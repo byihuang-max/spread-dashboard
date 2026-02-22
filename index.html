@@ -280,7 +280,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
 
       <script>
-      (function(){
+      var _msChartsInited=false;
+      function initMsCharts(){
+        if(_msChartsInited) return;
+        _msChartsInited=true;
         var msL=["11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13"];
         var msS=[38.07, 37.22, 70.4, 42.83, 48.06, 27.39, 43.04, 49.43, 51.84, 36.43, 18.01, 51.76, 58.57, 44.15, 49.92, 25.86, 61.32, 39.63, 35.88, 36.09, 59.8, 58.17, 46.62, 46.63, 61.46, 75.75, 71.19, 52.23, 46.36, 45.67, 43.94, 71.83, 36.73, 57.87, 50.57, 71.3, 33.23, 25.0, 28.16, 24.5, 33.46, 32.78, 34.26, 35.96, 48.04, 26.0, 40.04, 36.07, 36.87, 26.44, 31.99, 39.26, 37.74, 39.41, 23.12, 38.71, 42.74, 31.13, 41.86, 22.9];
         var msH=[7, 6, 7, 5, 5, 4, 5, 6, 7, 6, 3, 4, 5, 6, 6, 5, 5, 6, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 10, 6, 6, 7, 8, 9, 10, 11, 12, 5, 4, 5, 4, 3, 4, 4, 5, 5, 6, 7, 8, 5, 3, 4, 4, 4, 3, 4, 3, 4, 4, 5];
@@ -364,7 +367,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           el.textContent=d+' '+lb;
           tl.appendChild(el);
         });}
-      })();
+      }
       </script>
       </div>
       <div class="strat-page" id="strat-cta"><div class="card" style="text-align:center;padding:50px;color:var(--text-sub)"><div style="font-size:40px;margin-bottom:12px">📦</div><div style="font-size:14px;font-weight:600;color:var(--text)">商品CTA策略指标</div><div style="margin-top:6px;font-size:12px">流动性总值 · 持仓排名 · CTA多样性 · 基本面+期限+趋势跟踪</div><div style="margin-top:12px;font-size:11px">规划中</div></div></div>
@@ -412,6 +415,7 @@ document.querySelectorAll('.strat-tab').forEach(tab=>{
     document.querySelectorAll('.strat-page').forEach(p=>p.classList.remove('active'));
     const p=document.getElementById('strat-'+tab.dataset.strat);
     if(p) p.classList.add('active');
+    if(tab.dataset.strat==='momentum-stock' && typeof initMsCharts==='function') setTimeout(initMsCharts,50);
   });
 });
 </script>
