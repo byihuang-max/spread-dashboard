@@ -195,7 +195,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="strat-tabs">
         <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
         <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
-        <div class="strat-tab" data-strat="cta" style="opacity:.4">📦 商品CTA</div>
+        <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
         <div class="strat-tab" data-strat="convertible" style="opacity:.4">🔄 转债</div>
         <div class="strat-tab" data-strat="arbitrage" style="opacity:.4">⚖️ 套利</div>
       </div>
@@ -376,7 +376,335 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       }
       </script>
       </div>
-      <div class="strat-page" id="strat-cta"><div class="card" style="text-align:center;padding:50px;color:var(--text-sub)"><div style="font-size:40px;margin-bottom:12px">📦</div><div style="font-size:14px;font-weight:600;color:var(--text)">商品CTA策略指标</div><div style="margin-top:6px;font-size:12px">流动性总值 · 持仓排名 · CTA多样性 · 基本面+期限+趋势跟踪</div><div style="margin-top:12px;font-size:11px">规划中</div></div></div>
+      <div class="strat-page" id="strat-cta">
+      <!-- CTA策略环境总览 -->
+      <div class="overview-grid">
+        <div class="ov-card" style="border-left-color:#ef4444">
+          <div class="ov-label">CTA友好度</div>
+          <div class="ov-value" style="color:#ef4444">29.5</div>
+          <div class="ov-sub">偏弱 · 0-100综合评分</div>
+        </div>
+        <div class="ov-card blue">
+          <div class="ov-label">活跃品种</div>
+          <div class="ov-value">58</div>
+          <div class="ov-sub">日均成交额 &gt; 500万</div>
+        </div>
+        <div class="ov-card" style="border-left-color:#ef4444">
+          <div class="ov-label">趋势品种占比</div>
+          <div class="ov-value">3.5%</div>
+          <div class="ov-sub">2/58 有明显趋势</div>
+        </div>
+        <div class="ov-card amber">
+          <div class="ov-label">平均20日波动率</div>
+          <div class="ov-value">24.2%</div>
+          <div class="ov-sub">活跃品种年化波动率均值</div>
+        </div>
+        <div class="ov-card slate">
+          <div class="ov-label">成交量比</div>
+          <div class="ov-value">0.98</div>
+          <div class="ov-sub">MA20/MA60，&gt;1.2为放量</div>
+        </div>
+        <div class="ov-card green">
+          <div class="ov-label">数据日期</div>
+          <div class="ov-value" style="font-size:18px">2026-02-13</div>
+          <div class="ov-sub">最新交易日</div>
+        </div>
+      </div>
+
+      <!-- 宏观比价 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 宏观比价信号</div>
+        <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="border-bottom:1px solid #e2e8f0;color:#64748b;text-align:left">
+              <th style="padding:8px 6px">比价</th>
+              <th style="padding:8px 6px">最新值</th>
+              <th style="padding:8px 6px">20日变化</th>
+              <th style="padding:8px 6px">分位数</th>
+              <th style="padding:8px 6px">趋势</th>
+              <th style="padding:8px 6px">含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:8px 6px;font-weight:600">铜金比</td>
+              <td style="padding:8px 6px">90.4243</td>
+              <td style="padding:8px 6px;color:#ef4444;font-weight:600">-6.26%</td>
+              <td style="padding:8px 6px">28%</td>
+              <td style="padding:8px 6px;color:#ef4444;font-weight:600">下降</td>
+              <td style="padding:8px 6px;color:#94a3b8;font-size:11px">上升=经济预期改善，下降=避险升温</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:8px 6px;font-weight:600">油金比</td>
+              <td style="padding:8px 6px">0.4150</td>
+              <td style="padding:8px 6px;color:#ef4444;font-weight:600">-0.48%</td>
+              <td style="padding:8px 6px">52%</td>
+              <td style="padding:8px 6px;color:#ef4444;font-weight:600">下降</td>
+              <td style="padding:8px 6px;color:#94a3b8;font-size:11px">上升=通胀预期/需求强，下降=衰退预期</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:8px 6px;font-weight:600">工业品/农产品</td>
+              <td style="padding:8px 6px">0.9720</td>
+              <td style="padding:8px 6px;color:#ef4444;font-weight:600">-2.23%</td>
+              <td style="padding:8px 6px">4%</td>
+              <td style="padding:8px 6px;color:#94a3b8;font-weight:600">横盘</td>
+              <td style="padding:8px 6px;color:#94a3b8;font-size:11px">上升=工业品相对强势(经济扩张)，下降=农产品相对强势(防御)</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- 品种趋势扫描 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 品种趋势扫描 Top 15</div>
+        <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="border-bottom:1px solid #e2e8f0;color:#64748b;text-align:left">
+              <th style="padding:8px 4px">#</th>
+              <th style="padding:8px 4px">品种</th>
+              <th style="padding:8px 4px">板块</th>
+              <th style="padding:8px 4px">收盘</th>
+              <th style="padding:8px 4px">涨跌幅</th>
+              <th style="padding:8px 4px">趋势</th>
+              <th style="padding:8px 4px">波动率</th>
+              <th style="padding:8px 4px">量比</th>
+              <th style="padding:8px 4px">评分</th>
+              <th style="padding:8px 4px">信号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">1</td>
+              <td style="padding:6px 4px;font-weight:700">JD</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">3,251.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+12.4%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.850</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">2</td>
+              <td style="padding:6px 4px;font-weight:700">A</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">4,674.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+6.7%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.663</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">3</td>
+              <td style="padding:6px 4px;font-weight:700">SA</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">1,150.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.9%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.605</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">4</td>
+              <td style="padding:6px 4px;font-weight:700">CS</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">2,638.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.603</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">5</td>
+              <td style="padding:6px 4px;font-weight:700">JM</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">1,121.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.3%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.588</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">6</td>
+              <td style="padding:6px 4px;font-weight:700">FG</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">1,041.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.3%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.587</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">7</td>
+              <td style="padding:6px 4px;font-weight:700">EB</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">7,359.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.3%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.586</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">8</td>
+              <td style="padding:6px 4px;font-weight:700">P</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">8,698.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.8%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.571</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">9</td>
+              <td style="padding:6px 4px;font-weight:700">J</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">1,682.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.2%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.552</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">10</td>
+              <td style="padding:6px 4px;font-weight:700">RM</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">2,309.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.2%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.550</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">11</td>
+              <td style="padding:6px 4px;font-weight:700">SF</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">5,492.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.1%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.548</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">12</td>
+              <td style="padding:6px 4px;font-weight:700">UR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">1,833.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.1%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.548</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">13</td>
+              <td style="padding:6px 4px;font-weight:700">I</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">746.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-2.9%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.542</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">14</td>
+              <td style="padding:6px 4px;font-weight:700">V</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">4,905.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-2.9%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.542</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+              <td style="padding:6px 4px;color:#94a3b8">15</td>
+              <td style="padding:6px 4px;font-weight:700">BR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">12,505.0</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-2.7%</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px">0.0%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.536</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- 板块趋势分布 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#3b82f6"></span> 板块趋势分布</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #374151">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">黑色系</div>
+            <div style="font-size:18px;font-weight:700;color:#1e293b">0/8</div>
+            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">有色金属</div>
+            <div style="font-size:18px;font-weight:700;color:#1e293b">0/9</div>
+            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #eab308">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">贵金属</div>
+            <div style="font-size:18px;font-weight:700;color:#1e293b">1/2</div>
+            <div style="font-size:10px;color:#94a3b8">趋势占比 50%</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #8b5cf6">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">能源化工</div>
+            <div style="font-size:18px;font-weight:700;color:#1e293b">1/21</div>
+            <div style="font-size:10px;color:#94a3b8">趋势占比 5%</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #10b981">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">农产品</div>
+            <div style="font-size:18px;font-weight:700;color:#1e293b">0/18</div>
+            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 指标说明 -->
+      <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
+        <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
+        <p>① CTA友好度 = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比，标准化到0-100</p>
+        <p>② 趋势判定：MA20斜率 &gt; 0.5%为多头，&lt; -0.5%为空头</p>
+        <p>③ 品种评分 = 0.40×|涨跌幅标准化| + 0.30×波动率分位 + 0.30×成交量比标准化</p>
+        <p>④ 信号：趋势确认(多头/空头) + 波动放大(vol↑) + 放量(量比&gt;1.2)，满足越多越强</p>
+        <p>⑤ 铜金比↑=经济预期改善，↓=避险升温；油金比↑=通胀/需求强，↓=衰退预期</p>
+        <p>⑥ 工业品/农产品：工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利比值</p>
+        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · 更新：2026-02-13</p>
+      </div>
+      </div>
       <div class="strat-page" id="strat-convertible"><div class="card" style="text-align:center;padding:50px;color:var(--text-sub)"><div style="font-size:40px;margin-bottom:12px">🔄</div><div style="font-size:14px;font-weight:600;color:var(--text)">转债策略指标</div><div style="margin-top:6px;font-size:12px">成交量相关性 · 换手前50%均价分位+转股溢价率 · DELTA中位数 · 债底跟踪</div><div style="margin-top:12px;font-size:11px">规划中</div></div></div>
       <div class="strat-page" id="strat-arbitrage"><div class="card" style="text-align:center;padding:50px;color:var(--text-sub)"><div style="font-size:40px;margin-bottom:12px">⚖️</div><div style="font-size:14px;font-weight:600;color:var(--text)">套利策略指标</div><div style="margin-top:6px;font-size:12px">期权隐含波动率时序 · 股指/商品期货流动性波动率</div><div style="margin-top:12px;font-size:11px">规划中</div></div></div>
     </div>
