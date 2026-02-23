@@ -7,7 +7,7 @@
 import json
 import os
 
-BASE_DIR = '/Users/apple/Desktop/fof_dashboard'
+BASE_DIR = '/Users/apple/Desktop/gamt-dashboard'
 JSON_PATH = os.path.join(BASE_DIR, 'momentum_stock/momentum_sentiment.json')
 INDEX_PATH = os.path.join(BASE_DIR, 'index.html')
 

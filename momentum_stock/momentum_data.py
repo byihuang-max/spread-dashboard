@@ -10,8 +10,8 @@ from collections import defaultdict
 
 TUSHARE_TOKEN = '33b3ff939d0d7954cd76cacce7cf6cbb2b3c3feda13d1ca2cfa594e20ecd'
 TUSHARE_URL = 'http://lianghua.nanyangqiankun.top'
-OUTPUT_JSON = '/Users/apple/Desktop/fof_dashboard/momentum_stock/momentum_sentiment.json'
-CACHE_DIR = '/Users/apple/Desktop/fof_dashboard/momentum_stock/_cache'
+OUTPUT_JSON = '/Users/apple/Desktop/gamt-dashboard/momentum_stock/momentum_sentiment.json'
+CACHE_DIR = '/Users/apple/Desktop/gamt-dashboard/momentum_stock/_cache'
 LOOKBACK_DAYS = 120
 
 os.makedirs(CACHE_DIR, exist_ok=True)

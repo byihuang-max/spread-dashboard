@@ -2,7 +2,7 @@
 """把风格轧差看板的数据+图表原生注入到 FOF 主看板 index.html"""
 import re, os
 
-BASE = os.path.expanduser("~/Desktop/fof_dashboard")
+BASE = os.path.expanduser("~/Desktop/gamt-dashboard")
 src = open(os.path.join(BASE, "size_spread/风格轧差看板.html"), "r", encoding="utf-8").read()
 
 # 用原始 index.html 的备份或当前文件

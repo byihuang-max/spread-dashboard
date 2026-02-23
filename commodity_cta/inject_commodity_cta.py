@@ -6,7 +6,7 @@
 
 import json, os
 
-BASE_DIR = '/Users/apple/Desktop/fof_dashboard'
+BASE_DIR = '/Users/apple/Desktop/gamt-dashboard'
 JSON_PATH = os.path.join(BASE_DIR, 'commodity_cta/commodity_cta.json')
 INDEX_PATH = os.path.join(BASE_DIR, 'index.html')
 

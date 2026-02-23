@@ -377,7 +377,7 @@ print(f"   Sheet4: 拥挤-反身性轧差 ({len(crowd_dates)} 行)")
 # ============================================================
 import json
 
-dashboard_data_dir = os.path.expanduser("~/Desktop/fof_dashboard/data")
+dashboard_data_dir = os.path.expanduser("~/Desktop/gamt-dashboard/data")
 os.makedirs(dashboard_data_dir, exist_ok=True)
 
 # --- 风格轧差 JSON（Sheet1 + Sheet2 + Sheet3 + Sheet4 合并） ---
