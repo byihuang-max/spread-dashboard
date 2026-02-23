@@ -1,4 +1,4 @@
-const CACHE = 'gamt-v1';
+const CACHE = 'gamt-v2';
 const ASSETS = ['/spread-dashboard/', '/spread-dashboard/index.html'];
 
 self.addEventListener('install', e => {
