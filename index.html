@@ -951,5 +951,91 @@ function initCbCharts() {
   });
 }
 </script>
+
+<!-- ═══ 全局导航 + Tab 切换 ═══ -->
+<script>
+(function(){
+  // ── 侧边栏导航切换 module-page ──
+  var navItems = document.querySelectorAll('.nav-item[data-module]');
+  var modulePages = document.querySelectorAll('.module-page');
+  var titleMap = {
+    'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度',
+    'fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气',
+    'alerts':'红灯预警','report':'每日报告'
+  };
+
+  navItems.forEach(function(nav){
+    nav.addEventListener('click', function(){
+      var mod = this.getAttribute('data-module');
+      // 跳过未上线模块（opacity < 1）
+      if(this.style.opacity && parseFloat(this.style.opacity) < 1) return;
+
+      // 切换 nav active
+      navItems.forEach(function(n){ n.classList.remove('active') });
+      this.classList.add('active');
+
+      // 切换 page
+      modulePages.forEach(function(p){ p.classList.remove('active') });
+      var target = document.getElementById('page-' + mod);
+      if(target) target.classList.add('active');
+
+      // 更新标题
+      var titleEl = document.getElementById('pageTitle');
+      if(titleEl && titleMap[mod]) titleEl.textContent = titleMap[mod];
+    });
+  });
+
+  // ── 策略环境 strat-tab 切换 ──
+  var envFit = document.getElementById('page-env-fit');
+  if(envFit){
+    var stratTabs = envFit.querySelectorAll('.strat-tab[data-strat]');
+    var stratPages = envFit.querySelectorAll('.strat-page');
+
+    stratTabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        var strat = this.getAttribute('data-strat');
+        // 跳过未上线（opacity < 1）
+        if(this.style.opacity && parseFloat(this.style.opacity) < 1) return;
+
+        // 切换 tab active
+        stratTabs.forEach(function(t){ t.classList.remove('active') });
+        this.classList.add('active');
+
+        // 切换 page
+        stratPages.forEach(function(p){ p.classList.remove('active') });
+        var target = document.getElementById('strat-' + strat);
+        if(target) target.classList.add('active');
+
+        // 延迟初始化图表
+        if(strat === 'cta' && typeof initCtaCharts === 'function') setTimeout(initCtaCharts, 50);
+        if(strat === 'convertible' && typeof initCbCharts === 'function') setTimeout(initCbCharts, 50);
+      });
+    });
+  }
+
+  // ── 风格轧差 ss-tabs 切换（如果有动态生成的 tab）──
+  var ssPage = document.getElementById('page-style-spread');
+  if(ssPage){
+    ssPage.addEventListener('click', function(e){
+      var tab = e.target.closest('.strat-tab[data-strat]');
+      if(!tab) return;
+      var strat = tab.getAttribute('data-strat');
+      var tabs = ssPage.querySelectorAll('.strat-tab[data-strat]');
+      var pages = ssPage.querySelectorAll('.strat-page');
+      tabs.forEach(function(t){ t.classList.remove('active') });
+      tab.classList.add('active');
+      pages.forEach(function(p){ p.classList.remove('active') });
+      var target = document.getElementById('ss-' + strat) || ssPage.querySelector('.strat-page[data-strat="'+strat+'"]');
+      if(target) target.classList.add('active');
+    });
+  }
+
+  // ── 更新时间 ──
+  var ut = document.getElementById('updateTime');
+  if(ut) ut.textContent = '最后更新: ' + new Date().toLocaleString('zh-CN');
+})();
+</script>
+
 </div>
+</body></html>
       
