@@ -8,6 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>GAMT 投研看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -96,6 +97,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 /* ── 响应式 ── */
 @media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.overview-grid{grid-template-columns:1fr}}
+
+
 
 
 
@@ -282,7 +285,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <p>④ 炸板率：曾触及涨停但未封住(Z) / (涨停(U)+炸板(Z))，越低越好</p>
         <p>⑤ 封板质量：涨停股中 open_times=0（一字/秒板）的占比，越高说明资金越坚决</p>
         <p>⑥ 情绪周期：冰点(&lt;20) - 回暖(突破30) - 加速(&gt;60) - 分歧(&gt;50下降) - 退潮(跌破40)</p>
-        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare limit_list_d · 更新：2026-02-23 21:26:45 · 区间：20250820 ~ 20260213</p>
+        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare limit_list_d · 更新：2026-02-23 22:31:43 · 区间：20250820 ~ 20260213</p>
       </div>
 
       <script>
@@ -955,7 +958,6 @@ function initCbCharts() {
 <!-- ═══ 全局导航 + Tab 切换 ═══ -->
 <script>
 (function(){
-  // ── 侧边栏导航切换 module-page ──
   var navItems = document.querySelectorAll('.nav-item[data-module]');
   var modulePages = document.querySelectorAll('.module-page');
   var titleMap = {
@@ -963,57 +965,37 @@ function initCbCharts() {
     'fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气',
     'alerts':'红灯预警','report':'每日报告'
   };
-
   navItems.forEach(function(nav){
     nav.addEventListener('click', function(){
       var mod = this.getAttribute('data-module');
-      // 跳过未上线模块（opacity < 1）
       if(this.style.opacity && parseFloat(this.style.opacity) < 1) return;
-
-      // 切换 nav active
       navItems.forEach(function(n){ n.classList.remove('active') });
       this.classList.add('active');
-
-      // 切换 page
       modulePages.forEach(function(p){ p.classList.remove('active') });
       var target = document.getElementById('page-' + mod);
       if(target) target.classList.add('active');
-
-      // 更新标题
       var titleEl = document.getElementById('pageTitle');
       if(titleEl && titleMap[mod]) titleEl.textContent = titleMap[mod];
     });
   });
-
-  // ── 策略环境 strat-tab 切换 ──
   var envFit = document.getElementById('page-env-fit');
   if(envFit){
     var stratTabs = envFit.querySelectorAll('.strat-tab[data-strat]');
     var stratPages = envFit.querySelectorAll('.strat-page');
-
     stratTabs.forEach(function(tab){
       tab.addEventListener('click', function(){
         var strat = this.getAttribute('data-strat');
-        // 跳过未上线（opacity < 1）
         if(this.style.opacity && parseFloat(this.style.opacity) < 1) return;
-
-        // 切换 tab active
         stratTabs.forEach(function(t){ t.classList.remove('active') });
         this.classList.add('active');
-
-        // 切换 page
         stratPages.forEach(function(p){ p.classList.remove('active') });
         var target = document.getElementById('strat-' + strat);
         if(target) target.classList.add('active');
-
-        // 延迟初始化图表
         if(strat === 'cta' && typeof initCtaCharts === 'function') setTimeout(initCtaCharts, 50);
         if(strat === 'convertible' && typeof initCbCharts === 'function') setTimeout(initCbCharts, 50);
       });
     });
   }
-
-  // ── 风格轧差 ss-tabs 切换（如果有动态生成的 tab）──
   var ssPage = document.getElementById('page-style-spread');
   if(ssPage){
     ssPage.addEventListener('click', function(e){
@@ -1029,8 +1011,6 @@ function initCbCharts() {
       if(target) target.classList.add('active');
     });
   }
-
-  // ── 更新时间 ──
   var ut = document.getElementById('updateTime');
   if(ut) ut.textContent = '最后更新: ' + new Date().toLocaleString('zh-CN');
 })();
