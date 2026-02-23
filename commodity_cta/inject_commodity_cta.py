@@ -73,6 +73,25 @@ def build_html(data):
     sc_au = macro.get('sc_au', {})
     ind_agri = macro.get('ind_agri', {})
 
+    # 比价时间序列 → JS 数据
+    def series_to_js(r):
+        s = r.get('series', [])
+        dates = [f"{p['date'][4:6]}/{p['date'][6:8]}" for p in s]
+        vals = [p['value'] for p in s]
+        return json.dumps(dates), json.dumps(vals)
+
+    cu_au_dates_js, cu_au_vals_js = series_to_js(cu_au)
+    sc_au_dates_js, sc_au_vals_js = series_to_js(sc_au)
+    ind_agri_dates_js, ind_agri_vals_js = series_to_js(ind_agri)
+
+    # 篮子净值序列
+    basket = macro.get('_basket_nav', {})
+    ind_nav = basket.get('industrial', [])
+    agri_nav = basket.get('agricultural', [])
+    basket_dates_js = json.dumps([f"{p[0][4:6]}/{p[0][6:8]}" for p in ind_nav])
+    ind_nav_js = json.dumps([p[1] for p in ind_nav])
+    agri_nav_js = json.dumps([p[1] for p in agri_nav])
+
     # 品种扫描 top 15
     top_symbols = symbols_list[:15]
 
@@ -167,6 +186,62 @@ def build_html(data):
         </table>
         </div>
       </div>
+
+      <!-- 宏观比价走势图 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 铜金比走势（CU/AU）</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=经济预期改善，下降=避险升温</div>
+        <div style="position:relative;height:220px"><canvas id="cta-cu-au"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 油金比走势（SC/AU）</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=通胀预期/需求强，下降=衰退预期</div>
+        <div style="position:relative;height:220px"><canvas id="cta-sc-au"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#10b981"></span> 工业品 vs 农产品篮子</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利</div>
+        <div style="position:relative;height:220px"><canvas id="cta-ind-agri"></canvas></div>
+      </div>
+
+      <script>
+      var _ctaChartsInited=false;
+      function initCtaCharts(){
+        if(_ctaChartsInited)return;
+        _ctaChartsInited=true;
+        var ctaB={responsive:true,maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
+            tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
+          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
+        };
+        new Chart(document.getElementById('cta-cu-au'),{
+          type:'line',
+          data:{labels:''' + cu_au_dates_js + ''',datasets:[
+            {label:'铜金比',data:''' + cu_au_vals_js + ''',borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#ef4444',tension:.3}
+          ]},
+          options:ctaB
+        });
+        new Chart(document.getElementById('cta-sc-au'),{
+          type:'line',
+          data:{labels:''' + sc_au_dates_js + ''',datasets:[
+            {label:'油金比',data:''' + sc_au_vals_js + ''',borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#f59e0b',tension:.3}
+          ]},
+          options:ctaB
+        });
+        new Chart(document.getElementById('cta-ind-agri'),{
+          type:'line',
+          data:{labels:''' + basket_dates_js + ''',datasets:[
+            {label:'工业品篮子',data:''' + ind_nav_js + ''',borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
+            {label:'农产品篮子',data:''' + agri_nav_js + ''',borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
+          ]},
+          options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#f1f5f9'}}}})
+        });
+      }
+      </script>
 
       <!-- 品种趋势扫描 -->
       <div class="card">

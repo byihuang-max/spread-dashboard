@@ -181,6 +181,7 @@ def calc_ratio_stats(ratio_series):
         "trend": trend,
         "ma5_slope_pct": round(slope, 4),
         "n_days": len(vals),
+        "series": [{"date": d, "value": round(v, 6)} for d, v in ratio_series],
     }
 
 

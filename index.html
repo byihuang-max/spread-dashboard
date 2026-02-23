@@ -456,6 +456,62 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div>
       </div>
 
+      <!-- 宏观比价走势图 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 铜金比走势（CU/AU）</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=经济预期改善，下降=避险升温</div>
+        <div style="position:relative;height:220px"><canvas id="cta-cu-au"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 油金比走势（SC/AU）</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=通胀预期/需求强，下降=衰退预期</div>
+        <div style="position:relative;height:220px"><canvas id="cta-sc-au"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#10b981"></span> 工业品 vs 农产品篮子</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利</div>
+        <div style="position:relative;height:220px"><canvas id="cta-ind-agri"></canvas></div>
+      </div>
+
+      <script>
+      var _ctaChartsInited=false;
+      function initCtaCharts(){
+        if(_ctaChartsInited)return;
+        _ctaChartsInited=true;
+        var ctaB={responsive:true,maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
+            tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
+          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
+        };
+        new Chart(document.getElementById('cta-cu-au'),{
+          type:'line',
+          data:{labels:["01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13"],datasets:[
+            {label:'铜金比',data:[101.141989, 99.583325, 100.055736, 99.314142, 97.615081, 96.464801, 95.485587, 92.72178, 92.59089, 90.835753, 89.108911, 89.343249, 86.882482, 87.349494, 89.270032, 97.739441, 95.540237, 92.10826, 91.321806, 91.824753, 90.448869, 90.579904, 90.392781, 90.869534, 90.424286],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#ef4444',tension:.3}
+          ]},
+          options:ctaB
+        });
+        new Chart(document.getElementById('cta-sc-au'),{
+          type:'line',
+          data:{labels:["01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13"],datasets:[
+            {label:'油金比',data:[0.426297, 0.433809, 0.42811, 0.429772, 0.425062, 0.417016, 0.412202, 0.403552, 0.410453, 0.396096, 0.399976, 0.388983, 0.388046, 0.378266, 0.405366, 0.445172, 0.410869, 0.40501, 0.419169, 0.426925, 0.412278, 0.424627, 0.421798, 0.423401, 0.415008],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#f59e0b',tension:.3}
+          ]},
+          options:ctaB
+        });
+        new Chart(document.getElementById('cta-ind-agri'),{
+          type:'line',
+          data:{labels:["01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13"],datasets:[
+            {label:'工业品篮子',data:[1.008213, 1.000642, 1.008679, 0.999443, 0.988823, 0.986058, 0.983401, 0.986411, 1.000589, 1.018266, 1.021881, 1.01165, 1.029028, 1.039807, 1.016315, 0.978835, 0.995669, 1.003796, 0.984446, 0.98327, 0.986708, 0.987114, 0.992065, 0.987432, 0.976008],borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
+            {label:'农产品篮子',data:[1.001229, 1.001308, 1.000024, 0.993436, 0.996252, 0.99185, 0.992939, 0.99293, 1.002198, 1.001012, 1.010804, 1.011142, 1.017067, 1.024545, 1.015204, 1.002462, 1.004012, 1.006524, 1.003183, 1.003655, 1.003332, 1.004466, 1.009706, 1.007267, 1.004155],borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
+          ]},
+          options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#f1f5f9'}}}})
+        });
+      }
+      </script>
+
       <!-- 品种趋势扫描 -->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#ef4444"></span> 品种趋势扫描 Top 15</div>
@@ -750,6 +806,7 @@ document.querySelectorAll('.strat-tab').forEach(tab=>{
     const p=document.getElementById('strat-'+tab.dataset.strat);
     if(p) p.classList.add('active');
     if(tab.dataset.strat==='momentum-stock' && typeof initMsCharts==='function') setTimeout(initMsCharts,50);
+    if(tab.dataset.strat==='cta' && typeof initCtaCharts==='function') setTimeout(initCtaCharts,50);
   });
 });
 </script>
