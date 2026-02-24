@@ -76,8 +76,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <script>
-// Cloudflare Pages 308 去掉 .html 后缀，用 script src 定位真实目录
-var base=(function(){var s=document.currentScript&&document.currentScript.src;if(s)return s.replace(/[^/]*$/,'');var h=location.href.replace(/[?#].*$/,'');if(!/\.\w+$/.test(h)&&!/\/$/.test(h))h=h.replace(/\/[^/]*$/,'/');if(!h.endsWith('/'))h+='/';return h})();
+// Cloudflare Pages 308: arbitrage.html → /arbitrage/arbitrage
+// location.href 变成 /arbitrage/arbitrage，相对路径会解析到 /arbitrage/ 没问题
+// 但如果被当成目录则解析到 /，所以强制保证 base 以 /arbitrage/ 结尾
+var base=(function(){var h=location.href.replace(/[?#].*$/,'');var m=h.match(/\/arbitrage\b/);if(m)return h.slice(0,m.index)+'/arbitrage/';return h.replace(/[^/]*$/,'')})();
 
 // Tab 切换
 document.querySelectorAll('.tab').forEach(function(t){

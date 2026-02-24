@@ -945,7 +945,102 @@ function initCbCharts() {
       </div><!-- /strat-convertible -->
 
       <div class="strat-page" id="strat-arbitrage">
-        <iframe src="arbitrage/arbitrage.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+<!-- 套利模块 — 内联渲染 -->
+<div style="padding:0 4px">
+<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+  <div class="strat-tab active" data-arb="index-arb" style="font-size:12px;padding:6px 12px;cursor:pointer">📊 股指套利</div>
+  <div class="strat-tab" data-arb="commodity-arb" style="font-size:12px;padding:6px 12px;cursor:pointer">🏭 商品套利</div>
+  <div class="strat-tab" data-arb="option-arb" style="font-size:12px;padding:6px 12px;cursor:pointer">📈 期权套利</div>
+</div>
+<div id="arb-index-arb">
+  <div class="overview-grid" id="arb-idx-ov"></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#e74c3c"></span> 基差率走势（%）</div><div style="position:relative;height:280px"><canvas id="arb-c1"></canvas></div></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#3498db"></span> 年化基差率走势（%）</div><div style="position:relative;height:280px"><canvas id="arb-c2"></canvas></div></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#8e44ad"></span> 持仓量走势</div><div style="position:relative;height:240px"><canvas id="arb-c3"></canvas></div></div>
+</div>
+<div id="arb-commodity-arb" style="display:none">
+  <div class="overview-grid" id="arb-cmd-ov"></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#f39c12"></span> 跨品种比价走势</div><div style="position:relative;height:300px"><canvas id="arb-c4"></canvas></div></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#9b59b6"></span> Z-Score 走势</div><div style="position:relative;height:280px"><canvas id="arb-c5"></canvas></div></div>
+</div>
+<div id="arb-option-arb" style="display:none">
+  <div class="overview-grid" id="arb-opt-ov"></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#2ecc71"></span> PCR（成交量）走势</div><div style="position:relative;height:280px"><canvas id="arb-c6"></canvas></div></div>
+  <div class="card"><div class="card-title"><span class="dot" style="background:#e67e22"></span> HV20 历史波动率（%）& 总成交量</div><div style="position:relative;height:280px"><canvas id="arb-c7"></canvas></div></div>
+</div>
+</div>
+<script>
+var _arbInit=false;
+function initArbCharts(){
+  if(_arbInit)return;_arbInit=true;
+  // sub-tab switching
+  document.querySelectorAll('[data-arb]').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('[data-arb]').forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');
+      ['index-arb','commodity-arb','option-arb'].forEach(function(id){
+        var el=document.getElementById('arb-'+id);if(el)el.style.display='none';
+      });
+      var target=document.getElementById('arb-'+t.dataset.arb);if(target)target.style.display='block';
+    });
+  });
+  function fd(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
+  function sgn(v){return v>=0?'+'+v:v}
+  function clr(v){return v>=0?'#e74c3c':'#27ae60'}
+  var C=['#e74c3c','#3498db','#f39c12','#9b59b6','#2ecc71','#e67e22'];
+  // mod1
+  fetch('arbitrage/mod1_index_arb.json').then(function(r){return r.json()}).then(function(D){
+    var ct=D.contracts,sm=D.summary,keys=['IF','IH','IC','IM'];
+    var h='';keys.forEach(function(k){var s=sm[k];if(!s)return;var c=clr(s.latest_basis_pct);
+      h+='<div class="ov-card" style="text-align:center;padding:12px;border-left-color:'+c+'"><div style="font-size:11px;color:var(--text-sub)">'+k+'('+s.name+')</div><div style="font-size:22px;font-weight:700;color:'+c+';margin:2px 0">'+sgn(s.latest_basis.toFixed(1))+'</div><div style="font-size:10px;color:var(--text-sub)">基差率 '+sgn(s.latest_basis_pct.toFixed(3))+'% | 年化 '+sgn(s.latest_annual_pct.toFixed(1))+'%</div><div style="font-size:10px;color:var(--text-sub)">30日均值 '+sgn(s.avg_basis_pct.toFixed(3))+'%</div></div>';
+    });document.getElementById('arb-idx-ov').innerHTML=h;
+    var lb=ct.IF.series.map(function(r){return fd(r.date)});
+    var ds1=[],ds2=[],ds3=[];
+    keys.forEach(function(k,i){
+      ds1.push({label:k,data:ct[k].series.map(function(r){return r.basis_pct}),borderColor:C[i],borderWidth:1.5,pointRadius:0,tension:.2});
+      ds2.push({label:k,data:ct[k].series.map(function(r){return r.annual_basis_pct}),borderColor:C[i],borderWidth:1.5,pointRadius:0,tension:.2});
+      ds3.push({label:k,data:ct[k].series.map(function(r){return r.fut_oi}),borderColor:C[i],borderWidth:1.5,pointRadius:0,tension:.2,fill:false});
+    });
+    new Chart(document.getElementById('arb-c1'),{type:'line',data:{labels:lb,datasets:ds1},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'%'}}}}});
+    new Chart(document.getElementById('arb-c2'),{type:'line',data:{labels:lb,datasets:ds2},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'%'}}}}});
+    new Chart(document.getElementById('arb-c3'),{type:'line',data:{labels:lb,datasets:ds3},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'手'}}}}});
+  }).catch(function(e){console.error('mod1',e)});
+  // mod2
+  fetch('arbitrage/mod2_commodity_arb.json').then(function(r){return r.json()}).then(function(D){
+    var sp=D.spreads,sm=D.summary,keys=Object.keys(sp);
+    var h='';keys.forEach(function(k){var s=sm[k];if(!s)return;var zc=s.latest_z_score>=0?'#e74c3c':'#27ae60';
+      h+='<div class="ov-card" style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--text-sub)">'+s.name+'</div><div style="font-size:22px;font-weight:700;margin:2px 0">'+s.latest_ratio.toFixed(4)+'</div><div style="font-size:10px;color:var(--text-sub)">Z <span style="color:'+zc+'">'+sgn(s.latest_z_score.toFixed(2))+'</span> | 分位 '+(s.latest_pctile*100).toFixed(0)+'%</div></div>';
+    });document.getElementById('arb-cmd-ov').innerHTML=h;
+    var fk=keys[0],lb=sp[fk].series.map(function(r){return fd(r.date)});
+    var ds4=[],ds5=[];
+    keys.forEach(function(k,i){
+      ds4.push({label:sp[k].name,data:sp[k].series.map(function(r){return r.ratio}),borderColor:C[i],borderWidth:1.5,pointRadius:0,tension:.2,yAxisID:i>1?'y1':'y'});
+      ds5.push({label:sp[k].name,data:sp[k].series.map(function(r){return r.z_score}),borderColor:C[i],borderWidth:1.5,pointRadius:0,tension:.2});
+    });
+    new Chart(document.getElementById('arb-c4'),{type:'line',data:{labels:lb,datasets:ds4},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{position:'left'},y1:{position:'right',grid:{drawOnChartArea:false}}}}});
+    new Chart(document.getElementById('arb-c5'),{type:'line',data:{labels:lb,datasets:ds5},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'Z-Score'}}}}});
+  }).catch(function(e){console.error('mod2',e)});
+  // mod3
+  fetch('arbitrage/mod3_option_arb.json').then(function(r){return r.json()}).then(function(D){
+    var sr=D.series,sm=D.summary;
+    var h='';
+    if(sm.latest_pcr_vol!=null)h+='<div class="ov-card" style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--text-sub)">PCR（成交量）</div><div style="font-size:22px;font-weight:700;margin:2px 0">'+sm.latest_pcr_vol.toFixed(4)+'</div><div style="font-size:10px;color:var(--text-sub)">30日均值 '+(sm.avg_pcr_vol||0).toFixed(4)+'</div></div>';
+    if(sm.latest_pcr_oi!=null)h+='<div class="ov-card" style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--text-sub)">PCR（持仓量）</div><div style="font-size:22px;font-weight:700;margin:2px 0">'+sm.latest_pcr_oi.toFixed(4)+'</div><div style="font-size:10px;color:var(--text-sub)">均值 '+(sm.avg_pcr_oi||0).toFixed(4)+'</div></div>';
+    if(sm.latest_hv_20!=null)h+='<div class="ov-card" style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--text-sub)">HV20（沪深300）</div><div style="font-size:22px;font-weight:700;margin:2px 0">'+sm.latest_hv_20.toFixed(1)+'%</div><div style="font-size:10px;color:var(--text-sub)">均值 '+(sm.avg_hv_20||0).toFixed(1)+'%</div></div>';
+    if(sm.latest_total_vol)h+='<div class="ov-card" style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--text-sub)">总成交量</div><div style="font-size:22px;font-weight:700;margin:2px 0">'+(sm.latest_total_vol/10000).toFixed(0)+'万</div><div style="font-size:10px;color:var(--text-sub)">成交额 '+(sm.latest_total_amount/10000).toFixed(0)+'亿</div></div>';
+    document.getElementById('arb-opt-ov').innerHTML=h;
+    var lb=sr.map(function(r){return fd(r.date)});
+    new Chart(document.getElementById('arb-c6'),{type:'line',data:{labels:lb,datasets:[
+      {label:'PCR(成交量)',data:sr.map(function(r){return r.pcr_vol}),borderColor:'#2ecc71',borderWidth:1.5,pointRadius:0,tension:.2},
+      {label:'PCR(持仓量)',data:sr.map(function(r){return r.pcr_oi}),borderColor:'#3498db',borderWidth:1.5,pointRadius:0,tension:.2,borderDash:[4,3]}
+    ]},options:{plugins:{legend:{labels:{font:{size:11}}}}}});
+    new Chart(document.getElementById('arb-c7'),{type:'line',data:{labels:lb,datasets:[
+      {label:'HV20(%)',data:sr.map(function(r){return r.hv_20}),borderColor:'#e67e22',borderWidth:1.5,pointRadius:0,tension:.2,yAxisID:'y'},
+      {label:'总成交量(万手)',data:sr.map(function(r){return r.total_vol/10000}),borderColor:'#95a5a6',borderWidth:1,pointRadius:0,tension:.2,fill:true,backgroundColor:'rgba(149,165,166,0.1)',yAxisID:'y1'}
+    ]},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{position:'left',title:{display:true,text:'%'}},y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'万手'}}}}});
+  }).catch(function(e){console.error('mod3',e)});
+}
+</script>
       </div>
 
     </div><!-- /page-env-fit -->
@@ -988,6 +1083,7 @@ function initCbCharts() {
         if(target) target.classList.add('active');
         if(strat === 'cta' && typeof initCtaCharts === 'function') setTimeout(initCtaCharts, 50);
         if(strat === 'convertible' && typeof initCbCharts === 'function') setTimeout(function(){ initCbCharts(); window.dispatchEvent(new Event('resize')); }, 150);
+        if(strat === 'arbitrage' && typeof initArbCharts === 'function') setTimeout(function(){ initArbCharts(); window.dispatchEvent(new Event('resize')); }, 150);
       });
     });
   }
