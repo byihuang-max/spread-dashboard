@@ -817,19 +817,19 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">转债成交额 & 小盘相关性</div>
-    <canvas id="cb-chart-activity" height="200"></canvas>
+    <div style="position:relative;height:260px"><canvas id="cb-chart-activity"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">活跃转债均价分位 & 转股溢价率</div>
-    <canvas id="cb-chart-valuation" height="200"></canvas>
+    <div style="position:relative;height:260px"><canvas id="cb-chart-valuation"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">DELTA中位数走势</div>
-    <canvas id="cb-chart-delta" height="200"></canvas>
+    <div style="position:relative;height:260px"><canvas id="cb-chart-delta"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">债底：价格中位数 & 破面值占比</div>
-    <canvas id="cb-chart-floor" height="200"></canvas>
+    <div style="position:relative;height:260px"><canvas id="cb-chart-floor"></canvas></div>
   </div>
 </div>
 
@@ -979,7 +979,7 @@ function initCbCharts() {
         var target = document.getElementById('strat-' + strat);
         if(target) target.classList.add('active');
         if(strat === 'cta' && typeof initCtaCharts === 'function') setTimeout(initCtaCharts, 50);
-        if(strat === 'convertible' && typeof initCbCharts === 'function') setTimeout(initCbCharts, 50);
+        if(strat === 'convertible' && typeof initCbCharts === 'function') setTimeout(function(){ initCbCharts(); window.dispatchEvent(new Event('resize')); }, 150);
       });
     });
   }
