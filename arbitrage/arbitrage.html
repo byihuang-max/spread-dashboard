@@ -76,7 +76,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <script>
-var base=location.href.replace(/[^/]*$/,'');if(!base.endsWith('/'))base+='/';
+// Cloudflare Pages 308 去掉 .html 后缀，用 script src 定位真实目录
+var base=(function(){var s=document.currentScript&&document.currentScript.src;if(s)return s.replace(/[^/]*$/,'');var h=location.href.replace(/[?#].*$/,'');if(!/\.\w+$/.test(h)&&!/\/$/.test(h))h=h.replace(/\/[^/]*$/,'/');if(!h.endsWith('/'))h+='/';return h})();
 
 // Tab 切换
 document.querySelectorAll('.tab').forEach(function(t){
