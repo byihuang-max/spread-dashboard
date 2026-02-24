@@ -1,5 +1,5 @@
-const CACHE = 'gamt-v3';
-const ASSETS = ['/spread-dashboard/', '/spread-dashboard/index.html'];
+const CACHE = 'gamt-v4';
+const ASSETS = ['./', './index.html'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
