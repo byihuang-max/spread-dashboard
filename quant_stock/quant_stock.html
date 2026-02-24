@@ -41,7 +41,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <script>
-fetch('quant_stock_data.json').then(function(r){return r.json()}).then(function(QS){
+var jsonUrl=new URL('quant_stock_data.json',document.currentScript?document.currentScript.src:location.href.replace(/[^/]*$/,'')).href;
+fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
   function fmtDate(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
   function ma(arr,n){return arr.map(function(v,i){if(i<n-1)return null;var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];return s/n})}
   function val(v){return v==null?null:v}
