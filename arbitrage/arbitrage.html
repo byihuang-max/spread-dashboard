@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>套利环境</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+.card{background:#fff;border-radius:10px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
+.card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:7px;color:#2d3142}
+.card-title .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #e8eaef;color:#8b92a5;transition:all .12s}
+.tab:hover{color:#2d3142;border-color:#cbd5e1}
+.tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.tab-page{display:none}.tab-page.active{display:block}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.ov{background:#fff;border-radius:8px;padding:12px;border:1px solid #e8eaef;text-align:center}
+.ov .label{font-size:11px;color:#8b92a5;margin-bottom:2px}
+.ov .val{font-size:22px;font-weight:700;margin:2px 0}
+.ov .sub{font-size:10px;color:#8b92a5}
+.s-table{width:100%;border-collapse:collapse;font-size:12px}
+.s-table th{text-align:left;padding:7px 10px;background:#f8f9fb;color:#8b92a5;font-weight:600;font-size:11px;border-bottom:1px solid #e8eaef}
+.s-table td{padding:7px 10px;border-bottom:1px solid #f3f4f6}
+.pos{color:#e74c3c}.neg{color:#27ae60}
+</style>
+</head><body>
+
+<div class="tabs">
+  <div class="tab active" data-tab="index-arb">📊 股指套利</div>
+  <div class="tab" data-tab="commodity-arb">🏭 商品套利</div>
+  <div class="tab" data-tab="option-arb">📈 期权套利</div>
+</div>
+
+<!-- ═══ Tab 1: 股指套利 ═══ -->
+<div class="tab-page active" id="tab-index-arb">
+  <div class="ov-grid" id="idx-overview"></div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 基差率走势（%）</div>
+    <div style="position:relative;height:280px"><canvas id="chartBasis"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#3498db"></span> 年化基差率走势（%）</div>
+    <div style="position:relative;height:280px"><canvas id="chartAnnual"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#8e44ad"></span> 持仓量走势</div>
+    <div style="position:relative;height:240px"><canvas id="chartOI"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ Tab 2: 商品套利 ═══ -->
+<div class="tab-page" id="tab-commodity-arb">
+  <div class="ov-grid" id="cmd-overview"></div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#f39c12"></span> 跨品种比价走势</div>
+    <div style="position:relative;height:300px"><canvas id="chartRatio"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#9b59b6"></span> Z-Score 走势</div>
+    <div style="position:relative;height:280px"><canvas id="chartZscore"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ Tab 3: 期权套利 ═══ -->
+<div class="tab-page" id="tab-option-arb">
+  <div class="ov-grid" id="opt-overview"></div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#2ecc71"></span> PCR（成交量）走势</div>
+    <div style="position:relative;height:280px"><canvas id="chartPCR"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#e67e22"></span> HV20 历史波动率（%）& 总成交量</div>
+    <div style="position:relative;height:280px"><canvas id="chartHV"></canvas></div>
+  </div>
+</div>
+
+<script>
+var base=location.href.replace(/[^/]*$/,'');if(!base.endsWith('/'))base+='/';
+
+// Tab 切换
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+    document.querySelectorAll('.tab-page').forEach(function(x){x.classList.remove('active')});
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+function fmtDate(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
+function clr(v){return v>=0?'#e74c3c':'#27ae60'}
+function sign(v){return v>=0?'+'+v:v}
+
+var COLORS=['#e74c3c','#3498db','#f39c12','#9b59b6','#2ecc71','#e67e22'];
+
+// ═══ 股指套利 ═══
+fetch(base+'mod1_index_arb.json').then(function(r){return r.json()}).then(function(D){
+  var contracts=D.contracts, summary=D.summary;
+  // 总览卡片
+  var html='';
+  var keys=['IF','IH','IC','IM'];
+  keys.forEach(function(k){
+    var s=summary[k];if(!s)return;
+    var c=clr(s.latest_basis_pct);
+    html+='<div class="ov"><div class="label">'+k+'('+s.name+')</div>'
+      +'<div class="val" style="color:'+c+'">'+sign(s.latest_basis.toFixed(1))+'</div>'
+      +'<div class="sub">基差率 '+sign(s.latest_basis_pct.toFixed(3))+'% | 年化 '+sign(s.latest_annual_pct.toFixed(1))+'%</div>'
+      +'<div class="sub">30日均值 '+sign(s.avg_basis_pct.toFixed(3))+'%</div></div>';
+  });
+  document.getElementById('idx-overview').innerHTML=html;
+
+  // 基差率图
+  var labels=contracts.IF.series.map(function(r){return fmtDate(r.date)});
+  var datasets=[];
+  keys.forEach(function(k,i){
+    datasets.push({label:k,data:contracts[k].series.map(function(r){return r.basis_pct}),borderColor:COLORS[i],borderWidth:1.5,pointRadius:0,tension:0.2});
+  });
+  new Chart(document.getElementById('chartBasis'),{type:'line',data:{labels:labels,datasets:datasets},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'%'}}}}});
+
+  // 年化基差率图
+  var ds2=[];
+  keys.forEach(function(k,i){
+    ds2.push({label:k,data:contracts[k].series.map(function(r){return r.annual_basis_pct}),borderColor:COLORS[i],borderWidth:1.5,pointRadius:0,tension:0.2});
+  });
+  new Chart(document.getElementById('chartAnnual'),{type:'line',data:{labels:labels,datasets:ds2},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'%'}}}}});
+
+  // 持仓量图
+  var ds3=[];
+  keys.forEach(function(k,i){
+    ds3.push({label:k,data:contracts[k].series.map(function(r){return r.fut_oi}),borderColor:COLORS[i],borderWidth:1.5,pointRadius:0,tension:0.2,fill:false});
+  });
+  new Chart(document.getElementById('chartOI'),{type:'line',data:{labels:labels,datasets:ds3},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'手'}}}}});
+}).catch(function(e){console.error('mod1 load error',e)});
+
+// ═══ 商品套利 ═══
+fetch(base+'mod2_commodity_arb.json').then(function(r){return r.json()}).then(function(D){
+  var spreads=D.spreads, summary=D.summary;
+  var keys=Object.keys(spreads);
+
+  // 总览卡片
+  var html='';
+  keys.forEach(function(k){
+    var s=summary[k];if(!s)return;
+    var zc=s.latest_z_score>=0?'#e74c3c':'#27ae60';
+    html+='<div class="ov"><div class="label">'+s.name+'</div>'
+      +'<div class="val">'+s.latest_ratio.toFixed(4)+'</div>'
+      +'<div class="sub">Z-Score <span style="color:'+zc+'">'+sign(s.latest_z_score.toFixed(2))+'</span> | 分位 '+(s.latest_pctile*100).toFixed(0)+'%</div>'
+      +'<div class="sub">30日均值 '+s.avg_ratio.toFixed(4)+'</div></div>';
+  });
+  document.getElementById('cmd-overview').innerHTML=html;
+
+  // 比价走势
+  var firstKey=keys[0];
+  var labels=spreads[firstKey].series.map(function(r){return fmtDate(r.date)});
+  var ds=[];
+  keys.forEach(function(k,i){
+    var sp=spreads[k];
+    ds.push({label:sp.name,data:sp.series.map(function(r){return r.ratio}),borderColor:COLORS[i],borderWidth:1.5,pointRadius:0,tension:0.2,yAxisID:'y'+(i>1?'1':'')});
+  });
+  new Chart(document.getElementById('chartRatio'),{type:'line',data:{labels:labels,datasets:ds},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{position:'left'},y1:{position:'right',grid:{drawOnChartArea:false}}}}});
+
+  // Z-Score 走势
+  var ds2=[];
+  keys.forEach(function(k,i){
+    var sp=spreads[k];
+    ds2.push({label:sp.name,data:sp.series.map(function(r){return r.z_score}),borderColor:COLORS[i],borderWidth:1.5,pointRadius:0,tension:0.2});
+  });
+  new Chart(document.getElementById('chartZscore'),{type:'line',data:{labels:labels,datasets:ds2},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{title:{display:true,text:'Z-Score'}}}}});
+}).catch(function(e){console.error('mod2 load error',e)});
+
+// ═══ 期权套利 ═══
+fetch(base+'mod3_option_arb.json').then(function(r){return r.json()}).then(function(D){
+  var series=D.series, summary=D.summary;
+
+  // 总览卡片
+  var html='';
+  if(summary.latest_pcr_vol!=null){
+    html+='<div class="ov"><div class="label">PCR（成交量）</div><div class="val">'+summary.latest_pcr_vol.toFixed(4)+'</div><div class="sub">30日均值 '+(summary.avg_pcr_vol||0).toFixed(4)+'</div></div>';
+  }
+  if(summary.latest_pcr_oi!=null){
+    html+='<div class="ov"><div class="label">PCR（持仓量）</div><div class="val">'+summary.latest_pcr_oi.toFixed(4)+'</div><div class="sub">均值 '+(summary.avg_pcr_oi||0).toFixed(4)+'</div></div>';
+  }
+  if(summary.latest_hv_20!=null){
+    html+='<div class="ov"><div class="label">HV20（沪深300）</div><div class="val">'+summary.latest_hv_20.toFixed(1)+'%</div><div class="sub">均值 '+(summary.avg_hv_20||0).toFixed(1)+'%</div></div>';
+  }
+  if(summary.latest_total_vol){
+    html+='<div class="ov"><div class="label">总成交量</div><div class="val">'+(summary.latest_total_vol/10000).toFixed(0)+'万</div><div class="sub">成交额 '+(summary.latest_total_amount/10000).toFixed(0)+'亿</div></div>';
+  }
+  document.getElementById('opt-overview').innerHTML=html;
+
+  var labels=series.map(function(r){return fmtDate(r.date)});
+
+  // PCR 走势
+  new Chart(document.getElementById('chartPCR'),{type:'line',data:{labels:labels,datasets:[
+    {label:'PCR(成交量)',data:series.map(function(r){return r.pcr_vol}),borderColor:'#2ecc71',borderWidth:1.5,pointRadius:0,tension:0.2},
+    {label:'PCR(持仓量)',data:series.map(function(r){return r.pcr_oi}),borderColor:'#3498db',borderWidth:1.5,pointRadius:0,tension:0.2,borderDash:[4,3]}
+  ]},options:{plugins:{legend:{labels:{font:{size:11}}}}}});
+
+  // HV + 成交量
+  new Chart(document.getElementById('chartHV'),{type:'line',data:{labels:labels,datasets:[
+    {label:'HV20(%)',data:series.map(function(r){return r.hv_20}),borderColor:'#e67e22',borderWidth:1.5,pointRadius:0,tension:0.2,yAxisID:'y'},
+    {label:'总成交量(万手)',data:series.map(function(r){return r.total_vol/10000}),borderColor:'#95a5a6',borderWidth:1,pointRadius:0,tension:0.2,fill:true,backgroundColor:'rgba(149,165,166,0.1)',yAxisID:'y1'}
+  ]},options:{plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{position:'left',title:{display:true,text:'%'}},y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'万手'}}}}});
+}).catch(function(e){console.error('mod3 load error',e)});
+</script>
+</body></html>

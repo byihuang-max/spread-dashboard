@@ -198,7 +198,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
         <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
         <div class="strat-tab" data-strat="convertible">🔄 转债</div>
-        <div class="strat-tab" data-strat="arbitrage" style="opacity:.4">⚖️ 套利</div>
+        <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
       </div>
 
       <div class="strat-page active" id="strat-quant-stock">
@@ -942,6 +942,10 @@ function initCbCharts() {
   });
 }
 </script>
+
+      <div class="strat-page" id="strat-arbitrage">
+        <iframe src="arbitrage/arbitrage.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
 
 <!-- ═══ 全局导航 + Tab 切换 ═══ -->
 <script>
