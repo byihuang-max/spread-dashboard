@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宽基量化股票</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+.card{background:#fff;border-radius:10px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
+.card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:7px;color:#2d3142}
+.card-title .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+</style>
+</head><body>
+
+<div class="card">
+  <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 全市场成交额时序（亿元）</div>
+  <div style="position:relative;height:280px"><canvas id="chartAmount"></canvas></div>
+</div>
+
+<div class="card">
+  <div class="card-title"><span class="dot" style="background:#3498db"></span> 宽基成交额占全A比例（%）</div>
+  <div style="position:relative;height:320px"><canvas id="chartShare"></canvas></div>
+</div>
+
+<div class="card">
+  <div class="card-title"><span class="dot" style="background:#f39c12"></span> IF/IC/IM 年化基差（%）</div>
+  <div style="position:relative;height:280px"><canvas id="chartBasis"></canvas></div>
+</div>
+
+<div class="card">
+  <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 因子超额收益净值（vs 中证全指）</div>
+  <div style="position:relative;height:280px"><canvas id="chartFactor"></canvas></div>
+</div>
+
+<div class="card" style="font-size:12px;color:#999;line-height:1.8">
+  <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span> 📐 指标说明</div>
+  <p><b style="color:#555">① 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
+  <p><b style="color:#555">② 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
+  <p><b style="color:#555">③ 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
+  <p><b style="color:#555">④ 因子超额：</b>各因子指数相对中证全指的日度超额收益累计净值。成长=国证成长(399370)，红利=中证红利(000922)，小盘=中证2000(932000)</p>
+</div>
+
+<script>
+fetch('quant_stock_data.json').then(r=>r.json()).then(function(QS){
+  function fmtDate(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
+  function ma(arr,n){return arr.map(function(v,i){if(i<n-1)return null;var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];return s/n})}
+
+  var chartOpts={
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+    scales:{x:{ticks:{maxTicksToShow:12,font:{size:10}}}}
+  };
+
+  // 图1: 全市场成交额
+  (function(){
+    var d=QS.total_amount;
+    var labels=d.map(function(r){return fmtDate(r.date)});
+    var vals=d.map(function(r){return r.amount_yi});
+    var ma20=ma(vals,20);
+    new Chart(document.getElementById('chartAmount'),{
+      type:'line',
+      data:{labels:labels,datasets:[
+        {label:'全A成交额(亿)',data:vals,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1},
+        {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
+      ]},
+      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'}}}}})
+    });
+  })();
+
+  // 图2: 宽基成交额占比
+  (function(){
+    var d=QS.index_share;
+    var labels=d.map(function(r){return fmtDate(r.date)});
+    var colors=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+    var names=['沪深300','中证500','中证1000','中证2000','科创+创业板'];
+    var datasets=names.map(function(n,i){return{
+      label:n,data:d.map(function(r){return r[n]||0}),
+      borderColor:colors[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }});
+    new Chart(document.getElementById('chartShare'),{
+      type:'line',data:{labels:labels,datasets:datasets},
+      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v+'%'}},min:0}}})
+    });
+  })();
+
+  // 图3: 年化基差
+  (function(){
+    var d=QS.basis;
+    var labels=d.map(function(r){return fmtDate(r.date)});
+    var colors={IF:'#e74c3c',IC:'#3498db',IM:'#2ecc71'};
+    var nameMap={IF:'沪深300',IC:'中证500',IM:'中证1000'};
+    var datasets=['IF','IC','IM'].map(function(k){return{
+      label:k+'('+nameMap[k]+')',data:d.map(function(r){return r[k]||null}),
+      borderColor:colors[k],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }});
+    new Chart(document.getElementById('chartBasis'),{
+      type:'line',data:{labels:labels,datasets:datasets},
+      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v+'%'}}}}})
+    });
+  })();
+
+  // 图4: 因子超额收益
+  (function(){
+    var d=QS.factor;
+    var names=QS.factor_names;
+    var labels=d.map(function(r){return fmtDate(r.date)});
+    var colors=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+    var datasets=names.map(function(n,i){return{
+      label:n,data:d.map(function(r){return r[n]||null}),
+      borderColor:colors[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }});
+    new Chart(document.getElementById('chartFactor'),{
+      type:'line',data:{labels:labels,datasets:datasets},
+      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v.toFixed(2)}}}}})
+    });
+  })();
+});
+</script>
+</body></html>

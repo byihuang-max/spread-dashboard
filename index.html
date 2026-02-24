@@ -187,10 +187,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 风格轧差 ══ -->
     <div class="module-page" id="page-style-spread">
-
-      <div class="strat-tabs" id="ss-tabs"></div>
-      <div id="ss-content"></div>
-
+      <iframe src="size_spread/风格轧差看板.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 40px)"></iframe>
     </div>
 
     <!-- ══ 策略环境适配度 ══ -->
@@ -204,17 +201,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
 
       <div class="strat-page active" id="strat-quant-stock">
-        <div class="card"><div class="card-title"><span class="dot" style="background:#ef4444"></span> 全市场成交额（亿元）</div><div style="position:relative;height:260px"><canvas id="c1"></canvas></div></div>
-        <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent)"></span> 宽基成交额占全A比例（%）</div><div style="position:relative;height:300px"><canvas id="c2"></canvas></div></div>
-        <div class="card"><div class="card-title"><span class="dot" style="background:#f59e0b"></span> IF / IC / IM 年化基差（%）</div><div style="position:relative;height:260px"><canvas id="c3"></canvas></div></div>
-        <div class="card"><div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 因子超额收益净值（vs 中证全指）</div><div style="position:relative;height:260px"><canvas id="c4"></canvas></div></div>
-        <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-          <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
-          <p>① 全市场成交额：中证全指(000985.CSI)日成交额，反映整体流动性</p>
-          <p>② 宽基占比：沪深300/500/1000/2000/科创50+创业板指 各占全A比例，观察资金主战场</p>
-          <p>③ 年化基差：(主力合约-现货)/现货 × 12 × 100，负=贴水(对冲成本)，正=升水</p>
-          <p>④ 因子超额：各指数相对中证全指的日度超额累计。成长=国证成长，红利=中证红利，小盘=中证2000</p>
-        </div>
+        <iframe src="quant_stock/宽基量化股票.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
 
       <div class="strat-page" id="strat-momentum-stock">
