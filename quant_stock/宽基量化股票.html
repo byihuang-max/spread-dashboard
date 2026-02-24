@@ -41,80 +41,76 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <script>
-fetch('quant_stock_data.json').then(r=>r.json()).then(function(QS){
+fetch('quant_stock_data.json').then(function(r){return r.json()}).then(function(QS){
   function fmtDate(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
   function ma(arr,n){return arr.map(function(v,i){if(i<n-1)return null;var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];return s/n})}
+  function val(v){return v==null?null:v}
 
-  var chartOpts={
-    responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-    scales:{x:{ticks:{maxTicksToShow:12,font:{size:10}}}}
-  };
+  var baseScales={x:{ticks:{maxTicksToShow:12,font:{size:10}}}};
 
   // 图1: 全市场成交额
-  (function(){
-    var d=QS.total_amount;
-    var labels=d.map(function(r){return fmtDate(r.date)});
-    var vals=d.map(function(r){return r.amount_yi});
-    var ma20=ma(vals,20);
-    new Chart(document.getElementById('chartAmount'),{
-      type:'line',
-      data:{labels:labels,datasets:[
-        {label:'全A成交额(亿)',data:vals,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1},
-        {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
-      ]},
-      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'}}}}})
-    });
-  })();
+  var d1=QS.total_amount;
+  var lab1=d1.map(function(r){return fmtDate(r.date)});
+  var vals1=d1.map(function(r){return r.amount_yi});
+  new Chart(document.getElementById('chartAmount'),{
+    type:'line',
+    data:{labels:lab1,datasets:[
+      {label:'全A成交额(亿)',data:vals1,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1},
+      {label:'MA20',data:ma(vals1,20),borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'}}}}}
+  });
 
   // 图2: 宽基成交额占比
-  (function(){
-    var d=QS.index_share;
-    var labels=d.map(function(r){return fmtDate(r.date)});
-    var colors=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
-    var names=['沪深300','中证500','中证1000','中证2000','科创+创业板'];
-    var datasets=names.map(function(n,i){return{
-      label:n,data:d.map(function(r){return r[n]||0}),
-      borderColor:colors[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
-    }});
-    new Chart(document.getElementById('chartShare'),{
-      type:'line',data:{labels:labels,datasets:datasets},
-      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v+'%'}},min:0}}})
-    });
-  })();
+  var d2=QS.index_share;
+  var lab2=d2.map(function(r){return fmtDate(r.date)});
+  var colors2=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+  var names2=['沪深300','中证500','中证1000','中证2000','科创+创业板'];
+  new Chart(document.getElementById('chartShare'),{
+    type:'line',
+    data:{labels:lab2,datasets:names2.map(function(n,i){return{
+      label:n,data:d2.map(function(r){return val(r[n])}),
+      borderColor:colors2[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }})},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'}},min:0}}}
+  });
 
   // 图3: 年化基差
-  (function(){
-    var d=QS.basis;
-    var labels=d.map(function(r){return fmtDate(r.date)});
-    var colors={IF:'#e74c3c',IC:'#3498db',IM:'#2ecc71'};
-    var nameMap={IF:'沪深300',IC:'中证500',IM:'中证1000'};
-    var datasets=['IF','IC','IM'].map(function(k){return{
-      label:k+'('+nameMap[k]+')',data:d.map(function(r){return r[k]||null}),
-      borderColor:colors[k],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
-    }});
-    new Chart(document.getElementById('chartBasis'),{
-      type:'line',data:{labels:labels,datasets:datasets},
-      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v+'%'}}}}})
-    });
-  })();
+  var d3=QS.basis;
+  var lab3=d3.map(function(r){return fmtDate(r.date)});
+  var bColors={IF:'#e74c3c',IC:'#3498db',IM:'#2ecc71'};
+  var bNames={IF:'沪深300',IC:'中证500',IM:'中证1000'};
+  new Chart(document.getElementById('chartBasis'),{
+    type:'line',
+    data:{labels:lab3,datasets:['IF','IC','IM'].map(function(k){return{
+      label:k+'('+bNames[k]+')',data:d3.map(function(r){return val(r[k])}),
+      borderColor:bColors[k],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }})},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'}}}}}
+  });
 
   // 图4: 因子超额收益
-  (function(){
-    var d=QS.factor;
-    var names=QS.factor_names;
-    var labels=d.map(function(r){return fmtDate(r.date)});
-    var colors=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
-    var datasets=names.map(function(n,i){return{
-      label:n,data:d.map(function(r){return r[n]||null}),
-      borderColor:colors[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
-    }});
-    new Chart(document.getElementById('chartFactor'),{
-      type:'line',data:{labels:labels,datasets:datasets},
-      options:Object.assign({},chartOpts,{scales:{x:chartOpts.scales.x,y:{ticks:{callback:function(v){return v.toFixed(2)}}}}})
-    });
-  })();
-});
+  var d4=QS.factor;
+  var fNames=QS.factor_names;
+  var lab4=d4.map(function(r){return fmtDate(r.date)});
+  var colors4=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+  new Chart(document.getElementById('chartFactor'),{
+    type:'line',
+    data:{labels:lab4,datasets:fNames.map(function(n,i){return{
+      label:n,data:d4.map(function(r){return val(r[n])}),
+      borderColor:colors4[i],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false
+    }})},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v.toFixed(2)}}}}}
+  });
+
+}).catch(function(e){document.body.innerHTML='<p style="color:red;padding:40px">数据加载失败: '+e.message+'</p>'});
 </script>
 </body></html>
