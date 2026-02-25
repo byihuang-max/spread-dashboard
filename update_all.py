@@ -21,9 +21,11 @@ MODULES = {
     'style_spread': {
         'name': '风格轧差',
         'data_scripts': [
-            ('size_spread', 'style_spread.py'),
+            ('size_spread', 'fetch_incremental.py'),   # 增量拉取 → CSV + JSON cache
+            ('size_spread', 'compute_spreads.py'),      # 计算轧差 → JSON + CSV
+            ('size_spread', 'render_html.py'),          # 生成静态 HTML 看板
         ],
-        'inject_script': ('', 'inject_style_spread.py'),  # 在根目录
+        'inject_script': None,  # 不再用注入脚本，iframe 加载独立 HTML
     },
     'quant_stock': {
         'name': '宽基量化股票',
@@ -84,7 +86,7 @@ def run_script(subdir, script):
         result = subprocess.run(
             [sys.executable, path],
             cwd=cwd,
-            capture_output=True, text=True, timeout=300
+            capture_output=True, text=True, timeout=600
         )
         elapsed = time.time() - t0
         if result.returncode != 0:

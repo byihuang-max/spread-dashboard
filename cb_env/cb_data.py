@@ -227,34 +227,30 @@ def fetch_cb_basic_fresh():
 
 
 def fetch_stk_daily_incremental(stk_codes, new_dates):
-    """只拉新日期的正股行情，追加到CSV"""
+    """按日期批量拉取正股行情（trade_date 模式，大幅减少 API 调用次数）"""
     if not new_dates or not stk_codes:
         return
     stk_headers = ['ts_code', 'trade_date', 'close', 'pct_chg']
-    start_date = min(new_dates)
-    end_date = max(new_dates)
     new_rows = []
-    codes = sorted(stk_codes)
-    for i, code in enumerate(codes):
-        if i % 50 == 0:
-            log(f"  [{i+1}/{len(codes)}] stock {code}...")
+    sorted_dates = sorted(new_dates)
+    stk_set = set(stk_codes)
+    for i, dt in enumerate(sorted_dates):
+        log(f"  [{i+1}/{len(sorted_dates)}] stk_daily {dt}...")
         fields, items = ts_api("daily", {
-            "ts_code": code,
-            "start_date": start_date,
-            "end_date": end_date
+            "trade_date": dt,
         }, fields="ts_code,trade_date,close,pct_chg")
         if not fields:
-            time.sleep(0.3)
+            time.sleep(0.5)
             continue
         for it in items:
             rec = dict(zip(fields, it))
-            if rec["trade_date"] in new_dates:
+            if rec.get("ts_code") in stk_set:
                 new_rows.append([rec["ts_code"], rec["trade_date"],
                                 rec["close"], rec["pct_chg"]])
-        time.sleep(0.2)
+        time.sleep(0.3)
     if new_rows:
         append_csv(STK_DAILY_CSV, stk_headers, new_rows)
-    log(f"  新增 {len(new_rows)} 行正股行情")
+    log(f"  新增 {len(new_rows)} 行正股行情（{len(sorted_dates)}天批量拉取）")
 
 
 def fetch_idx_daily_incremental(index_codes, new_dates):

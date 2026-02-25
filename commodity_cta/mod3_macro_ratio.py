@@ -171,7 +171,7 @@ def compute_ratios(series):
 
 def write_output(results):
     # JSON
-    with open(OUT_JSON, 'w', encoding='gb18030') as f:
+    with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
     # CSV（每个比价一行，含公式）

@@ -393,7 +393,7 @@ def build_json(full_rows):
         'daily': daily
     }
 
-    with open(OUTPUT_JSON, 'w', encoding='gb18030') as f:
+    with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     fsize = os.path.getsize(OUTPUT_JSON) / 1024

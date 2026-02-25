@@ -167,7 +167,7 @@ def compute_env(series):
 def write_output(summary, per_symbol):
     """输出 JSON + CSV"""
     # JSON（格式不变）
-    with open(OUT_JSON, 'w', encoding='gb18030') as f:
+    with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump({'summary': summary, 'per_symbol': per_symbol}, f, ensure_ascii=False, indent=2)
 
     # CSV（含公式列）
