@@ -994,6 +994,7 @@ document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
     // 切换后触发 Chart.js resize（解决 display:none 时 canvas 尺寸为0的问题）
     setTimeout(function(){
       if(typeof initCtaCharts==='function' && strat==='cta') initCtaCharts();
+      if(typeof initCbCharts==='function' && strat==='convertible') initCbCharts();
       page.querySelectorAll('canvas').forEach(function(c){
         var chart=Chart.getChart(c);
         if(chart) chart.resize();
