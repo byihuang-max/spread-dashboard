@@ -140,7 +140,7 @@ def build_html(data):
       </div>
 
       <script>
-      (function(){{
+      var _msInited=false;function initMsCharts(){{if(_msInited)return;_msInited=true;
         var msL={dates_js};
         var msS={sentiment_js};
         var msH={height_js};
@@ -224,7 +224,7 @@ def build_html(data):
           el.textContent=d+' '+lb;
           tl.appendChild(el);
         }});}}
-      }})();
+      }}
       </script>'''
     return html
 

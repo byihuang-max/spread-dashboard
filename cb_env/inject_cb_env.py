@@ -119,19 +119,19 @@ def build_html(env):
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">转债成交额 & 小盘相关性</div>
-    <canvas id="cb-chart-activity" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-activity"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">活跃转债均价分位 & 转股溢价率</div>
-    <canvas id="cb-chart-valuation" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-valuation"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">DELTA中位数走势</div>
-    <canvas id="cb-chart-delta" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-delta"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">债底：价格中位数 & 破面值占比</div>
-    <canvas id="cb-chart-floor" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-floor"></canvas></div>
   </div>
 </div>
 

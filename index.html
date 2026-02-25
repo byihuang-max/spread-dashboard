@@ -83,7 +83,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .strat-tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--card-bg);border:1px solid var(--border);transition:all .12s;color:var(--text-sub)}
 .strat-tab:hover{color:var(--text);border-color:#cbd5e1}
 .strat-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.strat-page{position:absolute;left:-9999px;visibility:hidden;width:100%}.strat-page.active{position:static;visibility:visible}
+.strat-page{display:none}.strat-page.active{display:block}
 
 /* ── 风格轧差统计卡片 ── */
 .ss-desc{text-align:center;color:var(--text-sub);font-size:13px;margin:4px 0 14px}
@@ -283,7 +283,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
 
       <script>
-      (function(){
+      var _msInited=false;function initMsCharts(){if(_msInited)return;_msInited=true;
         var msL=["11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25"];
         var msS=[70.4, 42.83, 48.06, 27.39, 43.04, 49.43, 51.84, 36.43, 18.01, 51.76, 58.57, 44.15, 49.92, 25.86, 61.32, 39.63, 35.88, 36.09, 59.8, 58.17, 46.62, 46.63, 61.46, 75.75, 71.19, 52.23, 46.36, 45.67, 43.94, 71.83, 36.73, 57.87, 50.57, 71.3, 33.23, 25.0, 28.16, 24.5, 33.46, 32.78, 34.26, 35.96, 48.04, 26.0, 40.04, 36.07, 36.87, 26.44, 31.99, 39.26, 37.74, 39.41, 23.12, 38.71, 42.74, 31.13, 41.86, 22.9, 27.64, 20.0];
         var msH=[7, 5, 5, 4, 5, 6, 7, 6, 3, 4, 5, 6, 6, 5, 5, 6, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 10, 6, 6, 7, 8, 9, 10, 11, 12, 5, 4, 5, 4, 3, 4, 4, 5, 5, 6, 7, 8, 5, 3, 4, 4, 4, 3, 4, 3, 4, 4, 5, 4, 0];
@@ -357,7 +357,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           }})
         });
 
-        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "-": "#94a3b8"};
+        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "—": "#94a3b8"};
         var tl=document.getElementById('ms-timeline');
         if(tl){msL.forEach(function(d,i){
           var lb=msCL[i];var c=cycleColors[lb]||'#94a3b8';
@@ -367,7 +367,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           el.textContent=d+' '+lb;
           tl.appendChild(el);
         });}
-      })();
+      }
       </script>
       </div>
       <div class="strat-page" id="strat-cta">
@@ -759,7 +759,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
       </div>
       <div class="strat-page" id="strat-convertible">
-<!-- 转债指增策略环境 - 自动注入 -->
+<!-- 转债指增策略环境 — 自动注入 -->
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -831,19 +831,19 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">转债成交额 & 小盘相关性</div>
-    <canvas id="cb-chart-activity" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-activity"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">活跃转债均价分位 & 转股溢价率</div>
-    <canvas id="cb-chart-valuation" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-valuation"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">DELTA中位数走势</div>
-    <canvas id="cb-chart-delta" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-delta"></canvas></div>
   </div>
   <div class="card" style="padding:14px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">债底：价格中位数 & 破面值占比</div>
-    <canvas id="cb-chart-floor" height="200"></canvas>
+    <div style="position:relative;height:220px"><canvas id="cb-chart-floor"></canvas></div>
   </div>
 </div>
 
@@ -956,63 +956,4 @@ function initCbCharts() {
 }
 </script>
 </div>
-
-      <div class="strat-page" id="strat-arbitrage">
-        <div style="padding:40px;text-align:center;color:#94a3b8;font-size:14px">
-          ⚖️ 套利模块看板开发中...
-        </div>
-      </div>
-
-    </div><!-- /page-env-fit -->
-  </div><!-- /content -->
-</div><!-- /main -->
-
-<script>
-// 侧边栏导航切换
-document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
-  item.addEventListener('click',function(){
-    var mod=this.getAttribute('data-module');
-    var page=document.getElementById('page-'+mod);
-    if(!page) return;
-    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
-    document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
-    this.classList.add('active');
-    page.classList.add('active');
-  });
-});
-
-// 策略 tab 切换
-document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
-  tab.addEventListener('click',function(){
-    var strat=this.getAttribute('data-strat');
-    var page=document.getElementById('strat-'+strat);
-    if(!page) return;
-    document.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
-    document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
-    this.classList.add('active');
-    page.classList.add('active');
-    // 切换后触发 Chart.js resize（解决 display:none 时 canvas 尺寸为0的问题）
-    setTimeout(function(){
-      if(typeof initCtaCharts==='function' && strat==='cta') initCtaCharts();
-      if(typeof initCbCharts==='function' && strat==='convertible') initCbCharts();
-      page.querySelectorAll('canvas').forEach(function(c){
-        var chart=Chart.getChart(c);
-        if(chart) chart.resize();
-      });
-    },50);
-  });
-});
-
-// 刷新当前 tab
-function refreshActiveTab(){
-  var active=document.querySelector('.strat-page.active');
-  if(!active) return;
-  var iframe=active.querySelector('iframe');
-  if(iframe){
-    iframe.src=iframe.src;
-  } else {
-    location.reload(true);
-  }
-}
-</script>
-</body></html>
+      
