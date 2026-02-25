@@ -19,11 +19,18 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .tag{background:#fff3e0;color:#e65100;padding:3px 10px;border-radius:12px;font-size:12px}
 .tag.cool{background:#e3f2fd;color:#1565c0}
+.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
+.refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
+.refresh-btn:active{transform:scale(0.96)}
 </style>
 </head><body>
 
-<h2>风格轧差看板</h2>
-<p class="sub">数据来源: Tushare 申万行业指数 | 最后更新: 20260225</p>
+<div class="header-bar">
+  <div><h2 style="text-align:left;margin:0">风格轧差看板</h2>
+  <p class="sub" style="text-align:left">数据来源: Tushare 申万行业指数 | 最后更新: 20260225</p></div>
+  <button class="refresh-btn" onclick="location.reload()">🔄 刷新</button>
+</div>
 
 <!-- 经济敏感轧差 -->
 <div class="section">

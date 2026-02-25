@@ -62,7 +62,13 @@ def build_html(data):
     ls_color = sentiment_color(ls)
     cycle_colors_js = json.dumps(cycle_colors, ensure_ascii=False)
 
+    last_date = latest['date']
+    date_fmt = f"{last_date[:4]}-{last_date[4:6]}-{last_date[6:8]}"
+
     html = f'''
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+        <span style="font-size:13px;color:#888">🔥 强势股情绪 · 数据截至 <b style="color:#2d3142">{date_fmt}</b></span>
+      </div>
       <!-- 强势股情绪总览 -->
       <div class="overview-grid">
         <div class="ov-card" style="border-left-color:{ls_color}">

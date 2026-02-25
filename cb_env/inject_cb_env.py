@@ -50,6 +50,10 @@ def build_html(env):
 <!-- 转债指增策略环境 — 自动注入 -->
 <div style="padding:0 4px">
 
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">{last_date_fmt}</b></span>
+</div>
+
 <!-- 总览卡片 -->
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
   <div class="card" style="text-align:center;padding:14px 8px">

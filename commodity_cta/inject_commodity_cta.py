@@ -108,6 +108,9 @@ def build_html(data):
 
     # ── HTML ──
     html = f'''
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+        <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">{date_str}</b></span>
+      </div>
       <!-- CTA策略环境总览 -->
       <div class="overview-grid">
         <div class="ov-card" style="border-left-color:{cta_color}">

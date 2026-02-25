@@ -192,12 +192,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 策略环境适配度 ══ -->
     <div class="module-page" id="page-env-fit">
-      <div class="strat-tabs">
-        <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
-        <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
-        <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
-        <div class="strat-tab" data-strat="convertible">🔄 转债</div>
-        <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="strat-tabs" style="margin-bottom:0">
+          <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
+          <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
+          <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
+          <div class="strat-tab" data-strat="convertible">🔄 转债</div>
+          <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
+        </div>
+        <button onclick="refreshActiveTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="this.style.borderColor='#6366f1';this.style.color='#6366f1'" onmouseout="this.style.borderColor='#d1d5db';this.style.color='#555'">🔄 刷新当前</button>
       </div>
 
       <div class="strat-page active" id="strat-quant-stock">
@@ -205,6 +208,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
 
       <div class="strat-page" id="strat-momentum-stock">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+        <span style="font-size:13px;color:#888">🔥 强势股情绪 · 数据截至 <b style="color:#2d3142">2026-02-25</b></span>
+      </div>
       <!-- 强势股情绪总览 -->
       <div class="overview-grid">
         <div class="ov-card" style="border-left-color:#3b82f6">
@@ -364,6 +370,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </script>
       </div>
       <div class="strat-page" id="strat-cta">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+        <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">2026-02-24</b></span>
+      </div>
       <!-- CTA策略环境总览 -->
       <div class="overview-grid">
         <div class="ov-card" style="border-left-color:#f59e0b">
@@ -751,6 +760,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="strat-page" id="strat-convertible">
 <!-- 转债指增策略环境 — 自动注入 -->
 <div style="padding:0 4px">
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">2026-02-25</b></span>
+</div>
 
 <!-- 总览卡片 -->
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
