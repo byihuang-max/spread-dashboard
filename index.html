@@ -175,11 +175,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <tbody>
             <tr><td>📈 风格轧差</td><td><span class="tag tag-green">运行中</span></td><td>2026-02-13</td><td>小盘跑赢 +23%，科创跑赢红利 +56%</td></tr>
             <tr><td>🎯 策略环境适配度</td><td><span class="tag tag-green">运行中</span></td><td>2026-02-13</td><td>宽基量化股票 4 指标已上线</td></tr>
-            <tr><td>💰 资金流与微观结构</td><td><span class="tag tag-slate">规划中</span></td><td>—</td><td>—</td></tr>
-            <tr><td>🌍 宏观与流动性</td><td><span class="tag tag-slate">规划中</span></td><td>—</td><td>—</td></tr>
-            <tr><td>🏭 中观景气</td><td><span class="tag tag-slate">规划中</span></td><td>—</td><td>—</td></tr>
-            <tr><td>🚨 红灯预警</td><td><span class="tag tag-slate">规划中</span></td><td>—</td><td>—</td></tr>
-            <tr><td>📋 每日报告</td><td><span class="tag tag-slate">规划中</span></td><td>—</td><td>—</td></tr>
+            <tr><td>💰 资金流与微观结构</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
+            <tr><td>🌍 宏观与流动性</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
+            <tr><td>🏭 中观景气</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
+            <tr><td>🚨 红灯预警</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
+            <tr><td>📋 每日报告</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
           </tbody>
         </table>
       </div>
@@ -356,7 +356,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           }})
         });
 
-        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "—": "#94a3b8"};
+        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "-": "#94a3b8"};
         var tl=document.getElementById('ms-timeline');
         if(tl){msL.forEach(function(d,i){
           var lb=msCL[i];var c=cycleColors[lb]||'#94a3b8';
@@ -758,7 +758,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
       </div>
       <div class="strat-page" id="strat-convertible">
-<!-- 转债指增策略环境 — 自动注入 -->
+<!-- 转债指增策略环境 - 自动注入 -->
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -955,7 +955,17 @@ function initCbCharts() {
 }
 </script>
 </div>
-      
+
+      <div class="strat-page" id="strat-arbitrage">
+        <div style="padding:40px;text-align:center;color:#94a3b8;font-size:14px">
+          ⚖️ 套利模块看板开发中...
+        </div>
+      </div>
+
+    </div><!-- /page-env-fit -->
+  </div><!-- /content -->
+</div><!-- /main -->
+
 <script>
 // 侧边栏导航切换
 document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
@@ -995,3 +1005,4 @@ function refreshActiveTab(){
   }
 }
 </script>
+</body></html>
