@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """
 转债指增策略环境 — 计算模块
-读取 cb_data.json，计算4个维度指标，输出 cb_env.json
+读取 cb_data.json，计算4个维度指标，输出 cb_env.json + cb_env.csv
 """
 
-import json, os, math
+import json, os, csv, math
 from collections import defaultdict
 
 BASE_DIR = '/Users/apple/Desktop/gamt-dashboard/cb_env'
 INPUT_JSON = os.path.join(BASE_DIR, 'cb_data.json')
 OUTPUT_JSON = os.path.join(BASE_DIR, 'cb_env.json')
+OUTPUT_CSV = os.path.join(BASE_DIR, 'cb_env.csv')
+
+CSV_HEADERS = [
+    'trade_date',
+    'cb_amount', 'cb_active_count', 'corr_1000', 'corr_2000',
+    'avg_price', 'avg_premium', 'price_percentile',
+    'delta_median',
+    'below_par_ratio', 'median_price',
+]
 
 def log(msg):
     print(msg, flush=True)
@@ -410,9 +419,35 @@ def main():
 
     with open(OUTPUT_JSON, 'w') as f:
         json.dump(output, f, ensure_ascii=False, indent=1)
-    
-    fsize = os.path.getsize(OUTPUT_JSON) / 1024
-    log(f"\n✅ 输出: {OUTPUT_JSON} ({fsize:.0f} KB)")
+
+    # === CSV 输出 ===
+    dates = data["meta"]["dates"]
+    csv_rows = []
+    for i, dt in enumerate(dates):
+        csv_rows.append({
+            'trade_date': dt,
+            'cb_amount': mod1["series"]["cb_amount"][i],
+            'cb_active_count': mod1["series"]["cb_active_count"][i],
+            'corr_1000': mod1["series"]["corr_1000"][i] if mod1["series"]["corr_1000"][i] is not None else '',
+            'corr_2000': mod1["series"]["corr_2000"][i] if mod1["series"]["corr_2000"][i] is not None else '',
+            'avg_price': mod2["series"]["avg_price"][i] if mod2["series"]["avg_price"][i] is not None else '',
+            'avg_premium': mod2["series"]["avg_premium"][i] if mod2["series"]["avg_premium"][i] is not None else '',
+            'price_percentile': mod2["series"]["price_percentile"][i] if mod2["series"]["price_percentile"][i] is not None else '',
+            'delta_median': mod3["series"]["delta_median"][i] if mod3["series"]["delta_median"][i] is not None else '',
+            'below_par_ratio': mod4["series"]["below_par_ratio"][i] if mod4["series"]["below_par_ratio"][i] is not None else '',
+            'median_price': mod4["series"]["median_price"][i] if mod4["series"]["median_price"][i] is not None else '',
+        })
+
+    with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as f:
+        w = csv.DictWriter(f, fieldnames=CSV_HEADERS)
+        w.writeheader()
+        w.writerows(csv_rows)
+
+    json_kb = os.path.getsize(OUTPUT_JSON) / 1024
+    csv_kb = os.path.getsize(OUTPUT_CSV) / 1024
+    log(f"\n✅ 输出:")
+    log(f"  cb_env.json: {json_kb:.0f} KB")
+    log(f"  cb_env.csv: {csv_kb:.0f} KB ({len(csv_rows)} 行)")
 
 
 if __name__ == "__main__":

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
 模块一：股指套利（基差监控）
-拉取 IF/IH/IC/IM 连续合约 + 对应现货指数，计算：
-- 基差 = 期货 - 现货
-- 基差率 = 基差 / 现货 × 100%
-- 年化基差率 = 基差率 × 12（按月折算）
-输出：mod1_index_arb.json + mod1_index_arb.csv（近30个交易日）
+支持两种模式：
+  --incremental  从 arb_cache.json 读取缓存数据（快速，推荐）
+  无参数          全量从 API 拉取（兼容旧用法）
 """
 
 import requests, json, time, os, sys, csv
@@ -19,10 +17,10 @@ TS_TOKEN = '33b3ff939d0d7954cd76cacce7cf6cbb2b3c3feda13d1ca2cfa594e20ecd'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT_JSON = os.path.join(BASE_DIR, 'mod1_index_arb.json')
 OUT_CSV = os.path.join(BASE_DIR, 'mod1_index_arb.csv')
+CACHE_PATH = os.path.join(BASE_DIR, 'arb_cache.json')
 
 LOOKBACK_DAYS = 30
 
-# 股指期货连续合约 → 对应现货指数
 CONTRACTS = {
     'IF': {'fut_code': 'IF.CFX', 'spot_code': '000300.SH', 'name': '沪深300'},
     'IH': {'fut_code': 'IH.CFX', 'spot_code': '000016.SH', 'name': '上证50'},
@@ -77,7 +75,6 @@ def ts_api(api_name, params, fields=None):
 
 
 def get_trade_dates(n_days):
-    """获取最近 n 个交易日"""
     end = datetime.now().strftime('%Y%m%d')
     start = (datetime.now() - timedelta(days=n_days * 3)).strftime('%Y%m%d')
     rows = ts_api('trade_cal', {
@@ -89,35 +86,9 @@ def get_trade_dates(n_days):
     return sorted([r['cal_date'] for r in rows])[-n_days:]
 
 
-# ============ 数据拉取 ============
-
-def fetch_fut_daily(ts_code, start_date, end_date):
-    """拉取期货连续合约日线"""
-    return ts_api('fut_daily', {
-        'ts_code': ts_code,
-        'start_date': start_date,
-        'end_date': end_date,
-    }, fields='ts_code,trade_date,open,high,low,close,vol,amount,oi')
-
-
-def fetch_index_daily(ts_code, start_date, end_date):
-    """拉取指数日线"""
-    return ts_api('index_daily', {
-        'ts_code': ts_code,
-        'start_date': start_date,
-        'end_date': end_date,
-    }, fields='ts_code,trade_date,close')
-
-
 # ============ 计算 ============
 
 def compute_basis(dates, fut_map, spot_map):
-    """
-    计算每日基差数据
-    fut_map: {date: {close, vol, amount, oi}}
-    spot_map: {date: {close}}
-    返回: [{date, fut_close, spot_close, basis, basis_pct, annual_basis_pct}]
-    """
     results = []
     for d in dates:
         fut = fut_map.get(d)
@@ -131,7 +102,7 @@ def compute_basis(dates, fut_map, spot_map):
 
         basis = fc - sc
         basis_pct = basis / sc * 100
-        annual_pct = basis_pct * 12  # 按月折算年化
+        annual_pct = basis_pct * 12
 
         results.append({
             'date': d,
@@ -150,10 +121,6 @@ def compute_basis(dates, fut_map, spot_map):
 # ============ 输出 ============
 
 def write_output(all_data, dates):
-    """输出 JSON + CSV"""
-
-    # === JSON ===
-    # 按品种组织 + 汇总
     json_out = {
         'update_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'date_range': f'{dates[0]} ~ {dates[-1]}' if dates else '',
@@ -171,7 +138,6 @@ def write_output(all_data, dates):
             'series': series,
         }
 
-        # 汇总：最新值 + 近期统计
         if series:
             latest = series[-1]
             basis_pcts = [s['basis_pct'] for s in series]
@@ -191,7 +157,6 @@ def write_output(all_data, dates):
     with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(json_out, f, ensure_ascii=False, indent=2)
 
-    # === CSV ===
     csv_headers = [
         'date', 'contract', 'name', 'fut_close', 'spot_close',
         'basis', 'basis_pct', 'annual_basis_pct',
@@ -222,70 +187,45 @@ def write_output(all_data, dates):
         writer.writerows(csv_rows)
 
 
-# ============ 主流程 ============
+# ============ 增量模式 ============
 
-def main():
+def run_incremental():
+    """从 arb_cache.json 读取数据，直接计算输出"""
     log('=' * 50)
-    log('模块一：股指套利（基差监控）')
+    log('模块一：股指套利（基差监控）[增量模式]')
     log('=' * 50)
 
-    # 1. 交易日
-    log('\n[1] 获取交易日...')
-    dates = get_trade_dates(LOOKBACK_DAYS)
-    if not dates:
-        log('  ⚠️ 无法获取交易日')
+    if not os.path.exists(CACHE_PATH):
+        log('  ⚠️ arb_cache.json 不存在，请先运行 fetch_incremental.py')
         return
-    start_date = dates[0]
-    end_date = dates[-1]
-    log(f'  {len(dates)} 个交易日: {start_date} ~ {end_date}')
 
-    # 2. 拉取数据
+    with open(CACHE_PATH, 'r', encoding='utf-8') as f:
+        cache = json.load(f)
+
+    trade_dates = cache.get('trade_dates', [])
+    if not trade_dates:
+        log('  ⚠️ 缓存中无交易日数据')
+        return
+
+    dates = trade_dates[-LOOKBACK_DAYS:]
+    log(f'  分析区间: {dates[0]} ~ {dates[-1]} ({len(dates)} 天)')
+
     all_data = {}
-
     for prefix, info in CONTRACTS.items():
-        log(f'\n[2] 拉取 {prefix} ({info["name"]})...')
-
-        # 期货
-        log(f'  期货 {info["fut_code"]}...')
-        fut_rows = fetch_fut_daily(info['fut_code'], start_date, end_date)
-        fut_map = {}
-        for r in (fut_rows or []):
-            fut_map[r['trade_date']] = {
-                'close': r.get('close'),
-                'vol': r.get('vol', 0),
-                'amount': r.get('amount', 0),
-                'oi': r.get('oi', 0),
-            }
-        log(f'    {len(fut_map)} 天')
-
-        # 现货指数
-        log(f'  现货 {info["spot_code"]}...')
-        spot_rows = fetch_index_daily(info['spot_code'], start_date, end_date)
-        spot_map = {}
-        for r in (spot_rows or []):
-            spot_map[r['trade_date']] = {'close': r.get('close')}
-        log(f'    {len(spot_map)} 天')
-
-        # 计算基差
+        fut_map = cache.get('mod1_fut', {}).get(prefix, {})
+        spot_map = cache.get('mod1_spot', {}).get(prefix, {})
         series = compute_basis(dates, fut_map, spot_map)
         all_data[prefix] = series
-        log(f'  基差序列: {len(series)} 天')
+        log(f'  {prefix}({info["name"]}): {len(series)} 天')
 
-        if series:
-            latest = series[-1]
-            log(f'  最新: 期货={latest["fut_close"]} 现货={latest["spot_close"]} '
-                f'基差={latest["basis"]} 基差率={latest["basis_pct"]:.4f}% '
-                f'年化={latest["annual_basis_pct"]:.2f}%')
-
-    # 3. 输出
-    log('\n[3] 输出...')
     write_output(all_data, dates)
 
-    log(f'\n✅ 模块一完成')
+    log(f'\n✅ 模块一完成（增量模式）')
     log(f'  JSON: {OUT_JSON}')
     log(f'  CSV:  {OUT_CSV}')
 
     # 打印汇总
+    end_date = dates[-1]
     log(f'\n{"─"*50}')
     log(f'📊 股指套利基差汇总 ({end_date})')
     log(f'{"─"*50}')
@@ -300,6 +240,96 @@ def main():
                 f'基差率={latest["basis_pct"]:>+7.4f}%  '
                 f'年化={latest["annual_basis_pct"]:>+7.2f}%  '
                 f'30日均值={avg:>+7.4f}%')
+
+
+# ============ 全量模式 ============
+
+def run_full():
+    """原始全量拉取模式"""
+    log('=' * 50)
+    log('模块一：股指套利（基差监控）[全量模式]')
+    log('=' * 50)
+
+    log('\n[1] 获取交易日...')
+    dates = get_trade_dates(LOOKBACK_DAYS)
+    if not dates:
+        log('  ⚠️ 无法获取交易日')
+        return
+    start_date = dates[0]
+    end_date = dates[-1]
+    log(f'  {len(dates)} 个交易日: {start_date} ~ {end_date}')
+
+    all_data = {}
+
+    for prefix, info in CONTRACTS.items():
+        log(f'\n[2] 拉取 {prefix} ({info["name"]})...')
+
+        log(f'  期货 {info["fut_code"]}...')
+        fut_rows = ts_api('fut_daily', {
+            'ts_code': info['fut_code'],
+            'start_date': start_date, 'end_date': end_date,
+        }, fields='ts_code,trade_date,open,high,low,close,vol,amount,oi')
+        fut_map = {}
+        for r in (fut_rows or []):
+            fut_map[r['trade_date']] = {
+                'close': r.get('close'),
+                'vol': r.get('vol', 0),
+                'amount': r.get('amount', 0),
+                'oi': r.get('oi', 0),
+            }
+        log(f'    {len(fut_map)} 天')
+
+        log(f'  现货 {info["spot_code"]}...')
+        spot_rows = ts_api('index_daily', {
+            'ts_code': info['spot_code'],
+            'start_date': start_date, 'end_date': end_date,
+        }, fields='ts_code,trade_date,close')
+        spot_map = {}
+        for r in (spot_rows or []):
+            spot_map[r['trade_date']] = {'close': r.get('close')}
+        log(f'    {len(spot_map)} 天')
+
+        series = compute_basis(dates, fut_map, spot_map)
+        all_data[prefix] = series
+        log(f'  基差序列: {len(series)} 天')
+
+        if series:
+            latest = series[-1]
+            log(f'  最新: 期货={latest["fut_close"]} 现货={latest["spot_close"]} '
+                f'基差={latest["basis"]} 基差率={latest["basis_pct"]:.4f}% '
+                f'年化={latest["annual_basis_pct"]:.2f}%')
+
+    log('\n[3] 输出...')
+    write_output(all_data, dates)
+
+    log(f'\n✅ 模块一完成（全量模式）')
+    log(f'  JSON: {OUT_JSON}')
+    log(f'  CSV:  {OUT_CSV}')
+
+    end_date = dates[-1]
+    log(f'\n{"─"*50}')
+    log(f'📊 股指套利基差汇总 ({end_date})')
+    log(f'{"─"*50}')
+    for prefix, info in CONTRACTS.items():
+        series = all_data.get(prefix, [])
+        if series:
+            latest = series[-1]
+            basis_pcts = [s['basis_pct'] for s in series]
+            avg = sum(basis_pcts) / len(basis_pcts)
+            log(f'  {prefix}({info["name"]:>5s}): '
+                f'基差={latest["basis"]:>+8.2f}  '
+                f'基差率={latest["basis_pct"]:>+7.4f}%  '
+                f'年化={latest["annual_basis_pct"]:>+7.2f}%  '
+                f'30日均值={avg:>+7.4f}%')
+
+
+# ============ 入口 ============
+
+def main():
+    if '--incremental' in sys.argv or '-i' in sys.argv:
+        run_incremental()
+    else:
+        run_full()
 
 
 if __name__ == '__main__':
