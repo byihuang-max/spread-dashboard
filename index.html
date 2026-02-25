@@ -83,7 +83,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .strat-tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--card-bg);border:1px solid var(--border);transition:all .12s;color:var(--text-sub)}
 .strat-tab:hover{color:var(--text);border-color:#cbd5e1}
 .strat-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.strat-page{display:none}.strat-page.active{display:block}
+.strat-page{position:absolute;left:-9999px;visibility:hidden;width:100%}.strat-page.active{position:static;visibility:visible}
 
 /* ── 风格轧差统计卡片 ── */
 .ss-desc{text-align:center;color:var(--text-sub);font-size:13px;margin:4px 0 14px}
@@ -991,6 +991,14 @@ document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
     document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
     this.classList.add('active');
     page.classList.add('active');
+    // 切换后触发 Chart.js resize（解决 display:none 时 canvas 尺寸为0的问题）
+    setTimeout(function(){
+      if(typeof initCtaCharts==='function' && strat==='cta') initCtaCharts();
+      page.querySelectorAll('canvas').forEach(function(c){
+        var chart=Chart.getChart(c);
+        if(chart) chart.resize();
+      });
+    },50);
   });
 });
 
