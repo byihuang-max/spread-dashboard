@@ -996,8 +996,20 @@ function initCbCharts() {
     });
   });
 
-  // 刷新当前 tab — 调用本地 refresh_server API
-  var REFRESH_API='http://localhost:9876/api/refresh/';
+  // 刷新当前 tab — 调用 refresh_server API（自动选择本地或 tunnel）
+  var REFRESH_API=null;
+  (function(){
+    // 优先尝试本机
+    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';console.log('[refresh] using localhost')}
+    }).catch(function(){
+      // fallback: 读 tunnel_url.json
+      var base=document.currentScript?new URL('.',document.currentScript.src).href:'';
+      fetch(base+'tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+        if(d&&d.url){REFRESH_API=d.url+'/api/refresh/';console.log('[refresh] using tunnel:',d.url)}
+      }).catch(function(){console.warn('[refresh] no API available')});
+    });
+  })();
   window.refreshActiveTab=function(){
     var btn=document.getElementById('refreshBtn');
     // 找到当前激活的 tab 名
@@ -1005,6 +1017,12 @@ function initCbCharts() {
     if(!activeTab)return;
     var strat=activeTab.getAttribute('data-strat');
     if(!strat)return;
+
+    if(!REFRESH_API){
+      btn.innerHTML='❌ 刷新服务未连接';
+      setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
+      return;
+    }
 
     // 禁用按钮 + 显示加载状态
     var origText=btn.innerHTML;
