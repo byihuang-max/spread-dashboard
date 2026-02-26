@@ -57,7 +57,8 @@ h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
     <div class="card"><div class="label">观察天数</div><div class="value">262</div></div>
   </div>
   <div class="chart-box"><canvas id="ecoNavChart"></canvas></div>
-  <div class="chart-box short"><canvas id="ecoSpreadChart"></canvas><div class="info" style="margin-top:14px">
+  <div class="chart-box short"><canvas id="ecoSpreadChart"></canvas></div>
+  <div class="info" style="margin-top:14px">
     <strong>策略说明：</strong>经济敏感轧差 = (有色+煤炭+钢铁)等权 vs (食品饮料+医药)等权，每日涨跌幅之差归1复利。<br>
     <strong>解读：</strong>净值上升 → 周期股跑赢防御股，经济预期改善；净值下降 → 防御股跑赢，市场转向避险。<br>
     <strong>MA20灰色虚线</strong>为20日移动平均，用于判断中期趋势方向。净值在MA20上方为偏多格局，下方为偏空。
@@ -249,7 +250,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(t){
     document.querySelectorAll('.tab-page').forEach(function(x){x.classList.remove('active')});
     this.classList.add('active');
     document.getElementById('tab-'+id).classList.add('active');
-    initTab(id);
+    setTimeout(function(){initTab(id)},50);
   });
 });
 </script>
