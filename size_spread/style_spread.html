@@ -3,81 +3,87 @@
 <title>风格轧差看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{font-family:'PingFang SC',sans-serif;max-width:1100px;margin:30px auto;padding:0 20px;background:#fafafa}
-h2{text-align:center;color:#333;margin-bottom:5px}
-p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
-.cards{display:flex;justify-content:center;gap:20px;margin:15px 0;flex-wrap:wrap}
-.card{background:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);min-width:140px;text-align:center}
-.card .label{color:#888;font-size:11px}
-.card .value{font-size:18px;font-weight:bold;margin-top:3px}
-.card .detail{font-size:11px;color:#999;margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f5f6f8;color:#2d3142;font-size:14px;padding:16px 20px}
+.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
+.sub{color:#8b92a5;font-size:12px;margin-top:2px}
+.refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
+.refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #e8eaef;transition:all .12s;color:#8b92a5}
+.tab:hover{color:#2d3142;border-color:#cbd5e1}
+.tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.tab-page{display:none}.tab-page.active{display:block}
+.cards{display:flex;gap:12px;margin:14px 0;flex-wrap:wrap}
+.card{background:#fff;padding:12px 18px;border-radius:10px;border:1px solid #e8eaef;min-width:130px;text-align:center}
+.card .label{color:#8b92a5;font-size:11px;margin-bottom:3px}
+.card .value{font-size:20px;font-weight:700}
 .pos{color:#e74c3c} .neg{color:#2ecc71}
-.section{margin-top:35px}
-.section h3{color:#555;font-size:15px;border-bottom:1px solid #eee;padding-bottom:5px}
-.row{display:flex;gap:15px;margin-top:10px}
-.row canvas{flex:1;background:#fff;border-radius:8px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.chart-box{background:#fff;border-radius:10px;padding:16px;margin-bottom:14px;border:1px solid #e8eaef;position:relative;height:300px}
+.chart-box canvas{position:absolute;left:16px;top:16px;right:16px;bottom:16px}
+.chart-box.short{height:240px}
+.chart-title{font-size:13px;font-weight:600;color:#2d3142;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.chart-title .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .tag{background:#fff3e0;color:#e65100;padding:3px 10px;border-radius:12px;font-size:12px}
 .tag.cool{background:#e3f2fd;color:#1565c0}
-.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
-.refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
-.refresh-btn:active{transform:scale(0.96)}
+.info{background:#fff;border-radius:10px;padding:14px 18px;margin-bottom:14px;border:1px solid #e8eaef;font-size:11px;color:#8b92a5;line-height:1.7}
+.info strong{color:#2d3142}
 </style>
 </head><body>
 
 <div class="header-bar">
-  <div><h2 style="text-align:left;margin:0">风格轧差看板</h2>
-  <p class="sub" style="text-align:left">数据来源: Tushare 申万行业指数 | 最后更新: 20260225</p></div>
+  <div><h2>风格轧差看板</h2>
+  <div class="sub">数据来源: Tushare 申万行业指数 | 最后更新: 20260225</div></div>
   <button class="refresh-btn" onclick="location.reload()">🔄 刷新</button>
 </div>
 
+<div class="tabs">
+  <div class="tab active" data-tab="eco">📊 经济敏感轧差</div>
+  <div class="tab" data-tab="crowd">🔥 拥挤-反身性</div>
+  <div class="tab" data-tab="style">📈 风格轧差净值</div>
+  <div class="tab" data-tab="dual">🚀 双创等权</div>
+</div>
+
 <!-- 经济敏感轧差 -->
-<div class="section">
-<h3>📊 经济敏感轧差（有色+煤炭+钢铁 vs 食品饮料+医药）</h3>
-<div class="cards">
-  <div class="card"><div class="label">轧差净值</div><div class="value pos">1.4093</div></div>
-  <div class="card"><div class="label">累计收益</div><div class="value pos">+40.93%</div></div>
-  <div class="card"><div class="label">观察天数</div><div class="value">262</div></div>
-</div>
-<div class="row">
-  <canvas id="ecoNavChart" height="120"></canvas>
-  <canvas id="ecoSpreadChart" height="120"></canvas>
-</div>
+<div class="tab-page active" id="tab-eco">
+  <div class="info"><strong>经济敏感轧差</strong>：有色+煤炭+钢铁 vs 食品饮料+医药，等权轧差归1净值</div>
+  <div class="cards">
+    <div class="card"><div class="label">轧差净值</div><div class="value pos">1.4093</div></div>
+    <div class="card"><div class="label">累计收益</div><div class="value pos">+40.93%</div></div>
+    <div class="card"><div class="label">观察天数</div><div class="value">262</div></div>
+  </div>
+  <div class="chart-box"><canvas id="ecoNavChart"></canvas></div>
+  <div class="chart-box short"><canvas id="ecoSpreadChart"></canvas></div>
 </div>
 
 <!-- 拥挤-反身性轧差 -->
-<div class="section">
-<h3>🔥 拥挤-反身性轧差（高拥挤Top6 vs 低拥挤Bot6，20日滚动）</h3>
-<div class="cards">
-  <div class="card"><div class="label">轧差净值</div><div class="value pos">1.0344</div></div>
-  <div class="card"><div class="label">累计收益</div><div class="value pos">+3.44%</div></div>
-  <div class="card"><div class="label">观察天数</div><div class="value">242</div></div>
-</div>
-<p style="font-size:12px;color:#666;margin:5px 0 0 0">最新高拥挤 Top6：</p>
-<div class="tag-row"><span class="tag">综合</span><span class="tag">美容护理</span><span class="tag">煤炭</span><span class="tag">社会服务</span><span class="tag">纺织服饰</span><span class="tag">钢铁</span></div>
-<p style="font-size:12px;color:#666;margin:5px 0 0 0">最新低拥挤 Bot6：</p>
-<div class="tag-row"><span class="tag cool">电子</span><span class="tag cool">电力设备</span><span class="tag cool">有色金属</span><span class="tag cool">机械设备</span><span class="tag cool">计算机</span><span class="tag cool">通信</span></div>
-<div class="row">
-  <canvas id="crowdNavChart" height="120"></canvas>
-  <canvas id="crowdSpreadChart" height="120"></canvas>
-</div>
+<div class="tab-page" id="tab-crowd">
+  <div class="info"><strong>拥挤-反身性轧差</strong>：高拥挤Top6 vs 低拥挤Bot6，20日滚动</div>
+  <div class="cards">
+    <div class="card"><div class="label">轧差净值</div><div class="value pos">1.0344</div></div>
+    <div class="card"><div class="label">累计收益</div><div class="value pos">+3.44%</div></div>
+    <div class="card"><div class="label">观察天数</div><div class="value">242</div></div>
+  </div>
+  <p style="font-size:12px;color:#666;margin:5px 0 0 0">最新高拥挤 Top6：</p>
+  <div class="tag-row"><span class="tag">综合</span><span class="tag">美容护理</span><span class="tag">煤炭</span><span class="tag">社会服务</span><span class="tag">纺织服饰</span><span class="tag">钢铁</span></div>
+  <p style="font-size:12px;color:#666;margin:5px 0 0 0">最新低拥挤 Bot6：</p>
+  <div class="tag-row"><span class="tag cool">电子</span><span class="tag cool">电力设备</span><span class="tag cool">有色金属</span><span class="tag cool">机械设备</span><span class="tag cool">计算机</span><span class="tag cool">通信</span></div>
+  <div class="chart-box"><canvas id="crowdNavChart"></canvas></div>
+  <div class="chart-box short"><canvas id="crowdSpreadChart"></canvas></div>
 </div>
 
 <!-- 风格轧差净值 -->
-<div class="section">
-<h3>📈 风格轧差净值（归1）</h3>
-<div class="row">
-  <canvas id="styleNavChart" height="140"></canvas>
-</div>
+<div class="tab-page" id="tab-style">
+  <div class="info"><strong>风格轧差净值（归1）</strong>：中证红利-科创50、微盘股-中证全指、中证2000-沪深300</div>
+  <div class="chart-box" style="height:380px"><canvas id="styleNavChart"></canvas></div>
 </div>
 
 <!-- 双创等权 -->
-<div class="section">
-<h3>🚀 双创等权净值（创业板指+科创50 等权）</h3>
-<div class="row">
-  <canvas id="dualChart" height="120"></canvas>
-</div>
+<div class="tab-page" id="tab-dual">
+  <div class="info"><strong>双创等权净值</strong>：创业板指+科创50 等权平均涨跌幅，归1净值</div>
+  <div class="chart-box"><canvas id="dualChart"></canvas></div>
 </div>
 
 <script>
@@ -91,50 +97,75 @@ const style_data = {"中证红利-科创50": {"dates": ["01/20", "01/21", "01/22
 const di_dates = ["01/20", "01/21", "01/22", "01/23", "01/24", "01/27", "02/05", "02/06", "02/07", "02/10", "02/11", "02/12", "02/13", "02/14", "02/17", "02/18", "02/19", "02/20", "02/21", "02/24", "02/25", "02/26", "02/27", "02/28", "03/03", "03/04", "03/05", "03/06", "03/07", "03/10", "03/11", "03/12", "03/13", "03/14", "03/17", "03/18", "03/19", "03/20", "03/21", "03/24", "03/25", "03/26", "03/27", "03/28", "03/31", "04/01", "04/02", "04/03", "04/07", "04/08", "04/09", "04/10", "04/11", "04/14", "04/15", "04/16", "04/17", "04/18", "04/21", "04/22", "04/23", "04/24", "04/25", "04/28", "04/29", "04/30", "05/06", "05/07", "05/08", "05/09", "05/12", "05/13", "05/14", "05/15", "05/16", "05/19", "05/20", "05/21", "05/22", "05/23", "05/26", "05/27", "05/28", "05/29", "05/30", "06/03", "06/04", "06/05", "06/06", "06/09", "06/10", "06/11", "06/12", "06/13", "06/16", "06/17", "06/18", "06/19", "06/20", "06/23", "06/24", "06/25", "06/26", "06/27", "06/30", "07/01", "07/02", "07/03", "07/04", "07/07", "07/08", "07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24"];
 const di_navs = [1.0102845, 1.01631034190025, 1.013081015788862, 1.0064240604341133, 1.017827348250862, 0.9936040751898397, 1.0078165878813552, 1.0364970323392828, 1.0534810727111943, 1.065077792359599, 1.0511380542131967, 1.0692465350421545, 1.0530912891442026, 1.0653455859303291, 1.0757992894922705, 1.0516056392708788, 1.0744733296996436, 1.0733644732233936, 1.11889820422424, 1.1178520344032903, 1.1129714924210856, 1.1319014680499295, 1.1287129016144328, 1.0833787122775398, 1.081642597891115, 1.0893785057512324, 1.0910381739047443, 1.1210875472904287, 1.106739868860206, 1.1041489908272042, 1.1029824574183953, 1.0957639887258206, 1.0779128975854881, 1.102295287328872, 1.0969447460041777, 1.1036393997890412, 1.0955541375461866, 1.0838766259940817, 1.060966725750445, 1.06258576097394, 1.0536037235364273, 1.0508854259297034, 1.0580403793521458, 1.048236048176879, 1.0387568495932156, 1.0391510578176362, 1.0390050570940128, 1.0269484424114939, 0.915400275648315, 0.9316678539468612, 0.9562932328284577, 0.9723398332753193, 0.9889974731290755, 0.9919352901230054, 0.9874061135883038, 0.9854574676231372, 0.9870066067622407, 0.9843624160627247, 0.9974436082097823, 0.9918065556579847, 0.9953949117763552, 0.9874113468864529, 0.9909186319905936, 0.9868216789066284, 0.986689444801655, 0.9949993433057744, 1.011731749762476, 1.016110524775448, 1.0226456396155412, 1.0081670226498645, 1.0238944282032023, 1.022501931780846, 1.0297494254733086, 1.013386192227825, 1.0095414050145126, 1.007894842982934, 1.0130144448378657, 1.0160884371707264, 1.00877514064419, 0.9976821448100962, 0.9945304669146411, 0.9864255408745202, 0.9837197756159013, 0.9983865456104465, 0.9888898927886, 0.9936202475907543, 1.0013625365599814, 1.0124461177958954, 1.0077569736013237, 1.0161898839564194, 1.0027782098679625, 1.007825693987333, 1.0075974214676449, 0.9993190010528666, 1.0015669691457352, 0.9957433580036372, 0.999539629556026, 0.990048001233762, 0.9833077544413625, 0.9870575985629246, 1.0072735252390919, 1.0316465227293021, 1.0253410991823806, 1.0268339958227901, 1.0416614787224712, 1.0359557779727688, 1.0237884773604786, 1.0347240739814045, 1.0327694802056537, 1.023118765797872, 1.0424802653218308, 1.0386960619587124, 1.0382120295938397, 1.0500242869605436, 1.0465513316314217, 1.0576306473037378, 1.057217113720642, 1.0707410350393565, 1.0735865293399736, 1.078434309313208, 1.0861931049515618, 1.0886028243548969, 1.1031650643362922, 1.1133219050836365, 1.1191668450853256, 1.1377220717934178, 1.1222132133717657, 1.1072109060288053, 1.0999974269760275, 1.1094684048222911, 1.1138607902369826, 1.1207956875169982, 1.1161494289943965, 1.106292713386947, 1.1204438566302362, 1.1381233402440047, 1.1628928875594051, 1.1609758586342633, 1.1844693661095862, 1.2139442940505403, 1.206130741601884, 1.2269551919210113, 1.2246239770563614, 1.2977664810220182, 1.3379570111727892, 1.3241452809464525, 1.3204529018305333, 1.3934171678269829, 1.3970379623375813, 1.4212982250725543, 1.3859526701623375, 1.3811295548701725, 1.3097859265837988, 1.3748881811716833, 1.373058205002544, 1.3414545242980005, 1.3572501513216095, 1.428256050238151, 1.4269170601910526, 1.4389937727299795, 1.4533628450475746, 1.4741844478471486, 1.4674606925805178, 1.456902312897401, 1.4854692534486933, 1.4863545931237487, 1.529264907049935, 1.5507724887026852, 1.518144235540381, 1.5492236843303637, 1.5623626503971695, 1.5909491998114864, 1.510060569645471, 1.5122660131074384, 1.449918309919045, 1.4771825738187627, 1.4730752676722596, 1.4205557151539405, 1.4370753575654658, 1.4789229919777722, 1.4725939410336033, 1.4711029396683069, 1.5293850959320858, 1.5560445722318261, 1.548330481264987, 1.580178865099367, 1.5508594363468806, 1.5086295338951552, 1.5030242208619677, 1.480959825299714, 1.4902387790851295, 1.5288799255074172, 1.5137241388058622, 1.5024484076958973, 1.4812428508696773, 1.4740247544573895, 1.5034455515439815, 1.461810633885074, 1.456466985112907, 1.450119701991785, 1.4449101469623795, 1.4278854931557952, 1.3764266418107, 1.3843046196951037, 1.3995375077302286, 1.421424175044868, 1.4159502705467701, 1.4298081758446113, 1.444330737486665, 1.4303770582318063, 1.4159881802145233, 1.432776136079147, 1.4425068352073285, 1.474720176597761, 1.4771741109716197, 1.4768151576626536, 1.4549398331397756, 1.4746426283601544, 1.4452036002488864, 1.4160119327274592, 1.457507454410071, 1.431060252896073, 1.4359916865275528, 1.4666565709975055, 1.4722687323664274, 1.4845643846847858, 1.485124807740004, 1.4843852155857495, 1.4797917855361193, 1.4919001818212687, 1.4741637265096865, 1.52766039106286, 1.5474863676180737, 1.5575365178325693, 1.5574897917370343, 1.5746330818746839, 1.6080869490156524, 1.5698394049767896, 1.5930180837912717, 1.593787511525743, 1.6028888351103106, 1.5934894949812237, 1.5666376035012952, 1.5985069289505203, 1.6097907893619818, 1.6211357899500105, 1.6028809903872785, 1.6206641535351303, 1.6154375116399795, 1.586306326992576, 1.5972772215500564, 1.5466938478593983, 1.571846183213288, 1.5592855603632305, 1.535982817306382, 1.524950620721079, 1.5668059404080104, 1.5710950716698773, 1.5538790118745187, 1.5779454900104313, 1.559913517923337, 1.5649699775916854];
 
-const lineOpts = (title) => ({
-  plugins:{title:{display:true,text:title,font:{size:13}},legend:{display:false}},
-  scales:{x:{ticks:{maxTicksLimit:10}},y:{title:{display:true,text:'净值'}}}
-});
-const barOpts = (title) => ({
-  plugins:{title:{display:true,text:title,font:{size:13}},legend:{display:false}},
-  scales:{x:{ticks:{maxTicksLimit:10}},y:{title:{display:true,text:'%'}}}
-});
 
-// 经济敏感
-new Chart(document.getElementById('ecoNavChart'),{type:'line',data:{labels:eco_dates,datasets:[{
-  data:eco_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-}]},options:lineOpts('周期-防御 净值')});
+// Chart defaults
+Chart.defaults.animation = false;
+const baseOpts = {
+  responsive:true, maintainAspectRatio:false,
+  interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:false,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}}},
+  scales:{x:{ticks:{maxTicksLimit:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+    y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
+};
+const barBase = {...baseOpts};
 
-new Chart(document.getElementById('ecoSpreadChart'),{type:'bar',data:{labels:eco_dates,datasets:[{
-  data:eco_spreads,backgroundColor:eco_spreads.map(v=>v>=0?'rgba(231,76,60,0.6)':'rgba(52,152,219,0.6)'),borderRadius:2
-}]},options:barOpts('周期-防御 每日轧差%')});
+// Tab switching + lazy init
+var inited = {};
+function initTab(id) {
+  if(inited[id]) return;
+  inited[id] = true;
 
-// 拥挤度
-new Chart(document.getElementById('crowdNavChart'),{type:'line',data:{labels:cr_dates,datasets:[{
-  data:cr_navs,borderColor:'#c0392b',backgroundColor:'rgba(192,57,43,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-}]},options:lineOpts('高拥挤-低拥挤 净值')});
+  if(id==='eco') {
+    new Chart(document.getElementById('ecoNavChart'),{type:'line',data:{labels:eco_dates,datasets:[{
+      data:eco_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'周期-防御 净值',font:{size:13}}}}});
+    new Chart(document.getElementById('ecoSpreadChart'),{type:'bar',data:{labels:eco_dates,datasets:[{
+      data:eco_spreads,backgroundColor:eco_spreads.map(v=>v>=0?'rgba(231,76,60,0.6)':'rgba(52,152,219,0.6)'),borderRadius:2
+    }]},options:{...barBase,plugins:{...barBase.plugins,title:{display:true,text:'周期-防御 每日轧差%',font:{size:13}}}}});
+  }
 
-new Chart(document.getElementById('crowdSpreadChart'),{type:'bar',data:{labels:cr_dates,datasets:[{
-  data:cr_spreads,backgroundColor:cr_spreads.map(v=>v>=0?'rgba(192,57,43,0.6)':'rgba(41,128,185,0.6)'),borderRadius:2
-}]},options:barOpts('高拥挤-低拥挤 每日轧差%')});
+  if(id==='crowd') {
+    new Chart(document.getElementById('crowdNavChart'),{type:'line',data:{labels:cr_dates,datasets:[{
+      data:cr_navs,borderColor:'#c0392b',backgroundColor:'rgba(192,57,43,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'高拥挤-低拥挤 净值',font:{size:13}}}}});
+    new Chart(document.getElementById('crowdSpreadChart'),{type:'bar',data:{labels:cr_dates,datasets:[{
+      data:cr_spreads,backgroundColor:cr_spreads.map(v=>v>=0?'rgba(192,57,43,0.6)':'rgba(41,128,185,0.6)'),borderRadius:2
+    }]},options:{...barBase,plugins:{...barBase.plugins,title:{display:true,text:'高拥挤-低拥挤 每日轧差%',font:{size:13}}}}});
+  }
 
-// 风格轧差（多线）
-const colors = ['#e74c3c','#3498db','#2ecc71'];
-const styleDs = [];
-let ci = 0;
-for (const label in style_data) {
-  styleDs.push({label:label,data:style_data[label].navs,borderColor:colors[ci%3],backgroundColor:'transparent',tension:0.3,pointRadius:1,borderWidth:2});
-  ci++;
+  if(id==='style') {
+    const colors = ['#e74c3c','#3498db','#2ecc71'];
+    const ds = []; let ci=0;
+    for(const label in style_data) {
+      ds.push({label:label,data:style_data[label].navs,borderColor:colors[ci%3],backgroundColor:'transparent',tension:0.3,pointRadius:1,borderWidth:2});
+      ci++;
+    }
+    const firstKey = Object.keys(style_data)[0];
+    new Chart(document.getElementById('styleNavChart'),{type:'line',data:{labels:style_data[firstKey].dates,datasets:ds},options:{
+      ...baseOpts, plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11},padding:14}}}
+    }});
+  }
+
+  if(id==='dual') {
+    new Chart(document.getElementById('dualChart'),{type:'line',data:{labels:di_dates,datasets:[{
+      data:di_navs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'双创等权净值',font:{size:13}}}}});
+  }
 }
-const firstKey = Object.keys(style_data)[0];
-new Chart(document.getElementById('styleNavChart'),{type:'line',data:{labels:style_data[firstKey].dates,datasets:styleDs},options:{
-  plugins:{title:{display:false},legend:{display:true,position:'top'}},
-  scales:{x:{ticks:{maxTicksLimit:10}},y:{title:{display:true,text:'净值'}}}
-}});
 
-// 双创等权
-new Chart(document.getElementById('dualChart'),{type:'line',data:{labels:di_dates,datasets:[{
-  data:di_navs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-}]},options:lineOpts('双创等权净值')});
+// Init first tab
+initTab('eco');
+
+// Tab click
+document.querySelectorAll('.tab[data-tab]').forEach(function(t){
+  t.addEventListener('click',function(){
+    var id=this.getAttribute('data-tab');
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+    document.querySelectorAll('.tab-page').forEach(function(x){x.classList.remove('active')});
+    this.classList.add('active');
+    document.getElementById('tab-'+id).classList.add('active');
+    initTab(id);
+  });
+});
 </script>
 </body></html>
