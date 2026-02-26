@@ -247,15 +247,77 @@ def convert_results_to_csv():
     )
     write_csv(SHEET4_CSV_PATH, sheet4_header, list(sheet4_rows))
 
+XLSX_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread.xlsx')
+
+def write_xlsx(results):
+    """输出 Excel（4 个 sheet），与原 style_spread.py 格式一致"""
+    try:
+        import openpyxl
+    except ImportError:
+        import subprocess, sys
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'openpyxl', '-q'])
+        import openpyxl
+
+    wb = openpyxl.Workbook()
+
+    # Sheet1: 风格轧差
+    ws1 = wb.active
+    ws1.title = "风格轧差"
+    pair_names = list(results['style_spread']['data'].keys())
+    headers = ['日期']
+    for pn in pair_names:
+        long_n, short_n = pn.split('-')
+        headers += [f'{long_n}涨跌幅%', f'{short_n}涨跌幅%', f'{pn}轧差%', f'{pn}净值']
+    ws1.append(headers)
+    # 所有对的日期应该一致，取第一对
+    first_data = results['style_spread']['data'][pair_names[0]]
+    for i, dt in enumerate(first_data['dates']):
+        row = [dt]
+        for pn in pair_names:
+            d = results['style_spread']['data'][pn]
+            row += [round(d['spreads'][i], 4), None, round(d['spreads'][i], 4), round(d['navs'][i], 6)]
+        ws1.append(row)
+
+    # Sheet2: 双创等权
+    ws2 = wb.create_sheet("双创等权")
+    ws2.append(['日期', '创业板指涨跌幅%', '科创50涨跌幅%', '等权平均涨跌幅%', '归1净值'])
+    di = results['dual_innovation']
+    for i, dt in enumerate(di['dates']):
+        avg_chg = (di['cyb_chg'][i] + di['kc50_chg'][i]) / 2
+        ws2.append([dt, round(di['cyb_chg'][i], 4), round(di['kc50_chg'][i], 4),
+                    round(avg_chg, 4), round(di['navs'][i], 6)])
+
+    # Sheet3: 经济敏感轧差
+    ws3 = wb.create_sheet("经济敏感轧差")
+    eco = results['eco_sensitive']
+    ws3.append(['日期', '周期等权%', '防御等权%', '周期-防御轧差%', '轧差净值'])
+    for i, dt in enumerate(eco['dates']):
+        ws3.append([dt, round(eco['cycle_chg'][i], 4), round(eco['defense_chg'][i], 4),
+                    round(eco['spreads'][i], 4), round(eco['navs'][i], 6)])
+
+    # Sheet4: 拥挤-反身性轧差
+    ws4 = wb.create_sheet("拥挤-反身性轧差")
+    ws4.append(['日期', '高拥挤Top6等权%', '低拥挤Bot6等权%', '高-低轧差%', '轧差净值',
+                'Top6行业', 'Bottom6行业'])
+    cr = results['crowding']
+    for i, dt in enumerate(cr['dates']):
+        ws4.append([dt, round(cr['top_chg'][i], 4), round(cr['bot_chg'][i], 4),
+                    round(cr['spreads'][i], 4), round(cr['navs'][i], 6),
+                    ', '.join(cr['top_names'][i]), ', '.join(cr['bot_names'][i])])
+
+    wb.save(XLSX_PATH)
+    size_kb = os.path.getsize(XLSX_PATH) / 1024
+    print(f"Generated {os.path.basename(XLSX_PATH)}: {size_kb:.1f} KB")
+
+
 if __name__ == "__main__":
     results = generate_all_sheets()
     write_json_results(results)
     convert_results_to_csv()
+    write_xlsx(results)
 
     # Print output summary
     for path in [STYLE_SPREAD_JSON_PATH, SHEET1_CSV_PATH, SHEET2_CSV_PATH, SHEET3_CSV_PATH, SHEET4_CSV_PATH]:
         if os.path.exists(path):
             size_kb = os.path.getsize(path) / 1024
             print(f"Generated {os.path.basename(path)}: {size_kb:.2f} KB")
-
-    # Verification of reasonable row count and nav range can be added to enhance testing
