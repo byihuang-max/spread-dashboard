@@ -55,7 +55,11 @@ h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
     <div class="card"><div class="label">观察天数</div><div class="value">262</div></div>
   </div>
   <div class="chart-box"><canvas id="ecoNavChart"></canvas></div>
-  <div class="chart-box short"><canvas id="ecoSpreadChart"></canvas></div>
+  <div class="chart-box short"><canvas id="ecoSpreadChart"></canvas><div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>经济敏感轧差 = (有色+煤炭+钢铁)等权 vs (食品饮料+医药)等权，每日涨跌幅之差归1复利。<br>
+    <strong>解读：</strong>净值上升 → 周期股跑赢防御股，经济预期改善；净值下降 → 防御股跑赢，市场转向避险。<br>
+    <strong>MA20灰色虚线</strong>为20日移动平均，用于判断中期趋势方向。净值在MA20上方为偏多格局，下方为偏空。
+  </div>
 </div>
 
 <!-- 拥挤-反身性轧差 -->
@@ -72,18 +76,33 @@ h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
   <div class="tag-row"><span class="tag cool">电子</span><span class="tag cool">电力设备</span><span class="tag cool">有色金属</span><span class="tag cool">机械设备</span><span class="tag cool">计算机</span><span class="tag cool">通信</span></div>
   <div class="chart-box"><canvas id="crowdNavChart"></canvas></div>
   <div class="chart-box short"><canvas id="crowdSpreadChart"></canvas></div>
+<div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>按申万31个一级行业的20日成交额+波动率排序，高拥挤Top6 vs 低拥挤Bot6等权轧差。<br>
+    <strong>解读：</strong>净值上升 → 高拥挤（热门）行业跑赢冷门行业，动量有效；净值下降 → 拥挤反转，资金从热门撤向冷门。<br>
+    <strong>应用：</strong>当净值持续下行，应警惕动量策略回撤；当净值企稳回升，动量环境改善。
+  </div>
 </div>
 
 <!-- 风格轧差净值 -->
 <div class="tab-page" id="tab-style">
   <div class="info"><strong>风格轧差净值（归1）</strong>：中证红利-科创50、微盘股-中证全指、中证2000-沪深300</div>
   <div class="chart-box" style="height:380px"><canvas id="styleNavChart"></canvas></div>
+<div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>三对风格轧差归1净值：① 中证红利-科创50（价值vs成长）② 微盘股-中证全指（大小盘）③ 中证2000-沪深300（小盘vs大盘）<br>
+    <strong>解读：</strong>红利-科创50下行 → 成长跑赢价值；中证2000-沪深300上行 → 小盘跑赢大盘。<br>
+    <strong>当前状态：</strong>红利-科创50持续下行（科创跑赢），中证2000-沪深300上行（小盘占优），微盘股-中证全指走平（微盘持平全A）。
+  </div>
 </div>
 
 <!-- 双创等权 -->
 <div class="tab-page" id="tab-dual">
   <div class="info"><strong>双创等权净值</strong>：创业板指+科创50 等权平均涨跌幅，归1净值</div>
   <div class="chart-box"><canvas id="dualChart"></canvas></div>
+<div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>创业板指+科创50每日涨跌幅等权平均，归1复利净值。<br>
+    <strong>解读：</strong>代表"双创"板块整体表现。净值上升 → 双创板块走强，成长风格占优；净值下降 → 双创走弱，市场偏好蓝筹/价值。<br>
+    <strong>注意：</strong>此为等权近似，非真正个股等权（需拉全市场日数据，暂用指数替代）。
+  </div>
 </div>
 
 <script>
@@ -100,6 +119,7 @@ const di_navs = [1.0102845, 1.01631034190025, 1.013081015788862, 1.0064240604341
 
 // Chart defaults
 Chart.defaults.animation = false;
+function ma(arr,n){var r=[];for(var i=0;i<arr.length;i++){if(i<n-1){r.push(null)}else{var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];r.push(s/n)}}return r}
 const baseOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
@@ -118,7 +138,8 @@ function initTab(id) {
   if(id==='eco') {
     new Chart(document.getElementById('ecoNavChart'),{type:'line',data:{labels:eco_dates,datasets:[{
       data:eco_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'周期-防御 净值',font:{size:13}}}}});
+    },{label:'MA20',data:ma(eco_navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:'周期-防御 净值',font:{size:13}}}}});
     new Chart(document.getElementById('ecoSpreadChart'),{type:'bar',data:{labels:eco_dates,datasets:[{
       data:eco_spreads,backgroundColor:eco_spreads.map(v=>v>=0?'rgba(231,76,60,0.6)':'rgba(52,152,219,0.6)'),borderRadius:2
     }]},options:{...barBase,plugins:{...barBase.plugins,title:{display:true,text:'周期-防御 每日轧差%',font:{size:13}}}}});
@@ -127,7 +148,8 @@ function initTab(id) {
   if(id==='crowd') {
     new Chart(document.getElementById('crowdNavChart'),{type:'line',data:{labels:cr_dates,datasets:[{
       data:cr_navs,borderColor:'#c0392b',backgroundColor:'rgba(192,57,43,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'高拥挤-低拥挤 净值',font:{size:13}}}}});
+    },{label:'MA20',data:ma(cr_navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:'高拥挤-低拥挤 净值',font:{size:13}}}}});
     new Chart(document.getElementById('crowdSpreadChart'),{type:'bar',data:{labels:cr_dates,datasets:[{
       data:cr_spreads,backgroundColor:cr_spreads.map(v=>v>=0?'rgba(192,57,43,0.6)':'rgba(41,128,185,0.6)'),borderRadius:2
     }]},options:{...barBase,plugins:{...barBase.plugins,title:{display:true,text:'高拥挤-低拥挤 每日轧差%',font:{size:13}}}}});
@@ -141,15 +163,20 @@ function initTab(id) {
       ci++;
     }
     const firstKey = Object.keys(style_data)[0];
+    // Add MA20 for each style pair
+    ds.forEach(function(d){
+      ds.push({label:d.label+' MA20',data:ma(d.data,20),borderColor:d.borderColor,borderWidth:1,borderDash:[4,3],pointRadius:0,tension:0.3,backgroundColor:'transparent'});
+    });
     new Chart(document.getElementById('styleNavChart'),{type:'line',data:{labels:style_data[firstKey].dates,datasets:ds},options:{
-      ...baseOpts, plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11},padding:14}}}
+      ...baseOpts, plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},padding:10,filter:function(item){return !item.text.includes('MA20')}}}}
     }});
   }
 
   if(id==='dual') {
     new Chart(document.getElementById('dualChart'),{type:'line',data:{labels:di_dates,datasets:[{
       data:di_navs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
-    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:'双创等权净值',font:{size:13}}}}});
+    },{label:'MA20',data:ma(di_navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:'双创等权净值',font:{size:13}}}}});
   }
 }
 
