@@ -47,6 +47,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="card-title">持仓量走势</div>
     <div style="position:relative;height:220px"><canvas id="chartOI"></canvas></div>
   </div>
+  <div class="card" style="font-size:11px;color:#8b92a5;line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:#2d3142;margin-bottom:6px">📖 指标说明</div>
+    ① <b>基差</b> = 期货价格 − 现货价格。负基差（贴水）= 期货比现货便宜，正基差（升水）= 期货比现货贵<br>
+    ② <b>基差率</b> = 基差 / 现货价格 × 100%，标准化后可跨品种对比<br>
+    ③ <b>年化基差率</b> = 基差率 / 剩余到期天数 × 365，反映持有收益的年化水平<br>
+    ④ <b>持仓量（OI）</b>：未平仓合约数，反映市场参与度和资金沉淀<br>
+    ⑤ <b>用法</b>：深贴水（负基差率大）→ 多头展期有利 / 对冲成本低；升水扩大 → 警惕多头拥挤
+  </div>
 </div>
 
 <!-- ═══ Tab 2: 商品套利 ═══ -->
@@ -62,6 +70,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div style="position:relative;height:220px"><canvas id="chartZscore"></canvas></div>
     </div>
   </div>
+  <div class="card" style="font-size:11px;color:#8b92a5;line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:#2d3142;margin-bottom:6px">📖 指标说明</div>
+    ① <b>跨品种比价</b> = 品种A价格 / 品种B价格，反映产业链上下游或替代品的相对强弱<br>
+    ② <b>Z-Score</b> = (当前比价 − 均值) / 标准差，衡量比价偏离历史中枢的程度。|Z|>2 为极端区间<br>
+    ③ <b>分位数</b>：当前比价在历史窗口中的百分位，0%=历史最低，100%=历史最高<br>
+    ④ <b>配对</b>：螺纹/铁矿（钢厂利润）、豆油/棕榈油（油脂替代）、铜/铝（有色强弱）、原油/燃油（炼化价差）<br>
+    ⑤ <b>用法</b>：Z-Score 极端 + 分位数极端 → 均值回归机会；趋势性偏离 → 产业逻辑变化需验证
+  </div>
 </div>
 
 <!-- ═══ Tab 3: 期权套利 ═══ -->
@@ -76,6 +92,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="card-title">HV20 历史波动率（%）& 总成交量</div>
       <div style="position:relative;height:220px"><canvas id="chartHV"></canvas></div>
     </div>
+  </div>
+  <div class="card" style="font-size:11px;color:#8b92a5;line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:#2d3142;margin-bottom:6px">📖 指标说明</div>
+    ① <b>PCR（成交量）</b> = Put成交量 / Call成交量，>1 表示看跌情绪偏重，<1 表示看涨情绪偏重<br>
+    ② <b>PCR（持仓量）</b> = Put持仓量 / Call持仓量，比成交量PCR更稳定，反映中期情绪<br>
+    ③ <b>HV20</b> = 20日历史波动率，用沪深300收盘价计算。高HV = 市场波动大，期权定价贵<br>
+    ④ <b>总成交量</b>：全市场期权合约成交量，反映期权市场活跃度和投机/对冲需求<br>
+    ⑤ <b>用法</b>：PCR极高 + HV飙升 → 恐慌见底信号；PCR极低 + 成交量萎缩 → 乐观过头需警惕
   </div>
 </div>
 
