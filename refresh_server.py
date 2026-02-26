@@ -163,6 +163,15 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self._json(404, {'error': 'not found'})
 
+    def _check_market_hours(self):
+        """15:00 之前禁止刷新（A股数据收盘后才完整）"""
+        from datetime import datetime
+        now = datetime.now()
+        if now.hour < 15:
+            self._json(403, {'error': f'收盘前({now.strftime("%H:%M")})不可刷新，请15:00后再试'})
+            return False
+        return True
+
     def do_POST(self):
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
@@ -172,6 +181,9 @@ class Handler(BaseHTTPRequestHandler):
 
             if mod_key not in MODULES:
                 self._json(400, {'error': f'未知模块: {tab}', 'available': list(TAB_MAP.keys())})
+                return
+
+            if not self._check_market_hours():
                 return
 
             # 尝试获取锁
@@ -208,6 +220,8 @@ class Handler(BaseHTTPRequestHandler):
 
         # POST /api/refresh-all
         elif self.path == '/api/refresh-all':
+            if not self._check_market_hours():
+                return
             acquired = lock.acquire(blocking=False)
             if not acquired:
                 self._json(429, {'error': '有任务正在运行', 'running_module': state['module']})
