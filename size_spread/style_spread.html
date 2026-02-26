@@ -42,7 +42,9 @@ h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
 <div class="tabs">
   <div class="tab active" data-tab="eco">📊 经济敏感轧差</div>
   <div class="tab" data-tab="crowd">🔥 拥挤-反身性</div>
-  <div class="tab" data-tab="style">📈 风格轧差净值</div>
+  <div class="tab" data-tab="s1">💎 红利 vs 科创50</div>
+  <div class="tab" data-tab="s2">🎲 微盘 vs 全指</div>
+  <div class="tab" data-tab="s3">📐 2000 vs 300</div>
   <div class="tab" data-tab="dual">🚀 双创等权</div>
 </div>
 
@@ -83,14 +85,54 @@ h2{font-size:17px;font-weight:700;color:#2d3142;margin:0}
   </div>
 </div>
 
-<!-- 风格轧差净值 -->
-<div class="tab-page" id="tab-style">
-  <div class="info"><strong>风格轧差净值（归1）</strong>：中证红利-科创50、微盘股-中证全指、中证2000-沪深300</div>
-  <div class="chart-box" style="height:380px"><canvas id="styleNavChart"></canvas></div>
-<div class="info" style="margin-top:14px">
-    <strong>策略说明：</strong>三对风格轧差归1净值：① 中证红利-科创50（价值vs成长）② 微盘股-中证全指（大小盘）③ 中证2000-沪深300（小盘vs大盘）<br>
-    <strong>解读：</strong>红利-科创50下行 → 成长跑赢价值；中证2000-沪深300上行 → 小盘跑赢大盘。<br>
-    <strong>当前状态：</strong>红利-科创50持续下行（科创跑赢），中证2000-沪深300上行（小盘占优），微盘股-中证全指走平（微盘持平全A）。
+<!-- 红利 vs 科创50 -->
+<div class="tab-page" id="tab-s1">
+  <div class="info"><strong>中证红利 vs 科创50</strong>：价值风格 vs 成长风格的相对强弱</div>
+  <div class="cards">
+    <div class="card"><div class="label">轧差净值</div><div class="value neg">0.6517</div></div>
+    <div class="card"><div class="label">累计收益</div><div class="value neg">-34.83%</div></div>
+    <div class="card"><div class="label">含义</div><div class="value" style="font-size:14px;color:#2563eb">科创跑赢</div></div>
+  </div>
+  <div class="chart-box" style="height:320px"><canvas id="s1NavChart"></canvas></div>
+  <div class="chart-box short"><canvas id="s1SpreadChart"></canvas></div>
+  <div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>中证红利 vs 科创50 每日涨跌幅之差归1复利。<br>
+    <strong>解读：</strong>净值下行 → 科创50（成长）跑赢红利（价值），成长风格占优。净值上行 → 红利跑赢，价值风格回归。<br>
+    <strong>当前：</strong>持续下行，科创大幅跑赢红利，成长风格强势。
+  </div>
+</div>
+
+<!-- 微盘 vs 全指 -->
+<div class="tab-page" id="tab-s2">
+  <div class="info"><strong>微盘股 vs 中证全指</strong>：微盘股相对全A的超额表现</div>
+  <div class="cards">
+    <div class="card"><div class="label">轧差净值</div><div class="value pos">1.0972</div></div>
+    <div class="card"><div class="label">累计收益</div><div class="value pos">+9.72%</div></div>
+    <div class="card"><div class="label">含义</div><div class="value" style="font-size:14px;color:#2563eb">微盘略强</div></div>
+  </div>
+  <div class="chart-box" style="height:320px"><canvas id="s2NavChart"></canvas></div>
+  <div class="chart-box short"><canvas id="s2SpreadChart"></canvas></div>
+  <div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>国证微盘股 vs 中证全指（全A替代）每日涨跌幅之差归1复利。<br>
+    <strong>解读：</strong>净值上行 → 微盘股跑赢全A，小微盘风格占优；净值下行 → 微盘跑输大盘。<br>
+    <strong>当前：</strong>整体走平偏强，微盘相对全A持平略优。
+  </div>
+</div>
+
+<!-- 2000 vs 300 -->
+<div class="tab-page" id="tab-s3">
+  <div class="info"><strong>中证2000 vs 沪深300</strong>：小盘 vs 大盘的风格轮动</div>
+  <div class="cards">
+    <div class="card"><div class="label">轧差净值</div><div class="value pos">1.2330</div></div>
+    <div class="card"><div class="label">累计收益</div><div class="value pos">+23.30%</div></div>
+    <div class="card"><div class="label">含义</div><div class="value" style="font-size:14px;color:#2563eb">小盘跑赢</div></div>
+  </div>
+  <div class="chart-box" style="height:320px"><canvas id="s3NavChart"></canvas></div>
+  <div class="chart-box short"><canvas id="s3SpreadChart"></canvas></div>
+  <div class="info" style="margin-top:14px">
+    <strong>策略说明：</strong>中证2000 vs 沪深300 每日涨跌幅之差归1复利。<br>
+    <strong>解读：</strong>净值上行 → 小盘（中证2000）跑赢大盘（沪深300）；净值下行 → 大盘反攻。<br>
+    <strong>当前：</strong>持续上行，小盘风格显著占优，中证2000大幅跑赢沪深300。
   </div>
 </div>
 
@@ -155,21 +197,37 @@ function initTab(id) {
     }]},options:{...barBase,plugins:{...barBase.plugins,title:{display:true,text:'高拥挤-低拥挤 每日轧差%',font:{size:13}}}}});
   }
 
-  if(id==='style') {
-    const colors = ['#e74c3c','#3498db','#2ecc71'];
-    const ds = []; let ci=0;
-    for(const label in style_data) {
-      ds.push({label:label,data:style_data[label].navs,borderColor:colors[ci%3],backgroundColor:'transparent',tension:0.3,pointRadius:1,borderWidth:2});
-      ci++;
-    }
-    const firstKey = Object.keys(style_data)[0];
-    // Add MA20 for each style pair
-    ds.forEach(function(d){
-      ds.push({label:d.label+' MA20',data:ma(d.data,20),borderColor:d.borderColor,borderWidth:1,borderDash:[4,3],pointRadius:0,tension:0.3,backgroundColor:'transparent'});
-    });
-    new Chart(document.getElementById('styleNavChart'),{type:'line',data:{labels:style_data[firstKey].dates,datasets:ds},options:{
-      ...baseOpts, plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},padding:10,filter:function(item){return !item.text.includes('MA20')}}}}
-    }});
+  if(id==='s1') {
+    var k='中证红利-科创50',d=style_data[k],c='#e74c3c';
+    new Chart(document.getElementById('s1NavChart'),{type:'line',data:{labels:d.dates,datasets:[
+      {label:k,data:d.navs,borderColor:c,backgroundColor:'rgba(231,76,60,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2},
+      {label:'MA20',data:ma(d.navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:k+' 净值',font:{size:13}}}}});
+    new Chart(document.getElementById('s1SpreadChart'),{type:'bar',data:{labels:d.dates,datasets:[{
+      data:d.spreads,backgroundColor:d.spreads.map(v=>v>=0?'rgba(231,76,60,0.6)':'rgba(52,152,219,0.6)'),borderRadius:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:k+' 每日轧差%',font:{size:13}}}}});
+  }
+
+  if(id==='s2') {
+    var k='微盘股-中证全指',d=style_data[k],c='#3498db';
+    new Chart(document.getElementById('s2NavChart'),{type:'line',data:{labels:d.dates,datasets:[
+      {label:k,data:d.navs,borderColor:c,backgroundColor:'rgba(52,152,219,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2},
+      {label:'MA20',data:ma(d.navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:k+' 净值',font:{size:13}}}}});
+    new Chart(document.getElementById('s2SpreadChart'),{type:'bar',data:{labels:d.dates,datasets:[{
+      data:d.spreads,backgroundColor:d.spreads.map(v=>v>=0?'rgba(52,152,219,0.6)':'rgba(46,204,113,0.6)'),borderRadius:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:k+' 每日轧差%',font:{size:13}}}}});
+  }
+
+  if(id==='s3') {
+    var k='中证2000-沪深300',d=style_data[k],c='#2ecc71';
+    new Chart(document.getElementById('s3NavChart'),{type:'line',data:{labels:d.dates,datasets:[
+      {label:k,data:d.navs,borderColor:c,backgroundColor:'rgba(46,204,113,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2},
+      {label:'MA20',data:ma(d.navs,20),borderColor:'#94a3b8',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:0.3}
+    ]},options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},title:{display:true,text:k+' 净值',font:{size:13}}}}});
+    new Chart(document.getElementById('s3SpreadChart'),{type:'bar',data:{labels:d.dates,datasets:[{
+      data:d.spreads,backgroundColor:d.spreads.map(v=>v>=0?'rgba(46,204,113,0.6)':'rgba(231,76,60,0.6)'),borderRadius:2
+    }]},options:{...baseOpts,plugins:{...baseOpts.plugins,title:{display:true,text:k+' 每日轧差%',font:{size:13}}}}});
   }
 
   if(id==='dual') {
