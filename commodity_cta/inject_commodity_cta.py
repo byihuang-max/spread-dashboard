@@ -246,6 +246,73 @@ def build_html(data):
       }
       </script>
 
+      <!--
+      ╔══════════════════════════════════════════════════════════════╗
+      ║  品种趋势扫描 v2 — 计算公式说明                                ║
+      ╠══════════════════════════════════════════════════════════════╣
+      ║                                                              ║
+      ║  【趋势方向 (trend_dir)】                                      ║
+      ║  MA多头排列评分 = 比较 MA5>MA10, MA10>MA20, MA20>MA60 各对     ║
+      ║    大于+1, 小于-1, 等于0 → 求和/3 → alignment ∈ [-1, +1]     ║
+      ║  价格位置 = (价格在MA5/10/20/60之上的个数)/4 × 2 - 1           ║
+      ║  综合 = 0.6×alignment + 0.4×价格位置                          ║
+      ║    > 0.3 → 多头 | < -0.3 → 空头 | 其他 → 震荡                ║
+      ║                                                              ║
+      ║  【涨跌幅 (chg_20d)】                                         ║
+      ║  = (今日收盘 / 20日前收盘 - 1) × 100%                          ║
+      ║                                                              ║
+      ║  【波动率 (vol_20d)】                                          ║
+      ║  = std(近20日涨跌幅%) × √252 / 100  → 年化波动率               ║
+      ║                                                              ║
+      ║  【波动率分位 (vol_pctile_60d)】                                ║
+      ║  = vol_20d 在近60日滚动20日波动率序列中的分位数 (0~1)            ║
+      ║                                                              ║
+      ║  【Squeeze 检测】                                              ║
+      ║  5日前波动率分位 < 30% 且 当前分位 > 50% → Squeeze breakout     ║
+      ║  含义：波动率从低位快速扩张，趋势启动信号                        ║
+      ║                                                              ║
+      ║  【量比 (volume_ratio)】                                       ║
+      ║  = 成交额MA20 / 成交额MA60   (>1.2 视为放量)                   ║
+      ║                                                              ║
+      ║  【Donchian 突破】                                             ║
+      ║  DC20: 收盘价 ≥ 近20日最高价 → 突破高点; ≤ 近20日最低价 → 突破低点 ║
+      ║  DC60: 同理用60日窗口，更强的趋势确认                           ║
+      ║  dc20_position = (价格-20日低) / (20日高-20日低)  → 0~1+       ║
+      ║                                                              ║
+      ║  【持仓量变化 (OI)】                                           ║
+      ║  oi_chg_5d = (今日OI / 5日前OI - 1) × 100%                    ║
+      ║  价量共振判定:                                                  ║
+      ║    涨 + OI↑(>3%) → 多头确认 (新多入场)                         ║
+      ║    跌 + OI↑(>3%) → 空头确认 (新空入场)                         ║
+      ║    涨 + OI↓(<-3%) → 多头衰竭 (空头平仓驱动)                    ║
+      ║    跌 + OI↓(<-3%) → 空头衰竭 (多头平仓驱动)                    ║
+      ║                                                              ║
+      ║  【R² (趋势线性度)】                                           ║
+      ║  对近20日收盘价做线性回归, R² = SS_xy² / (SS_xx × SS_yy)       ║
+      ║  > 0.8 = 趋势非常线性(一路不回头), 适合趋势跟踪策略             ║
+      ║                                                              ║
+      ║  【评分 (trend_score)】                                        ║
+      ║  所有因子先做全品种 min-max 标准化到 [0,1]                      ║
+      ║  = 0.25×|chg_20d|_norm                                        ║
+      ║  + 0.20×|ma_alignment|_norm                                    ║
+      ║  + 0.15×vol_pctile_60d                                        ║
+      ║  + 0.15×volume_ratio_norm                                      ║
+      ║  + 0.15×R²_norm                                                ║
+      ║  + 0.10×min(dc20_position, 1.0)                                ║
+      ║                                                              ║
+      ║  【信号 (最多5★)】 满足以下条件各 +1★:                         ║
+      ║  ① 趋势方向=多头或空头 (非震荡)                                ║
+      ║  ② 20日Donchian突破                                           ║
+      ║  ③ 60日Donchian突破                                           ║
+      ║  ④ 放量 (量比>1.2)                                            ║
+      ║  ⑤ OI确认 (多头确认 或 空头确认)                               ║
+      ║  ⑥ Squeeze breakout                                           ║
+      ║  ⑦ 高线性度 (R²>0.8)                                          ║
+      ║  (最多取5★)                                                    ║
+      ║                                                              ║
+      ║  【过滤】日均成交额MA20 ≤ 500万 的品种不上榜                    ║
+      ╚══════════════════════════════════════════════════════════════╝
+      -->
       <!-- 品种趋势扫描 -->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#ef4444"></span> 品种趋势扫描 Top 15</div>
@@ -261,6 +328,8 @@ def build_html(data):
               <th style="padding:8px 4px">趋势</th>
               <th style="padding:8px 4px">波动率</th>
               <th style="padding:8px 4px">量比</th>
+              <th style="padding:8px 4px">R²</th>
+              <th style="padding:8px 4px">OI(5d)</th>
               <th style="padding:8px 4px">评分</th>
               <th style="padding:8px 4px">信号</th>
             </tr>
@@ -277,6 +346,12 @@ def build_html(data):
         tc = trend_color(td)
         vol = s.get('vol_20d', 0)
         vr = s.get('volume_ratio', 0)
+        r2 = s.get('r2', 0)
+        oi_5d = s.get('oi_chg_5d', 0)
+        oi_confirm = s.get('oi_confirm', '')
+        dc20 = s.get('donchian_20', '')
+        dc60 = s.get('donchian_60', '')
+        squeeze = s.get('squeeze', False)
         score = s.get('trend_score', 0)
         sig = s.get('signal_count', 0)
         badge = signal_badge(sig)
@@ -288,8 +363,22 @@ def build_html(data):
         elif score >= 0.5: sc_color = '#f59e0b'
         else: sc_color = '#94a3b8'
 
+        # R² 颜色
+        r2_color = '#10b981' if r2 > 0.8 else '#f59e0b' if r2 > 0.5 else '#94a3b8'
+
+        # OI 颜色
+        oi_color = '#10b981' if oi_5d > 3 else '#ef4444' if oi_5d < -3 else '#94a3b8'
+
+        # Donchian/OI/Squeeze 标记放 tooltip
+        extras = []
+        if dc20: extras.append(f'DC20:{dc20}')
+        if dc60: extras.append(f'DC60:{dc60}')
+        if oi_confirm: extras.append(oi_confirm)
+        if squeeze: extras.append('Squeeze')
+        tooltip = f'{driver_str}' + (f' | {" ".join(extras)}' if extras else '')
+
         html += f'''
-            <tr style="border-bottom:1px solid #f1f5f9" title="{driver_str}">
+            <tr style="border-bottom:1px solid #f1f5f9" title="{tooltip}">
               <td style="padding:6px 4px;color:#94a3b8">{i+1}</td>
               <td style="padding:6px 4px;font-weight:700">{sym}</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">{sec}</td>
@@ -298,6 +387,8 @@ def build_html(data):
               <td style="padding:6px 4px;color:{tc};font-weight:600">{td}</td>
               <td style="padding:6px 4px">{vol:.1%}</td>
               <td style="padding:6px 4px">{vr:.2f}</td>
+              <td style="padding:6px 4px;color:{r2_color};font-weight:600">{r2:.2f}</td>
+              <td style="padding:6px 4px;color:{oi_color}">{oi_5d:+.1f}%</td>
               <td style="padding:6px 4px;color:{sc_color};font-weight:700">{score:.3f}</td>
               <td style="padding:6px 4px">{badge}</td>
             </tr>'''
@@ -336,9 +427,10 @@ def build_html(data):
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
         <p>① CTA友好度 = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比，标准化到0-100</p>
-        <p>② 趋势判定：MA20斜率 &gt; 0.5%为多头，&lt; -0.5%为空头</p>
-        <p>③ 品种评分 = 0.40×|涨跌幅标准化| + 0.30×波动率分位 + 0.30×成交量比标准化</p>
-        <p>④ 信号：趋势确认(多头/空头) + 波动放大(vol↑) + 放量(量比&gt;1.2)，满足越多越强</p>
+        <p>② 趋势判定：MA5/10/20/60多头排列 + 价格位置，综合 &gt;0.3=多头，&lt;-0.3=空头</p>
+        <p>③ 评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²线性度15% + Donchian位置10%</p>
+        <p>④ 信号(最多5★)：趋势方向 + 20日突破 + 60日突破 + 放量 + OI确认 + Squeeze + 高R²</p>
+        <p>⑦ R²：近20日收盘价线性回归拟合度，&gt;0.8=趋势非常线性；OI(5d)：5日持仓量变化率</p>
         <p>⑤ 铜金比↑=经济预期改善，↓=避险升温；油金比↑=通胀/需求强，↓=衰退预期</p>
         <p>⑥ 工业品/农产品：工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利比值</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · 更新：''' + date_str + '''</p>

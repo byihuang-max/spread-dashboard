@@ -538,6 +538,73 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       }
       </script>
 
+      <!--
+      ╔══════════════════════════════════════════════════════════════╗
+      ║  品种趋势扫描 v2 — 计算公式说明                                ║
+      ╠══════════════════════════════════════════════════════════════╣
+      ║                                                              ║
+      ║  【趋势方向 (trend_dir)】                                      ║
+      ║  MA多头排列评分 = 比较 MA5>MA10, MA10>MA20, MA20>MA60 各对     ║
+      ║    大于+1, 小于-1, 等于0 → 求和/3 → alignment ∈ [-1, +1]     ║
+      ║  价格位置 = (价格在MA5/10/20/60之上的个数)/4 × 2 - 1           ║
+      ║  综合 = 0.6×alignment + 0.4×价格位置                          ║
+      ║    > 0.3 → 多头 | < -0.3 → 空头 | 其他 → 震荡                ║
+      ║                                                              ║
+      ║  【涨跌幅 (chg_20d)】                                         ║
+      ║  = (今日收盘 / 20日前收盘 - 1) × 100%                          ║
+      ║                                                              ║
+      ║  【波动率 (vol_20d)】                                          ║
+      ║  = std(近20日涨跌幅%) × √252 / 100  → 年化波动率               ║
+      ║                                                              ║
+      ║  【波动率分位 (vol_pctile_60d)】                                ║
+      ║  = vol_20d 在近60日滚动20日波动率序列中的分位数 (0~1)            ║
+      ║                                                              ║
+      ║  【Squeeze 检测】                                              ║
+      ║  5日前波动率分位 < 30% 且 当前分位 > 50% → Squeeze breakout     ║
+      ║  含义：波动率从低位快速扩张，趋势启动信号                        ║
+      ║                                                              ║
+      ║  【量比 (volume_ratio)】                                       ║
+      ║  = 成交额MA20 / 成交额MA60   (>1.2 视为放量)                   ║
+      ║                                                              ║
+      ║  【Donchian 突破】                                             ║
+      ║  DC20: 收盘价 ≥ 近20日最高价 → 突破高点; ≤ 近20日最低价 → 突破低点 ║
+      ║  DC60: 同理用60日窗口，更强的趋势确认                           ║
+      ║  dc20_position = (价格-20日低) / (20日高-20日低)  → 0~1+       ║
+      ║                                                              ║
+      ║  【持仓量变化 (OI)】                                           ║
+      ║  oi_chg_5d = (今日OI / 5日前OI - 1) × 100%                    ║
+      ║  价量共振判定:                                                  ║
+      ║    涨 + OI↑(>3%) → 多头确认 (新多入场)                         ║
+      ║    跌 + OI↑(>3%) → 空头确认 (新空入场)                         ║
+      ║    涨 + OI↓(<-3%) → 多头衰竭 (空头平仓驱动)                    ║
+      ║    跌 + OI↓(<-3%) → 空头衰竭 (多头平仓驱动)                    ║
+      ║                                                              ║
+      ║  【R² (趋势线性度)】                                           ║
+      ║  对近20日收盘价做线性回归, R² = SS_xy² / (SS_xx × SS_yy)       ║
+      ║  > 0.8 = 趋势非常线性(一路不回头), 适合趋势跟踪策略             ║
+      ║                                                              ║
+      ║  【评分 (trend_score)】                                        ║
+      ║  所有因子先做全品种 min-max 标准化到 [0,1]                      ║
+      ║  = 0.25×|chg_20d|_norm                                        ║
+      ║  + 0.20×|ma_alignment|_norm                                    ║
+      ║  + 0.15×vol_pctile_60d                                        ║
+      ║  + 0.15×volume_ratio_norm                                      ║
+      ║  + 0.15×R²_norm                                                ║
+      ║  + 0.10×min(dc20_position, 1.0)                                ║
+      ║                                                              ║
+      ║  【信号 (最多5★)】 满足以下条件各 +1★:                         ║
+      ║  ① 趋势方向=多头或空头 (非震荡)                                ║
+      ║  ② 20日Donchian突破                                           ║
+      ║  ③ 60日Donchian突破                                           ║
+      ║  ④ 放量 (量比>1.2)                                            ║
+      ║  ⑤ OI确认 (多头确认 或 空头确认)                               ║
+      ║  ⑥ Squeeze breakout                                           ║
+      ║  ⑦ 高线性度 (R²>0.8)                                          ║
+      ║  (最多取5★)                                                    ║
+      ║                                                              ║
+      ║  【过滤】日均成交额MA20 ≤ 500万 的品种不上榜                    ║
+      ╚══════════════════════════════════════════════════════════════╝
+      -->
       <!-- 品种趋势扫描 -->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#ef4444"></span> 品种趋势扫描 Top 15</div>
@@ -553,25 +620,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <th style="padding:8px 4px">趋势</th>
               <th style="padding:8px 4px">波动率</th>
               <th style="padding:8px 4px">量比</th>
+              <th style="padding:8px 4px">R²</th>
+              <th style="padding:8px 4px">OI(5d)</th>
               <th style="padding:8px 4px">评分</th>
               <th style="padding:8px 4px">信号</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">1</td>
-              <td style="padding:6px 4px;font-weight:700">BR</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">13,045.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+12.6%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">38.7%</td>
-              <td style="padding:6px 4px">1.75</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.894</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
-              <td style="padding:6px 4px;color:#94a3b8">2</td>
+              <td style="padding:6px 4px;color:#94a3b8">1</td>
               <td style="padding:6px 4px;font-weight:700">FU</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
               <td style="padding:6px 4px">2,943.0</td>
@@ -579,11 +636,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">37.9%</td>
               <td style="padding:6px 4px">1.30</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.852</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.73</td>
+              <td style="padding:6px 4px;color:#94a3b8">+0.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.902</td>
               <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">3</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量 | 多头衰竭">
+              <td style="padding:6px 4px;color:#94a3b8">2</td>
               <td style="padding:6px 4px;font-weight:700">SC</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
               <td style="padding:6px 4px">488.3</td>
@@ -591,11 +650,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">40.4%</td>
               <td style="padding:6px 4px">1.39</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.787</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.65</td>
+              <td style="padding:6px 4px;color:#ef4444">-6.3%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.836</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">4</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，多头确认 | 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">3</td>
               <td style="padding:6px 4px;font-weight:700">LU</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
               <td style="padding:6px 4px">3,436.0</td>
@@ -603,47 +664,27 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">36.9%</td>
               <td style="padding:6px 4px">1.21</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.741</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.70</td>
+              <td style="padding:6px 4px;color:#10b981">+79.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.816</td>
               <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">5</td>
-              <td style="padding:6px 4px;font-weight:700">AU</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">贵金属</td>
-              <td style="padding:6px 4px">1,151.1</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.6%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">71.7%</td>
-              <td style="padding:6px 4px">1.46</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.725</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">6</td>
-              <td style="padding:6px 4px;font-weight:700">PG</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">4,510.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+11.2%</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，放量，多头确认 | DC20:突破高点 DC60:突破高点 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">4</td>
+              <td style="padding:6px 4px;font-weight:700">A</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">4,679.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+7.9%</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">37.2%</td>
-              <td style="padding:6px 4px">1.08</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.702</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px">14.6%</td>
+              <td style="padding:6px 4px">1.34</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.71</td>
+              <td style="padding:6px 4px;color:#10b981">+10.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.785</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">7</td>
-              <td style="padding:6px 4px;font-weight:700">EB</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">7,578.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+5.2%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">34.5%</td>
-              <td style="padding:6px 4px">1.65</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.692</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">8</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点 | DC20:突破高点 DC60:突破高点 多头衰竭">
+              <td style="padding:6px 4px;color:#94a3b8">5</td>
               <td style="padding:6px 4px;font-weight:700">NR</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
               <td style="padding:6px 4px">13,980.0</td>
@@ -651,92 +692,150 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">25.5%</td>
               <td style="padding:6px 4px">0.98</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.676</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.53</td>
+              <td style="padding:6px 4px;color:#ef4444">-5.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.770</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">9</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认 | DC20:突破高点 DC60:突破高点 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">6</td>
               <td style="padding:6px 4px;font-weight:700">RU</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
               <td style="padding:6px 4px">17,240.0</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:600">+10.4%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">25.0%</td>
               <td style="padding:6px 4px">1.05</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.670</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.42</td>
+              <td style="padding:6px 4px;color:#10b981">+15.2%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.743</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">10</td>
-              <td style="padding:6px 4px;font-weight:700">A</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">4,679.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+7.9%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">14.6%</td>
-              <td style="padding:6px 4px">1.34</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.661</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">7</td>
+              <td style="padding:6px 4px;font-weight:700">PG</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">4,510.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+11.2%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">37.2%</td>
+              <td style="padding:6px 4px">1.08</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.31</td>
+              <td style="padding:6px 4px;color:#10b981">+180.3%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.720</td>
               <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">11</td>
-              <td style="padding:6px 4px;font-weight:700">BU</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">3,358.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+7.0%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">27.4%</td>
-              <td style="padding:6px 4px">1.00</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.577</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">12</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认 | DC20:突破高点 DC60:突破高点 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">8</td>
               <td style="padding:6px 4px;font-weight:700">CF</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
               <td style="padding:6px 4px">15,380.0</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:600">+5.9%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
               <td style="padding:6px 4px">18.0%</td>
               <td style="padding:6px 4px">1.10</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.576</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.24</td>
+              <td style="padding:6px 4px;color:#10b981">+17.6%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.649</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头 | 多头衰竭">
+              <td style="padding:6px 4px;color:#94a3b8">9</td>
+              <td style="padding:6px 4px;font-weight:700">AO</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">2,870.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+7.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">17.8%</td>
+              <td style="padding:6px 4px">1.12</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.74</td>
+              <td style="padding:6px 4px;color:#ef4444">-5.1%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.642</td>
               <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大">
-              <td style="padding:6px 4px;color:#94a3b8">13</td>
-              <td style="padding:6px 4px;font-weight:700">JD</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">3,268.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.0%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">36.1%</td>
-              <td style="padding:6px 4px">0.93</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.573</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="波动放大，放量">
-              <td style="padding:6px 4px;color:#94a3b8">14</td>
-              <td style="padding:6px 4px;font-weight:700">TA</td>
+            <tr style="border-bottom:1px solid #f1f5f9" title="放量 | 多头衰竭">
+              <td style="padding:6px 4px;color:#94a3b8">10</td>
+              <td style="padding:6px 4px;font-weight:700">BR</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">5,312.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.3%</td>
+              <td style="padding:6px 4px">13,045.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+12.6%</td>
               <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">27.4%</td>
-              <td style="padding:6px 4px">1.24</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.549</td>
+              <td style="padding:6px 4px">38.7%</td>
+              <td style="padding:6px 4px">1.75</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.02</td>
+              <td style="padding:6px 4px;color:#ef4444">-58.6%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.608</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认 | DC20:突破高点 DC60:突破高点 多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">11</td>
+              <td style="padding:6px 4px;font-weight:700">CY</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">21,315.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.0%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">15.2%</td>
+              <td style="padding:6px 4px">1.00</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.23</td>
+              <td style="padding:6px 4px;color:#10b981">+6.1%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.607</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，波动率squeeze | 多头确认 Squeeze">
+              <td style="padding:6px 4px;color:#94a3b8">12</td>
+              <td style="padding:6px 4px;font-weight:700">CS</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">2,673.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">11.5%</td>
+              <td style="padding:6px 4px">0.92</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.28</td>
+              <td style="padding:6px 4px;color:#10b981">+124.9%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.591</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
+              <td style="padding:6px 4px;color:#94a3b8">13</td>
+              <td style="padding:6px 4px;font-weight:700">AU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">贵金属</td>
+              <td style="padding:6px 4px">1,151.1</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.6%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">71.7%</td>
+              <td style="padding:6px 4px">1.46</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.00</td>
+              <td style="padding:6px 4px;color:#94a3b8">-1.2%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.567</td>
               <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
             </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="—">
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势空头">
+              <td style="padding:6px 4px;color:#94a3b8">14</td>
+              <td style="padding:6px 4px;font-weight:700">I</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">752.5</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.7%</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">空头</td>
+              <td style="padding:6px 4px">16.3%</td>
+              <td style="padding:6px 4px">0.90</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.79</td>
+              <td style="padding:6px 4px;color:#94a3b8">+2.8%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.563</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
               <td style="padding:6px 4px;color:#94a3b8">15</td>
-              <td style="padding:6px 4px;font-weight:700">SN</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
-              <td style="padding:6px 4px">416,160.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.3%</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">震荡</td>
-              <td style="padding:6px 4px">75.3%</td>
-              <td style="padding:6px 4px">1.17</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.545</td>
-              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:10px">—</span></td>
+              <td style="padding:6px 4px;font-weight:700">UR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">1,838.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">14.0%</td>
+              <td style="padding:6px 4px">1.10</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.39</td>
+              <td style="padding:6px 4px;color:#10b981">+16.7%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.562</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
             </tr>
           </tbody>
         </table>
@@ -779,9 +878,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
         <p>① CTA友好度 = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比，标准化到0-100</p>
-        <p>② 趋势判定：MA20斜率 &gt; 0.5%为多头，&lt; -0.5%为空头</p>
-        <p>③ 品种评分 = 0.40×|涨跌幅标准化| + 0.30×波动率分位 + 0.30×成交量比标准化</p>
-        <p>④ 信号：趋势确认(多头/空头) + 波动放大(vol↑) + 放量(量比&gt;1.2)，满足越多越强</p>
+        <p>② 趋势判定：MA5/10/20/60多头排列 + 价格位置，综合 &gt;0.3=多头，&lt;-0.3=空头</p>
+        <p>③ 评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²线性度15% + Donchian位置10%</p>
+        <p>④ 信号(最多5★)：趋势方向 + 20日突破 + 60日突破 + 放量 + OI确认 + Squeeze + 高R²</p>
+        <p>⑦ R²：近20日收盘价线性回归拟合度，&gt;0.8=趋势非常线性；OI(5d)：5日持仓量变化率</p>
         <p>⑤ 铜金比↑=经济预期改善，↓=避险升温；油金比↑=通胀/需求强，↓=衰退预期</p>
         <p>⑥ 工业品/农产品：工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利比值</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · 更新：2026-02-25</p>
