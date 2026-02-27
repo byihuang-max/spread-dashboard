@@ -166,6 +166,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-group-title">分析</div>
       <div class="nav-item" data-module="style-spread"><span class="icon">📈</span> 风格轧差 <span class="badge">6</span></div>
       <div class="nav-item" data-module="env-fit"><span class="icon">🎯</span> 策略环境适配度</div>
+      <div class="nav-item" data-module="patient-capital"><span class="icon">🏛️</span> 耐心资本持筹</div>
       <div class="nav-item" data-module="fund-flow" style="opacity:.35"><span class="icon">💰</span> 资金流与微观结构</div>
       <div class="nav-item" data-module="macro" style="opacity:.35"><span class="icon">🌍</span> 宏观与流动性</div>
       <div class="nav-item" data-module="meso" style="opacity:.35"><span class="icon">🏭</span> 中观景气</div>
@@ -218,6 +219,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <!-- ══ 风格轧差 ══ -->
     <div class="module-page" id="page-style-spread">
       <iframe src="size_spread/style_spread.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)"></iframe>
+    </div>
+
+    <!-- ══ 耐心资本持筹 ══ -->
+    <div class="module-page" id="page-patient-capital">
+      <iframe src="patient_capital/patient_capital.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)"></iframe>
     </div>
 
     <!-- ══ 策略环境适配度 ══ -->
@@ -1095,7 +1101,7 @@ function initCbCharts() {
 <!-- ═══ 导航切换 JS ═══ -->
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
+  var titles={'overview':'仪表盘','style-spread':'风格轧差','patient-capital':'耐心资本持筹','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');

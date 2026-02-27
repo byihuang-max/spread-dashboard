@@ -67,6 +67,13 @@ MODULES = {
             ('arbitrage', 'mod3_option_arb.py'),
         ],
     },
+    'patient_capital': {
+        'name': '耐心资本持筹',
+        'scripts': [
+            ('patient_capital', 'patient_data.py'),
+            ('patient_capital', 'patient_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -77,6 +84,7 @@ TAB_MAP = {
     'cta': 'commodity_cta',
     'convertible': 'cb_env',
     'arbitrage': 'arbitrage',
+    'patient-capital': 'patient_capital',
 }
 
 # ═══ 全局状态 ═══
