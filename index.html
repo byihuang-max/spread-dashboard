@@ -166,8 +166,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-group-title">分析</div>
       <div class="nav-item" data-module="style-spread"><span class="icon">📈</span> 风格轧差 <span class="badge">6</span></div>
       <div class="nav-item" data-module="env-fit"><span class="icon">🎯</span> 策略环境适配度</div>
-      <div class="nav-item" data-module="patient-capital"><span class="icon">🏛️</span> 耐心资本持筹</div>
-      <div class="nav-item" data-module="fund-flow" style="opacity:.35"><span class="icon">💰</span> 资金流与微观结构</div>
+      <div class="nav-item" data-module="fund-flow"><span class="icon">💰</span> 资金流与微观结构</div>
       <div class="nav-item" data-module="macro" style="opacity:.35"><span class="icon">🌍</span> 宏观与流动性</div>
       <div class="nav-item" data-module="meso" style="opacity:.35"><span class="icon">🏭</span> 中观景气</div>
     </div>
@@ -219,11 +218,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <!-- ══ 风格轧差 ══ -->
     <div class="module-page" id="page-style-spread">
       <iframe src="size_spread/style_spread.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)"></iframe>
-    </div>
-
-    <!-- ══ 耐心资本持筹 ══ -->
-    <div class="module-page" id="page-patient-capital">
-      <iframe src="patient_capital/patient_capital.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)"></iframe>
     </div>
 
     <!-- ══ 策略环境适配度 ══ -->
@@ -1097,11 +1091,26 @@ function initCbCharts() {
       <div class="strat-page" id="strat-arbitrage">
         <iframe src="arbitrage/arbitrage.html" style="width:100%;min-height:800px;border:none"></iframe>
       </div>
+    </div><!-- /page-env-fit -->
 
-<!-- ═══ 导航切换 JS ═══ -->
+    <!-- ══ 资金流与微观结构 ══ -->
+    <div class="module-page" id="page-fund-flow">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="strat-tabs" style="margin-bottom:0">
+          <div class="strat-tab active" data-strat="patient-capital">🏛️ 耐心资本持筹</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="refreshBtnFlow" onclick="refreshFlowTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+        </div>
+      </div>
+
+      <div class="strat-page active" id="strat-patient-capital">
+        <iframe src="patient_capital/patient_capital.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+    </div><!-- /page-fund-flow -->
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style-spread':'风格轧差','patient-capital':'耐心资本持筹','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
+  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -1127,14 +1136,20 @@ function initCbCharts() {
     });
   });
 
-  // 策略 tab 切换
+  // 策略 tab 切换（限定在同一 module-page 内）
   document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
     tab.addEventListener('click',function(){
       var strat=this.getAttribute('data-strat');
       var page=document.getElementById('strat-'+strat);
       if(!page)return;
-      document.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
-      document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
+      var container=this.closest('.module-page');
+      if(container){
+        container.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
+        container.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
+      } else {
+        document.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
+        document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
+      }
       this.classList.add('active');
       page.classList.add('active');
       // 懒加载图表
@@ -1232,6 +1247,14 @@ function initCbCharts() {
         btn.innerHTML='❌ 服务未启动';
         setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
       });
+  };
+
+  // ═══ 资金流模块刷新 ═══
+  window.refreshFlowTab=function(){
+    var btn=document.getElementById('refreshBtnFlow');
+    var activeTab=document.querySelector('#page-fund-flow .strat-tab.active');
+    var strat=activeTab?activeTab.getAttribute('data-strat'):'patient-capital';
+    refreshModule(strat,btn);
   };
 
   // ═══ 全部依次刷新 ═══
