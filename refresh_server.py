@@ -111,16 +111,16 @@ def run_module(mod_key):
             result = subprocess.run(
                 [sys.executable, path],
                 cwd=cwd,
-                capture_output=True, text=True, timeout=300
+                capture_output=True, text=True, timeout=600
             )
             elapsed = time.time() - t0
             if result.returncode != 0:
                 err = result.stderr[-300:] if result.stderr else result.stdout[-300:]
                 logs.append(f"❌ 失败 ({elapsed:.1f}s): {err}")
                 return False, logs
-            logs.append(f"✅ 完成")
+            logs.append(f"✅ 完成 ({elapsed:.0f}s)")
         except subprocess.TimeoutExpired:
-            logs.append(f"❌ 超时 (>300s)")
+            logs.append(f"❌ 超时 (>600s)")
             return False, logs
         except Exception as e:
             logs.append(f"❌ 异常: {e}")

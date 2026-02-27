@@ -1151,11 +1151,17 @@ function initCbCharts() {
   })();
   window.refreshActiveTab=function(){
     var btn=document.getElementById('refreshBtn');
-    // 找到当前激活的 tab 名
+    // 找到当前激活的 tab/module 名
+    var strat=null;
+    // 1. 先看当前是否在策略环境的 strat-tab
     var activeTab=document.querySelector('.strat-tab.active');
-    if(!activeTab)return;
-    var strat=activeTab.getAttribute('data-strat');
-    if(!strat)return;
+    if(activeTab) strat=activeTab.getAttribute('data-strat');
+    // 2. 如果不在策略tab，看侧边栏当前模块
+    if(!strat){
+      var activeMod=document.querySelector('.nav-item.active');
+      if(activeMod) strat=activeMod.getAttribute('data-module');
+    }
+    if(!strat){btn.innerHTML='❌ 未选中模块';setTimeout(function(){btn.innerHTML='🔄 刷新当前';},2000);return;}
 
     if(!REFRESH_API){
       btn.innerHTML='❌ 刷新服务未连接';
