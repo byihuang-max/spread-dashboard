@@ -10,22 +10,24 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: #0a0e17;
-    color: #c8d6e5;
-    padding: 16px;
+    background: #ffffff;
+    color: #2d3142;
+    padding: 20px 24px;
 }
 h1 {
     text-align: center;
-    font-size: 20px;
-    color: #f5f6fa;
-    margin-bottom: 4px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 2px;
 }
 .subtitle {
     text-align: center;
-    font-size: 12px;
-    color: #636e72;
-    margin-bottom: 16px;
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 18px;
 }
+
 /* ═══ 概览卡片 ═══ */
 .cards {
     display: grid;
@@ -34,43 +36,78 @@ h1 {
     margin-bottom: 20px;
 }
 @media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+
 .card {
-    background: #141a2a;
-    border: 1px solid #1e2d4a;
+    background: #fafbfc;
+    border: 1px solid #e8ecf1;
     border-radius: 8px;
     padding: 12px 14px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s;
+    position: relative;
 }
-.card:hover { border-color: #3498db; }
-.card.active { border-color: #f39c12; background: #1a2236; }
+.card:hover { border-color: #6366f1; box-shadow: 0 2px 8px rgba(99,102,241,0.1); }
+.card.active { border-color: #6366f1; background: #f0f0ff; box-shadow: 0 2px 8px rgba(99,102,241,0.12); }
 .card .idx-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    color: #dfe6e9;
+    color: #374151;
     margin-bottom: 6px;
 }
 .card .cum {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 2px;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 3px;
+    letter-spacing: -0.5px;
 }
 .card .meta {
     font-size: 11px;
-    color: #636e72;
-    line-height: 1.6;
+    color: #6b7280;
+    line-height: 1.7;
 }
-.card .meta span { margin-right: 10px; }
-.up { color: #e74c3c; }
-.down { color: #2ecc71; }
-.flat { color: #95a5a6; }
+.card .meta span { margin-right: 8px; }
+
+/* 异常高亮：浮盈>50% 或 累计>800亿 */
+.card.highlight-warn {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+.card.highlight-warn.active {
+    border-color: #f59e0b;
+    background: #fef3c7;
+}
+.card.highlight-danger {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+.card.highlight-danger.active {
+    border-color: #ef4444;
+    background: #fee2e2;
+}
+.card .badge-alert {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+.badge-warn { background: #fef3c7; color: #b45309; }
+.badge-danger { background: #fee2e2; color: #dc2626; }
+
+.up { color: #dc2626; }
+.down { color: #16a34a; }
+.flat { color: #9ca3af; }
 
 /* ═══ 图表区 ═══ */
 .chart-section {
-    background: #141a2a;
-    border: 1px solid #1e2d4a;
+    background: #fafbfc;
+    border: 1px solid #e8ecf1;
     border-radius: 8px;
-    padding: 16px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
 }
 .chart-header {
     display: flex;
@@ -79,28 +116,91 @@ h1 {
     margin-bottom: 12px;
 }
 .chart-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #f5f6fa;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
 }
 .range-btns button {
-    background: #1e2d4a;
-    color: #b2bec3;
-    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
     padding: 4px 12px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 600;
     margin-left: 4px;
+    transition: all 0.12s;
 }
-.range-btns button.active { background: #f39c12; color: #0a0e17; }
+.range-btns button:hover { border-color: #6366f1; color: #6366f1; }
+.range-btns button.active { background: #6366f1; color: #fff; border-color: #6366f1; }
 .chart-container { position: relative; height: 320px; margin-bottom: 16px; }
 .bar-container { position: relative; height: 180px; }
 .no-data {
     text-align: center;
-    color: #636e72;
+    color: #9ca3af;
     padding: 60px 0;
     font-size: 14px;
+}
+
+/* ═══ 方法论 ═══ */
+.methodology {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.9;
+}
+.methodology h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 10px;
+}
+.methodology .step {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.methodology .step-num {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    background: #6366f1;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
+.methodology .step-text { flex: 1; }
+.methodology .note {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    border-radius: 0 4px 4px 0;
+    font-size: 11px;
+    color: #92400e;
+}
+.methodology .indices-list {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.methodology .idx-tag {
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
 }
 </style>
 </head>
@@ -125,6 +225,41 @@ h1 {
     <div class="bar-container"><canvas id="barChart"></canvas></div>
 </div>
 
+<!-- ═══ 方法论说明 ═══ -->
+<div class="methodology">
+    <h3>📐 计算方法论</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><b>数据粒度</b> — 拉取每只ETF的 <b>15分钟K线</b>（开盘、收盘、成交量、成交额），同一指数下多只ETF成交额<b>加总</b>。</div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><b>基线分离</b> — 用过去 <b>20个交易日同一时段</b>（如每天14:00-14:15）的成交额中位数作为"正常水平"基线。超出基线 <b>1.5倍</b> 的部分视为异常增量资金。</div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><b>买卖方向判定</b> — 看异常放量bar的涨跌方向：<b>阳线（收盘≥开盘）→ 买入</b>；<b>阴线（收盘＜开盘）→ 卖出</b>。大资金托底推升价格为买入，砸盘压低价格为卖出。</div>
+    </div>
+    <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><b>滚动成本计算</b> — 买入用加权均价法累计：成本 = Σ买入金额 ÷ Σ买入股数。卖出按均价法减仓。累计持仓 = 净股数 × 当日收盘价。</div>
+    </div>
+    <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text"><b>浮盈浮亏</b> — PnL = (当前收盘价 - 持仓成本) ÷ 持仓成本 × 100%</div>
+    </div>
+    <div class="note">
+        ⚠️ <b>异常高亮规则：</b>浮盈超过 50% 标注<span style="color:#b45309;font-weight:700">橙色预警</span>；累计持仓超过 800亿 标注<span style="color:#dc2626;font-weight:700">红色预警</span>。两者同时触发以红色为准。
+    </div>
+    <div style="margin-top:12px">
+        <b>跟踪标的：</b>
+        <div class="indices-list" id="indicesList"></div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#9ca3af">
+        数据起算：2023-07-03 | 数据源：Tushare 15min K线 | 基线窗口：20日同时段中位数 | 异常阈值：1.5x
+    </div>
+</div>
+
 <script>
 let DATA = null;
 let currentIndex = null;
@@ -132,18 +267,38 @@ let currentRange = 0;
 let mainChart = null;
 let barChart = null;
 
+// 异常阈值
+const WARN_PNL = 50;       // 浮盈>50% 橙色
+const DANGER_CUM = 800;    // 累计>800亿 红色
+
 async function loadData() {
     try {
         const resp = await fetch('patient_capital.json?t=' + Date.now());
         DATA = await resp.json();
         document.getElementById('updated').textContent = '更新: ' + DATA.updated;
         renderCards();
-        // 默认选中第一个
+        renderIndicesList();
         const first = Object.keys(DATA.indices)[0];
         if (first) selectIndex(first);
     } catch (e) {
         document.getElementById('cards').innerHTML = '<div class="no-data">加载数据失败: ' + e.message + '</div>';
     }
+}
+
+function renderIndicesList() {
+    const el = document.getElementById('indicesList');
+    for (const [name, info] of Object.entries(DATA.indices)) {
+        const tag = document.createElement('span');
+        tag.className = 'idx-tag';
+        tag.textContent = `${name}（${info.etfs.length}只ETF）`;
+        el.appendChild(tag);
+    }
+}
+
+function getAlertLevel(L) {
+    if (L.cum >= DANGER_CUM) return 'danger';
+    if (L.pnl >= WARN_PNL) return 'warn';
+    return null;
 }
 
 function renderCards() {
@@ -154,16 +309,23 @@ function renderCards() {
         if (!L) continue;
         const pnlClass = L.pnl > 0 ? 'up' : L.pnl < 0 ? 'down' : 'flat';
         const pnlSign = L.pnl > 0 ? '+' : '';
+        const alert = getAlertLevel(L);
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card' + (alert ? ` highlight-${alert}` : '');
         card.dataset.index = name;
+
+        let badgeHtml = '';
+        if (alert === 'danger') badgeHtml = '<span class="badge-alert badge-danger">⚠ 规模预警</span>';
+        else if (alert === 'warn') badgeHtml = '<span class="badge-alert badge-warn">⚠ 高浮盈</span>';
+
         card.innerHTML = `
+            ${badgeHtml}
             <div class="idx-name">${name}</div>
-            <div class="cum ${pnlClass}">${L.cum.toFixed(1)} 亿</div>
+            <div class="cum ${pnlClass}">${L.cum.toFixed(1)} <span style="font-size:13px;font-weight:400">亿</span></div>
             <div class="meta">
-                <span>成本 ${L.cost.toFixed(3)}</span>
-                <span>现价 ${L.close.toFixed(3)}</span>
-                <span class="${pnlClass}">${pnlSign}${L.pnl.toFixed(1)}%</span>
+                <span>成本 <b>${L.cost.toFixed(3)}</b></span>
+                <span>现价 <b>${L.close.toFixed(3)}</b></span>
+                <span class="${pnlClass}" style="font-weight:700">${pnlSign}${L.pnl.toFixed(1)}%</span>
             </div>
         `;
         card.onclick = () => selectIndex(name);
@@ -176,7 +338,7 @@ function selectIndex(name) {
     document.querySelectorAll('.card').forEach(c => {
         c.classList.toggle('active', c.dataset.index === name);
     });
-    document.getElementById('chartTitle').textContent = name + ' - 耐心资本持仓估算';
+    document.getElementById('chartTitle').textContent = name + ' — 耐心资本持仓估算';
     renderCharts();
 }
 
@@ -199,10 +361,18 @@ function renderCharts() {
         return s.slice(0,4) + '-' + s.slice(4,6) + '-' + s.slice(6,8);
     });
 
-    // ═══ 主图：收盘价 + 成本线 ═══
     const closePrices = daily.map(d => d.close);
     const costPrices = daily.map(d => d.cost > 0 ? d.cost : null);
     const cumPositions = daily.map(d => d.cum);
+
+    const chartColors = {
+        text: '#6b7280',
+        grid: 'rgba(0,0,0,0.05)',
+        price: '#3b82f6',
+        cost: '#f59e0b',
+        cum: 'rgba(99,102,241,0.5)',
+        cumBg: 'rgba(99,102,241,0.06)',
+    };
 
     if (mainChart) mainChart.destroy();
     mainChart = new Chart(document.getElementById('mainChart'), {
@@ -213,7 +383,7 @@ function renderCharts() {
                 {
                     label: '收盘价',
                     data: closePrices,
-                    borderColor: '#3498db',
+                    borderColor: chartColors.price,
                     borderWidth: 1.5,
                     pointRadius: 0,
                     tension: 0.1,
@@ -222,7 +392,7 @@ function renderCharts() {
                 {
                     label: '成本线',
                     data: costPrices,
-                    borderColor: '#f39c12',
+                    borderColor: chartColors.cost,
                     borderWidth: 2,
                     borderDash: [6, 3],
                     pointRadius: 0,
@@ -232,8 +402,8 @@ function renderCharts() {
                 {
                     label: '累计持仓(亿)',
                     data: cumPositions,
-                    borderColor: 'rgba(155,89,182,0.6)',
-                    backgroundColor: 'rgba(155,89,182,0.08)',
+                    borderColor: chartColors.cum,
+                    backgroundColor: chartColors.cumBg,
                     borderWidth: 1,
                     pointRadius: 0,
                     fill: true,
@@ -247,29 +417,24 @@ function renderCharts() {
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { labels: { color: '#b2bec3', font: { size: 11 } } },
-                tooltip: {
-                    callbacks: {
-                        title: (items) => items[0].label,
-                    }
-                }
+                legend: { labels: { color: chartColors.text, font: { size: 11 }, usePointStyle: true, pointStyle: 'line' } },
             },
             scales: {
                 x: {
-                    ticks: { color: '#636e72', maxTicksLimit: 12, font: { size: 10 } },
-                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: chartColors.text, maxTicksLimit: 12, font: { size: 10 } },
+                    grid: { color: chartColors.grid },
                 },
                 y: {
                     position: 'left',
-                    ticks: { color: '#3498db', font: { size: 10 } },
-                    grid: { color: 'rgba(255,255,255,0.04)' },
-                    title: { display: true, text: '价格', color: '#3498db', font: { size: 10 } },
+                    ticks: { color: chartColors.price, font: { size: 10 } },
+                    grid: { color: chartColors.grid },
+                    title: { display: true, text: '价格', color: chartColors.price, font: { size: 10 } },
                 },
                 y1: {
                     position: 'right',
-                    ticks: { color: '#9b59b6', font: { size: 10 } },
+                    ticks: { color: '#6366f1', font: { size: 10 } },
                     grid: { display: false },
-                    title: { display: true, text: '持仓(亿)', color: '#9b59b6', font: { size: 10 } },
+                    title: { display: true, text: '持仓(亿)', color: '#6366f1', font: { size: 10 } },
                 },
             }
         }
@@ -277,7 +442,7 @@ function renderCharts() {
 
     // ═══ 副图：每日净买卖柱状图 ═══
     const netAmts = daily.map(d => d.net);
-    const barColors = netAmts.map(v => v >= 0 ? 'rgba(231,76,60,0.7)' : 'rgba(46,204,113,0.7)');
+    const barColors = netAmts.map(v => v >= 0 ? 'rgba(220,38,38,0.6)' : 'rgba(22,163,74,0.6)');
 
     if (barChart) barChart.destroy();
     barChart = new Chart(document.getElementById('barChart'), {
@@ -295,17 +460,17 @@ function renderCharts() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: '#b2bec3', font: { size: 11 } } },
+                legend: { labels: { color: chartColors.text, font: { size: 11 }, usePointStyle: true } },
             },
             scales: {
                 x: {
-                    ticks: { color: '#636e72', maxTicksLimit: 12, font: { size: 10 } },
-                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: chartColors.text, maxTicksLimit: 12, font: { size: 10 } },
+                    grid: { color: chartColors.grid },
                 },
                 y: {
-                    ticks: { color: '#b2bec3', font: { size: 10 } },
-                    grid: { color: 'rgba(255,255,255,0.04)' },
-                    title: { display: true, text: '亿元', color: '#b2bec3', font: { size: 10 } },
+                    ticks: { color: chartColors.text, font: { size: 10 } },
+                    grid: { color: chartColors.grid },
+                    title: { display: true, text: '亿元', color: chartColors.text, font: { size: 10 } },
                 },
             }
         }
