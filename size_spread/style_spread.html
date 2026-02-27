@@ -27,9 +27,12 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 .card .value{font-size:18px;font-weight:bold;margin-top:3px}
 .pos{color:#e74c3c} .neg{color:#2ecc71}
 
-/* ── 图表行 ── */
-.row{display:flex;gap:15px;margin-top:10px}
-.row canvas{flex:1;background:#fff;border-radius:8px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+/* ── 图表区（纵向堆叠，不横向溢出） ── */
+.row{display:flex;flex-direction:column;gap:15px;margin-top:10px}
+.row canvas{width:100%;background:#fff;border-radius:8px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+
+/* ── 文字注释 ── */
+.desc{color:#666;font-size:13px;line-height:1.7;margin:10px 0;padding:10px 14px;background:#fff;border-radius:8px;border-left:3px solid #6366f1}
 
 /* ── 拥挤度标签 ── */
 .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
@@ -40,7 +43,6 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 @media(max-width:768px){
   .ss-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:4px;padding-bottom:4px}
   .ss-tab{white-space:nowrap;flex-shrink:0;padding:6px 10px;font-size:11px}
-  .row{flex-direction:column}
 }
 </style>
 </head><body>
@@ -59,6 +61,11 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 
 <!-- ══ Tab 1: 经济敏感轧差 ══ -->
 <div class="ss-page active" id="page-eco">
+  <div class="desc">
+    <b>策略逻辑：</b>做多周期板块（有色金属+煤炭+钢铁），做空防御板块（食品饮料+医药生物），
+    等权构建多空组合。净值上行表示经济复苏预期增强、周期跑赢防御；下行表示市场偏好防御。
+    <br><b>信号意义：</b>净值持续走高 → 经济景气上行周期；急涨后回落 → 周期股拥挤，注意风格切换。
+  </div>
   <div class="cards">
     <div class="card"><div class="label">轧差净值</div><div class="value pos">1.4995</div></div>
     <div class="card"><div class="label">累计收益</div><div class="value pos">+49.95%</div></div>
@@ -72,6 +79,11 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 
 <!-- ══ Tab 2: 拥挤-反身性轧差 ══ -->
 <div class="ss-page" id="page-crowd">
+  <div class="desc">
+    <b>策略逻辑：</b>每20个交易日统计申万31个行业的拥挤度（涨幅排名），选出最拥挤的 Top6 做空、
+    最冷门的 Bot6 做多，捕捉行业轮动中的反身性效应。
+    <br><b>信号意义：</b>净值上行 → 低拥挤反转有效，市场存在均值回归；净值下行 → 趋势延续性强，动量策略占优。
+  </div>
   <div class="cards">
     <div class="card"><div class="label">轧差净值</div><div class="value pos">1.0307</div></div>
     <div class="card"><div class="label">累计收益</div><div class="value pos">+3.07%</div></div>
@@ -89,6 +101,13 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 
 <!-- ══ Tab 3: 风格轧差净值（多线对比） ══ -->
 <div class="ss-page" id="page-style">
+  <div class="desc">
+    <b>策略逻辑：</b>三组经典风格对冲的净值曲线，均从1开始归一化。
+    <br>🔴 <b>中证红利-科创50</b>：价值 vs 成长，净值下行 = 成长股跑赢。
+    <br>🔵 <b>微盘股-中证全指</b>：小盘超额，净值上行 = 微盘股跑赢大盘。
+    <br>🟢 <b>中证2000-沪深300</b>：大小盘轧差，净值上行 = 小盘跑赢大盘。
+    <br><b>信号意义：</b>三线同向上行 → 市场偏好小盘成长；三线同向下行 → 大盘价值占优。分化时关注风格切换拐点。
+  </div>
   <div class="row">
     <canvas id="styleNavChart" height="200"></canvas>
   </div>
@@ -96,6 +115,11 @@ p.sub{text-align:center;color:#888;font-size:13px;margin-top:0}
 
 <!-- ══ Tab 4: 双创等权 ══ -->
 <div class="ss-page" id="page-dual">
+  <div class="desc">
+    <b>策略逻辑：</b>创业板指 + 科创50 各50%等权配置，跟踪双创板块整体走势。
+    <br><b>信号意义：</b>净值趋势性上行 → 成长风格占优，科技板块资金流入；
+    急跌后企稳 → 关注成长股反弹机会。可作为成长风格的β基准。
+  </div>
   <div class="row">
     <canvas id="dualChart" height="200"></canvas>
   </div>
