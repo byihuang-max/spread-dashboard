@@ -956,4 +956,97 @@ function initCbCharts() {
 }
 </script>
 </div>
+
+<!-- ═══ 导航切换 JS ═══ -->
+<script>
+(function(){
+  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
+
+  // 侧边栏模块切换
+  document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
+    item.addEventListener('click',function(){
+      var mod=this.getAttribute('data-module');
+      var page=document.getElementById('page-'+mod);
+      if(!page)return;
+      document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+      document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
+      this.classList.add('active');
+      page.classList.add('active');
+      document.getElementById('pageTitle').textContent=titles[mod]||mod;
+    });
+  });
+
+  // 策略 tab 切换
+  document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      var strat=this.getAttribute('data-strat');
+      var page=document.getElementById('strat-'+strat);
+      if(!page)return;
+      document.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
+      document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
+      this.classList.add('active');
+      page.classList.add('active');
+      // 懒加载图表
+      if(strat==='momentum-stock'&&typeof initMsCharts==='function')initMsCharts();
+      if(strat==='cta'&&typeof initCtaCharts==='function')initCtaCharts();
+      if(strat==='convertible'&&typeof initCbCharts==='function')initCbCharts();
+    });
+  });
+
+  // 刷新当前 tab — 调用 refresh_server API（自动选择本地或 tunnel）
+  var REFRESH_API=null;
+  (function(){
+    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';console.log('[refresh] using localhost')}
+    }).catch(function(){
+      var base=document.currentScript?new URL('.',document.currentScript.src).href:'';
+      fetch(base+'tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+        if(d&&d.url){REFRESH_API=d.url+'/api/refresh/';console.log('[refresh] using tunnel:',d.url)}
+      }).catch(function(){console.warn('[refresh] no API available')});
+    });
+  })();
+  window.refreshActiveTab=function(){
+    var btn=document.getElementById('refreshBtn');
+    var activeTab=document.querySelector('.strat-tab.active');
+    if(!activeTab)return;
+    var strat=activeTab.getAttribute('data-strat');
+    if(!strat)return;
+
+    if(!REFRESH_API){
+      btn.innerHTML='❌ 刷新服务未连接';
+      setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
+      return;
+    }
+
+    var origText=btn.innerHTML;
+    btn.disabled=true;
+    btn.innerHTML='⏳ 刷新中...';
+    btn.style.opacity='0.6';
+    btn.style.cursor='wait';
+
+    fetch(REFRESH_API+strat,{method:'POST'})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(d.ok){
+          btn.innerHTML='✅ 完成！';
+          setTimeout(function(){location.reload(true)},1000);
+        }else if(d.error){
+          btn.innerHTML='⚠️ '+d.error;
+          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
+        }else{
+          btn.innerHTML='❌ 脚本失败';
+          console.error('refresh logs:',d.logs);
+          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
+        }
+      })
+      .catch(function(e){
+        btn.innerHTML='❌ 服务未启动';
+        console.error('refresh error:',e);
+        setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
+      });
+  };
+
+  document.getElementById('updateTime').textContent='更新: '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+})();
+</script>
       
