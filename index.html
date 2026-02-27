@@ -763,14 +763,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">2026-02-25</b></span>
+  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
 </div>
 
 <!-- 总览卡片 -->
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
   <div class="card" style="text-align:center;padding:14px 8px">
     <div style="font-size:11px;color:var(--text-sub)">转债友好度</div>
-    <div style="font-size:28px;font-weight:700;color:#f59e0b;margin:4px 0">61.7</div>
+    <div style="font-size:28px;font-weight:700;color:#f59e0b;margin:4px 0">60.0</div>
     <div style="font-size:10px;color:var(--text-sub)">0-100 综合评分</div>
   </div>
   <div class="card" style="text-align:center;padding:14px 8px">
@@ -795,7 +795,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   </div>
   <div class="card" style="text-align:center;padding:14px 8px">
     <div style="font-size:11px;color:var(--text-sub)">数据日期</div>
-    <div style="font-size:16px;font-weight:600;color:var(--text);margin:8px 0">2026-02-25</div>
+    <div style="font-size:16px;font-weight:600;color:var(--text);margin:8px 0">2026-02-27</div>
     <div style="font-size:10px;color:var(--text-sub)">57个交易日</div>
   </div>
 </div>
@@ -806,7 +806,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
     <div style="text-align:center">
       <div style="font-size:10px;color:var(--text-sub)">活跃度</div>
-      <div style="font-size:20px;font-weight:700;color:#f59e0b">62</div>
+      <div style="font-size:20px;font-weight:700;color:#f59e0b">60</div>
       <div style="font-size:9px;color:var(--text-sub)">成交额×小盘相关</div>
     </div>
     <div style="text-align:center">
@@ -866,16 +866,16 @@ function initCbCharts() {
   if (_cbChartsInited) return;
   _cbChartsInited = true;
 
-  var dates = ["2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-24", "2026-02-25"];
-  var cbAmount = [549.45, 651.79, 553.29, 468.56, 541.1, 525.56, 601.53, 652.92, 592.77, 544.33, 568.14, 673.67, 593.94, 578.62, 632.44, 657.13, 718.44, 704.67, 713.32, 758.99, 885.25, 940.52, 780.9, 830.53, 818.9, 850.75, 959.68, 928.06, 979.67, 1018.66, 1084.74, 1038.44, 1114.29, 953.71, 1034.58, 869.68, 883.43, 912.89, 957.74, 1040.98, 962.16, 908.73, 836.81, 870.04, 932.63, 850.83, 975.48, 873.32, 740.57, 887.48, 857.98, 765.36, 740.98, 833.88, 758.73, 649.37, 0.0];
-  var corr1000 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.4225, 0.4488, 0.4165, 0.4908, 0.43, 0.5537, 0.5134, 0.5141, 0.4893, 0.4613, 0.4566, 0.4854, 0.5442, 0.4905, 0.4915, 0.4354, 0.4254, 0.4011, 0.4163, 0.4212, 0.435, 0.481, 0.4938, 0.4926, 0.4733, 0.3989, 0.4607, 0.5181, 0.5138, 0.5516, 0.4696, 0.3971, 0.375, 0.3644, 0.3934, 0.4299, 0.4574, 0.1993];
-  var corr2000 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.3798, 0.4208, 0.3692, 0.4247, 0.3989, 0.5156, 0.4871, 0.4614, 0.4293, 0.4021, 0.3942, 0.4437, 0.5141, 0.5047, 0.5624, 0.5364, 0.4317, 0.3888, 0.3994, 0.4125, 0.4252, 0.4527, 0.4768, 0.5181, 0.4919, 0.4618, 0.5103, 0.5702, 0.56, 0.577, 0.5299, 0.4656, 0.4608, 0.447, 0.408, 0.4323, 0.5142, 0.2332];
-  var avgPrice = [162.52, 163.64, 164.52, 162.71, 162.28, 161.72, 164.39, 166.42, 164.29, 165.5, 163.52, 167.6, 166.14, 160.38, 165.68, 166.0, 167.2, 169.11, 168.46, 171.93, 174.19, 173.5, 173.22, 174.01, 174.5, 175.27, 173.41, 181.82, 173.76, 186.89, 180.55, 180.14, 179.67, 181.9, 191.9, 185.19, 182.73, 187.0, 189.38, 186.58, 181.11, 185.83, 188.33, 186.92, 181.64, 180.79, 188.64, 183.8, 185.23, 188.42, 188.84, 187.44, 187.12, 188.4, 191.24, 181.53, null];
-  var avgPremium = [27.74, 27.65, 25.37, 25.47, 26.67, 24.95, 24.39, 26.13, 25.12, 25.39, 26.23, 26.51, 26.87, 27.91, 28.88, 28.16, 30.45, 28.03, 30.58, 27.22, 28.22, 29.24, 28.62, 30.06, 29.23, 31.7, 32.07, 33.99, 32.79, 32.58, 33.89, 32.95, 31.96, 35.43, 35.1, 33.53, 30.98, 33.89, 32.85, 33.83, 33.03, 35.82, 34.79, 36.36, 33.17, 34.43, 35.05, 30.75, 32.83, 36.07, 34.5, 33.93, 31.71, 33.64, 33.5, null, null];
-  var pricePct = [50.0, 50.0, 66.7, 25.0, 0.0, 0.0, 71.4, 87.5, 55.6, 80.0, 36.4, 91.7, 76.9, 0.0, 73.3, 75.0, 88.2, 94.4, 89.5, 95.0, 95.2, 90.9, 87.0, 91.7, 96.0, 96.2, 77.8, 96.4, 79.3, 96.7, 90.3, 87.5, 84.8, 94.1, 97.1, 91.7, 89.2, 94.7, 94.9, 87.5, 75.6, 85.7, 93.0, 88.6, 71.1, 67.4, 93.6, 77.1, 79.6, 92.0, 94.1, 86.5, 84.9, 88.9, 96.4, 58.9, null];
-  var deltaMed = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.4205, 0.412, 0.4377, 0.4266, 0.429, 0.4301, 0.4482, 0.4547, 0.4376, 0.4439, 0.4428, 0.4933, 0.4879, 0.4749, 0.4953, 0.4764, 0.4945, 0.4927, 0.4892, 0.502, 0.4966, 0.4798, 0.4804, 0.4724, 0.4919, 0.5211, 0.5339, 0.5194, 0.5357, 0.5386, 0.5397, 0.5515, 0.5277, 0.5424, 0.5178, 0.5091, null];
-  var medianPrice = [130.68, 131.08, 131.49, 130.59, 130.48, 130.3, 131.66, 132.36, 131.25, 132.04, 130.98, 130.94, 130.94, 129.95, 130.8, 131.3, 132.14, 133.09, 132.47, 133.31, 134.24, 134.01, 133.03, 133.45, 133.74, 135.44, 137.42, 137.17, 137.44, 138.32, 139.92, 137.95, 138.2, 138.43, 139.07, 139.73, 138.99, 140.55, 142.24, 143.19, 141.02, 140.96, 142.73, 141.48, 140.01, 136.72, 140.36, 140.11, 139.52, 140.98, 142.01, 142.0, 142.41, 143.29, 142.06, 143.57, null];
-  var belowPar = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null];
+  var dates = ["2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27"];
+  var cbAmount = [553.29, 468.56, 541.1, 525.56, 601.53, 652.92, 592.77, 544.33, 568.14, 673.67, 593.94, 578.62, 632.44, 657.13, 718.44, 704.67, 713.32, 758.99, 885.25, 940.52, 780.9, 830.53, 818.9, 850.75, 959.68, 928.06, 979.67, 1018.66, 1084.74, 1038.44, 1114.29, 953.71, 1034.58, 869.68, 883.43, 912.89, 957.74, 1040.98, 962.16, 908.73, 836.81, 870.04, 932.63, 850.83, 975.48, 873.32, 740.57, 887.48, 857.98, 765.36, 740.98, 833.88, 758.73, 649.37, 795.61, 734.08, 0.0];
+  var corr1000 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.4954, 0.4908, 0.43, 0.5537, 0.5134, 0.5141, 0.4893, 0.4613, 0.4566, 0.4854, 0.5442, 0.4905, 0.4915, 0.4354, 0.4254, 0.4011, 0.4163, 0.4212, 0.435, 0.481, 0.4938, 0.4926, 0.4733, 0.3989, 0.4607, 0.5181, 0.5138, 0.5516, 0.4696, 0.3971, 0.375, 0.3644, 0.3934, 0.4299, 0.4574, 0.4174, 0.4081, 0.1743];
+  var corr2000 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.4392, 0.4247, 0.3989, 0.5156, 0.4871, 0.4614, 0.4293, 0.4021, 0.3942, 0.4437, 0.5141, 0.5047, 0.5624, 0.5364, 0.4317, 0.3888, 0.3994, 0.4125, 0.4252, 0.4527, 0.4768, 0.5181, 0.4919, 0.4618, 0.5103, 0.5702, 0.56, 0.577, 0.5299, 0.4656, 0.4608, 0.447, 0.408, 0.4323, 0.5142, 0.4677, 0.4594, 0.2];
+  var avgPrice = [164.52, 162.71, 162.28, 161.72, 164.39, 166.42, 164.29, 165.5, 163.52, 167.6, 166.14, 160.38, 165.68, 166.0, 167.2, 169.11, 168.46, 171.93, 174.19, 173.5, 173.22, 174.01, 174.5, 175.27, 173.41, 181.82, 173.76, 186.89, 180.55, 180.14, 179.67, 181.9, 191.9, 185.19, 182.73, 187.0, 189.38, 186.58, 181.11, 185.83, 188.33, 186.92, 181.64, 180.79, 188.64, 183.8, 185.23, 188.42, 188.84, 187.44, 187.12, 188.4, 191.24, 181.53, 185.27, 182.4, null];
+  var avgPremium = [25.37, 25.47, 26.67, 24.95, 24.39, 26.13, 25.12, 25.39, 26.23, 26.51, 26.87, 27.91, 28.88, 28.16, 30.45, 28.03, 30.58, 27.22, 28.22, 29.24, 28.62, 30.06, 29.23, 31.7, 32.07, 33.99, 32.79, 32.58, 33.89, 32.95, 31.96, 35.43, 35.1, 33.53, 30.98, 33.89, 32.85, 33.83, 33.03, 35.82, 34.79, 36.36, 33.17, 34.43, 35.05, 30.75, 32.83, 36.07, 34.5, 33.93, 31.71, 33.64, 33.5, null, null, null, null];
+  var pricePct = [50.0, 0.0, 0.0, 0.0, 60.0, 83.3, 42.9, 75.0, 33.3, 90.0, 72.7, 0.0, 69.2, 71.4, 86.7, 93.8, 88.2, 94.4, 94.7, 90.0, 85.7, 90.9, 95.7, 95.8, 76.0, 96.2, 77.8, 96.4, 89.7, 86.7, 83.9, 93.8, 97.0, 91.2, 88.6, 94.4, 94.6, 86.8, 74.4, 85.0, 92.7, 88.1, 69.8, 65.9, 93.3, 76.1, 78.7, 91.7, 93.9, 86.0, 84.3, 88.5, 96.2, 57.4, 70.9, 62.5, null];
+  var deltaMed = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.4377, 0.4266, 0.429, 0.4301, 0.4482, 0.4547, 0.4376, 0.4439, 0.4428, 0.4933, 0.4879, 0.4749, 0.4953, 0.4764, 0.4945, 0.4927, 0.4892, 0.502, 0.4966, 0.4798, 0.4804, 0.4724, 0.4919, 0.5211, 0.5339, 0.5194, 0.5357, 0.5386, 0.5397, 0.5515, 0.5277, 0.5424, 0.5178, 0.5091, 0.524, 0.508, null];
+  var medianPrice = [131.49, 130.59, 130.48, 130.3, 131.66, 132.36, 131.25, 132.04, 130.98, 130.94, 130.94, 129.95, 130.8, 131.3, 132.14, 133.09, 132.47, 133.31, 134.24, 134.01, 133.03, 133.45, 133.74, 135.44, 137.42, 137.17, 137.44, 138.32, 139.92, 137.95, 138.2, 138.43, 139.07, 139.73, 138.99, 140.55, 142.24, 143.19, 141.02, 140.96, 142.73, 141.48, 140.01, 136.72, 140.36, 140.11, 139.52, 140.98, 142.01, 142.0, 142.41, 143.29, 142.06, 143.57, 144.31, 143.68, null];
+  var belowPar = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null];
 
   var baseOpts = {
     responsive: true,
@@ -956,107 +956,4 @@ function initCbCharts() {
 }
 </script>
 </div>
-
-      <div class="strat-page" id="strat-arbitrage">
-        <iframe src="arbitrage/arbitrage.html" style="width:100%;min-height:800px;border:none"></iframe>
-      </div>
-
-<!-- ═══ 导航切换 JS ═══ -->
-<script>
-(function(){
-  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
-
-  // 侧边栏模块切换
-  document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
-    item.addEventListener('click',function(){
-      var mod=this.getAttribute('data-module');
-      var page=document.getElementById('page-'+mod);
-      if(!page)return;
-      document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
-      document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
-      this.classList.add('active');
-      page.classList.add('active');
-      document.getElementById('pageTitle').textContent=titles[mod]||mod;
-    });
-  });
-
-  // 策略 tab 切换
-  document.querySelectorAll('.strat-tab[data-strat]').forEach(function(tab){
-    tab.addEventListener('click',function(){
-      var strat=this.getAttribute('data-strat');
-      var page=document.getElementById('strat-'+strat);
-      if(!page)return;
-      document.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
-      document.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
-      this.classList.add('active');
-      page.classList.add('active');
-      // 懒加载图表
-      if(strat==='momentum-stock'&&typeof initMsCharts==='function')initMsCharts();
-      if(strat==='cta'&&typeof initCtaCharts==='function')initCtaCharts();
-      if(strat==='convertible'&&typeof initCbCharts==='function')initCbCharts();
-    });
-  });
-
-  // 刷新当前 tab — 调用 refresh_server API（自动选择本地或 tunnel）
-  var REFRESH_API=null;
-  (function(){
-    // 优先尝试本机
-    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';console.log('[refresh] using localhost')}
-    }).catch(function(){
-      // fallback: 读 tunnel_url.json
-      var base=document.currentScript?new URL('.',document.currentScript.src).href:'';
-      fetch(base+'tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-        if(d&&d.url){REFRESH_API=d.url+'/api/refresh/';console.log('[refresh] using tunnel:',d.url)}
-      }).catch(function(){console.warn('[refresh] no API available')});
-    });
-  })();
-  window.refreshActiveTab=function(){
-    var btn=document.getElementById('refreshBtn');
-    // 找到当前激活的 tab 名
-    var activeTab=document.querySelector('.strat-tab.active');
-    if(!activeTab)return;
-    var strat=activeTab.getAttribute('data-strat');
-    if(!strat)return;
-
-    if(!REFRESH_API){
-      btn.innerHTML='❌ 刷新服务未连接';
-      setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
-      return;
-    }
-
-    // 禁用按钮 + 显示加载状态
-    var origText=btn.innerHTML;
-    btn.disabled=true;
-    btn.innerHTML='⏳ 刷新中...';
-    btn.style.opacity='0.6';
-    btn.style.cursor='wait';
-
-    fetch(REFRESH_API+strat,{method:'POST'})
-      .then(function(r){return r.json()})
-      .then(function(d){
-        if(d.ok){
-          btn.innerHTML='✅ 完成！';
-          // 刷新页面以加载新数据
-          setTimeout(function(){location.reload(true)},1000);
-        }else if(d.error){
-          btn.innerHTML='⚠️ '+d.error;
-          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-        }else{
-          btn.innerHTML='❌ 脚本失败';
-          console.error('refresh logs:',d.logs);
-          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-        }
-      })
-      .catch(function(e){
-        btn.innerHTML='❌ 服务未启动';
-        console.error('refresh error:',e);
-        setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-      });
-  };
-
-  // 更新时间
-  document.getElementById('updateTime').textContent='更新: '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-})();
-</script>
       

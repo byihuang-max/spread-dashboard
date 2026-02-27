@@ -227,30 +227,48 @@ def fetch_cb_basic_fresh():
 
 
 def fetch_stk_daily_incremental(stk_codes, new_dates):
-    """按日期批量拉取正股行情（trade_date 模式，大幅减少 API 调用次数）"""
+    """只拉转债对应正股行情（并发按个股拉取，不再拉全市场）"""
     if not new_dates or not stk_codes:
         return
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     stk_headers = ['ts_code', 'trade_date', 'close', 'pct_chg']
-    new_rows = []
-    sorted_dates = sorted(new_dates)
-    stk_set = set(stk_codes)
-    for i, dt in enumerate(sorted_dates):
-        log(f"  [{i+1}/{len(sorted_dates)}] stk_daily {dt}...")
+    start_date = min(new_dates)
+    end_date = max(new_dates)
+    date_set = set(new_dates)
+    stk_list = sorted(stk_codes)
+
+    def fetch_one(ts_code):
         fields, items = ts_api("daily", {
-            "trade_date": dt,
-        }, fields="ts_code,trade_date,close,pct_chg")
-        if not fields:
-            time.sleep(0.5)
-            continue
-        for it in items:
-            rec = dict(zip(fields, it))
-            if rec.get("ts_code") in stk_set:
-                new_rows.append([rec["ts_code"], rec["trade_date"],
-                                rec["close"], rec["pct_chg"]])
-        time.sleep(0.3)
+            "ts_code": ts_code,
+            "start_date": start_date,
+            "end_date": end_date,
+        }, fields="ts_code,trade_date,close,pct_chg", retries=2)
+        rows = []
+        if fields:
+            for it in items:
+                rec = dict(zip(fields, it))
+                if rec.get("trade_date") in date_set:
+                    rows.append([rec["ts_code"], rec["trade_date"],
+                                 rec["close"], rec["pct_chg"]])
+        return rows
+
+    new_rows = []
+    done = 0
+    WORKERS = 8
+    log(f"  并发拉取 {len(stk_list)} 只正股（{WORKERS} 线程）...")
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        futures = {pool.submit(fetch_one, code): code for code in stk_list}
+        for fut in as_completed(futures):
+            done += 1
+            try:
+                new_rows.extend(fut.result())
+            except Exception as e:
+                log(f"  ⚠️ {futures[fut]}: {e}")
+            if done % 100 == 0:
+                log(f"  ... {done}/{len(stk_list)}")
     if new_rows:
         append_csv(STK_DAILY_CSV, stk_headers, new_rows)
-    log(f"  新增 {len(new_rows)} 行正股行情（{len(sorted_dates)}天批量拉取）")
+    log(f"  新增 {len(new_rows)} 行正股行情（{len(stk_list)}只个股并发拉取）")
 
 
 def fetch_idx_daily_incremental(index_codes, new_dates):
@@ -432,9 +450,14 @@ def main():
     else:
         log(f"\n  需要增量拉取: {len(new_dates)} 天 ({new_dates[0]} ~ {new_dates[-1]})")
     
-    # 3. 转债基本信息（每次更新）
+    # 3. 转债基本信息（增量模式下复用已有CSV，每周一或不存在时才全量更新）
     log("\n[2/5] 转债基本信息...")
-    fetch_cb_basic_fresh()
+    cb_basic_exists = os.path.exists(CB_BASIC_CSV) and os.path.getsize(CB_BASIC_CSV) > 1000
+    is_monday = datetime.now().weekday() == 0
+    if cb_basic_exists and not is_monday:
+        log("  cb_basic.csv 已存在，跳过全量拉取（每周一自动更新）")
+    else:
+        fetch_cb_basic_fresh()
     
     # 读取 cb_map 用于确定正股代码
     headers, rows = read_csv(CB_BASIC_CSV)
