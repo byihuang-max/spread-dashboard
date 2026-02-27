@@ -12,9 +12,14 @@
   --border:#e8eaef;
   --accent:#2563eb;
 }
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;margin:0;padding:20px;background:var(--bg);color:var(--text);font-size:14px}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;margin:0;padding:12px 20px 20px;background:var(--bg);color:var(--text);font-size:14px}
 
-.ss-tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap;padding:0 2px}
+.ss-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.ss-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0}
+.refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
+.refresh-btn:active{transform:scale(0.96)}
+.refresh-btn.loading{pointer-events:none;opacity:0.6}
 .ss-tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;
   background:#fff;border:1px solid #e5e7eb;transition:all .12s;color:#6b7280}
 .ss-tab:hover{color:#333;border-color:#cbd5e1}
@@ -46,11 +51,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </style>
 </head><body>
 
-<div class="ss-tabs">
-  <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
-  <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
-  <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
-  <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
+<div class="ss-header">
+  <div class="ss-tabs">
+    <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
+    <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
+    <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
+    <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
+  </div>
+  <button class="refresh-btn" id="refreshBtnSpread" onclick="refreshSpread()">🔄 刷新数据</button>
 </div>
 
 <!-- Tab 1: 经济敏感轧差 -->
@@ -266,5 +274,14 @@ document.querySelectorAll('.ss-tab').forEach(function(tab) {
 });
 
 initTab('eco');
+
+function refreshSpread(){
+  var btn=document.getElementById('refreshBtnSpread');
+  btn.classList.add('loading');btn.textContent='⏳ 刷新中...';
+  fetch('http://localhost:9876/api/refresh/style-spread',{method:'POST'})
+    .then(function(r){return r.json()})
+    .then(function(d){btn.classList.remove('loading');btn.textContent=d.ok?'✅ 完成':'❌ 失败';setTimeout(function(){btn.textContent='🔄 刷新数据';if(d.ok)location.reload()},1200)})
+    .catch(function(){btn.classList.remove('loading');btn.textContent='❌ 网络错误';setTimeout(function(){btn.textContent='🔄 刷新数据'},2000)});
+}
 </script>
 </body></html>
