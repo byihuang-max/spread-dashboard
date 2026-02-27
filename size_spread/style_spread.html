@@ -129,5 +129,16 @@ new Chart(document.getElementById('styleNavChart'),{type:'line',data:{labels:sty
 new Chart(document.getElementById('dualChart'),{type:'line',data:{labels:di_dates,datasets:[{
   data:di_navs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.08)',fill:true,tension:0.3,pointRadius:1,borderWidth:2
 }]},options:lineOpts('双创等权净值')});
+
+// Fix: Chart.js renders 0-width canvases when loaded inside display:none iframe
+// Resize all charts when the page becomes visible
+var allCharts = Chart.instances;
+function resizeAllCharts() {
+  Object.values(allCharts).forEach(function(c) { c.resize(); });
+}
+// Method 1: listen for visibility change (iframe becomes visible)
+new ResizeObserver(function() { resizeAllCharts(); }).observe(document.body);
+// Method 2: also handle window resize
+window.addEventListener('resize', resizeAllCharts);
 </script>
 </body></html>
