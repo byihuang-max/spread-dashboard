@@ -266,7 +266,7 @@ def inject(html_content):
         return False
     
     # 找到这个 div 的结束位置（下一个 strat-page 或 </main>）
-    next_markers = ['<div class="strat-page" id="strat-arb">', '</main>']
+    next_markers = ['<div class="strat-page" id="strat-arbitrage">', '<!-- ═══ 导航切换 JS ═══ -->', '</main>']
     end_idx = len(page)
     for marker in next_markers:
         idx = page.find(marker, start_idx + len(start_marker))

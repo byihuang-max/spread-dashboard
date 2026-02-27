@@ -383,6 +383,24 @@ def calc_score(mod1, mod2, mod3, mod4):
 
 # ═══ 主流程 ═══
 
+def find_latest_index(mod1):
+    """找到最近一个有完整数据的交易日索引（跳过盘中空数据）"""
+    amounts = mod1["series"]["cb_amount"]
+    counts = mod1["series"]["cb_active_count"]
+    for i in range(len(amounts) - 1, -1, -1):
+        if counts[i] > 0 and amounts[i] > 0:
+            return i
+    return len(amounts) - 1  # fallback
+
+def pick_latest(series_dict, idx):
+    """从 series 中按 idx 取值，构造 latest dict"""
+    result = {}
+    for key, arr in series_dict.items():
+        if key == 'dates':
+            continue
+        result[key] = arr[idx] if idx < len(arr) else None
+    return result
+
 def main():
     log("=" * 50)
     log("转债指增策略环境 — 计算模块")
@@ -396,6 +414,21 @@ def main():
     mod3 = calc_mod3(data)
     mod4 = calc_mod4(data)
 
+    # 检测最后一天是否数据不完整（盘中/未收盘），如果是则用倒数第二天做 latest
+    last_idx = len(data["meta"]["dates"]) - 1
+    valid_idx = find_latest_index(mod1)
+    if valid_idx < last_idx:
+        log(f"\n⚠️ 最后一天 {data['meta']['dates'][last_idx]} 数据不完整，总览使用 {data['meta']['dates'][valid_idx]}")
+        # 重建各模块的 latest
+        mod1["latest"] = pick_latest(mod1["series"], valid_idx)
+        mod1["latest"]["cb_amount"] = round(mod1["latest"].get("cb_amount", 0), 2)
+        mod1["latest"]["cb_amount_ma5"] = round(mean(mod1["series"]["cb_amount"][max(0,valid_idx-4):valid_idx+1]), 2) if valid_idx >= 4 else None
+        mod2["latest"] = pick_latest(mod2["series"], valid_idx)
+        mod3["latest"] = pick_latest(mod3["series"], valid_idx)
+        mod4["latest"] = pick_latest(mod4["series"], valid_idx)
+
+    effective_date = data["meta"]["dates"][valid_idx]
+
     score, details = calc_score(mod1, mod2, mod3, mod4)
     log(f"\n综合评分: {score}/100")
     for name, s in details:
@@ -407,7 +440,7 @@ def main():
             "dates": data["meta"]["dates"],
             "n_dates": data["meta"]["n_dates"],
             "n_cb": data["meta"]["n_cb"],
-            "last_date": data["meta"]["dates"][-1],
+            "last_date": effective_date,
         },
         "score": score,
         "score_details": details,
