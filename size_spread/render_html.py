@@ -14,6 +14,8 @@ with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 update_time = data["update_time"]
+# formatted date: 20260227 → 2026-02-27
+update_date = f"{update_time[:4]}-{update_time[4:6]}-{update_time[6:8]}" if len(update_time) == 8 else update_time
 
 # --- 经济敏感 ---
 eco = data["eco_sensitive"]
@@ -23,7 +25,6 @@ eco_s = json.dumps(eco["spreads"])
 eco_final = eco["navs"][-1] if eco["navs"] else 1.0
 eco_cls = "pos" if eco_final >= 1 else "neg"
 eco_days = len(eco["dates"])
-eco_last_date = eco["dates"][-1] if eco["dates"] else ""
 
 # --- 拥挤度 ---
 cr = data["crowding"]
@@ -33,7 +34,6 @@ cr_s = json.dumps(cr["spreads"])
 cr_final = cr["navs"][-1] if cr["navs"] else 1.0
 cr_cls = "pos" if cr_final >= 1 else "neg"
 cr_days = len(cr["dates"])
-cr_last_date = cr["dates"][-1] if cr["dates"] else ""
 last_top = cr["top_names"][-1] if cr["top_names"] else ""
 last_bot = cr["bot_names"][-1] if cr["bot_names"] else ""
 if isinstance(last_top, list):
@@ -51,7 +51,6 @@ style_json = json.dumps(style, ensure_ascii=False)
 di = data["dual_innovation"]
 di_d = json.dumps(di["dates"])
 di_n = json.dumps(di["navs"])
-di_last_date = di["dates"][-1] if di["dates"] else ""
 
 html = f'''<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -111,7 +110,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{eco_last_date}</b></span>
+    <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#e67e22">
@@ -150,7 +149,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 2: 拥挤-反身性轧差 -->
 <div class="ss-page" id="page-crowd">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">{cr_last_date}</b></span>
+    <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#c0392b">
@@ -196,7 +195,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 3: 风格轧差净值 -->
 <div class="ss-page" id="page-style">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">{eco_last_date}</b></span>
+    <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 风格轧差多线对比</div>
@@ -216,7 +215,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 4: 双创等权 -->
 <div class="ss-page" id="page-dual">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">{di_last_date}</b></span>
+    <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权净值</div>
