@@ -230,7 +230,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <div class="strat-tab" data-strat="convertible">🔄 转债</div>
           <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
         </div>
-        <button id="refreshBtn" onclick="refreshActiveTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="refreshBtn" onclick="refreshActiveTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+          <button id="refreshAllBtn" onclick="refreshAllTabs()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 全部刷新</button>
+        </div>
       </div>
 
       <div class="strat-page active" id="strat-quant-stock">
@@ -1197,6 +1200,64 @@ function initCbCharts() {
         console.error('refresh error:',e);
         setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
       });
+  };
+
+  // ═══ 全部依次刷新 ═══
+  var ALL_TABS = [
+    {strat:'momentum-stock', name:'强势股'},
+    {strat:'quant-stock', name:'宽基量化'},
+    {strat:'style-spread', name:'风格轧差'},
+    {strat:'cta', name:'商品CTA'},
+    {strat:'convertible', name:'转债'},
+    {strat:'arbitrage', name:'套利'},
+  ];
+  window.refreshAllTabs=function(){
+    var btn=document.getElementById('refreshAllBtn');
+    var origText=btn.innerHTML;
+    if(!REFRESH_API){
+      btn.innerHTML='❌ 刷新服务未连接';
+      setTimeout(function(){btn.innerHTML=origText;},2000);
+      return;
+    }
+    // 禁用两个按钮
+    btn.disabled=true;btn.style.opacity='0.6';btn.style.cursor='wait';
+    var btnSingle=document.getElementById('refreshBtn');
+    if(btnSingle){btnSingle.disabled=true;btnSingle.style.opacity='0.4';}
+
+    var total=ALL_TABS.length;
+    var done=0;var failed=[];var startTime=Date.now();
+
+    function next(idx){
+      if(idx>=total){
+        // 完成
+        var elapsed=((Date.now()-startTime)/1000).toFixed(0);
+        if(failed.length===0){
+          btn.innerHTML='✅ 全部完成 ('+elapsed+'s)';
+        }else{
+          btn.innerHTML='⚠️ '+failed.length+'个失败 ('+elapsed+'s)';
+        }
+        setTimeout(function(){
+          btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+          if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
+          location.reload(true);
+        },2000);
+        return;
+      }
+      var tab=ALL_TABS[idx];
+      btn.innerHTML='⏳ '+(idx+1)+'/'+total+' '+tab.name+'...';
+      fetch(REFRESH_API+tab.strat,{method:'POST'})
+        .then(function(r){return r.json()})
+        .then(function(d){
+          if(d.ok){done++;}else{failed.push(tab.name);}
+          next(idx+1);
+        })
+        .catch(function(e){
+          console.error('refresh-all error on '+tab.name,e);
+          failed.push(tab.name);
+          next(idx+1);
+        });
+    }
+    next(0);
   };
 
   // 更新时间
