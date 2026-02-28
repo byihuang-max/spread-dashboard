@@ -81,6 +81,13 @@ MODULES = {
             ('micro_flow/crowding', 'crowding_calc.py'),
         ],
     },
+    'option_sentiment': {
+        'name': '期权情绪',
+        'scripts': [
+            ('micro_flow/option_sentiment', 'option_data.py'),
+            ('micro_flow/option_sentiment', 'option_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -93,6 +100,7 @@ TAB_MAP = {
     'arbitrage': 'arbitrage',
     'patient-capital': 'patient_capital',
     'crowding': 'crowding',
+    'option-sentiment': 'option_sentiment',
 }
 
 # ═══ 全局状态 ═══
