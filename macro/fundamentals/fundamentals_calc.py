@@ -38,7 +38,7 @@ def calc():
 
         pmi_data = []
         for _, r in pmi.iterrows():
-            d = {'month': str(r['month'])}
+            d = {'month': str(r['month']).replace('.0', '')}
             if pmi_col and pd.notna(r.get(pmi_col)):
                 d['pmi'] = round(float(r[pmi_col]), 1)
             if nmp_col and pd.notna(r.get(nmp_col)):
@@ -69,7 +69,7 @@ def calc():
         merged['scissors'] = merged['nt_yoy'] - merged['ppi_yoy']
 
         result['cpi_ppi'] = [
-            {'month': str(r['month']),
+            {'month': str(r['month']).replace('.0', ''),
              'cpi': round(float(r['nt_yoy']), 1) if pd.notna(r.get('nt_yoy')) else None,
              'ppi': round(float(r['ppi_yoy']), 1) if pd.notna(r.get('ppi_yoy')) else None,
              'scissors': round(float(r['scissors']), 1) if pd.notna(r.get('scissors')) else None}

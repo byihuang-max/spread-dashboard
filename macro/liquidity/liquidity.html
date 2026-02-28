@@ -148,7 +148,7 @@ function renderMoney(){
   var d=DATA.money_supply||[];
   if(!d.length)return;
   new Chart(document.getElementById('moneyChart'),{type:'line',
-    data:{labels:d.map(function(x){return x.month.substring(4)}),datasets:[
+    data:{labels:d.map(function(x){var m=String(x.month).replace('.0','');return m.substring(0,4)+'-'+m.substring(4)}),datasets:[
       {label:'M1同比%',data:d.map(function(x){return x.m1}),borderColor:'#6366f1',borderWidth:2,tension:0.3,pointRadius:0},
       {label:'M2同比%',data:d.map(function(x){return x.m2}),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:0},
       {label:'剪刀差%',data:d.map(function(x){return x.scissors}),borderColor:'#f59e0b',borderWidth:2,tension:0.3,pointRadius:0,borderDash:[4,4]}

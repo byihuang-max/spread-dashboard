@@ -113,7 +113,7 @@ function renderPMI(){
   if(d.some(function(x){return x.pmi_nmp!=null}))
     datasets.push({label:'非制造业PMI',data:d.map(function(x){return x.pmi_nmp||null}),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:2,borderDash:[4,4]});
   new Chart(document.getElementById('pmiChart'),{type:'line',
-    data:{labels:d.map(function(x){return x.month.substring(4)}),datasets:datasets},
+    data:{labels:d.map(function(x){var m=String(x.month).replace('.0','');return m.substring(0,4)+'-'+m.substring(4)}),datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'top',labels:{font:{size:11}}},
         annotation:{}},
@@ -124,7 +124,7 @@ function renderCPI(){
   var d=DATA.cpi_ppi||[];
   if(!d.length)return;
   new Chart(document.getElementById('cpiChart'),{type:'line',
-    data:{labels:d.map(function(x){return x.month.substring(4)}),
+    data:{labels:d.map(function(x){var m=String(x.month).replace('.0','');return m.substring(0,4)+'-'+m.substring(4)}),
       datasets:[
         {label:'CPI同比%',data:d.map(function(x){return x.cpi}),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0},
         {label:'PPI同比%',data:d.map(function(x){return x.ppi}),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0},

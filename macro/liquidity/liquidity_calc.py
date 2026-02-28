@@ -94,7 +94,7 @@ def calc():
         money['scissors'] = money['m1_yoy'] - money['m2_yoy']
 
         result['money_supply'] = [
-            {'month': str(r['month']),
+            {'month': str(r['month']).replace('.0', ''),
              'm1': round(float(r['m1_yoy']), 1) if pd.notna(r['m1_yoy']) else None,
              'm2': round(float(r['m2_yoy']), 1) if pd.notna(r['m2_yoy']) else None,
              'scissors': round(float(r['scissors']), 1) if pd.notna(r['scissors']) else None}
