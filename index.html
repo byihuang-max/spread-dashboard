@@ -1786,7 +1786,7 @@ function initCbCharts() {
 
   // 启动：检查是否已登录
   discoverAPI(function(){
-    if(!AUTH_API){
+    if(AUTH_API===null){
       // API不可用 → 静态只读模式（pages.dev），跳过登录直接展示
       console.log('[GAMT] API not reachable, entering static readonly mode');
       STATIC_MODE = true;
