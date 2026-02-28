@@ -1737,20 +1737,9 @@ function initCbCharts() {
       document.getElementById('loginOverlay').classList.add('hidden');
       return;
     }
-    var token=localStorage.getItem('gamt_token');
-    if(token){
-      apiCall('GET','/api/auth/me').then(function(d){
-        if(d.username){
-          showApp(d);
-        }else{
-          localStorage.removeItem('gamt_token');
-          document.getElementById('loginOverlay').style.display='';
-        }
-      }).catch(function(){
-        // 网络失败，放行
-        document.getElementById('loginOverlay').classList.add('hidden');
-      });
-    }
+    // 每次都要求重新登录
+    localStorage.removeItem('gamt_token');
+    localStorage.removeItem('gamt_user');
   });
 })();
 </script>
