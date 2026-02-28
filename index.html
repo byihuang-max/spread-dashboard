@@ -1627,20 +1627,38 @@ function initCbCharts() {
 
   // 发现 API 地址（与刷新按钮同逻辑）
   function discoverAPI(cb){
-    // 优先同源（通过 tunnel 访问时，API 就在同域）
-    fetch('/api/status').then(function(r){
-      if(r.ok){AUTH_API='';cb();return;}
-      throw new Error('not ok');
-    }).catch(function(){
-      // 再试 localhost
-      fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-        if(r.ok){AUTH_API='http://localhost:9876';cb();}else{cb();}
-      }).catch(function(){
-        fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-          if(d&&d.url){AUTH_API=d.url;cb();}else{cb();}
-        }).catch(function(){cb()});
+    var attempts=0;
+    function tryDiscover(){
+      attempts++;
+      // 优先同源（通过 tunnel 访问时，API 就在同域）
+      fetch('/api/status').then(function(r){
+        if(r.ok){AUTH_API='';console.log('[auth] using same-origin');cb();return;}
+        throw new Error('status '+r.status);
+      }).catch(function(e){
+        console.log('[auth] same-origin failed:',e.message||e);
+        // 再试 localhost
+        fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+          if(r.ok){AUTH_API='http://localhost:9876';console.log('[auth] using localhost');cb();}
+          else{throw new Error('status '+r.status);}
+        }).catch(function(){
+          // 再试 tunnel_url.json
+          fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+            if(d&&d.url){AUTH_API=d.url;console.log('[auth] using tunnel:',d.url);cb();}
+            else{throw new Error('no tunnel url');}
+          }).catch(function(){
+            // 第一次全部失败→等2秒重试一次（tunnel冷启动可能慢）
+            if(attempts<2){
+              console.log('[auth] retrying in 2s...');
+              setTimeout(tryDiscover,2000);
+            }else{
+              console.log('[auth] all attempts failed, readonly mode');
+              cb();
+            }
+          });
+        });
       });
-    });
+    }
+    tryDiscover();
   }
 
   function apiCall(method, path, body){
