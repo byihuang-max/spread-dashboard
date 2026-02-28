@@ -8,7 +8,7 @@ REFRESH_TOKEN = "eyJzaWduX3RpbWUiOiIyMDI2LTAyLTA5IDE5OjE3OjQwIn0=.eyJ1aWQiOiI4ND
 
 # === Tushare 配置（备用） ===
 TS_TOKEN = "8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae"
-TS_URL = "http://lianghua.nanyangqiankun.top"
+TS_URL = "https://api.tushare.pro"
 
 def ts(api, params, fields=''):
     body = {"api_name": api, "token": TS_TOKEN, "params": params}

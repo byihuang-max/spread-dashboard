@@ -22,7 +22,7 @@ from collections import defaultdict
 
 # === Tushare ===
 TS_TOKEN = "8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae"
-TS_URL = "http://lianghua.nanyangqiankun.top"
+TS_URL = "https://api.tushare.pro"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_PATH = os.path.join(BASE_DIR, "arb_cache.json")

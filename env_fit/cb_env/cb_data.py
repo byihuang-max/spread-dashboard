@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 
 TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
-TUSHARE_URL = 'http://lianghua.nanyangqiankun.top'
+TUSHARE_URL = 'https://api.tushare.pro'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_JSON = os.path.join(BASE_DIR, 'cb_data.json')
 LOOKBACK_DAYS = 90

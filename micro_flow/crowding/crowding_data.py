@@ -13,7 +13,7 @@ CACHE_DIR = os.path.join(SCRIPT_DIR, 'cache')
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
-TUSHARE_URL_PRIVATE = 'http://lianghua.nanyangqiankun.top'
+TUSHARE_URL_PRIVATE = 'https://api.tushare.pro'
 TUSHARE_URL_OFFICIAL = 'https://api.tushare.pro'
 TUSHARE_URL = TUSHARE_URL_OFFICIAL  # 私有服务器不稳定，统一用官方
 
