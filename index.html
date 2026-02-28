@@ -147,8 +147,63 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .ss-footer .ft-title{font-size:12px;color:var(--text);font-weight:600;margin-bottom:6px}
 .ss-footer b{color:var(--text);font-weight:600}
 
+/* ── 登录遮罩 ── */
+.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1e2433 0%,#2d3a52 100%);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.login-overlay.hidden{opacity:0;pointer-events:none}
+.login-box{background:#fff;border-radius:16px;padding:40px 36px;width:380px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-box h2{font-size:20px;font-weight:700;color:#1e2433;margin-bottom:6px;text-align:center}
+.login-box .subtitle{font-size:13px;color:#8b92a5;text-align:center;margin-bottom:28px}
+.login-box label{font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px}
+.login-box input{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:16px;outline:none;transition:border .15s}
+.login-box input:focus{border-color:#2563eb}
+.login-box .btn{width:100%;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.login-box .btn-primary{background:#2563eb;color:#fff}.login-box .btn-primary:hover{background:#1d4ed8}
+.login-box .btn-link{background:none;color:#2563eb;font-size:12px;margin-top:12px}
+.login-box .err{color:#ef4444;font-size:12px;text-align:center;margin-bottom:10px;min-height:18px}
+.login-box .tabs{display:flex;margin-bottom:24px;border-bottom:2px solid #f1f5f9}
+.login-box .tab{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.login-box .tab.active{color:#2563eb;border-bottom-color:#2563eb}
+.user-bar{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-sub)}
+.user-bar .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.user-bar .logout-btn{padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:var(--text-sub)}
+.user-bar .logout-btn:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
+.user-bar .admin-btn{padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:var(--accent)}
+.user-bar .admin-btn:hover{background:var(--accent-light)}
 </style>
 </head><body>
+
+<!-- ═══ 登录遮罩 ═══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>GAMT 投研看板</h2>
+    <p class="subtitle">请登录或注册以继续使用</p>
+    <div class="tabs">
+      <div class="tab active" onclick="switchAuthTab('login')">登录</div>
+      <div class="tab" onclick="switchAuthTab('register')">注册</div>
+    </div>
+    <div class="err" id="authErr"></div>
+    <!-- 登录表单 -->
+    <div id="loginForm">
+      <label>用户名</label>
+      <input type="text" id="loginUser" placeholder="输入用户名" autocomplete="username">
+      <label>密码</label>
+      <input type="password" id="loginPass" placeholder="输入密码" autocomplete="current-password">
+      <button class="btn btn-primary" onclick="doLogin()">登 录</button>
+    </div>
+    <!-- 注册表单 -->
+    <div id="registerForm" style="display:none">
+      <label>用户名</label>
+      <input type="text" id="regUser" placeholder="2-30字符" autocomplete="username">
+      <label>显示名称（选填）</label>
+      <input type="text" id="regName" placeholder="你的名字">
+      <label>密码</label>
+      <input type="password" id="regPass" placeholder="至少6位" autocomplete="new-password">
+      <label>确认密码</label>
+      <input type="password" id="regPass2" placeholder="再输一次">
+      <button class="btn btn-primary" onclick="doRegister()">注 册</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ 移动端菜单 ═══ -->
 <button class="menu-toggle" id="menuToggle">☰</button>
@@ -1468,6 +1523,148 @@ function initCbCharts() {
 
   // 更新时间
   document.getElementById('updateTime').textContent='更新: '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+})();
+</script>
+
+<!-- ═══ 认证逻辑 ═══ -->
+<script>
+(function(){
+  var AUTH_API = null;
+  var currentUser = null;
+
+  // 发现 API 地址（与刷新按钮同逻辑）
+  function discoverAPI(cb){
+    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+      if(r.ok){AUTH_API='http://localhost:9876';cb();}
+    }).catch(function(){
+      fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+        if(d&&d.url){AUTH_API=d.url;cb();}else{cb();}
+      }).catch(function(){cb()});
+    });
+  }
+
+  function apiCall(method, path, body){
+    var opts = {method:method, headers:{'Content-Type':'application/json'}};
+    var token = localStorage.getItem('gamt_token');
+    if(token) opts.headers['Authorization']='Bearer '+token;
+    if(body) opts.body=JSON.stringify(body);
+    return fetch(AUTH_API+path, opts).then(function(r){return r.json()});
+  }
+
+  // 切换登录/注册 tab
+  window.switchAuthTab = function(tab){
+    var tabs = document.querySelectorAll('.login-box .tab');
+    tabs[0].className = tab==='login'?'tab active':'tab';
+    tabs[1].className = tab==='register'?'tab active':'tab';
+    document.getElementById('loginForm').style.display = tab==='login'?'':'none';
+    document.getElementById('registerForm').style.display = tab==='register'?'':'none';
+    document.getElementById('authErr').textContent='';
+  };
+
+  window.doLogin = function(){
+    var u=document.getElementById('loginUser').value;
+    var p=document.getElementById('loginPass').value;
+    if(!u||!p){document.getElementById('authErr').textContent='请填写用户名和密码';return;}
+    document.getElementById('authErr').textContent='登录中...';
+    apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(d){
+      if(d.ok){
+        localStorage.setItem('gamt_token',d.token);
+        localStorage.setItem('gamt_user',JSON.stringify({username:d.username,display_name:d.display_name,is_admin:d.is_admin}));
+        showApp(d);
+      }else{
+        document.getElementById('authErr').textContent=d.msg||'登录失败';
+      }
+    }).catch(function(){
+      document.getElementById('authErr').textContent='服务未连接，请确认看板服务已启动';
+    });
+  };
+
+  window.doRegister = function(){
+    var u=document.getElementById('regUser').value;
+    var n=document.getElementById('regName').value;
+    var p=document.getElementById('regPass').value;
+    var p2=document.getElementById('regPass2').value;
+    if(!u||!p){document.getElementById('authErr').textContent='请填写用户名和密码';return;}
+    if(p!==p2){document.getElementById('authErr').textContent='两次密码不一致';return;}
+    document.getElementById('authErr').textContent='注册中...';
+    apiCall('POST','/api/auth/register',{username:u,password:p,display_name:n}).then(function(d){
+      if(d.ok){
+        document.getElementById('authErr').style.color='#10b981';
+        document.getElementById('authErr').textContent='注册成功！正在登录...';
+        // 自动登录
+        apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(d2){
+          if(d2.ok){
+            localStorage.setItem('gamt_token',d2.token);
+            localStorage.setItem('gamt_user',JSON.stringify({username:d2.username,display_name:d2.display_name,is_admin:d2.is_admin}));
+            showApp(d2);
+          }
+        });
+      }else{
+        document.getElementById('authErr').style.color='#ef4444';
+        document.getElementById('authErr').textContent=d.msg||'注册失败';
+      }
+    }).catch(function(){
+      document.getElementById('authErr').textContent='服务未连接';
+    });
+  };
+
+  // Enter 键提交
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      var overlay=document.getElementById('loginOverlay');
+      if(!overlay.classList.contains('hidden')){
+        if(document.getElementById('loginForm').style.display!=='none') doLogin();
+        else doRegister();
+      }
+    }
+  });
+
+  function showApp(user){
+    currentUser=user;
+    document.getElementById('loginOverlay').classList.add('hidden');
+    // 插入用户栏到 header
+    var header=document.querySelector('.header .meta');
+    if(header){
+      var bar=document.createElement('div');
+      bar.className='user-bar';
+      bar.style.position='relative';bar.style.transform='none';
+      var initial=(user.display_name||user.username||'U').charAt(0).toUpperCase();
+      var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
+      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+'<button class="logout-btn" onclick="doLogout()">退出</button>';
+      header.appendChild(bar);
+    }
+  }
+
+  window.doLogout = function(){
+    var token=localStorage.getItem('gamt_token');
+    if(token && AUTH_API) apiCall('POST','/api/auth/logout');
+    localStorage.removeItem('gamt_token');
+    localStorage.removeItem('gamt_user');
+    location.reload();
+  };
+
+  // 启动：检查是否已登录
+  discoverAPI(function(){
+    if(!AUTH_API){
+      // API不可用时，直接显示看板（静态模式）
+      document.getElementById('loginOverlay').classList.add('hidden');
+      return;
+    }
+    var token=localStorage.getItem('gamt_token');
+    if(token){
+      apiCall('GET','/api/auth/me').then(function(d){
+        if(d.username){
+          showApp(d);
+        }else{
+          localStorage.removeItem('gamt_token');
+          document.getElementById('loginOverlay').style.display='';
+        }
+      }).catch(function(){
+        // 网络失败，放行
+        document.getElementById('loginOverlay').classList.add('hidden');
+      });
+    }
+  });
 })();
 </script>
       

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GAMT 管理后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;font-size:14px}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.subtitle{font-size:13px;color:#8b92a5;margin-bottom:24px}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid #e8eaef}
+.card h2{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;border-left:3px solid #2563eb}
+.stat .label{font-size:11px;color:#8b92a5}.stat .value{font-size:24px;font-weight:700;color:#2d3142}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:#f8f9fb;color:#8b92a5;font-weight:600;font-size:11px;border-bottom:1px solid #e8eaef}
+td{padding:10px 12px;border-bottom:1px solid #f3f4f6}
+tr:hover td{background:#fafbfc}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-green{background:#dcfce7;color:#16a34a}.tag-red{background:#fee2e2;color:#ef4444}.tag-blue{background:#dbeafe;color:#2563eb}.tag-gray{background:#f1f5f9;color:#64748b}
+.btn{padding:5px 12px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;transition:all .15s}
+.btn:hover{background:#f8fafc}
+.btn-danger{color:#ef4444;border-color:#fca5a5}.btn-danger:hover{background:#fee2e2}
+.btn-back{margin-bottom:20px;display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:#2563eb;font-size:13px;font-weight:500}
+.btn-back:hover{text-decoration:underline}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:13px}
+.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #e8eaef}
+.tab{padding:10px 20px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab.active{color:#2563eb;border-bottom-color:#2563eb}
+.tab-content{display:none}.tab-content.active{display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:12px;padding:28px;width:380px;max-width:90vw}
+.modal h3{font-size:16px;margin-bottom:16px}
+.modal input{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:12px}
+.modal .btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="btn-back" href="index.html">← 返回看板</a>
+  <h1>🛡️ GAMT 管理后台</h1>
+  <p class="subtitle">用户管理 · 登录日志 · 系统概况</p>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('users')">👤 用户列表</div>
+    <div class="tab" onclick="switchTab('logs')">📋 登录日志</div>
+  </div>
+
+  <div class="tab-content active" id="tab-users">
+    <div class="card"><table><thead><tr>
+      <th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th>
+    </tr></thead><tbody id="usersBody"></tbody></table></div>
+  </div>
+
+  <div class="tab-content" id="tab-logs">
+    <div class="card"><table><thead><tr>
+      <th>时间</th><th>用户名</th><th>IP</th><th>操作</th><th>结果</th>
+    </tr></thead><tbody id="logsBody"></tbody></table></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" style="display:none">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+var AUTH_API=null;
+
+function discoverAPI(cb){
+  fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+    if(r.ok){AUTH_API='http://localhost:9876';cb();}
+  }).catch(function(){
+    fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+      if(d&&d.url){AUTH_API=d.url;cb();}else{document.body.innerHTML='<div class="empty">服务未连接</div>';}
+    }).catch(function(){document.body.innerHTML='<div class="empty">服务未连接</div>';});
+  });
+}
+
+function apiCall(method,path,body){
+  var opts={method:method,headers:{'Content-Type':'application/json'}};
+  var token=localStorage.getItem('gamt_token');
+  if(token)opts.headers['Authorization']='Bearer '+token;
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(AUTH_API+path,opts).then(function(r){return r.json()});
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.className=t.textContent.includes(name==='users'?'用户':'日志')?'tab active':'tab'});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.className=c.id==='tab-'+name?'tab-content active':'tab-content'});
+}
+
+function loadUsers(){
+  apiCall('GET','/api/admin/users').then(function(d){
+    if(d.error){location.href='index.html';return;}
+    var users=d.users||[];
+    // Stats
+    var total=users.length;
+    var active=users.filter(function(u){return u.status==='active'}).length;
+    var today=new Date().toISOString().slice(0,10);
+    var todayNew=users.filter(function(u){return (u.created_at||'').slice(0,10)===today}).length;
+    document.getElementById('statsRow').innerHTML=
+      '<div class="stat"><div class="label">总用户数</div><div class="value">'+total+'</div></div>'+
+      '<div class="stat"><div class="label">活跃用户</div><div class="value">'+active+'</div></div>'+
+      '<div class="stat"><div class="label">今日新注册</div><div class="value">'+todayNew+'</div></div>';
+    // Table
+    var html='';
+    users.forEach(function(u){
+      var role=u.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-gray">用户</span>';
+      var status=u.status==='active'?'<span class="tag tag-green">正常</span>':'<span class="tag tag-red">已禁用</span>';
+      var actions='';
+      if(!u.is_admin){
+        var toggleBtn=u.status==='active'
+          ?'<button class="btn btn-danger" onclick="toggleUser('+u.id+',\'disabled\')">禁用</button>'
+          :'<button class="btn" onclick="toggleUser('+u.id+',\'active\')">启用</button>';
+        actions=toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> <button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
+      }
+      html+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+(u.display_name||'-')+'</td><td>'+role+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.last_login||'从未')+'</td><td>'+u.login_count+'</td><td>'+status+'</td><td>'+actions+'</td></tr>';
+    });
+    document.getElementById('usersBody').innerHTML=html||'<tr><td colspan="9" class="empty">暂无用户</td></tr>';
+  });
+}
+
+function loadLogs(){
+  apiCall('GET','/api/admin/logs').then(function(d){
+    var logs=d.logs||[];
+    var html='';
+    logs.forEach(function(l){
+      var result=l.success?'<span class="tag tag-green">成功</span>':'<span class="tag tag-red">失败</span>';
+      html+='<tr><td>'+(l.created_at||'-')+'</td><td>'+(l.username||'-')+'</td><td>'+(l.ip||'-')+'</td><td>'+(l.action||'-')+'</td><td>'+result+'</td></tr>';
+    });
+    document.getElementById('logsBody').innerHTML=html||'<tr><td colspan="5" class="empty">暂无日志</td></tr>';
+  });
+}
+
+function toggleUser(id,status){
+  apiCall('POST','/api/admin/toggle-user',{user_id:id,status:status}).then(function(){loadUsers()});
+}
+
+function delUser(id,name){
+  if(!confirm('确定删除用户 "'+name+'" ？此操作不可恢复。'))return;
+  apiCall('POST','/api/admin/delete-user',{user_id:id}).then(function(){loadUsers()});
+}
+
+function showResetPw(id,name){
+  document.getElementById('modalOverlay').style.display='';
+  document.getElementById('modalContent').innerHTML=
+    '<h3>重置密码 — '+name+'</h3>'+
+    '<input type="password" id="newPw" placeholder="新密码（至少6位）">'+
+    '<div class="btn-row"><button class="btn" onclick="closeModal()">取消</button> <button class="btn" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="doResetPw('+id+')">确认重置</button></div>';
+}
+function doResetPw(id){
+  var pw=document.getElementById('newPw').value;
+  if(!pw||pw.length<6){alert('密码至少6位');return;}
+  apiCall('POST','/api/admin/reset-password',{user_id:id,password:pw}).then(function(){closeModal();loadUsers();});
+}
+function closeModal(){document.getElementById('modalOverlay').style.display='none';}
+
+// Init
+discoverAPI(function(){
+  // Verify admin access
+  apiCall('GET','/api/auth/me').then(function(d){
+    if(!d.is_admin){
+      document.body.innerHTML='<div class="container"><div class="empty">⛔ 无管理员权限<br><br><a href="index.html">返回看板</a></div></div>';
+      return;
+    }
+    loadUsers();
+    loadLogs();
+  }).catch(function(){
+    location.href='index.html';
+  });
+});
+</script>
+</body></html>

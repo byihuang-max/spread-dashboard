@@ -15,6 +15,10 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# ═══ 认证模块 ═══
+sys.path.insert(0, BASE_DIR)
+import auth
+
 # ═══ 模块配置（和 update_all.py 保持一致）═══
 MODULES = {
     'style_spread': {
@@ -214,6 +218,37 @@ class Handler(BaseHTTPRequestHandler):
         self._cors()
         self.end_headers()
 
+    def _read_body(self):
+        length = int(self.headers.get('Content-Length', 0))
+        if length == 0:
+            return {}
+        try:
+            return json.loads(self.rfile.read(length))
+        except:
+            return {}
+
+    def _get_token(self):
+        h = self.headers.get('Authorization', '')
+        if h.startswith('Bearer '):
+            return h[7:]
+        return None
+
+    def _get_user(self):
+        return auth.verify_token(self._get_token())
+
+    def _require_admin(self):
+        user = self._get_user()
+        if not user:
+            self._json(401, {'error': '未登录'})
+            return None
+        if not user['is_admin']:
+            self._json(403, {'error': '无管理员权限'})
+            return None
+        return user
+
+    def _client_ip(self):
+        return self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
+
     def do_GET(self):
         if self.path == '/api/status':
             self._json(200, {
@@ -224,6 +259,20 @@ class Handler(BaseHTTPRequestHandler):
                 'last_result': state['last_result'],
                 'modules': {k: v['name'] for k, v in MODULES.items()},
             })
+        elif self.path == '/api/auth/me':
+            user = self._get_user()
+            if user:
+                self._json(200, user)
+            else:
+                self._json(401, {'error': '未登录或 token 已过期'})
+        elif self.path == '/api/admin/users':
+            admin = self._require_admin()
+            if admin:
+                self._json(200, {'users': auth.list_users()})
+        elif self.path.startswith('/api/admin/logs'):
+            admin = self._require_admin()
+            if admin:
+                self._json(200, {'logs': auth.list_login_log(200)})
         else:
             self._json(404, {'error': 'not found'})
 
@@ -237,6 +286,54 @@ class Handler(BaseHTTPRequestHandler):
         return True
 
     def do_POST(self):
+        # ═══ 认证 API ═══
+        if self.path == '/api/auth/register':
+            body = self._read_body()
+            ok, msg = auth.register(body.get('username',''), body.get('password',''), body.get('display_name',''))
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
+            return
+
+        if self.path == '/api/auth/login':
+            body = self._read_body()
+            ok, data = auth.login(body.get('username',''), body.get('password',''), self._client_ip())
+            if ok:
+                self._json(200, {'ok': True, **data})
+            else:
+                self._json(401, {'ok': False, 'msg': data})
+            return
+
+        if self.path == '/api/auth/logout':
+            token = self._get_token()
+            if token:
+                auth.logout(token)
+            self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/toggle-user':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            auth.toggle_user_status(body.get('user_id'), body.get('status', 'disabled'))
+            self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/delete-user':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            auth.delete_user(body.get('user_id'))
+            self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/reset-password':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            auth.reset_password(body.get('user_id'), body.get('password', ''))
+            self._json(200, {'ok': True})
+            return
+
+        # ═══ 刷新 API（原有逻辑）═══
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
         if len(parts) == 3 and parts[0] == 'api' and parts[1] == 'refresh':
