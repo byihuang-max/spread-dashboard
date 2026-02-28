@@ -249,6 +249,49 @@ class Handler(BaseHTTPRequestHandler):
     def _client_ip(self):
         return self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
 
+    # ═══ MIME 类型 ═══
+    MIME_MAP = {
+        '.html':'text/html','.htm':'text/html','.css':'text/css','.js':'application/javascript',
+        '.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg',
+        '.gif':'image/gif','.svg':'image/svg+xml','.ico':'image/x-icon','.webp':'image/webp',
+        '.woff':'font/woff','.woff2':'font/woff2','.ttf':'font/ttf','.txt':'text/plain',
+        '.webmanifest':'application/manifest+json','.map':'application/json',
+    }
+
+    def _serve_static(self, url_path):
+        """托管静态文件"""
+        # 清理路径，防止目录遍历
+        path = url_path.split('?')[0].split('#')[0]
+        if path == '/' or path == '':
+            path = '/index.html'
+        path = path.lstrip('/')
+        # 安全检查
+        if '..' in path:
+            self._json(403, {'error': 'forbidden'})
+            return
+        filepath = os.path.join(BASE_DIR, path)
+        if not os.path.isfile(filepath):
+            # 尝试加 index.html
+            if os.path.isdir(filepath):
+                filepath = os.path.join(filepath, 'index.html')
+            if not os.path.isfile(filepath):
+                self._json(404, {'error': 'not found'})
+                return
+        ext = os.path.splitext(filepath)[1].lower()
+        content_type = self.MIME_MAP.get(ext, 'application/octet-stream')
+        try:
+            with open(filepath, 'rb') as f:
+                data = f.read()
+            self.send_response(200)
+            self.send_header('Content-Type', content_type + ('; charset=utf-8' if ext in ('.html','.css','.js','.json','.svg','.txt') else ''))
+            self.send_header('Content-Length', str(len(data)))
+            self.send_header('Cache-Control', 'no-cache' if ext in ('.html','.json') else 'public, max-age=3600')
+            self._cors()
+            self.end_headers()
+            self.wfile.write(data)
+        except Exception as e:
+            self._json(500, {'error': str(e)})
+
     def do_GET(self):
         if self.path == '/api/status':
             self._json(200, {
@@ -273,8 +316,10 @@ class Handler(BaseHTTPRequestHandler):
             admin = self._require_admin()
             if admin:
                 self._json(200, {'logs': auth.list_login_log(200)})
-        else:
+        elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
+        else:
+            self._serve_static(self.path)
 
     def _check_market_hours(self):
         """15:00 之前禁止刷新（A股数据收盘后才完整）"""

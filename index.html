@@ -1595,12 +1595,19 @@ function initCbCharts() {
 
   // 发现 API 地址（与刷新按钮同逻辑）
   function discoverAPI(cb){
-    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-      if(r.ok){AUTH_API='http://localhost:9876';cb();}
+    // 优先同源（通过 tunnel 访问时，API 就在同域）
+    fetch('/api/status').then(function(r){
+      if(r.ok){AUTH_API='';cb();return;}
+      throw new Error('not ok');
     }).catch(function(){
-      fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-        if(d&&d.url){AUTH_API=d.url;cb();}else{cb();}
-      }).catch(function(){cb()});
+      // 再试 localhost
+      fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
+        if(r.ok){AUTH_API='http://localhost:9876';cb();}else{cb();}
+      }).catch(function(){
+        fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+          if(d&&d.url){AUTH_API=d.url;cb();}else{cb();}
+        }).catch(function(){cb()});
+      });
     });
   }
 
