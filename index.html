@@ -1413,66 +1413,103 @@ function initCbCharts() {
 
   // 刷新当前 tab — 调用 refresh_server API（自动选择本地或 tunnel）
   var REFRESH_API=null;
+  var STATUS_API=null;
   (function(){
     // 优先尝试本机
     fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';console.log('[refresh] using localhost')}
+      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';STATUS_API='http://localhost:9876/api/status';console.log('[refresh] using localhost')}
     }).catch(function(){
-      // fallback: 读 tunnel_url.json
-      var base=document.currentScript?new URL('.',document.currentScript.src).href:'';
-      fetch(base+'tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-        if(d&&d.url){REFRESH_API=d.url+'/api/refresh/';console.log('[refresh] using tunnel:',d.url)}
-      }).catch(function(){console.warn('[refresh] no API available')});
+      // 尝试同源（tunnel模式）
+      fetch('/api/status').then(function(r){
+        if(r.ok){REFRESH_API='/api/refresh/';STATUS_API='/api/status';console.log('[refresh] using same-origin')}
+      }).catch(function(){
+        // fallback: 读 tunnel_url.json
+        fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+          if(d&&d.url){REFRESH_API=d.url+'/api/refresh/';STATUS_API=d.url+'/api/status';console.log('[refresh] using tunnel:',d.url)}
+        }).catch(function(){console.warn('[refresh] no API available')});
+      });
     });
   })();
+
+  // ═══ 进度轮询 ═══
+  var _pollTimer=null;
+  function getAuthHeaders(){
+    var token=localStorage.getItem('gamt_token');
+    var h={};
+    if(token) h['Authorization']='Bearer '+token;
+    return h;
+  }
+  function startProgressPoll(onComplete){
+    var toast=document.getElementById('refreshToast');
+    toast.style.display='block';
+    _pollTimer=setInterval(function(){
+      fetch(STATUS_API,{headers:getAuthHeaders()})
+        .then(function(r){return r.json()})
+        .then(function(s){
+          if(!s.running){
+            clearInterval(_pollTimer);_pollTimer=null;
+            showToastComplete(s);
+            if(onComplete) onComplete(s);
+            return;
+          }
+          updateToast(s);
+        })
+        .catch(function(){});
+    },1500);
+  }
+  function updateToast(s){
+    var p=s.progress||{};
+    var title=document.getElementById('toastTitle');
+    var bar=document.getElementById('toastBar');
+    var detail=document.getElementById('toastDetail');
+    var elapsed=document.getElementById('toastElapsed');
+    var logDiv=document.getElementById('toastLog');
+    if(p.total_modules>1){
+      title.textContent='🔄 全部刷新 '+p.completed_modules+'/'+p.total_modules;
+    }else{
+      title.textContent='🔄 '+(s.module_name||s.module||'刷新中');
+    }
+    var pct=0;
+    if(p.total_modules>1){
+      var scriptPct=p.total_scripts>0?p.completed_scripts/p.total_scripts:0;
+      pct=((p.current_module_index+scriptPct)/p.total_modules)*100;
+    }else{
+      pct=p.total_scripts>0?(p.completed_scripts/p.total_scripts)*100:0;
+    }
+    bar.style.width=Math.min(pct,98)+'%';
+    bar.style.background='linear-gradient(90deg,#6366f1,#818cf8)';
+    detail.textContent=(s.module_name||'')+' → '+(p.current_script||'...');
+    elapsed.textContent=(p.elapsed||0)+'s';
+    var logs=p.logs||[];
+    logDiv.innerHTML=logs.slice(-5).join('<br>');
+    logDiv.scrollTop=logDiv.scrollHeight;
+  }
+  function showToastComplete(s){
+    var bar=document.getElementById('toastBar');
+    var title=document.getElementById('toastTitle');
+    var detail=document.getElementById('toastDetail');
+    var lastResult=s.last_result||{};
+    var allOk=lastResult.ok!==false;
+    bar.style.width='100%';
+    bar.style.background=allOk?'linear-gradient(90deg,#22c55e,#4ade80)':'linear-gradient(90deg,#ef4444,#f87171)';
+    title.textContent=allOk?'✅ 刷新完成！':'⚠️ 部分失败';
+    detail.textContent='耗时 '+(lastResult.elapsed||0)+'s';
+    setTimeout(function(){
+      document.getElementById('refreshToast').style.display='none';
+      location.reload(true);
+    },2500);
+  }
   window.refreshActiveTab=function(){
     var btn=document.getElementById('refreshBtn');
-    // 找到当前激活的 tab/module 名
     var strat=null;
-    // 1. 先看当前是否在策略环境的 strat-tab
     var activeTab=document.querySelector('.strat-tab.active');
     if(activeTab) strat=activeTab.getAttribute('data-strat');
-    // 2. 如果不在策略tab，看侧边栏当前模块
     if(!strat){
       var activeMod=document.querySelector('.nav-item.active');
       if(activeMod) strat=activeMod.getAttribute('data-module');
     }
     if(!strat){btn.innerHTML='❌ 未选中模块';setTimeout(function(){btn.innerHTML='🔄 刷新当前';},2000);return;}
-
-    if(!REFRESH_API){
-      btn.innerHTML='❌ 刷新服务未连接';
-      setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
-      return;
-    }
-
-    // 禁用按钮 + 显示加载状态
-    var origText=btn.innerHTML;
-    btn.disabled=true;
-    btn.innerHTML='⏳ 刷新中...';
-    btn.style.opacity='0.6';
-    btn.style.cursor='wait';
-
-    fetch(REFRESH_API+strat,{method:'POST'})
-      .then(function(r){return r.json()})
-      .then(function(d){
-        if(d.ok){
-          btn.innerHTML='✅ 完成！';
-          // 刷新页面以加载新数据
-          setTimeout(function(){location.reload(true)},1000);
-        }else if(d.error){
-          btn.innerHTML='⚠️ '+d.error;
-          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-        }else{
-          btn.innerHTML='❌ 脚本失败';
-          console.error('refresh logs:',d.logs);
-          setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-        }
-      })
-      .catch(function(e){
-        btn.innerHTML='❌ 服务未启动';
-        console.error('refresh error:',e);
-        setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
-      });
+    refreshModule(strat,btn);
   };
 
   // ═══ 通用模块刷新（给侧边栏模块页面用）═══
@@ -1483,15 +1520,20 @@ function initCbCharts() {
       setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
       return;
     }
-    btn.disabled=true;btn.innerHTML='⏳ 刷新中...';btn.style.opacity='0.6';btn.style.cursor='wait';
-    fetch(REFRESH_API+modName,{method:'POST'})
-      .then(function(r){return r.json()})
+    btn.disabled=true;btn.innerHTML='⏳ 启动中...';btn.style.opacity='0.6';btn.style.cursor='wait';
+    fetch(REFRESH_API+modName,{method:'POST',headers:getAuthHeaders()})
+      .then(function(r){
+        var status=r.status;
+        return r.json().then(function(d){d._status=status;return d;});
+      })
       .then(function(d){
-        if(d.ok){
-          btn.innerHTML='✅ 完成！';
-          setTimeout(function(){location.reload(true)},1000);
+        if(d.ok||d._status===202){
+          btn.innerHTML='⏳ 运行中...';
+          startProgressPoll(function(){
+            btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+          });
         }else{
-          btn.innerHTML='⚠️ '+(d.error||'脚本失败');
+          btn.innerHTML='⚠️ '+(d.error||'启动失败');
           setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
         }
       })
@@ -1532,14 +1574,6 @@ function initCbCharts() {
   };
 
   // ═══ 全部依次刷新 ═══
-  var ALL_TABS = [
-    {strat:'momentum-stock', name:'强势股'},
-    {strat:'quant-stock', name:'宽基量化'},
-    {strat:'style-spread', name:'风格轧差'},
-    {strat:'cta', name:'商品CTA'},
-    {strat:'convertible', name:'转债'},
-    {strat:'arbitrage', name:'套利'},
-  ];
   window.refreshAllTabs=function(){
     var btn=document.getElementById('refreshAllBtn');
     var origText=btn.innerHTML;
@@ -1548,45 +1582,35 @@ function initCbCharts() {
       setTimeout(function(){btn.innerHTML=origText;},2000);
       return;
     }
-    // 禁用两个按钮
-    btn.disabled=true;btn.style.opacity='0.6';btn.style.cursor='wait';
+    btn.disabled=true;btn.innerHTML='⏳ 启动全部刷新...';btn.style.opacity='0.6';btn.style.cursor='wait';
     var btnSingle=document.getElementById('refreshBtn');
     if(btnSingle){btnSingle.disabled=true;btnSingle.style.opacity='0.4';}
 
-    var total=ALL_TABS.length;
-    var done=0;var failed=[];var startTime=Date.now();
-
-    function next(idx){
-      if(idx>=total){
-        // 完成
-        var elapsed=((Date.now()-startTime)/1000).toFixed(0);
-        if(failed.length===0){
-          btn.innerHTML='✅ 全部完成 ('+elapsed+'s)';
+    var allUrl=REFRESH_API.replace('/api/refresh/','/api/refresh-all');
+    fetch(allUrl,{method:'POST',headers:getAuthHeaders()})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(d.ok){
+          btn.innerHTML='⏳ 运行中...';
+          startProgressPoll(function(){
+            btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+            if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
+          });
         }else{
-          btn.innerHTML='⚠️ '+failed.length+'个失败 ('+elapsed+'s)';
+          btn.innerHTML='⚠️ '+(d.error||'启动失败');
+          setTimeout(function(){
+            btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+            if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
+          },3000);
         }
+      })
+      .catch(function(){
+        btn.innerHTML='❌ 服务未启动';
         setTimeout(function(){
           btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
           if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
-          location.reload(true);
-        },2000);
-        return;
-      }
-      var tab=ALL_TABS[idx];
-      btn.innerHTML='⏳ '+(idx+1)+'/'+total+' '+tab.name+'...';
-      fetch(REFRESH_API+tab.strat,{method:'POST'})
-        .then(function(r){return r.json()})
-        .then(function(d){
-          if(d.ok){done++;}else{failed.push(tab.name);}
-          next(idx+1);
-        })
-        .catch(function(e){
-          console.error('refresh-all error on '+tab.name,e);
-          failed.push(tab.name);
-          next(idx+1);
-        });
-    }
-    next(0);
+        },3000);
+      });
   };
 
   // 更新时间
@@ -1726,6 +1750,12 @@ function initCbCharts() {
       var ag=document.getElementById('adminNavGroup');
       if(ag) ag.style.display='';
     }
+    // 检查是否有正在运行的刷新任务
+    if(typeof STATUS_API!=='undefined'&&STATUS_API){
+      fetch(STATUS_API,{headers:(typeof getAuthHeaders==='function'?getAuthHeaders():{})}).then(function(r){return r.json()}).then(function(s){
+        if(s.running&&typeof startProgressPoll==='function') startProgressPoll();
+      }).catch(function(){});
+    }
   }
 
   window.doLogout = function(){
@@ -1769,3 +1799,17 @@ function initCbCharts() {
 })();
 </script>
       
+
+<!-- ═══ 刷新进度 Toast ═══ -->
+<div id="refreshToast" style="display:none; position:fixed; bottom:24px; right:24px; z-index:9999; background:#1e293b; color:#fff; border-radius:12px; padding:16px 20px; min-width:320px; max-width:420px; box-shadow:0 8px 32px rgba(0,0,0,.25); font-size:13px; line-height:1.6;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+    <span id="toastTitle" style="font-weight:600; font-size:14px;">🔄 刷新中...</span>
+    <span id="toastElapsed" style="color:#94a3b8; font-size:12px;">0s</span>
+  </div>
+  <div style="background:#334155; border-radius:6px; height:6px; overflow:hidden; margin-bottom:8px;">
+    <div id="toastBar" style="height:100%; background:linear-gradient(90deg,#6366f1,#818cf8); border-radius:6px; transition:width .3s; width:0%"></div>
+  </div>
+  <div id="toastDetail" style="color:#cbd5e1; font-size:12px;">准备中...</div>
+  <div id="toastLog" style="color:#94a3b8; font-size:11px; max-height:80px; overflow-y:auto; margin-top:6px; border-top:1px solid #334155; padding-top:6px;"></div>
+</div>
+</body></html>

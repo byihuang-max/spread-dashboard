@@ -5,6 +5,7 @@ GAMT 看板刷新 API 服务
 - 后端依次跑数据脚本 + 注入脚本
 - 全局锁：同一时间只跑一个模块，防高并发
 - GET /api/status 查看当前状态
+- 异步模式：POST 立即返回 202，后台线程执行
 
 启动：python3 refresh_server.py
 端口：9876
@@ -153,13 +154,39 @@ TAB_MAP = {
 
 # ═══ 全局状态 ═══
 lock = threading.Lock()
+_cancel_flag = threading.Event()
+
+def _make_progress():
+    return {
+        'total_modules': 0,
+        'completed_modules': 0,
+        'current_module_index': 0,
+        'total_scripts': 0,
+        'completed_scripts': 0,
+        'current_script': None,
+        'elapsed': 0,
+        'logs': [],
+        'results': {},
+    }
+
 state = {
     'running': False,
+    'mode': None,
     'module': None,
+    'module_name': None,
     'step': None,
     'started': None,
     'last_result': None,
+    'progress': _make_progress(),
 }
+
+MAX_LOGS = 100
+
+def _append_log(msg):
+    logs = state['progress']['logs']
+    logs.append(msg)
+    if len(logs) > MAX_LOGS:
+        del logs[:len(logs) - MAX_LOGS]
 
 
 def run_module(mod_key):
@@ -167,16 +194,29 @@ def run_module(mod_key):
     mod = MODULES[mod_key]
     logs = []
     t0 = time.time()
+    scripts = mod['scripts']
 
-    for subdir, script in mod['scripts']:
+    for j, (subdir, script) in enumerate(scripts):
+        # 检查取消
+        if _cancel_flag.is_set():
+            logs.append("⛔ 任务已取消")
+            _append_log("⛔ 任务已取消")
+            return False, logs
+
+        # 更新进度
+        state['progress']['current_script'] = script
+        state['progress']['completed_scripts'] = j
+        state['step'] = f"{subdir}/{script}"
+
         path = os.path.join(BASE_DIR, subdir, script)
         cwd = os.path.join(BASE_DIR, subdir)
 
         if not os.path.exists(path):
             logs.append(f"⚠️ 跳过不存在: {subdir}/{script}")
+            _append_log(f"⚠️ 跳过: {script}")
             continue
 
-        state['step'] = f"{subdir}/{script}"
+        _append_log(f"🔄 {mod['name']} → {script}")
         logs.append(f"🔄 {subdir}/{script}")
 
         try:
@@ -189,25 +229,80 @@ def run_module(mod_key):
             if result.returncode != 0:
                 err = result.stderr[-300:] if result.stderr else result.stdout[-300:]
                 logs.append(f"❌ 失败 ({elapsed:.1f}s): {err}")
+                _append_log(f"❌ {script} 失败 ({elapsed:.0f}s)")
+                state['progress']['completed_scripts'] = j + 1
                 return False, logs
             logs.append(f"✅ 完成 ({elapsed:.0f}s)")
+            _append_log(f"✅ {script} ({elapsed:.0f}s)")
         except subprocess.TimeoutExpired:
             logs.append(f"❌ 超时 (>600s)")
+            _append_log(f"❌ {script} 超时")
+            state['progress']['completed_scripts'] = j + 1
             return False, logs
         except Exception as e:
             logs.append(f"❌ 异常: {e}")
+            _append_log(f"❌ {script} 异常: {e}")
+            state['progress']['completed_scripts'] = j + 1
             return False, logs
+
+        state['progress']['completed_scripts'] = j + 1
 
     total = time.time() - t0
     logs.append(f"🎉 全部完成 ({total:.1f}s)")
     return True, logs
 
 
+def _run_in_background(mod_keys):
+    """后台线程：依次跑 mod_keys 列表中的模块"""
+    try:
+        _cancel_flag.clear()
+        state['progress'] = _make_progress()
+        state['progress']['total_modules'] = len(mod_keys)
+        t0 = time.time()
+
+        for i, mod_key in enumerate(mod_keys):
+            if _cancel_flag.is_set():
+                _append_log("⛔ 任务已取消")
+                break
+
+            mod = MODULES[mod_key]
+            state['module'] = mod_key
+            state['module_name'] = mod['name']
+            state['progress']['current_module_index'] = i
+            state['progress']['total_scripts'] = len(mod['scripts'])
+            state['progress']['completed_scripts'] = 0
+            state['progress']['current_script'] = None
+
+            ok, logs = run_module(mod_key)
+
+            state['progress']['completed_modules'] = i + 1
+            state['progress']['results'][mod_key] = {
+                'ok': ok,
+                'name': mod['name'],
+                'elapsed': round(time.time() - t0, 1),
+            }
+            state['progress']['elapsed'] = round(time.time() - t0, 1)
+
+        state['progress']['elapsed'] = round(time.time() - t0, 1)
+        state['last_result'] = {
+            'ok': all(r['ok'] for r in state['progress']['results'].values()),
+            'results': state['progress']['results'],
+            'time': time.strftime('%H:%M:%S'),
+            'elapsed': state['progress']['elapsed'],
+        }
+    finally:
+        state['running'] = False
+        state['module'] = None
+        state['module_name'] = None
+        state['step'] = None
+        lock.release()
+
+
 class Handler(BaseHTTPRequestHandler):
     def _cors(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
     def _json(self, code, data):
         body = json.dumps(data, ensure_ascii=False).encode()
@@ -318,10 +413,13 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == '/api/status':
             self._json(200, {
                 'running': state['running'],
+                'mode': state['mode'],
                 'module': state['module'],
+                'module_name': state['module_name'],
                 'step': state['step'],
                 'started': state['started'],
                 'last_result': state['last_result'],
+                'progress': state['progress'],
                 'modules': {k: v['name'] for k, v in MODULES.items()},
             })
         elif self.path == '/api/auth/me':
@@ -402,7 +500,19 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {'ok': True})
             return
 
-        # ═══ 刷新 API（仅管理员）═══
+        # ═══ 取消 API（仅管理员）═══
+        if self.path == '/api/cancel':
+            admin = self._require_admin()
+            if not admin: return
+            if not state['running']:
+                self._json(400, {'error': '当前没有任务在运行'})
+                return
+            _cancel_flag.set()
+            _append_log("⛔ 收到取消请求")
+            self._json(200, {'ok': True, 'message': '已发送取消信号'})
+            return
+
+        # ═══ 刷新 API（仅管理员，异步模式）═══
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
         if len(parts) == 3 and parts[0] == 'api' and parts[1] == 'refresh':
@@ -418,7 +528,6 @@ class Handler(BaseHTTPRequestHandler):
             if not self._check_market_hours():
                 return
 
-            # 尝试获取锁
             acquired = lock.acquire(blocking=False)
             if not acquired:
                 self._json(429, {
@@ -428,27 +537,16 @@ class Handler(BaseHTTPRequestHandler):
                 })
                 return
 
-            try:
-                state['running'] = True
-                state['module'] = mod_key
-                state['step'] = 'starting'
-                state['started'] = time.strftime('%H:%M:%S')
+            state['running'] = True
+            state['mode'] = 'single'
+            state['module'] = mod_key
+            state['module_name'] = MODULES[mod_key]['name']
+            state['step'] = 'starting'
+            state['started'] = time.strftime('%H:%M:%S')
 
-                ok, logs = run_module(mod_key)
-
-                state['last_result'] = {
-                    'module': mod_key,
-                    'name': MODULES[mod_key]['name'],
-                    'ok': ok,
-                    'logs': logs,
-                    'time': time.strftime('%H:%M:%S'),
-                }
-                self._json(200, {'ok': ok, 'module': mod_key, 'logs': logs})
-            finally:
-                state['running'] = False
-                state['module'] = None
-                state['step'] = None
-                lock.release()
+            t = threading.Thread(target=_run_in_background, args=([mod_key],), daemon=True)
+            t.start()
+            self._json(202, {'ok': True, 'message': f'已启动刷新: {MODULES[mod_key]["name"]}'})
 
         # POST /api/refresh-all
         elif self.path == '/api/refresh-all':
@@ -460,21 +558,18 @@ class Handler(BaseHTTPRequestHandler):
             if not acquired:
                 self._json(429, {'error': '有任务正在运行', 'running_module': state['module']})
                 return
-            try:
-                state['running'] = True
-                state['started'] = time.strftime('%H:%M:%S')
-                results = {}
-                for mod_key in MODULES:
-                    state['module'] = mod_key
-                    ok, logs = run_module(mod_key)
-                    results[mod_key] = {'ok': ok, 'logs': logs}
-                state['last_result'] = {'all': results, 'time': time.strftime('%H:%M:%S')}
-                self._json(200, results)
-            finally:
-                state['running'] = False
-                state['module'] = None
-                state['step'] = None
-                lock.release()
+
+            mod_keys = list(MODULES.keys())
+            state['running'] = True
+            state['mode'] = 'all'
+            state['module'] = mod_keys[0]
+            state['module_name'] = MODULES[mod_keys[0]]['name']
+            state['step'] = 'starting'
+            state['started'] = time.strftime('%H:%M:%S')
+
+            t = threading.Thread(target=_run_in_background, args=(mod_keys,), daemon=True)
+            t.start()
+            self._json(202, {'ok': True, 'message': '已启动全部刷新'})
         else:
             self._json(404, {'error': 'not found'})
 
@@ -498,9 +593,10 @@ def main():
 
     server = ThreadedHTTPServer(('0.0.0.0', port), Handler)
     print(f"🚀 GAMT 刷新服务启动: http://localhost:{port}")
-    print(f"   POST /api/refresh/<tab>  — 刷新单个模块")
-    print(f"   POST /api/refresh-all    — 刷新全部")
-    print(f"   GET  /api/status         — 查看状态")
+    print(f"   POST /api/refresh/<tab>  — 刷新单个模块（异步）")
+    print(f"   POST /api/refresh-all    — 刷新全部（异步）")
+    print(f"   POST /api/cancel         — 取消当前任务")
+    print(f"   GET  /api/status         — 查看状态+进度")
     print(f"   可用 tab: {', '.join(TAB_MAP.keys())}")
     print(flush=True)
     server.serve_forever()
