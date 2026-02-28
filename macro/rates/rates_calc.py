@@ -35,22 +35,22 @@ def calc():
     if not cn10y.empty:
         cn10y['cn10y'] = pd.to_numeric(cn10y['cn10y'], errors='coerce')
         cn10y = cn10y.dropna().sort_values('trade_date')
-        result['cn10y'] = [{'date': fmt_date(r['trade_date']), 'value': round(float(r['cn10y']), 4)}
+        result['cn10y'] = [{'date': fmt_date(int(r['trade_date'])), 'value': round(float(r['cn10y']), 4)}
                            for _, r in cn10y.iterrows()]
 
     # ── 美债 ──
     if not us.empty:
         us['y10'] = pd.to_numeric(us['y10'], errors='coerce')
         us = us.dropna(subset=['y10']).sort_values('date')
-        result['us10y'] = [{'date': fmt_date(r['date']), 'value': round(float(r['y10']), 4)}
+        result['us10y'] = [{'date': fmt_date(int(r['date'])), 'value': round(float(r['y10']), 4)}
                            for _, r in us.iterrows()]
 
     # ── 中美利差 ──
     if not cn10y.empty and not us.empty:
-        cn_dict = dict(zip(cn10y['trade_date'].astype(str).str.replace('-', ''), cn10y['cn10y']))
+        cn_dict = dict(zip(cn10y['trade_date'].astype(int).astype(str), cn10y['cn10y']))
         spread_data = []
         for _, r in us.iterrows():
-            d = str(r['date']).replace('-', '')
+            d = str(int(r['date']))
             us_val = float(r['y10'])
             cn_val = cn_dict.get(d)
             if cn_val is not None:
