@@ -2,51 +2,42 @@
 <html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>中观景气度 - 产业链</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
-.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.signal-main{font-size:18px;font-weight:800}
-.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
-.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
-.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
-.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
-.signal-tag.info{background:rgba(59,130,246,0.2);color:#60a5fa}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:16px;font-size:14px}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:14px 18px;color:#e2e6ed;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.signal-main{font-size:17px;font-weight:800}
+.signal-tags{display:flex;gap:6px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:18px;font-size:11px;color:#b8bfce}
+.signal-tag.g{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.r{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.w{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag.b{background:rgba(59,130,246,0.2);color:#60a5fa}
 
-.chain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-@media(max-width:1200px){.chain-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.chain-grid{grid-template-columns:1fr}}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid #e5e7eb}
+.tab{padding:10px 18px;font-size:13px;font-weight:700;color:#8b92a5;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab:hover{color:#6366f1}
+.tab.active{color:#6366f1;border-bottom-color:#6366f1}
 
-.chain-card{background:#fff;border-radius:12px;border:1px solid #e8eaef;overflow:hidden}
-.chain-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f1f4}
-.chain-name{font-size:16px;font-weight:800}
-.chain-signal{font-size:12px;padding:3px 10px;border-radius:16px;font-weight:600}
-.chain-signal.good{background:#dcfce7;color:#16a34a}
-.chain-signal.risk{background:#fef2f2;color:#dc2626}
-.chain-signal.warn{background:#fef9c3;color:#a16207}
-.chain-signal.info{background:#dbeafe;color:#2563eb}
-.chain-signal.neutral{background:#f3f4f6;color:#6b7280}
+.tab-page{display:none}
+.tab-page.active{display:block}
 
-.tier{padding:10px 16px;border-bottom:1px solid #f8f9fa}
-.tier:last-child{border-bottom:none}
-.tier-label{font-size:10px;font-weight:700;color:#8b92a5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.tier-items{display:flex;flex-direction:column;gap:4px}
-.tier-item{display:flex;justify-content:space-between;align-items:center;font-size:12px}
-.tier-item .item-name{color:#374151;font-weight:600;flex:1}
-.tier-item .item-chg{font-weight:700;min-width:55px;text-align:right}
-.tier-item .item-arrow{min-width:24px;text-align:center;font-size:13px}
-.up{color:#dc2626} .down{color:#16a34a} .flat{color:#9ca3af}
+.tier-cards{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tier-card{background:#fff;border-radius:8px;border:1px solid #e8eaef;padding:8px 12px;flex:1;min-width:100px}
+.tier-card .tc-name{font-size:11px;color:#8b92a5;font-weight:600}
+.tier-card .tc-val{font-size:16px;font-weight:800;margin-top:2px}
+.tier-card .tc-sub{font-size:10px;color:#8b92a5;margin-top:1px}
+.up{color:#dc2626}.down{color:#16a34a}.flat{color:#9ca3af}
 
-.chain-footer{padding:10px 16px;background:#f9fafb;font-size:11px;color:#6b7280;line-height:1.6}
-.chain-footer .label{font-weight:700;color:#374151}
-.share-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600;margin-left:4px}
-.share-badge.inflow{background:#dcfce7;color:#16a34a}
-.share-badge.outflow{background:#fef2f2;color:#dc2626}
+.chart-box{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;margin-bottom:12px}
+.chart-box h3{font-size:12px;font-weight:700;color:#374151;margin-bottom:10px}
+.chart-wrap{position:relative;height:240px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
 
-.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:16px;padding:12px 14px;background:#fff;border-radius:10px;border:1px solid #e8eaef}
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:12px;padding:10px 12px;background:#f9fafb;border-radius:6px;border:1px solid #f0f1f4}
 .chart-note b{color:#374151}
-
 .loading{text-align:center;padding:60px;color:#8b92a5}
 </style>
 </head>
@@ -60,22 +51,22 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
   <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
 </div>
 
-<div class="chain-grid" id="chainGrid"></div>
-
-<div class="chart-note">
-  <b>📖 怎么看产业链景气传导：</b><br><br>
-  <b>上游涨 + 中游涨 + 下游涨 = 全链景气🟢</b> → 需求驱动型上涨，整条链都在赚钱，可以超配。<br>
-  <b>上游涨 + 下游跌 = 成本挤压⚠️</b> → 原材料涨价但下游传不出去，中游制造最受伤。<br>
-  <b>下游独立走强🔵</b> → 可能是政策刺激或消费回暖，但上游没跟说明持续性待观察。<br>
-  <b>全链下行🔴</b> → 景气下行周期，控制仓位。<br><br>
-  <b>ETF份额变化：</b>正=资金流入（市场在加仓），负=资金流出。份额方向和价格方向不一致时是重要信号——<br>
-  价格跌但份额增="越跌越买"（机构在抄底）；价格涨但份额减="边涨边跑"（获利了结）。<br><br>
-  <b>涨跌幅说明：</b>5日=短期动量，20日=中期趋势。箭头: ↗↗强势(>2%), ↗温和上涨, →持平, ↘温和下跌, ↘↘弱势(<-2%)。
+<div class="tabs" id="chainTabs">
+  <div class="tab active" data-chain="tech">🔬 科技芯片</div>
+  <div class="tab" data-chain="pharma">💊 创新药</div>
+  <div class="tab" data-chain="cycle">⛏️ 周期</div>
+  <div class="tab" data-chain="consumer">🛒 消费</div>
 </div>
+
+<div class="tab-page active" id="page-tech"></div>
+<div class="tab-page" id="page-pharma"></div>
+<div class="tab-page" id="page-cycle"></div>
+<div class="tab-page" id="page-consumer"></div>
 
 </div>
 <script>
-var DATA;
+var DATA,charts=[];
+function destroyCharts(){charts.forEach(function(c){c.destroy()});charts=[]}
 function loadData(){
   fetch('chain_prosperity.json?t='+Date.now())
     .then(function(r){return r.json()})
@@ -83,84 +74,172 @@ function loadData(){
     .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
 }
 
+function sigCls(s){
+  if(s.indexOf('🟢')>=0)return 'g';if(s.indexOf('🔴')>=0)return 'r';
+  if(s.indexOf('⚠️')>=0||s.indexOf('🟡')>=0)return 'w';if(s.indexOf('🔵')>=0)return 'b';return '';
+}
 function fmtChg(v){
-  if(v==null) return '<span class="flat">—</span>';
-  var cls=v>0.5?'up':v<-0.5?'down':'flat';
-  return '<span class="'+cls+'">'+(v>0?'+':'')+v.toFixed(2)+'%</span>';
-}
-function arrow(v){
-  if(v==null) return '—';
-  if(v>2) return '↗↗';
-  if(v>0.5) return '↗';
-  if(v>-0.5) return '→';
-  if(v>-2) return '↘';
-  return '↘↘';
-}
-function sigClass(emoji){
-  if(emoji=='🟢') return 'good';
-  if(emoji=='🔴') return 'risk';
-  if(emoji=='⚠️'||emoji=='🟡') return 'warn';
-  if(emoji=='🔵') return 'info';
-  return 'neutral';
+  if(v==null)return '<span class="flat">—</span>';
+  var c=v>0.3?'up':v<-0.3?'down':'flat';
+  return '<span class="'+c+'">'+(v>0?'+':'')+v.toFixed(2)+'%</span>';
 }
 
 function render(){
   document.getElementById('loadingMsg').style.display='none';
   document.getElementById('app').style.display='';
   document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
-
-  // 信号栏
-  var sigs=DATA.signals||[];
-  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
-    var cls='signal-tag';
-    if(s.indexOf('🟢')>=0) cls+=' good';
-    else if(s.indexOf('🔴')>=0) cls+=' risk';
-    else if(s.indexOf('⚠️')>=0||s.indexOf('🟡')>=0) cls+=' warn';
-    else if(s.indexOf('🔵')>=0) cls+=' info';
-    return '<span class="'+cls+'">'+s+'</span>';
+  document.getElementById('signalTags').innerHTML=(DATA.signals||[]).map(function(s){
+    return '<span class="signal-tag '+sigCls(s)+'">'+s+'</span>';
   }).join('');
 
-  // 产业链卡片
-  var grid=document.getElementById('chainGrid');
-  var html='';
-  var order=['tech','pharma','cycle','consumer'];
-  for(var i=0;i<order.length;i++){
-    var key=order[i];
-    var c=DATA.chains[key];
-    if(!c) continue;
-    var sc=sigClass(c.emoji);
-    html+='<div class="chain-card">';
-    html+='<div class="chain-header"><span class="chain-name">'+c.name+'</span><span class="chain-signal '+sc+'">'+c.emoji+' '+c.signal+'</span></div>';
+  renderTech();renderPharma();renderCycle();renderConsumer();
+}
 
-    var tierOrder=[['upstream','上游'],['midstream','中游'],['downstream','下游']];
-    for(var t=0;t<tierOrder.length;t++){
-      var tk=tierOrder[t][0], tl=tierOrder[t][1];
-      var tier=c.tiers[tk]||{items:[]};
-      html+='<div class="tier"><div class="tier-label">'+tl+'</div><div class="tier-items">';
-      var items=tier.items||[];
-      if(items.length===0){
-        html+='<div class="tier-item"><span class="item-name" style="color:#aaa">暂无数据</span></div>';
-      }
-      for(var j=0;j<items.length;j++){
-        var it=items[j];
-        var chgVal=it.chg_5d!=null?it.chg_5d:(it.chg_pct!=null?it.chg_pct:null);
-        var shareHtml='';
-        if(it.share_chg_5d!=null){
-          var sc2=it.share_chg_5d>0?'inflow':'outflow';
-          shareHtml=' <span class="share-badge '+sc2+'">'+(it.share_chg_5d>0?'+':'')+Math.round(it.share_chg_5d/10000)+'亿份</span>';
-        }
-        html+='<div class="tier-item">';
-        html+='<span class="item-name">'+it.name+shareHtml+'</span>';
-        html+='<span class="item-chg">'+fmtChg(chgVal)+'</span>';
-        html+='<span class="item-arrow">'+(chgVal!=null?arrow(chgVal):'—')+'</span>';
-        html+='</div>';
-      }
-      html+='</div></div>';
-    }
+// ═══ Tab切换 ═══
+document.getElementById('chainTabs').addEventListener('click',function(e){
+  var tab=e.target.closest('.tab');if(!tab)return;
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.tab-page').forEach(function(p){p.classList.remove('active')});
+  tab.classList.add('active');
+  document.getElementById('page-'+tab.getAttribute('data-chain')).classList.add('active');
+  destroyCharts();
+  var chain=tab.getAttribute('data-chain');
+  if(chain=='tech')renderTech();else if(chain=='pharma')renderPharma();
+  else if(chain=='cycle')renderCycle();else renderConsumer();
+});
 
-    html+='</div>';
+function makeTierCards(tiers){
+  return '<div class="tier-cards">'+tiers.map(function(t){
+    return '<div class="tier-card"><div class="tc-name">'+t.name+'</div>'+
+      '<div class="tc-val">'+fmtChg(t.chg_5d)+'</div>'+
+      (t.chg_20d!=null?'<div class="tc-sub">20日 '+fmtChg(t.chg_20d)+'</div>':'')+
+      '</div>';
+  }).join('')+'</div>';
+}
+
+function lineChart(canvasId,lines,title){
+  var labels=null;
+  for(var i=0;i<lines.length;i++){
+    if(lines[i].data&&lines[i].data.length>0){labels=lines[i].data.map(function(d){return d.date});break;}
   }
-  grid.innerHTML=html;
+  if(!labels)return;
+  var datasets=[];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];if(!l.data||l.data.length==0)continue;
+    datasets.push({label:l.name,data:l.data.map(function(d){return d.value}),borderColor:l.color,borderWidth:2,tension:0.3,pointRadius:0});
+  }
+  var c=new Chart(document.getElementById(canvasId),{type:'line',
+    data:{labels:labels,datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+      scales:{y:{title:{display:true,text:'归一化(首日=100)',font:{size:9}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{size:9}}}}}
+  });
+  charts.push(c);
+}
+
+function shareChart(canvasId,shareLines){
+  if(!shareLines||!shareLines.length)return;
+  // 合并所有份额变化为堆叠柱
+  var sl=shareLines[0];if(!sl.dates||!sl.dates.length)return;
+  var datasets=[];
+  var colors=['#6366f1','#f59e0b','#10b981','#dc2626'];
+  for(var i=0;i<shareLines.length;i++){
+    var s=shareLines[i];
+    datasets.push({label:s.name,data:(s.changes||[]).map(function(v){return v!=null?v/10000:null}),
+      backgroundColor:s.changes?s.changes.map(function(v){return v!=null?(v>0?'rgba(34,197,94,0.5)':'rgba(239,68,68,0.5)'):'transparent'}):'transparent',
+      borderColor:colors[i%4],borderWidth:1});
+  }
+  var c=new Chart(document.getElementById(canvasId),{type:'bar',
+    data:{labels:sl.dates,datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+      scales:{y:{title:{display:true,text:'份额变化(亿份)',font:{size:9}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{size:9}}}}}
+  });
+  charts.push(c);
+}
+
+// ═══ 科技芯片 ═══
+function renderTech(){
+  var c=DATA.chains.tech;if(!c)return;
+  var el=document.getElementById('page-tech');
+  el.innerHTML=makeTierCards(c.tiers)+
+    '<div class="chart-row"><div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="techTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="techShare"></canvas></div></div></div>'+
+    '<div class="chart-note"><b>📖 科技芯片链怎么看：</b><br><br>'+
+    '<b>SOXX费城半导体：</b>全球半导体风向标。SOXX涨→国内芯片ETF通常滞后1-3天跟涨，这是正常的传导节奏。<br>'+
+    '<b>芯片ETF(512480)：</b>中游代表，跟踪国内半导体设计/封测/制造龙头。<br>'+
+    '<b>消费电子ETF + 科创50：</b>下游应用端。消费电子放量=终端需求回暖，利好全链。<br><br>'+
+    '<b>传导信号：</b>SOXX涨+芯片ETF涨+消费电子涨 = 全链景气🟢（超配科技）。'+
+    'SOXX跌但芯片ETF份额在增 = 内资逆势建仓，可能见底。'+
+    'SOXX涨但国内不跟 = 外热内冷，注意政策/制裁风险。<br><br>'+
+    '<b>ETF份额：</b>价格涨+份额增 = 资金确认（追入）；价格涨+份额减 = 获利了结（谨慎）；价格跌+份额增 = 越跌越买（机构在抄底）。</div>';
+  lineChart('techTrend',c.trend_lines);
+  shareChart('techShare',c.share_lines);
+}
+
+// ═══ 创新药 ═══
+function renderPharma(){
+  var c=DATA.chains.pharma;if(!c)return;
+  var el=document.getElementById('page-pharma');
+  el.innerHTML=makeTierCards(c.tiers)+
+    '<div class="chart-row"><div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="pharmaTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="pharmaShare"></canvas></div></div></div>'+
+    '<div class="chart-note"><b>📖 创新药链怎么看：</b><br><br>'+
+    '<b>医药生物(申万)：</b>全行业基准指数，包含创新药+仿制药+医疗器械+CRO。走强说明板块整体有资金关注。<br>'+
+    '<b>创新药ETF(159992)：</b>聚焦创新药管线公司。跑赢大医药 = 市场愿意给管线溢价，政策环境偏暖。<br>'+
+    '<b>医药ETF(512010)：</b>宽基医药，偏防御。集采冲击时仿制药拖累，但创新药相对抗跌。<br><br>'+
+    '<b>传导信号：</b>创新药ETF跑赢医药ETF = 创新溢价升温，利好CRO/CDMO。'+
+    '全链下跌+创新药ETF份额增 = 逆势建仓，可能是长期资金在布局。'+
+    '集采政策出台后如果创新药反而涨 = 市场在"去伪存真"，利好真创新。<br><br>'+
+    '<b>估值参考：</b>医药PE分位<20%(近3年) = 底部区域，适合左侧配置。</div>';
+  lineChart('pharmaTrend',c.trend_lines);
+  shareChart('pharmaShare',c.share_lines);
+}
+
+// ═══ 周期 ═══
+function renderCycle(){
+  var c=DATA.chains.cycle;if(!c)return;
+  var el=document.getElementById('page-cycle');
+  el.innerHTML=makeTierCards(c.tiers)+
+    '<div class="chart-row"><div class="chart-box"><h3>📈 上游原材料价格（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📈 中游建材+南华工业品（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleMid"></canvas></div></div></div>'+
+    '<div class="chart-row"><div class="chart-box"><h3>📈 下游基建/地产ETF走势</h3><div class="chart-wrap"><canvas id="cycleDown"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 下游ETF份额日度变化</h3><div class="chart-wrap"><canvas id="cycleShare"></canvas></div></div></div>'+
+    '<div class="chart-note"><b>📖 周期链怎么看：</b><br><br>'+
+    '<b>上游（铜/铝/铁矿/煤炭）：</b>全球定价品种。铜被称为"铜博士"，是经济景气的领先指标。铜铝同涨 = 全球需求回暖；铁矿煤炭涨 = 国内基建发力。<br>'+
+    '<b>中游（螺纹/玻璃/纯碱）：</b>国内定价为主。螺纹=基建晴雨表，玻璃纯碱=地产竣工链。南华工业品是综合景气指标。<br>'+
+    '<b>下游（基建ETF/房地产ETF）：</b>终端需求验证。ETF份额流入=市场在押注周期反转。<br><br>'+
+    '<b>传导信号：</b>上游涨+中游涨+下游ETF流入 = 需求驱动型景气🟢，超配资源类。'+
+    '上游涨+下游跌 = 成本挤压⚠️，回避中游制造（但上游资源股受益）。'+
+    '下游ETF份额持续流出 = 市场对周期不看好，即使上游价格还在高位也要警惕。<br><br>'+
+    '<b>铜铝 vs 铁矿：</b>铜铝涨+铁矿不涨 = 海外需求好但国内差；反过来 = 国内基建强但全球偏弱。</div>';
+  lineChart('cycleUp',c.trend_lines_up);
+  lineChart('cycleMid',c.trend_lines_mid);
+  lineChart('cycleDown',c.trend_lines_down);
+  shareChart('cycleShare',c.share_lines);
+}
+
+// ═══ 消费 ═══
+function renderConsumer(){
+  var c=DATA.chains.consumer;if(!c)return;
+  var el=document.getElementById('page-consumer');
+  el.innerHTML=makeTierCards(c.tiers)+
+    '<div class="chart-row"><div class="chart-box"><h3>📈 上游农产品价格（60日归一化）</h3><div class="chart-wrap"><canvas id="conUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📈 中下游消费ETF+食品饮料（60日归一化）</h3><div class="chart-wrap"><canvas id="conMid"></canvas></div></div></div>'+
+    '<div class="chart-row"><div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="conShare"></canvas></div></div><div class="chart-box" style="display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">更多指标待扩展</div></div>'+
+    '<div class="chart-note"><b>📖 消费链怎么看：</b><br><br>'+
+    '<b>上游（生猪/大豆/棕榈油）：</b>农产品价格决定CPI食品分项。猪价是中国CPI的核心驱动——猪周期上行→CPI回升→消费板块关注度提升。<br>'+
+    '<b>白酒ETF(512690)：</b>消费信心的晴雨表。商务活动频繁+居民消费意愿强时白酒最先受益。白酒跑赢消费ETF = 市场偏好确定性龙头；跑输 = 风格转向性价比消费。<br>'+
+    '<b>食品饮料(申万)+消费ETF：</b>大消费基准。消费ETF含可选消费（家电/汽车），食品饮料偏必选。<br><br>'+
+    '<b>传导信号：</b>猪价涨+白酒ETF份额增+消费ETF涨 = 消费景气🟢。'+
+    '猪价跌+ETF份额减 = 消费低迷🔴，CPI可能偏低，但对债市利好。'+
+    '白酒涨+消费ETF不涨 = 资金抱团龙头，不是真正的消费复苏。<br><br>'+
+    '<b>猪周期参考：</b>猪价从底部反弹20%以上通常确认新一轮猪周期启动，利好养殖链+饲料。</div>';
+  lineChart('conUp',c.trend_lines_up);
+  lineChart('conMid',c.trend_lines_mid);
+  shareChart('conShare',c.share_lines);
 }
 
 loadData();

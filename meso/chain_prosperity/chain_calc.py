@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-中观景气度 - 计算 + 生成JSON
-4条产业链: 科技芯片 / 创新药 / 周期 / 消费
+中观景气度 - 计算 + 生成JSON (v2: 4个Tab + 时序数据)
 """
 import os, json
 import pandas as pd
@@ -11,101 +10,106 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_DIR = os.path.join(SCRIPT_DIR, 'cache')
 OUTPUT_JSON = os.path.join(SCRIPT_DIR, 'chain_prosperity.json')
 
+ETF_NAMES = {
+    '512480.SH': '芯片ETF', '159732.SZ': '消费电子ETF', '588000.SH': '科创50ETF',
+    '159992.SZ': '创新药ETF', '512010.SH': '医药ETF',
+    '516950.SH': '基建ETF', '512200.SH': '房地产ETF',
+    '512690.SH': '白酒ETF', '159928.SZ': '消费ETF',
+}
+
+FUTURES_NAMES = {
+    'CU.SHF': '铜', 'AL.SHF': '铝', 'I.DCE': '铁矿石', 'ZC.ZCE': '煤炭',
+    'RB.SHF': '螺纹钢', 'FG.ZCE': '玻璃', 'SA.ZCE': '纯碱',
+    'LH.DCE': '生猪', 'A.DCE': '大豆', 'P.DCE': '棕榈油',
+}
+
 
 def load_csv(name):
     path = os.path.join(CACHE_DIR, name)
-    if not os.path.exists(path):
-        return pd.DataFrame()
-    return pd.read_csv(path)
+    return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 
-def pct_change_n(series, n):
-    """计算最近n日涨跌幅(%)"""
+def pct_n(series, n):
     if len(series) < n + 1:
         return None
     return round((series.iloc[-1] / series.iloc[-(n+1)] - 1) * 100, 2)
 
 
-def share_change_n(series, n):
-    """计算最近n日份额变化(万份)"""
-    if len(series) < n + 1:
-        return None
-    return round(series.iloc[-1] - series.iloc[-(n+1)], 2)
+def normalize_series(dates, values):
+    """归一化为首日=100的序列"""
+    if not values or values[0] is None or values[0] == 0:
+        return []
+    base = values[0]
+    return [{'date': d, 'value': round(v / base * 100, 2) if v is not None else None}
+            for d, v in zip(dates, values)]
 
 
-def calc_etf_metrics(etf_price, etf_share, code):
-    """计算单只ETF的涨跌幅+份额变化"""
-    metrics = {'code': code}
-
-    price_df = etf_price[etf_price['ts_code'] == code].copy()
-    if not price_df.empty:
-        price_df['trade_date'] = price_df['trade_date'].astype(int).astype(str)
-        price_df = price_df.sort_values('trade_date')
-        price_df['close'] = pd.to_numeric(price_df['close'], errors='coerce')
-        series = price_df['close'].dropna()
-        metrics['latest'] = round(float(series.iloc[-1]), 3) if len(series) > 0 else None
-        metrics['chg_5d'] = pct_change_n(series, 5)
-        metrics['chg_20d'] = pct_change_n(series, 20)
-
-    share_df = etf_share[etf_share['ts_code'] == code].copy()
-    if not share_df.empty:
-        share_df['trade_date'] = share_df['trade_date'].astype(int).astype(str)
-        share_df = share_df.sort_values('trade_date')
-        share_df['fd_share'] = pd.to_numeric(share_df['fd_share'], errors='coerce')
-        series = share_df['fd_share'].dropna()
-        metrics['share_chg_5d'] = share_change_n(series, 5)  # 万份
-        metrics['latest_share'] = round(float(series.iloc[-1]), 0) if len(series) > 0 else None
-
-    return metrics
-
-
-def calc_future_metrics(futures_df, generic_code):
-    """计算期货品种涨跌幅"""
-    df = futures_df[futures_df['generic'] == generic_code].copy()
+def get_etf_ts(etf_price, code):
+    """获取ETF时序 (dates, closes)"""
+    df = etf_price[etf_price['ts_code'] == code].copy()
     if df.empty:
-        return None
+        return [], []
+    df['trade_date'] = df['trade_date'].astype(int).astype(str)
+    df = df.sort_values('trade_date')
+    df['close'] = pd.to_numeric(df['close'], errors='coerce')
+    dates = [d[4:6]+'-'+d[6:8] for d in df['trade_date']]
+    return dates, df['close'].tolist()
+
+
+def get_etf_share_ts(etf_share, code):
+    """获取ETF份额时序 + 日度变化"""
+    df = etf_share[etf_share['ts_code'] == code].copy()
+    if df.empty:
+        return [], [], []
+    df['trade_date'] = df['trade_date'].astype(int).astype(str)
+    df = df.sort_values('trade_date')
+    df['fd_share'] = pd.to_numeric(df['fd_share'], errors='coerce')
+    dates = [d[4:6]+'-'+d[6:8] for d in df['trade_date']]
+    shares = df['fd_share'].tolist()
+    # 日度变化(万份)
+    changes = [None] + [round(shares[i] - shares[i-1], 0) if shares[i] is not None and shares[i-1] is not None else None
+                        for i in range(1, len(shares))]
+    return dates, shares, changes
+
+
+def get_fut_ts(futures, generic_code):
+    """获取期货时序"""
+    df = futures[futures['generic'] == generic_code].copy()
+    if df.empty:
+        return [], []
     df['trade_date'] = df['trade_date'].astype(int).astype(str)
     df = df.sort_values('trade_date')
     df['settle'] = pd.to_numeric(df['settle'], errors='coerce')
-    series = df['settle'].dropna()
-    if len(series) == 0:
-        return None
-    return {
-        'name': df.iloc[0].get('name', generic_code),
-        'latest': round(float(series.iloc[-1]), 1),
-        'chg_5d': pct_change_n(series, 5),
-        'chg_20d': pct_change_n(series, 20),
-    }
+    dates = [d[4:6]+'-'+d[6:8] for d in df['trade_date']]
+    return dates, df['settle'].tolist()
+
+
+def get_sw_ts(sw_indices, ts_code):
+    """获取申万/南华指数时序"""
+    df = sw_indices[sw_indices['ts_code'] == ts_code].copy()
+    if df.empty:
+        return [], []
+    df['trade_date'] = df['trade_date'].astype(int).astype(str)
+    df = df.sort_values('trade_date')
+    df['close'] = pd.to_numeric(df['close'], errors='coerce')
+    dates = [d[4:6]+'-'+d[6:8] for d in df['trade_date']]
+    return dates, df['close'].tolist()
 
 
 def trend_arrow(val):
-    if val is None:
-        return '—'
-    if val > 2:
-        return '↗↗'
-    elif val > 0.5:
-        return '↗'
-    elif val > -0.5:
-        return '→'
-    elif val > -2:
-        return '↘'
-    else:
-        return '↘↘'
+    if val is None: return '—'
+    if val > 2: return '↗↗'
+    if val > 0.5: return '↗'
+    if val > -0.5: return '→'
+    if val > -2: return '↘'
+    return '↘↘'
 
 
-def chain_signal(tiers):
-    """根据上中下游涨跌判断传导信号"""
-    up = tiers.get('upstream', {}).get('direction')
-    mid = tiers.get('midstream', {}).get('direction')
-    down = tiers.get('downstream', {}).get('direction')
-
-    if up is None and mid is None and down is None:
-        return '数据不足', '⬜'
-
-    def pos(d):
-        return d is not None and d > 0.5
-    def neg(d):
-        return d is not None and d < -0.5
+def chain_signal(dirs):
+    """根据上中下游5日方向判断传导"""
+    up, mid, down = dirs.get('up'), dirs.get('mid'), dirs.get('down')
+    def pos(d): return d is not None and d > 0.5
+    def neg(d): return d is not None and d < -0.5
 
     if pos(up) and pos(mid) and pos(down):
         return '全链景气上行', '🟢'
@@ -122,12 +126,14 @@ def chain_signal(tiers):
     return '分化震荡', '🟡'
 
 
-ETF_NAMES = {
-    '512480.SH': '芯片ETF', '159732.SZ': '消费电子ETF', '588000.SH': '科创50ETF',
-    '159992.SZ': '创新药ETF', '512010.SH': '医药ETF',
-    '516950.SH': '基建ETF', '512200.SH': '房地产ETF',
-    '512690.SH': '白酒ETF', '159928.SZ': '消费ETF',
-}
+def make_tier_summary(name, chg_5d, chg_20d=None, share_chg_5d=None):
+    return {
+        'name': name,
+        'chg_5d': chg_5d,
+        'chg_20d': chg_20d,
+        'arrow': trend_arrow(chg_5d),
+        'share_chg_5d': share_chg_5d,
+    }
 
 
 def calc():
@@ -139,200 +145,181 @@ def calc():
 
     result = {
         'update_time': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M'),
-        'chains': {},
         'signals': [],
+        'chains': {},
     }
 
     # ═══════ 科技芯片 ═══════
-    tech = {'name': '🔬 科技芯片', 'tiers': {}}
+    tech = {'name': '🔬 科技芯片', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
-    # 上游: SOXX
-    soxx_data = {}
+    # 走势线
+    d1, v1 = get_etf_ts(etf_price, '512480.SH')
+    d2, v2 = get_etf_ts(etf_price, '159732.SZ')
+    d3, v3 = get_etf_ts(etf_price, '588000.SH')
+
+    # 用最长的dates做基准
+    base_dates = d1 if len(d1) >= len(d2) else d2
+
+    tech['trend_lines'] = [
+        {'name': 'SOXX费城半导体', 'color': '#2563eb', 'data': None},  # iFind只有实时没有历史
+        {'name': '芯片ETF', 'color': '#7c3aed', 'data': normalize_series(d1, v1)},
+        {'name': '消费电子ETF', 'color': '#f59e0b', 'data': normalize_series(d2, v2)},
+        {'name': '科创50ETF', 'color': '#10b981', 'data': normalize_series(d3, v3)},
+    ]
+
+    # 份额
+    for code, name in [('512480.SH','芯片ETF'), ('159732.SZ','消费电子ETF'), ('588000.SH','科创50ETF')]:
+        sd, ss, sc = get_etf_share_ts(etf_share, code)
+        tech['share_lines'].append({'name': name, 'dates': sd, 'changes': sc})
+
+    # 摘要
+    chg_chip = pct_n(pd.Series(v1), 5) if v1 else None
+    chg_ce = pct_n(pd.Series(v2), 5) if v2 else None
+    chg_kc = pct_n(pd.Series(v3), 5) if v3 else None
+
+    soxx_pct = None
     if not ifind.empty:
-        soxx_row = ifind[ifind['code'] == 'SOXX.O']
-        if not soxx_row.empty:
-            soxx_data = {
-                'items': [{'name': 'SOXX费城半导体',
-                           'latest': float(soxx_row.iloc[0]['latest']) if pd.notna(soxx_row.iloc[0]['latest']) else None,
-                           'chg_pct': float(soxx_row.iloc[0]['pct_change']) if pd.notna(soxx_row.iloc[0].get('pct_change')) else None}],
-                'direction': float(soxx_row.iloc[0]['pct_change']) if pd.notna(soxx_row.iloc[0].get('pct_change')) else None,
-            }
-    tech['tiers']['upstream'] = soxx_data if soxx_data else {'items': [], 'direction': None}
+        row = ifind[ifind['code'] == 'SOXX.O']
+        if not row.empty and pd.notna(row.iloc[0].get('pct_change')):
+            soxx_pct = round(float(row.iloc[0]['pct_change']), 2)
 
-    # 中游: 芯片ETF
-    chip_m = calc_etf_metrics(etf_price, etf_share, '512480.SH')
-    tech['tiers']['midstream'] = {
-        'items': [{'name': '芯片ETF', **chip_m}],
-        'direction': chip_m.get('chg_5d'),
-    }
+    tech['tiers'] = [
+        make_tier_summary('SOXX费城半导体', soxx_pct),
+        make_tier_summary('芯片ETF', chg_chip, pct_n(pd.Series(v1), 20) if v1 else None),
+        make_tier_summary('消费电子ETF', chg_ce),
+        make_tier_summary('科创50ETF', chg_kc),
+    ]
 
-    # 下游: 消费电子ETF + 科创50ETF
-    ce_m = calc_etf_metrics(etf_price, etf_share, '159732.SZ')
-    kc_m = calc_etf_metrics(etf_price, etf_share, '588000.SH')
-    down_items = []
-    chgs = []
-    for name, m in [('消费电子ETF', ce_m), ('科创50ETF', kc_m)]:
-        down_items.append({'name': name, **m})
-        if m.get('chg_5d') is not None:
-            chgs.append(m['chg_5d'])
-    tech['tiers']['downstream'] = {
-        'items': down_items,
-        'direction': np.mean(chgs) if chgs else None,
-    }
-
-    tech['signal'], tech['emoji'] = chain_signal(tech['tiers'])
+    down_avg = np.mean([x for x in [chg_ce, chg_kc] if x is not None]) if any(x is not None for x in [chg_ce, chg_kc]) else None
+    tech['signal_text'], tech['emoji'] = chain_signal({'up': soxx_pct, 'mid': chg_chip, 'down': down_avg})
     result['chains']['tech'] = tech
 
     # ═══════ 创新药 ═══════
-    pharma = {'name': '💊 创新药', 'tiers': {}}
+    pharma = {'name': '💊 创新药', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
-    # 上游: 医药行业指数(申万)
-    pharma_up_items = []
-    if not sw_indices.empty:
-        med = sw_indices[sw_indices['ts_code'] == '801150.SI'].copy()
-        if not med.empty:
-            med['trade_date'] = med['trade_date'].astype(int).astype(str)
-            med = med.sort_values('trade_date')
-            med['close'] = pd.to_numeric(med['close'], errors='coerce')
-            series = med['close'].dropna()
-            chg5 = pct_change_n(series, 5)
-            pharma_up_items.append({'name': '医药生物(申万)', 'chg_5d': chg5, 'chg_20d': pct_change_n(series, 20)})
-            pharma['tiers']['upstream'] = {'items': pharma_up_items, 'direction': chg5}
-    if not pharma_up_items:
-        pharma['tiers']['upstream'] = {'items': [], 'direction': None}
+    d_sw, v_sw = get_sw_ts(sw_indices, '801150.SI')
+    d_inno, v_inno = get_etf_ts(etf_price, '159992.SZ')
+    d_med, v_med = get_etf_ts(etf_price, '512010.SH')
 
-    # 中游: 创新药ETF
-    inno_m = calc_etf_metrics(etf_price, etf_share, '159992.SZ')
-    pharma['tiers']['midstream'] = {
-        'items': [{'name': '创新药ETF', **inno_m}],
-        'direction': inno_m.get('chg_5d'),
-    }
+    pharma['trend_lines'] = [
+        {'name': '医药生物(申万)', 'color': '#2563eb', 'data': normalize_series(d_sw, v_sw)},
+        {'name': '创新药ETF', 'color': '#7c3aed', 'data': normalize_series(d_inno, v_inno)},
+        {'name': '医药ETF', 'color': '#f59e0b', 'data': normalize_series(d_med, v_med)},
+    ]
 
-    # 下游: 医药ETF
-    med_m = calc_etf_metrics(etf_price, etf_share, '512010.SH')
-    pharma['tiers']['downstream'] = {
-        'items': [{'name': '医药ETF', **med_m}],
-        'direction': med_m.get('chg_5d'),
-    }
+    for code, name in [('159992.SZ','创新药ETF'), ('512010.SH','医药ETF')]:
+        sd, ss, sc = get_etf_share_ts(etf_share, code)
+        pharma['share_lines'].append({'name': name, 'dates': sd, 'changes': sc})
 
-    pharma['signal'], pharma['emoji'] = chain_signal(pharma['tiers'])
+    chg_sw = pct_n(pd.Series(v_sw), 5) if v_sw else None
+    chg_inno = pct_n(pd.Series(v_inno), 5) if v_inno else None
+    chg_med = pct_n(pd.Series(v_med), 5) if v_med else None
+
+    pharma['tiers'] = [
+        make_tier_summary('医药生物(申万)', chg_sw, pct_n(pd.Series(v_sw), 20) if v_sw else None),
+        make_tier_summary('创新药ETF', chg_inno, pct_n(pd.Series(v_inno), 20) if v_inno else None),
+        make_tier_summary('医药ETF', chg_med, pct_n(pd.Series(v_med), 20) if v_med else None),
+    ]
+
+    pharma['signal_text'], pharma['emoji'] = chain_signal({'up': chg_sw, 'mid': chg_inno, 'down': chg_med})
     result['chains']['pharma'] = pharma
 
     # ═══════ 周期 ═══════
-    cycle = {'name': '⛏️ 周期', 'tiers': {}}
+    cycle = {'name': '⛏️ 周期', 'trend_lines_up': [], 'trend_lines_mid': [], 'trend_lines_down': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
-    # 上游: 铜铝铁矿煤炭
-    cycle_up_items = []
-    cycle_up_chgs = []
-    for code in ['CU.SHF', 'AL.SHF', 'I.DCE', 'ZC.ZCE']:
-        fm = calc_future_metrics(futures, code)
-        if fm:
-            cycle_up_items.append(fm)
-            if fm.get('chg_5d') is not None:
-                cycle_up_chgs.append(fm['chg_5d'])
-    cycle['tiers']['upstream'] = {
-        'items': cycle_up_items,
-        'direction': np.mean(cycle_up_chgs) if cycle_up_chgs else None,
-    }
+    # 上游
+    up_chgs = []
+    for code, color in [('CU.SHF','#dc2626'), ('AL.SHF','#f59e0b'), ('I.DCE','#2563eb'), ('ZC.ZCE','#6b7280')]:
+        d, v = get_fut_ts(futures, code)
+        cycle['trend_lines_up'].append({'name': FUTURES_NAMES[code], 'color': color, 'data': normalize_series(d, v)})
+        c5 = pct_n(pd.Series(v), 5) if v else None
+        cycle['tiers'].append(make_tier_summary(FUTURES_NAMES[code], c5, pct_n(pd.Series(v), 20) if v else None))
+        if c5 is not None: up_chgs.append(c5)
 
-    # 中游: 螺纹/玻璃/纯碱 + 南华工业品
-    cycle_mid_items = []
-    cycle_mid_chgs = []
-    for code in ['RB.SHF', 'FG.ZCE', 'SA.ZCE']:
-        fm = calc_future_metrics(futures, code)
-        if fm:
-            cycle_mid_items.append(fm)
-            if fm.get('chg_5d') is not None:
-                cycle_mid_chgs.append(fm['chg_5d'])
+    # 中游
+    mid_chgs = []
+    for code, color in [('RB.SHF','#dc2626'), ('FG.ZCE','#f59e0b'), ('SA.ZCE','#7c3aed')]:
+        d, v = get_fut_ts(futures, code)
+        cycle['trend_lines_mid'].append({'name': FUTURES_NAMES[code], 'color': color, 'data': normalize_series(d, v)})
+        c5 = pct_n(pd.Series(v), 5) if v else None
+        cycle['tiers'].append(make_tier_summary(FUTURES_NAMES[code], c5, pct_n(pd.Series(v), 20) if v else None))
+        if c5 is not None: mid_chgs.append(c5)
 
-    # 南华
-    if not sw_indices.empty:
-        nh = sw_indices[sw_indices['ts_code'] == 'NHCI.NH'].copy()
-        if not nh.empty:
-            nh['trade_date'] = nh['trade_date'].astype(int).astype(str)
-            nh = nh.sort_values('trade_date')
-            nh['close'] = pd.to_numeric(nh['close'], errors='coerce')
-            series = nh['close'].dropna()
-            chg5 = pct_change_n(series, 5)
-            cycle_mid_items.append({'name': '南华工业品', 'latest': round(float(series.iloc[-1]), 1) if len(series) > 0 else None, 'chg_5d': chg5})
+    # 南华工业品
+    d_nh, v_nh = get_sw_ts(sw_indices, 'NHCI.NH')
+    cycle['trend_lines_mid'].append({'name': '南华工业品', 'color': '#10b981', 'data': normalize_series(d_nh, v_nh)})
 
-    cycle['tiers']['midstream'] = {
-        'items': cycle_mid_items,
-        'direction': np.mean(cycle_mid_chgs) if cycle_mid_chgs else None,
-    }
+    # 下游
+    d_jj, v_jj = get_etf_ts(etf_price, '516950.SH')
+    d_dc, v_dc = get_etf_ts(etf_price, '512200.SH')
+    cycle['trend_lines_down'] = [
+        {'name': '基建ETF', 'color': '#2563eb', 'data': normalize_series(d_jj, v_jj)},
+        {'name': '房地产ETF', 'color': '#f59e0b', 'data': normalize_series(d_dc, v_dc)},
+    ]
 
-    # 下游: 基建ETF + 房地产ETF
-    jj_m = calc_etf_metrics(etf_price, etf_share, '516950.SH')
-    dc_m = calc_etf_metrics(etf_price, etf_share, '512200.SH')
-    down_items = []
-    down_chgs = []
-    for name, m in [('基建ETF', jj_m), ('房地产ETF', dc_m)]:
-        down_items.append({'name': name, **m})
-        if m.get('chg_5d') is not None:
-            down_chgs.append(m['chg_5d'])
-    cycle['tiers']['downstream'] = {
-        'items': down_items,
-        'direction': np.mean(down_chgs) if down_chgs else None,
-    }
+    chg_jj = pct_n(pd.Series(v_jj), 5) if v_jj else None
+    chg_dc = pct_n(pd.Series(v_dc), 5) if v_dc else None
+    cycle['tiers'].append(make_tier_summary('基建ETF', chg_jj))
+    cycle['tiers'].append(make_tier_summary('房地产ETF', chg_dc))
 
-    cycle['signal'], cycle['emoji'] = chain_signal(cycle['tiers'])
+    for code, name in [('516950.SH','基建ETF'), ('512200.SH','房地产ETF')]:
+        sd, ss, sc = get_etf_share_ts(etf_share, code)
+        cycle['share_lines'].append({'name': name, 'dates': sd, 'changes': sc})
+
+    up_avg = np.mean(up_chgs) if up_chgs else None
+    mid_avg = np.mean(mid_chgs) if mid_chgs else None
+    down_avg = np.mean([x for x in [chg_jj, chg_dc] if x is not None]) if any(x is not None for x in [chg_jj, chg_dc]) else None
+    cycle['signal_text'], cycle['emoji'] = chain_signal({'up': up_avg, 'mid': mid_avg, 'down': down_avg})
     result['chains']['cycle'] = cycle
 
     # ═══════ 消费 ═══════
-    consumer = {'name': '🛒 消费', 'tiers': {}}
+    consumer = {'name': '🛒 消费', 'trend_lines_up': [], 'trend_lines_mid': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
-    # 上游: 生猪/大豆/棕榈油
-    con_up_items = []
+    # 上游
     con_up_chgs = []
-    for code in ['LH.DCE', 'A.DCE', 'P.DCE']:
-        fm = calc_future_metrics(futures, code)
-        if fm:
-            con_up_items.append(fm)
-            if fm.get('chg_5d') is not None:
-                con_up_chgs.append(fm['chg_5d'])
-    consumer['tiers']['upstream'] = {
-        'items': con_up_items,
-        'direction': np.mean(con_up_chgs) if con_up_chgs else None,
-    }
+    for code, color in [('LH.DCE','#dc2626'), ('A.DCE','#f59e0b'), ('P.DCE','#10b981')]:
+        d, v = get_fut_ts(futures, code)
+        consumer['trend_lines_up'].append({'name': FUTURES_NAMES[code], 'color': color, 'data': normalize_series(d, v)})
+        c5 = pct_n(pd.Series(v), 5) if v else None
+        consumer['tiers'].append(make_tier_summary(FUTURES_NAMES[code], c5, pct_n(pd.Series(v), 20) if v else None))
+        if c5 is not None: con_up_chgs.append(c5)
 
-    # 中游: 白酒ETF + 食品饮料(申万)
-    bj_m = calc_etf_metrics(etf_price, etf_share, '512690.SH')
-    con_mid_items = [{'name': '白酒ETF', **bj_m}]
-    con_mid_chg = bj_m.get('chg_5d')
+    # 中下游
+    d_bj, v_bj = get_etf_ts(etf_price, '512690.SH')
+    d_fb, v_fb = get_sw_ts(sw_indices, '801120.SI')
+    d_xf, v_xf = get_etf_ts(etf_price, '159928.SZ')
 
-    if not sw_indices.empty:
-        fb = sw_indices[sw_indices['ts_code'] == '801120.SI'].copy()
-        if not fb.empty:
-            fb['trade_date'] = fb['trade_date'].astype(int).astype(str)
-            fb = fb.sort_values('trade_date')
-            fb['close'] = pd.to_numeric(fb['close'], errors='coerce')
-            series = fb['close'].dropna()
-            chg5 = pct_change_n(series, 5)
-            con_mid_items.append({'name': '食品饮料(申万)', 'chg_5d': chg5, 'chg_20d': pct_change_n(series, 20)})
+    consumer['trend_lines_mid'] = [
+        {'name': '白酒ETF', 'color': '#7c3aed', 'data': normalize_series(d_bj, v_bj)},
+        {'name': '食品饮料(申万)', 'color': '#2563eb', 'data': normalize_series(d_fb, v_fb)},
+        {'name': '消费ETF', 'color': '#f59e0b', 'data': normalize_series(d_xf, v_xf)},
+    ]
 
-    consumer['tiers']['midstream'] = {
-        'items': con_mid_items,
-        'direction': con_mid_chg,
-    }
+    chg_bj = pct_n(pd.Series(v_bj), 5) if v_bj else None
+    chg_fb = pct_n(pd.Series(v_fb), 5) if v_fb else None
+    chg_xf = pct_n(pd.Series(v_xf), 5) if v_xf else None
+    consumer['tiers'].append(make_tier_summary('白酒ETF', chg_bj, pct_n(pd.Series(v_bj), 20) if v_bj else None))
+    consumer['tiers'].append(make_tier_summary('食品饮料(申万)', chg_fb))
+    consumer['tiers'].append(make_tier_summary('消费ETF', chg_xf))
 
-    # 下游: 消费ETF
-    xf_m = calc_etf_metrics(etf_price, etf_share, '159928.SZ')
-    consumer['tiers']['downstream'] = {
-        'items': [{'name': '消费ETF', **xf_m}],
-        'direction': xf_m.get('chg_5d'),
-    }
+    for code, name in [('512690.SH','白酒ETF'), ('159928.SZ','消费ETF')]:
+        sd, ss, sc = get_etf_share_ts(etf_share, code)
+        consumer['share_lines'].append({'name': name, 'dates': sd, 'changes': sc})
 
-    consumer['signal'], consumer['emoji'] = chain_signal(consumer['tiers'])
+    up_avg = np.mean(con_up_chgs) if con_up_chgs else None
+    mid_avg = chg_bj
+    down_avg = chg_xf
+    consumer['signal_text'], consumer['emoji'] = chain_signal({'up': up_avg, 'mid': mid_avg, 'down': down_avg})
     result['chains']['consumer'] = consumer
 
     # ═══════ 综合信号 ═══════
     for key in ['tech', 'pharma', 'cycle', 'consumer']:
         c = result['chains'][key]
-        result['signals'].append(f"{c['name']} {c['emoji']} {c['signal']}")
+        result['signals'].append(f"{c['name']} {c['emoji']} {c['signal_text']}")
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
-    print(f"\n输出: {OUTPUT_JSON}")
+    print(f"输出: {OUTPUT_JSON}")
     for s in result['signals']:
         print(f"  - {s}")
 
