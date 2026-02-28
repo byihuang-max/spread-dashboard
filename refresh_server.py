@@ -82,7 +82,7 @@ MODULES = {
         ],
     },
     'option_sentiment': {
-        'name': '期权情绪',
+        'name': '期权异常值监控',
         'scripts': [
             ('micro_flow/option_sentiment', 'option_data.py'),
             ('micro_flow/option_sentiment', 'option_calc.py'),
