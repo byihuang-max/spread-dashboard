@@ -255,7 +255,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   function initStars(){
     stars=[];
     // Uniform random stars across entire screen
-    for(var i=0;i<1600;i++){
+    for(var i=0;i<4000;i++){
       var colors=['180,220,255','140,180,255','255,200,160','120,160,255','200,180,255','100,200,255','80,255,220','255,255,255'];
       stars.push({
         x:Math.random()*w,y:Math.random()*h,
@@ -264,6 +264,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         twinkleSpeed:Math.random()*4+1,
         twinkleOffset:Math.random()*Math.PI*2,
         color:colors[Math.floor(Math.random()*colors.length)],
+        vx:(Math.random()-0.5)*0.3,
+        vy:(Math.random()-0.5)*0.3,
         bg:true
       });
         brightness:Math.random()*0.6+0.2,
@@ -390,6 +392,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     // Stars with glow
     for(var i=0;i<stars.length;i++){
       var s=stars[i];
+      // Drift movement
+      s.x+=s.vx; s.y+=s.vy;
+      if(s.x<0)s.x=w; if(s.x>w)s.x=0;
+      if(s.y<0)s.y=h; if(s.y>h)s.y=0;
       var twinkle=Math.sin(time*s.twinkleSpeed+s.twinkleOffset)*0.5+0.5;
       var alpha=s.brightness*(0.4+twinkle*0.6);
       // Mouse proximity glow
