@@ -1,4 +1,4 @@
-const CACHE = 'gamt-v5';
+const CACHE = 'gamt-v6';
 const ASSETS = ['./', './index.html'];
 
 self.addEventListener('install', e => {

@@ -1733,8 +1733,9 @@ function initCbCharts() {
   // 启动：检查是否已登录
   discoverAPI(function(){
     if(!AUTH_API){
-      // API不可用时，直接显示看板（静态模式）
-      document.getElementById('loginOverlay').classList.add('hidden');
+      // API不可用时，也要求登录，显示提示
+      console.warn('[GAMT] API not reachable, login required but API unavailable');
+      document.getElementById('loginOverlay').style.display='';
       return;
     }
     // 每次都要求重新登录

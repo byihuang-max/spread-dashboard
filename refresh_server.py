@@ -307,7 +307,7 @@ class Handler(BaseHTTPRequestHandler):
                     Handler._gz_cache[filepath] = (mtime, data)
                 self.send_header('Content-Encoding', 'gzip')
             self.send_header('Content-Length', str(len(data)))
-            self.send_header('Cache-Control', 'no-cache' if ext in ('.html','.json') else 'public, max-age=3600')
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate' if ext in ('.html','.json') else 'public, max-age=3600')
             self._cors()
             self.end_headers()
             self.wfile.write(data)
