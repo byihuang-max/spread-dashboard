@@ -12,14 +12,9 @@
   --border:#e8eaef;
   --accent:#2563eb;
 }
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;margin:0;padding:6px 20px 20px;background:var(--bg);color:var(--text);font-size:14px}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;max-width:1100px;margin:0 auto;padding:20px;background:var(--bg);color:var(--text);font-size:14px}
 
-.ss-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
-.ss-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0}
-.refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
-.refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
-.refresh-btn:active{transform:scale(0.96)}
-.refresh-btn.loading{pointer-events:none;opacity:0.6}
+.ss-tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap}
 .ss-tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;
   background:#fff;border:1px solid #e5e7eb;transition:all .12s;color:#6b7280}
 .ss-tab:hover{color:#333;border-color:#cbd5e1}
@@ -51,38 +46,17 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </style>
 </head><body>
 
-<div class="ss-header">
-  <div class="ss-tabs">
-    <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
-    <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
-    <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
-    <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
-  </div>
-  <button class="refresh-btn" id="refreshBtnSpread" onclick="refreshSpread()">🔄 刷新数据</button>
+<div class="ss-tabs">
+  <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
+  <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
+  <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
+  <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
 </div>
-
-<!-- 信号摘要栏 -->
-<div id="signalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:14px 18px;color:#e2e6ed;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
-  <div style="font-size:16px;font-weight:800">风格轧差</div>
-  <div id="signalTags" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="signalTime"></div>
-</div>
-<script>
-(function(){
-  fetch('style_spread_signals.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-    document.getElementById('signalTime').textContent='更新: '+(d.update_time||'');
-    window._ssSignalData=d;
-    // 初始显示当前tab的结论
-    updateSignalBar();
-    // tab结论已移至顶部信号栏
-  }).catch(function(){});
-})();
-</script>
 
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
+    <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">2026-02-28</b></span>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#e67e22">
@@ -114,14 +88,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
     <p><b>策略逻辑：</b>做多周期板块（有色金属+煤炭+钢铁），做空防御板块（食品饮料+医药生物），等权构建多空组合。净值上行表示经济复苏预期增强、周期跑赢防御；下行表示市场偏好防御。</p>
     <p><b>信号意义：</b>净值持续走高 → 经济景气上行周期；急涨后回落 → 周期股拥挤，注意风格切换。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260227</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260228</p>
   </div>
 </div>
 
 <!-- Tab 2: 拥挤-反身性轧差 -->
 <div class="ss-page" id="page-crowd">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
+    <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">2026-02-28</b></span>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#c0392b">
@@ -160,14 +134,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
     <p><b>策略逻辑：</b>每20个交易日统计申万31个行业的拥挤度（涨幅排名），选出最拥挤的 Top6 做空、最冷门的 Bot6 做多，捕捉行业轮动中的反身性效应。</p>
     <p><b>信号意义：</b>净值上行 → 低拥挤反转有效，市场存在均值回归；净值下行 → 趋势延续性强，动量策略占优。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260227</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260228</p>
   </div>
 </div>
 
 <!-- Tab 3: 风格轧差净值 -->
 <div class="ss-page" id="page-style">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
+    <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">2026-02-28</b></span>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 风格轧差多线对比</div>
@@ -180,14 +154,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <p>🔵 <b>微盘股-中证全指</b>：小盘超额，净值上行 = 微盘股跑赢大盘。</p>
     <p>🟢 <b>中证2000-沪深300</b>：大小盘轧差，净值上行 = 小盘跑赢大盘。</p>
     <p><b>信号意义：</b>三线同向上行 → 市场偏好小盘成长；三线同向下行 → 大盘价值占优。分化时关注风格切换拐点。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260227</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260228</p>
   </div>
 </div>
 
 <!-- Tab 4: 双创等权 -->
 <div class="ss-page" id="page-dual">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
+    <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">2026-02-28</b></span>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权净值</div>
@@ -197,7 +171,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
     <p><b>策略逻辑：</b>创业板指 + 科创50 各50%等权配置，跟踪双创板块整体走势。</p>
     <p><b>信号意义：</b>净值趋势性上行 → 成长风格占优，科技板块资金流入；急跌后企稳 → 关注成长股反弹机会。可作为成长风格的β基准。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260227</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: 20260228</p>
   </div>
 </div>
 
@@ -280,20 +254,6 @@ function initTab(tab) {
   }
 }
 
-function updateSignalBar(){
-  var d=window._ssSignalData;if(!d)return;
-  var activeTab=document.querySelector('.ss-tab.active');
-  var tabKey=activeTab?activeTab.getAttribute('data-tab'):'eco';
-  var ts=d.tab_signals||{};
-  var signals=ts[tabKey]||d.signals||[];
-  document.getElementById('signalTags').innerHTML=signals.map(function(s){
-    var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
-    if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
-    else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
-    else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
-    return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
-  }).join('');
-}
 document.querySelectorAll('.ss-tab').forEach(function(tab) {
   tab.addEventListener('click', function() {
     var target = this.getAttribute('data-tab');
@@ -302,19 +262,9 @@ document.querySelectorAll('.ss-tab').forEach(function(tab) {
     this.classList.add('active');
     document.getElementById('page-' + target).classList.add('active');
     initTab(target);
-    updateSignalBar();
   });
 });
 
 initTab('eco');
-
-function refreshSpread(){
-  var btn=document.getElementById('refreshBtnSpread');
-  btn.classList.add('loading');btn.textContent='⏳ 刷新中...';
-  fetch('http://localhost:9876/api/refresh/style-spread',{method:'POST'})
-    .then(function(r){return r.json()})
-    .then(function(d){btn.classList.remove('loading');btn.textContent=d.ok?'✅ 完成':'❌ 失败';setTimeout(function(){btn.textContent='🔄 刷新数据';if(d.ok)location.reload()},1200)})
-    .catch(function(){btn.classList.remove('loading');btn.textContent='❌ 网络错误';setTimeout(function(){btn.textContent='🔄 刷新数据'},2000)});
-}
 </script>
 </body></html>

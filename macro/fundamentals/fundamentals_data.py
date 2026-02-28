@@ -32,60 +32,105 @@ def ts_api(api_name, fields='', **kwargs):
     return pd.DataFrame()
 
 
+def read_csv(path):
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
+def get_last_month(csv_path, date_col='month'):
+    df = read_csv(csv_path)
+    if df.empty:
+        return None
+    return str(df[date_col].max())
+
+
+def next_month(yyyymm_str):
+    """给定 'YYYYMM' 字符串，返回下一个月的 'YYYYMM'"""
+    y, m = int(yyyymm_str[:4]), int(yyyymm_str[4:6])
+    m += 1
+    if m > 12:
+        y += 1
+        m = 1
+    return f"{y:04d}{m:02d}"
+
+
+def incremental_save(new_df, csv_path, date_col='month'):
+    """将 new_df 追加到已有 CSV，去重+排序"""
+    if new_df.empty:
+        print("  无新数据")
+        return
+    old = read_csv(csv_path)
+    combined = pd.concat([old, new_df]).drop_duplicates(subset=[date_col]).sort_values(date_col)
+    combined.to_csv(csv_path, index=False)
+    print(f"  新增 {len(new_df)} 条, 合计 {len(combined)} 条")
+
+
 def main():
     print("=" * 50)
-    print("经济基本面 - 数据拉取")
+    print("经济基本面 - 数据拉取 (增量模式)")
     print("=" * 50)
 
-    start_m = (dt.date.today() - dt.timedelta(days=750)).strftime('%Y%m')
+    default_start = (dt.date.today() - dt.timedelta(days=750)).strftime('%Y%m')
     end_m = dt.date.today().strftime('%Y%m')
 
     # PMI - 不传fields，拿全部字段再筛选
-    print("拉取 PMI...")
-    pmi = ts_api('cn_pmi', start_month=start_m, end_month=end_m)
-    if not pmi.empty:
-        # 统一列名: PMI010000=制造业PMI, PMI020100=非制造业PMI, MONTH=月份
-        col_map = {}
-        for c in pmi.columns:
-            cl = c.upper()
-            if cl == 'MONTH':
-                col_map[c] = 'month'
-            elif cl == 'PMI010000':
-                col_map[c] = 'pmi'
-            elif cl == 'PMI020100':
-                col_map[c] = 'pmi_nmp'
-            elif cl == 'PMI':
-                col_map[c] = 'pmi'
-            elif cl == 'PMI_NMP':
-                col_map[c] = 'pmi_nmp'
-        pmi = pmi.rename(columns=col_map)
-        # 只保留需要的列
-        keep = [c for c in ['month', 'pmi', 'pmi_nmp'] if c in pmi.columns]
-        pmi = pmi[keep]
-        pmi.to_csv(os.path.join(CACHE_DIR, 'pmi.csv'), index=False)
-        print(f"  PMI: {len(pmi)}条")
+    pmi_path = os.path.join(CACHE_DIR, 'pmi.csv')
+    last = get_last_month(pmi_path)
+    start_m = next_month(last) if last else default_start
+    print(f"拉取 PMI... (从 {start_m} 到 {end_m})")
+    if start_m > end_m:
+        print("  已是最新，跳过")
+    else:
+        pmi = ts_api('cn_pmi', start_month=start_m, end_month=end_m)
+        if not pmi.empty:
+            col_map = {}
+            for c in pmi.columns:
+                cl = c.upper()
+                if cl == 'MONTH':
+                    col_map[c] = 'month'
+                elif cl == 'PMI010000':
+                    col_map[c] = 'pmi'
+                elif cl == 'PMI020100':
+                    col_map[c] = 'pmi_nmp'
+                elif cl == 'PMI':
+                    col_map[c] = 'pmi'
+                elif cl == 'PMI_NMP':
+                    col_map[c] = 'pmi_nmp'
+            pmi = pmi.rename(columns=col_map)
+            keep = [c for c in ['month', 'pmi', 'pmi_nmp'] if c in pmi.columns]
+            pmi = pmi[keep]
+            incremental_save(pmi, pmi_path)
+        else:
+            print("  无新数据")
 
     time.sleep(0.5)
 
     # CPI
-    print("拉取 CPI...")
-    cpi = ts_api('cn_cpi',
-                  fields='month,nt_yoy',
-                  start_month=start_m, end_month=end_m)
-    if not cpi.empty:
-        cpi.to_csv(os.path.join(CACHE_DIR, 'cpi.csv'), index=False)
-        print(f"  CPI: {len(cpi)}条")
+    cpi_path = os.path.join(CACHE_DIR, 'cpi.csv')
+    last = get_last_month(cpi_path)
+    start_m = next_month(last) if last else default_start
+    print(f"拉取 CPI... (从 {start_m} 到 {end_m})")
+    if start_m > end_m:
+        print("  已是最新，跳过")
+    else:
+        cpi = ts_api('cn_cpi', fields='month,nt_yoy',
+                      start_month=start_m, end_month=end_m)
+        incremental_save(cpi, cpi_path)
 
     time.sleep(0.5)
 
     # PPI
-    print("拉取 PPI...")
-    ppi = ts_api('cn_ppi',
-                  fields='month,ppi_yoy',
-                  start_month=start_m, end_month=end_m)
-    if not ppi.empty:
-        ppi.to_csv(os.path.join(CACHE_DIR, 'ppi.csv'), index=False)
-        print(f"  PPI: {len(ppi)}条")
+    ppi_path = os.path.join(CACHE_DIR, 'ppi.csv')
+    last = get_last_month(ppi_path)
+    start_m = next_month(last) if last else default_start
+    print(f"拉取 PPI... (从 {start_m} 到 {end_m})")
+    if start_m > end_m:
+        print("  已是最新，跳过")
+    else:
+        ppi = ts_api('cn_ppi', fields='month,ppi_yoy',
+                      start_month=start_m, end_month=end_m)
+        incremental_save(ppi, ppi_path)
 
     print("\n数据拉取完成!")
 

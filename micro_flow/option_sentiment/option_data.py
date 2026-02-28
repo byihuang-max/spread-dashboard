@@ -79,10 +79,52 @@ def fetch_opt_basic():
     return pd.concat(all_contracts).reset_index(drop=True)
 
 
+def _read_cache(fname):
+    """读取缓存CSV，不存在则返回空DataFrame"""
+    path = os.path.join(CACHE_DIR, fname)
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
+def _get_last_date(fname, date_col='trade_date'):
+    """获取缓存CSV中最后日期"""
+    df = _read_cache(fname)
+    if df.empty or date_col not in df.columns:
+        return None
+    return str(df[date_col].max())
+
+
+def _save_incremental(new_data, fname, date_col='trade_date'):
+    """增量追加写入CSV，去重排序"""
+    if new_data.empty:
+        return
+    path = os.path.join(CACHE_DIR, fname)
+    old = _read_cache(fname)
+    combined = pd.concat([old, new_data]).drop_duplicates(
+        subset=[c for c in [date_col, 'ts_code'] if c in new_data.columns]
+    ).sort_values(date_col)
+    combined.to_csv(path, index=False)
+
+
 def fetch_opt_daily(trade_dates):
-    """拉取期权日线（按天拉，包含OI）"""
+    """拉取期权日线（按天拉，包含OI）- 增量模式"""
     print("拉取期权日线...")
-    recent = trade_dates[-25:]  # 25天够算20日分位
+    cache_fname = 'opt_daily.csv'
+    last = _get_last_date(cache_fname)
+
+    if last:
+        # 增量：只拉 last_date+1 之后的交易日
+        start = (pd.Timestamp(last) + pd.Timedelta(days=1)).strftime('%Y%m%d')
+        recent = [td for td in trade_dates if td >= start]
+        if not recent:
+            print(f"  期权日线已是最新（最后日期 {last}），跳过")
+            return pd.DataFrame()
+        print(f"  增量拉取期权日线: 从 {recent[0]} 到 {recent[-1]}")
+    else:
+        recent = trade_dates[-25:]  # 首次全量：25天够算20日分位
+        print(f"  首次全量拉取: {recent[0]} ~ {recent[-1]}")
+
     all_data = []
     for td in recent:
         for ex in sorted(set(info['exchange'] for info in UNDERLYINGS.values())):
@@ -93,17 +135,30 @@ def fetch_opt_daily(trade_dates):
                 all_data.append(df)
             time.sleep(0.35)
     if not all_data:
-        print("  期权日线无数据!")
+        print("  期权日线无新数据!")
         return pd.DataFrame()
     result = pd.concat(all_data).reset_index(drop=True)
-    print(f"  期权日线: {len(result)}条, {len(recent)}天")
+    print(f"  期权日线新增: {len(result)}条, {len(recent)}天")
     return result
 
 
 def fetch_etf_daily(trade_dates):
-    """拉取标的ETF日线（用于BS模型）"""
+    """拉取标的ETF日线（用于BS模型）- 增量模式"""
     print("拉取标的ETF价格...")
-    start, end = trade_dates[0], trade_dates[-1]
+    cache_fname = 'etf_daily.csv'
+    last = _get_last_date(cache_fname)
+
+    if last:
+        start = (pd.Timestamp(last) + pd.Timedelta(days=1)).strftime('%Y%m%d')
+        end = trade_dates[-1]
+        if start > end:
+            print(f"  ETF日线已是最新（最后日期 {last}），跳过")
+            return pd.DataFrame()
+        print(f"  增量拉取ETF日线: 从 {start} 到 {end}")
+    else:
+        start, end = trade_dates[0], trade_dates[-1]
+        print(f"  首次全量拉取: {start} ~ {end}")
+
     all_data = []
     for opt_code, info in UNDERLYINGS.items():
         src = info.get('price_src', 'fund_daily')
@@ -142,14 +197,20 @@ def main():
     opt_daily = fetch_opt_daily(trade_dates)
     etf_daily = fetch_etf_daily(trade_dates)
 
+    # 合约信息：全量覆盖（合约会新增/到期）
+    if not contracts.empty:
+        contracts.to_csv(os.path.join(CACHE_DIR, 'opt_contracts.csv'), index=False)
+        print(f"  合约: {len(contracts)}条（全量刷新）")
+
+    # 期权日线、ETF日线：增量追加
     for name, df, fname in [
-        ('合约', contracts, 'opt_contracts.csv'),
         ('期权日线', opt_daily, 'opt_daily.csv'),
         ('ETF日线', etf_daily, 'etf_daily.csv'),
     ]:
         if not df.empty:
-            df.to_csv(os.path.join(CACHE_DIR, fname), index=False)
-            print(f"  {name}: {len(df)}条")
+            _save_incremental(df, fname)
+            total = len(_read_cache(fname))
+            print(f"  {name}: 新增{len(df)}条, 总计{total}条")
 
     print("\n数据拉取完成!")
 

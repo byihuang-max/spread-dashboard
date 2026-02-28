@@ -63,51 +63,99 @@ def ifind_rt(access_token, codes, indicators='latest'):
         return None
 
 
+def read_csv(path):
+    """读取CSV，不存在则返回空DataFrame"""
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
+def get_last_date(csv_path, date_col='trade_date'):
+    """获取CSV中最后一个日期（字符串）"""
+    df = read_csv(csv_path)
+    if df.empty or date_col not in df.columns:
+        return None
+    return str(df[date_col].max())
+
+
+def save_incremental(new_data, csv_path, date_col):
+    """增量追加：与已有CSV合并、去重、排序后保存"""
+    if new_data.empty:
+        return
+    old = read_csv(csv_path)
+    combined = pd.concat([old, new_data]).drop_duplicates(subset=[date_col]).sort_values(date_col)
+    combined.to_csv(csv_path, index=False)
+
+
 def main():
     print("=" * 50)
-    print("全球利率与汇率 - 数据拉取")
+    print("全球利率与汇率 - 数据拉取（增量模式）")
     print("=" * 50)
 
     end = dt.date.today().strftime('%Y%m%d')
-    start = (dt.date.today() - dt.timedelta(days=120)).strftime('%Y%m%d')
+    default_start = (dt.date.today() - dt.timedelta(days=120)).strftime('%Y%m%d')
 
     # 1. 中国10Y国债收益率
-    print("拉取中国国债收益率...")
-    # yc_cb 每天有多条(不同期限)，筛选10Y
-    trade_cal = ts_api('trade_cal', fields='cal_date,is_open',
-                        exchange='SSE', start_date=start, end_date=end)
-    trade_dates = []
-    if not trade_cal.empty:
-        trade_dates = trade_cal[trade_cal['is_open'] == 1]['cal_date'].sort_values().tolist()[-60:]
+    cn10y_path = os.path.join(CACHE_DIR, 'cn10y.csv')
+    last_cn = get_last_date(cn10y_path, 'trade_date')
+    if last_cn:
+        cn_start = (pd.Timestamp(last_cn) + pd.Timedelta(days=1)).strftime('%Y%m%d')
+        print(f"拉取中国国债收益率（增量: {cn_start} → {end}）...")
+    else:
+        cn_start = default_start
+        print(f"拉取中国国债收益率（全量: {cn_start} → {end}）...")
 
-    cn10y_data = []
-    for td in trade_dates:
-        df = ts_api('yc_cb',
-                    fields='ts_code,trade_date,curve_type,curve_term,yield',
-                    ts_code='1001.CB', curve_type='0', trade_date=td)
-        if not df.empty:
-            df['curve_term'] = pd.to_numeric(df['curve_term'], errors='coerce')
-            df['yield'] = pd.to_numeric(df['yield'], errors='coerce')
-            # 取10年期
-            y10 = df[(df['curve_term'] >= 9.5) & (df['curve_term'] <= 10.5)]
-            if not y10.empty:
-                cn10y_data.append({'trade_date': td, 'cn10y': round(float(y10.iloc[0]['yield']), 4)})
-        time.sleep(0.3)
+    if cn_start <= end:
+        trade_cal = ts_api('trade_cal', fields='cal_date,is_open',
+                            exchange='SSE', start_date=cn_start, end_date=end)
+        trade_dates = []
+        if not trade_cal.empty:
+            trade_dates = trade_cal[trade_cal['is_open'] == 1]['cal_date'].sort_values().tolist()
 
-    if cn10y_data:
-        pd.DataFrame(cn10y_data).to_csv(os.path.join(CACHE_DIR, 'cn10y.csv'), index=False)
-        print(f"  中国10Y: {len(cn10y_data)}条")
+        cn10y_data = []
+        for td in trade_dates:
+            df = ts_api('yc_cb',
+                        fields='ts_code,trade_date,curve_type,curve_term,yield',
+                        ts_code='1001.CB', curve_type='0', trade_date=td)
+            if not df.empty:
+                df['curve_term'] = pd.to_numeric(df['curve_term'], errors='coerce')
+                df['yield'] = pd.to_numeric(df['yield'], errors='coerce')
+                y10 = df[(df['curve_term'] >= 9.5) & (df['curve_term'] <= 10.5)]
+                if not y10.empty:
+                    cn10y_data.append({'trade_date': td, 'cn10y': round(float(y10.iloc[0]['yield']), 4)})
+            time.sleep(0.3)
+
+        if cn10y_data:
+            save_incremental(pd.DataFrame(cn10y_data), cn10y_path, 'trade_date')
+            print(f"  中国10Y: 新增{len(cn10y_data)}条")
+        else:
+            print("  中国10Y: 无新数据")
+    else:
+        print("  中国10Y: 已是最新")
 
     time.sleep(0.5)
 
     # 2. 美国国债收益率
-    print("拉取美国国债收益率...")
-    us_data = ts_api('us_tycr',
-                      fields='date,y1,y2,y3,y5,y10,y30',
-                      start_date=start, end_date=end)
-    if not us_data.empty:
-        us_data.to_csv(os.path.join(CACHE_DIR, 'us_treasury.csv'), index=False)
-        print(f"  美债: {len(us_data)}条")
+    us_path = os.path.join(CACHE_DIR, 'us_treasury.csv')
+    last_us = get_last_date(us_path, 'date')
+    if last_us:
+        us_start = (pd.Timestamp(last_us) + pd.Timedelta(days=1)).strftime('%Y%m%d')
+        print(f"拉取美国国债收益率（增量: {us_start} → {end}）...")
+    else:
+        us_start = default_start
+        print(f"拉取美国国债收益率（全量: {us_start} → {end}）...")
+
+    if us_start <= end:
+        us_data = ts_api('us_tycr',
+                          fields='date,y1,y2,y3,y5,y10,y30',
+                          start_date=us_start, end_date=end)
+        if not us_data.empty:
+            save_incremental(us_data, us_path, 'date')
+            print(f"  美债: 新增{len(us_data)}条")
+        else:
+            print("  美债: 无新数据")
+    else:
+        print("  美债: 已是最新")
 
     time.sleep(0.5)
 

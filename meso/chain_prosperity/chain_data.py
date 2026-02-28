@@ -126,6 +126,51 @@ IFIND_CODES = {
 }
 
 
+def read_cached_csv(path):
+    """读取已有缓存CSV，不存在则返回空DataFrame"""
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
+def get_last_date(csv_path, date_col='trade_date'):
+    """获取缓存CSV中最后一个日期（字符串），无数据返回None"""
+    df = read_cached_csv(csv_path)
+    if df.empty or date_col not in df.columns:
+        return None
+    return str(df[date_col].max())
+
+
+def incremental_start(csv_path, default_start, date_col='trade_date', label=''):
+    """根据缓存CSV决定增量起始日期"""
+    last = get_last_date(csv_path, date_col)
+    if last:
+        start = (pd.Timestamp(str(last)) + pd.Timedelta(days=1)).strftime('%Y%m%d')
+        if label:
+            print(f"  增量拉取 {label}: 从 {start} 到今天")
+        return start
+    return default_start
+
+
+def save_incremental(csv_path, new_df, date_col='trade_date'):
+    """将新数据追加到已有CSV，去重+排序"""
+    if new_df.empty:
+        return
+    old = read_cached_csv(csv_path)
+    if old.empty:
+        combined = new_df
+    else:
+        combined = pd.concat([old, new_df])
+        # 用 ts_code+date_col 去重（多品种共存的CSV）
+        dedup_cols = [date_col]
+        if 'ts_code' in combined.columns:
+            dedup_cols = ['ts_code', date_col]
+        if 'generic' in combined.columns:
+            dedup_cols.append('generic')
+        combined = combined.drop_duplicates(subset=dedup_cols).sort_values(date_col)
+    combined.to_csv(csv_path, index=False)
+
+
 def main():
     print("=" * 50)
     print("中观景气度 - 产业链数据拉取")
@@ -142,32 +187,44 @@ def main():
         for tier in chain.values():
             all_etfs.update(tier)
 
-    etf_price_data = []
-    for code in sorted(all_etfs):
-        df = ts_api('fund_daily', ts_code=code,
-                     start_date=start_60d, end_date=end,
-                     fields='ts_code,trade_date,close,pre_close,pct_chg')
-        if not df.empty:
-            etf_price_data.append(df)
-            print(f"  {ETF_NAMES.get(code, code)}: {len(df)}条")
-        time.sleep(0.3)
+    etf_price_path = os.path.join(CACHE_DIR, 'etf_price.csv')
+    etf_price_start = incremental_start(etf_price_path, start_60d, 'trade_date', 'ETF价格')
 
-    if etf_price_data:
-        pd.concat(etf_price_data).to_csv(os.path.join(CACHE_DIR, 'etf_price.csv'), index=False)
+    if etf_price_start <= end:
+        etf_price_data = []
+        for code in sorted(all_etfs):
+            df = ts_api('fund_daily', ts_code=code,
+                         start_date=etf_price_start, end_date=end,
+                         fields='ts_code,trade_date,close,pre_close,pct_chg')
+            if not df.empty:
+                etf_price_data.append(df)
+                print(f"  {ETF_NAMES.get(code, code)}: {len(df)}条")
+            time.sleep(0.3)
+
+        if etf_price_data:
+            save_incremental(etf_price_path, pd.concat(etf_price_data), 'trade_date')
+    else:
+        print("  已是最新，跳过")
 
     # ── 2. ETF份额 (fund_share) ──
     print("\n[2/5] 拉取ETF份额...")
-    etf_share_data = []
-    for code in sorted(all_etfs):
-        df = ts_api('fund_share', ts_code=code,
-                     start_date=start_60d, end_date=end)
-        if not df.empty:
-            etf_share_data.append(df[['ts_code', 'trade_date', 'fd_share']])
-            print(f"  {ETF_NAMES.get(code, code)}: {len(df)}条")
-        time.sleep(0.3)
+    etf_share_path = os.path.join(CACHE_DIR, 'etf_share.csv')
+    etf_share_start = incremental_start(etf_share_path, start_60d, 'trade_date', 'ETF份额')
 
-    if etf_share_data:
-        pd.concat(etf_share_data).to_csv(os.path.join(CACHE_DIR, 'etf_share.csv'), index=False)
+    if etf_share_start <= end:
+        etf_share_data = []
+        for code in sorted(all_etfs):
+            df = ts_api('fund_share', ts_code=code,
+                         start_date=etf_share_start, end_date=end)
+            if not df.empty:
+                etf_share_data.append(df[['ts_code', 'trade_date', 'fd_share']])
+                print(f"  {ETF_NAMES.get(code, code)}: {len(df)}条")
+            time.sleep(0.3)
+
+        if etf_share_data:
+            save_incremental(etf_share_path, pd.concat(etf_share_data), 'trade_date')
+    else:
+        print("  已是最新，跳过")
 
     # ── 3. 期货主力合约 ──
     print("\n[3/5] 拉取期货主力合约...")
@@ -201,45 +258,57 @@ def main():
                 print(f"  {FUTURES_NAMES.get(code, code)} 主力: {mappings[code]}")
         time.sleep(0.3)
 
-    # 拿期货日线
-    fut_data = []
-    for generic, main_code in mappings.items():
-        df = ts_api('fut_daily', ts_code=main_code,
-                     start_date=start_60d, end_date=end,
-                     fields='ts_code,trade_date,close,settle,vol,oi')
-        if not df.empty:
-            df['generic'] = generic
-            df['name'] = FUTURES_NAMES.get(generic, generic)
-            fut_data.append(df)
-            print(f"  {FUTURES_NAMES.get(generic, generic)}: {len(df)}条")
-        time.sleep(0.3)
+    # 拿期货日线（增量）
+    futures_path = os.path.join(CACHE_DIR, 'futures.csv')
+    futures_start = incremental_start(futures_path, start_60d, 'trade_date', '期货日线')
 
-    if fut_data:
-        pd.concat(fut_data).to_csv(os.path.join(CACHE_DIR, 'futures.csv'), index=False)
+    if futures_start <= end:
+        fut_data = []
+        for generic, main_code in mappings.items():
+            df = ts_api('fut_daily', ts_code=main_code,
+                         start_date=futures_start, end_date=end,
+                         fields='ts_code,trade_date,close,settle,vol,oi')
+            if not df.empty:
+                df['generic'] = generic
+                df['name'] = FUTURES_NAMES.get(generic, generic)
+                fut_data.append(df)
+                print(f"  {FUTURES_NAMES.get(generic, generic)}: {len(df)}条")
+            time.sleep(0.3)
+
+        if fut_data:
+            save_incremental(futures_path, pd.concat(fut_data), 'trade_date')
+    else:
+        print("  已是最新，跳过")
 
     # ── 4. 申万行业指数 ──
     print("\n[4/5] 拉取申万行业指数...")
-    sw_data = []
-    for key, code in SW_INDICES.items():
-        df = ts_api('sw_daily', ts_code=code,
-                     start_date=start_60d, end_date=end,
-                     fields='ts_code,trade_date,name,close,pct_change')
-        if not df.empty:
-            sw_data.append(df)
-            print(f"  {df.iloc[0]['name'] if 'name' in df.columns else key}: {len(df)}条")
-        time.sleep(0.3)
+    sw_path = os.path.join(CACHE_DIR, 'sw_indices.csv')
+    sw_start = incremental_start(sw_path, start_60d, 'trade_date', '申万指数')
 
-    # 补充南华工业品指数
-    nh = ts_api('index_daily', ts_code='NHCI.NH',
-                start_date=start_60d, end_date=end,
-                fields='ts_code,trade_date,close,pct_chg')
-    if not nh.empty:
-        nh['name'] = '南华工业品'
-        sw_data.append(nh)
-        print(f"  南华工业品: {len(nh)}条")
+    if sw_start <= end:
+        sw_data = []
+        for key, code in SW_INDICES.items():
+            df = ts_api('sw_daily', ts_code=code,
+                         start_date=sw_start, end_date=end,
+                         fields='ts_code,trade_date,name,close,pct_change')
+            if not df.empty:
+                sw_data.append(df)
+                print(f"  {df.iloc[0]['name'] if 'name' in df.columns else key}: {len(df)}条")
+            time.sleep(0.3)
 
-    if sw_data:
-        pd.concat(sw_data).to_csv(os.path.join(CACHE_DIR, 'sw_indices.csv'), index=False)
+        # 补充南华工业品指数
+        nh = ts_api('index_daily', ts_code='NHCI.NH',
+                    start_date=sw_start, end_date=end,
+                    fields='ts_code,trade_date,close,pct_chg')
+        if not nh.empty:
+            nh['name'] = '南华工业品'
+            sw_data.append(nh)
+            print(f"  南华工业品: {len(nh)}条")
+
+        if sw_data:
+            save_incremental(sw_path, pd.concat(sw_data), 'trade_date')
+    else:
+        print("  已是最新，跳过")
 
     # ── 5. iFind海外 (SOXX) ──
     print("\n[5/5] 拉取iFind海外数据...")
