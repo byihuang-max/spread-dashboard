@@ -49,32 +49,25 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 <div class="cards" id="cards"></div>
 
 <div class="chart-box">
-  <div class="chart-title"><span class="dot" style="background:#6366f1"></span> 归一化净值对比</div>
-  <div style="position:relative;height:300px"><canvas id="navChart"></canvas></div>
+  <div class="chart-title"><span class="dot" style="background:#6366f1"></span> 净值与超额曲线</div>
+  <div style="position:relative;height:340px"><canvas id="mainChart"></canvas></div>
 </div>
 
-<div class="chart-box">
-  <div class="chart-title"><span class="dot" style="background:#f59e0b"></span> 累计超额收益</div>
-  <div style="position:relative;height:220px"><canvas id="excessChart"></canvas></div>
-</div>
-
-<div class="notes">
+<div class="notes" id="notes">
   <b>📌 指标说明</b><br>
   <b>归一化净值：</b>以起始日为基准=1，展示产品和基准指数的累计表现对比。<br>
-  <b>累计超额：</b>产品归一化净值 - 基准归一化净值，正值表示跑赢基准。<br>
-  <b>数据来源：</b>火富牛数据商城（团队净值，周频更新）。基准为中证1000指数（日频，取产品净值日对齐）。<br>
-  <b>注意：</b>超额曲线斜率向上=持续创造超额；走平=超额停滞；下行=跑输基准。
+  <b>累计超额（右轴）：</b>产品归一化净值 - 基准归一化净值。正值表示跑赢基准，曲线斜率向上=持续创造超额。<br>
+  <b>数据来源：</b>火富牛数据商城（团队净值，周频更新）。基准为对应指数（日频，取产品净值日对齐）。
 </div>
 
 </div>
 
 <script>
-fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
+fetch('fund_nav.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
   document.getElementById('loading').style.display='none';
   document.getElementById('content').style.display='';
   document.getElementById('updateTime').textContent='更新: '+D.update_time;
 
-  // 从URL参数或默认取tab
   var params=new URLSearchParams(window.location.search);
   var tabFilter=params.get('tab')||'';
   var f=null;
@@ -97,7 +90,7 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
   tags.push({text:'产品 '+(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'tag-green':'tag-red'});
   tags.push({text:f.benchmark_name+' '+(f.index_return>0?'+':'')+f.index_return+'%',cls:'tag-amber'});
   tags.push({text:'超额 '+(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'tag-green':'tag-red'});
-  document.getElementById('signalTags').innerHTML=tags.map(t=>'<span class="tag '+t.cls+'">'+t.text+'</span>').join('');
+  document.getElementById('signalTags').innerHTML=tags.map(function(t){return '<span class="tag '+t.cls+'">'+t.text+'</span>'}).join('');
 
   // 卡片
   document.getElementById('cards').innerHTML=[
@@ -105,56 +98,93 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
     {label:f.benchmark_name+'收益',value:(f.index_return>0?'+':'')+f.index_return+'%',cls:f.index_return>=0?'pos':'neg',sub:'基准指数'},
     {label:'累计超额',value:(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'pos':'neg',sub:'产品-基准'},
     {label:'数据周期',value:f.count+'期',cls:'',sub:f.date_range},
-  ].map(c=>'<div class="card"><div class="label">'+c.label+'</div><div class="value '+c.cls+'">'+c.value+'</div><div class="sub">'+c.sub+'</div></div>').join('');
+  ].map(function(c){return '<div class="card"><div class="label">'+c.label+'</div><div class="value '+c.cls+'">'+c.value+'</div><div class="sub">'+c.sub+'</div></div>'}).join('');
 
-  // 净值图
-  var labels=c.dates.map(d=>d.slice(5));
-  new Chart(document.getElementById('navChart'),{
+  // 三合一图表：产品净值（左轴）+ 基准净值（左轴）+ 超额（右轴）
+  var labels=c.dates.map(function(d){return d.slice(5)});
+
+  new Chart(document.getElementById('mainChart'),{
     type:'line',
     data:{
       labels:labels,
       datasets:[
-        {label:fundLabel,data:c.fund_nav,borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.3},
-        {label:f.benchmark_name,data:c.index_nav,borderColor:'#f59e0b',backgroundColor:'transparent',pointRadius:0,borderWidth:2,tension:.3,borderDash:[4,3]},
+        {
+          label:fundLabel,
+          data:c.fund_nav,
+          borderColor:'#6366f1',
+          backgroundColor:'rgba(99,102,241,.06)',
+          fill:true,
+          pointRadius:0,
+          borderWidth:2.5,
+          tension:.3,
+          yAxisID:'y'
+        },
+        {
+          label:f.benchmark_name,
+          data:c.index_nav,
+          borderColor:'#94a3b8',
+          backgroundColor:'transparent',
+          pointRadius:0,
+          borderWidth:1.5,
+          tension:.3,
+          borderDash:[5,3],
+          yAxisID:'y'
+        },
+        {
+          label:'累计超额',
+          data:c.excess,
+          borderColor:'#f59e0b',
+          backgroundColor:'rgba(245,158,11,.08)',
+          fill:true,
+          pointRadius:0,
+          borderWidth:2,
+          tension:.3,
+          yAxisID:'y1'
+        }
       ]
     },
     options:{
-      responsive:true,maintainAspectRatio:false,
+      responsive:true,
+      maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{legend:{position:'top',labels:{font:{size:11},usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.parsed.y*100-100).toFixed(1)+'%'}}}
+      plugins:{
+        legend:{
+          position:'top',
+          labels:{font:{size:11},usePointStyle:true,pointStyle:'circle'}
+        },
+        tooltip:{
+          callbacks:{
+            label:function(ctx){
+              if(ctx.datasetIndex<=1){
+                return ctx.dataset.label+': '+((ctx.parsed.y-1)*100).toFixed(1)+'%';
+              } else {
+                return ctx.dataset.label+': '+(ctx.parsed.y*100).toFixed(1)+'%';
+              }
+            }
+          }
+        }
       },
       scales:{
         x:{ticks:{maxTicksLimit:12,font:{size:10}},grid:{display:false}},
-        y:{ticks:{font:{size:10},callback:function(v){return ((v-1)*100).toFixed(0)+'%'}},grid:{color:'rgba(0,0,0,.04)'}}
+        y:{
+          type:'linear',
+          position:'left',
+          ticks:{font:{size:10},callback:function(v){return ((v-1)*100).toFixed(0)+'%'}},
+          grid:{color:'rgba(0,0,0,.04)'},
+          title:{display:true,text:'累计收益',font:{size:10},color:'#6366f1'}
+        },
+        y1:{
+          type:'linear',
+          position:'right',
+          ticks:{font:{size:10},callback:function(v){return (v*100).toFixed(0)+'%'},color:'#f59e0b'},
+          grid:{drawOnChartArea:false},
+          title:{display:true,text:'超额',font:{size:10},color:'#f59e0b'}
+        }
       }
     }
   });
 
-  // 超额图 - 曲线
-  new Chart(document.getElementById('excessChart'),{
-    type:'line',
-    data:{
-      labels:labels,
-      datasets:[{
-        label:'累计超额',data:c.excess,
-        borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.1)',fill:true,
-        pointRadius:0,borderWidth:2,tension:.3
-      },{
-        label:'零线',data:c.excess.map(function(){return 0}),
-        borderColor:'rgba(0,0,0,.15)',borderWidth:1,borderDash:[3,3],pointRadius:0
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return '超额: '+(ctx.parsed.y*100).toFixed(1)+'%'}}}},
-      scales:{
-        x:{ticks:{maxTicksLimit:12,font:{size:10}},grid:{display:false}},
-        y:{ticks:{font:{size:10},callback:function(v){return (v*100).toFixed(0)+'%'}},grid:{color:'rgba(0,0,0,.04)'}}
-      }
-    }
-  });
-}).catch(e=>{document.getElementById('loading').textContent='加载失败: '+e.message});
+}).catch(function(e){document.getElementById('loading').textContent='加载失败: '+e.message});
 </script>
 </body>
 </html>
