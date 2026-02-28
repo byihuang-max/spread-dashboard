@@ -10,8 +10,12 @@ GAMT 看板刷新 API 服务
 端口：9876
 """
 
-import subprocess, sys, os, time, json, threading
+import subprocess, sys, os, time, json, threading, gzip, io
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -209,6 +213,11 @@ class Handler(BaseHTTPRequestHandler):
         body = json.dumps(data, ensure_ascii=False).encode()
         self.send_response(code)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
+        accept_enc = self.headers.get('Accept-Encoding', '')
+        if 'gzip' in accept_enc and len(body) > 256:
+            body = gzip.compress(body)
+            self.send_header('Content-Encoding', 'gzip')
+        self.send_header('Content-Length', str(len(body)))
         self._cors()
         self.end_headers()
         self.wfile.write(body)
@@ -258,6 +267,9 @@ class Handler(BaseHTTPRequestHandler):
         '.webmanifest':'application/manifest+json','.map':'application/json',
     }
 
+    # 静态文件 gzip 缓存: {filepath: (mtime, gzipped_data)}
+    _gz_cache = {}
+
     def _serve_static(self, url_path):
         """托管静态文件"""
         # 清理路径，防止目录遍历
@@ -284,6 +296,16 @@ class Handler(BaseHTTPRequestHandler):
                 data = f.read()
             self.send_response(200)
             self.send_header('Content-Type', content_type + ('; charset=utf-8' if ext in ('.html','.css','.js','.json','.svg','.txt') else ''))
+            accept_enc = self.headers.get('Accept-Encoding', '')
+            if 'gzip' in accept_enc and len(data) > 1024 and ext in ('.html','.css','.js','.json','.svg','.txt'):
+                mtime = os.path.getmtime(filepath)
+                cached = Handler._gz_cache.get(filepath)
+                if cached and cached[0] == mtime:
+                    data = cached[1]
+                else:
+                    data = gzip.compress(data, compresslevel=6)
+                    Handler._gz_cache[filepath] = (mtime, data)
+                self.send_header('Content-Encoding', 'gzip')
             self.send_header('Content-Length', str(len(data)))
             self.send_header('Cache-Control', 'no-cache' if ext in ('.html','.json') else 'public, max-age=3600')
             self._cors()
@@ -457,7 +479,18 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     port = 9876
-    server = HTTPServer(('0.0.0.0', port), Handler)
+
+    # 预热：启动时预压缩大文件
+    for name in ('index.html', 'admin.html'):
+        fp = os.path.join(BASE_DIR, name)
+        if os.path.isfile(fp):
+            with open(fp, 'rb') as f:
+                data = f.read()
+            gz = gzip.compress(data, compresslevel=6)
+            Handler._gz_cache[fp] = (os.path.getmtime(fp), gz)
+            print(f"   预压缩 {name}: {len(data)//1024}KB → {len(gz)//1024}KB")
+
+    server = ThreadedHTTPServer(('0.0.0.0', port), Handler)
     print(f"🚀 GAMT 刷新服务启动: http://localhost:{port}")
     print(f"   POST /api/refresh/<tab>  — 刷新单个模块")
     print(f"   POST /api/refresh-all    — 刷新全部")
