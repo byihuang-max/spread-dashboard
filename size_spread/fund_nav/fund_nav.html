@@ -74,17 +74,26 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
   document.getElementById('content').style.display='';
   document.getElementById('updateTime').textContent='更新: '+D.update_time;
 
-  if(!D.funds||!D.funds.length){
+  // 从URL参数或默认取tab
+  var params=new URLSearchParams(window.location.search);
+  var tabFilter=params.get('tab')||'';
+  var f=null;
+  if(tabFilter){
+    f=(D.funds||[]).find(function(x){return x.tab===tabFilter});
+  }
+  if(!f) f=(D.funds||[])[0];
+
+  if(!f){
     document.getElementById('content').innerHTML='<div style="text-align:center;padding:40px;color:#999">暂无数据</div>';
     return;
   }
 
-  var f=D.funds[0];
   var c=f.chart;
+  var fundLabel=f.show_name!==false?f.name:'代表产品';
 
   // 信号
   var tags=[];
-  tags.push({text:f.name,cls:'tag-blue'});
+  if(f.show_name!==false) tags.push({text:f.name,cls:'tag-blue'});
   tags.push({text:'产品 '+(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'tag-green':'tag-red'});
   tags.push({text:f.benchmark_name+' '+(f.index_return>0?'+':'')+f.index_return+'%',cls:'tag-amber'});
   tags.push({text:'超额 '+(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'tag-green':'tag-red'});
@@ -92,7 +101,7 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
 
   // 卡片
   document.getElementById('cards').innerHTML=[
-    {label:'产品累计收益',value:(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'pos':'neg',sub:f.name},
+    {label:'产品累计收益',value:(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'pos':'neg',sub:fundLabel},
     {label:f.benchmark_name+'收益',value:(f.index_return>0?'+':'')+f.index_return+'%',cls:f.index_return>=0?'pos':'neg',sub:'基准指数'},
     {label:'累计超额',value:(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'pos':'neg',sub:'产品-基准'},
     {label:'数据周期',value:f.count+'期',cls:'',sub:f.date_range},
@@ -105,7 +114,7 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
     data:{
       labels:labels,
       datasets:[
-        {label:f.name,data:c.fund_nav,borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.3},
+        {label:fundLabel,data:c.fund_nav,borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.3},
         {label:f.benchmark_name,data:c.index_nav,borderColor:'#f59e0b',backgroundColor:'transparent',pointRadius:0,borderWidth:2,tension:.3,borderDash:[4,3]},
       ]
     },

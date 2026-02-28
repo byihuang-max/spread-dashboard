@@ -19,10 +19,22 @@ FUNDS = [
     {
         'tab': 'quant-stock',
         'name': '超量子中证1000增强9号A类',
+        'display_name': '1000指增代表产品',
         'reg_code': 'XZ916A',
         'benchmark': '000852',
         'benchmark_name': '中证1000',
         'start_date': '2024-01-01',
+        'show_name': True,
+    },
+    {
+        'tab': 'momentum-stock',
+        'name': '简文致盛尊享一号',
+        'display_name': '强势股代表产品',
+        'reg_code': 'SAVV99',
+        'benchmark': '000001',
+        'benchmark_name': '上证指数',
+        'start_date': '2025-03-01',
+        'show_name': False,
     },
 ]
 
@@ -124,10 +136,11 @@ def main():
 
         entry = {
             'tab': cfg['tab'],
-            'name': cfg['name'],
+            'name': cfg.get('display_name', cfg['name']),
             'reg_code': cfg['reg_code'],
             'benchmark_name': cfg['benchmark_name'],
             'source': source,
+            'show_name': cfg.get('show_name', True),
             'count': len(aligned['dates']),
             'date_range': f"{aligned['dates'][0]} ~ {aligned['dates'][-1]}",
             'total_return': round(total_ret, 2),
