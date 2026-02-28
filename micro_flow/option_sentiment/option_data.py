@@ -17,9 +17,10 @@ TUSHARE_URL = 'https://api.tushare.pro'
 
 # 关注的标的
 UNDERLYINGS = {
-    'OP510300.SH': {'name': '沪深300ETF', 'etf': '510300.SH', 'exchange': 'SSE'},
-    'OP510500.SH': {'name': '中证500ETF', 'etf': '510500.SH', 'exchange': 'SSE'},
-    'OP588000.SH': {'name': '科创50ETF',  'etf': '588000.SH', 'exchange': 'SSE'},
+    'OP510300.SH': {'name': '沪深300ETF', 'etf': '510300.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
+    'OP510500.SH': {'name': '中证500ETF', 'etf': '510500.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
+    'OP588000.SH': {'name': '科创50ETF',  'etf': '588000.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
+    'OP000852.SH': {'name': '中证1000',   'etf': '000852.SH', 'exchange': 'CFFEX', 'price_src': 'index_daily'},
 }
 
 
@@ -84,7 +85,7 @@ def fetch_opt_daily(trade_dates):
     recent = trade_dates[-25:]  # 25天够算20日分位
     all_data = []
     for td in recent:
-        for ex in ['SSE', 'SZSE']:
+        for ex in sorted(set(info['exchange'] for info in UNDERLYINGS.values())):
             df = ts_api('opt_daily',
                         fields='ts_code,trade_date,close,settle,vol,amount,oi',
                         trade_date=td, exchange=ex)
@@ -105,11 +106,15 @@ def fetch_etf_daily(trade_dates):
     start, end = trade_dates[0], trade_dates[-1]
     all_data = []
     for opt_code, info in UNDERLYINGS.items():
-        df = ts_api('fund_daily',
+        src = info.get('price_src', 'fund_daily')
+        df = ts_api(src,
                     fields='ts_code,trade_date,close',
                     ts_code=info['etf'], start_date=start, end_date=end)
-        if df.empty:
-            # 备用 daily
+        if df.empty and src == 'fund_daily':
+            df = ts_api('daily',
+                        fields='ts_code,trade_date,close',
+                        ts_code=info['etf'], start_date=start, end_date=end)
+        if df.empty and src == 'index_daily':
             df = ts_api('daily',
                         fields='ts_code,trade_date,close',
                         ts_code=info['etf'], start_date=start, end_date=end)

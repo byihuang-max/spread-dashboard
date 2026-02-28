@@ -23,6 +23,7 @@ UNDERLYING_MAP = {
     'OP510300.SH': {'name': '沪深300ETF', 'etf': '510300.SH'},
     'OP510500.SH': {'name': '中证500ETF', 'etf': '510500.SH'},
     'OP588000.SH': {'name': '科创50ETF',  'etf': '588000.SH'},
+    'OP000852.SH': {'name': '中证1000',   'etf': '000852.SH'},
 }
 
 
