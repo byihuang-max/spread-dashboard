@@ -44,7 +44,7 @@ def ts_api(api_name, fields='', **kwargs):
     return pd.DataFrame()
 
 
-def get_trade_dates(n=60):
+def get_trade_dates(n=260):
     end = dt.date.today().strftime('%Y%m%d')
     start = (dt.date.today() - dt.timedelta(days=n * 2)).strftime('%Y%m%d')
     df = ts_api('trade_cal', fields='cal_date,is_open',
@@ -122,7 +122,7 @@ def fetch_opt_daily(trade_dates):
             return pd.DataFrame()
         print(f"  增量拉取期权日线: 从 {recent[0]} 到 {recent[-1]}")
     else:
-        recent = trade_dates[-25:]  # 首次全量：25天够算20日分位
+        recent = trade_dates[-250:]  # 首次全量：约一年交易日
         print(f"  首次全量拉取: {recent[0]} ~ {recent[-1]}")
 
     all_data = []

@@ -93,7 +93,7 @@ def main():
     print("=" * 50)
 
     end = dt.date.today().strftime('%Y%m%d')
-    default_start = (dt.date.today() - dt.timedelta(days=120)).strftime('%Y%m%d')
+    default_start = (dt.date.today() - dt.timedelta(days=400)).strftime('%Y%m%d')
 
     # 1. 中国10Y国债收益率
     cn10y_path = os.path.join(CACHE_DIR, 'cn10y.csv')

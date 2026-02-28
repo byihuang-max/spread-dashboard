@@ -66,7 +66,7 @@ def main():
     print("=" * 50)
 
     end = dt.date.today().strftime('%Y%m%d')
-    default_start_60 = (dt.date.today() - dt.timedelta(days=120)).strftime('%Y%m%d')
+    default_start_60 = (dt.date.today() - dt.timedelta(days=400)).strftime('%Y%m%d')
     default_start_24m = (dt.date.today() - dt.timedelta(days=750)).strftime('%Y%m%d')
 
     # ── 1. Shibor ──

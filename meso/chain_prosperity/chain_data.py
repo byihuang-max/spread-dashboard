@@ -177,7 +177,7 @@ def main():
     print("=" * 50)
 
     end = dt.date.today().strftime('%Y%m%d')
-    start_60d = (dt.date.today() - dt.timedelta(days=90)).strftime('%Y%m%d')
+    start_60d = (dt.date.today() - dt.timedelta(days=400)).strftime('%Y%m%d')
     start_5d = (dt.date.today() - dt.timedelta(days=10)).strftime('%Y%m%d')
 
     # ── 1. ETF价格 (fund_daily) ──
