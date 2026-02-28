@@ -1599,6 +1599,7 @@ function initCbCharts() {
 (function(){
   var AUTH_API = null;
   var currentUser = null;
+  var STATIC_MODE = false;
 
   // 发现 API 地址（与刷新按钮同逻辑）
   function discoverAPI(cb){
@@ -1705,7 +1706,8 @@ function initCbCharts() {
       bar.style.position='relative';bar.style.transform='none';
       var initial=(user.display_name||user.username||'U').charAt(0).toUpperCase();
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
-      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+'<button class="logout-btn" onclick="doLogout()">退出</button>';
+      var logoutBtn=STATIC_MODE?'':'<button class="logout-btn" onclick="doLogout()">退出</button>';
+      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+logoutBtn;
       header.appendChild(bar);
     }
     // 侧边栏底部：显示用户名 + 管理后台入口
@@ -1733,9 +1735,15 @@ function initCbCharts() {
   // 启动：检查是否已登录
   discoverAPI(function(){
     if(!AUTH_API){
-      // API不可用时，也要求登录，显示提示
-      console.warn('[GAMT] API not reachable, login required but API unavailable');
-      document.getElementById('loginOverlay').style.display='';
+      // API不可用 → 静态只读模式（pages.dev），跳过登录直接展示
+      console.log('[GAMT] API not reachable, entering static readonly mode');
+      STATIC_MODE = true;
+      showApp({username:'visitor',display_name:'访客',is_admin:false});
+      // 隐藏所有刷新按钮
+      document.querySelectorAll('[id^="refreshBtn"],[id="refreshAllBtn"],[id="refreshBtnFlow"],[id="refreshBtnMacro"],[id="refreshBtnMeso"],[id="refreshBtnAlerts"]').forEach(function(el){el.style.display='none'});
+      // 侧边栏显示只读模式
+      var sideInfo=document.getElementById('sidebarUserInfo');
+      if(sideInfo) sideInfo.innerHTML='只读模式<br><span style="opacity:.5;font-size:11px">数据为最近快照</span>';
       return;
     }
     // 检查已有 token
