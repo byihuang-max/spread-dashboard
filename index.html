@@ -222,6 +222,26 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 策略环境适配度 ══ -->
     <div class="module-page" id="page-env-fit">
+      <!-- 信号摘要栏 -->
+      <div id="envFitSignalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:14px 18px;color:#e2e6ed;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800">策略环境适配度</div>
+        <div id="envFitSignalTags" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        <div style="margin-left:auto;font-size:11px;color:#7c8598" id="envFitSignalTime"></div>
+      </div>
+      <script>
+      (function(){
+        fetch('env_fit/env_fit_signals.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+          document.getElementById('envFitSignalTime').textContent='更新: '+(d.update_time||'');
+          document.getElementById('envFitSignalTags').innerHTML=(d.signals||[]).map(function(s){
+            var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
+            if(s.indexOf('🟢')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
+            else if(s.indexOf('🔴')>=0||s.indexOf('❄️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
+            else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
+            return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
+          }).join('');
+        }).catch(function(){});
+      })();
+      </script>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
           <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>

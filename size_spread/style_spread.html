@@ -61,6 +61,27 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   <button class="refresh-btn" id="refreshBtnSpread" onclick="refreshSpread()">🔄 刷新数据</button>
 </div>
 
+<!-- 信号摘要栏 -->
+<div id="signalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:14px 18px;color:#e2e6ed;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+  <div style="font-size:16px;font-weight:800">风格轧差</div>
+  <div id="signalTags" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="signalTime"></div>
+</div>
+<script>
+(function(){
+  fetch('style_spread_signals.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('signalTime').textContent='更新: '+(d.update_time||'');
+    document.getElementById('signalTags').innerHTML=(d.signals||[]).map(function(s){
+      var cls='';
+      if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0) cls=' style="background:rgba(34,197,94,0.2);color:#4ade80"';
+      else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0) cls=' style="background:rgba(239,68,68,0.2);color:#f87171"';
+      else if(s.indexOf('🔥')>=0) cls=' style="background:rgba(245,158,11,0.25);color:#fbbf24"';
+      return '<span'+cls+' style="'+(cls?cls.split('"')[1]:'background:rgba(255,255,255,0.1);color:#b8bfce')+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
+    }).join('');
+  }).catch(function(){});
+})();
+</script>
+
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
