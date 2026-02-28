@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中观景气度 - 产业链</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag.info{background:rgba(59,130,246,0.2);color:#60a5fa}
+
+.chain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:1200px){.chain-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.chain-grid{grid-template-columns:1fr}}
+
+.chain-card{background:#fff;border-radius:12px;border:1px solid #e8eaef;overflow:hidden}
+.chain-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f1f4}
+.chain-name{font-size:16px;font-weight:800}
+.chain-signal{font-size:12px;padding:3px 10px;border-radius:16px;font-weight:600}
+.chain-signal.good{background:#dcfce7;color:#16a34a}
+.chain-signal.risk{background:#fef2f2;color:#dc2626}
+.chain-signal.warn{background:#fef9c3;color:#a16207}
+.chain-signal.info{background:#dbeafe;color:#2563eb}
+.chain-signal.neutral{background:#f3f4f6;color:#6b7280}
+
+.tier{padding:10px 16px;border-bottom:1px solid #f8f9fa}
+.tier:last-child{border-bottom:none}
+.tier-label{font-size:10px;font-weight:700;color:#8b92a5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.tier-items{display:flex;flex-direction:column;gap:4px}
+.tier-item{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.tier-item .item-name{color:#374151;font-weight:600;flex:1}
+.tier-item .item-chg{font-weight:700;min-width:55px;text-align:right}
+.tier-item .item-arrow{min-width:24px;text-align:center;font-size:13px}
+.up{color:#dc2626} .down{color:#16a34a} .flat{color:#9ca3af}
+
+.chain-footer{padding:10px 16px;background:#f9fafb;font-size:11px;color:#6b7280;line-height:1.6}
+.chain-footer .label{font-weight:700;color:#374151}
+.share-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600;margin-left:4px}
+.share-badge.inflow{background:#dcfce7;color:#16a34a}
+.share-badge.outflow{background:#fef2f2;color:#dc2626}
+
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:16px;padding:12px 14px;background:#fff;border-radius:10px;border:1px solid #e8eaef}
+.chart-note b{color:#374151}
+
+.loading{text-align:center;padding:60px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="signal-bar">
+  <div class="signal-main">中观景气度</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="chain-grid" id="chainGrid"></div>
+
+<div class="chart-note">
+  <b>📖 怎么看产业链景气传导：</b><br><br>
+  <b>上游涨 + 中游涨 + 下游涨 = 全链景气🟢</b> → 需求驱动型上涨，整条链都在赚钱，可以超配。<br>
+  <b>上游涨 + 下游跌 = 成本挤压⚠️</b> → 原材料涨价但下游传不出去，中游制造最受伤。<br>
+  <b>下游独立走强🔵</b> → 可能是政策刺激或消费回暖，但上游没跟说明持续性待观察。<br>
+  <b>全链下行🔴</b> → 景气下行周期，控制仓位。<br><br>
+  <b>ETF份额变化：</b>正=资金流入（市场在加仓），负=资金流出。份额方向和价格方向不一致时是重要信号——<br>
+  价格跌但份额增="越跌越买"（机构在抄底）；价格涨但份额减="边涨边跑"（获利了结）。<br><br>
+  <b>涨跌幅说明：</b>5日=短期动量，20日=中期趋势。箭头: ↗↗强势(>2%), ↗温和上涨, →持平, ↘温和下跌, ↘↘弱势(<-2%)。
+</div>
+
+</div>
+<script>
+var DATA;
+function loadData(){
+  fetch('chain_prosperity.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;render()})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+
+function fmtChg(v){
+  if(v==null) return '<span class="flat">—</span>';
+  var cls=v>0.5?'up':v<-0.5?'down':'flat';
+  return '<span class="'+cls+'">'+(v>0?'+':'')+v.toFixed(2)+'%</span>';
+}
+function arrow(v){
+  if(v==null) return '—';
+  if(v>2) return '↗↗';
+  if(v>0.5) return '↗';
+  if(v>-0.5) return '→';
+  if(v>-2) return '↘';
+  return '↘↘';
+}
+function sigClass(emoji){
+  if(emoji=='🟢') return 'good';
+  if(emoji=='🔴') return 'risk';
+  if(emoji=='⚠️'||emoji=='🟡') return 'warn';
+  if(emoji=='🔵') return 'info';
+  return 'neutral';
+}
+
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+
+  // 信号栏
+  var sigs=DATA.signals||[];
+  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🟢')>=0) cls+=' good';
+    else if(s.indexOf('🔴')>=0) cls+=' risk';
+    else if(s.indexOf('⚠️')>=0||s.indexOf('🟡')>=0) cls+=' warn';
+    else if(s.indexOf('🔵')>=0) cls+=' info';
+    return '<span class="'+cls+'">'+s+'</span>';
+  }).join('');
+
+  // 产业链卡片
+  var grid=document.getElementById('chainGrid');
+  var html='';
+  var order=['tech','pharma','cycle','consumer'];
+  for(var i=0;i<order.length;i++){
+    var key=order[i];
+    var c=DATA.chains[key];
+    if(!c) continue;
+    var sc=sigClass(c.emoji);
+    html+='<div class="chain-card">';
+    html+='<div class="chain-header"><span class="chain-name">'+c.name+'</span><span class="chain-signal '+sc+'">'+c.emoji+' '+c.signal+'</span></div>';
+
+    var tierOrder=[['upstream','上游'],['midstream','中游'],['downstream','下游']];
+    for(var t=0;t<tierOrder.length;t++){
+      var tk=tierOrder[t][0], tl=tierOrder[t][1];
+      var tier=c.tiers[tk]||{items:[]};
+      html+='<div class="tier"><div class="tier-label">'+tl+'</div><div class="tier-items">';
+      var items=tier.items||[];
+      if(items.length===0){
+        html+='<div class="tier-item"><span class="item-name" style="color:#aaa">暂无数据</span></div>';
+      }
+      for(var j=0;j<items.length;j++){
+        var it=items[j];
+        var chgVal=it.chg_5d!=null?it.chg_5d:(it.chg_pct!=null?it.chg_pct:null);
+        var shareHtml='';
+        if(it.share_chg_5d!=null){
+          var sc2=it.share_chg_5d>0?'inflow':'outflow';
+          shareHtml=' <span class="share-badge '+sc2+'">'+(it.share_chg_5d>0?'+':'')+Math.round(it.share_chg_5d/10000)+'亿份</span>';
+        }
+        html+='<div class="tier-item">';
+        html+='<span class="item-name">'+it.name+shareHtml+'</span>';
+        html+='<span class="item-chg">'+fmtChg(chgVal)+'</span>';
+        html+='<span class="item-arrow">'+(chgVal!=null?arrow(chgVal):'—')+'</span>';
+        html+='</div>';
+      }
+      html+='</div></div>';
+    }
+
+    html+='</div>';
+  }
+  grid.innerHTML=html;
+}
+
+loadData();
+</script>
+</body></html>

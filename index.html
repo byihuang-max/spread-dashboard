@@ -168,7 +168,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-item" data-module="env-fit"><span class="icon">🎯</span> 策略环境适配度</div>
       <div class="nav-item" data-module="fund-flow"><span class="icon">💰</span> 资金流与微观结构</div>
       <div class="nav-item" data-module="macro"><span class="icon">🌍</span> 宏观与流动性</div>
-      <div class="nav-item" data-module="meso" style="opacity:.35"><span class="icon">🏭</span> 中观景气</div>
+      <div class="nav-item" data-module="meso"><span class="icon">🏭</span> 中观景气</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
@@ -1139,6 +1139,21 @@ function initCbCharts() {
         <iframe src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-macro -->
+
+    <!-- ══ 中观景气 ══ -->
+    <div class="module-page" id="page-meso">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="strat-tabs" style="margin-bottom:0">
+          <div class="strat-tab active" data-strat="chain-prosperity">🏭 产业链景气</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="refreshBtnMeso" onclick="refreshMesoTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+        </div>
+      </div>
+      <div class="strat-page active" id="strat-chain-prosperity">
+        <iframe src="meso/chain_prosperity/chain_prosperity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+    </div><!-- /page-meso -->
 <script>
 (function(){
   var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
@@ -1293,6 +1308,14 @@ function initCbCharts() {
     var btn=document.getElementById('refreshBtnMacro');
     var activeTab=document.querySelector('#page-macro .strat-tab.active');
     var strat=activeTab?activeTab.getAttribute('data-strat'):'liquidity';
+    refreshModule(strat,btn);
+  };
+
+  // ═══ 中观景气模块刷新 ═══
+  window.refreshMesoTab=function(){
+    var btn=document.getElementById('refreshBtnMeso');
+    var activeTab=document.querySelector('#page-meso .strat-tab.active');
+    var strat=activeTab?activeTab.getAttribute('data-strat'):'chain-prosperity';
     refreshModule(strat,btn);
   };
 

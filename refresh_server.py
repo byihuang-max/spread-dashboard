@@ -109,6 +109,13 @@ MODULES = {
             ('macro/fundamentals', 'fundamentals_calc.py'),
         ],
     },
+    'chain-prosperity': {
+        'name': '产业链景气',
+        'scripts': [
+            ('meso/chain_prosperity', 'chain_data.py'),
+            ('meso/chain_prosperity', 'chain_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -125,6 +132,7 @@ TAB_MAP = {
     'liquidity': 'liquidity',
     'rates': 'rates',
     'fundamentals': 'fundamentals',
+    'chain-prosperity': 'chain-prosperity',
 }
 
 # ═══ 全局状态 ═══
