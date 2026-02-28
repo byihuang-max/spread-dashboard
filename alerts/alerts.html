@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>红灯预警</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:16px;font-size:14px}
+
+.header-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:18px 22px;color:#e2e6ed;margin-bottom:18px}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header-title{font-size:20px;font-weight:900}
+.composite{display:flex;align-items:center;gap:12px}
+.composite-score{font-size:28px;font-weight:900}
+.composite-bar{width:200px;height:10px;background:rgba(255,255,255,0.15);border-radius:5px;overflow:hidden}
+.composite-fill{height:100%;border-radius:5px;transition:width .5s}
+.composite-label{font-size:12px;font-weight:700}
+
+.alert-list{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.alert-item{font-size:12px;color:#fbbf24;padding:2px 0}
+
+.dim-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:900px){.dim-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.dim-grid{grid-template-columns:repeat(2,1fr)}}
+
+.dim-card{background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:14px;text-align:center;transition:all .2s}
+.dim-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.dim-emoji{font-size:28px;margin-bottom:6px}
+.dim-name{font-size:12px;font-weight:700;color:#374151;margin-bottom:4px}
+.dim-score-bar{width:100%;height:6px;background:#f0f0f0;border-radius:3px;margin-bottom:6px;overflow:hidden}
+.dim-score-fill{height:100%;border-radius:3px}
+.dim-score-text{font-size:18px;font-weight:900}
+.dim-items{margin-top:8px;text-align:left}
+.dim-items li{font-size:11px;color:#6b7280;line-height:1.6;list-style:none}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:768px){.detail-grid{grid-template-columns:1fr}}
+.chart-box{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef}
+.chart-box h3{font-size:12px;font-weight:700;color:#374151;margin-bottom:10px}
+.chart-wrap{position:relative;height:200px}
+
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;padding:12px 14px;background:#fff;border-radius:10px;border:1px solid #e8eaef}
+.chart-note b{color:#374151}
+
+.loading{text-align:center;padding:60px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="header-bar">
+  <div class="header-top">
+    <div class="header-title">🚨 红灯预警</div>
+    <div class="composite">
+      <div class="composite-score" id="compScore"></div>
+      <div>
+        <div class="composite-bar"><div class="composite-fill" id="compBar"></div></div>
+        <div class="composite-label" id="compLabel" style="margin-top:4px"></div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#7c8598" id="updateTime"></div>
+  </div>
+  <div class="alert-list" id="alertList"></div>
+</div>
+
+<div class="dim-grid" id="dimGrid"></div>
+<div class="detail-grid" id="detailGrid"></div>
+
+<div class="chart-note">
+  <b>📖 红灯预警怎么看：</b><br><br>
+  <b>综合风险评分(0-100)：</b>5个维度加权求和。>60=高风险（建议减仓防守），40-60=中高风险（控制仓位），20-40=中低风险（正常操作），<20=低风险（可以进攻）。<br><br>
+  <b>💧流动性风险：</b>DR007和Shibor异常偏高=央行在收紧，资金面紧张时市场容易杀估值。R007-DR007价差走阔=非银机构融资困难。<br>
+  <b>📊估值泡沫：</b>PE分位>90%意味着比过去1年90%的时间都贵。股债性价比(EP-10Y国债)<0=买股票不如买债券。<br>
+  <b>🔥情绪过热：</b>成交额>MA20的1.8倍+涨停>80只=市场太疯了，容易见顶回调。跌停>50只=恐慌蔓延。<br>
+  <b>🌍外部冲击：</b>中美利差恶化+汇率急贬+期权IV飙升=海外风险传导。<br>
+  <b>🏃微观恶化：</b>北向连续净流出+期权PCR极端看空=聪明钱在跑路。
+</div>
+
+</div>
+<script>
+var DATA;
+function loadData(){
+  fetch('alerts.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;render()})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+
+function scoreColor(s){
+  if(s>=60)return '#dc2626';if(s>=40)return '#f97316';if(s>=20)return '#eab308';return '#22c55e';
+}
+function levelEmoji(l){
+  if(l=='🔴')return '🔴';if(l=='🟡')return '🟡';return '🟢';
+}
+
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+
+  // 综合评分
+  var s=DATA.composite_score||0;
+  document.getElementById('compScore').textContent=s.toFixed(0);
+  document.getElementById('compScore').style.color=scoreColor(s);
+  var bar=document.getElementById('compBar');
+  bar.style.width=s+'%';bar.style.background=scoreColor(s);
+  document.getElementById('compLabel').textContent=DATA.composite_level||'';
+  document.getElementById('compLabel').style.color=scoreColor(s);
+
+  // 预警列表
+  document.getElementById('alertList').innerHTML=(DATA.alerts||[]).map(function(a){
+    return '<div class="alert-item">⚠️ '+a+'</div>';
+  }).join('');
+
+  // 5维卡片
+  var dimOrder=['liquidity','valuation','sentiment','external','micro'];
+  var grid=document.getElementById('dimGrid');
+  grid.innerHTML=dimOrder.map(function(key){
+    var d=DATA.dimensions[key];if(!d)return '';
+    var sc=d.score||0;
+    return '<div class="dim-card">'+
+      '<div class="dim-emoji">'+d.level+'</div>'+
+      '<div class="dim-name">'+d.name+'</div>'+
+      '<div class="dim-score-bar"><div class="dim-score-fill" style="width:'+sc+'%;background:'+scoreColor(sc)+'"></div></div>'+
+      '<div class="dim-score-text" style="color:'+scoreColor(sc)+'">'+sc+'</div>'+
+      '<ul class="dim-items">'+
+        (d.items||[]).map(function(it){return '<li>• '+it+'</li>'}).join('')+
+      '</ul></div>';
+  }).join('');
+
+  // 趋势图
+  var dg=document.getElementById('detailGrid');
+  var html='';
+  var chartConfigs=[];
+
+  if(DATA.dimensions.liquidity&&DATA.dimensions.liquidity.trend&&DATA.dimensions.liquidity.trend.length){
+    html+='<div class="chart-box"><h3>💧 DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div></div>';
+    chartConfigs.push({id:'chartLiq',data:DATA.dimensions.liquidity.trend,label:'DR007 %',color:'#dc2626'});
+  }
+  if(DATA.dimensions.valuation&&DATA.dimensions.valuation.trend&&DATA.dimensions.valuation.trend.length){
+    html+='<div class="chart-box"><h3>📊 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div></div>';
+    chartConfigs.push({id:'chartVal',data:DATA.dimensions.valuation.trend,label:'PE(TTM)',color:'#6366f1'});
+  }
+  if(DATA.dimensions.sentiment&&DATA.dimensions.sentiment.trend&&DATA.dimensions.sentiment.trend.length){
+    html+='<div class="chart-box"><h3>🔥 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div></div>';
+    chartConfigs.push({id:'chartSent',data:DATA.dimensions.sentiment.trend,label:'成交额(亿)',color:'#f59e0b'});
+  }
+  if(DATA.dimensions.external&&DATA.dimensions.external.trend&&DATA.dimensions.external.trend.length){
+    html+='<div class="chart-box"><h3>🌍 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div></div>';
+    chartConfigs.push({id:'chartExt',data:DATA.dimensions.external.trend,label:'中美利差 %',color:'#2563eb',fill:true});
+  }
+
+  dg.innerHTML=html;
+
+  chartConfigs.forEach(function(cfg){
+    new Chart(document.getElementById(cfg.id),{type:'line',
+      data:{labels:cfg.data.map(function(d){return d.date}),
+        datasets:[{label:cfg.label,data:cfg.data.map(function(d){return d.value!=null?d.value:d.spread}),
+          borderColor:cfg.color,backgroundColor:cfg.fill?cfg.color+'18':'transparent',
+          fill:!!cfg.fill,tension:0.3,borderWidth:2,pointRadius:0}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8,font:{size:9}}}}}
+    });
+  });
+}
+loadData();
+</script>
+</body></html>

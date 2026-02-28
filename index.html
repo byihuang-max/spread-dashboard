@@ -172,7 +172,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     </div>
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
-      <div class="nav-item" data-module="alerts" style="opacity:.35"><span class="icon">🚨</span> 红灯预警</div>
+      <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
     </div>
   </nav>
@@ -1154,6 +1154,14 @@ function initCbCharts() {
         <iframe src="meso/chain_prosperity/chain_prosperity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-meso -->
+
+    <!-- ══ 红灯预警 ══ -->
+    <div class="module-page" id="page-alerts">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button id="refreshBtnAlerts" onclick="refreshAlertsTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#dc2626';this.style.color='#dc2626'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新数据</button>
+      </div>
+      <iframe src="alerts/alerts.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 80px)"></iframe>
+    </div><!-- /page-alerts -->
 <script>
 (function(){
   var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
@@ -1317,6 +1325,12 @@ function initCbCharts() {
     var activeTab=document.querySelector('#page-meso .strat-tab.active');
     var strat=activeTab?activeTab.getAttribute('data-strat'):'chain-prosperity';
     refreshModule(strat,btn);
+  };
+
+  // ═══ 红灯预警刷新 ═══
+  window.refreshAlertsTab=function(){
+    var btn=document.getElementById('refreshBtnAlerts');
+    refreshModule('alerts',btn);
   };
 
   // ═══ 全部依次刷新 ═══

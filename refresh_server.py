@@ -116,6 +116,13 @@ MODULES = {
             ('meso/chain_prosperity', 'chain_calc.py'),
         ],
     },
+    'alerts': {
+        'name': '红灯预警',
+        'scripts': [
+            ('alerts', 'alerts_data.py'),
+            ('alerts', 'alerts_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -133,6 +140,7 @@ TAB_MAP = {
     'rates': 'rates',
     'fundamentals': 'fundamentals',
     'chain-prosperity': 'chain-prosperity',
+    'alerts': 'alerts',
 }
 
 # ═══ 全局状态 ═══
