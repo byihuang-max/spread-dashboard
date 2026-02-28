@@ -327,6 +327,7 @@ function renderCards() {
                 <span>现价 <b>${L.close.toFixed(3)}</b></span>
                 <span class="${pnlClass}" style="font-weight:700">${pnlSign}${L.pnl.toFixed(1)}%</span>
             </div>
+            ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span>📍 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
         `;
         card.onclick = () => selectIndex(name);
         el.appendChild(card);
@@ -364,6 +365,9 @@ function renderCharts() {
     const closePrices = daily.map(d => d.close);
     const costPrices = daily.map(d => d.cost > 0 ? d.cost : null);
     const cumPositions = daily.map(d => d.cum);
+    const idxCloses = daily.map(d => d.idx_close || null);
+    const costIdxes = daily.map(d => d.cost_idx || null);
+    const hasIdx = idxCloses.some(v => v !== null);
 
     const chartColors = {
         text: '#6b7280',
@@ -375,42 +379,67 @@ function renderCharts() {
     };
 
     if (mainChart) mainChart.destroy();
+
+    // 如果有指数数据，主图用指数点位+成本指数位；否则用ETF价格
+    const datasets = [];
+    if (hasIdx) {
+        datasets.push({
+            label: '指数点位',
+            data: idxCloses,
+            borderColor: chartColors.price,
+            borderWidth: 1.5,
+            pointRadius: 0,
+            tension: 0.1,
+            yAxisID: 'y',
+        });
+        datasets.push({
+            label: '成本指数位',
+            data: costIdxes,
+            borderColor: chartColors.cost,
+            borderWidth: 2,
+            borderDash: [6, 3],
+            pointRadius: 0,
+            tension: 0.1,
+            yAxisID: 'y',
+        });
+    } else {
+        datasets.push({
+            label: '收盘价',
+            data: closePrices,
+            borderColor: chartColors.price,
+            borderWidth: 1.5,
+            pointRadius: 0,
+            tension: 0.1,
+            yAxisID: 'y',
+        });
+        datasets.push({
+            label: '成本线',
+            data: costPrices,
+            borderColor: chartColors.cost,
+            borderWidth: 2,
+            borderDash: [6, 3],
+            pointRadius: 0,
+            tension: 0.1,
+            yAxisID: 'y',
+        });
+    }
+    datasets.push({
+        label: '累计持仓(亿)',
+        data: cumPositions,
+        borderColor: chartColors.cum,
+        backgroundColor: chartColors.cumBg,
+        borderWidth: 1,
+        pointRadius: 0,
+        fill: true,
+        tension: 0.1,
+        yAxisID: 'y1',
+    });
+
     mainChart = new Chart(document.getElementById('mainChart'), {
         type: 'line',
         data: {
             labels,
-            datasets: [
-                {
-                    label: '收盘价',
-                    data: closePrices,
-                    borderColor: chartColors.price,
-                    borderWidth: 1.5,
-                    pointRadius: 0,
-                    tension: 0.1,
-                    yAxisID: 'y',
-                },
-                {
-                    label: '成本线',
-                    data: costPrices,
-                    borderColor: chartColors.cost,
-                    borderWidth: 2,
-                    borderDash: [6, 3],
-                    pointRadius: 0,
-                    tension: 0.1,
-                    yAxisID: 'y',
-                },
-                {
-                    label: '累计持仓(亿)',
-                    data: cumPositions,
-                    borderColor: chartColors.cum,
-                    backgroundColor: chartColors.cumBg,
-                    borderWidth: 1,
-                    pointRadius: 0,
-                    fill: true,
-                    tension: 0.1,
-                    yAxisID: 'y1',
-                },
-            ]
+            datasets,
         },
         options: {
             responsive: true,
@@ -428,7 +457,7 @@ function renderCharts() {
                     position: 'left',
                     ticks: { color: chartColors.price, font: { size: 10 } },
                     grid: { color: chartColors.grid },
-                    title: { display: true, text: '价格', color: chartColors.price, font: { size: 10 } },
+                    title: { display: true, text: hasIdx ? '指数点位' : '价格', color: chartColors.price, font: { size: 10 } },
                 },
                 y1: {
                     position: 'right',

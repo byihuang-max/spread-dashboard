@@ -14,7 +14,7 @@ import requests, json, time, os, sys, csv, re, glob
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-TUSHARE_TOKEN = '33b3ff939d0d7954cd76cacce7cf6cbb2b3c3feda13d1ca2cfa594e20ecd'
+TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
 TUSHARE_URL = 'http://lianghua.nanyangqiankun.top'
 BASE_DIR = '/Users/apple/Desktop/gamt-dashboard/commodity_cta'
 CACHE_DIR = os.path.join(BASE_DIR, '_cache')

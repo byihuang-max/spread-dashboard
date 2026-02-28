@@ -16,7 +16,7 @@ except ImportError:
     import openpyxl
 
 # === Tushare ===
-TS_TOKEN = "33b3ff939d0d7954cd76cacce7cf6cbb2b3c3feda13d1ca2cfa594e20ecd"
+TS_TOKEN = "8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae"
 TS_URL = "http://lianghua.nanyangqiankun.top"
 
 def ts(api, params, fields=''):

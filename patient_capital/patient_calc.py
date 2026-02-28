@@ -7,10 +7,16 @@ from pathlib import Path
 from collections import defaultdict
 from statistics import median
 
+import requests
+
 BASE_DIR = Path(__file__).parent
 CACHE_DIR = BASE_DIR / 'raw_15min'
 CSV_OUT = BASE_DIR / 'patient_capital.csv'
 JSON_OUT = BASE_DIR / 'patient_capital.json'
+
+# Tushare 配置
+TS_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
+TS_API = 'http://api.tushare.pro'
 
 # 和 patient_data.py 保持一致
 INDEX_ETFS = {
@@ -27,6 +33,48 @@ INDEX_ETFS = {
 
 BASELINE_WINDOW = 20  # 基线窗口：20个交易日
 ABNORMAL_THRESHOLD = 1.5  # 超过基线1.5倍视为异常
+
+# 指数名称 → Tushare 指数代码（用于拉日线算折算系数）
+INDEX_TS_CODE = {
+    '沪深300':  '399300.SZ',
+    '上证50':   '000016.SH',
+    '创业板指':  '399006.SZ',
+    '科创50':   '000688.SH',
+    '创业板50':  '399673.SZ',
+    '中证1000': '000852.SH',
+    '中证500':  '000905.SH',
+    '中证A500': '932000.CSI',
+}
+
+
+def fetch_index_daily(ts_code, start_date='20230701'):
+    """从 Tushare 拉取指数日线收盘价"""
+    print(f"  拉取指数日线 {ts_code}...", end='', flush=True)
+    resp = requests.post(TS_API, json={
+        'api_name': 'index_daily',
+        'token': TS_TOKEN,
+        'params': {'ts_code': ts_code, 'start_date': start_date, 'fields': 'trade_date,close'},
+    }, timeout=30)
+    data = resp.json()
+    items = data.get('data', {}).get('items', [])
+    fields = data.get('data', {}).get('fields', [])
+    if not items:
+        print(f" 无数据")
+        return {}
+    di = {f: i for i, f in enumerate(fields)}
+    result = {}
+    for row in items:
+        result[row[di['trade_date']]] = row[di['close']]
+    print(f" {len(result)}天")
+    return result
+
+
+def fetch_all_index_daily():
+    """拉取所有跟踪指数的日线数据"""
+    all_idx = {}
+    for name, ts_code in INDEX_TS_CODE.items():
+        all_idx[name] = fetch_index_daily(ts_code)
+    return all_idx
 
 
 def load_all_cache():
@@ -80,10 +128,11 @@ def extract_time_slot(trade_time):
     return trade_time.split(' ')[1][:5]
 
 
-def compute_patient_capital(all_data, index_name, etf_codes):
+def compute_patient_capital(all_data, index_name, etf_codes, index_daily=None):
     """
     计算单个指数的耐心资本持仓。
-    返回日级别列表: [{date, buy, sell, net, cum, cost, close, pnl, bars}, ...]
+    index_daily: {date_str: index_close} 对应指数的日线收盘价
+    返回日级别列表: [{date, buy, sell, net, cum, cost, close, pnl, bars, idx_close, cost_idx}, ...]
     """
     dates = sorted(all_data.keys())
 
@@ -169,6 +218,15 @@ def compute_patient_capital(all_data, index_name, etf_codes):
 
         day_net = day_buy - day_sell
 
+        # 折算指数点位
+        idx_close = None
+        cost_idx = None
+        if index_daily and date in index_daily and close_price > 0:
+            idx_close = index_daily[date]
+            ratio = idx_close / close_price  # 折算系数
+            if cost_price > 0:
+                cost_idx = round(cost_price * ratio, 2)
+
         results.append({
             'date': date,
             'buy': round(day_buy / 1e8, 4),       # 亿
@@ -179,6 +237,8 @@ def compute_patient_capital(all_data, index_name, etf_codes):
             'close': round(close_price, 4),
             'pnl': round(pnl, 2),
             'bars': abnormal_count,
+            'idx_close': round(idx_close, 2) if idx_close else None,
+            'cost_idx': cost_idx,
         })
 
     return results
@@ -194,14 +254,19 @@ def run():
 
     print(f"已加载 {len(all_data)} 个交易日")
 
+    print("\n拉取指数日线（用于折算指数点位）...")
+    all_index_daily = fetch_all_index_daily()
+
     all_results = {}
     for index_name, etf_codes in INDEX_ETFS.items():
         print(f"  计算 {index_name} ({len(etf_codes)} ETFs)...", end='', flush=True)
-        results = compute_patient_capital(all_data, index_name, etf_codes)
+        idx_daily = all_index_daily.get(index_name, {})
+        results = compute_patient_capital(all_data, index_name, etf_codes, idx_daily)
         if results:
             all_results[index_name] = results
             latest = results[-1]
-            print(f" {len(results)} 天, 最新累计: {latest['cum']}亿, 成本: {latest['cost']}, 浮盈: {latest['pnl']}%")
+            cost_idx_str = f", 成本指数位: {latest['cost_idx']}" if latest.get('cost_idx') else ""
+            print(f" {len(results)} 天, 最新累计: {latest['cum']}亿, 成本: {latest['cost']}{cost_idx_str}, 浮盈: {latest['pnl']}%")
         else:
             print(" 无数据")
 
@@ -211,12 +276,13 @@ def run():
         writer = csv.writer(f)
         writer.writerow(['date', 'index_name', 'daily_buy_amt', 'daily_sell_amt',
                          'daily_net_amt', 'cum_position', 'cost_price', 'close_price',
-                         'pnl_pct', 'abnormal_bars'])
+                         'pnl_pct', 'abnormal_bars', 'idx_close', 'cost_idx'])
         for index_name, results in all_results.items():
             for r in results:
                 writer.writerow([
                     r['date'], index_name, r['buy'], r['sell'], r['net'],
-                    r['cum'], r['cost'], r['close'], r['pnl'], r['bars']
+                    r['cum'], r['cost'], r['close'], r['pnl'], r['bars'],
+                    r.get('idx_close', ''), r.get('cost_idx', '')
                 ])
 
     # ═══ 输出 JSON ═══
