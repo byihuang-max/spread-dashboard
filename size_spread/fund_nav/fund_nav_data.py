@@ -183,6 +183,15 @@ def main():
 
     with open(OUTPUT, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False)
+
+    # 每个tab输出独立JSON
+    for fund in result['funds']:
+        tab_file = os.path.join(BASE, f"fund_nav_{fund['tab']}.json")
+        tab_data = {'update_time': result['update_time'], 'fund': fund}
+        with open(tab_file, 'w', encoding='utf-8') as f:
+            json.dump(tab_data, f, ensure_ascii=False)
+        print(f"  -> {tab_file}")
+
     print(f"\n输出: {OUTPUT}")
 
 

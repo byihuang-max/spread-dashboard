@@ -63,18 +63,17 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 </div>
 
 <script>
-fetch('fund_nav.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
-  document.getElementById('loading').style.display='none';
-  document.getElementById('content').style.display='';
-  document.getElementById('updateTime').textContent='更新: '+D.update_time;
-
   var params=new URLSearchParams(window.location.search);
   var tabFilter=params.get('tab')||'';
-  var f=null;
-  if(tabFilter){
-    f=(D.funds||[]).find(function(x){return x.tab===tabFilter});
-  }
-  if(!f) f=(D.funds||[])[0];
+  var jsonFile=tabFilter?'fund_nav_'+tabFilter+'.json':'fund_nav.json';
+
+fetch(jsonFile+'?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
+  document.getElementById('loading').style.display='none';
+  document.getElementById('content').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(D.update_time||'');
+
+  // 独立JSON用D.fund，合并JSON用D.funds[0]
+  var f=D.fund||(D.funds||[])[0];
 
   if(!f){
     document.getElementById('content').innerHTML='<div style="text-align:center;padding:40px;color:#999">暂无数据</div>';
