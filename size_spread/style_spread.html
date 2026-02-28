@@ -74,23 +74,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     window._ssSignalData=d;
     // 初始显示当前tab的结论
     updateSignalBar();
-    // 4个tab独立信号（保留tab内结论div）
-    var ts=d.tab_signals||{};
-    var tabs={eco:'tab-signal-eco',crowd:'tab-signal-crowd',style:'tab-signal-style',dual:'tab-signal-dual'};
-    var icons={eco:'📊',crowd:'🔥',style:'📈',dual:'🚀'};
-    for(var k in tabs){
-      var el=document.getElementById(tabs[k]);
-      if(el&&ts[k]&&ts[k].length){
-        el.innerHTML='<b>'+icons[k]+' 结论：</b>'+ts[k].map(function(s){return '<span style="display:inline-block;margin:0 4px">'+s+'</span>'}).join(' · ');
-      } else if(el){el.style.display='none';}
-    }
+    // tab结论已移至顶部信号栏
   }).catch(function(){});
 })();
 </script>
 
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
-  <div id="tab-signal-eco" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#15803d;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -130,7 +120,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 2: 拥挤-反身性轧差 -->
 <div class="ss-page" id="page-crowd">
-  <div id="tab-signal-crowd" style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#92400e;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -177,7 +166,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 3: 风格轧差净值 -->
 <div class="ss-page" id="page-style">
-  <div id="tab-signal-style" style="background:#ede9fe;border:1px solid #c4b5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#5b21b6;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -198,7 +186,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 4: 双创等权 -->
 <div class="ss-page" id="page-dual">
-  <div id="tab-signal-dual" style="background:#fce7f3;border:1px solid #f9a8d4;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#9d174d;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
