@@ -6,9 +6,10 @@
 
 import json, os, re
 
-BASE_DIR = '/Users/apple/Desktop/gamt-dashboard/cb_env'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ENV_JSON = os.path.join(BASE_DIR, 'cb_env.json')
-INDEX_HTML = '/Users/apple/Desktop/gamt-dashboard/index.html'
+REPO_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
+INDEX_HTML = os.path.join(REPO_ROOT, 'index.html')
 
 def log(msg):
     print(msg, flush=True)

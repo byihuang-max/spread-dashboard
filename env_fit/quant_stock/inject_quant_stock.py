@@ -13,7 +13,7 @@ with open(os.path.join(DIR, 'quant_stock_data.json'), encoding='utf-8') as f:
     data = json.load(f)
 
 # 读 HTML
-html_path = os.path.join(DIR, '..', 'index.html')
+html_path = os.path.join(DIR, '..', '..', 'index.html')
 html_path = os.path.normpath(html_path)
 with open(html_path, encoding='utf-8') as f:
     html = f.read()

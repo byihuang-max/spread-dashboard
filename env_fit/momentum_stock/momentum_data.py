@@ -17,7 +17,7 @@ from collections import defaultdict
 
 TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
 TUSHARE_URL = 'http://lianghua.nanyangqiankun.top'
-BASE_DIR = '/Users/apple/Desktop/gamt-dashboard/momentum_stock'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_JSON = os.path.join(BASE_DIR, 'momentum_sentiment.json')
 RAW_CSV = os.path.join(BASE_DIR, 'momentum_raw.csv')
 FULL_CSV = os.path.join(BASE_DIR, 'momentum_sentiment.csv')

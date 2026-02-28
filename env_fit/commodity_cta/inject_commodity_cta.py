@@ -6,9 +6,10 @@
 
 import json, os
 
-BASE_DIR = '/Users/apple/Desktop/gamt-dashboard'
-JSON_PATH = os.path.join(BASE_DIR, 'commodity_cta/commodity_cta.json')
-INDEX_PATH = os.path.join(BASE_DIR, 'index.html')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
+JSON_PATH = os.path.join(BASE_DIR, 'commodity_cta.json')
+INDEX_PATH = os.path.join(REPO_ROOT, 'index.html')
 
 
 def load_data():

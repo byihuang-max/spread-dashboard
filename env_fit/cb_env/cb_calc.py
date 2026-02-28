@@ -7,7 +7,7 @@
 import json, os, csv, math
 from collections import defaultdict
 
-BASE_DIR = '/Users/apple/Desktop/gamt-dashboard/cb_env'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 INPUT_JSON = os.path.join(BASE_DIR, 'cb_data.json')
 OUTPUT_JSON = os.path.join(BASE_DIR, 'cb_env.json')
 OUTPUT_CSV = os.path.join(BASE_DIR, 'cb_env.csv')

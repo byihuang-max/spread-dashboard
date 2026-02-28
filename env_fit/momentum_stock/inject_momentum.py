@@ -7,9 +7,10 @@
 import json
 import os
 
-BASE_DIR = '/Users/apple/Desktop/gamt-dashboard'
-JSON_PATH = os.path.join(BASE_DIR, 'momentum_stock/momentum_sentiment.json')
-INDEX_PATH = os.path.join(BASE_DIR, 'index.html')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
+JSON_PATH = os.path.join(BASE_DIR, 'momentum_sentiment.json')
+INDEX_PATH = os.path.join(REPO_ROOT, 'index.html')
 
 
 def load_data():
