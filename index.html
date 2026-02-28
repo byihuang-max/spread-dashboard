@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#2563eb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -291,8 +294,12 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
     </div>
+    <div class="nav-group" id="adminNavGroup" style="display:none">
+      <div class="nav-group-title">设置</div>
+      <div class="nav-item" onclick="location.href='admin.html'" style="cursor:pointer"><span class="icon">⚙️</span> 管理后台</div>
+    </div>
   </nav>
-  <div class="user-info">Roni · FOF Manager<br>v0.3 · 2026-02-13</div>
+  <div class="user-info" id="sidebarUserInfo">未登录<br><span style="opacity:.5;font-size:11px">v0.3 · 2026-02-13</span></div>
 </aside>
 
 <!-- ═══ 主内容 ═══ -->
@@ -1700,6 +1707,18 @@ function initCbCharts() {
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
       bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+'<button class="logout-btn" onclick="doLogout()">退出</button>';
       header.appendChild(bar);
+    }
+    // 侧边栏底部：显示用户名 + 管理后台入口
+    var sideInfo=document.getElementById('sidebarUserInfo');
+    if(sideInfo){
+      var dn=user.display_name||user.username||'User';
+      var role=user.is_admin?'管理员':'成员';
+      sideInfo.innerHTML=dn+' · '+role+'<br><span style="opacity:.5;font-size:11px">v0.3 · 2026-02-13</span>';
+    }
+    // 管理员：显示侧边栏管理后台导航
+    if(user.is_admin){
+      var ag=document.getElementById('adminNavGroup');
+      if(ag) ag.style.display='';
     }
   }
 
