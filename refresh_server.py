@@ -344,13 +344,15 @@ class Handler(BaseHTTPRequestHandler):
             self._serve_static(self.path)
 
     def _check_market_hours(self):
-        """15:00 之前禁止刷新（A股数据收盘后才完整）"""
+        """只允许 15:00 ~ 次日 09:30 刷新（A股数据收盘后才完整）"""
         from datetime import datetime
         now = datetime.now()
-        if now.hour < 15:
-            self._json(403, {'error': f'收盘前({now.strftime("%H:%M")})不可刷新，请15:00后再试'})
-            return False
-        return True
+        h, m = now.hour, now.minute
+        # 允许：15:00~23:59 或 00:00~09:30
+        if 15 <= h <= 23 or h < 9 or (h == 9 and m <= 30):
+            return True
+        self._json(403, {'error': f'当前时间 {now.strftime("%H:%M")}，刷新仅限 15:00~次日09:30'})
+        return False
 
     def do_POST(self):
         # ═══ 认证 API ═══
@@ -400,10 +402,12 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {'ok': True})
             return
 
-        # ═══ 刷新 API（原有逻辑）═══
+        # ═══ 刷新 API（仅管理员）═══
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
         if len(parts) == 3 and parts[0] == 'api' and parts[1] == 'refresh':
+            admin = self._require_admin()
+            if not admin: return
             tab = parts[2]
             mod_key = TAB_MAP.get(tab, tab.replace('-', '_'))
 
@@ -448,6 +452,8 @@ class Handler(BaseHTTPRequestHandler):
 
         # POST /api/refresh-all
         elif self.path == '/api/refresh-all':
+            admin = self._require_admin()
+            if not admin: return
             if not self._check_market_hours():
                 return
             acquired = lock.acquire(blocking=False)

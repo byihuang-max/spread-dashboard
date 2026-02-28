@@ -1698,6 +1698,10 @@ function initCbCharts() {
   function showApp(user){
     currentUser=user;
     document.getElementById('loginOverlay').classList.add('hidden');
+    // 非管理员隐藏所有刷新按钮
+    if(!user.is_admin){
+      document.querySelectorAll('[id^="refreshBtn"],[id="refreshAllBtn"],[id="refreshBtnFlow"],[id="refreshBtnMacro"],[id="refreshBtnMeso"],[id="refreshBtnAlerts"]').forEach(function(el){el.style.display='none'});
+    }
     // 插入用户栏到 header
     var header=document.querySelector('.header .meta');
     if(header){
