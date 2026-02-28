@@ -41,6 +41,10 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
 .pct-bar{height:8px;border-radius:4px;background:#e5e7eb;position:relative;margin-top:4px}
 .pct-fill{height:100%;border-radius:4px;position:absolute;left:0;top:0}
 
+/* 图表下方注释 */
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
+.chart-note b{color:#374151}
+
 .loading{text-align:center;padding:60px;color:#8b92a5}
 
 /* 信号栏 */
@@ -72,10 +76,21 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
   <div class="chart-box">
     <h3>📐 IV期限结构（平值）</h3>
     <div class="chart-wrap"><canvas id="termChart"></canvas></div>
+    <div class="chart-note">
+      <b>怎么看：</b>横轴是不同到期月份，纵轴是平值期权的隐含波动率(IV)。<br>
+      <b>正常形态：</b>远月IV > 近月IV（向右上倾斜），反映时间溢价。<br>
+      <b>异常信号：</b>近月IV > 远月IV = <b>期限倒挂</b>，说明市场预期短期内有大事发生（如重大政策、财报季），恐慌情绪集中在近期。
+    </div>
   </div>
   <div class="chart-box">
     <h3>📊 PCR（持仓量 & 成交量）</h3>
     <div class="chart-wrap"><canvas id="pcrChart"></canvas></div>
+    <div class="chart-note">
+      <b>PCR = 认沽持仓 ÷ 认购持仓。</b><br>
+      <b>PCR > 1：</b>看跌合约持仓超过看涨，市场偏空。极端高值(>1.5)可能是反向指标——过度恐慌后容易反弹。<br>
+      <b>PCR < 0.5：</b>看涨情绪亢奋，需警惕回调。<br>
+      <b>实线=持仓量PCR</b>（反映中长期持仓结构），<b>虚线=成交量PCR</b>（反映短期交易情绪）。
+    </div>
   </div>
 </div>
 
@@ -83,10 +98,21 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
   <div class="chart-box">
     <h3>📈 ATM隐含波动率（近月）+ 20日分位</h3>
     <div class="chart-wrap"><canvas id="ivChart"></canvas></div>
+    <div class="chart-note">
+      <b>紫线 = ATM IV：</b>平值期权的隐含波动率，代表市场对未来波动的定价。IV上升=不确定性增大/恐慌升温。<br>
+      <b>绿虚线 = 20日分位：</b>当前IV在过去20个交易日中的排名百分位。<br>
+      <b>> 80%：</b>波动率处于高位，对冲成本贵，但也意味着市场可能已经price in了风险。<br>
+      <b>< 20%：</b>波动率低位，买保险便宜，适合建立对冲头寸。
+    </div>
   </div>
   <div class="chart-box">
     <h3>📊 持仓量按行权价分布（近月）</h3>
     <div class="chart-wrap"><canvas id="oiChart"></canvas></div>
+    <div class="chart-note">
+      <b>红色柱(朝上) = Call OI：</b>认购期权各行权价的持仓量。Call OI 密集处 = 潜在<b>压力位</b>（卖方在此对冲）。<br>
+      <b>绿色柱(朝下) = Put OI：</b>认沽期权各行权价的持仓量。Put OI 密集处 = 潜在<b>支撑位</b>（卖方在此对冲）。<br>
+      <b>异常关注：</b>某个行权价OI突然激增（如深度虚值Put），说明有大资金在该价位"买保险"防大跌。
+    </div>
   </div>
 </div>
 

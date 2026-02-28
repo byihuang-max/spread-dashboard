@@ -17,9 +17,9 @@ TUSHARE_URL = 'https://api.tushare.pro'
 
 # 关注的标的
 UNDERLYINGS = {
-    'OP510300.SH': {'name': '沪深300ETF', 'etf': '510300.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
-    'OP510500.SH': {'name': '中证500ETF', 'etf': '510500.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
-    'OP588000.SH': {'name': '科创50ETF',  'etf': '588000.SH', 'exchange': 'SSE', 'price_src': 'fund_daily'},
+    'OP000300.SH': {'name': '沪深300',    'etf': '000300.SH', 'exchange': 'CFFEX', 'price_src': 'index_daily'},
+    'OP000016.SH': {'name': '上证50',     'etf': '000016.SH', 'exchange': 'CFFEX', 'price_src': 'index_daily'},
+    'OP510500.SH': {'name': '中证500ETF', 'etf': '510500.SH', 'exchange': 'SSE',   'price_src': 'fund_daily'},
     'OP000852.SH': {'name': '中证1000',   'etf': '000852.SH', 'exchange': 'CFFEX', 'price_src': 'index_daily'},
 }
 
