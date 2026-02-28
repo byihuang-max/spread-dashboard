@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>资金拥挤度监控</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
+.section{margin-bottom:24px}
+
+/* 信号卡片 */
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:20px;font-weight:800;letter-spacing:1px}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+
+/* 三路资金卡片 */
+.flow-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.flow-card{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;position:relative;overflow:hidden}
+.flow-card .name{font-size:12px;color:#8b92a5;margin-bottom:8px;font-weight:600}
+.flow-card .value{font-size:22px;font-weight:800;margin-bottom:4px}
+.flow-card .dir{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block}
+.flow-card .dir.inflow{background:#dcfce7;color:#16a34a}
+.flow-card .dir.outflow{background:#fee2e2;color:#dc2626}
+.flow-card .ma-info{font-size:11px;color:#8b92a5;margin-top:6px}
+
+/* 图表容器 */
+.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-wrap{position:relative;height:280px}
+
+/* 行业热力图 */
+.heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px}
+.heat-cell{padding:10px 6px;border-radius:8px;text-align:center;font-size:11px;line-height:1.4;font-weight:600;transition:transform .15s}
+.heat-cell:hover{transform:scale(1.05)}
+.heat-cell .ind-name{font-weight:700;margin-bottom:2px;font-size:12px}
+.heat-cell .ind-val{font-size:11px}
+
+/* 两融趋势 */
+.margin-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef}
+.margin-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+
+.loading{text-align:center;padding:60px;color:#8b92a5;font-size:14px}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<!-- 信号栏 -->
+<div class="signal-bar">
+  <div class="signal-main" id="consensusLabel">--</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<!-- 三路资金卡片 -->
+<div class="flow-cards" id="flowCards"></div>
+
+<!-- 每日净流入柱状图 -->
+<div class="chart-box section">
+  <h3>📊 三路资金每日净流入（60日）</h3>
+  <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
+</div>
+
+<!-- 20日滚动累计 -->
+<div class="chart-box section">
+  <h3>📈 20日滚动累计净流入</h3>
+  <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
+</div>
+
+<!-- 行业资金热力图 -->
+<div class="section">
+  <h2>🔥 行业资金流向（近5日累计）</h2>
+  <div class="heatmap-grid" id="heatmapGrid"></div>
+</div>
+
+<!-- 两融余额趋势 -->
+<div class="margin-box section">
+  <h3>💳 两融余额趋势（60日）</h3>
+  <div class="chart-wrap"><canvas id="marginChart"></canvas></div>
+</div>
+
+</div>
+
+<script>
+var DATA;
+function loadData(){
+  fetch('crowding.json?t='+Date.now())
+    .then(r=>r.json())
+    .then(d=>{DATA=d;render()})
+    .catch(e=>{document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  
+  // 信号栏
+  var sig=DATA.crowding_signal||{};
+  document.getElementById('consensusLabel').textContent=sig.consensus||'--';
+  var tags=sig.signals||[];
+  document.getElementById('signalTags').innerHTML=tags.map(function(t){
+    return '<span class="signal-tag">'+t+'</span>'
+  }).join('');
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+  
+  // 三路卡片
+  var flows=DATA.three_flows||{};
+  var details=flows.details||{};
+  var html='';
+  var order=['north_net','etf_share_chg','margin_chg'];
+  order.forEach(function(k){
+    var d=details[k];
+    if(!d)return;
+    var cls=d.direction==='inflow'?'inflow':'outflow';
+    var dirText=d.direction==='inflow'?'▲ 流入':'▼ 流出';
+    html+='<div class="flow-card">'+
+      '<div class="name">'+d.name+'</div>'+
+      '<div class="value">'+d.latest+'</div>'+
+      '<div class="dir '+cls+'">'+dirText+'</div>'+
+      '<div class="ma-info">MA5: '+d.ma5+' | MA20: '+d.ma20+'</div>'+
+    '</div>';
+  });
+  document.getElementById('flowCards').innerHTML=html;
+  
+  // 每日柱状图
+  renderDailyChart();
+  renderCumChart();
+  renderHeatmap();
+  renderMarginChart();
+}
+
+function renderDailyChart(){
+  var chart=DATA.direction_chart||[];
+  var labels=chart.map(function(d){return d.date});
+  var datasets=[];
+  var colors={north_net:'#6366f1',etf_share_chg:'#f59e0b',margin_chg:'#10b981'};
+  var names={north_net:'北向(亿)',etf_share_chg:'ETF份额变化(万份)',margin_chg:'两融变化(亿)'};
+  ['north_net','etf_share_chg','margin_chg'].forEach(function(k){
+    var hasData=chart.some(function(d){return d[k]!=null});
+    if(!hasData)return;
+    datasets.push({
+      label:names[k],
+      data:chart.map(function(d){return d[k]}),
+      backgroundColor:colors[k]+'88',
+      borderColor:colors[k],
+      borderWidth:1,
+      barPercentage:0.6,
+    });
+  });
+  new Chart(document.getElementById('dailyChart'),{
+    type:'bar',
+    data:{labels:labels,datasets:datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},
+              y:{grid:{color:'#f0f0f0'}}}
+    }
+  });
+}
+
+function renderCumChart(){
+  var rolling=DATA.rolling_cum||[];
+  if(!rolling.length)return;
+  var colors=['#6366f1','#f59e0b','#10b981'];
+  var datasets=rolling.map(function(s,i){
+    return{
+      label:s.name+'(20日累计)',
+      data:s.data.map(function(d){return d.value}),
+      borderColor:colors[i%3],
+      backgroundColor:colors[i%3]+'18',
+      fill:true,
+      tension:0.3,
+      borderWidth:2,
+      pointRadius:0,
+    }
+  });
+  var labels=rolling[0].data.map(function(d){return d.date});
+  new Chart(document.getElementById('cumChart'),{
+    type:'line',
+    data:{labels:labels,datasets:datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},
+              y:{grid:{color:'#f0f0f0'}}}
+    }
+  });
+}
+
+function renderHeatmap(){
+  var hm=DATA.industry_heatmap||{};
+  var summary=hm.summary||[];
+  if(!summary.length){
+    document.getElementById('heatmapGrid').innerHTML='<div style="color:#8b92a5;padding:20px">暂无行业数据</div>';
+    return;
+  }
+  var vals=summary.map(function(d){return d.net_5d});
+  var maxAbs=Math.max.apply(null,vals.map(Math.abs))||1;
+  var html='';
+  summary.forEach(function(d){
+    var ratio=d.net_5d/maxAbs;
+    var bg,fg;
+    if(ratio>0){
+      var g=Math.round(100+ratio*155);
+      bg='rgba(22,163,106,'+Math.min(Math.abs(ratio)*0.7+0.1,0.85)+')';
+      fg=Math.abs(ratio)>0.3?'#fff':'#16a34a';
+    }else{
+      bg='rgba(220,38,38,'+Math.min(Math.abs(ratio)*0.7+0.1,0.85)+')';
+      fg=Math.abs(ratio)>0.3?'#fff':'#dc2626';
+    }
+    html+='<div class="heat-cell" style="background:'+bg+';color:'+fg+'">'+
+      '<div class="ind-name">'+d.industry+'</div>'+
+      '<div class="ind-val">'+d.net_5d.toFixed(1)+'亿</div></div>';
+  });
+  document.getElementById('heatmapGrid').innerHTML=html;
+}
+
+function renderMarginChart(){
+  var mt=DATA.margin_trend||[];
+  if(!mt.length)return;
+  new Chart(document.getElementById('marginChart'),{
+    type:'line',
+    data:{
+      labels:mt.map(function(d){return d.date}),
+      datasets:[{
+        label:'两融余额(亿)',
+        data:mt.map(function(d){return d.balance}),
+        borderColor:'#8b5cf6',
+        backgroundColor:'#8b5cf618',
+        fill:true,tension:0.3,borderWidth:2,pointRadius:0,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},
+              y:{grid:{color:'#f0f0f0'}}}
+    }
+  });
+}
+
+loadData();
+</script>
+</body></html>

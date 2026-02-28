@@ -74,6 +74,13 @@ MODULES = {
             ('micro_flow/patient_capital', 'patient_calc.py'),
         ],
     },
+    'crowding': {
+        'name': '拥挤度监控',
+        'scripts': [
+            ('micro_flow/crowding', 'crowding_data.py'),
+            ('micro_flow/crowding', 'crowding_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -85,6 +92,7 @@ TAB_MAP = {
     'convertible': 'cb_env',
     'arbitrage': 'arbitrage',
     'patient-capital': 'patient_capital',
+    'crowding': 'crowding',
 }
 
 # ═══ 全局状态 ═══
