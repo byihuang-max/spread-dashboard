@@ -71,14 +71,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 (function(){
   fetch('style_spread_signals.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     document.getElementById('signalTime').textContent='更新: '+(d.update_time||'');
-    document.getElementById('signalTags').innerHTML=(d.signals||[]).map(function(s){
-      var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
-      if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
-      else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
-      else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
-      return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
-    }).join('');
-    // 4个tab独立信号
+    window._ssSignalData=d;
+    // 初始显示当前tab的结论
+    updateSignalBar();
+    // 4个tab独立信号（保留tab内结论div）
     var ts=d.tab_signals||{};
     var tabs={eco:'tab-signal-eco',crowd:'tab-signal-crowd',style:'tab-signal-style',dual:'tab-signal-dual'};
     var icons={eco:'📊',crowd:'🔥',style:'📈',dual:'🚀'};
@@ -297,6 +293,20 @@ function initTab(tab) {
   }
 }
 
+function updateSignalBar(){
+  var d=window._ssSignalData;if(!d)return;
+  var activeTab=document.querySelector('.ss-tab.active');
+  var tabKey=activeTab?activeTab.getAttribute('data-tab'):'eco';
+  var ts=d.tab_signals||{};
+  var signals=ts[tabKey]||d.signals||[];
+  document.getElementById('signalTags').innerHTML=signals.map(function(s){
+    var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
+    if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
+    else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
+    else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
+    return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
+  }).join('');
+}
 document.querySelectorAll('.ss-tab').forEach(function(tab) {
   tab.addEventListener('click', function() {
     var target = this.getAttribute('data-tab');
@@ -305,6 +315,7 @@ document.querySelectorAll('.ss-tab').forEach(function(tab) {
     this.classList.add('active');
     document.getElementById('page-' + target).classList.add('active');
     initTab(target);
+    updateSignalBar();
   });
 });
 
