@@ -131,14 +131,18 @@ fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
     }
   });
 
-  // 超额图
-  var exColors=c.excess.map(v=>v>=0?'rgba(34,197,94,.6)':'rgba(239,68,68,.5)');
+  // 超额图 - 曲线
   new Chart(document.getElementById('excessChart'),{
-    type:'bar',
+    type:'line',
     data:{
       labels:labels,
       datasets:[{
-        label:'累计超额',data:c.excess,backgroundColor:exColors,borderRadius:2,barPercentage:.7
+        label:'累计超额',data:c.excess,
+        borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.1)',fill:true,
+        pointRadius:0,borderWidth:2,tension:.3
+      },{
+        label:'零线',data:c.excess.map(function(){return 0}),
+        borderColor:'rgba(0,0,0,.15)',borderWidth:1,borderDash:[3,3],pointRadius:0
       }]
     },
     options:{
