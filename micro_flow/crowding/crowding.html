@@ -70,9 +70,9 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
   <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
 </div>
 
-<!-- 行业资金热力图 -->
+<!-- 行业涨跌热力图 -->
 <div class="section">
-  <h2>🔥 行业资金流向（近5日累计）</h2>
+  <h2>🔥 申万行业涨跌（近5日累计）</h2>
   <div class="heatmap-grid" id="heatmapGrid"></div>
 </div>
 
@@ -200,14 +200,13 @@ function renderHeatmap(){
     document.getElementById('heatmapGrid').innerHTML='<div style="color:#8b92a5;padding:20px">暂无行业数据</div>';
     return;
   }
-  var vals=summary.map(function(d){return d.net_5d});
+  var vals=summary.map(function(d){return d.pct_5d});
   var maxAbs=Math.max.apply(null,vals.map(Math.abs))||1;
   var html='';
   summary.forEach(function(d){
-    var ratio=d.net_5d/maxAbs;
+    var ratio=d.pct_5d/maxAbs;
     var bg,fg;
     if(ratio>0){
-      var g=Math.round(100+ratio*155);
       bg='rgba(22,163,106,'+Math.min(Math.abs(ratio)*0.7+0.1,0.85)+')';
       fg=Math.abs(ratio)>0.3?'#fff':'#16a34a';
     }else{
@@ -216,7 +215,7 @@ function renderHeatmap(){
     }
     html+='<div class="heat-cell" style="background:'+bg+';color:'+fg+'">'+
       '<div class="ind-name">'+d.industry+'</div>'+
-      '<div class="ind-val">'+d.net_5d.toFixed(1)+'亿</div></div>';
+      '<div class="ind-val">'+d.pct_5d.toFixed(2)+'%</div></div>';
   });
   document.getElementById('heatmapGrid').innerHTML=html;
 }

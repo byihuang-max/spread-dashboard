@@ -132,43 +132,45 @@ def calc_crowding():
         rolling_data.append({'name': label, 'key': col, 'data': series})
     result['rolling_cum'] = rolling_data
     
-    # ── 行业热力图（最近5日净流入排名）──
+    # ── 行业热力图（申万一级，近5日涨跌幅+成交额）──
     if not industry.empty:
         industry['trade_date'] = pd.to_datetime(industry['trade_date'])
-        # net_amount 单位万元 -> 亿
-        if 'net_amount' in industry.columns:
-            industry['net_amount'] = industry['net_amount'].astype(float)
-            # 按行业汇总最近5日
-            ind_sum = industry.groupby('name')['net_amount'].sum().reset_index()
-            ind_sum.columns = ['industry', 'net_5d']
-            # 转亿（如果单位是万元）
-            if ind_sum['net_5d'].abs().max() > 1e6:
-                ind_sum['net_5d'] = ind_sum['net_5d'] / 1e4
-            elif ind_sum['net_5d'].abs().max() > 1e3:
-                ind_sum['net_5d'] = ind_sum['net_5d'] / 1e4
-            ind_sum = ind_sum.sort_values('net_5d', ascending=False)
-            
-            # 每日数据（用于热力图）
-            daily_ind = []
-            for td in sorted(industry['trade_date'].unique()):
-                day_data = industry[industry['trade_date'] == td]
-                for _, row in day_data.iterrows():
-                    val = float(row['net_amount'])
-                    if abs(val) > 1e6:
-                        val = val / 1e4
-                    elif abs(val) > 1e3:
-                        val = val / 1e4
-                    daily_ind.append({
-                        'date': pd.Timestamp(td).strftime('%m-%d'),
-                        'industry': str(row['name']),
-                        'net': round(val, 2),
-                    })
-            
-            result['industry_heatmap'] = {
-                'summary': [{'industry': r['industry'], 'net_5d': round(r['net_5d'], 2)} 
-                           for _, r in ind_sum.iterrows()],
-                'daily': daily_ind,
-            }
+        industry['pct_change'] = pd.to_numeric(industry['pct_change'], errors='coerce')
+        industry['amount'] = pd.to_numeric(industry['amount'], errors='coerce')
+        
+        # 最近5个交易日
+        dates_sorted = sorted(industry['trade_date'].unique())
+        last5 = dates_sorted[-5:] if len(dates_sorted) >= 5 else dates_sorted
+        ind5 = industry[industry['trade_date'].isin(last5)]
+        
+        # 5日累计涨跌幅（复利）
+        ind_cum = []
+        for name, grp in ind5.groupby('name'):
+            grp = grp.sort_values('trade_date')
+            cum_ret = ((1 + grp['pct_change'] / 100).prod() - 1) * 100
+            avg_amount = grp['amount'].mean()
+            ind_cum.append({
+                'industry': name,
+                'pct_5d': round(cum_ret, 2),
+                'avg_amount': round(avg_amount, 0),
+            })
+        ind_cum = sorted(ind_cum, key=lambda x: x['pct_5d'], reverse=True)
+        
+        # 每日数据
+        daily_ind = []
+        for td in sorted(industry['trade_date'].unique()):
+            day_data = industry[industry['trade_date'] == td]
+            for _, row in day_data.iterrows():
+                daily_ind.append({
+                    'date': pd.Timestamp(td).strftime('%m-%d'),
+                    'industry': str(row['name']),
+                    'pct': round(float(row['pct_change']), 2) if pd.notna(row['pct_change']) else 0,
+                })
+        
+        result['industry_heatmap'] = {
+            'summary': ind_cum,
+            'daily': daily_ind,
+        }
     
     # ── 拥挤度综合信号 ──
     signals = []

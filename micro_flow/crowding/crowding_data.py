@@ -148,35 +148,40 @@ def fetch_margin(trade_dates):
 
 
 def fetch_industry_flow(trade_dates):
-    """行业资金流向 - 申万一级"""
-    print("拉取行业资金流向...")
-    # 取最近5个交易日
-    recent = trade_dates[-5:]
+    """申万一级行业涨跌幅+成交额（sw_daily）"""
+    print("拉取申万行业数据...")
+    
+    # 1. 获取申万一级行业代码
+    clf = ts_api('index_classify', fields='index_code,industry_name',
+                 level='L1', src='SW2021')
+    if clf.empty:
+        print("  获取行业分类失败!")
+        return pd.DataFrame()
+    l1_codes = set(clf['index_code'].tolist())
+    l1_names = dict(zip(clf['index_code'], clf['industry_name']))
+    
+    # 2. 拉最近10个交易日的 sw_daily
+    recent = trade_dates[-10:]
     all_data = []
     for td in recent:
-        df = ts_api('moneyflow_ind_dc',
-                    fields='trade_date,name,buy_elg_amount,sell_elg_amount,buy_lg_amount,sell_lg_amount,net_amount',
+        df = ts_api('sw_daily',
+                    fields='ts_code,name,pct_change,amount,trade_date',
                     trade_date=td)
         if not df.empty:
+            # 只保留一级行业
+            df = df[df['ts_code'].isin(l1_codes)].copy()
+            df['pct_change'] = pd.to_numeric(df['pct_change'], errors='coerce')
+            df['amount'] = pd.to_numeric(df['amount'], errors='coerce')
             all_data.append(df)
-        time.sleep(0.5)
+        time.sleep(0.3)
     
     if not all_data:
-        print("  行业资金流向无数据，尝试 moneyflow_ind_ths...")
-        # 备用: 同花顺行业
-        for td in recent:
-            df = ts_api('moneyflow_ind_ths',
-                        fields='trade_date,name,net_amount',
-                        trade_date=td)
-            if not df.empty:
-                all_data.append(df)
-            time.sleep(0.5)
-    
-    if not all_data:
-        print("  行业资金流向全部为空!")
+        print("  申万行业数据为空!")
         return pd.DataFrame()
     
-    return pd.concat(all_data).reset_index(drop=True)
+    result = pd.concat(all_data).reset_index(drop=True)
+    print(f"  申万一级行业: {result['name'].nunique()}个, {len(recent)}个交易日")
+    return result
 
 
 def main():
