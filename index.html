@@ -1738,9 +1738,21 @@ function initCbCharts() {
       document.getElementById('loginOverlay').style.display='';
       return;
     }
-    // 每次都要求重新登录
-    localStorage.removeItem('gamt_token');
-    localStorage.removeItem('gamt_user');
+    // 检查已有 token
+    var token=localStorage.getItem('gamt_token');
+    if(token){
+      apiCall('GET','/api/auth/me').then(function(d){
+        if(d.username){
+          showApp(d);
+        }else{
+          localStorage.removeItem('gamt_token');
+          localStorage.removeItem('gamt_user');
+        }
+      }).catch(function(){
+        localStorage.removeItem('gamt_token');
+        localStorage.removeItem('gamt_user');
+      });
+    }
   });
 })();
 </script>
