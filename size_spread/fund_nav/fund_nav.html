@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品净值跟踪</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#fff;color:#2d3142;padding:16px 20px}
+
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:14px 18px;color:#e2e6ed;margin-bottom:14px}
+.signal-bar .title{font-size:14px;font-weight:800;margin-bottom:6px}
+.signal-bar .tags{display:flex;gap:6px;flex-wrap:wrap}
+.signal-bar .tag{padding:3px 10px;border-radius:18px;font-size:11px;font-weight:600}
+.tag-green{background:rgba(34,197,94,.2);color:#4ade80}
+.tag-red{background:rgba(239,68,68,.2);color:#f87171}
+.tag-blue{background:rgba(59,130,246,.2);color:#60a5fa}
+.tag-amber{background:rgba(245,158,11,.25);color:#fbbf24}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{background:#fafbfc;border:1px solid #e8ecf1;border-radius:8px;padding:12px 14px;border-left:4px solid #6366f1}
+.card .label{font-size:11px;color:#6b7280;margin-bottom:2px}
+.card .value{font-size:18px;font-weight:800}
+.card .sub{font-size:10px;color:#94a3b8;margin-top:2px}
+.pos{color:#16a34a}.neg{color:#dc2626}
+
+.chart-box{background:#fff;border:1px solid #e8ecf1;border-radius:10px;padding:14px;margin-bottom:14px}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.chart-title .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.notes{background:#f8fafc;border:1px solid #e8ecf1;border-radius:10px;padding:14px;font-size:11px;color:#64748b;line-height:1.7}
+.notes b{color:#374151}
+
+#loading{text-align:center;padding:40px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div id="loading">加载中...</div>
+<div id="content" style="display:none">
+
+<div class="signal-bar">
+  <div class="title">📊 产品净值跟踪</div>
+  <div class="tags" id="signalTags"></div>
+  <div style="font-size:10px;color:#7c8598;margin-top:6px" id="updateTime"></div>
+</div>
+
+<div class="cards" id="cards"></div>
+
+<div class="chart-box">
+  <div class="chart-title"><span class="dot" style="background:#6366f1"></span> 归一化净值对比</div>
+  <div style="position:relative;height:300px"><canvas id="navChart"></canvas></div>
+</div>
+
+<div class="chart-box">
+  <div class="chart-title"><span class="dot" style="background:#f59e0b"></span> 累计超额收益</div>
+  <div style="position:relative;height:220px"><canvas id="excessChart"></canvas></div>
+</div>
+
+<div class="notes">
+  <b>📌 指标说明</b><br>
+  <b>归一化净值：</b>以起始日为基准=1，展示产品和基准指数的累计表现对比。<br>
+  <b>累计超额：</b>产品归一化净值 - 基准归一化净值，正值表示跑赢基准。<br>
+  <b>数据来源：</b>火富牛数据商城（团队净值，周频更新）。基准为中证1000指数（日频，取产品净值日对齐）。<br>
+  <b>注意：</b>超额曲线斜率向上=持续创造超额；走平=超额停滞；下行=跑输基准。
+</div>
+
+</div>
+
+<script>
+fetch('fund_nav.json?t='+Date.now()).then(r=>r.json()).then(D=>{
+  document.getElementById('loading').style.display='none';
+  document.getElementById('content').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+D.update_time;
+
+  if(!D.funds||!D.funds.length){
+    document.getElementById('content').innerHTML='<div style="text-align:center;padding:40px;color:#999">暂无数据</div>';
+    return;
+  }
+
+  var f=D.funds[0];
+  var c=f.chart;
+
+  // 信号
+  var tags=[];
+  tags.push({text:f.name,cls:'tag-blue'});
+  tags.push({text:'产品 '+(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'tag-green':'tag-red'});
+  tags.push({text:f.benchmark_name+' '+(f.index_return>0?'+':'')+f.index_return+'%',cls:'tag-amber'});
+  tags.push({text:'超额 '+(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'tag-green':'tag-red'});
+  document.getElementById('signalTags').innerHTML=tags.map(t=>'<span class="tag '+t.cls+'">'+t.text+'</span>').join('');
+
+  // 卡片
+  document.getElementById('cards').innerHTML=[
+    {label:'产品累计收益',value:(f.total_return>0?'+':'')+f.total_return+'%',cls:f.total_return>=0?'pos':'neg',sub:f.name},
+    {label:f.benchmark_name+'收益',value:(f.index_return>0?'+':'')+f.index_return+'%',cls:f.index_return>=0?'pos':'neg',sub:'基准指数'},
+    {label:'累计超额',value:(f.excess_return>0?'+':'')+f.excess_return+'%',cls:f.excess_return>=0?'pos':'neg',sub:'产品-基准'},
+    {label:'数据周期',value:f.count+'期',cls:'',sub:f.date_range},
+  ].map(c=>'<div class="card"><div class="label">'+c.label+'</div><div class="value '+c.cls+'">'+c.value+'</div><div class="sub">'+c.sub+'</div></div>').join('');
+
+  // 净值图
+  var labels=c.dates.map(d=>d.slice(5));
+  new Chart(document.getElementById('navChart'),{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:f.name,data:c.fund_nav,borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.3},
+        {label:f.benchmark_name,data:c.index_nav,borderColor:'#f59e0b',backgroundColor:'transparent',pointRadius:0,borderWidth:2,tension:.3,borderDash:[4,3]},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11},usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.parsed.y*100-100).toFixed(1)+'%'}}}
+      },
+      scales:{
+        x:{ticks:{maxTicksLimit:12,font:{size:10}},grid:{display:false}},
+        y:{ticks:{font:{size:10},callback:function(v){return ((v-1)*100).toFixed(0)+'%'}},grid:{color:'rgba(0,0,0,.04)'}}
+      }
+    }
+  });
+
+  // 超额图
+  var exColors=c.excess.map(v=>v>=0?'rgba(34,197,94,.6)':'rgba(239,68,68,.5)');
+  new Chart(document.getElementById('excessChart'),{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'累计超额',data:c.excess,backgroundColor:exColors,borderRadius:2,barPercentage:.7
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return '超额: '+(ctx.parsed.y*100).toFixed(1)+'%'}}}},
+      scales:{
+        x:{ticks:{maxTicksLimit:12,font:{size:10}},grid:{display:false}},
+        y:{ticks:{font:{size:10},callback:function(v){return (v*100).toFixed(0)+'%'}},grid:{color:'rgba(0,0,0,.04)'}}
+      }
+    }
+  });
+}).catch(e=>{document.getElementById('loading').textContent='加载失败: '+e.message});
+</script>
+</body>
+</html>
