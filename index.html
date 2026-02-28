@@ -192,27 +192,77 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 总览 ══ -->
     <div class="module-page active" id="page-overview">
-      <div class="overview-grid">
-        <div class="ov-card amber"><div class="ov-label">市场环境</div><div class="ov-value">震荡偏多</div><div class="ov-tag warn">MIXED</div><div class="ov-sub">基于多因子综合判断</div></div>
-        <div class="ov-card blue"><div class="ov-label">风格倾向</div><div class="ov-value">小盘 + 成长</div><div class="ov-tag on">RISK-ON</div><div class="ov-sub">中证2000持续跑赢沪深300</div></div>
-        <div class="ov-card green"><div class="ov-label">动量警示</div><div class="ov-value">中等偏高</div><div class="ov-tag warn">CAUTION</div><div class="ov-sub">高动量组近期走平</div></div>
-        <div class="ov-card slate"><div class="ov-label">已上线模块</div><div class="ov-value">3 / 8</div><div class="ov-sub">风格轧差 · 策略环境 · 仪表盘</div></div>
+      <div id="ov-loading" style="text-align:center;padding:40px;color:#8b92a5">加载中...</div>
+      <div id="ov-content" style="display:none">
+        <!-- 风险评分横幅 -->
+        <div id="ov-risk-banner" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:18px 22px;color:#e2e6ed;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div style="font-size:20px;font-weight:900">GAMT 投研看板</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div id="ov-risk-score" style="font-size:28px;font-weight:900"></div>
+              <div>
+                <div style="width:180px;height:8px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden"><div id="ov-risk-bar" style="height:100%;border-radius:4px;transition:width .5s"></div></div>
+                <div id="ov-risk-label" style="font-size:11px;font-weight:700;margin-top:3px"></div>
+              </div>
+            </div>
+            <div id="ov-time" style="font-size:11px;color:#7c8598"></div>
+          </div>
+          <div id="ov-alerts" style="margin-top:10px"></div>
+        </div>
+        <!-- 顶部卡片 -->
+        <div id="ov-cards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
+        <!-- 模块状态表 -->
+        <div style="background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:16px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px">📋 模块状态</div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead><tr style="border-bottom:2px solid #e8eaef">
+              <th style="text-align:left;padding:8px 6px;color:#6b7280">模块</th>
+              <th style="text-align:left;padding:8px 6px;color:#6b7280">状态</th>
+              <th style="text-align:left;padding:8px 6px;color:#6b7280">更新</th>
+              <th style="text-align:left;padding:8px 6px;color:#6b7280">关键信号</th>
+            </tr></thead>
+            <tbody id="ov-table"></tbody>
+          </table>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent)"></span> 模块状态</div>
-        <table class="s-table">
-          <thead><tr><th>模块</th><th>状态</th><th>最后更新</th><th>关键信号</th></tr></thead>
-          <tbody>
-            <tr><td>📈 风格轧差</td><td><span class="tag tag-green">运行中</span></td><td>2026-02-13</td><td>小盘跑赢 +23%，科创跑赢红利 +56%</td></tr>
-            <tr><td>🎯 策略环境适配度</td><td><span class="tag tag-green">运行中</span></td><td>2026-02-13</td><td>宽基量化股票 4 指标已上线</td></tr>
-            <tr><td>💰 资金流与微观结构</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
-            <tr><td>🌍 宏观与流动性</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
-            <tr><td>🏭 中观景气</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
-            <tr><td>🚨 红灯预警</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
-            <tr><td>📋 每日报告</td><td><span class="tag tag-slate">规划中</span></td><td>-</td><td>-</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <script>
+      (function(){
+        fetch('overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
+          document.getElementById('ov-loading').style.display='none';
+          document.getElementById('ov-content').style.display='';
+          document.getElementById('ov-time').textContent='更新: '+D.update_time;
+          // 风险
+          var rs=D.risk_score||{};
+          var sc=rs.score||0;
+          var col=sc>=60?'#dc2626':sc>=40?'#f97316':sc>=20?'#eab308':'#22c55e';
+          document.getElementById('ov-risk-score').textContent=sc.toFixed(0);
+          document.getElementById('ov-risk-score').style.color=col;
+          document.getElementById('ov-risk-bar').style.width=sc+'%';
+          document.getElementById('ov-risk-bar').style.background=col;
+          document.getElementById('ov-risk-label').textContent='综合风险 '+(rs.level||'');
+          document.getElementById('ov-risk-label').style.color=col;
+          document.getElementById('ov-alerts').innerHTML=(rs.alerts||[]).map(function(a){
+            return '<div style="font-size:11px;color:#fbbf24;padding:2px 0">⚠️ '+a+'</div>';
+          }).join('');
+          // 卡片
+          var cardColors={blue:'#2563eb',green:'#16a34a',amber:'#d97706',red:'#dc2626',slate:'#64748b'};
+          document.getElementById('ov-cards').innerHTML=(D.top_cards||[]).map(function(c){
+            var cc=cardColors[c.color]||'#6b7280';
+            return '<div style="background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:14px 16px;border-left:4px solid '+cc+'">'+
+              '<div style="font-size:11px;color:#6b7280;margin-bottom:4px">'+c.label+'</div>'+
+              '<div style="font-size:13px;font-weight:700;color:'+cc+'">'+c.value+'</div></div>';
+          }).join('');
+          // 表格
+          document.getElementById('ov-table').innerHTML=(D.modules||[]).map(function(m){
+            var st=m.status==='on'?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
+            var sigs=(m.signals||[]).slice(0,2).join(' | ')||'-';
+            return '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px 6px;font-weight:600">'+m.name+'</td><td style="padding:8px 6px">'+st+'</td><td style="padding:8px 6px;color:#6b7280">'+m.updated+'</td><td style="padding:8px 6px;color:#374151;font-size:11px">'+sigs+'</td></tr>';
+          }).join('');
+        }).catch(function(e){
+          document.getElementById('ov-loading').textContent='加载失败: '+e.message;
+        });
+      })();
+      </script>
     </div>
 
     <!-- ══ 风格轧差 ══ -->

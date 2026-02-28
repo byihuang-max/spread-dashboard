@@ -209,6 +209,9 @@ h1 {
 <h1>🏛️ 耐心资本持筹成本</h1>
 <div class="subtitle" id="updated"></div>
 
+<!-- 信号摘要栏 -->
+<div id="patientSignalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:12px 16px;color:#e2e6ed;margin:10px 0 14px;font-size:12px;line-height:1.8"></div>
+
 <div class="cards" id="cards"></div>
 
 <div class="chart-section">
@@ -276,6 +279,7 @@ async function loadData() {
         const resp = await fetch('patient_capital.json?t=' + Date.now());
         DATA = await resp.json();
         document.getElementById('updated').textContent = '更新: ' + DATA.updated;
+        renderSignalBar();
         renderCards();
         renderIndicesList();
         const first = Object.keys(DATA.indices)[0];
@@ -299,6 +303,32 @@ function getAlertLevel(L) {
     if (L.cum >= DANGER_CUM) return 'danger';
     if (L.pnl >= WARN_PNL) return 'warn';
     return null;
+}
+
+function renderSignalBar() {
+    const bar = document.getElementById('patientSignalBar');
+    const sigs = [];
+    let allProfit = true, maxPnl = -Infinity, maxName = '', minPnl = Infinity, minName = '';
+    for (const [name, info] of Object.entries(DATA.indices)) {
+        const lt = info.latest || {};
+        const pnl = lt.pnl;
+        if (pnl == null) continue;
+        if (pnl < 0) allProfit = false;
+        if (pnl > maxPnl) { maxPnl = pnl; maxName = name; }
+        if (pnl < minPnl) { minPnl = pnl; minName = name; }
+        const emoji = pnl > 10 ? '🟢' : pnl > 0 ? '🟡' : '🔴';
+        sigs.push(name + ' 浮盈' + (pnl > 0 ? '+' : '') + pnl.toFixed(1) + '% ' + emoji);
+    }
+    let summary = '';
+    if (allProfit && maxPnl > 0) {
+        summary = '<b>📊 结论：</b>全部指数耐心资本浮盈，市场中长期趋势健康。';
+        if (maxPnl > 30) summary += ' ' + maxName + '浮盈最高(' + maxPnl.toFixed(0) + '%)，获利盘丰厚注意回调。';
+    } else if (minPnl < -5) {
+        summary = '<b>📊 结论：</b>' + minName + '耐心资本亏损' + minPnl.toFixed(1) + '%，底部筹码松动。';
+    } else {
+        summary = '<b>📊 结论：</b>耐心资本整体浮盈分化。';
+    }
+    bar.innerHTML = summary + '<br>' + sigs.join(' · ');
 }
 
 function renderCards() {

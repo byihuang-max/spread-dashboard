@@ -72,18 +72,29 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   fetch('style_spread_signals.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     document.getElementById('signalTime').textContent='更新: '+(d.update_time||'');
     document.getElementById('signalTags').innerHTML=(d.signals||[]).map(function(s){
-      var cls='';
-      if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0) cls=' style="background:rgba(34,197,94,0.2);color:#4ade80"';
-      else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0) cls=' style="background:rgba(239,68,68,0.2);color:#f87171"';
-      else if(s.indexOf('🔥')>=0) cls=' style="background:rgba(245,158,11,0.25);color:#fbbf24"';
-      return '<span'+cls+' style="'+(cls?cls.split('"')[1]:'background:rgba(255,255,255,0.1);color:#b8bfce')+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
+      var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
+      if(s.indexOf('🟢')>=0||s.indexOf('✅')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
+      else if(s.indexOf('🔴')>=0||s.indexOf('⚠️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
+      else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
+      return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
     }).join('');
+    // 4个tab独立信号
+    var ts=d.tab_signals||{};
+    var tabs={eco:'tab-signal-eco',crowd:'tab-signal-crowd',style:'tab-signal-style',dual:'tab-signal-dual'};
+    var icons={eco:'📊',crowd:'🔥',style:'📈',dual:'🚀'};
+    for(var k in tabs){
+      var el=document.getElementById(tabs[k]);
+      if(el&&ts[k]&&ts[k].length){
+        el.innerHTML='<b>'+icons[k]+' 结论：</b>'+ts[k].map(function(s){return '<span style="display:inline-block;margin:0 4px">'+s+'</span>'}).join(' · ');
+      } else if(el){el.style.display='none';}
+    }
   }).catch(function(){});
 })();
 </script>
 
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
+  <div id="tab-signal-eco" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#15803d;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -123,6 +134,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 2: 拥挤-反身性轧差 -->
 <div class="ss-page" id="page-crowd">
+  <div id="tab-signal-crowd" style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#92400e;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -169,6 +181,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 3: 风格轧差净值 -->
 <div class="ss-page" id="page-style">
+  <div id="tab-signal-style" style="background:#ede9fe;border:1px solid #c4b5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#5b21b6;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
@@ -189,6 +202,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- Tab 4: 双创等权 -->
 <div class="ss-page" id="page-dual">
+  <div id="tab-signal-dual" style="background:#fce7f3;border:1px solid #f9a8d4;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#9d174d;line-height:1.7"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
   </div>
