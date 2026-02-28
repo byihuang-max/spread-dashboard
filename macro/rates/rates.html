@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全球利率与汇率</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+.section{margin-bottom:28px}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
+.s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
+.s-card .s-value{font-size:22px;font-weight:800}
+.s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
+.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-wrap{position:relative;height:260px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
+.chart-note b{color:#374151}
+.loading{text-align:center;padding:60px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="signal-bar">
+  <div class="signal-main">全球利率与汇率</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="summary-cards" id="summaryCards"></div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>📈 中国10Y vs 美国10Y国债收益率</h3>
+    <div class="chart-wrap"><canvas id="yieldChart"></canvas></div>
+    <div class="chart-note">
+      <b>中国10Y：</b>国内无风险利率基准，影响股债估值中枢。下行=宽松预期，利好成长股。<br>
+      <b>美国10Y：</b>全球资产定价之锚。上行=全球流动性收紧，新兴市场承压。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3>📊 中美利差（中10Y - 美10Y）</h3>
+    <div class="chart-wrap"><canvas id="spreadChart"></canvas></div>
+    <div class="chart-note">
+      <b>中美利差 = 中国10Y - 美国10Y。</b><br>
+      <b>利差为负：</b>中国利率低于美国，资金有外流压力（北向可能流出、人民币有贬值压力）。<br>
+      <b>利差收窄/转正：</b>中国利率优势回升，外资回流动力增强。<br>
+      <b>关键阈值：</b>< -1.5% 压力较大，> -0.5% 压力缓解。
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+var DATA;
+function loadData(){
+  fetch('rates.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;render()})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+  var sigs=DATA.signals||[];
+  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🟢')>=0) cls+=' good';
+    else if(s.indexOf('🔴')>=0) cls+=' risk';
+    else if(s.indexOf('⚠️')>=0) cls+=' warn';
+    return '<span class="'+cls+'">'+s+'</span>';
+  }).join('');
+
+  // 摘要卡片
+  var html='';
+  var cn=DATA.cn10y||[];
+  var us=DATA.us10y||[];
+  var sp=DATA.spread||[];
+  if(cn.length) html+='<div class="s-card"><div class="s-label">中国10Y</div><div class="s-value">'+cn[cn.length-1].value.toFixed(2)+'%</div></div>';
+  if(us.length) html+='<div class="s-card"><div class="s-label">美国10Y</div><div class="s-value">'+us[us.length-1].value.toFixed(2)+'%</div></div>';
+  if(sp.length) html+='<div class="s-card"><div class="s-label">中美利差</div><div class="s-value" style="color:'+(sp[sp.length-1].spread<-1?'#dc2626':'#16a34a')+'">'+(sp[sp.length-1].spread>0?'+':'')+sp[sp.length-1].spread.toFixed(2)+'%</div></div>';
+  var fx=DATA.fx||{};
+  if(fx['USDCNY.FX']&&fx['USDCNY.FX'].latest) html+='<div class="s-card"><div class="s-label">USDCNY</div><div class="s-value">'+fx['USDCNY.FX'].latest.toFixed(4)+'</div></div>';
+  if(fx['USDCNH.FX']&&fx['USDCNH.FX'].latest) html+='<div class="s-card"><div class="s-label">USDCNH</div><div class="s-value">'+fx['USDCNH.FX'].latest.toFixed(4)+'</div></div>';
+  if(DATA.fx_spread!=null) html+='<div class="s-card"><div class="s-label">在岸离岸价差</div><div class="s-value">'+(DATA.fx_spread*1000).toFixed(0)+'点</div></div>';
+  document.getElementById('summaryCards').innerHTML=html;
+
+  renderYieldChart();
+  renderSpreadChart();
+}
+function renderYieldChart(){
+  var cn=DATA.cn10y||[];
+  var us=DATA.us10y||[];
+  if(!cn.length&&!us.length)return;
+  // 用较长的那个做labels
+  var labels=(cn.length>=us.length?cn:us).map(function(d){return d.date});
+  var datasets=[];
+  if(cn.length) datasets.push({label:'中国10Y %',data:cn.map(function(d){return d.value}),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0});
+  if(us.length) datasets.push({label:'美国10Y %',data:us.map(function(d){return d.value}),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0});
+  new Chart(document.getElementById('yieldChart'),{type:'line',
+    data:{labels:labels,datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+function renderSpreadChart(){
+  var sp=DATA.spread||[];
+  if(!sp.length)return;
+  new Chart(document.getElementById('spreadChart'),{type:'line',
+    data:{labels:sp.map(function(d){return d.date}),
+      datasets:[{label:'中美利差 %',data:sp.map(function(d){return d.spread}),
+        borderColor:'#6366f1',backgroundColor:sp.map(function(d){return d.spread>0?'rgba(34,197,94,0.2)':'rgba(239,68,68,0.2)'}),
+        fill:true,tension:0.3,borderWidth:2,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+loadData();
+</script>
+</body></html>

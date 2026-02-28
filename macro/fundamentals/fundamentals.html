@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>经济基本面</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+.section{margin-bottom:28px}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+/* 美林时钟卡片 */
+.clock-card{background:#fff;border-radius:12px;padding:20px;border:1px solid #e8eaef;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.clock-phase{font-size:36px;font-weight:900}
+.clock-info{flex:1}
+.clock-info .phase-name{font-size:18px;font-weight:800;margin-bottom:4px}
+.clock-info .phase-advice{font-size:13px;color:#6b7280}
+.clock-info .phase-data{font-size:12px;color:#8b92a5;margin-top:6px}
+.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-wrap{position:relative;height:280px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
+.chart-note b{color:#374151}
+.loading{text-align:center;padding:60px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="signal-bar">
+  <div class="signal-main">经济基本面</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="clock-card" id="clockCard" style="display:none"></div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>📊 PMI 制造业 & 非制造业</h3>
+    <div class="chart-wrap"><canvas id="pmiChart"></canvas></div>
+    <div class="chart-note">
+      <b>PMI（采购经理指数）：</b>反映制造业景气程度的领先指标。<br>
+      <b>> 50：</b>扩张区间，经济在增长。<b>< 50：</b>收缩区间，经济在放缓。<br>
+      <b>趋势比绝对值更重要：</b>从48升到49.5（虽然还在50以下）比从52降到50.5更积极。<br>
+      <b>非制造业PMI：</b>反映服务业景气，消费复苏时先行指标。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3>📈 CPI / PPI 同比 & 剪刀差</h3>
+    <div class="chart-wrap"><canvas id="cpiChart"></canvas></div>
+    <div class="chart-note">
+      <b>CPI（消费者物价指数）：</b>反映终端消费品价格变化。CPI上行=通胀，央行可能收紧。<br>
+      <b>PPI（工业生产者出厂价格）：</b>反映上游原材料价格。PPI<0=工业通缩，企业利润承压。<br>
+      <b>CPI-PPI剪刀差：</b>CPI>PPI时下游（消费类）利润好，PPI>CPI时上游（资源类）利润好。<br>
+      <b>剪刀差扩大(>3%)：</b>上下游利润分化严重，结构性机会。
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+var DATA;
+function loadData(){
+  fetch('fundamentals.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;render()})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+  var sigs=DATA.signals||[];
+  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🟢')>=0||s.indexOf('🌱')>=0) cls+=' good';
+    else if(s.indexOf('🔴')>=0||s.indexOf('❄️')>=0) cls+=' risk';
+    else if(s.indexOf('⚠️')>=0||s.indexOf('🟡')>=0||s.indexOf('🔥')>=0) cls+=' warn';
+    return '<span class="'+cls+'">'+s+'</span>';
+  }).join('');
+
+  // 美林时钟
+  var mc=DATA.merrill_clock;
+  var card=document.getElementById('clockCard');
+  if(mc){
+    card.style.display='flex';
+    card.innerHTML='<div class="clock-phase">'+mc.emoji+'</div>'+
+      '<div class="clock-info">'+
+        '<div class="phase-name">美林时钟: '+mc.phase+'</div>'+
+        '<div class="phase-advice">建议: '+mc.advice+'</div>'+
+        '<div class="phase-data">PMI='+mc.pmi.toFixed(1)+' | CPI='+mc.cpi.toFixed(1)+'%</div>'+
+      '</div>';
+  }
+
+  renderPMI();
+  renderCPI();
+}
+function renderPMI(){
+  var d=DATA.pmi||[];
+  if(!d.length)return;
+  var datasets=[];
+  if(d.some(function(x){return x.pmi!=null}))
+    datasets.push({label:'制造业PMI',data:d.map(function(x){return x.pmi||null}),borderColor:'#6366f1',borderWidth:2,tension:0.3,pointRadius:2});
+  if(d.some(function(x){return x.pmi_nmp!=null}))
+    datasets.push({label:'非制造业PMI',data:d.map(function(x){return x.pmi_nmp||null}),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:2,borderDash:[4,4]});
+  new Chart(document.getElementById('pmiChart'),{type:'line',
+    data:{labels:d.map(function(x){return x.month.substring(4)}),datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}},
+        annotation:{}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+function renderCPI(){
+  var d=DATA.cpi_ppi||[];
+  if(!d.length)return;
+  new Chart(document.getElementById('cpiChart'),{type:'line',
+    data:{labels:d.map(function(x){return x.month.substring(4)}),
+      datasets:[
+        {label:'CPI同比%',data:d.map(function(x){return x.cpi}),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0},
+        {label:'PPI同比%',data:d.map(function(x){return x.ppi}),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0},
+        {label:'CPI-PPI剪刀差',data:d.map(function(x){return x.scissors}),borderColor:'#f59e0b',borderWidth:1.5,tension:0.3,pointRadius:0,borderDash:[4,4]}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+loadData();
+</script>
+</body></html>

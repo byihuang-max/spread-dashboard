@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>境内流动性</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
+.section{margin-bottom:28px}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-wrap{position:relative;height:280px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
+.chart-note b{color:#374151}
+.loading{text-align:center;padding:60px;color:#8b92a5}
+</style>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="signal-bar">
+  <div class="signal-main">境内流动性</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>📐 Shibor期限结构（当日 vs 一周前 vs 一月前）</h3>
+    <div class="chart-wrap"><canvas id="shiborTermChart"></canvas></div>
+    <div class="chart-note">
+      <b>怎么看：</b>横轴是资金期限（隔夜~1年），纵轴是利率。三条线分别是今天、一周前、一月前。<br>
+      <b>曲线下移：</b>资金面在放松，借钱更便宜。<br>
+      <b>曲线上移：</b>资金面收紧。<br>
+      <b>短端下长端上（变陡）：</b>央行短期放水但市场预期未来收紧。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3>📈 Shibor隔夜利率走势</h3>
+    <div class="chart-wrap"><canvas id="shiborOnChart"></canvas></div>
+    <div class="chart-note">
+      <b>Shibor隔夜(O/N)：</b>银行间最短期的资金价格，反映当天市场资金松紧。<br>
+      <b>< 1.2%：</b>资金极度宽松，"钱多到溢出来"。<br>
+      <b>> 2.5%：</b>资金面偏紧，跨月/跨季时常见。<br>
+      <b>趋势性下行：</b>央行在持续放水。
+    </div>
+  </div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>📊 DR007 / R007 走势</h3>
+    <div class="chart-wrap"><canvas id="drChart"></canvas></div>
+    <div class="chart-note">
+      <b>DR007：</b>银行间存款类机构7天回购利率，是央行货币政策操作的核心利率锚。<br>
+      <b>R007：</b>全市场7天回购利率（含非银），通常高于DR007，二者价差反映非银融资压力。<br>
+      <b>央行态度：</b>DR007围绕政策利率波动。持续低于政策利率=央行在刻意放水。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3>💰 M1/M2 同比 & 剪刀差</h3>
+    <div class="chart-wrap"><canvas id="moneyChart"></canvas></div>
+    <div class="chart-note">
+      <b>M1：</b>活期存款+现金，代表"准备花出去的钱"。M1上升=企业/居民在活化资金，经济回暖信号。<br>
+      <b>M2：</b>广义货币，包含定期。M2高但M1低=钱都趴在账上不动，经济偏冷。<br>
+      <b>M1-M2剪刀差：</b>> 0 资金活化（利好股市），< -5% 资金保守（利好债市）。
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+var DATA;
+function loadData(){
+  fetch('liquidity.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;render()})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+  var sigs=DATA.signals||[];
+  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🟢')>=0) cls+=' good';
+    else if(s.indexOf('🔴')>=0) cls+=' risk';
+    else if(s.indexOf('🟡')>=0) cls+=' warn';
+    return '<span class="'+cls+'">'+s+'</span>';
+  }).join('');
+  renderShiborTerm();
+  renderShiborOn();
+  renderDR();
+  renderMoney();
+}
+function renderShiborTerm(){
+  var st=DATA.shibor_term;
+  if(!st)return;
+  new Chart(document.getElementById('shiborTermChart'),{type:'line',
+    data:{labels:st.tenors,datasets:[
+      {label:'当日',data:st.today,borderColor:'#6366f1',borderWidth:2.5,tension:0.3,pointRadius:5,pointBackgroundColor:'#6366f1'},
+      {label:'一周前',data:st.week_ago,borderColor:'#f59e0b',borderWidth:1.5,tension:0.3,pointRadius:3,borderDash:[4,4]},
+      {label:'一月前',data:st.month_ago,borderColor:'#8b92a5',borderWidth:1.5,tension:0.3,pointRadius:3,borderDash:[6,3]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{title:{display:true,text:'%',font:{size:10}},grid:{color:'#f0f0f0'}},x:{}}}
+  });
+}
+function renderShiborOn(){
+  var d=DATA.shibor_on||[];
+  if(!d.length)return;
+  new Chart(document.getElementById('shiborOnChart'),{type:'line',
+    data:{labels:d.map(function(x){return x.date}),datasets:[
+      {label:'Shibor O/N %',data:d.map(function(x){return x.value}),borderColor:'#6366f1',backgroundColor:'#6366f118',fill:true,tension:0.3,borderWidth:2,pointRadius:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+function renderDR(){
+  var d=DATA.dr007||[];
+  if(!d.length)return;
+  var datasets=[{label:'DR007 %',data:d.map(function(x){return x.dr007}),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0}];
+  if(d.some(function(x){return x.r007!=null})){
+    datasets.push({label:'R007 %',data:d.map(function(x){return x.r007}),borderColor:'#f59e0b',borderWidth:1.5,tension:0.3,pointRadius:0,borderDash:[4,4]});
+  }
+  new Chart(document.getElementById('drChart'),{type:'line',
+    data:{labels:d.map(function(x){return x.date}),datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+function renderMoney(){
+  var d=DATA.money_supply||[];
+  if(!d.length)return;
+  new Chart(document.getElementById('moneyChart'),{type:'line',
+    data:{labels:d.map(function(x){return x.month.substring(4)}),datasets:[
+      {label:'M1同比%',data:d.map(function(x){return x.m1}),borderColor:'#6366f1',borderWidth:2,tension:0.3,pointRadius:0},
+      {label:'M2同比%',data:d.map(function(x){return x.m2}),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:0},
+      {label:'剪刀差%',data:d.map(function(x){return x.scissors}),borderColor:'#f59e0b',borderWidth:2,tension:0.3,pointRadius:0,borderDash:[4,4]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+loadData();
+</script>
+</body></html>

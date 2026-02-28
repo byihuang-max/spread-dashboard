@@ -88,6 +88,27 @@ MODULES = {
             ('micro_flow/option_sentiment', 'option_calc.py'),
         ],
     },
+    'liquidity': {
+        'name': '境内流动性',
+        'scripts': [
+            ('macro/liquidity', 'liquidity_data.py'),
+            ('macro/liquidity', 'liquidity_calc.py'),
+        ],
+    },
+    'rates': {
+        'name': '全球利率与汇率',
+        'scripts': [
+            ('macro/rates', 'rates_data.py'),
+            ('macro/rates', 'rates_calc.py'),
+        ],
+    },
+    'fundamentals': {
+        'name': '经济基本面',
+        'scripts': [
+            ('macro/fundamentals', 'fundamentals_data.py'),
+            ('macro/fundamentals', 'fundamentals_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -101,6 +122,9 @@ TAB_MAP = {
     'patient-capital': 'patient_capital',
     'crowding': 'crowding',
     'option-sentiment': 'option_sentiment',
+    'liquidity': 'liquidity',
+    'rates': 'rates',
+    'fundamentals': 'fundamentals',
 }
 
 # ═══ 全局状态 ═══
