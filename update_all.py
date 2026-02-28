@@ -30,35 +30,35 @@ MODULES = {
     'quant_stock': {
         'name': '宽基量化股票',
         'data_scripts': [
-            ('quant_stock', 'quant_stock_data.py'),
+            ('env_fit/quant_stock', 'quant_stock_data.py'),
         ],
-        'inject_script': ('quant_stock', 'inject_quant_stock.py'),
+        'inject_script': ('env_fit/quant_stock', 'inject_quant_stock.py'),
     },
     'momentum_stock': {
         'name': '强势股情绪',
         'data_scripts': [
-            ('momentum_stock', 'momentum_data.py'),
+            ('env_fit/momentum_stock', 'momentum_data.py'),
         ],
-        'inject_script': ('momentum_stock', 'inject_momentum.py'),
+        'inject_script': ('env_fit/momentum_stock', 'inject_momentum.py'),
     },
     'commodity_cta': {
         'name': '商品CTA',
         'data_scripts': [
-            ('commodity_cta', 'commodity_data.py'),           # 拉数据
-            ('commodity_cta', 'mod1_cta_env.py'),             # 计算 mod1
-            ('commodity_cta', 'mod2_trend_scan.py'),          # 计算 mod2
-            ('commodity_cta', 'mod3_macro_ratio.py'),         # 计算 mod3
-            ('commodity_cta', 'commodity_cta_main.py'),       # 合并 JSON
+            ('env_fit/commodity_cta', 'commodity_data.py'),           # 拉数据
+            ('env_fit/commodity_cta', 'mod1_cta_env.py'),             # 计算 mod1
+            ('env_fit/commodity_cta', 'mod2_trend_scan.py'),          # 计算 mod2
+            ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),         # 计算 mod3
+            ('env_fit/commodity_cta', 'commodity_cta_main.py'),       # 合并 JSON
         ],
-        'inject_script': ('commodity_cta', 'inject_commodity_cta.py'),
+        'inject_script': ('env_fit/commodity_cta', 'inject_commodity_cta.py'),
     },
     'cb_env': {
         'name': '转债指增',
         'data_scripts': [
-            ('cb_env', 'cb_data.py'),    # 拉数据 → CSV + JSON
-            ('cb_env', 'cb_calc.py'),    # 计算指标 → cb_env.json
+            ('env_fit/cb_env', 'cb_data.py'),    # 拉数据 → CSV + JSON
+            ('env_fit/cb_env', 'cb_calc.py'),    # 计算指标 → cb_env.json
         ],
-        'inject_script': ('cb_env', 'inject_cb_env.py'),
+        'inject_script': ('env_fit/cb_env', 'inject_cb_env.py'),
     },
 }
 

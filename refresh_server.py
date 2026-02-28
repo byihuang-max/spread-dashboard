@@ -28,50 +28,50 @@ MODULES = {
     'quant_stock': {
         'name': '宽基量化股票',
         'scripts': [
-            ('quant_stock', 'quant_stock_data.py'),
-            ('quant_stock', 'inject_quant_stock.py'),
+            ('env_fit/quant_stock', 'quant_stock_data.py'),
+            ('env_fit/quant_stock', 'inject_quant_stock.py'),
         ],
     },
     'momentum_stock': {
         'name': '强势股',
         'scripts': [
-            ('momentum_stock', 'momentum_data.py'),
-            ('momentum_stock', 'inject_momentum.py'),
+            ('env_fit/momentum_stock', 'momentum_data.py'),
+            ('env_fit/momentum_stock', 'inject_momentum.py'),
         ],
     },
     'commodity_cta': {
         'name': '商品CTA',
         'scripts': [
-            ('commodity_cta', 'commodity_data.py'),
-            ('commodity_cta', 'mod1_cta_env.py'),
-            ('commodity_cta', 'mod2_trend_scan.py'),
-            ('commodity_cta', 'mod3_macro_ratio.py'),
-            ('commodity_cta', 'commodity_cta_main.py'),
-            ('commodity_cta', 'inject_commodity_cta.py'),
+            ('env_fit/commodity_cta', 'commodity_data.py'),
+            ('env_fit/commodity_cta', 'mod1_cta_env.py'),
+            ('env_fit/commodity_cta', 'mod2_trend_scan.py'),
+            ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),
+            ('env_fit/commodity_cta', 'commodity_cta_main.py'),
+            ('env_fit/commodity_cta', 'inject_commodity_cta.py'),
         ],
     },
     'cb_env': {
         'name': '转债',
         'scripts': [
-            ('cb_env', 'cb_data.py'),
-            ('cb_env', 'cb_calc.py'),
-            ('cb_env', 'inject_cb_env.py'),
+            ('env_fit/cb_env', 'cb_data.py'),
+            ('env_fit/cb_env', 'cb_calc.py'),
+            ('env_fit/cb_env', 'inject_cb_env.py'),
         ],
     },
     'arbitrage': {
         'name': '套利',
         'scripts': [
-            ('arbitrage', 'fetch_incremental.py'),
-            ('arbitrage', 'mod1_index_arb.py'),
-            ('arbitrage', 'mod2_commodity_arb.py'),
-            ('arbitrage', 'mod3_option_arb.py'),
+            ('env_fit/arbitrage', 'fetch_incremental.py'),
+            ('env_fit/arbitrage', 'mod1_index_arb.py'),
+            ('env_fit/arbitrage', 'mod2_commodity_arb.py'),
+            ('env_fit/arbitrage', 'mod3_option_arb.py'),
         ],
     },
     'patient_capital': {
         'name': '耐心资本持筹',
         'scripts': [
-            ('patient_capital', 'patient_data.py'),
-            ('patient_capital', 'patient_calc.py'),
+            ('micro_flow/patient_capital', 'patient_data.py'),
+            ('micro_flow/patient_capital', 'patient_calc.py'),
         ],
     },
 }
