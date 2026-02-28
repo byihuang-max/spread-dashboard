@@ -147,24 +147,35 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .ss-footer .ft-title{font-size:12px;color:var(--text);font-weight:600;margin-bottom:6px}
 .ss-footer b{color:var(--text);font-weight:600}
 
-/* ── 登录遮罩 ── */
-.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1e2433 0%,#2d3a52 100%);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+/* ── 登录遮罩（科技风） ── */
+.login-overlay{position:fixed;inset:0;background:#0a0e1a;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .4s;overflow:hidden}
 .login-overlay.hidden{opacity:0;pointer-events:none}
-.login-box{background:#fff;border-radius:16px;padding:40px 36px;width:380px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.login-box h2{font-size:20px;font-weight:700;color:#1e2433;margin-bottom:6px;text-align:center}
-.login-box .subtitle{font-size:13px;color:#8b92a5;text-align:center;margin-bottom:28px}
-.login-box label{font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px}
-.login-box input{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:16px;outline:none;transition:border .15s}
-.login-box input:focus{border-color:#2563eb}
-.login-box .btn{width:100%;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
-.login-box .btn-primary{background:#2563eb;color:#fff}.login-box .btn-primary:hover{background:#1d4ed8}
-.login-box .btn-link{background:none;color:#2563eb;font-size:12px;margin-top:12px}
-.login-box .err{color:#ef4444;font-size:12px;text-align:center;margin-bottom:10px;min-height:18px}
-.login-box .tabs{display:flex;margin-bottom:24px;border-bottom:2px solid #f1f5f9}
-.login-box .tab{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.login-box .tab.active{color:#2563eb;border-bottom-color:#2563eb}
+.login-overlay canvas{position:absolute;inset:0;z-index:0}
+.login-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(37,99,235,.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(16,185,129,.08) 0%,transparent 60%);z-index:1}
+.login-box{position:relative;z-index:2;background:rgba(15,20,35,.85);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 38px;width:400px;max-width:90vw;box-shadow:0 0 80px rgba(37,99,235,.12),0 0 0 1px rgba(255,255,255,.05) inset}
+.login-box .brand{text-align:center;margin-bottom:8px}
+.login-box .brand-logo{font-size:36px;font-weight:800;letter-spacing:6px;background:linear-gradient(135deg,#60a5fa 0%,#34d399 50%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.login-box .brand-full{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px;font-weight:500}
+.login-box .subtitle{font-size:12px;color:rgba(255,255,255,.3);text-align:center;margin-bottom:30px}
+.login-box .glow-line{width:60px;height:2px;margin:14px auto 20px;background:linear-gradient(90deg,transparent,#2563eb,#10b981,transparent);border-radius:2px}
+.login-box label{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);display:block;margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase}
+.login-box input{width:100%;padding:11px 16px;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-size:14px;margin-bottom:16px;outline:none;transition:all .2s;background:rgba(255,255,255,.04);color:#e2e8f0;font-family:inherit}
+.login-box input::placeholder{color:rgba(255,255,255,.2)}
+.login-box input:focus{border-color:rgba(37,99,235,.6);background:rgba(37,99,235,.06);box-shadow:0 0 20px rgba(37,99,235,.1)}
+.login-box .btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;letter-spacing:1px}
+.login-box .btn-primary{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;box-shadow:0 4px 20px rgba(37,99,235,.3)}
+.login-box .btn-primary:hover{box-shadow:0 6px 30px rgba(37,99,235,.5);transform:translateY(-1px)}
+.login-box .btn-primary:active{transform:translateY(0)}
+.login-box .err{color:#f87171;font-size:12px;text-align:center;margin-bottom:10px;min-height:18px}
+.login-box .tabs{display:flex;margin-bottom:26px;border-bottom:1px solid rgba(255,255,255,.08);gap:0}
+.login-box .tab{flex:1;text-align:center;padding:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;letter-spacing:1px}
+.login-box .tab:hover{color:rgba(255,255,255,.5)}
+.login-box .tab.active{color:#60a5fa;border-bottom-color:#2563eb}
+.login-ver{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:10px;color:rgba(255,255,255,.12);letter-spacing:1px;z-index:2}
+@keyframes float-p{0%,100%{transform:translateY(0) scale(1);opacity:.3}50%{transform:translateY(-20px) scale(1.1);opacity:.6}}
+.particle{position:absolute;border-radius:50%;background:rgba(96,165,250,.3);animation:float-p 4s ease-in-out infinite;z-index:1}
 .user-bar{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-sub)}
-.user-bar .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.user-bar .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#10b981);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
 .user-bar .logout-btn{padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:var(--text-sub)}
 .user-bar .logout-btn:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
 .user-bar .admin-btn{padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:var(--accent)}
@@ -174,36 +185,86 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- ═══ 登录遮罩 ═══ -->
 <div class="login-overlay" id="loginOverlay">
+  <canvas id="bgCanvas"></canvas>
+  <div class="particle" style="width:4px;height:4px;top:15%;left:20%;animation-delay:0s;animation-duration:5s"></div>
+  <div class="particle" style="width:3px;height:3px;top:40%;left:75%;animation-delay:1s;animation-duration:4s"></div>
+  <div class="particle" style="width:5px;height:5px;top:70%;left:30%;animation-delay:2s;animation-duration:6s"></div>
+  <div class="particle" style="width:3px;height:3px;top:25%;left:60%;animation-delay:.5s;animation-duration:3.5s"></div>
+  <div class="particle" style="width:4px;height:4px;top:80%;left:80%;animation-delay:1.5s;animation-duration:5.5s"></div>
+  <div class="particle" style="width:2px;height:2px;top:55%;left:15%;animation-delay:3s;animation-duration:4.5s"></div>
+  <div class="particle" style="width:6px;height:6px;top:10%;left:85%;animation-delay:2.5s;animation-duration:7s;background:rgba(52,211,153,.2)"></div>
+  <div class="particle" style="width:3px;height:3px;top:90%;left:50%;animation-delay:1.8s;animation-duration:4.2s;background:rgba(167,139,250,.25)"></div>
+
   <div class="login-box">
-    <h2>GAMT 投研看板</h2>
-    <p class="subtitle">请登录或注册以继续使用</p>
+    <div class="brand">
+      <div class="brand-logo">GAMT</div>
+      <div class="brand-full">General Asset Management Team</div>
+    </div>
+    <div class="glow-line"></div>
+    <p class="subtitle">投研看板 · Research Dashboard</p>
     <div class="tabs">
-      <div class="tab active" onclick="switchAuthTab('login')">登录</div>
-      <div class="tab" onclick="switchAuthTab('register')">注册</div>
+      <div class="tab active" onclick="switchAuthTab('login')">LOGIN</div>
+      <div class="tab" onclick="switchAuthTab('register')">REGISTER</div>
     </div>
     <div class="err" id="authErr"></div>
-    <!-- 登录表单 -->
     <div id="loginForm">
-      <label>用户名</label>
-      <input type="text" id="loginUser" placeholder="输入用户名" autocomplete="username">
-      <label>密码</label>
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="输入用户名" autocomplete="username" spellcheck="false">
+      <label>Password</label>
       <input type="password" id="loginPass" placeholder="输入密码" autocomplete="current-password">
-      <button class="btn btn-primary" onclick="doLogin()">登 录</button>
+      <button class="btn btn-primary" onclick="doLogin()">ACCESS DASHBOARD →</button>
     </div>
-    <!-- 注册表单 -->
     <div id="registerForm" style="display:none">
-      <label>用户名</label>
-      <input type="text" id="regUser" placeholder="2-30字符" autocomplete="username">
-      <label>显示名称（选填）</label>
-      <input type="text" id="regName" placeholder="你的名字">
-      <label>密码</label>
-      <input type="password" id="regPass" placeholder="至少6位" autocomplete="new-password">
-      <label>确认密码</label>
+      <label>Username</label>
+      <input type="text" id="regUser" placeholder="2-30 字符" autocomplete="username" spellcheck="false">
+      <label>Display Name</label>
+      <input type="text" id="regName" placeholder="你的名字（选填）">
+      <label>Password</label>
+      <input type="password" id="regPass" placeholder="至少 6 位" autocomplete="new-password">
+      <label>Confirm Password</label>
       <input type="password" id="regPass2" placeholder="再输一次">
-      <button class="btn btn-primary" onclick="doRegister()">注 册</button>
+      <button class="btn btn-primary" onclick="doRegister()">CREATE ACCOUNT →</button>
     </div>
   </div>
+  <div class="login-ver">GAMT SYSTEM v2.0</div>
 </div>
+
+<!-- ═══ 背景网格动画 ═══ -->
+<script>
+(function(){
+  var cv=document.getElementById('bgCanvas');
+  if(!cv)return;
+  var ctx=cv.getContext('2d');
+  var w,h,pts=[];
+  function resize(){w=cv.width=window.innerWidth;h=cv.height=window.innerHeight;pts=[];for(var i=0;i<60;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.5+.5});}
+  resize();window.addEventListener('resize',resize);
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    // grid
+    ctx.strokeStyle='rgba(37,99,235,.04)';ctx.lineWidth=.5;
+    for(var x=0;x<w;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+    for(var y=0;y<h;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    // nodes + connections
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;
+      if(p.y<0||p.y>h)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(96,165,250,.35)';ctx.fill();
+      for(var j=i+1;j<pts.length;j++){
+        var q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle='rgba(96,165,250,'+((.15)*(1-d/140))+')';ctx.lineWidth=.6;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
 
 <!-- ═══ 移动端菜单 ═══ -->
 <button class="menu-toggle" id="menuToggle">☰</button>
