@@ -731,55 +731,139 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <div class="strat-page" id="strat-momentum-stock">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-        <span style="font-size:13px;color:#888">🔥 强势股情绪 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
+        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
       </div>
-      <!-- 强势股情绪总览 -->
+
+      <!-- 区块一：环境总览 -->
+      <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px">
+          <div style="width:48px;height:48px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 12px #fbbf2466">
+            🟡
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="background:#10b981;color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600">回暖</span>
+              <span style="font-size:28px;font-weight:800;color:#f59e0b">55.48</span>
+              <span style="font-size:12px;color:#94a3b8">合成情绪指数</span>
+            </div>
+            <div style='font-size:12px;color:#64748b;margin-top:4px;line-height:1.5'>🟡观察：晋级率断崖(16.6→0.0)，耐心资本无托底</div>
+          </div>
+        </div>
+      </div>
+
       <div class="overview-grid">
-        <div class="ov-card" style="border-left-color:#10b981">
-          <div class="ov-label">合成情绪指数</div>
-          <div class="ov-value" style="color:#10b981">48.14</div>
-          <div class="ov-sub">0-100，60日滚动标准化</div>
+        <div class="ov-card" style="border-left-color:#ef4444">
+          <div class="ov-label">涨停 / 跌停 / 炸板</div>
+          <div class="ov-value">75 / 0 / 15</div>
+          <div class="ov-sub">涨跌停比 20</div>
         </div>
-        <div class="ov-card" style="border-left-color:#10b981">
-          <div class="ov-label">情绪周期</div>
-          <div class="ov-value" style="color:#10b981">回暖</div>
-          <div class="ov-sub">基于指数水平+变化率自动判定</div>
-        </div>
-        <div class="ov-card blue">
+        <div class="ov-card" style="border-left-color:#2563eb">
           <div class="ov-label">最高连板</div>
           <div class="ov-value">7板</div>
           <div class="ov-sub">空间龙高度</div>
         </div>
-        <div class="ov-card green">
-          <div class="ov-label">涨停 / 跌停 / 炸板</div>
-          <div class="ov-value">75 / 0 / 15</div>
-          <div class="ov-sub">涨跌停比 75.0</div>
-        </div>
-        <div class="ov-card amber">
-          <div class="ov-label">连板晋级率</div>
+        <div class="ov-card" style="border-left-color:#10b981">
+          <div class="ov-label">晋级率</div>
           <div class="ov-value">0%</div>
           <div class="ov-sub">1进2: 0%</div>
         </div>
-        <div class="ov-card slate">
+        <div class="ov-card" style="border-left-color:#f59e0b">
           <div class="ov-label">炸板率 / 封板质量</div>
-          <div class="ov-value">16.67% / 58.67%</div>
-          <div class="ov-sub">炸板率越低越好，封板质量越高越好</div>
+          <div class="ov-value">16.67% / 0.0%</div>
+          <div class="ov-sub">炸板率越低越好</div>
+        </div>
+        <div class="ov-card" style="border-left-color:#8b5cf6">
+          <div class="ov-label">大市值涨停</div>
+          <div class="ov-value">100亿+ 0个 / 300亿+ 0个</div>
+          <div class="ov-sub">机构资金参与度</div>
+        </div>
+        <div class="ov-card" style="border-left-color:#ec4899">
+          <div class="ov-label">300亿+涨停股</div>
+          <div class="ov-value" style="font-size:16px">无</div>
+          <div class="ov-sub">大象起舞信号</div>
         </div>
       </div>
 
+      <!-- 区块二：预警条件链 + 产品净值 + 赚钱效应趋势 -->
+      
+      <div class="card" style="padding:14px 18px">
+        <div class="card-title" style="font-size:12px;margin-bottom:10px"><span class="dot" style="background:#fbbf24"></span> 预警条件链</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">信号层</div>
+            <div style="flex:1;border-left:2px solid #ef4444;padding-left:10px"><span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠️ 晋级率断崖(16.6→0.0)</span></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">确认层</div>
+            <div style="flex:1;border-left:2px solid #e2e8f0;padding-left:10px"><span style="color:#10b981;font-size:11px">✅ 成交额正常</span></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">过滤层</div>
+            <div style="flex:1;border-left:2px solid #ef4444;padding-left:10px"><span style="display:inline-block;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠️ 无耐心资本支撑</span></div>
+          </div>
+          <div style="margin-top:4px;padding:6px 14px;border-radius:8px;background:#fbbf2415;border:1px solid #fbbf2433;color:#fbbf24;font-weight:700;font-size:13px;display:inline-block;align-self:flex-start">
+            🟡 持续关注
+          </div>
+        </div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:8px;line-height:1.5">
+          逻辑：情绪退潮信号 → 成交额确认 → 耐心资本过滤 · 三层都亮=红灯，有托底降为黄灯
+        </div>
+      </div>
+
+      <!-- 产品净值 -->
+      
+      <div class="card" style="padding:16px 20px">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产品净值 · 基准 · 超额收益</div>
+        <div style="position:relative;height:360px"><canvas id="ms-nav-chart"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
+          紫色=产品净值（左轴） · 灰色虚线=基准（左轴） · 橙色=累计超额（右轴） · 红色背景=基准回撤&gt;2%区域<br>
+          回撤区域悬停可查看Beta/情绪/Alpha贡献
+        </div>
+      </div>
+
+      <!-- 绝对收益拆解 -->
+      <details class="card" style="padding:16px 20px;cursor:pointer" id="ms-decomp-details">
+        <summary style="font-size:13px;font-weight:700;color:#374151;list-style:none;display:flex;align-items:center;gap:6px">
+          <span class="dot" style="background:#2563eb"></span> 绝对收益归因拆解（点击展开）
+          <span style="font-size:10px;color:#94a3b8;font-weight:400;margin-left:auto">▶</span>
+        </summary>
+        <div id="ms-decomp-content" style="margin-top:12px">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <div style="flex:1;min-width:100px;background:#f0fdf4;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">总收益</div>
+            <div style="font-size:20px;font-weight:800;color:#10b981">+22.61%</div>
+          </div>
+          <div style="flex:1;min-width:100px;background:#eff6ff;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">Beta贡献</div>
+            <div style="font-size:20px;font-weight:800;color:#3b82f6">+3.47%</div>
+            <div style="font-size:10px;color:#94a3b8">β=0.15</div>
+          </div>
+          <div style="flex:1;min-width:100px;background:#fefce8;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">情绪贡献</div>
+            <div style="font-size:20px;font-weight:800;color:#f59e0b">+1.05%</div>
+            <div style="font-size:10px;color:#94a3b8">占比5%</div>
+          </div>
+          <div style="flex:1;min-width:100px;background:#fdf2f8;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">管理人Alpha</div>
+            <div style="font-size:20px;font-weight:800;color:#ec4899">+18.09%</div>
+            <div style="font-size:10px;color:#94a3b8">选票+择时</div>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">各情绪周期日均超beta收益：</div>
+          <span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#ef444418;color:#ef4444;font-size:11px;font-weight:600">加速 +0.223%/日</span><span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#10b98118;color:#10b981;font-size:11px;font-weight:600">回暖 +0.123%/日</span><span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#94a3b818;color:#94a3b8;font-size:11px;font-weight:600">震荡 -0.127%/日</span><span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#f59e0b18;color:#f59e0b;font-size:11px;font-weight:600">分歧 -0.052%/日</span><span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#8b5cf618;color:#8b5cf6;font-size:11px;font-weight:600">退潮 +0.059%/日</span>
+        </div>
+        <div style="position:relative;height:300px"><canvas id="ms-decomp"></canvas></div>
+        <div id="ms-decomp-tl" style="display:flex;gap:1px;margin-top:4px;height:12px;border-radius:3px;overflow:hidden"></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
+          归因逻辑：总收益 = Beta(60日滚动回归×指数收益) + 情绪环境(各周期平均超beta收益) + 管理人Alpha(残差)
+        </div></div>
+      </details>
+
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#10b981"></span> 合成情绪指数（0-100）</div>
+        <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 合成情绪指数（0-100）</div>
         <div style="position:relative;height:280px"><canvas id="ms-c1"></canvas></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent)"></span> 子因子分解（标准化 0-100）</div>
-        <div style="position:relative;height:280px"><canvas id="ms-c2"></canvas></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板数量</div>
-        <div style="position:relative;height:260px"><canvas id="ms-c3"></canvas></div>
+        <div id="ms-timeline" style="display:flex;gap:1px;margin-top:4px;height:14px;border-radius:3px;overflow:hidden"></div>
       </div>
 
       <div class="card">
@@ -787,41 +871,79 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div style="position:relative;height:260px"><canvas id="ms-c4"></canvas></div>
       </div>
 
+      <details class="card" style="cursor:pointer">
+        <summary class="card-title" style="list-style:none"><span class="dot" style="background:var(--accent)"></span> 子因子分解（点击展开）</summary>
+        <div style="position:relative;height:280px;margin-top:8px"><canvas id="ms-c2"></canvas></div>
+      </details>
+
+      <!-- 区块三：板块结构 -->
+      
+            <div class="card">
+              <div class="card-title"><span class="dot" style="background:#ef4444"></span> 主攻方向</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:10px 12px;border-left:3px solid #ef4444">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:4px">有色金属</div>
+                  <div style="font-size:11px;color:#64748b;line-height:1.8">
+                    涨跌比 <b>9.38</b> · 成交 <b>2269</b>亿<br>
+                    均涨幅 <b style="color:#ef4444">+3.39%</b>
+                     · 大市值↑14 · 300亿+↑9
+                  </div>
+                </div><div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:10px 12px;border-left:3px solid #ef4444">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:4px">计算机</div>
+                  <div style="font-size:11px;color:#64748b;line-height:1.8">
+                    涨跌比 <b>4.87</b> · 成交 <b>2283</b>亿<br>
+                    均涨幅 <b style="color:#ef4444">+1.85%</b>
+                     · 大市值↑2 · 300亿+↑2
+                  </div>
+                </div><div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:10px 12px;border-left:3px solid #ef4444">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:4px">公用事业</div>
+                  <div style="font-size:11px;color:#64748b;line-height:1.8">
+                    涨跌比 <b>19.14</b> · 成交 <b>719</b>亿<br>
+                    均涨幅 <b style="color:#ef4444">+2.77%</b>
+                     · 大市值↑7 · 300亿+↑1
+                  </div>
+                </div></div>
+            </div>
+            <div class="card">
+              <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产业链传导</div>
+              <div style="font-size:12px;line-height:2"><div style="margin-bottom:4px">科技：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">制造：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">消费：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">金融地产：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">能源资源：✅ 上游 ✅ 中游 ❌ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">医药：✅ 上游 ❌ 中游 ❌ 下游</div><div style="margin-bottom:4px">建筑：✅ 上游 ✅ 中游 ❌ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">交运：❌ 上游 ✅ 中游 ❌ 下游</div><div style="margin-bottom:4px">综合：❌ 上游 ✅ 中游 ❌ 下游</div></div>
+            </div>
+            <div class="card">
+              <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 行业热力图</div>
+              <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px"><div style="background:rgba(220,38,38,0.85);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="有色金属 +3.39% 成交2269亿 涨跌比9.38">有色⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="计算机 +1.85% 成交2283亿 涨跌比4.87">计算⭐</div><div style="background:rgba(220,38,38,0.85);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="公用事业 +2.77% 成交719亿 涨跌比19.14">公用⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="通信 +0.15% 成交1853亿 涨跌比1.25">通信⭐</div><div style="background:rgba(220,38,38,0.85);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="钢铁 +2.19% 成交380亿 涨跌比13.25">钢铁⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="银行 +0.18% 成交209亿 涨跌比1.79">银行⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="房地产 +0.16% 成交156亿 涨跌比1.87">房地⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="商贸零售 +1.06% 成交134亿 涨跌比5.15">商贸⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="机械设备 +0.19% 成交2008亿 涨跌比0.85">机械⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="电力设备 +0.58% 成交2381亿 涨跌比1.03">电力⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="建筑装饰 +1.24% 成交400亿 涨跌比3.14">建筑⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="建筑材料 +0.36% 成交665亿 涨跌比1.66">建筑⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="家用电器 +0.01% 成交244亿 涨跌比0.67">家用⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="纺织服饰 +0.64% 成交130亿 涨跌比1.94">纺织⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="农林牧渔 +1.24% 成交270亿 涨跌比4.65">农林⭐</div><div style="background:rgba(167,243,208,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="电子 -0.37% 成交4093亿 涨跌比0.55">电子⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="综合 +0.27% 成交32亿 涨跌比1.57">综合⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="医药生物 +0.67% 成交777亿 涨跌比2.19">医药⭐</div><div style="background:rgba(167,243,208,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="汽车 -0.04% 成交801亿 涨跌比0.64">汽车⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="环保 +1.29% 成交274亿 涨跌比2.08">环保⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="石油石化 +1.45% 成交219亿 涨跌比3.88">石油⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="交通运输 +0.69% 成交775亿 涨跌比2.2">交通⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="传媒 +0.69% 成交1045亿 涨跌比2.54">传媒⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="非银金融 +0.90% 成交398亿 涨跌比3.24">非银⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="基础化工 +0.53% 成交1607亿 涨跌比1.33">基础⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="社会服务 +1.19% 成交163亿 涨跌比6.17">社会⭐</div><div style="background:rgba(167,243,208,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="轻工制造 -0.01% 成交132亿 涨跌比0.81">轻工⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="食品饮料 +0.34% 成交269亿 涨跌比1.9">食品⭐</div><div style="background:rgba(220,38,38,0.85);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="煤炭 +3.49% 成交165亿 涨跌比33.0">煤炭⭐</div><div style="background:rgba(252,165,165,0.5);color:#333;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="美容护理 +0.10% 成交18亿 涨跌比1.5">美容⭐</div><div style="background:rgba(239,68,68,0.6);color:#fff;padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="国防军工 +1.62% 成交187亿 涨跌比1.75">国防⭐</div></div>
+              <div style="font-size:10px;color:#94a3b8;margin-top:6px">悬停查看详情 · 红涨绿跌 · ⭐有涨停</div>
+            </div>
+
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 情绪周期标注</div>
-        <div id="ms-timeline" style="display:flex;flex-wrap:wrap;gap:3px;font-size:10px;line-height:1"></div>
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板数量</div>
+        <div style="position:relative;height:260px"><canvas id="ms-c3"></canvas></div>
       </div>
 
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
-        <p>① 合成情绪指数 = 0.25*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.15*涨跌停比 + 0.15*封板质量，各因子60日滚动min-max标准化</p>
-        <p>② 空间高度：当日最高连板天数（limit_times最大值）</p>
-        <p>③ 连板晋级率：今日涨停中昨日也涨停的占比；1进2：昨日首板今日晋级连板的占比</p>
-        <p>④ 炸板率：曾触及涨停但未封住(Z) / (涨停(U)+炸板(Z))，越低越好</p>
-        <p>⑤ 封板质量：涨停股中 open_times=0（一字/秒板）的占比，越高说明资金越坚决</p>
-        <p>⑥ 情绪周期：冰点(&lt;20) - 回暖(突破30) - 加速(&gt;60) - 分歧(&gt;50下降) - 退潮(跌破40)</p>
-        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare limit_list_d · 更新：2026-02-28 20:51:23 · 区间：20250826 ~ 20260227</p>
+        <p>① 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
+        <p>② 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
+        <p>③ 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
+        <p>④ 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
+        <p>⑤ 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
+        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare · 更新：2026-03-01 13:50:53 · 区间：20250826 ~ 20260227</p>
       </div>
 
       <script>
       var _msInited=false;function initMsCharts(){if(_msInited)return;_msInited=true;
         var msL=["11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27"];
-        var msS=[48.06, 27.39, 43.04, 49.43, 51.84, 36.43, 18.01, 51.76, 58.57, 44.15, 49.92, 25.86, 61.32, 39.63, 35.88, 36.09, 59.8, 58.17, 46.62, 46.63, 61.46, 75.75, 71.19, 52.23, 46.36, 45.67, 43.94, 71.83, 36.73, 57.87, 50.57, 71.3, 33.23, 25.0, 28.16, 24.5, 33.46, 32.78, 34.26, 35.96, 48.04, 26.0, 40.04, 36.07, 36.87, 26.44, 31.99, 39.26, 37.74, 39.41, 23.12, 38.71, 42.74, 31.13, 41.86, 22.9, 27.64, 33.16, 20.0, 48.14];
+        var msS=[64.67, 24.39, 45.08, 60.98, 64.15, 44.32, 30.75, 64.82, 63.99, 52.75, 52.73, 26.32, 66.78, 36.32, 35.93, 41.09, 70.33, 67.21, 60.12, 58.4, 75.5, 78.72, 79.7, 61.04, 57.44, 58.26, 65.4, 79.97, 50.05, 77.19, 55.71, 82.47, 36.83, 42.06, 31.95, 22.32, 41.62, 33.95, 39.65, 49.12, 50.15, 26.84, 55.36, 55.48, 58.05, 27.53, 30.44, 58.17, 44.91, 39.09, 31.51, 58.37, 60.0, 41.78, 56.02, 34.68, 40.11, 44.83, 32.75, 55.48];
         var msH=[5, 4, 5, 6, 7, 6, 3, 4, 5, 6, 6, 5, 5, 6, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 10, 6, 6, 7, 8, 9, 10, 11, 12, 5, 4, 5, 4, 3, 4, 4, 5, 5, 6, 7, 8, 5, 3, 4, 4, 4, 3, 4, 3, 4, 4, 5, 4, 5, 0, 7];
         var msU=[68, 53, 70, 64, 47, 48, 38, 73, 74, 53, 57, 34, 78, 59, 42, 49, 61, 70, 80, 54, 76, 79, 82, 72, 54, 57, 108, 120, 80, 92, 94, 183, 66, 102, 55, 58, 88, 54, 79, 73, 104, 70, 53, 80, 82, 48, 36, 69, 68, 44, 55, 83, 60, 51, 60, 32, 92, 75, 0, 75];
         var msD=[3, 8, 3, 3, 2, 7, 13, 2, 2, 7, 3, 19, 15, 9, 15, 19, 4, 1, 8, 9, 4, 0, 1, 16, 13, 6, 8, 1, 3, 3, 1, 3, 49, 14, 63, 46, 23, 16, 4, 2, 0, 30, 2, 5, 11, 52, 98, 9, 5, 14, 5, 3, 2, 5, 13, 12, 15, 3, 0, 0];
         var msZ=[23, 34, 27, 27, 19, 25, 26, 21, 28, 23, 28, 27, 12, 33, 19, 20, 19, 22, 32, 21, 21, 24, 20, 26, 26, 19, 26, 25, 44, 29, 46, 48, 62, 59, 18, 39, 20, 15, 25, 27, 18, 40, 18, 26, 35, 21, 18, 18, 19, 10, 26, 26, 8, 17, 19, 11, 42, 35, 0, 15];
         var msP=[27.27, 14.71, 16.98, 25.71, 23.44, 23.4, 20.83, 28.95, 35.62, 22.97, 30.19, 15.79, 38.24, 16.67, 20.34, 19.05, 34.69, 24.59, 22.86, 21.25, 25.93, 28.95, 27.85, 21.95, 25.0, 22.22, 24.56, 38.89, 19.17, 32.5, 20.65, 45.74, 15.85, 28.79, 13.73, 10.91, 17.24, 13.64, 14.81, 21.52, 15.07, 14.42, 20.0, 18.87, 23.75, 8.54, 20.83, 27.78, 17.39, 14.71, 18.18, 25.45, 25.3, 18.33, 33.33, 8.33, 21.88, 19.57, 0.0, 0];
         var ms12=[21.54, 12.77, 11.63, 18.03, 8.7, 18.75, 18.92, 14.29, 32.26, 20.83, 22.22, 12.2, 44.0, 9.23, 15.22, 16.67, 26.83, 18.18, 20.0, 12.5, 13.51, 20.97, 14.04, 13.33, 22.22, 13.89, 24.44, 35.11, 10.26, 21.05, 13.64, 38.67, 11.43, 13.51, 12.05, 7.32, 17.31, 11.54, 14.29, 18.31, 12.5, 15.05, 16.36, 5.13, 20.0, 7.94, 17.07, 19.23, 13.56, 14.29, 11.76, 21.28, 28.99, 7.69, 30.0, 2.33, 14.81, 16.47, 0.0, 0];
-        var msZR=[25.27, 39.08, 27.84, 29.67, 28.79, 34.25, 40.62, 22.34, 27.45, 30.26, 32.94, 44.26, 13.33, 35.87, 31.15, 28.99, 23.75, 23.91, 28.57, 28.0, 21.65, 23.3, 19.61, 26.53, 32.5, 25.0, 19.4, 17.24, 35.48, 23.97, 32.86, 20.78, 48.44, 36.65, 24.66, 40.21, 18.52, 21.74, 24.04, 27.0, 14.75, 36.36, 25.35, 24.53, 29.91, 30.43, 33.33, 20.69, 21.84, 18.52, 32.1, 23.85, 11.76, 25.0, 24.05, 25.58, 31.34, 31.82, 0.0, 16.67];
-        var msUR=[22.67, 6.62, 23.33, 21.33, 23.5, 6.86, 2.92, 36.5, 37.0, 7.57, 19.0, 1.79, 5.2, 6.56, 2.8, 2.58, 15.25, 70.0, 10.0, 6.0, 19.0, 79.0, 82.0, 4.5, 4.15, 9.5, 13.5, 120.0, 26.67, 30.67, 94.0, 61.0, 1.35, 7.29, 0.87, 1.26, 3.83, 3.38, 19.75, 36.5, 104.0, 2.33, 26.5, 16.0, 7.45, 0.92, 0.37, 7.67, 13.6, 3.14, 11.0, 27.67, 30.0, 10.2, 4.62, 2.67, 6.13, 25.0, 0.0, 75.0];
-        var msSL=[55.88, 60.38, 65.71, 57.81, 53.19, 37.5, 36.84, 61.64, 60.81, 52.83, 52.63, 50.0, 60.26, 61.02, 61.9, 51.02, 60.66, 54.29, 51.25, 46.3, 50.0, 54.43, 42.68, 47.22, 48.15, 63.16, 50.0, 53.33, 50.0, 54.35, 46.81, 38.8, 48.48, 34.31, 58.18, 62.07, 52.27, 70.37, 63.29, 54.79, 51.92, 58.57, 54.72, 42.5, 39.02, 58.33, 69.44, 50.72, 63.24, 79.55, 50.91, 55.42, 58.33, 56.86, 60.0, 46.88, 52.17, 58.67, 0.0, 58.67];
-        var msCL=["\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u51b0\u70b9", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u9707\u8361", "\u56de\u6696", "\u5206\u6b67", "\u9000\u6f6e", "\u9707\u8361", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u9000\u6f6e", "\u9707\u8361", "\u9707\u8361", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u5206\u6b67", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9707\u8361", "\u9707\u8361", "\u9707\u8361", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9707\u8361", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696"];
-        var msHN=[33.33, 16.67, 33.33, 50.0, 66.67, 50.0, 0.0, 16.67, 33.33, 50.0, 50.0, 33.33, 33.33, 50.0, 16.67, 33.33, 50.0, 50.0, 66.67, 83.33, 100.0, 100.0, 100.0, 100.0, 77.78, 33.33, 33.33, 44.44, 55.56, 66.67, 77.78, 88.89, 100.0, 22.22, 11.11, 22.22, 11.11, 0.0, 11.11, 11.11, 22.22, 22.22, 33.33, 44.44, 55.56, 22.22, 0.0, 11.11, 11.11, 11.11, 0.0, 11.11, 0.0, 11.11, 11.11, 22.22, 11.11, 22.22, 0.0, 58.33];
-        var msPN=[45.37, 9.55, 16.03, 40.92, 34.45, 34.33, 27.0, 50.16, 69.18, 33.11, 53.69, 12.63, 76.65, 15.14, 25.61, 21.93, 66.52, 37.72, 32.79, 28.2, 41.55, 50.16, 47.02, 30.2, 38.89, 30.97, 37.64, 76.23, 14.06, 56.08, 18.73, 97.82, 3.59, 44.39, 0.0, 0.0, 17.82, 7.69, 10.98, 29.87, 11.71, 9.88, 25.59, 22.41, 36.15, 0.0, 32.44, 50.78, 23.36, 16.28, 25.44, 44.63, 44.23, 25.84, 65.43, 0.0, 35.56, 29.5, 0.0, 0.0];
-        var msZN=[71.8, 37.67, 65.45, 60.92, 63.1, 49.6, 33.86, 79.04, 66.41, 59.47, 52.84, 24.86, 100.0, 45.01, 56.53, 61.8, 74.58, 74.19, 62.82, 64.21, 79.7, 75.68, 84.68, 67.8, 53.23, 71.53, 85.19, 90.46, 45.96, 71.45, 47.6, 80.01, 5.8, 37.43, 69.6, 27.88, 86.07, 77.43, 71.26, 63.32, 96.19, 38.21, 67.75, 69.95, 55.51, 54.12, 46.34, 80.25, 77.17, 86.07, 49.64, 71.77, 100.0, 65.91, 68.36, 64.42, 46.62, 45.31, 100.0, 65.59];
-        var msUN=[21.5, 6.01, 22.14, 20.21, 27.31, 7.65, 2.99, 42.68, 43.27, 8.49, 22.0, 1.65, 5.68, 7.29, 2.85, 2.59, 17.56, 82.27, 11.36, 6.63, 22.0, 92.91, 96.45, 4.86, 4.44, 10.77, 15.49, 100.0, 21.97, 25.32, 78.26, 50.67, 0.8, 5.77, 0.4, 0.73, 2.88, 2.5, 16.19, 30.19, 86.62, 1.62, 21.83, 13.05, 5.9, 0.44, 0.0, 6.1, 11.06, 2.32, 8.89, 22.82, 24.77, 8.22, 3.55, 1.92, 4.81, 20.59, 0.0, 62.5];
-        var msSN=[72.01, 82.65, 95.27, 76.57, 65.64, 28.51, 26.95, 85.64, 87.83, 68.01, 67.51, 60.98, 86.46, 88.35, 90.54, 63.51, 87.46, 60.44, 49.91, 32.77, 45.58, 60.93, 20.23, 35.95, 39.18, 91.17, 45.58, 57.12, 45.58, 60.65, 34.53, 6.79, 40.32, 0.0, 76.02, 88.41, 57.2, 100.0, 80.37, 56.79, 48.84, 67.28, 56.6, 22.71, 13.06, 66.61, 97.42, 45.51, 80.23, 100.0, 36.69, 46.66, 53.09, 49.85, 56.79, 27.79, 39.48, 53.85, 0.0, 73.75];
+        var msCL=["\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u52a0\u901f", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u5206\u6b67", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u9707\u8361", "\u56de\u6696", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u5206\u6b67", "\u52a0\u901f", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u9707\u8361", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u9707\u8361", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696"];
+        var msHN=[39.34, 18.55, 40.48, 61.72, 80.0, 60.61, 4.48, 19.12, 40.58, 62.14, 61.97, 39.58, 39.73, 62.84, 18.0, 40.13, 63.64, 63.46, 82.91, 93.75, 98.15, 99.39, 99.4, 99.4, 96.47, 58.14, 58.05, 77.27, 88.2, 93.33, 96.15, 97.83, 98.92, 32.98, 14.74, 33.85, 14.95, 3.57, 16.16, 16.5, 36.63, 36.76, 58.25, 75.48, 85.71, 35.85, 3.74, 16.67, 16.97, 17.27, 4.05, 18.3, 4.42, 19.3, 19.57, 40.95, 19.66, 41.53, 0.42, 77.5];
+        var msPN=[86.07, 10.48, 21.43, 78.91, 71.54, 69.7, 52.99, 90.44, 94.93, 66.43, 89.44, 13.89, 97.95, 18.24, 43.33, 36.18, 92.86, 71.15, 63.92, 54.37, 77.16, 86.59, 83.73, 57.74, 71.76, 60.47, 68.39, 98.3, 32.02, 90.56, 42.31, 98.37, 12.37, 83.51, 6.84, 1.56, 22.68, 7.65, 10.61, 54.5, 11.39, 9.31, 39.81, 31.73, 68.1, 1.42, 49.53, 82.87, 27.06, 10.91, 29.73, 75.45, 73.89, 30.26, 92.17, 1.29, 57.26, 38.98, 0.84, 1.25];
+        var msZN=[72.95, 15.32, 54.76, 41.41, 48.46, 21.97, 12.69, 88.97, 57.97, 39.29, 27.46, 9.03, 99.32, 20.95, 38.0, 50.66, 81.17, 80.13, 53.16, 55.0, 89.51, 82.32, 90.96, 62.5, 30.0, 73.26, 93.68, 96.02, 18.54, 76.11, 26.37, 88.59, 5.91, 16.49, 73.16, 11.98, 93.3, 85.2, 74.24, 57.5, 96.53, 18.14, 65.53, 71.63, 38.57, 36.32, 23.83, 88.43, 83.94, 92.73, 30.18, 75.45, 99.56, 66.23, 71.74, 60.78, 32.05, 30.08, 99.58, 94.58];
+        var msUN=[81.97, 25.0, 81.75, 81.25, 80.77, 28.03, 15.67, 80.88, 80.43, 33.57, 58.45, 6.25, 19.86, 25.0, 14.0, 13.82, 56.49, 82.05, 44.3, 25.62, 61.73, 82.32, 81.93, 17.26, 17.06, 43.6, 54.6, 82.39, 82.02, 81.67, 81.32, 80.98, 2.69, 34.57, 1.58, 2.6, 18.04, 17.86, 64.14, 82.0, 81.68, 10.29, 81.55, 56.25, 36.67, 2.36, 0.47, 39.35, 54.59, 18.64, 47.3, 82.59, 82.3, 46.05, 22.17, 15.09, 29.49, 82.63, 0.42, 82.5];
+        var msSN=[50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0];
 
         var msB={
           responsive:true,maintainAspectRatio:false,
@@ -830,7 +952,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           scales:{x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
         };
 
-        function msMA(a,n){var r=[];for(var i=0;i<a.length;i++){if(i<n-1){r.push(null)}else{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}return r;}
+        function msMA(a,n){var r=[];for(var i=0;i<a.length;i++){if(i<n-1)r.push(null);else{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}return r;}
 
         new Chart(document.getElementById('ms-c1'),{
           type:'line',
@@ -842,17 +964,34 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',stepSize:20},grid:{color:'#f1f5f9'},min:0,max:100}}})
         });
 
-        new Chart(document.getElementById('ms-c2'),{
-          type:'line',
-          data:{labels:msL,datasets:[
-            {label:'空间高度(0.25)',data:msHN,borderColor:'#ef4444',borderWidth:1.3,pointRadius:0,tension:.2},
-            {label:'晋级率(0.25)',data:msPN,borderColor:'#2563eb',borderWidth:1.3,pointRadius:0,tension:.2},
-            {label:'1-炸板率(0.20)',data:msZN,borderColor:'#10b981',borderWidth:1.3,pointRadius:0,tension:.2},
-            {label:'涨跌停比(0.15)',data:msUN,borderColor:'#f59e0b',borderWidth:1.3,pointRadius:0,tension:.2},
-            {label:'封板质量(0.15)',data:msSN,borderColor:'#8b5cf6',borderWidth:1.3,pointRadius:0,tension:.2}
-          ]},
-          options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'},min:0,max:100}}})
-        });
+        // Cycle timeline
+        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "—": "#94a3b8"};
+        var tl=document.getElementById('ms-timeline');
+        if(tl){msL.forEach(function(d,i){
+          var lb=msCL[i];var c=cycleColors[lb]||'#94a3b8';
+          var el=document.createElement('div');
+          el.style.cssText='flex:1;background:'+c+'88;height:100%';
+          el.title=d+' '+lb+' 情绪='+msS[i];
+          tl.appendChild(el);
+        });}
+
+        // Sub-factor chart (lazy init on details open)
+        var c2Init=false;
+        var det=document.querySelector('details:has(#ms-c2)');
+        if(det){det.addEventListener('toggle',function(){
+          if(!det.open||c2Init)return;c2Init=true;
+          new Chart(document.getElementById('ms-c2'),{
+            type:'line',
+            data:{labels:msL,datasets:[
+              {label:'空间高度(0.25)',data:msHN,borderColor:'#ef4444',borderWidth:1.3,pointRadius:0,tension:.2},
+              {label:'晋级率(0.25)',data:msPN,borderColor:'#2563eb',borderWidth:1.3,pointRadius:0,tension:.2},
+              {label:'1-炸板率(0.20)',data:msZN,borderColor:'#10b981',borderWidth:1.3,pointRadius:0,tension:.2},
+              {label:'涨跌停比(0.15)',data:msUN,borderColor:'#f59e0b',borderWidth:1.3,pointRadius:0,tension:.2},
+              {label:'封板质量(0.15)',data:msSN,borderColor:'#8b5cf6',borderWidth:1.3,pointRadius:0,tension:.2}
+            ]},
+            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'},min:0,max:100}}})
+          });
+        });}
 
         new Chart(document.getElementById('ms-c3'),{
           type:'bar',
@@ -877,60 +1016,903 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             y1:{position:'right',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{display:false},title:{display:true,text:'晋级率',font:{size:9},color:'#94a3b8'}}
           }})
         });
+        // ── 产品净值图表 ──
+        
+        var navDates=["03-21", "03-24", "03-25", "03-26", "03-27", "03-28", "03-31", "04-01", "04-02", "04-03", "04-07", "04-08", "04-09", "04-10", "04-11", "04-14", "04-15", "04-16", "04-17", "04-18", "04-21", "04-22", "04-23", "04-24", "04-25", "04-28", "04-29", "04-30", "05-06", "05-07", "05-08", "05-09", "05-12", "05-13", "05-14", "05-15", "05-16", "05-19", "05-20", "05-21", "05-22", "05-23", "05-26", "05-27", "05-28", "05-29", "05-30", "06-03", "06-04", "06-05", "06-06", "06-09", "06-10", "06-11", "06-12", "06-13", "06-16", "06-17", "06-18", "06-19", "06-20", "06-23", "06-24", "06-25", "06-26", "06-27", "06-30", "07-01", "07-02", "07-03", "07-04", "07-07", "07-08", "07-09", "07-10", "07-11", "07-14", "07-15", "07-16", "07-17", "07-18", "07-21", "07-22", "07-23", "07-24", "07-25", "07-28", "07-29", "07-30", "07-31", "08-01", "08-04", "08-05", "08-06", "08-07", "08-08", "08-11", "08-12", "08-13", "08-14", "08-15", "08-18", "08-19", "08-20", "08-21", "08-22", "08-25", "08-26", "08-27", "08-28", "08-29", "09-01", "09-02", "09-03", "09-04", "09-05", "09-08", "09-09", "09-10", "09-11", "09-12", "09-15", "09-16", "09-17", "09-18", "09-19", "09-22", "09-23", "09-24", "09-25", "09-26", "09-29", "09-30", "10-09", "10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26"];
+        var navFund=[1.0, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0002, 1.0002, 1.0002, 1.0002, 1.0003, 1.0003, 1.0002, 1.0002, 1.0002, 1.0003, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 0.9974, 0.9975, 0.9899, 0.9848, 0.9846, 0.9862, 0.9853, 0.9844, 0.9868, 0.9719, 0.9931, 0.988, 0.9901, 0.9905, 0.9901, 0.9919, 0.9929, 0.9966, 0.9924, 0.9906, 0.9876, 0.9873, 0.9868, 0.9837, 0.982, 0.9822, 0.9801, 0.9788, 0.9791, 0.9788, 0.9747, 0.9747, 0.9803, 0.9782, 0.9795, 0.9776, 0.9774, 0.9699, 0.9681, 0.9704, 0.9681, 0.9795, 0.9786, 0.9784, 0.9831, 0.9836, 0.9797, 0.9797, 0.9815, 0.9923, 1.0025, 1.0036, 1.0005, 1.0046, 1.0037, 1.0018, 1.0017, 1.0042, 1.008, 1.005, 1.0073, 1.0049, 1.0091, 1.0222, 1.0279, 1.0383, 1.0611, 1.0843, 1.0751, 1.0863, 1.0828, 1.0894, 1.0905, 1.0936, 1.1012, 1.1047, 1.1108, 1.1146, 1.1234, 1.1203, 1.12, 1.1057, 1.1023, 1.109, 1.1332, 1.1194, 1.1134, 1.1215, 1.1287, 1.1328, 1.1288, 1.1209, 1.1094, 1.113, 1.1138, 1.1118, 1.1064, 1.1197, 1.1106, 1.1205, 1.1254, 1.1342, 1.1434, 1.1335, 1.1521, 1.158, 1.163, 1.1686, 1.159, 1.1723, 1.1876, 1.1894, 1.166, 1.1628, 1.1584, 1.1532, 1.1508, 1.1424, 1.1455, 1.1451, 1.1468, 1.1471, 1.1495, 1.1489, 1.1473, 1.1533, 1.1512, 1.1355, 1.1454, 1.1457, 1.1507, 1.1587, 1.1632, 1.1728, 1.1723, 1.1689, 1.167, 1.1554, 1.1604, 1.1636, 1.1664, 1.1655, 1.1553, 1.1536, 1.1542, 1.1563, 1.1507, 1.1539, 1.1592, 1.1619, 1.1549, 1.1545, 1.1528, 1.154, 1.1572, 1.1584, 1.1648, 1.1691, 1.1742, 1.1801, 1.1841, 1.1865, 1.1895, 1.1918, 1.1969, 1.2004, 1.2038, 1.2002, 1.1965, 1.1983, 1.2024, 1.2015, 1.2077, 1.2067, 1.2083, 1.208, 1.2326, 1.2672, 1.2691, 1.2448, 1.2428, 1.252, 1.2489, 1.2525, 1.2593, 1.2515, 1.2549, 1.2539, 1.2486, 1.2447, 1.2364, 1.2273, 1.2315, 1.233, 1.2245, 1.2245, 1.2245, 1.2191, 1.2193, 1.2365, 1.2241, 1.2275, 1.2404, 1.2478];
+        var navIndex=[1.0, 1.001545, 1.001529, 1.001149, 1.00265, 0.995981, 0.991356, 0.995127, 0.99563, 0.993217, 0.920277, 0.934831, 0.947094, 0.958039, 0.962374, 0.96968, 0.971122, 0.973601, 0.97489, 0.973817, 0.978187, 0.980661, 0.97965, 0.979927, 0.979265, 0.97729, 0.976767, 0.974501, 0.985522, 0.993413, 0.996186, 0.993215, 1.001312, 1.002984, 1.011625, 1.004752, 1.000782, 1.000818, 1.00465, 1.006759, 1.004564, 0.995109, 0.994653, 0.992825, 0.9926, 0.999588, 0.994846, 0.999151, 1.00338, 1.005726, 1.006101, 1.010384, 1.00594, 1.01114, 1.011242, 1.003615, 1.007102, 1.006709, 1.007126, 0.999191, 0.998533, 1.004978, 1.016564, 1.027087, 1.024852, 1.017652, 1.023655, 1.027614, 1.026736, 1.028625, 1.031945, 1.032185, 1.039421, 1.038106, 1.043049, 1.043196, 1.046011, 1.041657, 1.041294, 1.045172, 1.050419, 1.057941, 1.0645, 1.064629, 1.071592, 1.068005, 1.069277, 1.072776, 1.074561, 1.061928, 1.057988, 1.06493, 1.07512, 1.079993, 1.081679, 1.08033, 1.084021, 1.089481, 1.094695, 1.089637, 1.09865, 1.107939, 1.107719, 1.119287, 1.12074, 1.136984, 1.154163, 1.149651, 1.129433, 1.142286, 1.146544, 1.151776, 1.146606, 1.133358, 1.119187, 1.133048, 1.137306, 1.131496, 1.132961, 1.15171, 1.15031, 1.14731, 1.147715, 1.152017, 1.138737, 1.135299, 1.137821, 1.135817, 1.145271, 1.14517, 1.137682, 1.147913, 1.153929, 1.169144, 1.158165, 1.155928, 1.148714, 1.162676, 1.163871, 1.141144, 1.148317, 1.163902, 1.163137, 1.165708, 1.174, 1.187859, 1.185267, 1.193621, 1.184874, 1.175331, 1.181789, 1.176935, 1.179628, 1.191073, 1.188041, 1.194294, 1.189587, 1.188809, 1.197535, 1.185941, 1.180456, 1.17088, 1.172939, 1.168276, 1.139698, 1.140255, 1.150139, 1.148404, 1.151695, 1.155659, 1.16321, 1.158368, 1.15251, 1.151854, 1.159882, 1.166204, 1.161878, 1.159195, 1.151118, 1.155882, 1.149514, 1.136703, 1.150215, 1.152025, 1.156209, 1.164208, 1.164985, 1.171217, 1.176767, 1.177973, 1.178448, 1.1784, 1.179507, 1.195726, 1.213632, 1.214258, 1.213428, 1.224557, 1.237889, 1.230005, 1.226241, 1.222231, 1.219055, 1.222647, 1.222543, 1.223521, 1.225196, 1.229234, 1.228176, 1.230345, 1.233714, 1.235719, 1.22382, 1.193447, 1.208898, 1.219141, 1.211329, 1.208258, 1.225348, 1.226919, 1.227992, 1.228596, 1.213158, 1.22366, 1.232523, 1.232345];
+        var navExcess=[0.0, -0.001445, -0.001429, -0.001049, -0.00255, 0.004119, 0.008844, 0.005073, 0.00457, 0.006983, 0.080023, 0.065469, 0.053106, 0.042161, 0.037826, 0.03062, 0.029078, 0.026599, 0.02531, 0.026383, 0.022013, 0.019539, 0.01775, 0.017573, 0.010635, 0.00751, 0.007833, 0.011699, -0.000222, -0.009013, -0.009386, -0.021315, -0.008212, -0.014984, -0.021525, -0.014252, -0.010682, -0.008918, -0.01175, -0.010159, -0.012164, -0.004509, -0.007053, -0.005525, -0.0058, -0.015888, -0.012846, -0.016951, -0.02328, -0.026926, -0.027001, -0.031584, -0.03124, -0.03644, -0.030942, -0.025415, -0.027602, -0.029109, -0.029726, -0.029291, -0.030433, -0.034578, -0.048464, -0.047587, -0.046252, -0.039252, -0.040555, -0.044014, -0.047036, -0.048925, -0.050445, -0.039885, -0.036921, -0.034506, -0.042549, -0.038596, -0.042311, -0.039857, -0.039594, -0.040972, -0.042419, -0.052941, -0.0572, -0.059729, -0.062492, -0.045805, -0.041377, -0.034476, -0.013461, 0.022372, 0.017112, 0.02137, 0.00768, 0.009407, 0.008821, 0.01327, 0.017179, 0.015219, 0.016105, 0.024963, 0.02475, 0.012361, 0.012281, -0.013587, -0.01844, -0.027984, -0.020963, -0.030251, -0.016033, -0.020786, -0.017844, -0.018976, -0.017806, -0.012458, -0.009787, -0.020048, -0.023506, -0.019696, -0.026561, -0.03201, -0.03971, -0.02681, -0.022315, -0.017817, 0.004663, -0.001799, 0.014279, 0.022183, 0.017729, 0.02343, 0.021318, 0.024387, 0.033671, 0.020256, 0.007835, 0.006872, 0.009686, -0.009476, -0.013071, 0.001256, -0.002817, -0.018802, -0.016337, -0.018608, -0.0245, -0.038959, -0.037967, -0.040321, -0.033674, -0.039831, -0.036389, -0.031235, -0.028928, -0.032373, -0.024841, -0.021494, -0.017287, -0.019909, -0.030535, -0.030541, -0.020056, -0.00728, -0.006539, -0.002776, 0.015602, 0.013345, 0.004061, 0.007896, -0.000995, -0.001759, -0.00401, 0.003532, 0.00239, 0.002646, -0.007082, -0.012204, -0.004678, -0.000795, 0.013682, 0.013218, 0.024686, 0.043397, 0.033885, 0.034475, 0.033291, 0.027592, 0.031915, 0.029183, 0.027033, 0.022227, 0.018052, 0.0199, 0.022893, 0.005774, -0.005932, -0.007558, -0.005128, -0.016557, -0.005289, 0.037195, 0.042859, 0.022569, 0.023745, 0.029353, 0.026357, 0.028979, 0.034104, 0.022266, 0.026724, 0.023555, 0.014886, 0.008981, 0.01258, 0.033853, 0.022602, 0.013859, 0.013171, 0.016242, -0.000848, -0.007819, -0.008692, 0.007904, 0.010942, 0.00384, 0.007877, 0.015455];
+        var navDD=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0];
+        var navDatesFull=["20250321", "20250324", "20250325", "20250326", "20250327", "20250328", "20250331", "20250401", "20250402", "20250403", "20250407", "20250408", "20250409", "20250410", "20250411", "20250414", "20250415", "20250416", "20250417", "20250418", "20250421", "20250422", "20250423", "20250424", "20250425", "20250428", "20250429", "20250430", "20250506", "20250507", "20250508", "20250509", "20250512", "20250513", "20250514", "20250515", "20250516", "20250519", "20250520", "20250521", "20250522", "20250523", "20250526", "20250527", "20250528", "20250529", "20250530", "20250603", "20250604", "20250605", "20250606", "20250609", "20250610", "20250611", "20250612", "20250613", "20250616", "20250617", "20250618", "20250619", "20250620", "20250623", "20250624", "20250625", "20250626", "20250627", "20250630", "20250701", "20250702", "20250703", "20250704", "20250707", "20250708", "20250709", "20250710", "20250711", "20250714", "20250715", "20250716", "20250717", "20250718", "20250721", "20250722", "20250723", "20250724", "20250725", "20250728", "20250729", "20250730", "20250731", "20250801", "20250804", "20250805", "20250806", "20250807", "20250808", "20250811", "20250812", "20250813", "20250814", "20250815", "20250818", "20250819", "20250820", "20250821", "20250822", "20250825", "20250826", "20250827", "20250828", "20250829", "20250901", "20250902", "20250903", "20250904", "20250905", "20250908", "20250909", "20250910", "20250911", "20250912", "20250915", "20250916", "20250917", "20250918", "20250919", "20250922", "20250923", "20250924", "20250925", "20250926", "20250929", "20250930", "20251009", "20251010", "20251013", "20251014", "20251015", "20251016", "20251017", "20251020", "20251021", "20251022", "20251023", "20251024", "20251027", "20251028", "20251029", "20251030", "20251031", "20251103", "20251104", "20251105", "20251106", "20251107", "20251110", "20251111", "20251112", "20251113", "20251114", "20251117", "20251118", "20251119", "20251120", "20251121", "20251124", "20251125", "20251126", "20251127", "20251128", "20251201", "20251202", "20251203", "20251204", "20251205", "20251208", "20251209", "20251210", "20251211", "20251212", "20251215", "20251216", "20251217", "20251218", "20251219", "20251222", "20251223", "20251224", "20251225", "20251226", "20251229", "20251230", "20251231", "20260105", "20260106", "20260107", "20260108", "20260109", "20260112", "20260113", "20260114", "20260115", "20260116", "20260119", "20260120", "20260121", "20260122", "20260123", "20260126", "20260127", "20260128", "20260129", "20260130", "20260202", "20260203", "20260204", "20260205", "20260206", "20260209", "20260210", "20260211", "20260212", "20260213", "20260224", "20260225", "20260226"];
+        
+        
+        // decomp lookup for tooltip
+        var decompLookup={};
+        var _dcDaily=[{"date": "20250324", "cum_beta": -0.71, "cum_sentiment": 0.0, "cum_alpha": 0.72, "cycle_label": "\u2014", "beta": 1.0, "sentiment": 0}, {"date": "20250325", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.82, "cycle_label": "\u2014", "beta": 0.1375, "sentiment": 0}, {"date": "20250326", "cum_beta": -0.82, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.004, "sentiment": 0}, {"date": "20250327", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.82, "cycle_label": "\u2014", "beta": -0.0045, "sentiment": 0}, {"date": "20250328", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.82, "cycle_label": "\u2014", "beta": -0.0022, "sentiment": 0}, {"date": "20250331", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0033, "sentiment": 0}, {"date": "20250401", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0033, "sentiment": 0}, {"date": "20250402", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0035, "sentiment": 0}, {"date": "20250403", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.002, "sentiment": 0}, {"date": "20250407", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0007, "sentiment": 0}, {"date": "20250408", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250409", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.001, "sentiment": 0}, {"date": "20250410", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.001, "sentiment": 0}, {"date": "20250411", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.001, "sentiment": 0}, {"date": "20250414", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.84, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250415", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250416", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250417", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250418", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250421", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250422", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.83, "cycle_label": "\u2014", "beta": -0.0008, "sentiment": 0}, {"date": "20250423", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.55, "cycle_label": "\u2014", "beta": -0.0024, "sentiment": 0}, {"date": "20250424", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": 0.56, "cycle_label": "\u2014", "beta": -0.0025, "sentiment": 0}, {"date": "20250425", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -0.2, "cycle_label": "\u2014", "beta": -0.0054, "sentiment": 0}, {"date": "20250428", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -0.72, "cycle_label": "\u2014", "beta": -0.0031, "sentiment": 0}, {"date": "20250429", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -0.74, "cycle_label": "\u2014", "beta": -0.0029, "sentiment": 0}, {"date": "20250430", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -0.58, "cycle_label": "\u2014", "beta": -0.0015, "sentiment": 0}, {"date": "20250506", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -0.66, "cycle_label": "\u2014", "beta": -0.002, "sentiment": 0}, {"date": "20250507", "cum_beta": -0.82, "cum_sentiment": 0.0, "cum_alpha": -0.75, "cycle_label": "\u2014", "beta": -0.0021, "sentiment": 0}, {"date": "20250508", "cum_beta": -0.82, "cum_sentiment": 0.0, "cum_alpha": -0.51, "cycle_label": "\u2014", "beta": -0.0005, "sentiment": 0}, {"date": "20250509", "cum_beta": -0.83, "cum_sentiment": 0.0, "cum_alpha": -2.01, "cycle_label": "\u2014", "beta": 0.0091, "sentiment": 0}, {"date": "20250512", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": 0.13, "cycle_label": "\u2014", "beta": 0.0291, "sentiment": 0}, {"date": "20250513", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": -0.37, "cycle_label": "\u2014", "beta": 0.0296, "sentiment": 0}, {"date": "20250514", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": -0.16, "cycle_label": "\u2014", "beta": 0.03, "sentiment": 0}, {"date": "20250515", "cum_beta": -0.84, "cum_sentiment": 0.0, "cum_alpha": -0.07, "cycle_label": "\u2014", "beta": 0.0289, "sentiment": 0}, {"date": "20250516", "cum_beta": -0.83, "cum_sentiment": 0.0, "cum_alpha": -0.12, "cycle_label": "\u2014", "beta": 0.0289, "sentiment": 0}, {"date": "20250519", "cum_beta": -0.82, "cum_sentiment": 0.0, "cum_alpha": 0.05, "cycle_label": "\u2014", "beta": 0.0295, "sentiment": 0}, {"date": "20250520", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": 0.12, "cycle_label": "\u2014", "beta": 0.03, "sentiment": 0}, {"date": "20250521", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": 0.5, "cycle_label": "\u2014", "beta": 0.0297, "sentiment": 0}, {"date": "20250522", "cum_beta": -0.84, "cum_sentiment": 0.0, "cum_alpha": 0.12, "cycle_label": "\u2014", "beta": 0.0318, "sentiment": 0}, {"date": "20250523", "cum_beta": -0.88, "cum_sentiment": 0.0, "cum_alpha": -0.02, "cycle_label": "\u2014", "beta": 0.0326, "sentiment": 0}, {"date": "20250526", "cum_beta": -0.86, "cum_sentiment": 0.0, "cum_alpha": -0.35, "cycle_label": "\u2014", "beta": 0.0313, "sentiment": 0}, {"date": "20250527", "cum_beta": -0.87, "cum_sentiment": 0.0, "cum_alpha": -0.37, "cycle_label": "\u2014", "beta": 0.0313, "sentiment": 0}, {"date": "20250528", "cum_beta": -0.88, "cum_sentiment": 0.0, "cum_alpha": -0.41, "cycle_label": "\u2014", "beta": 0.0313, "sentiment": 0}, {"date": "20250529", "cum_beta": -0.83, "cum_sentiment": 0.0, "cum_alpha": -0.77, "cycle_label": "\u2014", "beta": 0.0277, "sentiment": 0}, {"date": "20250530", "cum_beta": -0.86, "cum_sentiment": 0.0, "cum_alpha": -0.91, "cycle_label": "\u2014", "beta": 0.0283, "sentiment": 0}, {"date": "20250603", "cum_beta": -0.84, "cum_sentiment": 0.0, "cum_alpha": -0.91, "cycle_label": "\u2014", "beta": 0.0285, "sentiment": 0}, {"date": "20250604", "cum_beta": -0.82, "cum_sentiment": 0.0, "cum_alpha": -1.15, "cycle_label": "\u2014", "beta": 0.0274, "sentiment": 0}, {"date": "20250605", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": -1.3, "cycle_label": "\u2014", "beta": 0.0269, "sentiment": 0}, {"date": "20250606", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": -1.26, "cycle_label": "\u2014", "beta": 0.0268, "sentiment": 0}, {"date": "20250609", "cum_beta": -0.77, "cum_sentiment": 0.0, "cum_alpha": -1.32, "cycle_label": "\u2014", "beta": 0.0267, "sentiment": 0}, {"date": "20250610", "cum_beta": -0.8, "cum_sentiment": 0.0, "cum_alpha": -1.72, "cycle_label": "\u2014", "beta": 0.0284, "sentiment": 0}, {"date": "20250611", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": -1.73, "cycle_label": "\u2014", "beta": 0.0285, "sentiment": 0}, {"date": "20250612", "cum_beta": -0.79, "cum_sentiment": 0.0, "cum_alpha": -1.16, "cycle_label": "\u2014", "beta": 0.0289, "sentiment": 0}, {"date": "20250613", "cum_beta": -0.83, "cum_sentiment": 0.0, "cum_alpha": -1.33, "cycle_label": "\u2014", "beta": 0.0299, "sentiment": 0}, {"date": "20250616", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -1.22, "cycle_label": "\u2014", "beta": 0.0305, "sentiment": 0}, {"date": "20250617", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -1.41, "cycle_label": "\u2014", "beta": 0.0306, "sentiment": 0}, {"date": "20250618", "cum_beta": -0.81, "cum_sentiment": 0.0, "cum_alpha": -1.43, "cycle_label": "\u2014", "beta": 0.0305, "sentiment": 0}, {"date": "20250619", "cum_beta": -0.86, "cum_sentiment": 0.0, "cum_alpha": -2.14, "cycle_label": "\u2014", "beta": 0.0354, "sentiment": 0}, {"date": "20250620", "cum_beta": -0.89, "cum_sentiment": 0.0, "cum_alpha": -2.3, "cycle_label": "\u2014", "beta": 0.0358, "sentiment": 0}, {"date": "20250623", "cum_beta": -0.84, "cum_sentiment": 0.0, "cum_alpha": -2.11, "cycle_label": "\u2014", "beta": 0.0379, "sentiment": 0}, {"date": "20250624", "cum_beta": -0.77, "cum_sentiment": 0.0, "cum_alpha": -2.42, "cycle_label": "\u2014", "beta": 0.0355, "sentiment": 0}, {"date": "20250625", "cum_beta": -0.72, "cum_sentiment": 0.0, "cum_alpha": -1.3, "cycle_label": "\u2014", "beta": 0.0434, "sentiment": 0}, {"date": "20250626", "cum_beta": -0.74, "cum_sentiment": 0.0, "cum_alpha": -1.37, "cycle_label": "\u2014", "beta": 0.0435, "sentiment": 0}, {"date": "20250627", "cum_beta": -0.72, "cum_sentiment": 0.0, "cum_alpha": -1.41, "cycle_label": "\u2014", "beta": 0.0439, "sentiment": 0}, {"date": "20250630", "cum_beta": -0.66, "cum_sentiment": 0.0, "cum_alpha": -0.99, "cycle_label": "\u2014", "beta": 0.047, "sentiment": 0}, {"date": "20250701", "cum_beta": -0.64, "cum_sentiment": 0.0, "cum_alpha": -0.95, "cycle_label": "\u2014", "beta": 0.0471, "sentiment": 0}, {"date": "20250702", "cum_beta": -0.69, "cum_sentiment": 0.0, "cum_alpha": -1.3, "cycle_label": "\u2014", "beta": 0.0488, "sentiment": 0}, {"date": "20250703", "cum_beta": -0.67, "cum_sentiment": 0.0, "cum_alpha": -1.32, "cycle_label": "\u2014", "beta": 0.0494, "sentiment": 0}, {"date": "20250704", "cum_beta": -0.74, "cum_sentiment": 0.0, "cum_alpha": -1.06, "cycle_label": "\u2014", "beta": 0.1595, "sentiment": 0}, {"date": "20250707", "cum_beta": -0.71, "cum_sentiment": 0.0, "cum_alpha": -0.0, "cycle_label": "\u2014", "beta": 0.1598, "sentiment": 0}, {"date": "20250708", "cum_beta": -0.47, "cum_sentiment": 0.0, "cum_alpha": 0.79, "cycle_label": "\u2014", "beta": 0.1858, "sentiment": 0}, {"date": "20250709", "cum_beta": -0.52, "cum_sentiment": 0.0, "cum_alpha": 0.95, "cycle_label": "\u2014", "beta": 0.1999, "sentiment": 0}, {"date": "20250710", "cum_beta": -0.47, "cum_sentiment": 0.0, "cum_alpha": 0.59, "cycle_label": "\u2014", "beta": 0.2046, "sentiment": 0}, {"date": "20250711", "cum_beta": -0.29, "cum_sentiment": 0.0, "cum_alpha": 0.82, "cycle_label": "\u2014", "beta": 0.2131, "sentiment": 0}, {"date": "20250714", "cum_beta": -0.29, "cum_sentiment": 0.0, "cum_alpha": 0.73, "cycle_label": "\u2014", "beta": 0.2143, "sentiment": 0}, {"date": "20250715", "cum_beta": -0.35, "cum_sentiment": 0.0, "cum_alpha": 0.61, "cycle_label": "\u2014", "beta": 0.2244, "sentiment": 0}, {"date": "20250716", "cum_beta": -0.29, "cum_sentiment": 0.0, "cum_alpha": 0.53, "cycle_label": "\u2014", "beta": 0.2244, "sentiment": 0}, {"date": "20250717", "cum_beta": -0.03, "cum_sentiment": 0.0, "cum_alpha": 0.52, "cycle_label": "\u2014", "beta": 0.2253, "sentiment": 0}, {"date": "20250718", "cum_beta": 0.03, "cum_sentiment": 0.0, "cum_alpha": 0.84, "cycle_label": "\u2014", "beta": 0.2431, "sentiment": 0}, {"date": "20250721", "cum_beta": 0.25, "cum_sentiment": 0.0, "cum_alpha": 0.33, "cycle_label": "\u2014", "beta": 0.2358, "sentiment": 0}, {"date": "20250722", "cum_beta": 0.34, "cum_sentiment": 0.0, "cum_alpha": 0.46, "cycle_label": "\u2014", "beta": 0.2398, "sentiment": 0}, {"date": "20250723", "cum_beta": 0.23, "cum_sentiment": 0.0, "cum_alpha": 0.34, "cycle_label": "\u2014", "beta": 0.249, "sentiment": 0}, {"date": "20250724", "cum_beta": 0.59, "cum_sentiment": 0.0, "cum_alpha": 0.4, "cycle_label": "\u2014", "beta": 0.2533, "sentiment": 0}, {"date": "20250725", "cum_beta": 0.61, "cum_sentiment": 0.0, "cum_alpha": 1.67, "cycle_label": "\u2014", "beta": 0.2432, "sentiment": 0}, {"date": "20250728", "cum_beta": 0.69, "cum_sentiment": 0.0, "cum_alpha": 2.15, "cycle_label": "\u2014", "beta": 0.2451, "sentiment": 0}, {"date": "20250729", "cum_beta": 0.86, "cum_sentiment": 0.0, "cum_alpha": 2.99, "cycle_label": "\u2014", "beta": 0.2534, "sentiment": 0}, {"date": "20250730", "cum_beta": 0.66, "cum_sentiment": 0.0, "cum_alpha": 5.39, "cycle_label": "\u2014", "beta": 0.2423, "sentiment": 0}, {"date": "20250731", "cum_beta": 0.5, "cum_sentiment": 0.0, "cum_alpha": 7.74, "cycle_label": "\u2014", "beta": 0.189, "sentiment": 0}, {"date": "20250801", "cum_beta": 0.52, "cum_sentiment": 0.0, "cum_alpha": 6.86, "cycle_label": "\u2014", "beta": 0.1895, "sentiment": 0}, {"date": "20250804", "cum_beta": 0.69, "cum_sentiment": 0.0, "cum_alpha": 7.74, "cycle_label": "\u2014", "beta": 0.1575, "sentiment": 0}, {"date": "20250805", "cum_beta": 0.75, "cum_sentiment": 0.0, "cum_alpha": 7.35, "cycle_label": "\u2014", "beta": 0.0944, "sentiment": 0}, {"date": "20250806", "cum_beta": 0.86, "cum_sentiment": 0.0, "cum_alpha": 7.85, "cycle_label": "\u2014", "beta": 0.0959, "sentiment": 0}, {"date": "20250807", "cum_beta": 0.86, "cum_sentiment": 0.0, "cum_alpha": 7.95, "cycle_label": "\u2014", "beta": 0.0961, "sentiment": 0}, {"date": "20250808", "cum_beta": 0.83, "cum_sentiment": 0.0, "cum_alpha": 8.27, "cycle_label": "\u2014", "beta": 0.0964, "sentiment": 0}, {"date": "20250811", "cum_beta": 0.99, "cum_sentiment": 0.0, "cum_alpha": 8.8, "cycle_label": "\u2014", "beta": 0.1094, "sentiment": 0}, {"date": "20250812", "cum_beta": 1.03, "cum_sentiment": 0.0, "cum_alpha": 9.09, "cycle_label": "\u2014", "beta": 0.1097, "sentiment": 0}, {"date": "20250813", "cum_beta": 1.2, "cum_sentiment": 0.0, "cum_alpha": 9.47, "cycle_label": "\u2014", "beta": 0.1188, "sentiment": 0}, {"date": "20250814", "cum_beta": 1.06, "cum_sentiment": 0.0, "cum_alpha": 9.94, "cycle_label": "\u2014", "beta": 0.1101, "sentiment": 0}, {"date": "20250815", "cum_beta": 1.29, "cum_sentiment": 0.0, "cum_alpha": 10.51, "cycle_label": "\u2014", "beta": 0.1118, "sentiment": 0}, {"date": "20250818", "cum_beta": 1.43, "cum_sentiment": 0.0, "cum_alpha": 10.09, "cycle_label": "\u2014", "beta": 0.0838, "sentiment": 0}, {"date": "20250819", "cum_beta": 1.43, "cum_sentiment": 0.0, "cum_alpha": 10.06, "cycle_label": "\u2014", "beta": 0.0892, "sentiment": 0}, {"date": "20250820", "cum_beta": 1.49, "cum_sentiment": 0.0, "cum_alpha": 8.72, "cycle_label": "\u2014", "beta": 0.0675, "sentiment": 0}, {"date": "20250821", "cum_beta": 1.44, "cum_sentiment": 0.0, "cum_alpha": 8.47, "cycle_label": "\u2014", "beta": 0.0744, "sentiment": 0}, {"date": "20250822", "cum_beta": 1.6, "cum_sentiment": 0.0, "cum_alpha": 8.92, "cycle_label": "\u2014", "beta": 0.1036, "sentiment": 0}, {"date": "20250825", "cum_beta": 1.83, "cum_sentiment": 0.0, "cum_alpha": 10.87, "cycle_label": "\u2014", "beta": 0.1473, "sentiment": 0}, {"date": "20250826", "cum_beta": 1.82, "cum_sentiment": 0.0, "cum_alpha": 9.66, "cycle_label": "\u2014", "beta": 0.1617, "sentiment": 50.0}, {"date": "20250827", "cum_beta": 1.48, "cum_sentiment": -0.03, "cum_alpha": 9.5, "cycle_label": "\u2014", "beta": 0.1861, "sentiment": 39.38}, {"date": "20250828", "cum_beta": 1.77, "cum_sentiment": -0.03, "cum_alpha": 9.93, "cycle_label": "\u56de\u6696", "beta": 0.1965, "sentiment": 60.0}, {"date": "20250829", "cum_beta": 1.75, "cum_sentiment": 0.01, "cum_alpha": 10.55, "cycle_label": "\u5206\u6b67", "beta": 0.1911, "sentiment": 55.62}, {"date": "20250901", "cum_beta": 1.92, "cum_sentiment": 0.08, "cum_alpha": 10.68, "cycle_label": "\u52a0\u901f", "beta": 0.1978, "sentiment": 71.0}, {"date": "20250902", "cum_beta": 1.44, "cum_sentiment": 0.11, "cum_alpha": 10.77, "cycle_label": "\u9000\u6f6e", "beta": 0.1907, "sentiment": 42.92}, {"date": "20250903", "cum_beta": 1.13, "cum_sentiment": 0.09, "cum_alpha": 10.4, "cycle_label": "\u56de\u6696", "beta": 0.2096, "sentiment": 46.93}, {"date": "20250904", "cum_beta": 0.58, "cum_sentiment": 0.06, "cum_alpha": 9.96, "cycle_label": "\u9000\u6f6e", "beta": 0.2388, "sentiment": 41.56}, {"date": "20250905", "cum_beta": 1.22, "cum_sentiment": 0.05, "cum_alpha": 9.66, "cycle_label": "\u56de\u6696", "beta": 0.2178, "sentiment": 55.0}, {"date": "20250908", "cum_beta": 1.41, "cum_sentiment": 0.03, "cum_alpha": 9.55, "cycle_label": "\u9000\u6f6e", "beta": 0.2163, "sentiment": 36.75}, {"date": "20250909", "cum_beta": 1.16, "cum_sentiment": -0.03, "cum_alpha": 9.68, "cycle_label": "\u56de\u6696", "beta": 0.2162, "sentiment": 40.45}, {"date": "20250910", "cum_beta": 1.17, "cum_sentiment": -0.05, "cum_alpha": 9.2, "cycle_label": "\u56de\u6696", "beta": 0.2175, "sentiment": 52.71}, {"date": "20250911", "cum_beta": 1.68, "cum_sentiment": -0.01, "cum_alpha": 9.85, "cycle_label": "\u52a0\u901f", "beta": 0.2177, "sentiment": 62.31}, {"date": "20250912", "cum_beta": 1.75, "cum_sentiment": 0.04, "cum_alpha": 8.93, "cycle_label": "\u5206\u6b67", "beta": 0.2155, "sentiment": 57.32}, {"date": "20250915", "cum_beta": 1.73, "cum_sentiment": 0.03, "cum_alpha": 9.85, "cycle_label": "\u9000\u6f6e", "beta": 0.2135, "sentiment": 37.33}, {"date": "20250916", "cum_beta": 1.94, "cum_sentiment": 0.01, "cum_alpha": 10.09, "cycle_label": "\u56de\u6696", "beta": 0.2334, "sentiment": 54.84}, {"date": "20250917", "cum_beta": 2.16, "cum_sentiment": 0.05, "cum_alpha": 10.62, "cycle_label": "\u52a0\u901f", "beta": 0.2267, "sentiment": 60.59}, {"date": "20250918", "cum_beta": 1.94, "cum_sentiment": 0.07, "cum_alpha": 11.62, "cycle_label": "\u9000\u6f6e", "beta": 0.2077, "sentiment": 49.13}, {"date": "20250919", "cum_beta": 1.83, "cum_sentiment": 0.05, "cum_alpha": 10.89, "cycle_label": "\u9000\u6f6e", "beta": 0.2197, "sentiment": 43.42}, {"date": "20250922", "cum_beta": 1.99, "cum_sentiment": 0.07, "cum_alpha": 12.35, "cycle_label": "\u52a0\u901f", "beta": 0.2273, "sentiment": 64.38}, {"date": "20250923", "cum_beta": 1.75, "cum_sentiment": 0.15, "cum_alpha": 13.03, "cycle_label": "\u52a0\u901f", "beta": 0.2167, "sentiment": 66.43}, {"date": "20250924", "cum_beta": 2.1, "cum_sentiment": 0.2, "cum_alpha": 13.05, "cycle_label": "\u5206\u6b67", "beta": 0.2061, "sentiment": 54.2}, {"date": "20250925", "cum_beta": 2.03, "cum_sentiment": 0.18, "cum_alpha": 13.63, "cycle_label": "\u9000\u6f6e", "beta": 0.2042, "sentiment": 36.96}, {"date": "20250926", "cum_beta": 1.71, "cum_sentiment": 0.13, "cum_alpha": 13.19, "cycle_label": "\u56de\u6696", "beta": 0.2227, "sentiment": 42.85}, {"date": "20250929", "cum_beta": 2.02, "cum_sentiment": 0.12, "cum_alpha": 14.03, "cycle_label": "\u56de\u6696", "beta": 0.2322, "sentiment": 53.0}, {"date": "20250930", "cum_beta": 2.26, "cum_sentiment": 0.14, "cum_alpha": 15.07, "cycle_label": "\u9707\u8361", "beta": 0.2339, "sentiment": 54.71}, {"date": "20251009", "cum_beta": 2.48, "cum_sentiment": 0.12, "cum_alpha": 15.02, "cycle_label": "\u9000\u6f6e", "beta": 0.2309, "sentiment": 39.81}, {"date": "20251010", "cum_beta": 2.08, "cum_sentiment": 0.03, "cum_alpha": 13.55, "cycle_label": "\u9000\u6f6e", "beta": 0.273, "sentiment": 23.66}, {"date": "20251013", "cum_beta": 2.02, "cum_sentiment": -0.02, "cum_alpha": 13.38, "cycle_label": "\u56de\u6696", "beta": 0.2754, "sentiment": 56.12}, {"date": "20251014", "cum_beta": 1.49, "cum_sentiment": -0.04, "cum_alpha": 13.56, "cycle_label": "\u9000\u6f6e", "beta": 0.2751, "sentiment": 34.08}, {"date": "20251015", "cum_beta": 1.87, "cum_sentiment": -0.09, "cum_alpha": 12.77, "cycle_label": "\u56de\u6696", "beta": 0.2577, "sentiment": 48.87}, {"date": "20251016", "cum_beta": 1.59, "cum_sentiment": -0.13, "cum_alpha": 12.88, "cycle_label": "\u9000\u6f6e", "beta": 0.2594, "sentiment": 34.3}, {"date": "20251017", "cum_beta": 0.81, "cum_sentiment": -0.16, "cum_alpha": 12.96, "cycle_label": "\u56de\u6696", "beta": 0.2665, "sentiment": 53.18}, {"date": "20251020", "cum_beta": 1.01, "cum_sentiment": -0.09, "cum_alpha": 12.97, "cycle_label": "\u52a0\u901f", "beta": 0.2658, "sentiment": 73.9}, {"date": "20251021", "cum_beta": 1.39, "cum_sentiment": -0.01, "cum_alpha": 12.47, "cycle_label": "\u5206\u6b67", "beta": 0.2634, "sentiment": 59.57}, {"date": "20251022", "cum_beta": 1.28, "cum_sentiment": 0.06, "cum_alpha": 12.66, "cycle_label": "\u52a0\u901f", "beta": 0.263, "sentiment": 68.54}, {"date": "20251023", "cum_beta": 1.26, "cum_sentiment": 0.13, "cum_alpha": 12.63, "cycle_label": "\u5206\u6b67", "beta": 0.2614, "sentiment": 58.51}, {"date": "20251024", "cum_beta": 1.66, "cum_sentiment": 0.15, "cum_alpha": 12.43, "cycle_label": "\u9000\u6f6e", "beta": 0.2579, "sentiment": 49.15}, {"date": "20251027", "cum_beta": 1.92, "cum_sentiment": 0.14, "cum_alpha": 12.13, "cycle_label": "\u9707\u8361", "beta": 0.2549, "sentiment": 46.15}, {"date": "20251028", "cum_beta": 1.86, "cum_sentiment": 0.18, "cum_alpha": 12.0, "cycle_label": "\u52a0\u901f", "beta": 0.2553, "sentiment": 71.69}, {"date": "20251029", "cum_beta": 2.17, "cum_sentiment": 0.23, "cum_alpha": 12.17, "cycle_label": "\u9000\u6f6e", "beta": 0.2528, "sentiment": 46.83}, {"date": "20251030", "cum_beta": 1.86, "cum_sentiment": 0.21, "cum_alpha": 12.32, "cycle_label": "\u9707\u8361", "beta": 0.2766, "sentiment": 45.36}, {"date": "20251031", "cum_beta": 1.95, "cum_sentiment": 0.19, "cum_alpha": 10.89, "cycle_label": "\u9707\u8361", "beta": 0.301, "sentiment": 46.16}, {"date": "20251103", "cum_beta": 2.07, "cum_sentiment": 0.18, "cum_alpha": 11.64, "cycle_label": "\u56de\u6696", "beta": 0.3019, "sentiment": 50.97}, {"date": "20251104", "cum_beta": 1.68, "cum_sentiment": 0.21, "cum_alpha": 12.03, "cycle_label": "\u52a0\u901f", "beta": 0.2898, "sentiment": 60.67}, {"date": "20251105", "cum_beta": 1.79, "cum_sentiment": 0.29, "cum_alpha": 12.27, "cycle_label": "\u52a0\u901f", "beta": 0.2936, "sentiment": 71.47}, {"date": "20251106", "cum_beta": 2.14, "cum_sentiment": 0.33, "cum_alpha": 12.59, "cycle_label": "\u9000\u6f6e", "beta": 0.2944, "sentiment": 43.3}, {"date": "20251107", "cum_beta": 2.1, "cum_sentiment": 0.32, "cum_alpha": 13.02, "cycle_label": "\u56de\u6696", "beta": 0.2933, "sentiment": 55.89}, {"date": "20251110", "cum_beta": 2.18, "cum_sentiment": 0.32, "cum_alpha": 13.77, "cycle_label": "\u9000\u6f6e", "beta": 0.2958, "sentiment": 40.78}, {"date": "20251111", "cum_beta": 2.09, "cum_sentiment": 0.33, "cum_alpha": 13.8, "cycle_label": "\u52a0\u901f", "beta": 0.2934, "sentiment": 64.05}, {"date": "20251112", "cum_beta": 1.88, "cum_sentiment": 0.42, "cum_alpha": 13.63, "cycle_label": "\u52a0\u901f", "beta": 0.2944, "sentiment": 72.84}, {"date": "20251113", "cum_beta": 2.28, "cum_sentiment": 0.51, "cum_alpha": 12.98, "cycle_label": "\u5206\u6b67", "beta": 0.2853, "sentiment": 61.57}, {"date": "20251114", "cum_beta": 1.93, "cum_sentiment": 0.57, "cum_alpha": 12.28, "cycle_label": "\u52a0\u901f", "beta": 0.304, "sentiment": 62.36}, {"date": "20251117", "cum_beta": 2.01, "cum_sentiment": 0.67, "cum_alpha": 12.53, "cycle_label": "\u52a0\u901f", "beta": 0.3014, "sentiment": 80.05}, {"date": "20251118", "cum_beta": 1.7, "cum_sentiment": 0.72, "cum_alpha": 13.06, "cycle_label": "\u9000\u6f6e", "beta": 0.3096, "sentiment": 40.18}, {"date": "20251119", "cum_beta": 1.45, "cum_sentiment": 0.72, "cum_alpha": 13.55, "cycle_label": "\u52a0\u901f", "beta": 0.3055, "sentiment": 60.58}, {"date": "20251120", "cum_beta": 1.25, "cum_sentiment": 0.74, "cum_alpha": 13.66, "cycle_label": "\u9000\u6f6e", "beta": 0.3198, "sentiment": 44.53}, {"date": "20251121", "cum_beta": 0.09, "cum_sentiment": 0.7, "cum_alpha": 13.98, "cycle_label": "\u9000\u6f6e", "beta": 0.3108, "sentiment": 39.34}, {"date": "20251124", "cum_beta": 0.47, "cum_sentiment": 0.72, "cum_alpha": 13.43, "cycle_label": "\u52a0\u901f", "beta": 0.3023, "sentiment": 71.1}, {"date": "20251125", "cum_beta": 0.83, "cum_sentiment": 0.77, "cum_alpha": 13.08, "cycle_label": "\u9000\u6f6e", "beta": 0.2717, "sentiment": 49.38}, {"date": "20251126", "cum_beta": 0.82, "cum_sentiment": 0.81, "cum_alpha": 13.23, "cycle_label": "\u52a0\u901f", "beta": 0.272, "sentiment": 64.67}, {"date": "20251127", "cum_beta": 0.86, "cum_sentiment": 0.78, "cum_alpha": 12.74, "cycle_label": "\u9000\u6f6e", "beta": 0.2695, "sentiment": 24.39}, {"date": "20251128", "cum_beta": 1.14, "cum_sentiment": 0.71, "cum_alpha": 12.81, "cycle_label": "\u56de\u6696", "beta": 0.2647, "sentiment": 45.08}, {"date": "20251201", "cum_beta": 1.33, "cum_sentiment": 0.72, "cum_alpha": 13.07, "cycle_label": "\u52a0\u901f", "beta": 0.267, "sentiment": 60.98}, {"date": "20251202", "cum_beta": 1.07, "cum_sentiment": 0.78, "cum_alpha": 13.5, "cycle_label": "\u52a0\u901f", "beta": 0.2618, "sentiment": 64.15}, {"date": "20251203", "cum_beta": 0.82, "cum_sentiment": 0.8, "cum_alpha": 13.11, "cycle_label": "\u9000\u6f6e", "beta": 0.2723, "sentiment": 44.32}, {"date": "20251204", "cum_beta": 0.83, "cum_sentiment": 0.74, "cum_alpha": 13.14, "cycle_label": "\u9000\u6f6e", "beta": 0.2668, "sentiment": 30.75}, {"date": "20251205", "cum_beta": 1.15, "cum_sentiment": 0.73, "cum_alpha": 12.68, "cycle_label": "\u52a0\u901f", "beta": 0.247, "sentiment": 64.82}, {"date": "20251208", "cum_beta": 1.43, "cum_sentiment": 0.8, "cum_alpha": 12.43, "cycle_label": "\u5206\u6b67", "beta": 0.2597, "sentiment": 63.99}, {"date": "20251209", "cum_beta": 1.28, "cum_sentiment": 0.84, "cum_alpha": 12.82, "cycle_label": "\u5206\u6b67", "beta": 0.2592, "sentiment": 52.75}, {"date": "20251210", "cum_beta": 1.38, "cum_sentiment": 0.86, "cum_alpha": 12.81, "cycle_label": "\u5206\u6b67", "beta": 0.26, "sentiment": 52.73}, {"date": "20251211", "cum_beta": 1.06, "cum_sentiment": 0.81, "cum_alpha": 13.73, "cycle_label": "\u9000\u6f6e", "beta": 0.2467, "sentiment": 26.32}, {"date": "20251212", "cum_beta": 1.25, "cum_sentiment": 0.79, "cum_alpha": 13.93, "cycle_label": "\u52a0\u901f", "beta": 0.231, "sentiment": 66.78}, {"date": "20251215", "cum_beta": 1.05, "cum_sentiment": 0.8, "cum_alpha": 14.55, "cycle_label": "\u9000\u6f6e", "beta": 0.2292, "sentiment": 36.32}, {"date": "20251216", "cum_beta": 0.68, "cum_sentiment": 0.73, "cum_alpha": 15.5, "cycle_label": "\u9707\u8361", "beta": 0.2127, "sentiment": 35.93}, {"date": "20251217", "cum_beta": 1.0, "cum_sentiment": 0.67, "cum_alpha": 15.58, "cycle_label": "\u56de\u6696", "beta": 0.2096, "sentiment": 41.09}, {"date": "20251218", "cum_beta": 0.95, "cum_sentiment": 0.7, "cum_alpha": 15.8, "cycle_label": "\u52a0\u901f", "beta": 0.2032, "sentiment": 70.33}, {"date": "20251219", "cum_beta": 1.12, "cum_sentiment": 0.79, "cum_alpha": 15.79, "cycle_label": "\u5206\u6b67", "beta": 0.215, "sentiment": 67.21}, {"date": "20251222", "cum_beta": 1.34, "cum_sentiment": 0.86, "cum_alpha": 15.69, "cycle_label": "\u5206\u6b67", "beta": 0.2083, "sentiment": 60.12}, {"date": "20251223", "cum_beta": 1.3, "cum_sentiment": 0.91, "cum_alpha": 16.12, "cycle_label": "\u5206\u6b67", "beta": 0.1951, "sentiment": 58.4}, {"date": "20251224", "cum_beta": 1.61, "cum_sentiment": 0.99, "cum_alpha": 16.01, "cycle_label": "\u52a0\u901f", "beta": 0.2026, "sentiment": 75.5}, {"date": "20251225", "cum_beta": 1.81, "cum_sentiment": 1.13, "cum_alpha": 15.96, "cycle_label": "\u52a0\u901f", "beta": 0.2023, "sentiment": 78.72}, {"date": "20251226", "cum_beta": 1.88, "cum_sentiment": 1.27, "cum_alpha": 15.45, "cycle_label": "\u52a0\u901f", "beta": 0.2031, "sentiment": 79.7}, {"date": "20251229", "cum_beta": 1.85, "cum_sentiment": 1.37, "cum_alpha": 15.07, "cycle_label": "\u5206\u6b67", "beta": 0.193, "sentiment": 61.04}, {"date": "20251230", "cum_beta": 1.86, "cum_sentiment": 1.42, "cum_alpha": 15.16, "cycle_label": "\u5206\u6b67", "beta": 0.1783, "sentiment": 57.44}, {"date": "20251231", "cum_beta": 1.85, "cum_sentiment": 1.46, "cum_alpha": 15.47, "cycle_label": "\u9707\u8361", "beta": 0.1634, "sentiment": 58.26}, {"date": "20260105", "cum_beta": 2.17, "cum_sentiment": 1.52, "cum_alpha": 15.02, "cycle_label": "\u52a0\u901f", "beta": 0.1523, "sentiment": 65.4}, {"date": "20260106", "cum_beta": 2.35, "cum_sentiment": 1.63, "cum_alpha": 15.25, "cycle_label": "\u52a0\u901f", "beta": 0.1219, "sentiment": 79.97}, {"date": "20260107", "cum_beta": 2.41, "cum_sentiment": 1.71, "cum_alpha": 15.03, "cycle_label": "\u5206\u6b67", "beta": 0.1197, "sentiment": 50.05}, {"date": "20260108", "cum_beta": 2.5, "cum_sentiment": 1.77, "cum_alpha": 15.0, "cycle_label": "\u52a0\u901f", "beta": 0.1141, "sentiment": 77.19}, {"date": "20260109", "cum_beta": 2.74, "cum_sentiment": 1.86, "cum_alpha": 14.65, "cycle_label": "\u5206\u6b67", "beta": 0.1187, "sentiment": 55.71}, {"date": "20260112", "cum_beta": 3.21, "cum_sentiment": 1.95, "cum_alpha": 16.12, "cycle_label": "\u52a0\u901f", "beta": 0.1689, "sentiment": 82.47}, {"date": "20260113", "cum_beta": 3.08, "cum_sentiment": 2.0, "cum_alpha": 19.01, "cycle_label": "\u9000\u6f6e", "beta": 0.0726, "sentiment": 36.83}, {"date": "20260114", "cum_beta": 3.13, "cum_sentiment": 1.95, "cum_alpha": 19.17, "cycle_label": "\u56de\u6696", "beta": 0.0719, "sentiment": 42.06}, {"date": "20260115", "cum_beta": 3.11, "cum_sentiment": 1.88, "cum_alpha": 17.34, "cycle_label": "\u9000\u6f6e", "beta": 0.0878, "sentiment": 31.95}, {"date": "20260116", "cum_beta": 3.1, "cum_sentiment": 1.77, "cum_alpha": 17.3, "cycle_label": "\u9000\u6f6e", "beta": 0.0895, "sentiment": 22.32}, {"date": "20260119", "cum_beta": 3.14, "cum_sentiment": 1.68, "cum_alpha": 18.09, "cycle_label": "\u56de\u6696", "beta": 0.0907, "sentiment": 41.62}, {"date": "20260120", "cum_beta": 3.04, "cum_sentiment": 1.62, "cum_alpha": 18.0, "cycle_label": "\u9000\u6f6e", "beta": 0.0963, "sentiment": 33.95}, {"date": "20260121", "cum_beta": 3.12, "cum_sentiment": 1.55, "cum_alpha": 18.28, "cycle_label": "\u56de\u6696", "beta": 0.1003, "sentiment": 39.65}, {"date": "20260122", "cum_beta": 3.19, "cum_sentiment": 1.52, "cum_alpha": 18.77, "cycle_label": "\u56de\u6696", "beta": 0.1016, "sentiment": 49.12}, {"date": "20260123", "cum_beta": 3.34, "cum_sentiment": 1.52, "cum_alpha": 18.01, "cycle_label": "\u9707\u8361", "beta": 0.0759, "sentiment": 50.15}, {"date": "20260126", "cum_beta": 3.26, "cum_sentiment": 1.46, "cum_alpha": 18.42, "cycle_label": "\u9000\u6f6e", "beta": 0.0675, "sentiment": 26.84}, {"date": "20260127", "cum_beta": 3.27, "cum_sentiment": 1.42, "cum_alpha": 18.37, "cycle_label": "\u56de\u6696", "beta": 0.0694, "sentiment": 55.36}, {"date": "20260128", "cum_beta": 3.29, "cum_sentiment": 1.45, "cum_alpha": 17.91, "cycle_label": "\u9707\u8361", "beta": 0.0671, "sentiment": 55.48}, {"date": "20260129", "cum_beta": 3.23, "cum_sentiment": 1.48, "cum_alpha": 17.62, "cycle_label": "\u9707\u8361", "beta": 0.0721, "sentiment": 58.05}, {"date": "20260130", "cum_beta": 3.15, "cum_sentiment": 1.45, "cum_alpha": 17.07, "cycle_label": "\u9000\u6f6e", "beta": 0.0819, "sentiment": 27.53}, {"date": "20260202", "cum_beta": 2.82, "cum_sentiment": 1.34, "cum_alpha": 16.77, "cycle_label": "\u56de\u6696", "beta": 0.0986, "sentiment": 30.44}, {"date": "20260203", "cum_beta": 3.11, "cum_sentiment": 1.31, "cum_alpha": 16.85, "cycle_label": "\u56de\u6696", "beta": 0.0985, "sentiment": 58.17}, {"date": "20260204", "cum_beta": 3.1, "cum_sentiment": 1.32, "cum_alpha": 16.97, "cycle_label": "\u9000\u6f6e", "beta": 0.0973, "sentiment": 44.91}, {"date": "20260205", "cum_beta": 2.92, "cum_sentiment": 1.28, "cum_alpha": 16.5, "cycle_label": "\u9000\u6f6e", "beta": 0.108, "sentiment": 39.09}, {"date": "20260206", "cum_beta": 2.9, "cum_sentiment": 1.21, "cum_alpha": 16.6, "cycle_label": "\u9000\u6f6e", "beta": 0.1058, "sentiment": 31.51}, {"date": "20260209", "cum_beta": 3.14, "cum_sentiment": 1.18, "cum_alpha": 16.39, "cycle_label": "\u56de\u6696", "beta": 0.104, "sentiment": 58.37}, {"date": "20260210", "cum_beta": 3.15, "cum_sentiment": 1.23, "cum_alpha": 15.88, "cycle_label": "\u9707\u8361", "beta": 0.0912, "sentiment": 60.0}, {"date": "20260211", "cum_beta": 3.14, "cum_sentiment": 1.23, "cum_alpha": 15.9, "cycle_label": "\u9000\u6f6e", "beta": 0.0909, "sentiment": 41.78}, {"date": "20260212", "cum_beta": 3.24, "cum_sentiment": 1.23, "cum_alpha": 17.23, "cycle_label": "\u56de\u6696", "beta": 0.1038, "sentiment": 56.02}, {"date": "20260213", "cum_beta": 3.08, "cum_sentiment": 1.2, "cum_alpha": 16.41, "cycle_label": "\u9000\u6f6e", "beta": 0.1207, "sentiment": 34.68}, {"date": "20260224", "cum_beta": 3.22, "cum_sentiment": 1.14, "cum_alpha": 16.61, "cycle_label": "\u56de\u6696", "beta": 0.121, "sentiment": 40.11}, {"date": "20260225", "cum_beta": 3.38, "cum_sentiment": 1.1, "cum_alpha": 17.53, "cycle_label": "\u56de\u6696", "beta": 0.1095, "sentiment": 44.83}, {"date": "20260226", "cum_beta": 3.47, "cum_sentiment": 1.05, "cum_alpha": 18.09, "cycle_label": "\u9000\u6f6e", "beta": 0.1161, "sentiment": 32.75}];
+        _dcDaily.forEach(function(d){ decompLookup[d.date]=d; });
+        
+        
+        (function(){
+          var el=document.getElementById('ms-nav-chart');
+          if(!el)return;
+          // bar dataset for drawdown highlight: use left y-axis max
+          var allVals=navFund.concat(navIndex);
+          var yMax=Math.max.apply(null,allVals)*1.05;
+          var ddData=navDD.map(function(v){return v?yMax:0});
 
-        var cycleColors={"冰点": "#3b82f6", "回暖": "#10b981", "加速": "#ef4444", "分歧": "#f59e0b", "退潮": "#8b5cf6", "震荡": "#94a3b8", "—": "#94a3b8"};
-        var tl=document.getElementById('ms-timeline');
-        if(tl){msL.forEach(function(d,i){
-          var lb=msCL[i];var c=cycleColors[lb]||'#94a3b8';
-          var el=document.createElement('div');
-          el.style.cssText='padding:3px 6px;border-radius:3px;color:#fff;font-weight:600;background:'+c;
-          el.title=d+' 情绪='+msS[i];
-          el.textContent=d+' '+lb;
-          tl.appendChild(el);
+          new Chart(el,{
+            type:'line',
+            data:{labels:navDates,datasets:[
+              {label:'基准回撤区域',data:ddData,type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'y',order:4},
+              {label:'产品净值',data:navFund,borderColor:'#8b5cf6',borderWidth:2,pointRadius:0,tension:.2,fill:false,yAxisID:'y',order:2},
+              {label:'基准',data:navIndex,borderColor:'#94a3b8',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.2,fill:false,yAxisID:'y',order:3},
+              {label:'累计超额',data:navExcess,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.1)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true,yAxisID:'y1',order:1}
+            ]},
+            options:{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{mode:'index',intersect:false},
+              plugins:{
+                legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,filter:function(item){return item.text!=='基准回撤区域'}}},
+                tooltip:{
+                  callbacks:{
+                    afterBody:function(ctx){
+                      var i=ctx[0].dataIndex;
+                      if(!navDD[i])return '';
+                      var dt=navDatesFull[i];
+                      var dc=decompLookup[dt];
+                      if(!dc)return '\n📉 基准回撤区域';
+                      return '\n📉 基准回撤区域'
+                        +'\nBeta贡献: '+dc.cum_beta.toFixed(2)+'%'
+                        +'\n情绪贡献: '+dc.cum_sentiment.toFixed(2)+'%'
+                        +'\n管理人Alpha: '+dc.cum_alpha.toFixed(2)+'%'
+                        +'\n情绪周期: '+dc.cycle_label;
+                    }
+                  }
+                }
+              },
+              scales:{
+                x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(2)}},grid:{color:'#f1f5f9'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return (v*100).toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'累计超额',font:{size:9},color:'#f59e0b'}}
+              }
+            }
+          });
+        })();
+        
+
+        // ── 收益拆解（懒加载） ──
+        
+        var dcL=["08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26"];
+        var dcF=[12.7, 11.48, 10.94, 11.67, 12.31, 12.68, 12.32, 11.62, 10.6, 10.92, 10.99, 10.81, 10.33, 11.53, 10.72, 11.61, 12.05, 12.83, 13.64, 12.77, 14.42, 14.93, 15.36, 15.84, 15.02, 16.17, 17.47, 17.62, 15.66, 15.38, 15.0, 14.55, 14.35, 13.62, 13.89, 13.85, 14.0, 14.03, 14.24, 14.18, 14.04, 14.57, 14.39, 13.02, 13.89, 13.92, 14.36, 15.05, 15.44, 16.27, 16.22, 15.93, 15.77, 14.78, 15.21, 15.48, 15.73, 15.65, 14.77, 14.63, 14.68, 14.86, 14.38, 14.65, 15.11, 15.35, 14.74, 14.71, 14.56, 14.67, 14.94, 15.05, 15.6, 15.97, 16.4, 16.91, 17.25, 17.45, 17.7, 17.89, 18.32, 18.62, 18.9, 18.6, 18.29, 18.44, 18.78, 18.71, 19.22, 19.14, 19.27, 19.25, 21.29, 24.09, 24.24, 22.33, 22.17, 22.91, 22.66, 22.95, 23.49, 22.87, 23.14, 23.06, 22.64, 22.33, 21.66, 20.93, 21.27, 21.39, 20.7, 20.7, 20.7, 20.26, 20.28, 21.69, 20.68, 20.96, 22.01, 22.61];
+        var dcB=[1.83, 1.82, 1.48, 1.77, 1.75, 1.92, 1.44, 1.13, 0.58, 1.22, 1.41, 1.16, 1.17, 1.68, 1.75, 1.73, 1.94, 2.16, 1.94, 1.83, 1.99, 1.75, 2.1, 2.03, 1.71, 2.02, 2.26, 2.48, 2.08, 2.02, 1.49, 1.87, 1.59, 0.81, 1.01, 1.39, 1.28, 1.26, 1.66, 1.92, 1.86, 2.17, 1.86, 1.95, 2.07, 1.68, 1.79, 2.14, 2.1, 2.18, 2.09, 1.88, 2.28, 1.93, 2.01, 1.7, 1.45, 1.25, 0.09, 0.47, 0.83, 0.82, 0.86, 1.14, 1.33, 1.07, 0.82, 0.83, 1.15, 1.43, 1.28, 1.38, 1.06, 1.25, 1.05, 0.68, 1.0, 0.95, 1.12, 1.34, 1.3, 1.61, 1.81, 1.88, 1.85, 1.86, 1.85, 2.17, 2.35, 2.41, 2.5, 2.74, 3.21, 3.08, 3.13, 3.11, 3.1, 3.14, 3.04, 3.12, 3.19, 3.34, 3.26, 3.27, 3.29, 3.23, 3.15, 2.82, 3.11, 3.1, 2.92, 2.9, 3.14, 3.15, 3.14, 3.24, 3.08, 3.22, 3.38, 3.47];
+        var dcS=[0.0, 0.0, -0.03, -0.03, 0.01, 0.08, 0.11, 0.09, 0.06, 0.05, 0.03, -0.03, -0.05, -0.01, 0.04, 0.03, 0.01, 0.05, 0.07, 0.05, 0.07, 0.15, 0.2, 0.18, 0.13, 0.12, 0.14, 0.12, 0.03, -0.02, -0.04, -0.09, -0.13, -0.16, -0.09, -0.01, 0.06, 0.13, 0.15, 0.14, 0.18, 0.23, 0.21, 0.19, 0.18, 0.21, 0.29, 0.33, 0.32, 0.32, 0.33, 0.42, 0.51, 0.57, 0.67, 0.72, 0.72, 0.74, 0.7, 0.72, 0.77, 0.81, 0.78, 0.71, 0.72, 0.78, 0.8, 0.74, 0.73, 0.8, 0.84, 0.86, 0.81, 0.79, 0.8, 0.73, 0.67, 0.7, 0.79, 0.86, 0.91, 0.99, 1.13, 1.27, 1.37, 1.42, 1.46, 1.52, 1.63, 1.71, 1.77, 1.86, 1.95, 2.0, 1.95, 1.88, 1.77, 1.68, 1.62, 1.55, 1.52, 1.52, 1.46, 1.42, 1.45, 1.48, 1.45, 1.34, 1.31, 1.32, 1.28, 1.21, 1.18, 1.23, 1.23, 1.23, 1.2, 1.14, 1.1, 1.05];
+        var dcA=[10.87, 9.66, 9.5, 9.93, 10.55, 10.68, 10.77, 10.4, 9.96, 9.66, 9.55, 9.68, 9.2, 9.85, 8.93, 9.85, 10.09, 10.62, 11.62, 10.89, 12.35, 13.03, 13.05, 13.63, 13.19, 14.03, 15.07, 15.02, 13.55, 13.38, 13.56, 12.77, 12.88, 12.96, 12.97, 12.47, 12.66, 12.63, 12.43, 12.13, 12.0, 12.17, 12.32, 10.89, 11.64, 12.03, 12.27, 12.59, 13.02, 13.77, 13.8, 13.63, 12.98, 12.28, 12.53, 13.06, 13.55, 13.66, 13.98, 13.43, 13.08, 13.23, 12.74, 12.81, 13.07, 13.5, 13.11, 13.14, 12.68, 12.43, 12.82, 12.81, 13.73, 13.93, 14.55, 15.5, 15.58, 15.8, 15.79, 15.69, 16.12, 16.01, 15.96, 15.45, 15.07, 15.16, 15.47, 15.02, 15.25, 15.03, 15.0, 14.65, 16.12, 19.01, 19.17, 17.34, 17.3, 18.09, 18.0, 18.28, 18.77, 18.01, 18.42, 18.37, 17.91, 17.62, 17.07, 16.77, 16.85, 16.97, 16.5, 16.6, 16.39, 15.88, 15.9, 17.23, 16.41, 16.61, 17.53, 18.09];
+        var dcCL=["\u2014", "\u2014", "\u2014", "\u56de\u6696", "\u5206\u6b67", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u52a0\u901f", "\u5206\u6b67", "\u9000\u6f6e", "\u56de\u6696", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u5206\u6b67", "\u9000\u6f6e", "\u9707\u8361", "\u52a0\u901f", "\u9000\u6f6e", "\u9707\u8361", "\u9707\u8361", "\u56de\u6696", "\u52a0\u901f", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u52a0\u901f", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u52a0\u901f", "\u52a0\u901f", "\u9000\u6f6e", "\u9000\u6f6e", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u5206\u6b67", "\u9000\u6f6e", "\u52a0\u901f", "\u9000\u6f6e", "\u9707\u8361", "\u56de\u6696", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u5206\u6b67", "\u52a0\u901f", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u5206\u6b67", "\u9707\u8361", "\u52a0\u901f", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u5206\u6b67", "\u52a0\u901f", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u9707\u8361", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e", "\u9000\u6f6e", "\u9000\u6f6e", "\u56de\u6696", "\u9707\u8361", "\u9000\u6f6e", "\u56de\u6696", "\u9000\u6f6e", "\u56de\u6696", "\u56de\u6696", "\u9000\u6f6e"];
+
+        var dcInit=false;
+        var dcDet=document.getElementById('ms-decomp-details');
+        if(dcDet){dcDet.addEventListener('toggle',function(){
+          if(!dcDet.open||dcInit)return;dcInit=true;
+          // 更新箭头
+          var arrow=dcDet.querySelector('summary span:last-child');
+          if(arrow)arrow.textContent='▼';
+
+          var dcEl=document.getElementById('ms-decomp');
+          if(dcEl){new Chart(dcEl,{
+            type:'line',
+            data:{labels:dcL,datasets:[
+              {label:'总收益',data:dcF,borderColor:'#1e293b',borderWidth:2.5,pointRadius:0,tension:.2,fill:false},
+              {label:'Beta贡献',data:dcB,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true},
+              {label:'情绪贡献',data:dcS,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true},
+              {label:'管理人Alpha',data:dcA,borderColor:'#ec4899',backgroundColor:'rgba(236,72,153,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}
+            ]},
+            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{color:'#f1f5f9'}}}})
+          })}
+
+          // 收益拆解周期色带
+          var dcTl=document.getElementById('ms-decomp-tl');
+          if(dcTl){dcL.forEach(function(d,i){
+            var lb=dcCL[i];var c=cycleColors[lb]||'#94a3b8';
+            var el=document.createElement('div');
+            el.style.cssText='flex:1;background:'+c+'88;height:100%';
+            el.title=d+' '+lb;
+            dcTl.appendChild(el);
+          })}
         });}
+        
       }
       </script>
-        <iframe src="size_spread/fund_nav/fund_nav.html?tab=momentum-stock" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%"></iframe>
       </div>
       <div class="strat-page" id="strat-cta">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
         <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">2026-02-27</b></span>
       </div>
-      <!-- CTA策略环境总览 -->
+
+      <!-- ═══ PCA核心引擎（主角） ═══ -->
       <div class="overview-grid">
         <div class="ov-card" style="border-left-color:#f59e0b">
-          <div class="ov-label">CTA友好度</div>
-          <div class="ov-value" style="color:#f59e0b">49.4</div>
-          <div class="ov-sub">一般 · 0-100综合评分</div>
+          <div class="ov-label">PCA友好度</div>
+          <div class="ov-value" style="color:#f59e0b">40.8</div>
+          <div class="ov-sub">一般 · 基于品种共振强度</div>
+        </div>
+        <div class="ov-card" style="border-left-color:#3b82f6">
+          <div class="ov-label">环境类型</div>
+          <div class="ov-value" style="font-size:16px;color:#3b82f6">🔵 温和趋势</div>
+          <div class="ov-sub">PC1+PC2联合判定</div>
         </div>
         <div class="ov-card blue">
-          <div class="ov-label">活跃品种</div>
-          <div class="ov-value">58</div>
-          <div class="ov-sub">日均成交额 &gt; 500万</div>
-        </div>
-        <div class="ov-card" style="border-left-color:#ef4444">
-          <div class="ov-label">趋势品种占比</div>
-          <div class="ov-value">5.2%</div>
-          <div class="ov-sub">3/58 有明显趋势</div>
-        </div>
-        <div class="ov-card amber">
-          <div class="ov-label">平均20日波动率</div>
-          <div class="ov-value">94.1%</div>
-          <div class="ov-sub">活跃品种年化波动率均值</div>
+          <div class="ov-label">PC1 解释比</div>
+          <div class="ov-value">29.3%</div>
+          <div class="ov-sub">全市场共振强度</div>
         </div>
         <div class="ov-card slate">
-          <div class="ov-label">成交量比</div>
-          <div class="ov-value">1.05</div>
-          <div class="ov-sub">MA20/MA60，&gt;1.2为放量</div>
+          <div class="ov-label">PC2 解释比</div>
+          <div class="ov-value">9.5%</div>
+          <div class="ov-sub">板块分化程度</div>
+        </div>
+        <div class="ov-card amber">
+          <div class="ov-label">动量信号</div>
+          <div class="ov-value" style="font-size:16px">中性</div>
+          <div class="ov-sub">PC1近5日方向</div>
         </div>
         <div class="ov-card green">
-          <div class="ov-label">数据日期</div>
-          <div class="ov-value" style="font-size:18px">2026-02-27</div>
-          <div class="ov-sub">最新交易日</div>
+          <div class="ov-label">活跃品种</div>
+          <div class="ov-value">58</div>
+          <div class="ov-sub">参与PCA计算</div>
         </div>
       </div>
 
-      <!-- 宏观比价 -->
+      <!-- PCA方差解释比走势 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> PCA方差解释比走势</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">PC1高=品种共振强=趋势跟踪友好 | 虚线: PC1=35%为"强共振"阈值</div>
+        <div style="position:relative;height:240px"><canvas id="pca-explained"></canvas></div>
+      </div>
+
+      <!-- PCA友好度走势 -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#3b82f6"></span> PCA友好度走势</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">综合评分0-100，核心由PC1方差解释比驱动</div>
+        <div style="position:relative;height:220px"><canvas id="pca-friendly-chart"></canvas></div>
+      </div>
+
+      <!-- PC1累计值（动量/反转）-->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> PC1累计值 — 动量 vs 反转</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">持续同方向=动量主导（趋势跟踪有利）| 频繁翻转=反转主导</div>
+        <div style="position:relative;height:220px"><canvas id="pca-momentum"></canvas></div>
+      </div>
+
+      <script>
+      var _pcaChartsInited=false;
+      function initPcaCharts(){
+        if(_pcaChartsInited)return;
+        _pcaChartsInited=true;
+        var pcaBase={responsive:true,maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
+            tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(1)}}}},
+          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
+        };
+
+        // 方差解释比
+        new Chart(document.getElementById('pca-explained'),{
+          type:'line',
+          data:{labels:["10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26", "02-27"],datasets:[
+            {label:'PC1解释比(%)',data:[29.9, 29.4, 29.3, 29.7, 29.5, 29.6, 29.4, 29.2, 28.2, 28.1, 28.7, 28.3, 28.5, 24.2, 24.8, 25.2, 23.7, 23.5, 24.1, 24.0, 24.4, 24.5, 24.6, 24.3, 24.3, 24.9, 24.4, 24.4, 25.0, 25.1, 25.9, 26.2, 26.3, 25.5, 25.3, 25.1, 25.2, 25.3, 25.5, 25.5, 25.2, 24.8, 24.1, 25.0, 24.6, 24.3, 24.0, 23.7, 22.5, 22.4, 22.4, 20.9, 21.2, 21.1, 21.3, 20.8, 21.0, 20.8, 20.8, 20.3, 20.3, 22.1, 22.3, 22.7, 22.5, 22.6, 22.4, 22.7, 22.5, 23.1, 22.8, 22.8, 22.8, 23.1, 23.2, 22.7, 22.7, 23.2, 23.4, 25.3, 28.3, 27.9, 28.4, 29.1, 29.0, 29.0, 28.9, 29.3, 29.0, 29.3, 29.5, 29.2, 29.3],borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.08)',fill:true,borderWidth:2,pointRadius:1.5,tension:.3},
+            {label:'PC2解释比(%)',data:[12.2, 12.2, 11.9, 11.8, 12.0, 12.1, 12.1, 11.9, 12.3, 12.7, 12.4, 12.4, 12.0, 12.4, 12.0, 12.0, 11.9, 11.8, 11.6, 11.6, 11.6, 11.5, 11.5, 11.7, 11.7, 11.5, 11.9, 11.9, 11.8, 11.7, 11.8, 11.6, 11.4, 11.6, 11.5, 11.4, 11.3, 11.3, 11.3, 11.4, 11.3, 11.8, 11.8, 11.4, 11.7, 11.6, 11.5, 12.2, 12.5, 12.3, 11.8, 11.8, 11.6, 11.2, 11.0, 10.9, 10.9, 10.9, 10.8, 10.7, 9.8, 9.6, 9.4, 9.4, 9.2, 8.9, 9.0, 9.1, 8.9, 8.8, 8.8, 8.8, 8.8, 8.9, 8.9, 8.8, 9.0, 8.9, 8.6, 8.8, 8.9, 8.8, 8.7, 8.4, 8.4, 8.5, 8.5, 8.5, 8.4, 8.3, 9.3, 9.7, 9.5],borderColor:'#f59e0b',borderWidth:1.5,pointRadius:1,borderDash:[4,3],tension:.3}
+          ]},
+          options:Object.assign({},pcaBase,{plugins:Object.assign({},pcaBase.plugins,{
+            annotation:{annotations:{threshold:{type:'line',yMin:35,yMax:35,borderColor:'rgba(139,92,246,0.3)',borderWidth:1,borderDash:[6,3],
+              label:{content:'强共振阈值(35%)',enabled:true,position:'start',font:{size:9},color:'#8b5cf6'}}}}
+          })})
+        });
+
+        // 友好度
+        new Chart(document.getElementById('pca-friendly-chart'),{
+          type:'line',
+          data:{labels:["10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26", "02-27"],datasets:[
+            {label:'PCA友好度',data:[43.6, 41.9, 41.7, 42.7, 42.3, 42.7, 42.0, 41.2, 37.9, 38.0, 39.7, 38.5, 39.0, 26.4, 27.9, 29.3, 24.8, 24.4, 26.1, 25.6, 26.8, 27.0, 27.3, 26.5, 26.5, 28.2, 26.9, 26.9, 28.6, 28.8, 31.1, 32.0, 32.3, 30.0, 29.5, 28.7, 29.1, 29.3, 29.9, 29.9, 29.2, 28.0, 26.0, 28.7, 27.4, 26.6, 25.6, 24.9, 21.4, 21.3, 21.1, 16.8, 17.7, 17.4, 18.1, 16.7, 17.3, 16.7, 16.6, 15.2, 15.1, 20.3, 20.8, 21.9, 21.5, 21.7, 21.1, 22.0, 21.4, 23.2, 22.3, 22.3, 22.1, 23.1, 23.6, 22.0, 22.0, 23.4, 23.9, 29.3, 38.1, 36.8, 38.3, 40.3, 40.2, 40.0, 39.8, 41.0, 39.9, 41.0, 41.5, 40.6, 40.8],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,borderWidth:2,pointRadius:1.5,tension:.3}
+          ]},
+          options:pcaBase
+        });
+
+        // 动量/反转
+        new Chart(document.getElementById('pca-momentum'),{
+          type:'line',
+          data:{labels:["10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26", "02-27"],datasets:[
+            {label:'PC1累计值',data:[0.0, -0.0, 0.0, -0.0, -0.0, -0.0, 0.0, -0.0, -0.0, 0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, -0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, -0.0, -0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0],borderColor:'#ef4444',backgroundColor:function(ctx){
+              var v=ctx.raw||0; return v>=0?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)';
+            },fill:true,borderWidth:2,pointRadius:1.5,tension:.3}
+          ]},
+          options:pcaBase
+        });
+      }
+      </script>
+
+      <!-- ═══ 传统CTA友好度（可折叠） ═══ -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div onclick="this.parentElement.classList.toggle('collapsed-section')" 
+             style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-bottom:1px solid #f1f5f9">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="dot" style="background:#94a3b8"></span>
+            <span style="font-size:13px;font-weight:600;color:#64748b">传统CTA友好度（规则驱动）</span>
+            <span style="font-size:11px;color:#94a3b8">点击展开</span>
+          </div>
+          <span style="font-size:18px;font-weight:700;color:#f59e0b">49.4</span>
+        </div>
+        <div class="collapsible-content" style="display:none;padding:16px">
+          <div class="overview-grid">
+            <div class="ov-card" style="border-left-color:#f59e0b">
+              <div class="ov-label">CTA友好度</div>
+              <div class="ov-value" style="color:#f59e0b">49.4</div>
+              <div class="ov-sub">一般 · 0.4×趋势+0.3×波动+0.3×量比</div>
+            </div>
+            <div class="ov-card blue">
+              <div class="ov-label">趋势品种占比</div>
+              <div class="ov-value">5.2%</div>
+              <div class="ov-sub">3/58 有明显趋势</div>
+            </div>
+            <div class="ov-card amber">
+              <div class="ov-label">平均20日波动率</div>
+              <div class="ov-value">94.1%</div>
+              <div class="ov-sub">年化波动率均值</div>
+            </div>
+            <div class="ov-card slate">
+              <div class="ov-label">成交量比</div>
+              <div class="ov-value">1.05</div>
+              <div class="ov-sub">MA20/MA60</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PCA Loading品种扫描（主角） ═══ -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> PCA品种结构分析</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:12px">
+          PC1解释29.1% · PC2解释9.5% · 分化轴: <b style="color:#64748b">黑色系 vs 能源化工</b>
+        </div>
+
+        <!-- 板块一致性卡片 -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #8b5cf6">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">能源化工</div>
+            <div style="font-size:14px;font-weight:700;color:#1e293b">PC1: +0.150</div>
+            <div style="font-size:10px;color:#10b981">一致性 81% · 21品种</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">有色金属</div>
+            <div style="font-size:14px;font-weight:700;color:#1e293b">PC1: +0.142</div>
+            <div style="font-size:10px;color:#10b981">一致性 85% · 9品种</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #374151">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">黑色系</div>
+            <div style="font-size:14px;font-weight:700;color:#1e293b">PC1: +0.109</div>
+            <div style="font-size:10px;color:#10b981">一致性 88% · 8品种</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #eab308">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">贵金属</div>
+            <div style="font-size:14px;font-weight:700;color:#1e293b">PC1: +0.163</div>
+            <div style="font-size:10px;color:#10b981">一致性 96% · 2品种</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #10b981">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">农产品</div>
+            <div style="font-size:14px;font-weight:700;color:#1e293b">PC1: +0.087</div>
+            <div style="font-size:10px;color:#f59e0b">一致性 69% · 18品种</div>
+          </div>
+        </div>
+
+        <!-- Loading排名表 -->
+        <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="border-bottom:1px solid #e2e8f0;color:#64748b;text-align:left">
+              <th style="padding:8px 4px">#</th>
+              <th style="padding:8px 4px">品种</th>
+              <th style="padding:8px 4px">板块</th>
+              <th style="padding:8px 4px">PC1</th>
+              <th style="padding:8px 4px">PC2</th>
+              <th style="padding:8px 4px">20日涨跌</th>
+              <th style="padding:8px 4px">角色</th>
+              <th style="padding:8px 4px">产业驱动</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">1</td>
+              <td style="padding:6px 4px;font-weight:700">RU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.193</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:96.5%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.028</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="泰国割胶季·轮胎开工·合成胶价差">泰国割胶季·轮胎开工·合成胶价差</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">2</td>
+              <td style="padding:6px 4px;font-weight:700">NR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.189</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:94.39999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.036</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.1%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">3</td>
+              <td style="padding:6px 4px;font-weight:700">PP</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.178</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:88.8%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.074</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="石化投产·塑编需求·PDH利润">石化投产·塑编需求·PDH利润</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">4</td>
+              <td style="padding:6px 4px;font-weight:700">L</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.176</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:88.25%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.073</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="石化检修·农膜需求·进口到港">石化检修·农膜需求·进口到港</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">5</td>
+              <td style="padding:6px 4px;font-weight:700">MA</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.175</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:87.44999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.145</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.6%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="煤制甲醇成本·MTO开工·进口到港">煤制甲醇成本·MTO开工·进口到港</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">6</td>
+              <td style="padding:6px 4px;font-weight:700">NI</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.174</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:86.99999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.126</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.7%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="不锈钢需求·印尼镍矿·新能源电池">不锈钢需求·印尼镍矿·新能源电池</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">7</td>
+              <td style="padding:6px 4px;font-weight:700">BR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.173</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:86.65%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.060</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+2.9%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">8</td>
+              <td style="padding:6px 4px;font-weight:700">AU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">贵金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.169</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:84.39999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.078</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+5.5%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="美元/实际利率·央行购金·避险情绪">美元/实际利率·央行购金·避险情绪</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">9</td>
+              <td style="padding:6px 4px;font-weight:700">CY</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.169</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:84.39999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.097</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.6%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">10</td>
+              <td style="padding:6px 4px;font-weight:700">CF</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.168</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:83.89999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.073</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.5%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="新疆产量·纺织需求·抛储政策">新疆产量·纺织需求·抛储政策</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">11</td>
+              <td style="padding:6px 4px;font-weight:700">AL</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.167</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:83.25%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.035</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+1.9%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="电解铝产能·电力成本·地产竣工">电解铝产能·电力成本·地产竣工</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">12</td>
+              <td style="padding:6px 4px;font-weight:700">EB</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.166</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:83.0%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.128</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-2.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">13</td>
+              <td style="padding:6px 4px;font-weight:700">EG</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.162</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:81.0%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.041</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-3.7%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="聚酯开工·煤化工投产·库存周期">聚酯开工·煤化工投产·库存周期</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">14</td>
+              <td style="padding:6px 4px;font-weight:700">TA</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.161</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:80.60000000000001%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.102</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.9%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="聚酯需求·PX成本·加工费">聚酯需求·PX成本·加工费</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">15</td>
+              <td style="padding:6px 4px;font-weight:700">CU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.158</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:79.14999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.003</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="全球制造业PMI·铜矿供给·新能源需求">全球制造业PMI·铜矿供给·新能源需求</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">16</td>
+              <td style="padding:6px 4px;font-weight:700">AG</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">贵金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.158</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:79.04999999999998%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.018</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-1.4%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="光伏需求·工业属性·金银比">光伏需求·工业属性·金银比</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">17</td>
+              <td style="padding:6px 4px;font-weight:700">PX</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.157</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:78.60000000000001%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.124</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.1%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">18</td>
+              <td style="padding:6px 4px;font-weight:700">Y</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.156</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:78.04999999999998%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.040</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+1.8%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="棕榈油替代·食用需求·进口大豆到港">棕榈油替代·食用需求·进口大豆到港</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">19</td>
+              <td style="padding:6px 4px;font-weight:700">BC</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.156</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:77.95%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.002</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.8%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:6px 4px;color:#94a3b8">20</td>
+              <td style="padding:6px 4px;font-weight:700">PF</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="color:#10b981;font-weight:600;min-width:48px">+0.155</span>
+                  <div style="width:60px;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                    <div style="width:77.64999999999999%;height:100%;background:#10b981;border-radius:3px"></div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-0.112</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+0.2%</td>
+              <td style="padding:6px 4px"><span style="color:#94a3b8;font-size:11px;font-weight:600">一般品种</span></td>
+              <td style="padding:6px 4px;color:#94a3b8;font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- ═══ 传统品种趋势扫描（可折叠） ═══ -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div onclick="this.parentElement.classList.toggle('collapsed-section')" 
+             style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-bottom:1px solid #f1f5f9">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="dot" style="background:#94a3b8"></span>
+            <span style="font-size:13px;font-weight:600;color:#64748b">传统品种趋势扫描（涨跌幅驱动）</span>
+            <span style="font-size:11px;color:#94a3b8">点击展开</span>
+          </div>
+          <span style="font-size:12px;color:#94a3b8">58 品种</span>
+        </div>
+        <div class="collapsible-content" style="display:none;padding:16px">
+        <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="border-bottom:1px solid #e2e8f0;color:#64748b;text-align:left">
+              <th style="padding:8px 4px">#</th>
+              <th style="padding:8px 4px">品种</th>
+              <th style="padding:8px 4px">板块</th>
+              <th style="padding:8px 4px">收盘</th>
+              <th style="padding:8px 4px">涨跌幅</th>
+              <th style="padding:8px 4px">趋势</th>
+              <th style="padding:8px 4px">波动率</th>
+              <th style="padding:8px 4px">量比</th>
+              <th style="padding:8px 4px">R²</th>
+              <th style="padding:8px 4px">OI(5d)</th>
+              <th style="padding:8px 4px">评分</th>
+              <th style="padding:8px 4px">信号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
+              <td style="padding:6px 4px;color:#94a3b8">1</td>
+              <td style="padding:6px 4px;font-weight:700">FU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">2,960.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+14.2%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">38.2%</td>
+              <td style="padding:6px 4px">1.34</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.73</td>
+              <td style="padding:6px 4px;color:#ef4444">-10.0%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.898</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">2</td>
+              <td style="padding:6px 4px;font-weight:700">LU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">3,500.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+11.6%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">36.8%</td>
+              <td style="padding:6px 4px">1.26</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.72</td>
+              <td style="padding:6px 4px;color:#10b981">+57.2%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.867</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">3</td>
+              <td style="padding:6px 4px;font-weight:700">A</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">4,708.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">14.2%</td>
+              <td style="padding:6px 4px">1.42</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.77</td>
+              <td style="padding:6px 4px;color:#10b981">+7.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.827</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
+              <td style="padding:6px 4px;color:#94a3b8">4</td>
+              <td style="padding:6px 4px;font-weight:700">SC</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">488.4</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+9.4%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">40.7%</td>
+              <td style="padding:6px 4px">1.42</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.64</td>
+              <td style="padding:6px 4px;color:#ef4444">-10.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.825</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">5</td>
+              <td style="padding:6px 4px;font-weight:700">PG</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">4,519.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+9.3%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">37.5%</td>
+              <td style="padding:6px 4px">1.14</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.36</td>
+              <td style="padding:6px 4px;color:#10b981">+280.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.732</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">6</td>
+              <td style="padding:6px 4px;font-weight:700">RU</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">17,155.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.2%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">25.3%</td>
+              <td style="padding:6px 4px">1.08</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.44</td>
+              <td style="padding:6px 4px;color:#10b981">+14.1%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.732</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">7</td>
+              <td style="padding:6px 4px;font-weight:700">NR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">13,765.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.1%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">26.2%</td>
+              <td style="padding:6px 4px">1.01</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.52</td>
+              <td style="padding:6px 4px;color:#ef4444">-24.9%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.725</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">8</td>
+              <td style="padding:6px 4px;font-weight:700">SN</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
+              <td style="padding:6px 4px">453,240.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+10.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">79.8%</td>
+              <td style="padding:6px 4px">1.14</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.10</td>
+              <td style="padding:6px 4px;color:#10b981">+97.4%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.658</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">9</td>
+              <td style="padding:6px 4px;font-weight:700">CF</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">15,395.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.5%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">17.7%</td>
+              <td style="padding:6px 4px">1.15</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.41</td>
+              <td style="padding:6px 4px;color:#10b981">+20.8%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.651</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">10</td>
+              <td style="padding:6px 4px;font-weight:700">JD</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">3,267.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+5.6%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">35.9%</td>
+              <td style="padding:6px 4px">0.91</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.29</td>
+              <td style="padding:6px 4px;color:#ef4444">-26.4%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.635</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，波动率squeeze">
+              <td style="padding:6px 4px;color:#94a3b8">11</td>
+              <td style="padding:6px 4px;font-weight:700">CS</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">2,667.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.8%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">11.7%</td>
+              <td style="padding:6px 4px">0.96</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.53</td>
+              <td style="padding:6px 4px;color:#10b981">+221.6%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.634</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
+              <td style="padding:6px 4px;color:#94a3b8">12</td>
+              <td style="padding:6px 4px;font-weight:700">CY</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">21,245.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.6%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">15.3%</td>
+              <td style="padding:6px 4px">1.07</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.42</td>
+              <td style="padding:6px 4px;color:#10b981">+38.4%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.633</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
+              <td style="padding:6px 4px;color:#94a3b8">13</td>
+              <td style="padding:6px 4px;font-weight:700">UR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
+              <td style="padding:6px 4px">1,847.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.0%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">14.1%</td>
+              <td style="padding:6px 4px">1.13</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.46</td>
+              <td style="padding:6px 4px;color:#94a3b8">-0.2%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.606</td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
+              <td style="padding:6px 4px;color:#94a3b8">14</td>
+              <td style="padding:6px 4px;font-weight:700">RR</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
+              <td style="padding:6px 4px">3,635.0</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">+1.6%</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
+              <td style="padding:6px 4px">7.9%</td>
+              <td style="padding:6px 4px">1.61</td>
+              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.45</td>
+              <td style="padding:6px 4px;color:#ef4444">-4.5%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.554</td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9" title="趋势空头，空头确认，高线性度">
+              <td style="padding:6px 4px;color:#94a3b8">15</td>
+              <td style="padding:6px 4px;font-weight:700">I</td>
+              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
+              <td style="padding:6px 4px">750.5</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.6%</td>
+              <td style="padding:6px 4px;color:#ef4444;font-weight:600">空头</td>
+              <td style="padding:6px 4px">16.2%</td>
+              <td style="padding:6px 4px">0.90</td>
+              <td style="padding:6px 4px;color:#10b981;font-weight:600">0.86</td>
+              <td style="padding:6px 4px;color:#10b981">+9.8%</td>
+              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.535</td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        </div>
+      </div>
+
+      <!-- ═══ 宏观比价（不动） ═══ -->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 宏观比价信号</div>
         <div style="overflow-x:auto">
@@ -981,16 +1963,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=经济预期改善，下降=避险升温</div>
         <div style="position:relative;height:220px"><canvas id="cta-cu-au"></canvas></div>
       </div>
-
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 油金比走势（SC/AU）</div>
         <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">上升=通胀预期/需求强，下降=衰退预期</div>
         <div style="position:relative;height:220px"><canvas id="cta-sc-au"></canvas></div>
       </div>
-
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#10b981"></span> 工业品 vs 农产品篮子</div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF)</div>
         <div style="position:relative;height:220px"><canvas id="cta-ind-agri"></canvas></div>
       </div>
 
@@ -1010,376 +1990,52 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           type:'line',
           data:{labels:["07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27"],datasets:[
             {label:'铜金比',data:[102.240421, 101.642312, 101.388386, 100.332736, 100.06407, 100.404295, 100.273097, 100.911173, 101.957273, 101.600326, 100.378358, 102.588797, 101.952864, 101.964429, 102.198486, 102.005738, 101.313808, 101.723064, 100.240588, 100.421725, 99.887709, 99.946498, 99.631886, 101.375276, 101.824648, 102.067582, 101.386927, 101.907708, 101.522516, 101.785668, 101.775638, 101.326246, 101.745539, 102.274186, 101.38007, 101.374878, 100.776283, 101.143774, 99.655241, 99.040183, 98.308953, 98.120495, 98.25895, 96.796539, 95.448663, 95.738043, 96.451527, 97.168613, 97.330447, 96.047881, 96.469799, 96.614489, 96.212194, 94.695806, 93.425606, 92.976744, 96.768532, 96.336705, 95.058394, 95.048033, 94.879255, 95.290386, 91.767648, 89.895418, 89.343358, 88.005215, 84.406881, 87.99159, 85.910307, 89.674141, 91.342276, 93.508155, 94.600381, 96.496483, 97.389338, 96.430451, 94.379122, 94.62594, 93.645558, 93.909631, 94.050992, 93.285283, 92.395137, 91.297108, 91.820335, 91.082166, 91.166597, 93.010996, 93.247833, 91.867663, 92.358669, 92.411591, 92.527302, 91.494982, 91.463157, 91.842983, 91.653388, 92.683332, 92.777697, 93.247622, 95.424891, 96.541247, 96.97507, 95.729029, 96.037223, 96.262658, 96.923743, 93.982668, 94.624364, 94.741355, 94.441611, 95.091336, 94.238954, 92.611216, 94.709662, 95.374519, 97.136672, 98.155245, 99.599935, 100.49511, 101.859296, 104.798105, 103.523876, 101.428944, 100.757094, 101.141989, 99.583325, 100.055736, 99.314142, 97.615081, 96.464801, 95.485587, 92.72178, 92.59089, 90.835753, 89.108911, 89.343249, 86.882482, 87.349494, 89.270032, 97.739441, 95.540237, 92.10826, 91.321806, 91.824753, 90.448869, 90.579904, 90.392781, 90.869534, 90.424286, 88.231204, 89.013605, 89.552369, 90.530534],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#ef4444',tension:.3}
-          ]},
-          options:ctaB
+          ]},options:ctaB
         });
         new Chart(document.getElementById('cta-sc-au'),{
           type:'line',
           data:{labels:["07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27"],datasets:[
             {label:'油金比',data:[0.677734, 0.675676, 0.664331, 0.67507, 0.664018, 0.666186, 0.665739, 0.684667, 0.655367, 0.642551, 0.635263, 0.653492, 0.659831, 0.65296, 0.667583, 0.68314, 0.689749, 0.684944, 0.658161, 0.650224, 0.645544, 0.6382, 0.621731, 0.627854, 0.638111, 0.629404, 0.618852, 0.626837, 0.625595, 0.624726, 0.624838, 0.633321, 0.638221, 0.632588, 0.635114, 0.614087, 0.615025, 0.617995, 0.603952, 0.609708, 0.605242, 0.59165, 0.590976, 0.596092, 0.578564, 0.583379, 0.588844, 0.569754, 0.586941, 0.586168, 0.597907, 0.596772, 0.586351, 0.570585, 0.553049, 0.560814, 0.573989, 0.573908, 0.568481, 0.548605, 0.515137, 0.512334, 0.489133, 0.477752, 0.462024, 0.459221, 0.432687, 0.44913, 0.440315, 0.469472, 0.487859, 0.495576, 0.501959, 0.513324, 0.507861, 0.503092, 0.497549, 0.507165, 0.506236, 0.508298, 0.501634, 0.499967, 0.493387, 0.483517, 0.492937, 0.467635, 0.479857, 0.492867, 0.499499, 0.495731, 0.48844, 0.482663, 0.481447, 0.473957, 0.470044, 0.472571, 0.475826, 0.473071, 0.473488, 0.468381, 0.474712, 0.472093, 0.477313, 0.468819, 0.463927, 0.459025, 0.450827, 0.443977, 0.443166, 0.435533, 0.43794, 0.435351, 0.437524, 0.43471, 0.438266, 0.438856, 0.434714, 0.4317, 0.442813, 0.442121, 0.423819, 0.426078, 0.416758, 0.417059, 0.429914, 0.426297, 0.433809, 0.42811, 0.429772, 0.425062, 0.417016, 0.412202, 0.403552, 0.410453, 0.396096, 0.399976, 0.388983, 0.388046, 0.378266, 0.405366, 0.445172, 0.410869, 0.40501, 0.419169, 0.426925, 0.412278, 0.424627, 0.421798, 0.423401, 0.415008, 0.42877, 0.424218, 0.421813, 0.425473],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.06)',fill:true,borderWidth:2,pointRadius:2,pointBackgroundColor:'#f59e0b',tension:.3}
-          ]},
-          options:ctaB
+          ]},options:ctaB
         });
         new Chart(document.getElementById('cta-ind-agri'),{
           type:'line',
           data:{labels:["07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27"],datasets:[
             {label:'工业品篮子',data:[1.0, 1.009502, 1.005403, 1.008628, 1.003189, 1.003038, 1.005216, 1.008626, 1.024061, 1.03422, 1.027256, 1.037853, 1.047824, 1.023886, 1.032903, 1.030545, 1.01787, 1.015096, 1.012654, 1.015313, 1.017484, 1.015988, 1.013618, 1.019201, 1.021463, 1.017447, 1.0083, 1.016928, 1.012612, 1.011179, 1.018354, 1.020827, 1.020289, 1.027104, 1.021725, 1.018811, 1.017086, 1.01482, 1.01602, 1.011632, 1.011457, 1.008505, 1.014537, 1.013044, 1.010622, 1.011723, 1.01011, 1.012445, 1.014591, 1.014187, 1.015027, 1.005991, 1.006426, 1.004986, 0.999864, 1.004583, 1.013698, 1.007678, 1.007376, 1.002149, 1.009045, 1.003988, 1.002715, 0.99045, 0.993018, 0.996994, 0.98566, 0.986914, 0.988805, 0.994573, 1.001977, 1.002471, 1.012375, 1.003769, 1.013863, 1.001705, 0.998221, 0.995225, 0.984577, 0.985251, 0.99134, 0.989313, 0.99267, 0.984737, 0.990973, 0.994754, 0.989819, 0.988778, 0.98292, 0.983417, 0.978427, 0.973862, 0.9863, 0.986751, 0.990399, 0.989958, 0.997116, 1.006017, 1.004751, 1.003985, 1.007321, 1.002845, 1.001413, 0.987874, 0.990059, 0.988112, 0.991428, 0.989524, 0.996491, 1.00409, 1.010308, 1.014246, 1.022846, 1.018446, 1.03463, 1.035078, 1.04556, 1.041233, 1.046831, 1.045829, 1.0503, 1.077404, 1.078601, 1.062418, 1.070945, 1.079741, 1.071632, 1.080239, 1.070349, 1.058975, 1.056014, 1.053168, 1.056392, 1.071575, 1.090507, 1.094378, 1.083422, 1.102033, 1.113576, 1.088418, 1.048278, 1.066307, 1.075011, 1.054287, 1.053028, 1.05671, 1.057145, 1.062446, 1.057486, 1.045251, 1.063753, 1.066784, 1.059418, 1.059055],borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
             {label:'农产品篮子',data:[1.0, 1.000135, 1.001093, 1.002785, 0.999644, 1.002736, 1.010444, 1.019265, 1.018364, 1.018243, 1.019365, 1.01872, 1.014633, 1.010734, 1.009936, 1.010841, 1.003445, 1.002566, 1.002033, 1.004109, 1.002379, 1.001007, 0.99969, 1.006833, 1.018823, 1.033175, 1.028509, 1.020549, 1.024249, 1.024806, 1.022754, 1.018356, 1.020521, 1.021947, 1.015715, 1.014099, 1.012519, 1.01387, 1.013009, 1.013347, 1.010276, 1.010558, 1.016056, 1.015321, 1.013449, 1.006725, 1.012378, 1.010094, 1.009365, 1.012964, 1.007861, 1.003027, 1.004188, 1.004097, 0.990105, 0.99254, 0.999464, 0.99761, 0.994116, 0.990442, 1.002198, 0.994275, 0.989232, 0.983355, 0.984487, 0.985349, 0.982626, 0.988995, 0.989016, 0.98471, 0.987829, 0.986141, 0.984125, 0.985667, 0.980201, 0.980106, 0.980299, 0.980919, 0.977178, 0.978896, 0.98567, 0.982835, 0.986282, 0.991432, 0.991702, 0.996173, 0.992561, 0.98926, 0.986371, 0.987892, 0.981984, 0.982096, 0.984087, 0.985301, 0.986001, 0.99061, 0.99267, 0.993163, 0.994602, 0.994718, 0.981323, 0.981923, 0.974885, 0.969329, 0.968061, 0.970948, 0.964871, 0.961146, 0.954905, 0.949384, 0.947383, 0.942044, 0.948642, 0.951387, 0.957073, 0.960524, 0.969954, 0.967737, 0.971744, 0.968459, 0.966998, 0.972161, 0.979302, 0.974119, 0.976577, 0.977778, 0.977854, 0.976601, 0.970167, 0.972917, 0.968618, 0.969681, 0.969673, 0.978724, 0.977566, 0.987129, 0.987459, 0.993245, 1.000547, 0.991425, 0.978982, 0.980495, 0.982949, 0.979686, 0.980147, 0.979831, 0.980939, 0.986056, 0.983674, 0.980635, 0.992276, 0.998828, 0.99627, 1.000457],borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
-          ]},
-          options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#f1f5f9'}}}})
+          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#f1f5f9'}}}})
         });
       }
       </script>
 
-      <!--
-      ╔══════════════════════════════════════════════════════════════╗
-      ║  品种趋势扫描 v2 — 计算公式说明                                ║
-      ╠══════════════════════════════════════════════════════════════╣
-      ║                                                              ║
-      ║  【趋势方向 (trend_dir)】                                      ║
-      ║  MA多头排列评分 = 比较 MA5>MA10, MA10>MA20, MA20>MA60 各对     ║
-      ║    大于+1, 小于-1, 等于0 → 求和/3 → alignment ∈ [-1, +1]     ║
-      ║  价格位置 = (价格在MA5/10/20/60之上的个数)/4 × 2 - 1           ║
-      ║  综合 = 0.6×alignment + 0.4×价格位置                          ║
-      ║    > 0.3 → 多头 | < -0.3 → 空头 | 其他 → 震荡                ║
-      ║                                                              ║
-      ║  【涨跌幅 (chg_20d)】                                         ║
-      ║  = (今日收盘 / 20日前收盘 - 1) × 100%                          ║
-      ║                                                              ║
-      ║  【波动率 (vol_20d)】                                          ║
-      ║  = std(近20日涨跌幅%) × √252 / 100  → 年化波动率               ║
-      ║                                                              ║
-      ║  【波动率分位 (vol_pctile_60d)】                                ║
-      ║  = vol_20d 在近60日滚动20日波动率序列中的分位数 (0~1)            ║
-      ║                                                              ║
-      ║  【Squeeze 检测】                                              ║
-      ║  5日前波动率分位 < 30% 且 当前分位 > 50% → Squeeze breakout     ║
-      ║  含义：波动率从低位快速扩张，趋势启动信号                        ║
-      ║                                                              ║
-      ║  【量比 (volume_ratio)】                                       ║
-      ║  = 成交额MA20 / 成交额MA60   (>1.2 视为放量)                   ║
-      ║                                                              ║
-      ║  【Donchian 突破】                                             ║
-      ║  DC20: 收盘价 ≥ 近20日最高价 → 突破高点; ≤ 近20日最低价 → 突破低点 ║
-      ║  DC60: 同理用60日窗口，更强的趋势确认                           ║
-      ║  dc20_position = (价格-20日低) / (20日高-20日低)  → 0~1+       ║
-      ║                                                              ║
-      ║  【持仓量变化 (OI)】                                           ║
-      ║  oi_chg_5d = (今日OI / 5日前OI - 1) × 100%                    ║
-      ║  价量共振判定:                                                  ║
-      ║    涨 + OI↑(>3%) → 多头确认 (新多入场)                         ║
-      ║    跌 + OI↑(>3%) → 空头确认 (新空入场)                         ║
-      ║    涨 + OI↓(<-3%) → 多头衰竭 (空头平仓驱动)                    ║
-      ║    跌 + OI↓(<-3%) → 空头衰竭 (多头平仓驱动)                    ║
-      ║                                                              ║
-      ║  【R² (趋势线性度)】                                           ║
-      ║  对近20日收盘价做线性回归, R² = SS_xy² / (SS_xx × SS_yy)       ║
-      ║  > 0.8 = 趋势非常线性(一路不回头), 适合趋势跟踪策略             ║
-      ║                                                              ║
-      ║  【评分 (trend_score)】                                        ║
-      ║  所有因子先做全品种 min-max 标准化到 [0,1]                      ║
-      ║  = 0.25×|chg_20d|_norm                                        ║
-      ║  + 0.20×|ma_alignment|_norm                                    ║
-      ║  + 0.15×vol_pctile_60d                                        ║
-      ║  + 0.15×volume_ratio_norm                                      ║
-      ║  + 0.15×R²_norm                                                ║
-      ║  + 0.10×min(dc20_position, 1.0)                                ║
-      ║                                                              ║
-      ║  【信号 (最多5★)】 满足以下条件各 +1★:                         ║
-      ║  ① 趋势方向=多头或空头 (非震荡)                                ║
-      ║  ② 20日Donchian突破                                           ║
-      ║  ③ 60日Donchian突破                                           ║
-      ║  ④ 放量 (量比>1.2)                                            ║
-      ║  ⑤ OI确认 (多头确认 或 空头确认)                               ║
-      ║  ⑥ Squeeze breakout                                           ║
-      ║  ⑦ 高线性度 (R²>0.8)                                          ║
-      ║  (最多取5★)                                                    ║
-      ║                                                              ║
-      ║  【过滤】日均成交额MA20 ≤ 500万 的品种不上榜                    ║
-      ╚══════════════════════════════════════════════════════════════╝
-      -->
-      <!-- 品种趋势扫描 -->
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 品种趋势扫描 Top 15</div>
-        <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <thead>
-            <tr style="border-bottom:1px solid #e2e8f0;color:#64748b;text-align:left">
-              <th style="padding:8px 4px">#</th>
-              <th style="padding:8px 4px">品种</th>
-              <th style="padding:8px 4px">板块</th>
-              <th style="padding:8px 4px">收盘</th>
-              <th style="padding:8px 4px">涨跌幅</th>
-              <th style="padding:8px 4px">趋势</th>
-              <th style="padding:8px 4px">波动率</th>
-              <th style="padding:8px 4px">量比</th>
-              <th style="padding:8px 4px">R²</th>
-              <th style="padding:8px 4px">OI(5d)</th>
-              <th style="padding:8px 4px">评分</th>
-              <th style="padding:8px 4px">信号</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量 | 多头衰竭">
-              <td style="padding:6px 4px;color:#94a3b8">1</td>
-              <td style="padding:6px 4px;font-weight:700">FU</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">2,960.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+14.2%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">38.2%</td>
-              <td style="padding:6px 4px">1.34</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.73</td>
-              <td style="padding:6px 4px;color:#ef4444">-10.0%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.898</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">2</td>
-              <td style="padding:6px 4px;font-weight:700">LU</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">3,500.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+11.6%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">36.8%</td>
-              <td style="padding:6px 4px">1.26</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.72</td>
-              <td style="padding:6px 4px;color:#10b981">+57.2%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.867</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">3</td>
-              <td style="padding:6px 4px;font-weight:700">A</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">4,708.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.8%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">14.2%</td>
-              <td style="padding:6px 4px">1.42</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.77</td>
-              <td style="padding:6px 4px;color:#10b981">+7.8%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.827</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量 | 多头衰竭">
-              <td style="padding:6px 4px;color:#94a3b8">4</td>
-              <td style="padding:6px 4px;font-weight:700">SC</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">488.4</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+9.4%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">40.7%</td>
-              <td style="padding:6px 4px">1.42</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.64</td>
-              <td style="padding:6px 4px;color:#ef4444">-10.8%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.825</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">5</td>
-              <td style="padding:6px 4px;font-weight:700">PG</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">4,519.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+9.3%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">37.5%</td>
-              <td style="padding:6px 4px">1.14</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.36</td>
-              <td style="padding:6px 4px;color:#10b981">+280.5%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.732</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">6</td>
-              <td style="padding:6px 4px;font-weight:700">RU</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">17,155.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.2%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">25.3%</td>
-              <td style="padding:6px 4px">1.08</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.44</td>
-              <td style="padding:6px 4px;color:#10b981">+14.1%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.732</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头 | 多头衰竭">
-              <td style="padding:6px 4px;color:#94a3b8">7</td>
-              <td style="padding:6px 4px;font-weight:700">NR</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">13,765.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+8.1%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">26.2%</td>
-              <td style="padding:6px 4px">1.01</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.52</td>
-              <td style="padding:6px 4px;color:#ef4444">-24.9%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:700">0.725</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认 | DC20:突破高点 DC60:突破高点 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">8</td>
-              <td style="padding:6px 4px;font-weight:700">SN</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">有色金属</td>
-              <td style="padding:6px 4px">453,240.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+10.8%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">79.8%</td>
-              <td style="padding:6px 4px">1.14</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.10</td>
-              <td style="padding:6px 4px;color:#10b981">+97.4%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.658</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">9</td>
-              <td style="padding:6px 4px;font-weight:700">CF</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">15,395.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.5%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">17.7%</td>
-              <td style="padding:6px 4px">1.15</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.41</td>
-              <td style="padding:6px 4px;color:#10b981">+20.8%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.651</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头 | 多头衰竭">
-              <td style="padding:6px 4px;color:#94a3b8">10</td>
-              <td style="padding:6px 4px;font-weight:700">JD</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">3,267.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+5.6%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">35.9%</td>
-              <td style="padding:6px 4px">0.91</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.29</td>
-              <td style="padding:6px 4px;color:#ef4444">-26.4%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.635</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，波动率squeeze | 多头确认 Squeeze">
-              <td style="padding:6px 4px;color:#94a3b8">11</td>
-              <td style="padding:6px 4px;font-weight:700">CS</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">2,667.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.8%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">11.7%</td>
-              <td style="padding:6px 4px">0.96</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.53</td>
-              <td style="padding:6px 4px;color:#10b981">+221.6%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.634</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认 | 多头确认">
-              <td style="padding:6px 4px;color:#94a3b8">12</td>
-              <td style="padding:6px 4px;font-weight:700">CY</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">21,245.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+3.6%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">15.3%</td>
-              <td style="padding:6px 4px">1.07</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.42</td>
-              <td style="padding:6px 4px;color:#10b981">+38.4%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.633</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
-              <td style="padding:6px 4px;color:#94a3b8">13</td>
-              <td style="padding:6px 4px;font-weight:700">UR</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">能源化工</td>
-              <td style="padding:6px 4px">1,847.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+4.0%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">14.1%</td>
-              <td style="padding:6px 4px">1.13</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.46</td>
-              <td style="padding:6px 4px;color:#94a3b8">-0.2%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.606</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量 | 多头衰竭">
-              <td style="padding:6px 4px;color:#94a3b8">14</td>
-              <td style="padding:6px 4px;font-weight:700">RR</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">农产品</td>
-              <td style="padding:6px 4px">3,635.0</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">+1.6%</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">多头</td>
-              <td style="padding:6px 4px">7.9%</td>
-              <td style="padding:6px 4px">1.61</td>
-              <td style="padding:6px 4px;color:#94a3b8;font-weight:600">0.45</td>
-              <td style="padding:6px 4px;color:#ef4444">-4.5%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.554</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid #f1f5f9" title="趋势空头，空头确认，高线性度 | 空头确认">
-              <td style="padding:6px 4px;color:#94a3b8">15</td>
-              <td style="padding:6px 4px;font-weight:700">I</td>
-              <td style="padding:6px 4px;color:#64748b;font-size:11px">黑色系</td>
-              <td style="padding:6px 4px">750.5</td>
-              <td style="padding:6px 4px;color:#ef4444;font-weight:600">-4.6%</td>
-              <td style="padding:6px 4px;color:#ef4444;font-weight:600">空头</td>
-              <td style="padding:6px 4px">16.2%</td>
-              <td style="padding:6px 4px">0.90</td>
-              <td style="padding:6px 4px;color:#10b981;font-weight:600">0.86</td>
-              <td style="padding:6px 4px;color:#10b981">+9.8%</td>
-              <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.535</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
-
-      <!-- 板块趋势分布 -->
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:#3b82f6"></span> 板块趋势分布</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px">
-          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #374151">
-            <div style="font-size:11px;color:#64748b;margin-bottom:4px">黑色系</div>
-            <div style="font-size:18px;font-weight:700;color:#1e293b">0/8</div>
-            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
-            <div style="font-size:11px;color:#64748b;margin-bottom:4px">有色金属</div>
-            <div style="font-size:18px;font-weight:700;color:#1e293b">1/9</div>
-            <div style="font-size:10px;color:#94a3b8">趋势占比 11%</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #eab308">
-            <div style="font-size:11px;color:#64748b;margin-bottom:4px">贵金属</div>
-            <div style="font-size:18px;font-weight:700;color:#1e293b">0/2</div>
-            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #8b5cf6">
-            <div style="font-size:11px;color:#64748b;margin-bottom:4px">能源化工</div>
-            <div style="font-size:18px;font-weight:700;color:#1e293b">2/21</div>
-            <div style="font-size:10px;color:#94a3b8">趋势占比 10%</div>
-          </div>
-          <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #10b981">
-            <div style="font-size:11px;color:#64748b;margin-bottom:4px">农产品</div>
-            <div style="font-size:18px;font-weight:700;color:#1e293b">0/18</div>
-            <div style="font-size:10px;color:#94a3b8">趋势占比 0%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 指标说明 -->
+      <!-- ═══ 指标说明 ═══ -->
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
-        <p>① CTA友好度 = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比，标准化到0-100</p>
-        <p>② 趋势判定：MA5/10/20/60多头排列 + 价格位置，综合 &gt;0.3=多头，&lt;-0.3=空头</p>
-        <p>③ 评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²线性度15% + Donchian位置10%</p>
-        <p>④ 信号(最多5★)：趋势方向 + 20日突破 + 60日突破 + 放量 + OI确认 + Squeeze + 高R²</p>
-        <p>⑦ R²：近20日收盘价线性回归拟合度，&gt;0.8=趋势非常线性；OI(5d)：5日持仓量变化率</p>
-        <p>⑤ 铜金比↑=经济预期改善，↓=避险升温；油金比↑=通胀/需求强，↓=衰退预期</p>
-        <p>⑥ 工业品/农产品：工业篮子(RB,CU,AL,MA,TA,EG) vs 农产品篮子(M,P,SR,C,OI,CF) 等权归1复利比值</p>
-        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · 更新：2026-02-27</p>
+        <p><b style="color:#8b5cf6">PCA核心引擎</b></p>
+        <p>① PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），PC1方差解释比为核心驱动</p>
+        <p>② PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
+        <p>③ 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
+        <p>④ PC1累计值：持续正/负=动量主导，频繁翻转=反转主导</p>
+        <p>⑤ Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
+        <p>⑥ 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
+        <p style="margin-top:8px"><b style="color:#64748b">传统指标</b></p>
+        <p>⑦ CTA友好度(传统) = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比</p>
+        <p>⑧ 品种评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²15% + Donchian10%</p>
+        <p>⑨ 铜金比↑=经济预期改善；油金比↑=通胀/需求强；工业品/农产品比↑=工业品相对强</p>
+        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · PCA窗口60日 · 更新：2026-02-27</p>
       </div>
-        <iframe src="size_spread/fund_nav/fund_nav.html?tab=cta" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%"></iframe>
+
+      <!-- 折叠功能CSS+JS -->
+      <style>
+      .collapsed-section .collapsible-content{display:none!important}
+      .card:not(.collapsed-section) .collapsible-content{display:block!important}
+      </style>
+      <script>
+      // 默认折叠：给所有含collapsible-content的card加上collapsed类
+      document.querySelectorAll('#strat-cta .collapsible-content').forEach(function(el){
+        el.parentElement.classList.add('collapsed-section');
+      });
+      </script>
       </div>
       <div class="strat-page" id="strat-convertible">
 <!-- 转债指增策略环境 — 自动注入 -->
@@ -1710,7 +2366,7 @@ function initCbCharts() {
       page.classList.add('active');
       // 懒加载图表
       if(strat==='momentum-stock'&&typeof initMsCharts==='function')initMsCharts();
-      if(strat==='cta'&&typeof initCtaCharts==='function')initCtaCharts();
+      if(strat==='cta'){if(typeof initPcaCharts==='function')initPcaCharts();if(typeof initCtaCharts==='function')initCtaCharts();}
       if(strat==='convertible'&&typeof initCbCharts==='function')initCbCharts();
     });
   });

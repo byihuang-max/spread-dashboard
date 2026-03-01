@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Notes — GAMT 投研知识库</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #1e1e2e; --bg2: #252536; --bg3: #2d2d44;
+  --text: #cdd6f4; --text2: #a6adc8; --text3: #6c7086;
+  --accent: #89b4fa; --accent2: #74c7ec; --green: #a6e3a1;
+  --yellow: #f9e2af; --red: #f38ba8; --mauve: #cba6f7;
+  --border: #45475a; --hover: #313244;
+}
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+/* Sidebar */
+.sidebar { width: 280px; min-width: 280px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+.sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+.sidebar-header h1 { font-size: 16px; color: var(--accent); margin-bottom: 12px; }
+.search-box { width: 100%; padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; outline: none; }
+.search-box:focus { border-color: var(--accent); }
+.search-box::placeholder { color: var(--text3); }
+
+.nav-section { padding: 12px 0; overflow-y: auto; flex: 1; }
+.nav-group { margin-bottom: 8px; }
+.nav-group-title { padding: 4px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); cursor: pointer; user-select: none; }
+.nav-group-title:hover { color: var(--text2); }
+.nav-item { padding: 6px 20px 6px 28px; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-item:hover { background: var(--hover); color: var(--text); }
+.nav-item.active { background: var(--bg3); color: var(--accent); border-right: 2px solid var(--accent); }
+.nav-item .icon { margin-right: 6px; font-size: 12px; }
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.toolbar { padding: 12px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--bg2); }
+.breadcrumb { font-size: 13px; color: var(--text3); }
+.breadcrumb span { color: var(--text2); }
+.view-toggle { margin-left: auto; display: flex; gap: 4px; }
+.view-toggle button { padding: 4px 10px; font-size: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; color: var(--text2); cursor: pointer; }
+.view-toggle button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+.content-area { flex: 1; overflow-y: auto; padding: 32px 48px; max-width: 900px; }
+
+/* Note rendering */
+.note-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; color: var(--text); }
+.note-body { line-height: 1.8; font-size: 15px; }
+.note-body h2 { font-size: 20px; margin: 28px 0 12px; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.note-body h3 { font-size: 16px; margin: 20px 0 8px; color: var(--mauve); }
+.note-body p { margin: 8px 0; }
+.note-body blockquote { border-left: 3px solid var(--accent); padding: 8px 16px; margin: 12px 0; background: var(--bg2); border-radius: 0 6px 6px 0; color: var(--text2); font-style: italic; }
+.note-body code { background: var(--bg3); padding: 2px 6px; border-radius: 3px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+.note-body pre { background: var(--bg3); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; }
+.note-body pre code { background: none; padding: 0; }
+.note-body ul, .note-body ol { padding-left: 24px; margin: 8px 0; }
+.note-body li { margin: 4px 0; }
+.note-body strong { color: var(--yellow); }
+.note-body em { color: var(--text2); }
+
+/* Wiki links */
+.wiki-link { color: var(--accent); cursor: pointer; text-decoration: none; border-bottom: 1px dashed var(--accent); }
+.wiki-link:hover { color: var(--accent2); border-bottom-style: solid; }
+.wiki-link.broken { color: var(--red); border-bottom-color: var(--red); }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 8px; margin: 2px 4px 2px 0; background: var(--bg3); border-radius: 10px; font-size: 12px; color: var(--mauve); cursor: pointer; }
+.tag:hover { background: var(--border); }
+
+/* Backlinks panel */
+.backlinks { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+.backlinks h3 { font-size: 14px; color: var(--text3); margin-bottom: 12px; }
+.backlink-item { padding: 8px 12px; margin: 4px 0; background: var(--bg2); border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text2); }
+.backlink-item:hover { background: var(--bg3); color: var(--text); }
+.backlink-item .context { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Search results */
+.search-results { padding: 20px; }
+.search-result { padding: 12px 16px; margin: 8px 0; background: var(--bg2); border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+.search-result:hover { border-color: var(--accent); }
+.search-result .title { font-size: 15px; color: var(--accent); margin-bottom: 4px; }
+.search-result .path { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.search-result .snippet { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.search-result .snippet mark { background: rgba(249,226,175,0.2); color: var(--yellow); border-radius: 2px; padding: 0 2px; }
+
+/* Graph view */
+.graph-container { flex: 1; position: relative; }
+.graph-container canvas { width: 100%; height: 100%; }
+
+/* Welcome */
+.welcome { text-align: center; padding: 80px 40px; color: var(--text3); }
+.welcome h2 { font-size: 24px; color: var(--text2); margin-bottom: 16px; }
+.welcome p { font-size: 14px; line-height: 1.8; max-width: 500px; margin: 0 auto; }
+.welcome .shortcuts { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.welcome .shortcut { padding: 8px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+.welcome .shortcut kbd { background: var(--bg3); padding: 2px 6px; border-radius: 3px; font-family: monospace; color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; min-width: 60px; }
+  .sidebar-header h1, .nav-group-title, .nav-item { display: none; }
+  .content-area { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>📝 Smart Notes</h1>
+    <input type="text" class="search-box" placeholder="搜索笔记…  ⌘K" id="searchInput">
+  </div>
+  <div class="nav-section" id="navSection"></div>
+</div>
+
+<div class="main">
+  <div class="toolbar" id="toolbar">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="view-toggle">
+      <button id="btnNotes" class="active" onclick="switchView('notes')">📄 笔记</button>
+      <button id="btnGraph" onclick="switchView('graph')">🔗 图谱</button>
+    </div>
+  </div>
+  <div class="content-area" id="contentArea">
+    <div class="welcome">
+      <h2>GAMT 投研知识库</h2>
+      <p>记录每一次对话的洞察、每一个参数背后的"为什么"。<br>搜索关键词，跳转到相关的讨论和逻辑。</p>
+      <div class="shortcuts">
+        <div class="shortcut"><kbd>⌘K</kbd> 搜索</div>
+        <div class="shortcut"><kbd>←</kbd> 返回</div>
+      </div>
+    </div>
+  </div>
+  <canvas id="graphCanvas" style="display:none; width:100%; height:100%;"></canvas>
+</div>
+
+<script>
+// ===== Note Database =====
+const NOTES = {};
+let currentNote = null;
+let history = [];
+
+// Parse markdown files loaded at build time or fetched dynamically
+// For simplicity, we embed notes as JS objects (the build script generates this)
+
+async function loadNotes() {
+  // Fetch the note index
+  try {
+    const resp = await fetch('notes/index.json');
+    const index = await resp.json();
+    for (const entry of index) {
+      const noteResp = await fetch('notes/' + entry.path);
+      const content = await noteResp.text();
+      const id = entry.path.replace(/\.md$/, '');
+      const title = content.match(/^#\s+(.+)$/m)?.[1] || entry.name;
+      const tags = [...content.matchAll(/#(\S+)/g)].map(m => m[1]).filter(t => !t.startsWith('#'));
+      const links = [...content.matchAll(/\[\[([^\]]+)\]\]/g)].map(m => m[1]);
+      NOTES[id] = { id, title, path: entry.path, category: entry.category, content, tags, links };
+    }
+  } catch(e) {
+    console.error('Failed to load index:', e);
+  }
+  renderNav();
+}
+
+// ===== Navigation =====
+function renderNav(filter = '') {
+  const nav = document.getElementById('navSection');
+  const categories = { concepts: '💡 核心概念', sessions: '💬 对话记录', decisions: '⚖️ 决策记录' };
+  let html = '';
+  for (const [cat, label] of Object.entries(categories)) {
+    const notes = Object.values(NOTES).filter(n => n.category === cat && 
+      (!filter || n.title.toLowerCase().includes(filter) || n.content.toLowerCase().includes(filter)));
+    if (notes.length === 0) continue;
+    html += `<div class="nav-group">
+      <div class="nav-group-title">${label}</div>
+      ${notes.map(n => `<div class="nav-item ${currentNote?.id === n.id ? 'active' : ''}" onclick="openNote('${n.id}')">
+        <span class="icon">${cat === 'concepts' ? '◆' : cat === 'sessions' ? '◇' : '▸'}</span>${n.title}
+      </div>`).join('')}
+    </div>`;
+  }
+  nav.innerHTML = html || '<div style="padding:20px;color:var(--text3);font-size:13px;">无匹配结果</div>';
+}
+
+// ===== Note Rendering =====
+function openNote(id) {
+  const note = NOTES[id];
+  if (!note) {
+    // Try to find by title
+    const found = Object.values(NOTES).find(n => n.title === id);
+    if (found) return openNote(found.id);
+    return;
+  }
+  if (currentNote) history.push(currentNote.id);
+  currentNote = note;
+  renderNote(note);
+  renderNav();
+  document.getElementById('breadcrumb').innerHTML = `<span>${{concepts:'概念',sessions:'对话',decisions:'决策'}[note.category] || ''}</span> / ${note.title}`;
+}
+
+function renderNote(note) {
+  const area = document.getElementById('contentArea');
+  area.style.display = 'block';
+  document.getElementById('graphCanvas').style.display = 'none';
+  document.getElementById('btnNotes').classList.add('active');
+  document.getElementById('btnGraph').classList.remove('active');
+
+  // Parse markdown (simplified)
+  let body = note.content
+    .replace(/^#\s+.+$/m, '') // remove title (we show it separately)
+    .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
+    .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
+    .replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/~~(.+?)~~/g, '<del>$1</del>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+    .replace(/\[\[([^\]]+)\]\]/g, (_, name) => {
+      const target = Object.values(NOTES).find(n => n.title === name || n.id.endsWith('/' + name) || n.id.includes(name));
+      if (target) return `<a class="wiki-link" onclick="openNote('${target.id}')">${name}</a>`;
+      return `<a class="wiki-link broken" title="笔记不存在">${name}</a>`;
+    })
+    .replace(/#(\S+)/g, '<span class="tag" onclick="searchTag(\'$1\')">#$1</span>');
+
+  // Fix consecutive blockquotes
+  body = body.replace(/<\/blockquote>\s*<blockquote>/g, '<br>');
+  // Wrap loose text in paragraphs
+  body = body.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return '';
+    if (trimmed.startsWith('<')) return trimmed;
+    return `<p>${trimmed}</p>`;
+  }).join('\n');
+
+  // Backlinks
+  const backlinks = Object.values(NOTES).filter(n => n.links.some(l => {
+    const target = Object.values(NOTES).find(t => t.title === l || t.id.endsWith('/' + l) || t.id.includes(l));
+    return target?.id === note.id;
+  }));
+
+  let backlinksHtml = '';
+  if (backlinks.length > 0) {
+    backlinksHtml = `<div class="backlinks"><h3>🔗 反向链接 (${backlinks.length})</h3>
+      ${backlinks.map(b => {
+        // Find the line that mentions this note
+        const lines = b.content.split('\n');
+        const contextLine = lines.find(l => l.includes(`[[${note.title}]]`)) || '';
+        return `<div class="backlink-item" onclick="openNote('${b.id}')">
+          <div>${b.title}</div>
+          <div class="context">${contextLine.replace(/\[\[([^\]]+)\]\]/g, '$1').substring(0, 100)}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  area.innerHTML = `<div class="note-title">${note.title}</div><div class="note-body">${body}</div>${backlinksHtml}`;
+}
+
+// ===== Search =====
+const searchInput = document.getElementById('searchInput');
+let searchTimeout;
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+      renderNav();
+      if (!currentNote) showWelcome();
+      else renderNote(currentNote);
+      return;
+    }
+    showSearchResults(q);
+  }, 200);
+});
+
+function showSearchResults(query) {
+  const area = document.getElementById('contentArea');
+  const results = Object.values(NOTES).filter(n => 
+    n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)
+  ).map(n => {
+    // Find matching lines for snippet
+    const lines = n.content.split('\n').filter(l => l.toLowerCase().includes(query));
+    const snippet = lines.slice(0, 2).join(' ').substring(0, 200);
+    const highlighted = snippet.replace(new RegExp(query, 'gi'), m => `<mark>${m}</mark>`);
+    return { note: n, snippet: highlighted };
+  });
+
+  area.innerHTML = `<div class="search-results">
+    <h3 style="color:var(--text3);margin-bottom:16px;">搜索 "${query}" — ${results.length} 条结果</h3>
+    ${results.map(r => `<div class="search-result" onclick="openNote('${r.note.id}'); searchInput.value='';">
+      <div class="title">${r.note.title}</div>
+      <div class="path">${r.note.category} / ${r.note.path}</div>
+      <div class="snippet">${r.snippet}</div>
+    </div>`).join('')}
+  </div>`;
+  renderNav(query);
+}
+
+function searchTag(tag) {
+  searchInput.value = tag;
+  showSearchResults(tag.toLowerCase());
+}
+
+function showWelcome() {
+  document.getElementById('contentArea').innerHTML = `<div class="welcome">
+    <h2>GAMT 投研知识库</h2>
+    <p>记录每一次对话的洞察、每一个参数背后的"为什么"。<br>搜索关键词，跳转到相关的讨论和逻辑。</p>
+    <div class="shortcuts">
+      <div class="shortcut"><kbd>⌘K</kbd> 搜索</div>
+      <div class="shortcut"><kbd>←</kbd> 返回</div>
+    </div>
+  </div>`;
+}
+
+// ===== Graph View =====
+function switchView(view) {
+  if (view === 'graph') {
+    document.getElementById('contentArea').style.display = 'none';
+    document.getElementById('graphCanvas').style.display = 'block';
+    document.getElementById('btnGraph').classList.add('active');
+    document.getElementById('btnNotes').classList.remove('active');
+    drawGraph();
+  } else {
+    document.getElementById('contentArea').style.display = 'block';
+    document.getElementById('graphCanvas').style.display = 'none';
+    document.getElementById('btnNotes').classList.add('active');
+    document.getElementById('btnGraph').classList.remove('active');
+  }
+}
+
+function drawGraph() {
+  const canvas = document.getElementById('graphCanvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * 2;
+  canvas.height = rect.height * 2;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(2, 2);
+
+  const notes = Object.values(NOTES);
+  if (notes.length === 0) return;
+
+  // Simple force-directed layout
+  const nodes = notes.map((n, i) => ({
+    id: n.id, title: n.title, category: n.category,
+    x: rect.width/2 + (Math.random() - 0.5) * 300,
+    y: rect.height/2 + (Math.random() - 0.5) * 200,
+    vx: 0, vy: 0
+  }));
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+
+  // Build edges
+  const edges = [];
+  for (const note of notes) {
+    for (const link of note.links) {
+      const target = notes.find(n => n.title === link || n.id.endsWith('/' + link) || n.id.includes(link));
+      if (target) edges.push({ source: note.id, target: target.id });
+    }
+  }
+
+  // Simulate
+  for (let iter = 0; iter < 200; iter++) {
+    // Repulsion
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        let dx = nodes[j].x - nodes[i].x;
+        let dy = nodes[j].y - nodes[i].y;
+        let d = Math.sqrt(dx*dx + dy*dy) || 1;
+        let f = 5000 / (d * d);
+        nodes[i].vx -= dx/d * f; nodes[i].vy -= dy/d * f;
+        nodes[j].vx += dx/d * f; nodes[j].vy += dy/d * f;
+      }
+    }
+    // Attraction (edges)
+    for (const e of edges) {
+      const s = nodeMap[e.source], t = nodeMap[e.target];
+      if (!s || !t) continue;
+      let dx = t.x - s.x, dy = t.y - s.y;
+      let d = Math.sqrt(dx*dx + dy*dy) || 1;
+      let f = (d - 120) * 0.05;
+      s.vx += dx/d * f; s.vy += dy/d * f;
+      t.vx -= dx/d * f; t.vy -= dy/d * f;
+    }
+    // Center gravity
+    for (const n of nodes) {
+      n.vx += (rect.width/2 - n.x) * 0.01;
+      n.vy += (rect.height/2 - n.y) * 0.01;
+      n.vx *= 0.8; n.vy *= 0.8;
+      n.x += n.vx; n.y += n.vy;
+    }
+  }
+
+  // Draw edges
+  ctx.strokeStyle = 'rgba(137,180,250,0.2)';
+  ctx.lineWidth = 1;
+  for (const e of edges) {
+    const s = nodeMap[e.source], t = nodeMap[e.target];
+    if (!s || !t) continue;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(t.x, t.y);
+    ctx.stroke();
+  }
+
+  // Draw nodes
+  const colors = { concepts: '#89b4fa', sessions: '#a6e3a1', decisions: '#f9e2af' };
+  for (const n of nodes) {
+    const r = n.id === currentNote?.id ? 8 : 5;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = colors[n.category] || '#cdd6f4';
+    ctx.fill();
+    if (n.id === currentNote?.id) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = '#cdd6f4';
+    ctx.font = '11px -apple-system, PingFang SC, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.title, n.x, n.y + r + 14);
+  }
+
+  // Click handler
+  canvas.onclick = (e) => {
+    const cr = canvas.getBoundingClientRect();
+    const x = e.clientX - cr.left, y = e.clientY - cr.top;
+    for (const n of nodes) {
+      if (Math.abs(n.x - x) < 20 && Math.abs(n.y - y) < 20) {
+        openNote(n.id);
+        return;
+      }
+    }
+  };
+}
+
+// ===== Keyboard shortcuts =====
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+  if (e.key === 'Escape') {
+    searchInput.value = '';
+    searchInput.blur();
+    renderNav();
+  }
+  if (e.altKey && e.key === 'ArrowLeft' && history.length > 0) {
+    const prev = history.pop();
+    currentNote = null;
+    openNote(prev);
+  }
+});
+
+// ===== Init =====
+loadNotes();
+</script>
+</body>
+</html>

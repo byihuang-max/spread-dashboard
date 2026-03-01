@@ -66,13 +66,15 @@ def get_trade_dates(n_days=LOOKBACK_DAYS):
 
 RAW_HEADERS = [
     'date', 'up_count', 'down_count', 'zha_count', 'max_height',
-    'lianban_count', 'shouban_count', 'seal_zero_count'
+    'lianban_count', 'shouban_count', 'seal_zero_count',
+    'big_cap_up', 'mega_cap_up', 'mega_cap_names'
 ]
 
 FULL_HEADERS = [
     # 基础数据
     'date', 'up_count', 'down_count', 'zha_count', 'max_height',
     'lianban_count', 'shouban_count', 'seal_zero_count',
+    'big_cap_up', 'mega_cap_up', 'mega_cap_names',
     # 计算指标
     'promotion_rate', 'rate_1to2', 'zha_rate', 'ud_ratio', 'seal_quality',
     'h_norm', 'p_norm', 'z_norm', 'u_norm', 's_norm',
@@ -101,7 +103,10 @@ def read_raw_csv():
     # 转数值
     for r in rows:
         for k in RAW_HEADERS[1:]:
-            r[k] = int(r[k]) if r.get(k, '') != '' else 0
+            if k == 'mega_cap_names':
+                r[k] = r.get(k, '')
+            else:
+                r[k] = int(r[k]) if r.get(k, '') != '' else 0
     return sorted(rows, key=lambda x: x['date'])
 
 def write_csv(path, headers, rows):
@@ -143,6 +148,9 @@ def migrate_from_json():
             'lianban_count': d['lianban_count'],
             'shouban_count': d['shouban_count'],
             'seal_zero_count': round(d['seal_quality'] / 100 * max(d['up_count'], 1)),
+            'big_cap_up': 0,
+            'mega_cap_up': 0,
+            'mega_cap_names': '',
         })
     write_csv(RAW_CSV, RAW_HEADERS, raw_rows)
     log(f"    momentum_raw.csv: {len(raw_rows)} 行")
@@ -171,6 +179,27 @@ def fetch_day_cached(trade_date):
     return result
 
 
+def fetch_daily_basic(trade_date, retries=3):
+    """拉取某日 daily_basic 获取总市值，返回 {ts_code: total_mv} 字典"""
+    for attempt in range(retries):
+        try:
+            resp = requests.post(TUSHARE_URL, json={
+                'api_name': 'daily_basic', 'token': TUSHARE_TOKEN,
+                'params': {'trade_date': trade_date},
+                'fields': 'ts_code,total_mv'
+            }, timeout=20)
+            data = resp.json()
+            if data.get('code') == 0 and data.get('data'):
+                cols = data['data']['fields']
+                return {row[cols.index('ts_code')]: row[cols.index('total_mv')]
+                        for row in data['data']['items'] if row[cols.index('total_mv')]}
+            return {}
+        except Exception:
+            if attempt < retries - 1:
+                time.sleep(2)
+    return {}
+
+
 def compute_raw_day(trade_date):
     """拉取并计算单日基础数据"""
     data = fetch_day_cached(trade_date)
@@ -192,6 +221,23 @@ def compute_raw_day(trade_date):
         if ot == 0:
             seal_zero_count += 1
 
+    # 市值标注
+    big_cap_up = 0
+    mega_cap_up = 0
+    mega_cap_names = []
+    if ups:
+        mv_map = fetch_daily_basic(trade_date)
+        time.sleep(0.2)
+        for u in ups:
+            ts_code = u.get('ts_code', '')
+            mv = mv_map.get(ts_code)
+            if mv and mv >= 1000000:  # >=100亿
+                big_cap_up += 1
+            if mv and mv >= 3000000:  # >=300亿
+                mega_cap_up += 1
+                name = u.get('name', ts_code)
+                mega_cap_names.append(name)
+
     return {
         'date': trade_date,
         'up_count': len(ups),
@@ -201,6 +247,9 @@ def compute_raw_day(trade_date):
         'lianban_count': lianban_count,
         'shouban_count': shouban_count,
         'seal_zero_count': seal_zero_count,
+        'big_cap_up': big_cap_up,
+        'mega_cap_up': mega_cap_up,
+        'mega_cap_names': '|'.join(mega_cap_names),
     }
 
 
@@ -260,10 +309,13 @@ def compute_all_metrics(raw_rows):
 
         # 炸板率 = 炸板数 / (涨停数 + 炸板数)
         zha_rate = zha_count / max(up_count + zha_count, 1) * 100
-        # 涨跌停比 = 涨停数 / 跌停数
-        ud_ratio = up_count / max(down_count, 1)
-        # 封板质量 = 一字/秒板(open_times=0)占比
-        seal_quality = seal_zero_count / max(up_count, 1) * 100
+        # 涨跌停比 = 涨停数 / 跌停数（clip到20防极端值）
+        ud_ratio = min(up_count / max(down_count, 1), 20)
+        # 封板质量 = 大市值涨停占比（100亿+涨停数/总涨停数），反映资金级别
+        # 旧版用一字板(open_times=0)占比，但一字板=买不到≠资金质量
+        big_cap = r.get('big_cap_up', 0)
+        mega_cap = r.get('mega_cap_up', 0)
+        seal_quality = (big_cap + 2 * mega_cap) / max(up_count, 1) * 100
 
         full_rows.append({
             'date': dt,
@@ -274,6 +326,9 @@ def compute_all_metrics(raw_rows):
             'lianban_count': r['lianban_count'],
             'shouban_count': r['shouban_count'],
             'seal_zero_count': seal_zero_count,
+            'big_cap_up': r.get('big_cap_up', 0),
+            'mega_cap_up': r.get('mega_cap_up', 0),
+            'mega_cap_names': r.get('mega_cap_names', ''),
             'promotion_rate': round(promotion_rate, 2),
             'rate_1to2': round(rate_1to2, 2),
             'zha_rate': round(zha_rate, 2),
@@ -283,8 +338,8 @@ def compute_all_metrics(raw_rows):
             'formula_promotion_rate': '今日涨停∩昨日涨停 / 昨日涨停总数 × 100',
             'formula_rate_1to2': '昨日首板∩今日连板(limit_times≥2) / 昨日首板数 × 100',
             'formula_zha_rate': 'zha_count / (up_count + zha_count) × 100',
-            'formula_ud_ratio': 'up_count / max(down_count, 1)',
-            'formula_seal_quality': 'seal_zero_count(open_times=0) / up_count × 100',
+            'formula_ud_ratio': 'min(up_count / max(down_count, 1), 20)，clip防极端值',
+            'formula_seal_quality': '(big_cap_up + 2*mega_cap_up) / up_count × 100，大市值涨停加权占比',
         })
 
         prev_up_codes = current_up_codes
@@ -296,25 +351,61 @@ def compute_all_metrics(raw_rows):
     return full_rows
 
 
-def normalize_series(values, window=60):
+def percentile_rank(values, window=120):
+    """120日滚动分位数排名（0-100），替代60日min-max标准化。
+    
+    优势：有绝对锚点，冰点期里的"相对高"不会被误判为加速。
+    当窗口内数据不足时，用已有数据计算。
+    """
     result = []
     for i, v in enumerate(values):
         w = values[max(0, i - window + 1):i + 1]
-        mn, mx = min(w), max(w)
-        result.append(round((v - mn) / (mx - mn) * 100, 2) if mx != mn else 50.0)
+        if len(w) <= 1:
+            result.append(50.0)
+            continue
+        # 分位数：小于当前值的占比
+        below = sum(1 for x in w if x < v)
+        equal = sum(1 for x in w if x == v)
+        # 中位数法分位：(below + 0.5*equal) / total
+        rank = (below + 0.5 * equal) / len(w) * 100
+        result.append(round(rank, 2))
     return result
 
 
 def compute_sentiment(full_rows):
-    """在 full_rows 上原地添加标准化因子、合成情绪、周期标签"""
-    h = normalize_series([r['max_height'] for r in full_rows])
-    p = normalize_series([r['promotion_rate'] for r in full_rows])
-    z = normalize_series([100 - r['zha_rate'] for r in full_rows])
-    u = normalize_series([r['ud_ratio'] for r in full_rows])
-    s = normalize_series([r['seal_quality'] for r in full_rows])
+    """在 full_rows 上原地添加标准化因子、合成情绪、周期标签。
+    
+    v2 优化（2026-03-01）：
+    ① 封板质量改为大市值涨停占比（big_cap+2*mega_cap / up_count）
+    ② 标准化改为120日分位数排名（替代60日min-max，有绝对锚）
+    ③ 涨跌停比clip到20（防跌停=0时极端值）
+    ④ 加交互修正项：
+       - 高度×质量交互：连板高但封板质量低（全小票）→ 打折
+       - 赚亏对冲：晋级率高但炸板率也高（分歧期）→ 打折
+    ⑤ 权重调整：空间高度0.20 晋级率0.25 反炸板率0.20 涨跌停比0.10 封板质量0.25
+    """
+    h = percentile_rank([r['max_height'] for r in full_rows])
+    p = percentile_rank([r['promotion_rate'] for r in full_rows])
+    z = percentile_rank([100 - r['zha_rate'] for r in full_rows])
+    u = percentile_rank([r['ud_ratio'] for r in full_rows])
+    s = percentile_rank([r['seal_quality'] for r in full_rows])
 
-    sentiment = [round(0.25*h[i] + 0.25*p[i] + 0.20*z[i] + 0.15*u[i] + 0.15*s[i], 2)
-                 for i in range(len(full_rows))]
+    sentiment = []
+    for i in range(len(full_rows)):
+        # 基础加权：提升封板质量权重（资金级别），降低涨跌停比权重（易极端）
+        base = 0.20*h[i] + 0.25*p[i] + 0.20*z[i] + 0.10*u[i] + 0.25*s[i]
+        
+        # 交互修正1：高度×质量 — 连板高但封板质量低，说明全是小票在玩，打折
+        # h高s低 → 扣分；h高s也高 → 不扣
+        if h[i] > 70 and s[i] < 30:
+            base *= 0.85  # 打85折
+        
+        # 交互修正2：赚亏对冲 — 晋级率高但炸板率也高=分歧期，不是真的好
+        # p高z低（z是反炸板率，低=炸板率高）
+        if p[i] > 60 and z[i] < 30:
+            base *= 0.90  # 打9折
+        
+        sentiment.append(round(min(max(base, 0), 100), 2))
 
     # 周期标签
     labels = []
@@ -350,7 +441,7 @@ def compute_sentiment(full_rows):
         r['s_norm'] = s[i]
         r['sentiment'] = sentiment[i]
         r['cycle_label'] = labels[i]
-        r['formula_sentiment'] = '0.25*h_norm + 0.25*p_norm + 0.20*z_norm + 0.15*u_norm + 0.15*s_norm (各因子60日滚动min-max标准化)'
+        r['formula_sentiment'] = 'v2: 0.20*h + 0.25*p + 0.20*z + 0.10*u + 0.25*s (120日分位数排名) × 交互修正(高度×质量, 赚亏对冲)'
         r['formula_cycle_label'] = '冰点(<20)|回暖(<35且上升)|加速(>60且上升)|分歧(>50且下降)|退潮(<40从>45连降)|震荡(其他)'
 
 
@@ -380,6 +471,9 @@ def build_json(full_rows):
             'u_norm': r['u_norm'],
             's_norm': r['s_norm'],
             'cycle_label': r['cycle_label'],
+            'big_cap_up': r.get('big_cap_up', 0),
+            'mega_cap_up': r.get('mega_cap_up', 0),
+            'mega_cap_names': r.get('mega_cap_names', ''),
         })
 
     output = {
@@ -449,7 +543,7 @@ def main():
             log(f"  [{i+1}/{len(new_dates)}] {dt} {tag}")
             row = compute_raw_day(dt)
             new_raw_rows.append(row)
-            log(f"    U={row['up_count']} D={row['down_count']} Z={row['zha_count']} H={row['max_height']}")
+            log(f"    U={row['up_count']} D={row['down_count']} Z={row['zha_count']} H={row['max_height']} BigCap={row['big_cap_up']} MegaCap={row['mega_cap_up']}")
 
         # 追加到 raw CSV
         append_csv(RAW_CSV, RAW_HEADERS, new_raw_rows)
@@ -467,7 +561,8 @@ def main():
 
     full_rows = compute_all_metrics(raw_rows)
 
-    # 5. 写完整 CSV
+    # 5. 写完整 CSV（含重写 raw CSV 以确保新字段列头一致）
+    write_csv(RAW_CSV, RAW_HEADERS, raw_rows)
     write_csv(FULL_CSV, FULL_HEADERS, full_rows)
     log(f"  momentum_sentiment.csv: {len(full_rows)} 行")
 

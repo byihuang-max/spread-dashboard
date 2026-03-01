@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 CTA策略环境 — 集成脚本
-依次运行模块1/2/3，合并输出到 commodity_cta.json
+依次运行模块1/1b/2/2b/3，合并输出到 commodity_cta.json
 也可单独运行各模块后，只跑本脚本做合并。
+
+模块1b依赖模块1的数据(fut_daily.csv)，模块2b依赖模块1b的输出。
 """
 
 import json, os, subprocess, sys
@@ -10,9 +12,11 @@ import json, os, subprocess, sys
 BASE = os.path.dirname(os.path.abspath(__file__))
 
 MODULES = [
-    ("mod1_cta_env.py", "mod1_cta_env.json", "CTA整体环境"),
-    ("mod2_trend_scan.py", "mod2_trend_scan.json", "品种趋势扫描"),
-    ("mod3_macro_ratio.py", "mod3_macro_ratio.json", "宏观比价"),
+    ("mod1_cta_env.py",      "mod1_cta_env.json",      "CTA整体环境"),
+    ("mod1b_pca_engine.py",  "mod1b_pca_engine.json",  "PCA核心引擎"),
+    ("mod2_trend_scan.py",   "mod2_trend_scan.json",   "品种趋势扫描"),
+    ("mod2b_pca_loading.py", "mod2b_pca_loading.json", "PCA Loading增强"),
+    ("mod3_macro_ratio.py",  "mod3_macro_ratio.json",  "宏观比价"),
 ]
 
 
@@ -58,11 +62,22 @@ def print_summary(merged):
     # 模块一
     env = merged.get("mod1_cta_env", {}).get("summary", {})
     if env:
-        print(f"\n【整体环境】")
+        print(f"\n【整体环境（传统）】")
         print(f"  CTA友好度: {env.get('cta_friendly', '?')}/100")
         print(f"  活跃品种: {env.get('n_active', '?')}")
         print(f"  趋势占比: {env.get('trend_pct', 0):.1%}")
-        print(f"  平均波动率: {env.get('avg_vol_20d', 0):.2%}")
+
+    # 模块1b
+    pca = merged.get("mod1b_pca_engine", {})
+    rolling = pca.get("rolling", [])
+    if rolling:
+        latest = rolling[-1]
+        print(f"\n【PCA环境引擎】")
+        print(f"  PC1解释比: {latest['pc1_ratio']:.1%}")
+        print(f"  PC2解释比: {latest['pc2_ratio']:.1%}")
+        print(f"  环境类型: {latest['env_type']}")
+        print(f"  动量信号: {latest['momentum_signal']}")
+        print(f"  PCA友好度: {latest['pca_friendly']}")
 
     # 模块二
     scan = merged.get("mod2_trend_scan", {})
@@ -76,6 +91,15 @@ def print_summary(merged):
             td = s.get("trend_dir", "?")
             sig = s.get("signal_count", 0)
             print(f"  {name:>4s}  score={score:.3f}  chg={chg:+.1f}%  {td}  signals={sig}")
+
+    # 模块2b
+    pca_loading = merged.get("mod2b_pca_loading", {})
+    pca_syms = pca_loading.get("symbols", [])
+    if pca_syms:
+        print(f"\n【PCA Loading Top 5】")
+        print(f"  分化轴: {pca_loading.get('divergence_axis', '?')}")
+        for s in pca_syms[:5]:
+            print(f"  {s['symbol']:>4s} ({s['sector']})  PC1={s['pc1_loading']:+.3f}  [{s['combined_role']}]")
 
     # 模块三
     macro = merged.get("mod3_macro_ratio", {})
@@ -93,7 +117,7 @@ def main():
         mode = "full"
 
     if mode == "full":
-        print("🚀 完整运行：依次执行三个模块 + 合并")
+        print("🚀 完整运行：依次执行五个模块 + 合并")
         for script, _, label in MODULES:
             ok = run_module(script, label)
             if not ok:
