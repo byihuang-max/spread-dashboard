@@ -71,10 +71,8 @@ def run():
     sm = (now - timedelta(days=400)).strftime('%Y%m')
 
     lines = []
-    lines.append(f"{'─'*32}")
-    lines.append(f"📊  FOF 每日市场观察")
-    lines.append(f"📅  {now.strftime('%Y-%m-%d %H:%M')}  生成")
-    lines.append(f"{'─'*32}")
+    lines.append(f"📊 FOF 每日市场观察")
+    lines.append(f"生成: {now.strftime('%Y-%m-%d %H:%M')}")
     lines.append("")
 
     # ═══ 获取 iFind token ═══
@@ -86,8 +84,7 @@ def run():
         log("  iFind token 获取失败，仅用 Tushare")
 
     # ═══ 1. 全球流动性 ═══
-    lines.append("🌍 一、全球流动性")
-    lines.append("─" * 32)
+    lines.append("━━ 1. 全球流动性 ━━")
 
     # 美债 (Tushare)
     log("拉美债...")
@@ -163,11 +160,11 @@ def run():
     else:
         lines.append("  纳指/费城半导体: iFind 不可用")
 
+    lines.append("⚠️ DXY/黄金/WTI/BTC 待补充数据源")
     lines.append("")
 
     # ═══ 2. 中国基本盘 ═══
-    lines.append("🇨🇳 二、中国宏观基本盘")
-    lines.append("─" * 32)
+    lines.append("━━ 2. 中国基本盘 ━━")
 
     log("拉CPI...")
     d = ts('cn_cpi', {'start_m': sm, 'end_m': end[:6]})
@@ -210,8 +207,7 @@ def run():
     lines.append("")
 
     # ═══ 3. 中观景气 ═══
-    lines.append("🏭 三、中观景气（期货主力合约）")
-    lines.append("─" * 32)
+    lines.append("━━ 3. 中观景气(期货主力) ━━")
     futs = {'RB.SHF':'螺纹','I.DCE':'铁矿','FG.ZCE':'玻璃','SA.ZCE':'纯碱','AL.SHF':'铝'}
     for code, name in futs.items():
         log(f"拉{name}...")
@@ -239,7 +235,6 @@ def run():
     # ═══ 4. A股微观 ═══
     a_stock_header_idx = len(lines)
     lines.append("")  # 占位，拉完数据后回填带日期的标题
-    lines.append("─" * 32)
     indices = [
         ('000300.SH','沪深300'),('000016.SH','上证50'),('000905.SH','中证500'),
         ('000852.SH','中证1000'),('932000.CSI','中证2000'),('000688.SH','科创50'),
@@ -266,8 +261,7 @@ def run():
 
     # 回填 A股微观标题日期
     if trade_date:
-        td_fmt = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
-        lines[a_stock_header_idx] = f"📈 四、A股微观（{td_fmt}）"
+        lines[a_stock_header_idx] = f"━━ 4. A股微观({trade_date}) ━━"
 
     # 沪深300 交叉校验 (iFind)
     if at and '000300.SH' in idx_data:
@@ -282,11 +276,11 @@ def run():
 
     # 全A成交额 (amount单位=千元，除以100000=亿)
     log("拉全A成交额...")
-    amt_d = ts('index_daily', {'ts_code': '000985.CSI', 'start_date': s20, 'end_date': end})
-    if amt_d:
-        amt_d.sort(key=lambda x: x['trade_date'], reverse=True)
-        amt = float(amt_d[0]['amount']) / 100000  # 千元→亿
-        lines.append(f"全A成交额({amt_d[0]['trade_date']}): {amt:.0f}亿")
+    d = ts('index_daily', {'ts_code': '000985.CSI', 'start_date': s20, 'end_date': end})
+    if d:
+        d.sort(key=lambda x: x['trade_date'], reverse=True)
+        amt = float(d[0]['amount']) / 100000  # 千元→亿
+        lines.append(f"全A成交额({d[0]['trade_date']}): {amt:.0f}亿")
 
     # 涨跌家数
     up_ratio = 0.5
@@ -334,76 +328,31 @@ def run():
     lines.append("")
 
     # ═══ 5. 结论 ═══
-    lines.append("💡 五、综合研判")
-    lines.append("─" * 32)
+    lines.append("━━ 5. 结论 ━━")
     try:
         chg300 = idx_data.get('000300.SH', {}).get('chg', 0)
-        chg500 = idx_data.get('000905.SH', {}).get('chg', 0)
-        chg1000 = idx_data.get('000852.SH', {}).get('chg', 0)
         chg2000 = idx_data.get('932000.CSI', {}).get('chg', 0)
 
-        # 市场情绪
-        if up_ratio > 0.65:
-            mood = "🟢 偏多（涨跌比 {:.0%}）".format(up_ratio)
-        elif up_ratio < 0.35:
-            mood = "🔴 偏空（涨跌比 {:.0%}）".format(up_ratio)
+        lines.append(f"• {'存量博弈' if up_ratio < 0.4 else '增量入场' if up_ratio > 0.6 else '中性'}")
+        lines.append(f"• {'Risk-OFF' if chg300 < -0.5 and up_ratio < 0.4 else 'Risk-ON' if chg300 > 0.5 and up_ratio > 0.6 else '中性'}")
+        if abs(chg300 - chg2000) > 0.3:
+            lines.append(f"• 风格: {'大盘占优' if chg300 > chg2000 else '小盘占优'}")
         else:
-            mood = "🟡 中性（涨跌比 {:.0%}）".format(up_ratio)
-        lines.append(f"• 市场情绪：{mood}")
+            lines.append(f"• 风格: 均衡")
 
-        # 风格判断
-        big = chg300
-        small = (chg1000 + chg2000) / 2 if chg1000 and chg2000 else chg2000
-        diff = small - big
-        if diff > 0.5:
-            lines.append(f"• 风格偏向：小盘占优（小-大 {cs(diff,'.2f')}pp）")
-        elif diff < -0.5:
-            lines.append(f"• 风格偏向：大盘占优（大-小 {cs(-diff,'.2f')}pp）")
-        else:
-            lines.append(f"• 风格偏向：大小盘均衡")
-
-        # 成交额判断
-        if amt_d:
-            amt_val = float(amt_d[0]['amount']) / 100000
-            if len(amt_d) >= 5:
-                ma5_amt = sum(float(amt_d[i]['amount']) for i in range(min(5,len(amt_d)))) / min(5,len(amt_d)) / 100000
-                amt_ratio = amt_val / ma5_amt if ma5_amt > 0 else 1
-                if amt_ratio > 1.15:
-                    lines.append(f"• 成交额：{amt_val:.0f}亿（放量 vs 5日均{ma5_amt:.0f}亿，比值{amt_ratio:.2f}）")
-                elif amt_ratio < 0.85:
-                    lines.append(f"• 成交额：{amt_val:.0f}亿（缩量 vs 5日均{ma5_amt:.0f}亿，比值{amt_ratio:.2f}）")
-                else:
-                    lines.append(f"• 成交额：{amt_val:.0f}亿（平稳 vs 5日均{ma5_amt:.0f}亿）")
-
-        # 两融判断
-        if total and ptotal:
-            margin_chg = total - ptotal
-            if margin_chg > 100:
-                lines.append(f"• 两融：{total:.0f}亿（+{margin_chg:.0f}亿 ↑杠杆增加）")
-            elif margin_chg < -100:
-                lines.append(f"• 两融：{total:.0f}亿（{margin_chg:.0f}亿 ↓杠杆收缩）")
-            else:
-                lines.append(f"• 两融：{total:.0f}亿（{cs(margin_chg,'.0f')}亿 →平稳）")
-
-        # 红灯
         alerts = []
-        if up_ratio < 0.30: alerts.append(f"涨跌比极端（{up_ratio:.0%}）")
-        if total and ptotal and (total - ptotal) < -200: alerts.append(f"两融大幅缩减（{total-ptotal:.0f}亿）")
-        if chg300 < -2: alerts.append(f"沪深300大跌（{chg300:+.2f}%）")
+        if up_ratio < 0.35: alerts.append(f"涨跌比极端({up_ratio:.0%})")
+        if total and ptotal and (total - ptotal) < -200: alerts.append(f"两融大幅缩减({total-ptotal:.0f}亿)")
         if alerts:
-            lines.append("")
-            lines.append("🚨 红灯预警: " + " | ".join(alerts))
+            lines.append("🔴 红灯: " + " | ".join(alerts))
         else:
-            lines.append("")
             lines.append("✅ 无红灯事件")
     except Exception as e:
         lines.append(f"  结论生成失败: {e}")
 
     # 数据源标注
     lines.append("")
-    lines.append(f"{'─'*32}")
-    lines.append(f"📡 数据源: Tushare{'+ iFind' if at else '（iFind不可用）'}")
-    lines.append(f"{'─'*32}")
+    lines.append(f"数据源: Tushare{'+ iFind' if at else '(iFind不可用)'}")
 
     report = '\n'.join(lines)
     print(report)

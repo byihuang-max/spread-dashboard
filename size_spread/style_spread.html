@@ -46,12 +46,42 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </style>
 </head><body>
 
-<div class="ss-tabs">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+<div class="ss-tabs" style="margin:0;flex:1">
   <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
   <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
   <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
   <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
 </div>
+<button id="ssRefreshBtn" onclick="doRefresh()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap;flex-shrink:0" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新数据</button>
+</div>
+<script>
+function doRefresh(){
+  var btn=document.getElementById('ssRefreshBtn');
+  btn.disabled=true;btn.textContent='⏳ 刷新中...';btn.style.color='#999';
+  var base='';
+  fetch('/api/refresh/style-spread',{method:'POST'}).then(function(r){
+    if(!r.ok) return fetch('http://localhost:9876/api/refresh/style-spread',{method:'POST'});
+    return r;
+  }).catch(function(){
+    return fetch('http://localhost:9876/api/refresh/style-spread',{method:'POST'});
+  }).then(function(){
+    // poll status until done
+    var poll=setInterval(function(){
+      fetch('/api/status').then(function(r){return r.json()}).catch(function(){
+        return fetch('http://localhost:9876/api/status').then(function(r){return r.json()})
+      }).then(function(d){
+        if(!d.running){clearInterval(poll);location.reload(true)}
+      }).catch(function(){});
+    },2000);
+    // timeout fallback
+    setTimeout(function(){clearInterval(poll);location.reload(true)},120000);
+  }).catch(function(){
+    btn.textContent='❌ 刷新失败';
+    setTimeout(function(){btn.disabled=false;btn.textContent='🔄 刷新数据';btn.style.color='#555'},3000);
+  });
+}
+</script>
 
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
