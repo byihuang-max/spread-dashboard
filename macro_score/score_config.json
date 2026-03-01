@@ -1,0 +1,61 @@
+{
+  "macro_weights": {
+    "liquidity": 0.25,
+    "fundamentals": 0.25,
+    "rates_fx": 0.15,
+    "option_sentiment": 0.20,
+    "crowding_flow": 0.15
+  },
+  "strategy_weights": {
+    "quant_stock": {
+      "small_cap_momentum": 0.25,
+      "volume_activity": 0.25,
+      "basis_cost": 0.20,
+      "crowding_risk": 0.15,
+      "option_iv": 0.15
+    },
+    "momentum_stock": {
+      "market_trend": 0.25,
+      "money_effect": 0.30,
+      "north_flow": 0.20,
+      "crowding_risk": 0.15,
+      "macro_phase": 0.10
+    },
+    "commodity_cta": {
+      "trend_count": 0.35,
+      "volatility": 0.25,
+      "macro_ratio": 0.20,
+      "macro_phase": 0.20
+    },
+    "cb_env": {
+      "cb_score": 0.40,
+      "activity": 0.20,
+      "delta": 0.20,
+      "floor": 0.20
+    },
+    "arbitrage": {
+      "spread_width": 0.30,
+      "volatility": 0.30,
+      "volume": 0.20,
+      "basis_cost": 0.20
+    }
+  },
+  "thresholds": {
+    "macro": {
+      "offense": 75,
+      "balanced": 55,
+      "cautious": 40
+    },
+    "strategy": {
+      "green": 70,
+      "yellow": 45
+    }
+  },
+  "default_allocation": {
+    "quant_stock": 25,
+    "momentum_stock": 15,
+    "commodity_cta": 20,
+    "cb_env": 25,
+    "arbitrage": 15
+  }
+}

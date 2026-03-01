@@ -6,7 +6,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
-.card{background:#fff;border-radius:10px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
+.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
 .card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:7px;color:#2d3142}
 .card-title .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 2px}
@@ -14,8 +14,58 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .header-bar .date-label b{color:#2d3142}
 .refresh-btn{background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
 .refresh-btn:hover{background:#f0f4ff;border-color:#6366f1;color:#6366f1}
-.refresh-btn:active{transform:scale(0.96)}
-.refresh-btn.loading{pointer-events:none;opacity:0.6}
+
+/* ── 诊断面板 ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.diag-hero{
+  background:linear-gradient(135deg,#0c1222,#162038 50%,#1a1040 80%,#0c1222);
+  border-radius:16px;padding:24px 28px;color:#e2e8f0;margin-bottom:16px;
+  position:relative;overflow:hidden;animation:fadeUp .4s ease-out;
+}
+.diag-hero::before{content:'';position:absolute;top:-60px;right:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(99,102,241,0.1),transparent 65%);border-radius:50%}
+.diag-hero::after{content:'';position:absolute;bottom:-40px;left:25%;width:160px;height:160px;background:radial-gradient(circle,rgba(16,185,129,0.07),transparent 65%);border-radius:50%}
+
+.diag-score-ring{position:relative;width:100px;height:100px;flex-shrink:0}
+.diag-score-ring svg{transform:rotate(-90deg)}
+.diag-score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900}
+
+.factor-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.factor-card{
+  background:#fff;border-radius:12px;padding:14px;border:1px solid #e8eaef;
+  animation:fadeUp .4s ease-out both;transition:transform .15s;
+}
+.factor-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.factor-card:nth-child(1){animation-delay:.05s}
+.factor-card:nth-child(2){animation-delay:.1s}
+.factor-card:nth-child(3){animation-delay:.15s}
+.factor-card:nth-child(4){animation-delay:.2s}
+.factor-card:nth-child(5){animation-delay:.25s}
+.factor-score{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.factor-label{font-size:11px;color:#64748b;font-weight:600;margin-bottom:4px}
+.factor-grade{font-size:12px;font-weight:700;margin-top:2px}
+.factor-bar{width:100%;height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin:8px 0}
+.factor-bar-fill{height:100%;border-radius:2px;transition:width .6s ease}
+.factor-sig{font-size:10px;color:#94a3b8;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.narrative-box{
+  background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);
+  border-radius:12px;border:1px solid #e8eaef;padding:16px 20px;margin-bottom:16px;
+  animation:fadeUp .4s ease-out .3s both;
+}
+.narrative-text{font-size:13px;color:#334155;line-height:1.8}
+.narrative-text .sep{color:#cbd5e1;margin:0 6px}
+
+.neutral-box{
+  background:#f8fafc;border-radius:10px;border:1px solid #e8eaef;
+  padding:14px 18px;margin-bottom:16px;animation:fadeUp .4s ease-out .35s both;
+}
+.neutral-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.neutral-row{display:flex;align-items:center;gap:16px;font-size:12px}
+.neutral-metric{text-align:center}
+.neutral-metric .val{font-size:18px;font-weight:800;color:#1e293b}
+.neutral-metric .lab{font-size:10px;color:#94a3b8;margin-top:2px}
+.neutral-divider{width:1px;height:36px;background:#e2e8f0}
+.neutral-verdict{font-size:13px;font-weight:700;margin-left:auto;padding:4px 12px;border-radius:8px}
 </style>
 </head><body>
 
@@ -24,6 +74,23 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   <button class="refresh-btn" onclick="doRefresh()" id="refreshBtn">🔄 刷新</button>
 </div>
 
+<!-- ═══ 超额环境诊断面板 ═══ -->
+<div id="diag-panel"></div>
+
+<!-- ═══ 超额净值归因曲线 ═══ -->
+<div class="card" id="excess-card" style="display:none">
+  <div class="card-title"><span class="dot" style="background:#6366f1"></span> 超额净值 × 环境归因</div>
+  <div style="position:relative;height:340px"><canvas id="chartExcess"></canvas></div>
+  <div id="excess-tooltip" style="display:none;position:absolute;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
+  <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center">
+    <span>🟢 超额顺风 (周Δ>+1%)</span>
+    <span>⚪ 正常</span>
+    <span>🟡 走平/微回撤</span>
+    <span>🔴 明显回撤 (周Δ<-1%)</span>
+  </div>
+</div>
+
+<!-- ═══ 原有图表 ═══ -->
 <div class="card">
   <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 全市场成交额时序（亿元）</div>
   <div style="position:relative;height:280px"><canvas id="chartAmount"></canvas></div>
@@ -32,6 +99,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div class="card">
   <div class="card-title"><span class="dot" style="background:#3498db"></span> 宽基成交额占全A比例（%）</div>
   <div style="position:relative;height:320px"><canvas id="chartShare"></canvas></div>
+</div>
+
+<!-- ═══ 风格迁移速度子模块 ═══ -->
+<div class="card" id="migration-card" style="display:none">
+  <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 风格占比变化率（5日 vs 20日均值 Δpp）</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:1;min-width:300px;position:relative;height:220px"><canvas id="chartMigration"></canvas></div>
+    <div id="migration-summary" style="flex:0 0 220px;font-size:12px;line-height:1.8;padding:8px 0"></div>
+  </div>
 </div>
 
 <div class="card">
@@ -53,13 +129,271 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <script>
+(function(){
+// ═══ 诊断面板 ═══
+var diagBase = location.href.replace(/[^/]*$/,'');
+if(!diagBase.endsWith('/')) diagBase+='/';
+
+fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
+  var sc = D.env_score;
+  var scoreCol = sc>=75?'#10b981':sc>=55?'#f59e0b':sc>=40?'#f97316':'#ef4444';
+  var dashOff = 251*(1-sc/100); // 2*pi*40
+
+  var html = '';
+
+  // ── Hero ──
+  html += '<div class="diag-hero">';
+  html += '<div style="display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap">';
+
+  // Ring
+  html += '<div class="diag-score-ring">';
+  html += '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>';
+  html += '<circle cx="50" cy="50" r="40" fill="none" stroke="'+scoreCol+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="'+dashOff+'" style="filter:drop-shadow(0 0 8px '+scoreCol+'60);transition:stroke-dashoffset .8s ease"/>';
+  html += '</svg>';
+  html += '<div class="diag-score-num" style="color:'+scoreCol+'">'+sc+'</div>';
+  html += '</div>';
+
+  // Text
+  html += '<div>';
+  html += '<div style="font-size:10px;color:#4b5578;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:4px">超额环境诊断</div>';
+  html += '<div style="font-size:20px;font-weight:800;color:'+scoreCol+'">'+D.env_emoji+' '+D.env_grade+'</div>';
+  if(D.alpha_environment){
+    html += '<div style="font-size:11px;color:#64748b;margin-top:4px">Alpha环境: '+D.alpha_environment.label+'（'+D.alpha_environment.score+'分）</div>';
+  }
+  html += '</div>';
+
+  // Update time
+  html += '<div style="margin-left:auto;text-align:right">';
+  html += '<div style="font-size:10px;color:#4b5578">更新: '+D.update_time+'</div>';
+  html += '</div>';
+
+  html += '</div></div>';
+
+  // ── Factor cards ──
+  html += '<div class="factor-grid">';
+  var fOrder = ['流动性','离散度','风格集中度','市场预期','微观结构'];
+  var fIcons = {'流动性':'💧','离散度':'📊','风格集中度':'🎯','市场预期':'🔮','微观结构':'🔬'};
+  fOrder.forEach(function(name){
+    var f = D.factors[name]||{};
+    var s = f.score||0;
+    var col = s>=70?'#10b981':s>=45?'#f59e0b':'#ef4444';
+    var bgCol = s>=70?'#f0fdf4':s>=45?'#fffbeb':'#fef2f2';
+    var borderCol = s>=70?'#bbf7d0':s>=45?'#fde68a':'#fecaca';
+
+    html += '<div class="factor-card" style="border-color:'+borderCol+';background:'+bgCol+'">';
+    html += '<div class="factor-label">'+fIcons[name]+' '+name+'</div>';
+    html += '<div style="display:flex;align-items:baseline;justify-content:space-between">';
+    html += '<div class="factor-score" style="color:'+col+'">'+s+'</div>';
+    html += '<div class="factor-grade" style="color:'+col+'">'+f.emoji+' '+f.grade+'</div>';
+    html += '</div>';
+    html += '<div class="factor-bar"><div class="factor-bar-fill" style="width:'+s+'%;background:'+col+'"></div></div>';
+
+    // Show first 2 signals
+    var sigs = (f.signals||[]).slice(0,2);
+    sigs.forEach(function(sig){
+      html += '<div class="factor-sig">'+sig+'</div>';
+    });
+
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // ── Narrative ──
+  html += '<div class="narrative-box">';
+  html += '<div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:8px;display:flex;align-items:center;gap:6px">🧠 诊断逻辑</div>';
+  var parts = D.narrative.split(' → ');
+  html += '<div class="narrative-text">';
+  html += parts.map(function(p,i){
+    var icon = i===0?'💧':i===1?'📊':i===2?'🔮':'🔬';
+    return '<span>'+icon+' '+p+'</span>';
+  }).join('<span class="sep">→</span>');
+  html += '</div></div>';
+
+  // ── Neutral aux ──
+  var N = D.neutral_aux;
+  if(N && N.available){
+    html += '<div class="neutral-box">';
+    html += '<div class="neutral-title">📎 中性策略参考</div>';
+    html += '<div class="neutral-row">';
+
+    html += '<div class="neutral-metric"><div class="val">'+N.excess_annual_pct.toFixed(1)+'%</div><div class="lab">超额年化</div></div>';
+    html += '<div class="neutral-divider"></div>';
+    html += '<div class="neutral-metric"><div class="val">'+N.basis_annual_cost_pct.toFixed(1)+'%</div><div class="lab">基差成本</div></div>';
+    html += '<div class="neutral-divider"></div>';
+    html += '<div class="neutral-metric"><div class="val">'+(N.ratio==='inf'?'∞':N.ratio.toFixed(1))+'x</div><div class="lab">超额/基差</div></div>';
+    html += '<div class="neutral-divider"></div>';
+
+    var vCol = N.verdict_emoji==='✅'?'#dcfce7;color:#166534':N.verdict_emoji==='❌'?'#fee2e2;color:#991b1b':'#fef9c3;color:#854d0e';
+    html += '<div class="neutral-verdict" style="background:'+vCol+'">'+N.verdict_emoji+' '+N.verdict+'</div>';
+
+    html += '</div></div>';
+  }
+
+  document.getElementById('diag-panel').innerHTML = html;
+
+  // ═══ 风格迁移子图表 ═══
+  var conc = D.factors['风格集中度']||{};
+  var mig = conc.migration;
+  if(mig && mig.deltas && Object.keys(mig.deltas).length>0){
+    document.getElementById('migration-card').style.display='';
+
+    // 柱状图：各风格Δpp
+    var migLabels = Object.keys(mig.deltas);
+    var migVals = migLabels.map(function(k){return mig.deltas[k]});
+    var migColors = migVals.map(function(v){return v>2?'#ef4444':v>0?'#f59e0b':v>-2?'#3b82f6':'#ef4444'});
+
+    new Chart(document.getElementById('chartMigration'),{
+      type:'bar',
+      data:{labels:migLabels,datasets:[{
+        label:'占比变化(pp)',data:migVals,
+        backgroundColor:migColors,borderRadius:6,barPercentage:0.6
+      }]},
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        indexAxis:'y',
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{grid:{color:'#f1f5f9'},ticks:{callback:function(v){return (v>0?'+':'')+v+'pp'},font:{size:11}}},
+          y:{grid:{display:false},ticks:{font:{size:11,weight:600}}}
+        }
+      }
+    });
+
+    // 右侧摘要
+    var sumHtml = '';
+    var intCol = mig.intensity_score>=60?'#ef4444':mig.intensity_score>=30?'#f59e0b':'#10b981';
+    sumHtml += '<div style="margin-bottom:10px"><span style="font-weight:700;color:#334155">迁移强度</span>';
+    sumHtml += ' <span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:'+intCol+'20;color:'+intCol+'">'+mig.intensity+'</span></div>';
+
+    if(mig.max_mover){
+      var dir = mig.max_delta_signed>0?'↑吸入':'↓流出';
+      sumHtml += '<div style="color:#64748b">最大变化: <b style="color:#1e293b">'+mig.max_mover+'</b></div>';
+      sumHtml += '<div style="color:#64748b">'+dir+' <b style="color:#1e293b">'+Math.abs(mig.max_delta_signed).toFixed(1)+'pp</b> (5日vs20日)</div>';
+    }
+
+    sumHtml += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e8eaef;color:#94a3b8;font-size:10px;line-height:1.6">';
+    sumHtml += '⚠️ 单一风格5日变化>5pp为剧烈迁移<br>量化持仓分散，剧烈迁移=超额风险';
+    sumHtml += '</div>';
+
+    document.getElementById('migration-summary').innerHTML = sumHtml;
+  }
+
+// ═══ 超额净值归因曲线 ═══
+fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return r.json()}).then(function(EA){
+  if(!EA.points||!EA.points.length) return;
+  document.getElementById('excess-card').style.display='';
+
+  var pts = EA.points;
+  var labels = pts.map(function(p){return p.date});
+  var exData = pts.map(function(p){return (p.excess*100).toFixed(2)*1});
+
+  var zoneColors = {bad:'rgba(239,68,68,0.12)',weak:'rgba(251,191,36,0.10)',good:'rgba(16,185,129,0.06)',neutral:'transparent'};
+
+  var bgPlugin = {
+    id:'zoneBg',
+    beforeDraw:function(chart){
+      var ctx=chart.ctx;
+      var xScale=chart.scales.x;
+      var yScale=chart.scales.y;
+      var top=yScale.top;
+      var bottom=yScale.bottom;
+      pts.forEach(function(p,i){
+        if(p.zone==='neutral') return;
+        var x0 = i>0 ? (xScale.getPixelForValue(i-1)+xScale.getPixelForValue(i))/2 : xScale.getPixelForValue(i)-((xScale.getPixelForValue(1)-xScale.getPixelForValue(0))/2);
+        var x1 = i<pts.length-1 ? (xScale.getPixelForValue(i)+xScale.getPixelForValue(i+1))/2 : xScale.getPixelForValue(i)+((xScale.getPixelForValue(1)-xScale.getPixelForValue(0))/2);
+        ctx.fillStyle = zoneColors[p.zone]||'transparent';
+        ctx.fillRect(x0, top, x1-x0, bottom-top);
+      });
+    }
+  };
+
+  new Chart(document.getElementById('chartExcess'),{
+    type:'line',
+    data:{labels:labels,datasets:[{
+      label:'累计超额(%)',data:exData,
+      borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,0.08)',
+      fill:true,borderWidth:2.5,pointRadius:4,pointHoverRadius:7,
+      pointBackgroundColor:pts.map(function(p){
+        return p.zone==='bad'?'#ef4444':p.zone==='weak'?'#f59e0b':p.zone==='good'?'#10b981':'#6366f1';
+      }),
+      pointBorderColor:'#fff',pointBorderWidth:1.5,tension:0.15
+    }]},
+    plugins:[bgPlugin],
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{enabled:false,external:function(context){
+          var tt=document.getElementById('excess-tooltip');
+          if(context.tooltip.opacity===0){tt.style.display='none';return;}
+          var idx=context.tooltip.dataPoints[0].dataIndex;
+          var p=pts[idx];
+          var e=p.env||{};
+
+          var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
+          html+=p.date+' <span style="color:'+(p.zone==='bad'?'#fca5a5':p.zone==='weak'?'#fde68a':'#6ee7b7')+'">超额 '+(p.excess*100).toFixed(2)+'%</span>';
+          if(idx>0) html+=' <span style="font-size:11px;color:#94a3b8">(周Δ '+(p.delta>0?'+':'')+(p.delta*100).toFixed(2)+'%)</span>';
+          html+='</div>';
+
+          var liq=e.liquidity;
+          if(liq) html+='<div>💧 成交额 <b>'+liq.amount+'亿</b> '+liq.trend+' (CV='+liq.cv+')</div>';
+
+          var disp=e.dispersion;
+          if(disp) html+='<div>📊 截面波动率 <b>'+disp.cross_vol.toFixed(2)+'</b></div>';
+
+          var sty=e.style;
+          if(sty){
+            html+='<div>🎯 HHI='+sty.hhi+' 主导:'+sty.dominant+'('+sty.dominant_pct+'%)';
+            if(Math.abs(sty.max_delta)>=1.5) html+=' <span style="color:#fca5a5">⚠️'+sty.max_mover+(sty.max_delta>0?'↑':'↓')+Math.abs(sty.max_delta).toFixed(1)+'pp</span>';
+            html+='</div>';
+          }
+
+          var bas=e.basis;
+          if(bas){
+            html+='<div>🔮 IM基差 <b>'+bas.im+'%</b> (分位'+bas.pctile+'%)';
+            if(bas.siphon) html+=' <span style="color:#fca5a5">🚨虹吸! '+bas.siphon_note+'</span>';
+            html+='</div>';
+          }
+
+          var fac=e.factors;
+          if(fac){
+            var facParts=[];
+            for(var fn in fac){var v=fac[fn];if(Math.abs(v)>1) facParts.push(fn+(v>0?'↑':'↓')+Math.abs(v).toFixed(1)+'%');}
+            if(facParts.length) html+='<div>📈 因子: '+facParts.join(', ')+'</div>';
+          }
+
+          tt.innerHTML=html;
+          tt.style.display='block';
+          var pos=context.chart.canvas.getBoundingClientRect();
+          var left=context.tooltip.caretX+pos.left+12;
+          var topY=context.tooltip.caretY+pos.top-30;
+          var ttW=tt.offsetWidth||300;
+          if(left+ttW>window.innerWidth-20) left=context.tooltip.caretX+pos.left-ttW-12;
+          tt.style.position='fixed';
+          tt.style.left=left+'px';
+          tt.style.top=topY+'px';
+        }}
+      },
+      scales:{
+        x:{ticks:{maxTicksToShow:12,font:{size:10}}},
+        y:{ticks:{callback:function(v){return v+'%'}}}
+      }
+    }
+  });
+}).catch(function(e2){console.warn('excess_attribution.json:',e2)});
+
+}).catch(function(e){
+  console.warn('quant_env_diag.json load failed:', e);
+});
+
+// ═══ 原有图表 ═══
 var base=location.href.replace(/[^/]*$/,'');if(!base.endsWith('/'))base+='/';var jsonUrl=base+'quant_stock_data.json';
 fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
   function fmtDate(d){return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
   function ma(arr,n){return arr.map(function(v,i){if(i<n-1)return null;var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];return s/n})}
   function val(v){return v==null?null:v}
 
-  // 显示数据截至日期
   var lastDate=QS.total_amount[QS.total_amount.length-1].date;
   document.getElementById('dateLabel').innerHTML='📊 宽基量化股票 · 数据截至 <b>'+fmtDate(lastDate)+'</b>';
 
@@ -129,6 +463,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
   });
 
 }).catch(function(e){document.body.innerHTML='<p style="color:red;padding:40px">数据加载失败: '+e.message+'</p>'});
+})();
 function doRefresh(){var b=document.getElementById('refreshBtn');b.classList.add('loading');b.innerHTML='⏳ 刷新中...';location.reload();}
 </script>
 </body></html>

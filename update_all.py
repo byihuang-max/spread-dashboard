@@ -60,6 +60,13 @@ MODULES = {
         ],
         'inject_script': ('env_fit/cb_env', 'inject_cb_env.py'),
     },
+    'macro_score': {
+        'name': '宏观打分+策略适配',
+        'data_scripts': [
+            ('macro_score', 'macro_score.py'),   # 读取所有模块JSON → 综合打分
+        ],
+        'inject_script': None,
+    },
 }
 
 def log(msg, level='INFO'):

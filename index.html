@@ -98,6 +98,90 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .ss-extra-info{font-size:12px;color:var(--text-sub);line-height:1.8;margin:12px 0}
 .ss-extra-info b{color:var(--text)}
 
+/* ── 仪表盘美化 ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scoreIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes ringDraw{from{stroke-dashoffset:314}to{stroke-dashoffset:var(--dash-offset)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+#ms-hero{
+  background:linear-gradient(135deg,#0c1222 0%,#162038 40%,#1a1040 70%,#0c1222 100%);
+  border-radius:20px;padding:28px 32px;color:#e2e8f0;margin-bottom:20px;
+  position:relative;overflow:hidden;
+  animation:fadeUp .5s ease-out;
+  box-shadow:0 4px 24px rgba(0,0,0,0.2),0 1px 3px rgba(0,0,0,0.1);
+}
+#ms-hero::before{
+  content:'';position:absolute;top:-80px;right:-60px;width:280px;height:280px;
+  background:radial-gradient(circle,rgba(99,102,241,0.12),transparent 65%);border-radius:50%;
+}
+#ms-hero::after{
+  content:'';position:absolute;bottom:-50px;left:20%;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(16,185,129,0.08),transparent 65%);border-radius:50%;
+}
+.ms-gauge-ring{animation:ringDraw 1.2s ease-out forwards}
+.ms-score-num{animation:scoreIn .6s ease-out .2s both;font-variant-numeric:tabular-nums}
+
+.ms-strat-card{
+  border-radius:14px;padding:18px;border:1px solid;
+  transition:all .2s ease;cursor:default;
+  backdrop-filter:blur(4px);animation:fadeUp .4s ease-out both;
+}
+.ms-strat-card:nth-child(1){animation-delay:.05s}
+.ms-strat-card:nth-child(2){animation-delay:.1s}
+.ms-strat-card:nth-child(3){animation-delay:.15s}
+.ms-strat-card:nth-child(4){animation-delay:.2s}
+.ms-strat-card:nth-child(5){animation-delay:.25s}
+.ms-strat-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+
+.ms-bottom-card{
+  background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);
+  border-radius:14px;border:1px solid rgba(232,234,239,0.8);
+  padding:20px;animation:fadeUp .5s ease-out .2s both;
+  box-shadow:0 1px 8px rgba(0,0,0,0.03);
+}
+
+.ms-alloc-bar-seg{
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;font-weight:700;min-width:24px;
+  transition:width .6s ease;position:relative;
+}
+.ms-alloc-bar-seg:first-child{border-radius:8px 0 0 8px}
+.ms-alloc-bar-seg:last-child{border-radius:0 8px 8px 0}
+
+.ms-meso-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 12px;border-radius:8px;font-size:11px;font-weight:600;
+  margin:3px 4px 3px 0;transition:all .15s;
+}
+.ms-meso-tag:hover{transform:scale(1.04);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+#ov-risk-banner{
+  background:linear-gradient(135deg,#1a2235,#252f48);
+  border-radius:14px;padding:20px 24px;color:#e2e6ed;margin-bottom:18px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 2px 12px rgba(0,0,0,0.1);
+  animation:fadeUp .5s ease-out .3s both;
+}
+
+.module-status-table{
+  width:100%;border-collapse:separate;border-spacing:0;font-size:12px;
+}
+.module-status-table th{
+  text-align:left;padding:10px 12px;color:#6b7280;font-weight:700;font-size:11px;
+  border-bottom:2px solid #e5e7eb;letter-spacing:.3px;text-transform:uppercase;
+}
+.module-status-table td{
+  padding:10px 12px;border-bottom:1px solid #f3f4f6;transition:background .15s;
+}
+.module-status-table tr:hover td{background:#f8fafc}
+.module-status-table .status-badge{
+  display:inline-block;padding:2px 10px;border-radius:6px;font-size:10px;font-weight:700;
+}
+.module-status-table .status-running{background:#dcfce7;color:#15803d}
+.module-status-table .status-error{background:#fee2e2;color:#dc2626}
+.module-status-table .status-stale{background:#fef3c7;color:#b45309}
+
 /* ── 汉堡菜单按钮 ── */
 .menu-toggle{display:none;position:fixed;top:10px;left:10px;z-index:30;background:var(--sidebar-bg);color:#e2e6ed;border:none;border-radius:8px;width:38px;height:38px;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
 .sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:15}
@@ -115,6 +199,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   .refresh-btn{font-size:10px;padding:4px 8px}
   .overview-grid{grid-template-columns:1fr}
   .ov-card .ov-value{font-size:20px}
+  #ms-strat-grid{grid-template-columns:repeat(2,1fr)!important}
+  #ms-bottom-row{grid-template-columns:1fr!important}
+  #ms-radar{width:140px!important;height:140px!important}
+  #ov-cards{grid-template-columns:repeat(2,1fr)!important}
   .strat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:4px;padding-bottom:4px;margin-bottom:0}
   .strat-tab{white-space:nowrap;flex-shrink:0;padding:6px 10px;font-size:11px}
   .content{padding:12px}
@@ -316,10 +404,58 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="module-page active" id="page-overview">
       <div id="ov-loading" style="text-align:center;padding:40px;color:#8b92a5">加载中...</div>
       <div id="ov-content" style="display:none">
-        <!-- 风险评分横幅 -->
+
+        <!-- ═══ 宏观总控 Hero ═══ -->
+        <div id="ms-hero">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;position:relative;z-index:1">
+            <!-- 左：环形仪表 + 分数 -->
+            <div style="display:flex;align-items:center;gap:20px">
+              <div style="position:relative;width:120px;height:120px;flex-shrink:0">
+                <svg viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                  <circle id="ms-ring" cx="60" cy="60" r="50" fill="none" stroke-width="8" stroke-linecap="round"
+                    class="ms-gauge-ring" stroke-dasharray="314" stroke-dashoffset="314"/>
+                </svg>
+                <div id="ms-score" class="ms-score-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;line-height:1"></div>
+              </div>
+              <div>
+                <div style="font-size:10px;color:#4b5578;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:6px">MACRO SCORE</div>
+                <div id="ms-phase" style="font-size:18px;font-weight:800;margin-bottom:4px"></div>
+                <div id="ms-merrill" style="font-size:11px;color:#64748b;line-height:1.4"></div>
+              </div>
+            </div>
+            <!-- 中：雷达图 -->
+            <div style="flex-shrink:0">
+              <canvas id="ms-radar" width="200" height="200"></canvas>
+            </div>
+            <!-- 右：时间 + 信号 -->
+            <div style="text-align:right;min-width:200px">
+              <div id="ms-time" style="font-size:10px;color:#4b5578;letter-spacing:.5px;margin-bottom:10px"></div>
+              <div id="ms-signals" style="max-width:280px;margin-left:auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ 策略红绿灯 ═══ -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px" id="ms-strat-grid">
+        </div>
+
+        <!-- ═══ 中观标签 + 配置建议 ═══ -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px" id="ms-bottom-row">
+          <div class="ms-bottom-card">
+            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155">🔍 中观观察</div>
+            <div id="ms-meso-tags"></div>
+          </div>
+          <div class="ms-bottom-card">
+            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155">💼 配置建议</div>
+            <div id="ms-alloc"></div>
+          </div>
+        </div>
+
+        <!-- ═══ 原有顶部卡片 (风险+宏观快照) ═══ -->
         <div id="ov-risk-banner" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:18px 22px;color:#e2e6ed;margin-bottom:16px">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <div style="font-size:20px;font-weight:900">GAMT 投研看板</div>
+            <div style="font-size:16px;font-weight:800">⚠️ 风险预警</div>
             <div style="display:flex;align-items:center;gap:12px">
               <div id="ov-risk-score" style="font-size:28px;font-weight:900"></div>
               <div>
@@ -331,29 +467,191 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           </div>
           <div id="ov-alerts" style="margin-top:10px"></div>
         </div>
-        <!-- 顶部卡片 -->
         <div id="ov-cards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
         <!-- 模块状态表 -->
-        <div style="background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:16px">
-          <div style="font-size:14px;font-weight:700;margin-bottom:12px">📋 模块状态</div>
-          <table style="width:100%;border-collapse:collapse;font-size:12px">
-            <thead><tr style="border-bottom:2px solid #e8eaef">
-              <th style="text-align:left;padding:8px 6px;color:#6b7280">模块</th>
-              <th style="text-align:left;padding:8px 6px;color:#6b7280">状态</th>
-              <th style="text-align:left;padding:8px 6px;color:#6b7280">更新</th>
-              <th style="text-align:left;padding:8px 6px;color:#6b7280">关键信号</th>
+        <div style="background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-radius:14px;border:1px solid rgba(232,234,239,0.8);padding:20px;box-shadow:0 1px 8px rgba(0,0,0,0.03);animation:fadeUp .5s ease-out .35s both">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#334155;display:flex;align-items:center;gap:8px">📋 模块状态</div>
+          <table class="module-status-table">
+            <thead><tr>
+              <th>模块</th>
+              <th>状态</th>
+              <th>更新</th>
+              <th>关键信号</th>
             </tr></thead>
             <tbody id="ov-table"></tbody>
           </table>
         </div>
       </div>
+
       <script>
       (function(){
+        /* ── 加载 macro_score.json ── */
+        fetch('macro_score/macro_score.json?t='+Date.now()).then(function(r){return r.json()}).then(function(S){
+          // Score colors
+          var sc=S.macro.total;
+          var scoreCol=sc>=75?'#10b981':sc>=55?'#f59e0b':sc>=40?'#f97316':'#ef4444';
+          var scoreGlow=sc>=75?'0 0 20px rgba(16,185,129,0.4)':sc>=55?'0 0 20px rgba(245,158,11,0.4)':sc>=40?'0 0 20px rgba(249,115,22,0.4)':'0 0 20px rgba(239,68,68,0.4)';
+          document.getElementById('ms-score').textContent=Math.round(sc);
+          document.getElementById('ms-score').style.color=scoreCol;
+          document.getElementById('ms-score').style.textShadow=scoreGlow;
+          // Ring gauge
+          var ring=document.getElementById('ms-ring');
+          var dashOff=314*(1-sc/100);
+          ring.style.stroke=scoreCol;
+          ring.style.filter='drop-shadow('+scoreGlow+')';
+          ring.style.setProperty('--dash-offset',dashOff);
+          ring.style.strokeDashoffset=dashOff;
+          document.getElementById('ms-phase').textContent=S.macro.emoji+' '+S.macro.phase;
+          document.getElementById('ms-phase').style.color=scoreCol;
+          var mc=S.macro.merrill_clock||{};
+          document.getElementById('ms-merrill').textContent=(mc.emoji||'')+' 美林时钟: '+(mc.phase||'')+(mc.pmi?' | PMI='+mc.pmi:'')+(mc.cpi?' | CPI='+mc.cpi+'%':'');
+          document.getElementById('ms-time').textContent='更新: '+S.update_time;
+
+          // Raw signals (top 4)
+          var sigs=(S.macro.raw_signals||[]).slice(0,4);
+          document.getElementById('ms-signals').innerHTML=sigs.map(function(s){
+            var c=s.indexOf('🔴')>=0?'#fca5a5':s.indexOf('🟢')>=0?'#86efac':'#cbd5e1';
+            return '<div style="font-size:11px;color:'+c+';padding:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+s+'</div>';
+          }).join('');
+
+          // ── Radar chart (canvas) ──
+          var canvas=document.getElementById('ms-radar');
+          var ctx=canvas.getContext('2d');
+          var W=200,H=200,cx=W/2,cy=H/2,R=70;
+          var labels=['流动性','基本面','利率汇率','期权情绪','资金面'];
+          var keys=['liquidity','fundamentals','rates_fx','option_sentiment','crowding_flow'];
+          var vals=keys.map(function(k){return (S.macro.detail[k]||{}).score||0;});
+          var n=5;
+          ctx.clearRect(0,0,W,H);
+
+          // Grid rings
+          [0.25,0.5,0.75,1].forEach(function(p){
+            ctx.beginPath();
+            for(var i=0;i<=n;i++){
+              var a=Math.PI*2*i/n-Math.PI/2;
+              var x=cx+R*p*Math.cos(a),y=cy+R*p*Math.sin(a);
+              i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+            }
+            ctx.strokeStyle='rgba(148,163,184,0.2)';ctx.lineWidth=1;ctx.stroke();
+          });
+
+          // Axes
+          for(var i=0;i<n;i++){
+            var a=Math.PI*2*i/n-Math.PI/2;
+            ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+            ctx.strokeStyle='rgba(148,163,184,0.15)';ctx.stroke();
+          }
+
+          // Data polygon
+          ctx.beginPath();
+          for(var i=0;i<n;i++){
+            var a=Math.PI*2*i/n-Math.PI/2;
+            var v=vals[i]/100;
+            var x=cx+R*v*Math.cos(a),y=cy+R*v*Math.sin(a);
+            i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+          }
+          ctx.closePath();
+          ctx.fillStyle='rgba(37,99,235,0.15)';ctx.fill();
+          ctx.strokeStyle='#2563eb';ctx.lineWidth=2;ctx.stroke();
+
+          // Dots + labels
+          for(var i=0;i<n;i++){
+            var a=Math.PI*2*i/n-Math.PI/2;
+            var v=vals[i]/100;
+            var x=cx+R*v*Math.cos(a),y=cy+R*v*Math.sin(a);
+            ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#2563eb';ctx.fill();
+            // label
+            var lx=cx+R*1.22*Math.cos(a),ly=cy+R*1.22*Math.sin(a);
+            ctx.font='600 10px -apple-system,PingFang SC,sans-serif';
+            ctx.fillStyle='#94a3b8';ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillText(labels[i]+' '+Math.round(vals[i]),lx,ly);
+          }
+
+          // ── Strategy cards ──
+          var stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage'];
+          var stratIcons={quant_stock:'📊',momentum_stock:'🚀',commodity_cta:'🛢️',cb_env:'🔄',arbitrage:'⚖️'};
+          var grid=document.getElementById('ms-strat-grid');
+          grid.innerHTML=stratOrder.map(function(k){
+            var st=S.strategies[k]||{};
+            var sc2=st.score||0;
+            var light,bg,border,glow;
+            if(sc2>=70){light='🟢';bg='linear-gradient(135deg,#f0fdf4,#dcfce7)';border='#86efac';glow='0 4px 16px rgba(16,185,129,0.12)';}
+            else if(sc2>=45){light='🟡';bg='linear-gradient(135deg,#fffbeb,#fef3c7)';border='#fcd34d';glow='0 4px 16px rgba(245,158,11,0.12)';}
+            else{light='🔴';bg='linear-gradient(135deg,#fef2f2,#fee2e2)';border='#fca5a5';glow='0 4px 16px rgba(239,68,68,0.12)';}
+
+            var progColor=sc2>=70?'#22c55e':sc2>=45?'#eab308':'#ef4444';
+            var sigs2=(st.signals||[]).slice(0,2).map(function(s){
+              return '<div style="font-size:10px;color:#64748b;padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+s+'</div>';
+            }).join('');
+
+            return '<div class="ms-strat-card" style="background:'+bg+';border-color:'+border+';box-shadow:'+glow+'">'+
+              '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+                '<span style="font-size:20px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.1))">'+(stratIcons[k]||'')+'</span>'+
+                '<span style="font-size:26px;font-weight:900;color:#1e293b;font-variant-numeric:tabular-nums">'+sc2+'</span>'+
+              '</div>'+
+              '<div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:4px">'+(st.label||k)+'</div>'+
+              '<div style="width:100%;height:5px;background:rgba(0,0,0,0.05);border-radius:3px;overflow:hidden;margin:8px 0">'+
+                '<div style="height:100%;width:'+sc2+'%;background:'+progColor+';border-radius:3px;transition:width .8s ease"></div>'+
+              '</div>'+
+              sigs2+
+            '</div>';
+          }).join('');
+
+          // ── Meso tags ──
+          var meso=document.getElementById('ms-meso-tags');
+          meso.innerHTML=(S.meso_tags||[]).map(function(t){
+            var bg2='#f1f5f9',col2='#475569';
+            if(t.indexOf('🟢')>=0){bg2='#dcfce7';col2='#166534';}
+            else if(t.indexOf('🔴')>=0){bg2='#fee2e2';col2='#991b1b';}
+            else if(t.indexOf('🟡')>=0){bg2='#fef9c3';col2='#854d0e';}
+            else if(t.indexOf('拥挤')>=0){bg2='#fef3c7';col2='#92400e';}
+            else if(t.indexOf('冷清')>=0){bg2='#e0f2fe';col2='#075985';}
+            return '<span class="ms-meso-tag" style="background:'+bg2+';color:'+col2+'">'+t+'</span>';
+          }).join('');
+
+          // ── Allocation bars ──
+          var allocEl=document.getElementById('ms-alloc');
+          var alloc=S.allocation||{};
+          var allocOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','cash'];
+          var allocColors={quant_stock:'#2563eb',momentum_stock:'#7c3aed',commodity_cta:'#ea580c',cb_env:'#0891b2',arbitrage:'#4f46e5',cash:'#94a3b8'};
+          // Stacked bar
+          var barHtml='<div style="display:flex;height:32px;border-radius:10px;overflow:hidden;margin-bottom:16px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)">';
+          allocOrder.forEach(function(k){
+            var v=alloc[k]||{};
+            var pct=v.pct||0;
+            if(pct<1)return;
+            barHtml+='<div class="ms-alloc-bar-seg" style="width:'+pct+'%;background:'+allocColors[k]+'" title="'+(v.label||k)+' '+pct+'%">'+Math.round(pct)+'%</div>';
+          });
+          barHtml+='</div>';
+          // Legend
+          barHtml+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+          allocOrder.forEach(function(k){
+            var v=alloc[k]||{};
+            var pct=v.pct||0;
+            var delta=v.delta||0;
+            var deltaStr=delta>0?'<span style="color:#16a34a;font-weight:700"> ↑'+delta.toFixed(1)+'%</span>':delta<0?'<span style="color:#ef4444;font-weight:700"> ↓'+Math.abs(delta).toFixed(1)+'%</span>':'';
+            barHtml+='<div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0">'+
+              '<span style="width:10px;height:10px;border-radius:3px;background:'+allocColors[k]+';flex-shrink:0"></span>'+
+              '<span style="color:#475569;font-weight:600">'+(v.label||k)+'</span>'+
+              '<span style="color:#1e293b;font-weight:800;margin-left:auto">'+pct.toFixed(1)+'%</span>'+deltaStr+
+            '</div>';
+          });
+          barHtml+='</div>';
+          allocEl.innerHTML=barHtml;
+
+        }).catch(function(e){
+          console.warn('macro_score.json load failed:',e);
+          // Hide the sections gracefully
+          ['ms-hero','ms-strat-grid','ms-bottom-row'].forEach(function(id){
+            var el=document.getElementById(id);if(el)el.style.display='none';
+          });
+        });
+
+        /* ── 原有 overview.json ── */
         fetch('overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
           document.getElementById('ov-loading').style.display='none';
           document.getElementById('ov-content').style.display='';
           document.getElementById('ov-time').textContent='更新: '+D.update_time;
-          // 风险
           var rs=D.risk_score||{};
           var sc=rs.score||0;
           var col=sc>=60?'#dc2626':sc>=40?'#f97316':sc>=20?'#eab308':'#22c55e';
@@ -366,7 +664,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           document.getElementById('ov-alerts').innerHTML=(rs.alerts||[]).map(function(a){
             return '<div style="font-size:11px;color:#fbbf24;padding:2px 0">⚠️ '+a+'</div>';
           }).join('');
-          // 卡片
           var cardColors={blue:'#2563eb',green:'#16a34a',amber:'#d97706',red:'#dc2626',slate:'#64748b'};
           document.getElementById('ov-cards').innerHTML=(D.top_cards||[]).map(function(c){
             var cc=cardColors[c.color]||'#6b7280';
@@ -374,7 +671,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               '<div style="font-size:11px;color:#6b7280;margin-bottom:4px">'+c.label+'</div>'+
               '<div style="font-size:13px;font-weight:700;color:'+cc+'">'+c.value+'</div></div>';
           }).join('');
-          // 表格
           document.getElementById('ov-table').innerHTML=(D.modules||[]).map(function(m){
             var st=m.status==='on'?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
             var sigs=(m.signals||[]).slice(0,2).join(' | ')||'-';
