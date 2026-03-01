@@ -4,7 +4,7 @@ import os
 import csv
 
 CACHE_FILE_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_cache.json')
-STYLE_SPREAD_JSON_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/data/style_spread.json')
+STYLE_SPREAD_JSON_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/data/style_spread.json')
 SHEET1_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet1.csv')
 SHEET2_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet2.csv')
 SHEET3_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet3.csv')

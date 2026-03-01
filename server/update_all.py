@@ -12,7 +12,7 @@ GAMT 投研看板 — 一键更新脚本
 
 import subprocess, sys, os, time, argparse
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(BASE_DIR)
 
 # ═══ 模块定义 ═══
@@ -63,7 +63,7 @@ MODULES = {
     'macro_score': {
         'name': '宏观打分+策略适配',
         'data_scripts': [
-            ('macro_score', 'macro_score.py'),   # 读取所有模块JSON → 综合打分
+            ('macro/score', 'macro_score.py'),   # 读取所有模块JSON → 综合打分
         ],
         'inject_script': None,
     },

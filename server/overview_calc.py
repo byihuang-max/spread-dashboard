@@ -4,7 +4,7 @@ import os, json, glob
 from datetime import datetime
 
 BASE = os.path.expanduser("~/Desktop/gamt-dashboard")
-OUTPUT = os.path.join(BASE, "overview.json")
+OUTPUT = os.path.join(BASE, "server", "overview.json")
 
 
 def read_json(path):

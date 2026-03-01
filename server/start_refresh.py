@@ -12,7 +12,7 @@ GAMT 刷新服务 + Cloudflare Tunnel 启动脚本
 
 import subprocess, sys, os, time, json, signal, re
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 URL_FILE = os.path.join(BASE_DIR, 'tunnel_url.json')
 TUNNEL_LOG = '/tmp/cf-tunnel.log'
 SERVER_LOG = '/tmp/gamt-refresh.log'
@@ -30,7 +30,7 @@ def start_server():
     subprocess.run(['pkill', '-f', 'refresh_server.py'], capture_output=True)
     time.sleep(1)
     subprocess.Popen(
-        [sys.executable, os.path.join(BASE_DIR, 'refresh_server.py')],
+        [sys.executable, os.path.join(BASE_DIR, 'server', 'refresh_server.py')],
         cwd=BASE_DIR,
         stdout=open(SERVER_LOG, 'w'),
         stderr=subprocess.STDOUT

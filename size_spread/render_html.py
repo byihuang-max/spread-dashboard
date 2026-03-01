@@ -2,7 +2,7 @@
 """从 style_spread.json 生成静态 HTML 看板（v2 card格式 + MA20）"""
 import json, sys, os
 
-json_path = os.path.expanduser('~/Desktop/gamt-dashboard/data/style_spread.json')
+json_path = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/data/style_spread.json')
 out_en = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread.html')
 out_cn = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/风格轧差看板.html')
 

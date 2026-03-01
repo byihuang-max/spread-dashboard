@@ -7,7 +7,7 @@ import json, os, sys, math
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(BASE)
+ROOT = os.path.dirname(os.path.dirname(BASE))
 
 def load(rel_path):
     p = os.path.join(ROOT, rel_path)
@@ -675,7 +675,7 @@ def calc_meso_tags():
 # ─── Main ───────────────────────────────────────────────────
 
 def main():
-    config = load("macro_score/score_config.json")
+    config = load("macro/score/score_config.json")
     if not config:
         print("ERROR: score_config.json not found")
         sys.exit(1)

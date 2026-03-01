@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GAMT">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icon-192.png">
 <title>GAMT 投研看板</title>
 <script>if(window.self!==window.top){document.documentElement.innerHTML='';window.stop()}</script>
 <style>
@@ -486,7 +486,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <script>
       (function(){
         /* ── 加载 macro_score.json ── */
-        fetch('macro_score/macro_score.json?t='+Date.now()).then(function(r){return r.json()}).then(function(S){
+        fetch('macro/score/macro_score.json?t='+Date.now()).then(function(r){return r.json()}).then(function(S){
           // Score colors
           var sc=S.macro.total;
           var scoreCol=sc>=75?'#10b981':sc>=55?'#f59e0b':sc>=40?'#f97316':'#ef4444';
@@ -648,7 +648,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         });
 
         /* ── 原有 overview.json ── */
-        fetch('overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
+        fetch('server/overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
           document.getElementById('ov-loading').style.display='none';
           document.getElementById('ov-content').style.display='';
           document.getElementById('ov-time').textContent='更新: '+D.update_time;
