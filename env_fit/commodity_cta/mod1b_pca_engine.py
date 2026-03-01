@@ -231,6 +231,8 @@ def rolling_pca(dates, symbols, ret_matrix):
     T = len(dates)
     N = len(symbols)
     results = []
+    running_cumsum = 0.0  # 跨窗口滚动累计
+    prev_eigvec = None    # 上一窗口的PC1特征向量，用于符号对齐
 
     for end in range(ROLLING_WINDOW, T):
         start = end - ROLLING_WINDOW
@@ -239,13 +241,25 @@ def rolling_pca(dates, symbols, ret_matrix):
 
         eigenvalues, eigenvectors, explained, scores = pca_eigen(window)
 
+        # 符号对齐：PCA特征向量方向有任意性（v和-v都是解）
+        # 通过与上一窗口的特征向量做内积来保持方向一致
+        if prev_eigvec is not None:
+            dot = sum(eigenvectors[0][j] * prev_eigvec[j] for j in range(N))
+            if dot < 0:
+                # 翻转PC1
+                eigenvectors[0] = [-x for x in eigenvectors[0]]
+                scores = [[-s[0], s[1]] for s in scores]
+        prev_eigvec = eigenvectors[0][:]
+
         pc1_ratio = explained[0]
         pc2_ratio = explained[1]
         pc1_score = scores[-1][0]  # 最新一天的PC1得分
         pc2_score = scores[-1][1]
 
-        # PC1累计值（窗口内）→ 动量信号
-        pc1_cumsum = sum(s[0] for s in scores)
+        # PC1累计值：跨窗口逐日累加当天的PC1得分
+        # 持续正值=动量偏多持续，持续负值=动量偏空持续，反复翻转=反转环境
+        running_cumsum += pc1_score
+        pc1_cumsum = running_cumsum
 
         # 环境类型判定
         if pc1_ratio > 0.35:

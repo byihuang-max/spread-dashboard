@@ -726,7 +726,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <div class="strat-page active" id="strat-quant-stock">
         <iframe src="env_fit/quant_stock/quant_stock.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
-        <iframe src="size_spread/fund_nav/fund_nav.html?tab=quant-stock" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%"></iframe>
       </div>
 
       <div class="strat-page" id="strat-momentum-stock">
@@ -810,14 +809,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div>
       </div>
 
-      <!-- 产品净值 -->
+      <!-- 产品净值 × 超额归因 -->
       
       <div class="card" style="padding:16px 20px">
-        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产品净值 · 基准 · 超额收益</div>
-        <div style="position:relative;height:360px"><canvas id="ms-nav-chart"></canvas></div>
-        <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
-          紫色=产品净值（左轴） · 灰色虚线=基准（左轴） · 橙色=累计超额（右轴） · 红色背景=基准回撤&gt;2%区域<br>
-          回撤区域悬停可查看Beta/情绪/Alpha贡献
+        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 强势股策略 × 归因分析</div>
+        <div style="position:relative;height:380px"><canvas id="ms-nav-chart"></canvas></div>
+        <div id="ms-nav-tooltip" style="display:none;position:fixed;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center;flex-wrap:wrap">
+          <span>🟣 产品收益</span><span>⚪ 基准(上证指数)</span><span>🟡 累计超额(右轴)</span>
+          <span>|</span><span>红色背景=基准回撤&gt;2%</span><span>悬停查看Beta/情绪/Alpha归因</span>
         </div>
       </div>
 
@@ -1035,45 +1035,81 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         (function(){
           var el=document.getElementById('ms-nav-chart');
           if(!el)return;
-          // bar dataset for drawdown highlight: use left y-axis max
-          var allVals=navFund.concat(navIndex);
-          var yMax=Math.max.apply(null,allVals)*1.05;
-          var ddData=navDD.map(function(v){return v?yMax:0});
+          var tt=document.getElementById('ms-nav-tooltip');
+          // Convert to %
+          var fundPct=navFund.map(function(v){return ((v-1)*100)});
+          var indexPct=navIndex.map(function(v){return ((v-1)*100)});
+          var excessPct=navExcess.map(function(v){return (v*100)});
+          // Gradient for product fill
+          var ctx=el.getContext('2d');
+          var gradFund=ctx.createLinearGradient(0,0,0,el.parentElement.offsetHeight||380);
+          gradFund.addColorStop(0,'rgba(139,92,246,0.25)');
+          gradFund.addColorStop(0.5,'rgba(139,92,246,0.08)');
+          gradFund.addColorStop(1,'rgba(139,92,246,0)');
+          var gradExcess=ctx.createLinearGradient(0,0,0,el.parentElement.offsetHeight||380);
+          gradExcess.addColorStop(0,'rgba(245,158,11,0.18)');
+          gradExcess.addColorStop(1,'rgba(245,158,11,0)');
+          // Zone colors based on weekly excess delta
+          var zoneColors=excessPct.map(function(v,i){
+            if(i===0) return '#f59e0b';
+            var delta=excessPct[i]-excessPct[Math.max(0,i-5)];
+            if(delta>1) return '#10b981';
+            if(delta<-1) return '#ef4444';
+            if(Math.abs(delta)<0.3) return '#f59e0b';
+            return '#f59e0b';
+          });
+          var ddData=navDD.map(function(v){return v?999:0});
 
           new Chart(el,{
             type:'line',
             data:{labels:navDates,datasets:[
-              {label:'基准回撤区域',data:ddData,type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'y',order:4},
-              {label:'产品净值',data:navFund,borderColor:'#8b5cf6',borderWidth:2,pointRadius:0,tension:.2,fill:false,yAxisID:'y',order:2},
-              {label:'基准',data:navIndex,borderColor:'#94a3b8',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.2,fill:false,yAxisID:'y',order:3},
-              {label:'累计超额',data:navExcess,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.1)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true,yAxisID:'y1',order:1}
+              {label:'基准回撤区域',data:ddData,type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'yHidden',order:10},
+              {label:'产品收益(%)',data:fundPct,borderColor:'#8b5cf6',backgroundColor:gradFund,borderWidth:2,pointRadius:0,tension:.3,fill:true,yAxisID:'y',order:2},
+              {label:'基准(%)',data:indexPct,borderColor:'#94a3b8',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y',order:3},
+              {label:'累计超额(%)',data:excessPct,borderColor:'#f59e0b',backgroundColor:gradExcess,borderWidth:2.5,
+                pointRadius:3,pointHoverRadius:6,
+                pointBackgroundColor:zoneColors,pointBorderColor:'#fff',pointBorderWidth:1.5,
+                tension:.15,fill:true,yAxisID:'y1',order:1}
             ]},
             options:{
               responsive:true,maintainAspectRatio:false,
               interaction:{mode:'index',intersect:false},
               plugins:{
                 legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,filter:function(item){return item.text!=='基准回撤区域'}}},
-                tooltip:{
-                  callbacks:{
-                    afterBody:function(ctx){
-                      var i=ctx[0].dataIndex;
-                      if(!navDD[i])return '';
-                      var dt=navDatesFull[i];
-                      var dc=decompLookup[dt];
-                      if(!dc)return '\n📉 基准回撤区域';
-                      return '\n📉 基准回撤区域'
-                        +'\nBeta贡献: '+dc.cum_beta.toFixed(2)+'%'
-                        +'\n情绪贡献: '+dc.cum_sentiment.toFixed(2)+'%'
-                        +'\n管理人Alpha: '+dc.cum_alpha.toFixed(2)+'%'
-                        +'\n情绪周期: '+dc.cycle_label;
-                    }
+                tooltip:{enabled:false,external:function(context){
+                  if(context.tooltip.opacity===0){tt.style.display='none';return;}
+                  var i=context.tooltip.dataPoints[0].dataIndex;
+                  var dt=navDatesFull[i];
+                  var dc=decompLookup[dt]||{};
+                  var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
+                  html+=navDates[i]+' <span style="color:#c4b5fd">产品 '+(fundPct[i]).toFixed(1)+'%</span>';
+                  html+=' <span style="color:#fde68a">超额 '+(excessPct[i]).toFixed(2)+'%</span>';
+                  html+='</div>';
+                  if(dc.cum_beta!==undefined){
+                    html+='<div>📊 Beta贡献: <b>'+dc.cum_beta.toFixed(2)+'%</b> (β='+((dc.beta||0)).toFixed(2)+')</div>';
+                    html+='<div>🎭 情绪贡献: <b>'+dc.cum_sentiment.toFixed(2)+'%</b>';
+                    if(dc.sentiment) html+=' (指数='+(dc.sentiment).toFixed(0)+')';
+                    html+='</div>';
+                    html+='<div>⭐ 管理人Alpha: <b>'+dc.cum_alpha.toFixed(2)+'%</b></div>';
+                    if(dc.cycle_label && dc.cycle_label!=='—') html+='<div>🔄 情绪周期: <b>'+dc.cycle_label+'</b></div>';
                   }
-                }
+                  if(navDD[i]) html+='<div style="color:#fca5a5;margin-top:4px">📉 基准回撤区域</div>';
+                  tt.innerHTML=html;
+                  tt.style.display='block';
+                  var pos=context.chart.canvas.getBoundingClientRect();
+                  var left=context.tooltip.caretX+pos.left+12;
+                  var topY=context.tooltip.caretY+pos.top-30;
+                  var ttW=tt.offsetWidth||300;
+                  if(left+ttW>window.innerWidth-20) left=context.tooltip.caretX+pos.left-ttW-12;
+                  tt.style.left=left+'px';
+                  tt.style.top=topY+'px';
+                }}
               },
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(2)}},grid:{color:'#f1f5f9'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
-                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return (v*100).toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'累计超额',font:{size:9},color:'#f59e0b'}}
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(0)+'%'}},grid:{color:'#f1f5f9'},title:{display:true,text:'累计收益%',font:{size:9},color:'#8b5cf6'}},
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'超额%',font:{size:9},color:'#f59e0b'}},
+                yHidden:{display:false}
               }
             }
           });
@@ -1133,7 +1169,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div class="ov-card" style="border-left-color:#f59e0b">
           <div class="ov-label">PCA友好度</div>
           <div class="ov-value" style="color:#f59e0b">40.8</div>
-          <div class="ov-sub">一般 · 基于品种共振强度</div>
+          <div class="ov-sub">一般 · 趋势CTA&gt;60为良好</div>
         </div>
         <div class="ov-card" style="border-left-color:#3b82f6">
           <div class="ov-label">环境类型</div>
@@ -1143,12 +1179,12 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div class="ov-card blue">
           <div class="ov-label">PC1 解释比</div>
           <div class="ov-value">29.3%</div>
-          <div class="ov-sub">全市场共振强度</div>
+          <div class="ov-sub">25-35% 中等共振</div>
         </div>
         <div class="ov-card slate">
           <div class="ov-label">PC2 解释比</div>
           <div class="ov-value">9.5%</div>
-          <div class="ov-sub">板块分化程度</div>
+          <div class="ov-sub">&lt;10% 分化小</div>
         </div>
         <div class="ov-card amber">
           <div class="ov-label">动量信号</div>
@@ -1161,6 +1197,177 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <div class="ov-sub">参与PCA计算</div>
         </div>
       </div>
+
+      <!-- 策略评价 -->
+      <div class="card" style="background:linear-gradient(135deg,#f8fafc,#f0f4ff);border-left:4px solid #f59e0b">
+        <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-bottom:8px">🌤️ 温和环境：可交易但别重仓，等共振信号加强</div>
+        <div style="font-size:12px;line-height:2"><span style="color:#f59e0b">⚠️ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span><br><span style="color:#94a3b8">📊 <b>截面策略空间有限</b>：品种走势趋同，多空对冲收益薄</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:6px">
+          参考阈值：PC1 &gt;35%=强共振(趋势CTA利好) · 25-35%=中等 · &lt;20%=困难 | PC2 &gt;15%=截面/多空有空间 · &lt;10%=空间有限
+        </div>
+      </div>
+
+      <!-- ═══ 绝对收益归因拆解 ═══ -->
+      <div class="card" style="padding:16px 20px">
+        <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 商品CTA策略 × 归因分析</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:12px">
+          基准: 南华商品指数 · 环境因子: PCA友好度 + 全市场波动率 · 周期: 20250103 ~ 20260226
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <div style="flex:1;min-width:90px;background:#f0fdf4;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">总收益</div>
+            <div style="font-size:20px;font-weight:800;color:#10b981">+19.23%</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:#eff6ff;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">Beta贡献</div>
+            <div style="font-size:20px;font-weight:800;color:#10b981">+0.93%</div>
+            <div style="font-size:10px;color:#94a3b8">β=0.01</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:#faf5ff;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">PCA环境</div>
+            <div style="font-size:20px;font-weight:800;color:#10b981">+23.76%</div>
+            <div style="font-size:10px;color:#94a3b8">R²=0.039</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:#fff7ed;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">波动率环境</div>
+            <div style="font-size:20px;font-weight:800;color:#ef4444">-0.69%</div>
+            <div style="font-size:10px;color:#94a3b8">R²=0.005</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:#fefce8;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:#64748b">管理人Alpha</div>
+            <div style="font-size:20px;font-weight:800;color:#ef4444">-4.77%</div>
+            <div style="font-size:10px;color:#94a3b8">择时+择品种</div>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">各PCA环境下日均Alpha：</div>
+          <span style="display:inline-block;margin:2px 4px;padding:3px 8px;border-radius:6px;background:#3b82f618;color:#3b82f6;font-size:11px;font-weight:600">温和趋势 -0.172%/日 (92天)</span>
+        </div>
+        <!-- 归因解读 -->
+        <div style="background:#fefce8;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;line-height:1.7">
+          <div style="font-weight:700;color:#92400e;margin-bottom:2px">💡 归因解读</div>
+          <div style="color:#78716c">• 产品与南华商品指数几乎无相关性 — CTA做的是多空择时，非商品多头</div>
+          <div style="color:#78716c">• 管理人alpha略为负，部分环境下择时有失误</div>
+        </div>
+
+        <!-- 累计收益分解图 -->
+        <div style="position:relative;height:380px"><canvas id="cta-decomp"></canvas></div>
+        <div id="cta-decomp-tooltip" style="display:none;position:fixed;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center;flex-wrap:wrap">
+          <span>🟣 产品收益</span><span>⚪ 南华商品指数</span><span>🔵 PCA环境(左轴)</span><span>🟡 累计超额(右轴)</span>
+          <span>|</span><span>红色背景=产品回撤&gt;1.5%</span><span>悬停查看Beta/PCA/Vol/Alpha归因</span>
+        </div>
+      </div>
+
+      <!-- ═══ 全市场平均波动率 ═══ -->
+      <div class="card" style="padding:16px 20px">
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 全市场平均波动率（20日年化）</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+          <div style="font-size:28px;font-weight:800;color:#ef4444">25.32%</div>
+          <div style="font-size:12px;color:#64748b;line-height:1.6">
+            历史分位 <b style="color:#ef4444">99.2%</b> · 高波动<br>
+            <span style="font-size:11px;color:#94a3b8">高波动+趋势=CTA利润放大 · 低波动=策略损耗增加</span>
+          </div>
+        </div>
+        <div style="position:relative;height:240px"><canvas id="cta-vol-chart"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:6px">
+          蓝色=全市场等权平均波动率(年化%) · 橙色虚线=历史分位数(右轴%) · 窗口: 20日波动率 / 120日分位
+        </div>
+      </div>
+
+      <script>
+      var _ctaDecompInited=false;
+      function initCtaDecomp(){
+        if(_ctaDecompInited)return;
+        _ctaDecompInited=true;
+
+        var ctaEl=document.getElementById('cta-decomp');
+        var ctaCtx=ctaEl.getContext('2d');
+        var ctaH=ctaEl.parentElement.offsetHeight||380;
+        var gradCtaFund=ctaCtx.createLinearGradient(0,0,0,ctaH);
+        gradCtaFund.addColorStop(0,'rgba(139,92,246,0.25)');
+        gradCtaFund.addColorStop(0.5,'rgba(139,92,246,0.08)');
+        gradCtaFund.addColorStop(1,'rgba(139,92,246,0)');
+        var gradCtaExcess=ctaCtx.createLinearGradient(0,0,0,ctaH);
+        gradCtaExcess.addColorStop(0,'rgba(245,158,11,0.18)');
+        gradCtaExcess.addColorStop(1,'rgba(245,158,11,0)');
+
+        // 归因分解
+        new Chart(document.getElementById('cta-decomp'),{
+          type:'line',
+          data:{labels:["01/03", "01/06", "01/07", "01/08", "01/09", "01/10", "01/13", "01/14", "01/15", "01/16", "01/17", "01/20", "01/21", "01/22", "01/23", "01/24", "01/27", "02/05", "02/06", "02/07", "02/10", "02/11", "02/12", "02/13", "02/14", "02/17", "02/18", "02/19", "02/20", "02/21", "02/24", "02/25", "02/26", "02/27", "02/28", "03/03", "03/04", "03/05", "03/06", "03/07", "03/10", "03/11", "03/12", "03/13", "03/14", "03/17", "03/18", "03/19", "03/20", "03/21", "03/24", "03/25", "03/26", "03/27", "03/28", "03/31", "04/01", "04/02", "04/03", "04/07", "04/08", "04/09", "04/10", "04/11", "04/14", "04/15", "04/16", "04/17", "04/18", "04/21", "04/22", "04/23", "04/24", "04/25", "04/28", "04/29", "04/30", "05/06", "05/07", "05/08", "05/09", "05/12", "05/13", "05/14", "05/15", "05/16", "05/19", "05/20", "05/21", "05/22", "05/23", "05/26", "05/27", "05/28", "05/29", "05/30", "06/03", "06/04", "06/05", "06/06", "06/09", "06/10", "06/11", "06/12", "06/13", "06/16", "06/17", "06/18", "06/19", "06/20", "06/23", "06/24", "06/25", "06/26", "06/27", "06/30", "07/01", "07/02", "07/03", "07/04", "07/07", "07/08", "07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26"],datasets:[
+            {label:'产品回撤区域',data:(function(){var dd=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1];return dd.map(function(v){return v?999:0})})(),type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'yHidden',order:10},
+            {label:'产品收益(%)',data:[1.5974, 1.7462, 1.5418, 2.0352, 1.9982, 1.9888, 1.683, 1.1811, 0.9009, 1.0882, 1.3501, 0.9024, 0.893, 0.9304, 0.6121, 0.0483, -0.1218, 0.342, 0.6435, 1.207, 1.2911, 1.3191, 1.7296, 1.0606, 1.0045, 0.9764, 0.7798, 1.2863, 2.1171, 3.2186, 3.1454, 2.9163, 3.0999, 2.9259, 2.0443, 1.9331, 1.998, 1.8868, 2.759, 2.621, 2.5474, 2.4736, 2.6304, 2.2804, 3.0846, 3.4514, 3.5518, 3.8986, 3.2802, 2.9873, 2.3815, 2.2245, 2.6685, 2.5764, 3.0004, 3.2299, 3.6785, 4.2346, 4.0442, 3.1178, 3.2553, 4.1433, 2.9546, 2.9638, 2.6423, 2.541, 2.8545, 3.2774, 3.1676, 3.3142, 3.9731, 3.9094, 3.6638, 3.755, 3.591, 3.8009, 4.0468, 4.5464, 4.1577, 4.1305, 4.3484, 3.5966, 3.8156, 3.8702, 4.0159, 3.9796, 4.0523, 3.9887, 3.8978, 3.552, 3.3968, 3.1774, 2.9483, 3.2973, 3.819, 3.3819, 3.4277, 3.3637, 3.446, 3.053, 3.6127, 3.1839, 3.1289, 3.2298, 3.2664, 3.4953, 3.6598, 3.678, 3.4865, 3.5778, 3.4501, 2.9565, 2.5156, 2.534, 3.3827, 3.3095, 3.1722, 3.3189, 3.7857, 3.6308, 3.5213, 3.8501, 3.9139, 4.1959, 4.2957, 4.5132, 4.7122, 4.5227, 4.7035, 5.2, 5.667, 5.238, 5.3457, 4.9779, 4.3837, 4.5196, 4.1216, 4.2579, 3.5325, 3.2584, 3.231, 3.744, 3.9628, 3.9264, 4.0811, 4.2991, 4.5619, 5.0592, 4.9332, 5.1314, 5.3921, 5.2038, 5.608, 5.5365, 6.0558, 5.9399, 6.0559, 5.9312, 6.0561, 6.065, 6.439, 6.7851, 6.4402, 6.3515, 6.2182, 6.2805, 6.4582, 6.7333, 7.1491, 7.1667, 6.8848, 7.1848, 7.3444, 6.3689, 6.5096, 6.8308, 7.0309, 7.3904, 6.9824, 6.8725, 7.4227, 7.7112, 8.9311, 8.1864, 8.1864, 9.5686, 9.0038, 9.3172, 10.1665, 9.7793, 9.2059, 9.3037, 8.9228, 8.5993, 8.7567, 9.1298, 9.6287, 9.7066, 9.5704, 9.4633, 9.3365, 9.4049, 9.4537, 9.2294, 8.9753, 9.0537, 9.0537, 9.9544, 9.5857, 9.1085, 9.0204, 9.1771, 9.0891, 9.0793, 8.9912, 8.6189, 8.6779, 8.3831, 8.4127, 9.3291, 9.0166, 8.9383, 8.9873, 9.1342, 9.3299, 9.1444, 9.4476, 9.6817, 10.3724, 10.0729, 9.9082, 9.4131, 9.5204, 9.7251, 10.8532, 11.5842, 12.4339, 12.7842, 13.8124, 13.5229, 12.8581, 12.6318, 13.1137, 13.5556, 14.2485, 13.4303, 13.4116, 13.3365, 14.3405, 14.452, 14.9068, 14.1954, 13.8791, 14.5231, 15.2464, 15.0808, 16.9068, 17.9393, 18.4144, 18.7178, 19.7319, 19.8023, 21.1487, 20.4887, 19.8332, 19.8684, 19.631, 19.9835, 20.0977, 19.9924, 19.8432, 19.852, 19.7024, 19.5615, 19.2262],borderColor:'#8b5cf6',backgroundColor:gradCtaFund,borderWidth:2,pointRadius:0,tension:.3,fill:true,yAxisID:'y'},
+            {label:'Beta贡献(%)',data:[-0.5692, 1.723, 1.5829, 1.6174, 1.4715, 0.8143, -0.103, -0.1479, -0.2949, -0.5903, -0.6996, -0.5334, -0.5948, -0.5174, -0.413, -0.4672, -0.4636, -0.4992, -0.5664, -0.6346, -0.651, -0.6266, -0.645, -0.7138, -0.69, -0.712, -0.6985, -0.6807, -0.6047, -0.6221, -0.6658, -0.7156, -0.7451, -0.7331, -0.729, -0.7443, -0.8046, -0.8479, -0.8354, -0.8245, -0.8108, -0.8531, -0.8422, -0.7974, -0.74, -0.7721, -0.7855, -0.8222, -0.7997, -0.8137, -0.8, -0.8011, -0.7963, -0.7923, -0.7933, -0.8009, -0.7634, -0.7651, -0.798, -1.3154, -1.5394, -1.6896, -1.6312, -1.6347, -1.6269, -1.6289, -1.6525, -1.6159, -1.6182, -1.5824, -1.5886, -1.5496, -1.567, -1.5691, -1.5763, -1.6022, -1.6294, -1.646, -1.6375, -1.6431, -1.6416, -1.67, -1.6598, -1.728, -1.665, -1.6397, -1.6449, -1.6422, -1.692, -1.6491, -1.6229, -1.6217, -1.6039, -1.5655, -1.5978, -1.5569, -1.5728, -1.6024, -1.5849, -1.6225, -1.6333, -1.6355, -1.6428, -1.6504, -1.7144, -1.7531, -1.7373, -1.7871, -1.8027, -1.7927, -1.8001, -1.7908, -1.7898, -1.7903, -1.7906, -1.7907, -1.7918, -1.7967, -1.7993, -1.7683, -1.7265, -1.7582, -1.757, -1.7259, -1.7327, -1.7106, -1.7328, -1.7299, -1.718, -1.6897, -1.6254, -1.5893, -1.6046, -1.5801, -1.5677, -1.6161, -1.5998, -1.5879, -1.6705, -1.6834, -1.6985, -1.6579, -1.6557, -1.6691, -1.7237, -1.6603, -1.5504, -1.5529, -1.6643, -1.6578, -1.6771, -1.7205, -1.7747, -1.7347, -1.7098, -1.6338, -1.6738, -1.7435, -1.7207, -1.7264, -1.7301, -1.6893, -1.6677, -1.716, -1.6392, -1.6214, -1.6376, -1.6422, -1.6251, -1.6365, -1.5515, -1.4782, -1.4982, -1.6664, -1.6315, -1.5961, -1.7427, -1.6345, -1.5294, -1.5755, -1.5709, -1.6379, -1.4474, -1.5896, -1.6074, -1.705, -1.673, -1.6592, -1.7128, -1.7335, -1.7112, -1.7138, -1.6716, -1.6662, -1.606, -1.6919, -1.6019, -1.6732, -1.686, -1.6767, -1.7395, -1.7372, -1.7058, -1.727, -1.6937, -1.6974, -1.6669, -1.6593, -1.6807, -1.6986, -1.7362, -1.6934, -1.7668, -1.8324, -1.7913, -1.7661, -1.758, -1.7341, -1.6927, -1.5962, -1.5949, -1.6233, -1.6082, -1.5919, -1.6107, -1.766, -1.7184, -1.746, -1.7288, -1.7445, -1.8196, -1.7654, -1.7048, -1.7175, -1.5268, -1.4578, -1.2249, -1.2546, -1.0072, -1.1327, -1.0292, -1.1979, -1.0874, -0.7375, -0.6362, -1.0589, -0.7631, -0.3481, -0.4108, -0.1671, -0.2917, -0.4845, -0.5166, -0.5411, -0.4276, -0.2099, 0.181, 0.7655, 0.6943, 1.2101, 2.0146, 1.2704, 0.7715, 0.8639, 1.0107, 0.8557, 0.7881, 0.8662, 0.8735, 0.9263, 0.902, 0.7816, 0.9338, 0.9679, 0.931],borderColor:'transparent',borderWidth:0,pointRadius:0,hidden:true},
+            {label:'PCA环境(%)',data:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0777, 0.1761, 0.2769, 0.3656, 0.4592, 0.5478, 0.645, 0.7519, 0.8989, 1.0446, 1.1697, 1.3094, 1.443, 1.7297, 1.9982, 2.2496, 2.5557, 2.8667, 3.157, 3.4534, 3.7352, 4.0145, 4.2903, 4.5757, 4.8612, 5.126, 5.4066, 5.6872, 5.9471, 6.2046, 6.4342, 6.6529, 6.8679, 7.1108, 7.3598, 7.6185, 7.8724, 8.1238, 8.368, 8.6121, 8.8648, 9.132, 9.4236, 9.6823, 9.9568, 10.241, 10.5374, 10.8423, 11.1897, 11.5383, 11.8894, 12.2927, 12.685, 13.081, 13.4685, 13.873, 14.2702, 14.6747, 15.0804, 15.5031, 15.927, 16.2878, 16.6425, 16.9838, 17.33, 17.6737, 18.0248, 18.3649, 18.7123, 19.0378, 19.3743, 19.7108, 20.0497, 20.3764, 20.6971, 21.0372, 21.3773, 21.7004, 22.0175, 22.2689, 22.4135, 22.5738, 22.7159, 22.8337, 22.9528, 23.0742, 23.1981, 23.3075, 23.4301, 23.5395, 23.6427, 23.7569],borderColor:'#6366f1',borderWidth:1.5,pointRadius:0,borderDash:[4,3],tension:.3,yAxisID:'y'},
+            {label:'波动率环境(%)',data:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0235, 0.0433, 0.0639, 0.0849, 0.1058, 0.1331, 0.1633, 0.1956, 0.2163, 0.2324, 0.2544, 0.2706, 0.2805, 0.2692, 0.2539, 0.2388, 0.2134, 0.1881, 0.164, 0.1389, 0.1082, 0.0803, 0.0557, 0.0285, -0.003, -0.0431, -0.0857, -0.1308, -0.1711, -0.2127, -0.2636, -0.3126, -0.3605, -0.4114, -0.4599, -0.5059, -0.5485, -0.5891, -0.6303, -0.6682, -0.6889, -0.7094, -0.7323, -0.7521, -0.7728, -0.791, -0.8043, -0.8143, -0.8275, -0.8379, -0.8442, -0.8514, -0.8577, -0.862, -0.8678, -0.8742, -0.8833, -0.8931, -0.9019, -0.9128, -0.9378, -0.9652, -0.9957, -1.0269, -1.0587, -1.0893, -1.1247, -1.1602, -1.195, -1.2304, -1.2678, -1.3046, -1.3392, -1.3766, -1.4183, -1.4612, -1.503, -1.5446, -1.59, -1.6364, -1.6794, -1.7184, -1.7554, -1.7887, -1.8199, -1.8531, -1.8855, -1.9162, -1.9418, -1.9672, -1.9876, -2.0065, -2.0206, -2.0312, -2.0369, -2.0423, -2.0442, -2.0442, -2.0405, -2.0362, -2.0295, -2.0187, -1.9985, -1.9735, -1.9482, -1.9213, -1.8942, -1.8663, -1.8408, -1.8084, -1.7801, -1.7525, -1.7303, -1.7065, -1.6817, -1.6522, -1.6219, -1.5905, -1.5556, -1.5072, -1.4395, -1.3711, -1.3113, -1.251, -1.1913, -1.1331, -1.0759, -1.0201, -0.9625, -0.9058, -0.8351, -0.7629, -0.6889],borderColor:'transparent',borderWidth:0,pointRadius:0,hidden:true},
+            {label:'南华商品指数(%)',data:[-0.57, -0.92, -0.86, -0.88, -0.81, -0.28, 2.06, 2.19, 2.59, 3.45, 3.77, 2.96, 3.26, 2.85, 2.07, 2.44, 2.41, 2.67, 3.21, 4.02, 4.21, 3.91, 4.14, 2.46, 3.11, 2.54, 2.94, 3.35, 4.27, 3.88, 3.06, 2.32, 1.86, 2.05, 2.12, 1.88, 0.87, 0.21, 0.38, 0.53, 0.73, 0.15, 0.29, 1.15, 1.89, 1.42, 1.23, 0.6, 1.18, 0.86, 1.78, 1.71, 1.96, 2.17, 2.11, 1.38, 2.63, 2.57, 1.66, -2.69, -4.38, -5.88, -3.37, -3.53, -3.13, -3.24, -3.91, -3.09, -3.14, -2.38, -2.52, -1.34, -1.83, -1.89, -2.11, -2.86, -3.7, -4.39, -3.79, -4.72, -4.51, -3.04, -3.49, -1.89, -3.39, -3.99, -3.86, -3.92, -3.12, -3.96, -4.47, -4.49, -4.82, -5.51, -4.78, -6.01, -5.53, -4.69, -5.13, -4.3, -4.04, -3.99, -3.82, -3.62, -2.26, -1.27, -1.67, -0.23, 0.3, -0.02, 0.3, -2.09, -2.29, -2.17, -2.02, -2.23, -2.11, -1.41, -0.9, -1.24, -1.7, -1.15, -1.1, -0.03, -0.24, 0.41, -0.2, -0.09, 0.31, 1.09, 2.32, 3.09, 2.72, 3.41, 3.85, 1.8, 2.46, 2.79, 1.49, 1.29, 1.07, 1.46, 1.48, 1.36, 0.93, 1.42, 2.25, 2.23, 1.4, 1.45, 1.29, 0.95, 0.48, 0.8, 1.01, 1.79, 1.37, 0.69, 0.9, 0.85, 0.82, 1.17, 1.36, 0.94, 1.58, 1.73, 1.6, 1.56, 1.69, 1.6, 2.25, 2.95, 2.74, 1.61, 1.85, 2.09, 0.98, 1.75, 2.72, 2.29, 2.33, 1.57, 2.9, 2.04, 1.93, 1.06, 1.35, 1.47, 0.88, 0.63, 1.04, 1.01, 1.75, 1.83, 2.53, 1.59, 2.31, 1.73, 1.56, 1.69, 0.87, 0.9, 1.38, 1.07, 1.62, 1.55, 2.2, 2.34, 1.95, 1.68, 1.14, 1.77, 0.87, 0.1, 0.65, 0.98, 1.09, 1.45, 2.1, 3.05, 3.06, 2.78, 2.92, 3.09, 2.91, 1.53, 1.93, 1.7, 1.84, 1.71, 1.17, 1.62, 2.13, 1.94, 3.39, 3.88, 5.14, 4.97, 6.01, 5.49, 5.94, 5.25, 5.8, 7.82, 8.38, 6.82, 7.93, 9.72, 9.46, 10.52, 9.96, 9.15, 9.03, 8.93, 9.37, 10.17, 11.43, 13.2, 12.97, 14.65, 17.23, 14.32, 9.32, 10.34, 12.55, 10.13, 9.19, 10.26, 10.36, 11.2, 10.81, 8.93, 12.26, 13.09, 12.29],borderColor:'#94a3b8',borderWidth:1.5,pointRadius:0,borderDash:[5,3],tension:.3,yAxisID:'y'},
+            {label:'管理人Alpha(%)',data:[2.1666, 0.0232, -0.0411, 0.4178, 0.5267, 1.1745, 1.7861, 1.329, 1.1957, 1.6785, 2.0496, 1.4358, 1.4878, 1.4478, 1.0251, 0.5156, 0.3418, 0.8412, 1.2099, 1.8417, 1.9422, 1.9457, 2.3746, 1.7745, 1.6945, 1.6884, 1.4783, 1.967, 2.7218, 3.8407, 3.8112, 3.6319, 3.8451, 3.6589, 2.7733, 2.6775, 2.8026, 2.7347, 3.5945, 3.4456, 3.3581, 3.3267, 3.4726, 3.0778, 3.8246, 4.2235, 4.3373, 4.7208, 4.0799, 3.801, 3.1816, 3.0257, 3.4648, 3.3687, 3.7937, 4.0307, 4.4419, 4.9998, 4.8423, 4.4332, 4.7947, 5.8329, 4.5857, 4.5985, 4.2692, 4.17, 4.507, 4.8933, 4.7858, 4.8966, 5.5617, 5.459, 5.2308, 5.3241, 5.1673, 5.4032, 5.6762, 6.1924, 5.7952, 5.7736, 5.99, 5.2667, 5.4754, 5.5982, 5.6809, 5.6193, 5.6972, 5.6309, 5.5898, 5.2011, 5.0197, 4.7991, 4.5522, 4.8628, 5.4168, 4.9388, 5.0005, 4.966, 5.031, 4.6755, 5.246, 4.8194, 4.7717, 4.8802, 4.9808, 5.2485, 5.3971, 5.4651, 5.2892, 5.3705, 5.2502, 4.7473, 4.3054, 4.3244, 5.1733, 5.1003, 4.964, 5.1156, 5.585, 5.3991, 5.2479, 5.6083, 5.6709, 5.9218, 6.0284, 6.2238, 6.445, 6.2526, 6.4216, 6.8897, 7.2925, 6.8272, 6.9503, 6.558, 5.9514, 6.1357, 5.7214, 5.8458, 5.203, 4.9419, 4.9295, 5.402, 5.595, 5.5523, 5.7409, 5.8745, 6.0066, 6.479, 6.4342, 6.5936, 6.8529, 6.6919, 7.1283, 7.0005, 7.4851, 7.3046, 7.4758, 7.4358, 7.5633, 7.6034, 8.005, 8.3355, 7.9997, 7.9871, 7.8018, 7.8734, 8.0988, 8.4186, 8.86, 8.9341, 8.6074, 8.8757, 9.1062, 8.3479, 8.5017, 8.8382, 9.2335, 9.5308, 9.0603, 9.0371, 9.624, 10.0172, 11.0674, 10.4077, 10.35, 11.7487, 11.0839, 11.3083, 12.1358, 11.6821, 10.9927, 10.9565, 10.3939, 9.9473, 9.9109, 10.2406, 10.3687, 10.2558, 9.8902, 9.4774, 9.1112, 8.8979, 8.6438, 8.1864, 7.6501, 7.4878, 7.2035, 7.8418, 7.2651, 6.5607, 6.2644, 6.1537, 5.9191, 5.7821, 5.4688, 4.8938, 4.7434, 4.2186, 3.9899, 4.5974, 4.0776, 3.8299, 3.6628, 3.5797, 3.5639, 3.2756, 3.3036, 3.324, 3.7456, 3.1961, 2.8273, 1.9559, 1.6745, 1.5598, 2.108, 2.3882, 2.6147, 2.6126, 2.9909, 2.4297, 1.2531, 0.7855, 0.7275, 0.3848, 0.5954, -0.1798, -0.8609, -1.724, -1.0282, -1.5393, -1.3256, -2.2241, -2.8621, -2.5575, -2.3065, -3.0525, -1.969, -1.8711, -1.6952, -2.2792, -2.4276, -1.9783, -0.4522, -1.4175, -2.4399, -2.4521, -2.7996, -2.7024, -2.7741, -3.1119, -3.4038, -3.454, -3.9357, -4.2863, -4.7728],borderColor:'transparent',borderWidth:0,pointRadius:0,hidden:true},
+            {label:'累计超额(%)',data:[2.1674,2.6662,2.4018,2.9152,2.8082,2.2688,-0.377,-1.0089,-1.6891,-2.3618,-2.4199,-2.0576,-2.367,-1.9196,-1.4579,-2.3917,-2.5318,-2.328,-2.5665,-2.813,-2.9189,-2.5909,-2.4104,-1.3994,-2.1055,-1.5636,-2.1602,-2.0637,-2.1529,-0.6614,0.0854,0.5963,1.2399,0.8759,-0.0757,0.0531,1.128,1.6768,2.379,2.091,1.8174,2.3236,2.3404,1.1304,1.1946,2.0314,2.3218,3.2986,2.1002,2.1273,0.6015,0.5145,0.7085,0.4064,0.8904,1.8499,1.0485,1.6646,2.3842,5.8078,7.6353,10.0233,6.3246,6.4938,5.7723,5.781,6.7645,6.3674,6.3076,5.6942,6.4931,5.2494,5.4938,5.645,5.701,6.6609,7.7468,8.9364,7.9477,8.8505,8.8584,6.6366,7.3056,5.7602,7.4059,7.9696,7.9123,7.9087,7.0178,7.512,7.8668,7.6674,7.7683,8.8073,8.599,9.3919,8.9577,8.0537,8.576,7.353,7.6527,7.1739,6.9489,6.8498,5.5264,4.7653,5.3298,3.908,3.1865,3.5978,3.1501,5.0465,4.8056,4.704,5.4027,5.5395,5.2822,4.7289,4.6857,4.8708,5.2213,5.0001,5.0139,4.2259,4.5357,4.1032,4.9122,4.6127,4.3935,4.11,3.347,2.148,2.6257,1.5679,0.5337,2.7196,1.6616,1.4679,2.0425,1.9684,2.161,2.284,2.4828,2.5664,3.1511,2.8791,2.3119,2.8292,3.5332,3.6814,4.1021,4.2538,5.128,4.7365,5.0458,4.1499,4.6859,5.2412,5.1561,5.215,5.619,5.6151,5.0802,5.4115,4.6382,4.5505,4.8582,5.1733,5.4591,5.5667,4.6348,4.2348,4.6044,4.7589,4.6596,4.7408,6.0509,5.6404,4.2624,4.5825,5.0927,6.1412,6.0311,6.1464,6.2564,8.5086,7.6538,7.8472,9.2865,9.1493,8.1659,8.2937,7.1728,6.7693,6.2267,7.5398,7.3187,7.9766,8.0104,7.7733,8.4665,8.5049,8.0737,8.1594,7.3553,7.5037,6.8537,7.6144,7.6357,7.4285,7.8804,7.4071,8.2191,8.9793,8.3412,7.6389,7.5879,6.9331,6.3127,6.2791,5.9566,6.1583,6.0673,6.0442,6.4199,7.6144,7.5176,7.9817,8.5324,8.3629,8.7382,7.7931,7.3904,7.7851,7.4632,7.7042,7.2939,7.8142,7.8024,8.0329,6.9181,7.3818,7.3137,5.7356,5.8685,6.6103,5.4816,3.6165,4.8805,3.932,4.9468,5.0454,4.8491,5.5931,5.8764,4.9108,5.4768,4.7393,5.4444,4.0678,2.5019,5.4823,11.8287,10.1487,7.2832,9.7384,10.441,9.7235,9.7377,8.7924,9.0332,10.922,7.4424,6.4715,6.9362],borderColor:'#f59e0b',backgroundColor:gradCtaExcess,fill:true,borderWidth:2.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:'#f59e0b',pointBorderColor:'#fff',pointBorderWidth:1.5,tension:.15,yAxisID:'y1'}
+          ]},
+          options:{responsive:true,maintainAspectRatio:false,
+            interaction:{mode:'index',intersect:false},
+            plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,filter:function(item){return ['产品回撤区域','Beta贡献(%)','波动率环境(%)','管理人Alpha(%)'].indexOf(item.text)<0}}},
+              tooltip:{enabled:false,external:function(context){
+                var tt=document.getElementById('cta-decomp-tooltip');
+                if(context.tooltip.opacity===0){tt.style.display='none';return;}
+                var i=context.tooltip.dataPoints[0].dataIndex;
+                var ds=context.chart.data.datasets;
+                var fund=ds[1].data[i],bench=ds[5].data[i],excess=ds[7].data[i];
+                var beta=ds[2].data[i],pca=ds[3].data[i],vol=ds[4].data[i],alpha=ds[6].data[i];
+                var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
+                html+=context.chart.data.labels[i];
+                html+=' <span style="color:#c4b5fd">产品 '+fund.toFixed(2)+'%</span>';
+                html+=' <span style="color:#fde68a">超额 '+excess.toFixed(2)+'%</span>';
+                html+='</div>';
+                html+='<div>📊 Beta贡献: <b>'+beta.toFixed(2)+'%</b></div>';
+                if(pca!==0) html+='<div>🧩 PCA环境: <b>'+pca.toFixed(2)+'%</b></div>';
+                if(vol!==0) html+='<div>📈 波动率环境: <b>'+vol.toFixed(2)+'%</b></div>';
+                html+='<div>⭐ 管理人Alpha: <b>'+alpha.toFixed(2)+'%</b></div>';
+                var ddArr=ds[0].data;
+                if(ddArr[i]>0) html+='<div style="color:#fca5a5;margin-top:4px">📉 产品回撤区域</div>';
+                tt.innerHTML=html;
+                tt.style.display='block';
+                var pos=context.chart.canvas.getBoundingClientRect();
+                var left=context.tooltip.caretX+pos.left+12;
+                var topY=context.tooltip.caretY+pos.top-30;
+                var ttW=tt.offsetWidth||300;
+                if(left+ttW>window.innerWidth-20) left=context.tooltip.caretX+pos.left-ttW-12;
+                tt.style.position='fixed';
+                tt.style.left=left+'px';
+                tt.style.top=topY+'px';
+              }}},
+            scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+              y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(0)+'%'}},grid:{color:'#f1f5f9'},title:{display:true,text:'累计收益%',font:{size:9},color:'#8b5cf6'}},
+              y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'超额%',font:{size:9},color:'#f59e0b'}},
+              yHidden:{display:false}}
+          }
+        });
+
+        // 全市场波动率
+        var volCtx=document.getElementById('cta-vol-chart');
+        if(volCtx){
+          new Chart(volCtx,{
+            type:'line',
+            data:{labels:["08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27"],datasets:[
+              {label:'平均波动率(%)',data:[20.73, 20.38, 20.46, 20.5, 20.48, 21.09, 21.36, 21.56, 20.47, 20.03, 20.59, 20.05, 19.45, 17.46, 17.09, 17.11, 16.14, 16.14, 16.27, 16.16, 15.64, 15.91, 16.21, 15.97, 15.57, 14.76, 14.52, 14.29, 14.74, 14.62, 13.74, 13.93, 14.02, 13.75, 13.97, 14.2, 14.53, 14.71, 14.65, 14.97, 16.58, 16.6, 16.37, 16.67, 16.58, 16.81, 17.28, 17.58, 17.29, 17.54, 17.94, 17.84, 17.94, 18.12, 17.98, 17.92, 17.67, 17.6, 17.7, 17.5, 16.18, 15.95, 15.66, 15.59, 15.54, 15.65, 15.2, 15.19, 15.26, 15.2, 15.01, 15.07, 15.28, 15.01, 14.61, 14.49, 14.6, 14.62, 14.26, 14.17, 14.48, 14.87, 15.05, 15.39, 15.6, 15.4, 15.49, 15.64, 16.12, 16.14, 16.6, 16.75, 17.2, 17.53, 17.99, 18.02, 18.34, 18.53, 18.87, 18.93, 19.15, 19.54, 20.42, 20.87, 20.9, 21.05, 21.07, 21.14, 20.92, 21.57, 21.18, 21.11, 20.61, 20.76, 20.85, 21.3, 21.37, 21.47, 21.8, 23.07, 24.88, 24.95, 24.14, 24.18, 24.13, 23.99, 23.9, 23.76, 23.93, 23.85, 25.16, 25.31, 25.47, 25.32],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.06)',fill:true,borderWidth:2,pointRadius:1,tension:.3,yAxisID:'y'},
+              {label:'历史分位(%)',data:[100.0, 50.0, 66.7, 75.0, 60.0, 100.0, 100.0, 100.0, 33.3, 10.0, 63.6, 16.7, 7.7, 7.1, 6.7, 12.5, 5.9, 11.1, 15.8, 15.0, 4.8, 9.1, 26.1, 12.5, 4.0, 3.8, 3.7, 3.6, 10.3, 10.0, 3.2, 6.2, 9.1, 5.9, 11.4, 16.7, 24.3, 28.9, 28.2, 37.5, 61.0, 61.9, 58.1, 63.6, 60.0, 65.2, 70.2, 72.9, 69.4, 72.0, 74.5, 73.1, 75.5, 75.9, 74.5, 69.6, 66.7, 65.5, 67.8, 60.0, 37.7, 30.6, 28.6, 26.6, 24.6, 30.3, 23.9, 23.5, 26.1, 25.7, 22.5, 23.6, 30.1, 23.0, 13.3, 10.5, 14.3, 17.9, 8.9, 7.5, 12.3, 26.8, 31.3, 39.3, 43.5, 39.5, 40.2, 46.6, 52.8, 55.6, 64.8, 66.3, 69.9, 74.5, 85.3, 85.4, 86.6, 86.7, 86.9, 87.0, 87.1, 88.2, 91.3, 97.1, 97.1, 97.2, 97.2, 98.1, 94.5, 100.0, 97.3, 95.5, 88.5, 89.5, 89.6, 97.4, 98.3, 98.3, 100.0, 100.0, 100.0, 100.0, 98.3, 98.3, 96.7, 95.8, 95.0, 94.2, 95.0, 93.3, 100.0, 100.0, 100.0, 99.2],borderColor:'#f59e0b',borderWidth:1.5,pointRadius:0,borderDash:[4,3],tension:.3,yAxisID:'y1'}
+            ]},
+            options:{responsive:true,maintainAspectRatio:false,
+              interaction:{mode:'index',intersect:false},
+              plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
+                tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}}},
+              scales:{
+                x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+                y:{position:'left',title:{display:true,text:'年化波动率%',font:{size:10},color:'#94a3b8'},ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}},
+                y1:{position:'right',min:0,max:100,title:{display:true,text:'分位%',font:{size:10},color:'#f59e0b'},ticks:{font:{size:9},color:'#f59e0b'},grid:{display:false}}
+              }
+            }
+          });
+        }
+      }
+      </script>
 
       <!-- PCA方差解释比走势 -->
       <div class="card">
@@ -1222,7 +1429,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         new Chart(document.getElementById('pca-momentum'),{
           type:'line',
           data:{labels:["10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26", "02-27"],datasets:[
-            {label:'PC1累计值',data:[0.0, -0.0, 0.0, -0.0, -0.0, -0.0, 0.0, -0.0, -0.0, 0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, -0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, -0.0, -0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.0, 0.0, -0.0, -0.0, 0.0, 0.0, 0.0, -0.0, -0.0, -0.0, -0.0, 0.0],borderColor:'#ef4444',backgroundColor:function(ctx){
+            {label:'PC1累计值',data:[3.78, -0.37, -3.56, -9.02, -8.51, -5.79, -10.2, -8.58, -5.99, -1.38, 4.55, 5.17, 9.74, 6.97, 12.42, 7.93, 4.88, 5.13, 0.12, 0.35, 3.68, 1.81, 4.99, 0.8, 4.48, 7.14, 4.57, 6.1, 0.64, 2.91, -1.53, -4.61, 0.27, 0.07, 1.48, 2.48, 6.6, 10.06, 11.17, 9.39, 10.07, 6.91, 6.83, -0.63, 0.03, -1.17, -1.58, 1.92, 1.62, 4.78, 9.3, 10.31, 16.56, 18.48, 25.29, 26.45, 32.98, 28.96, 33.4, 30.99, 30.45, 41.39, 49.62, 40.29, 41.49, 45.45, 41.7, 45.97, 42.74, 36.43, 33.74, 31.35, 33.0, 39.26, 45.46, 48.09, 43.91, 49.61, 56.83, 46.33, 32.49, 35.85, 41.95, 34.81, 32.84, 33.0, 33.51, 37.19, 35.15, 30.24, 40.33, 42.29, 39.43],borderColor:'#ef4444',backgroundColor:function(ctx){
               var v=ctx.raw||0; return v>=0?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)';
             },fill:true,borderWidth:2,pointRadius:1.5,tension:.3}
           ]},
@@ -2038,6 +2245,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </script>
       </div>
       <div class="strat-page" id="strat-convertible">
+
+
 <!-- 转债指增策略环境 — 自动注入 -->
 <div style="padding:0 4px">
 
@@ -2105,6 +2314,112 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     </div>
   </div>
 </div>
+
+      <!-- 转债策略 × 归因分析 -->
+      <div class="card" style="padding:16px 20px;margin-top:12px">
+        <div class="card-title"><span class="dot" style="background:#0891b2"></span> 转债策略 × 归因分析</div>
+        <div style="position:relative;height:380px"><canvas id="cb-nav-chart"></canvas></div>
+        <div id="cb-nav-tooltip" style="display:none;position:fixed;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center;flex-wrap:wrap">
+          <span>🟣 产品收益</span><span>⚪ 中证转债指数</span><span>🟡 累计超额(右轴)</span><span>🔵 活跃度指数(右轴)</span>
+          <span>|</span><span>红色背景=基准回撤&gt;2%</span><span>悬停查看Top50成交额/波动</span>
+        </div>
+      </div>
+
+      <script>
+      (function(){
+        Promise.all([
+          fetch('size_spread/fund_nav/fund_nav_convertible.json').then(r=>r.json()),
+          fetch('env_fit/cb_env/cb_env_activity.json').then(r=>r.json())
+        ]).then(function(res){
+          var fn=res[0].fund.chart, env=res[1];
+          var dates=fn.dates.map(function(d){return d.slice(5)});
+          var datesFull=fn.dates.map(function(d){return d.replace(/-/g,'')});
+          var fundPct=fn.fund_nav.map(function(v){return ((v-1)*100)});
+          var indexPct=fn.index_nav.map(function(v){return ((v-1)*100)});
+          var excessPct=fn.excess.map(function(v){return (v*100)});
+
+          // Benchmark drawdown >2%
+          var idxMax=-Infinity;
+          var ddFlags=indexPct.map(function(v){
+            if(v>idxMax) idxMax=v;
+            return (idxMax-v)>2 ? 1 : 0;
+          });
+
+          // Env lookup
+          var envMap={};
+          env.dates.forEach(function(d,i){
+            envMap[d]={amount:env.top50_amount[i],chg:env.top50_avg_abs_chg[i],score:env.activity_score[i]};
+          });
+
+          // Activity score aligned to fund dates (null where no data)
+          var activityLine=datesFull.map(function(d){var e=envMap[d]; return e?e.score:null});
+
+          var el=document.getElementById('cb-nav-chart');
+          var ctx=el.getContext('2d');
+          var h=el.parentElement.offsetHeight||380;
+          var gradFund=ctx.createLinearGradient(0,0,0,h);
+          gradFund.addColorStop(0,'rgba(8,145,178,0.22)');
+          gradFund.addColorStop(0.5,'rgba(8,145,178,0.06)');
+          gradFund.addColorStop(1,'rgba(8,145,178,0)');
+          var gradExcess=ctx.createLinearGradient(0,0,0,h);
+          gradExcess.addColorStop(0,'rgba(245,158,11,0.18)');
+          gradExcess.addColorStop(1,'rgba(245,158,11,0)');
+
+          var tt=document.getElementById('cb-nav-tooltip');
+
+          new Chart(el,{
+            type:'line',
+            data:{labels:dates,datasets:[
+              {label:'基准回撤区域',data:ddFlags.map(function(v){return v?999:0}),type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'yHidden',order:10},
+              {label:'产品收益(%)',data:fundPct,borderColor:'#0891b2',backgroundColor:gradFund,borderWidth:2,pointRadius:0,tension:.3,fill:true,yAxisID:'y',order:2},
+              {label:'中证转债(%)',data:indexPct,borderColor:'#94a3b8',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y',order:3},
+              {label:'累计超额(%)',data:excessPct,borderColor:'#f59e0b',backgroundColor:gradExcess,fill:true,borderWidth:2.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:'#f59e0b',pointBorderColor:'#fff',pointBorderWidth:1.5,tension:.15,yAxisID:'y1',order:1},
+              {label:'活跃度指数',data:activityLine,borderColor:'#6366f1',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.3,yAxisID:'y1',spanGaps:false,order:4}
+            ]},
+            options:{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{mode:'index',intersect:false},
+              plugins:{
+                legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,filter:function(item){return item.text!=='基准回撤区域'}}},
+                tooltip:{enabled:false,external:function(context){
+                  if(context.tooltip.opacity===0){tt.style.display='none';return;}
+                  var i=context.tooltip.dataPoints[0].dataIndex;
+                  var dt=datesFull[i];
+                  var e=envMap[dt];
+                  var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
+                  html+=dates[i]+' <span style="color:#67e8f9">产品 '+fundPct[i].toFixed(2)+'%</span>';
+                  html+=' <span style="color:#fde68a">超额 '+excessPct[i].toFixed(2)+'%</span>';
+                  html+='</div>';
+                  html+='<div>📊 基准(转债指数): '+indexPct[i].toFixed(2)+'%</div>';
+                  if(e){
+                    html+='<div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px">';
+                    html+='<div>💰 Top50成交额: <b>'+e.amount.toFixed(0)+'亿</b></div>';
+                    html+='<div>📈 Top50平均波动: <b>'+e.chg.toFixed(2)+'%</b></div>';
+                    html+='<div>🔥 活跃度指数: <b>'+e.score+'</b>/100</div>';
+                    html+='</div>';
+                  }
+                  if(ddFlags[i]) html+='<div style="color:#fca5a5;margin-top:4px">📉 基准回撤区域</div>';
+                  tt.innerHTML=html;
+                  tt.style.display='block';
+                  var pos=context.chart.canvas.getBoundingClientRect();
+                  var left=context.tooltip.caretX+pos.left+12;
+                  var topY=context.tooltip.caretY+pos.top-30;
+                  if(left+340>window.innerWidth-20) left=context.tooltip.caretX+pos.left-340-12;
+                  tt.style.left=left+'px';tt.style.top=topY+'px';
+                }}
+              },
+              scales:{
+                x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(0)+'%'}},grid:{color:'#f1f5f9'},title:{display:true,text:'累计收益%',font:{size:9},color:'#0891b2'}},
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'超额% / 活跃度',font:{size:9},color:'#f59e0b'}},
+                yHidden:{display:false}
+              }
+            }
+          });
+        });
+      })();
+      </script>
 
 <!-- 图表区域 -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
@@ -2234,11 +2549,137 @@ function initCbCharts() {
   });
 }
 </script>
-        <iframe src="size_spread/fund_nav/fund_nav.html?tab=convertible" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%"></iframe>
+        <iframe src="size_spread/fund_nav/fund_nav.html?tab=convertible" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%;display:none"></iframe>
+
+
 </div>
       <div class="strat-page" id="strat-arbitrage">
+
+
         <iframe src="env_fit/arbitrage/arbitrage.html" style="width:100%;min-height:800px;border:none"></iframe>
-        <iframe src="size_spread/fund_nav/fund_nav.html?tab=arbitrage" class="embed-frame" style="height:700px;border:none;margin-top:10px;width:100%"></iframe>
+
+      <!-- 期权套利 × 波动率分析 -->
+      <div class="card" style="padding:16px 20px;margin-top:12px">
+        <div class="card-title"><span class="dot" style="background:#4f46e5"></span> 期权套利 × 波动率分析</div>
+        <div style="position:relative;height:380px"><canvas id="arb-nav-chart"></canvas></div>
+        <div id="arb-nav-tooltip" style="display:none;position:fixed;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center;flex-wrap:wrap">
+          <span>🟣 产品净值收益</span><span>🟠 HV20历史波动率(右轴)</span>
+          <span>|</span><span style="color:#10b981">绿色背景=周涨&gt;0.5%</span><span style="color:#ef4444">红色背景=周跌&gt;0.5%</span>
+          <span>悬停查看波动率/PCR</span>
+        </div>
+      </div>
+
+      <script>
+      (function(){
+        Promise.all([
+          fetch('size_spread/fund_nav/fund_nav_arbitrage.json').then(r=>r.json()),
+          fetch('env_fit/arbitrage/mod3_option_arb.json').then(r=>r.json())
+        ]).then(function(res){
+          var fn=res[0].fund.chart, arb=res[1];
+          var dates=fn.dates.map(function(d){return d.slice(5)});
+          var datesFull=fn.dates.map(function(d){return d.replace(/-/g,'')});
+          var fundPct=fn.fund_nav.map(function(v){return ((v-1)*100)});
+
+          // Weekly returns for anomaly detection
+          var weekRet=[0];
+          for(var i=1;i<fundPct.length;i++) weekRet.push(fundPct[i]-fundPct[i-1]);
+
+          // Anomaly flags: green=big gain, red=big loss
+          var anomalyColors=weekRet.map(function(r){
+            if(r>0.5) return 'rgba(16,185,129,0.12)';
+            if(r<-0.5) return 'rgba(239,68,68,0.12)';
+            return 'rgba(0,0,0,0)';
+          });
+          var anomalyData=weekRet.map(function(r){return Math.abs(r)>0.5?999:0});
+
+          // HV lookup from arb series
+          var hvMap={};
+          arb.series.forEach(function(s){
+            hvMap[s.date]={hv:s.hv_20,pcr_vol:s.pcr_vol,pcr_oi:s.pcr_oi,total_vol:s.total_vol};
+          });
+
+          // Align HV to fund dates (nearest match)
+          var arbDates=arb.series.map(function(s){return s.date}).sort();
+          function nearestHV(dt){
+            // Find closest arb date <= dt
+            var best=null;
+            for(var j=arbDates.length-1;j>=0;j--){
+              if(arbDates[j]<=dt){best=arbDates[j];break;}
+            }
+            return best?hvMap[best]:null;
+          }
+          var hvLine=datesFull.map(function(d){var e=nearestHV(d);return e?e.hv:null});
+
+          var el=document.getElementById('arb-nav-chart');
+          var ctx=el.getContext('2d');
+          var h=el.parentElement.offsetHeight||380;
+          var gradFund=ctx.createLinearGradient(0,0,0,h);
+          gradFund.addColorStop(0,'rgba(79,70,229,0.22)');
+          gradFund.addColorStop(0.5,'rgba(79,70,229,0.06)');
+          gradFund.addColorStop(1,'rgba(79,70,229,0)');
+
+          var tt=document.getElementById('arb-nav-tooltip');
+
+          new Chart(el,{
+            type:'line',
+            data:{labels:dates,datasets:[
+              {label:'异常标记',data:anomalyData,type:'bar',backgroundColor:anomalyColors,borderWidth:0,barPercentage:1.0,categoryPercentage:1.0,yAxisID:'yHidden',order:10},
+              {label:'产品收益(%)',data:fundPct,borderColor:'#4f46e5',backgroundColor:gradFund,borderWidth:2,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:weekRet.map(function(r){
+                if(r>0.5) return '#10b981';
+                if(r<-0.5) return '#ef4444';
+                return '#4f46e5';
+              }),pointBorderColor:'#fff',pointBorderWidth:1.5,tension:.3,fill:true,yAxisID:'y',order:2},
+              {label:'HV20(%)',data:hvLine,borderColor:'#f59e0b',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y1',spanGaps:false,order:1}
+            ]},
+            options:{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{mode:'index',intersect:false},
+              plugins:{
+                legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,filter:function(item){return item.text!=='异常标记'}}},
+                tooltip:{enabled:false,external:function(context){
+                  if(context.tooltip.opacity===0){tt.style.display='none';return;}
+                  var i=context.tooltip.dataPoints[0].dataIndex;
+                  var dt=datesFull[i];
+                  var e=nearestHV(dt);
+                  var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
+                  html+=dates[i]+' <span style="color:#a5b4fc">产品 '+fundPct[i].toFixed(2)+'%</span>';
+                  if(i>0) html+=' <span style="color:'+(weekRet[i]>=0?'#6ee7b7':'#fca5a5')+'">周 '+(weekRet[i]>=0?'+':'')+weekRet[i].toFixed(2)+'%</span>';
+                  html+='</div>';
+                  if(e){
+                    html+='<div style="margin-top:2px">';
+                    html+='<div>📊 HV20波动率: <b>'+e.hv.toFixed(2)+'%</b></div>';
+                    html+='<div>📈 PCR(成交量): <b>'+e.pcr_vol.toFixed(4)+'</b></div>';
+                    html+='<div>📈 PCR(持仓量): <b>'+e.pcr_oi.toFixed(4)+'</b></div>';
+                    html+='</div>';
+                  }
+                  if(Math.abs(weekRet[i])>0.5){
+                    var dir=weekRet[i]>0?'大涨':'大跌';
+                    var clr=weekRet[i]>0?'#6ee7b7':'#fca5a5';
+                    html+='<div style="color:'+clr+';margin-top:4px">⚡ 本周'+dir+' '+Math.abs(weekRet[i]).toFixed(2)+'%</div>';
+                  }
+                  tt.innerHTML=html;
+                  tt.style.display='block';
+                  var pos=context.chart.canvas.getBoundingClientRect();
+                  var left=context.tooltip.caretX+pos.left+12;
+                  var topY=context.tooltip.caretY+pos.top-30;
+                  if(left+340>window.innerWidth-20) left=context.tooltip.caretX+pos.left-340-12;
+                  tt.style.left=left+'px';tt.style.top=topY+'px';
+                }}
+              },
+              scales:{
+                x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)+'%'}},grid:{color:'#f1f5f9'},title:{display:true,text:'累计收益%',font:{size:9},color:'#4f46e5'}},
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{display:false},title:{display:true,text:'HV20(%)',font:{size:9},color:'#f59e0b'}},
+                yHidden:{display:false}
+              }
+            }
+          });
+        });
+      })();
+      </script>
+
+
       </div>
     </div><!-- /page-env-fit -->
 
@@ -2366,7 +2807,7 @@ function initCbCharts() {
       page.classList.add('active');
       // 懒加载图表
       if(strat==='momentum-stock'&&typeof initMsCharts==='function')initMsCharts();
-      if(strat==='cta'){if(typeof initPcaCharts==='function')initPcaCharts();if(typeof initCtaCharts==='function')initCtaCharts();}
+      if(strat==='cta'){if(typeof initPcaCharts==='function')initPcaCharts();if(typeof initCtaCharts==='function')initCtaCharts();if(typeof initCtaDecomp==='function')initCtaDecomp();}
       if(strat==='convertible'&&typeof initCbCharts==='function')initCbCharts();
     });
   });

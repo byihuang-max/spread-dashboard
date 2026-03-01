@@ -79,14 +79,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- ═══ 超额净值归因曲线 ═══ -->
 <div class="card" id="excess-card" style="display:none">
-  <div class="card-title"><span class="dot" style="background:#6366f1"></span> 超额净值 × 环境归因</div>
-  <div style="position:relative;height:340px"><canvas id="chartExcess"></canvas></div>
+  <div class="card-title"><span class="dot" style="background:#6366f1"></span> 产品净值 × 超额归因</div>
+  <div style="position:relative;height:380px"><canvas id="chartExcess"></canvas></div>
   <div id="excess-tooltip" style="display:none;position:absolute;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
   <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center">
+    <span>🟣 产品净值</span>
+    <span>⚪ 基准指数</span>
+    <span>🟡 累计超额(右轴)</span>
+    <span>|</span>
     <span>🟢 超额顺风 (周Δ>+1%)</span>
-    <span>⚪ 正常</span>
     <span>🟡 走平/微回撤</span>
     <span>🔴 明显回撤 (周Δ<-1%)</span>
+    <span>红色背景=基准回撤>2%</span>
   </div>
 </div>
 
@@ -279,13 +283,35 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
   }
 
 // ═══ 超额净值归因曲线 ═══
-fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return r.json()}).then(function(EA){
+Promise.all([
+  fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return r.json()}),
+  fetch('../../size_spread/fund_nav/fund_nav_quant-stock.json?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})
+]).then(function(results){
+  var EA=results[0];
+  var NAV=results[1];
   if(!EA.points||!EA.points.length) return;
   document.getElementById('excess-card').style.display='';
 
   var pts = EA.points;
   var labels = pts.map(function(p){return p.date});
   var exData = pts.map(function(p){return (p.excess*100).toFixed(2)*1});
+
+  // 从fund_nav JSON提取净值数据
+  var navF=NAV?(NAV.fund||(NAV.funds||[])[0]):null;
+  var fundNav = navF?navF.chart.fund_nav:null;
+  var indexNav = navF?navF.chart.index_nav:null;
+  var fundLabel = navF?(navF.show_name!==false?navF.name:'代表产品'):'产品';
+  var benchLabel = navF?navF.benchmark_name:'基准';
+
+  // 回撤标记: 基准回撤>2%区域
+  var navDD = [];
+  if(indexNav){
+    var peak=indexNav[0]||1;
+    for(var i=0;i<indexNav.length;i++){
+      if(indexNav[i]>peak) peak=indexNav[i];
+      navDD.push((indexNav[i]-peak)/peak < -0.02 ? 1 : 0);
+    }
+  }
 
   var zoneColors = {bad:'rgba(239,68,68,0.12)',weak:'rgba(251,191,36,0.10)',good:'rgba(16,185,129,0.06)',neutral:'transparent'};
 
@@ -307,23 +333,56 @@ fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return 
     }
   };
 
+  var datasets = [];
+
+  // 基准回撤背景柱
+  if(navDD.length){
+    datasets.push({
+      label:'基准回撤区域',data:navDD.map(function(v){return v?999:0}),
+      type:'bar',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0,
+      barPercentage:1.0,categoryPercentage:1.0,yAxisID:'yHidden',order:10
+    });
+  }
+
+  // 产品净值（左轴）
+  if(fundNav){
+    datasets.push({
+      label:fundLabel,data:fundNav.map(function(v){return ((v-1)*100).toFixed(2)*1}),
+      borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.06)',
+      fill:true,borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y'
+    });
+  }
+
+  // 基准净值（左轴）
+  if(indexNav){
+    datasets.push({
+      label:benchLabel,data:indexNav.map(function(v){return ((v-1)*100).toFixed(2)*1}),
+      borderColor:'#94a3b8',borderDash:[5,3],
+      borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y'
+    });
+  }
+
+  // 累计超额（右轴）— 带zone颜色点
+  datasets.push({
+    label:'累计超额(%)',data:exData,
+    borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',
+    fill:true,borderWidth:2.5,pointRadius:4,pointHoverRadius:7,
+    pointBackgroundColor:pts.map(function(p){
+      return p.zone==='bad'?'#ef4444':p.zone==='weak'?'#f59e0b':p.zone==='good'?'#10b981':'#f59e0b';
+    }),
+    pointBorderColor:'#fff',pointBorderWidth:1.5,tension:0.15,yAxisID:'y1'
+  });
+
   new Chart(document.getElementById('chartExcess'),{
     type:'line',
-    data:{labels:labels,datasets:[{
-      label:'累计超额(%)',data:exData,
-      borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,0.08)',
-      fill:true,borderWidth:2.5,pointRadius:4,pointHoverRadius:7,
-      pointBackgroundColor:pts.map(function(p){
-        return p.zone==='bad'?'#ef4444':p.zone==='weak'?'#f59e0b':p.zone==='good'?'#10b981':'#6366f1';
-      }),
-      pointBorderColor:'#fff',pointBorderWidth:1.5,tension:0.15
-    }]},
+    data:{labels:labels,datasets:datasets},
     plugins:[bgPlugin],
     options:{
       responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{display:false},
+        legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12,
+          filter:function(item){return item.text!=='基准回撤区域'}}},
         tooltip:{enabled:false,external:function(context){
           var tt=document.getElementById('excess-tooltip');
           if(context.tooltip.opacity===0){tt.style.display='none';return;}
@@ -332,7 +391,9 @@ fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return 
           var e=p.env||{};
 
           var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
-          html+=p.date+' <span style="color:'+(p.zone==='bad'?'#fca5a5':p.zone==='weak'?'#fde68a':'#6ee7b7')+'">超额 '+(p.excess*100).toFixed(2)+'%</span>';
+          html+=p.date;
+          if(fundNav) html+=' <span style="color:#c4b5fd">产品 '+(((fundNav[idx]-1)*100)).toFixed(1)+'%</span>';
+          html+=' <span style="color:'+(p.zone==='bad'?'#fca5a5':p.zone==='weak'?'#fde68a':'#6ee7b7')+'">超额 '+(p.excess*100).toFixed(2)+'%</span>';
           if(idx>0) html+=' <span style="font-size:11px;color:#94a3b8">(周Δ '+(p.delta>0?'+':'')+(p.delta*100).toFixed(2)+'%)</span>';
           html+='</div>';
 
@@ -376,12 +437,14 @@ fetch(diagBase+'excess_attribution.json?t='+Date.now()).then(function(r){return 
         }}
       },
       scales:{
-        x:{ticks:{maxTicksToShow:12,font:{size:10}}},
-        y:{ticks:{callback:function(v){return v+'%'}}}
+        x:{ticks:{maxTicksToShow:12,font:{size:10}},grid:{display:false}},
+        y:{position:'left',ticks:{font:{size:10},callback:function(v){return v+'%'}},grid:{color:'rgba(0,0,0,.04)'},title:{display:true,text:'累计收益%',font:{size:10},color:'#8b5cf6'}},
+        y1:{position:'right',ticks:{font:{size:10},callback:function(v){return v+'%'},color:'#f59e0b'},grid:{drawOnChartArea:false},title:{display:true,text:'超额%',font:{size:10},color:'#f59e0b'}},
+        yHidden:{display:false}
       }
     }
   });
-}).catch(function(e2){console.warn('excess_attribution.json:',e2)});
+}).catch(function(e2){console.warn('excess_attribution load:',e2)});
 
 }).catch(function(e){
   console.warn('quant_env_diag.json load failed:', e);
