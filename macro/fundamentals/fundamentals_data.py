@@ -61,7 +61,9 @@ def incremental_save(new_df, csv_path, date_col='month'):
         print("  无新数据")
         return
     old = read_csv(csv_path)
-    combined = pd.concat([old, new_df]).drop_duplicates(subset=[date_col]).sort_values(date_col)
+    combined = pd.concat([old, new_df])
+    combined[date_col] = combined[date_col].astype(str)
+    combined = combined.drop_duplicates(subset=[date_col]).sort_values(date_col)
     combined.to_csv(csv_path, index=False)
     print(f"  新增 {len(new_df)} 条, 合计 {len(combined)} 条")
 

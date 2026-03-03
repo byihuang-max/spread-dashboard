@@ -59,6 +59,7 @@ MODULES = {
             ('env_fit/cb_env', 'cb_calc.py'),    # 计算指标 → cb_env.json
         ],
         'inject_script': ('env_fit/cb_env', 'inject_cb_env.py'),
+        'post_inject': [('env_fit/cb_env', 'inject_cb_nav.py')],  # 注入产品净值
     },
     'macro_score': {
         'name': '宏观打分+策略适配',
@@ -132,6 +133,14 @@ def update_module(mod_key):
         total_time += t
         if not ok:
             all_ok = False
+
+    # 3. 后置注入脚本（可选）
+    if mod.get('post_inject'):
+        for subdir, script in mod['post_inject']:
+            ok, t = run_script(subdir, script)
+            total_time += t
+            if not ok:
+                all_ok = False
 
     return all_ok, total_time
 

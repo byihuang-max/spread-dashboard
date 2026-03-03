@@ -55,7 +55,9 @@ def save_incremental(csv_path, new_data, date_col):
     if new_data.empty:
         return
     old = read_csv(csv_path)
-    combined = pd.concat([old, new_data]).drop_duplicates(subset=[date_col]).sort_values(date_col)
+    combined = pd.concat([old, new_data])
+    combined[date_col] = combined[date_col].astype(str)
+    combined = combined.drop_duplicates(subset=[date_col]).sort_values(date_col)
     combined.to_csv(csv_path, index=False)
     print(f"  保存 {len(combined)} 条 (新增 {len(combined) - len(old)})")
 

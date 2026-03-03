@@ -167,7 +167,9 @@ def save_incremental(csv_path, new_df, date_col='trade_date'):
             dedup_cols = ['ts_code', date_col]
         if 'generic' in combined.columns:
             dedup_cols.append('generic')
-        combined = combined.drop_duplicates(subset=dedup_cols).sort_values(date_col)
+        combined = combined.drop_duplicates(subset=dedup_cols)
+        combined[date_col] = combined[date_col].astype(str)
+        combined = combined.sort_values(date_col)
     combined.to_csv(csv_path, index=False)
 
 

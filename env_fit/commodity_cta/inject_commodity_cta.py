@@ -476,6 +476,7 @@ def build_html(data):
 
         html += f'''
       <!-- PCA方差解释比走势 -->
+      <div class="card">
         <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">PC1高=品种共振强=趋势跟踪友好 | 虚线: PC1=35%为"强共振"阈值</div>
         <div style="position:relative;height:240px"><canvas id="pca-explained"></canvas></div>
       </div>
