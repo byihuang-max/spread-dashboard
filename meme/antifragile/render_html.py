@@ -10,7 +10,7 @@ import numpy as np
 from datetime import timedelta
 
 EQUITY_INDICES = ['纳斯达克100', '恒生科技ETF', '科创50ETF', '日经225', '韩国KOSPI', '道琼斯']
-COMPARISON_ASSETS = ['COMEX黄金', 'WTI原油', 'BTC']
+COMPARISON_ASSETS = ['COMEX黄金', 'WTI原油', 'BTC', '美元兑日元']
 MAIN_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '道琼斯', 'COMEX黄金']
 
 COLORS = {
@@ -18,6 +18,7 @@ COLORS = {
     'BTC': '#F7931A',        '日经225': '#ef4444',    '韩国KOSPI': '#8b5cf6',
     '道琼斯': '#06b6d4',     'COMEX黄金': '#eab308',
     'WTI原油': '#0ea5e9',    '股票中位数': '#475569',
+    '美元兑日元': '#be185d', # 日元套息杠杆（玫红）
 }
 
 
@@ -149,8 +150,8 @@ def render_html():
                 'hidden_legend': True,  # 前端用
             })
 
-    # 4条主线
-    for name in ['股票中位数', 'COMEX黄金', 'WTI原油', 'BTC']:
+    # 4条主线 + 美元兑日元
+    for name in ['股票中位数', 'COMEX黄金', 'WTI原油', 'BTC', '美元兑日元']:
         if name in df_norm.columns:
             median_datasets.append({
                 'label': name,
@@ -277,7 +278,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="section">
   <div class="chart-box">
-    <h3>📊 股票指数中位数 vs 黄金 / 原油 / BTC <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
+    <h3>📊 股票指数中位数 vs 黄金 / 原油 / BTC / 美元兑日元 <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
     <div class="chart-wrap-sm"><canvas id="medianChart"></canvas></div>
   </div>
   <div class="chart-box">
