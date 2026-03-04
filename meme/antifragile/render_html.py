@@ -63,7 +63,8 @@ def calc_returns(nav_data):
 def fmt_ret(v):
     if v is None:
         return '-'
-    color = '#16a34a' if v > 0 else '#dc2626' if v < 0 else '#6b7280'
+    # A股惯例：红=涨，绿=跌
+    color = '#dc2626' if v > 0 else '#16a34a' if v < 0 else '#6b7280'
     sign = '+' if v > 0 else ''
     return f'<span style="color:{color};font-weight:600">{sign}{v:.1%}</span>'
 
@@ -122,6 +123,7 @@ def render_html():
             'pointRadius': 0,
             'pointHoverRadius': 5,
             'fill': False,
+            'spanGaps': True,
         })
 
     # ─────────────────────────────────────────────
@@ -316,6 +318,7 @@ new Chart(document.getElementById('navChart'),{{
   data:{{labels:NAV_LABELS, datasets:NAV_DATASETS}},
   options:{{
     responsive:true, maintainAspectRatio:false,
+    spanGaps:true,
     interaction:{{mode:'index', intersect:false}},
     animation:{{duration:600, easing:'easeOutQuart'}},
     plugins:{{
