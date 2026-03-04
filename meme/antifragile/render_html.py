@@ -191,16 +191,17 @@ def render_html():
     # 4. 相关性热力图（HTML 彩色表格）
     # ─────────────────────────────────────────────
     # 列头（竖排文字）
-    corr_header = '<tr><th style="padding:4px 6px"></th>' + ''.join(
+    col_w = f'width:calc((100% - 120px) / {len(assets_corr)})'
+    corr_header = '<tr><th style="padding:4px 6px;width:120px"></th>' + ''.join(
         f'<th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;'
         f'text-align:center;white-space:nowrap;writing-mode:vertical-rl;'
-        f'transform:rotate(180deg);height:70px;vertical-align:bottom">{a}</th>'
+        f'transform:rotate(180deg);height:70px;vertical-align:bottom;{col_w}">{a}</th>'
         for a in assets_corr
     ) + '</tr>'
     # 行
     corr_rows = ''
     for a1 in assets_corr:
-        corr_rows += f'<tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap">{a1}</td>'
+        corr_rows += f'<tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">{a1}</td>'
         for a2 in assets_corr:
             v = latest_corr[a1][a2]
             bg = val_to_color(v)
@@ -208,13 +209,13 @@ def render_html():
             corr_rows += (
                 f'<td style="padding:7px 6px;text-align:center;background:{bg};'
                 f'color:{fc};font-size:11px;font-weight:600;border:1px solid #f5f5f5;'
-                f'min-width:52px">{v:.2f}</td>'
+                f'{col_w}">{v:.2f}</td>'
             )
         corr_rows += '</tr>'
 
     corr_table_html = (
         '<div style="overflow-x:auto">'
-        '<table style="border-collapse:collapse;font-size:12px">'
+        '<table style="border-collapse:collapse;font-size:12px;width:100%;table-layout:fixed">'
         f'<thead>{corr_header}</thead><tbody>{corr_rows}</tbody>'
         '</table></div>'
     )
