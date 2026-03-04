@@ -256,11 +256,13 @@ def fetch_incremental():
     print("=" * 50)
     for code, name in SW_CODES.items():
         last = sw_last.get(code)
+        # 修复：只有当 last 日期是今天或未来才跳过（避免周末后首个交易日被跳过）
         if last and last >= today:
             print(f"  {name}({code}): 已是最新 ({last})，跳过")
             stats["sw_skip"] += 1
             continue
 
+        # 如果有历史数据，从最后日期的下一天开始拉；否则全量拉
         start = next_day(last) if last else full_start()
         print(f"  {name}({code}): 从 {start} 拉取...", end='', flush=True)
 

@@ -12,6 +12,9 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(DIR, 'quant_stock_data.json'), encoding='utf-8') as f:
     data = json.load(f)
 
+# 获取最新日期
+latest_date = data.get('dates', [])[-1] if data.get('dates') else ''
+
 # 读 HTML
 html_path = os.path.join(DIR, '..', '..', 'index.html')
 html_path = os.path.normpath(html_path)
@@ -40,25 +43,25 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
 
         <!-- 图1: 全市场成交额 -->
         <div class="card">
-          <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 全市场成交额时序（亿元）</div>
+          <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 全市场成交额时序（亿元）<span style="margin-left:auto;font-size:11px;color:#999;font-weight:400">更新: {latest_date}</span></div>
           <div style="position:relative;height:280px"><canvas id="chartAmount"></canvas></div>
         </div>
 
         <!-- 图2: 宽基成交额占比 -->
         <div class="card">
-          <div class="card-title"><span class="dot" style="background:#3498db"></span> 宽基成交额占全A比例（%）</div>
+          <div class="card-title"><span class="dot" style="background:#3498db"></span> 宽基成交额占全A比例（%）<span style="margin-left:auto;font-size:11px;color:#999;font-weight:400">更新: {latest_date}</span></div>
           <div style="position:relative;height:320px"><canvas id="chartShare"></canvas></div>
         </div>
 
         <!-- 图3: 股指期货年化基差 -->
         <div class="card">
-          <div class="card-title"><span class="dot" style="background:#f39c12"></span> IF/IC/IM 年化基差（%）</div>
+          <div class="card-title"><span class="dot" style="background:#f39c12"></span> IF/IC/IM 年化基差（%）<span style="margin-left:auto;font-size:11px;color:#999;font-weight:400">更新: {latest_date}</span></div>
           <div style="position:relative;height:280px"><canvas id="chartBasis"></canvas></div>
         </div>
 
         <!-- 图4: 因子超额收益 -->
         <div class="card">
-          <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 因子超额收益净值（vs 中证全指）</div>
+          <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 因子超额收益净值（vs 中证全指）<span style="margin-left:auto;font-size:11px;color:#999;font-weight:400">更新: {latest_date}</span></div>
           <div style="position:relative;height:280px"><canvas id="chartFactor"></canvas></div>
         </div>
 
@@ -267,6 +270,9 @@ strat_css = '''
 .strat-page{display:none}
 .strat-page.active{display:block}
 '''
+
+# 格式化模板，替换日期占位符
+new_module = new_module.format(latest_date=latest_date)
 
 # ============ 替换 HTML ============
 

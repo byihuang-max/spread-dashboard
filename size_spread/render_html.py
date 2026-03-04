@@ -111,6 +111,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <div class="ss-page active" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#e67e22">
@@ -150,6 +151,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <div class="ss-page" id="page-crowd">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#c0392b">
@@ -196,6 +198,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <div class="ss-page" id="page-style">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 风格轧差多线对比</div>
@@ -216,6 +219,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <div class="ss-page" id="page-dual">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权净值</div>
@@ -320,6 +324,63 @@ document.querySelectorAll('.ss-tab').forEach(function(tab) {{
 }});
 
 initTab('eco');
+
+function refreshData(module) {{
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '刷新中...';
+  
+  fetch('/api/refresh/' + module, {{
+    method: 'POST',
+    credentials: 'include'
+  }})
+  .then(res => res.json())
+  .then(data => {{
+    if(data.ok) {{
+      pollProgress(btn);
+    }} else {{
+      alert('刷新失败: ' + (data.error || '未知错误'));
+      btn.disabled = false;
+      btn.textContent = '🔄 刷新当前';
+    }}
+  }})
+  .catch(err => {{
+    alert('刷新失败: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🔄 刷新当前';
+  }});
+}}
+
+function pollProgress(btn) {{
+  fetch('/api/status', {{credentials: 'include'}})
+  .then(res => res.json())
+  .then(data => {{
+    if(data.running) {{
+      const prog = data.progress || {{}};
+      const script = prog.current_script || '';
+      const done = prog.completed_scripts || 0;
+      const total = prog.total_scripts || 0;
+      btn.textContent = `${{script}} (${{done}}/${{total}})`;
+      setTimeout(() => pollProgress(btn), 800);
+    }} else {{
+      const result = data.last_result || {{}};
+      if(result.ok) {{
+        btn.textContent = '✅ 完成';
+        setTimeout(() => location.reload(), 1000);
+      }} else {{
+        btn.textContent = '❌ 失败';
+        setTimeout(() => {{
+          btn.disabled = false;
+          btn.textContent = '🔄 刷新当前';
+        }}, 2000);
+      }}
+    }}
+  }})
+  .catch(() => {{
+    btn.disabled = false;
+    btn.textContent = '🔄 刷新当前';
+  }});
+}}
 </script>
 </body></html>'''
 

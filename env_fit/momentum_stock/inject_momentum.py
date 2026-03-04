@@ -215,7 +215,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 chain_items += f'<div style="margin-bottom:4px">{name}：{pos_str}{badge}</div>'
             chain_html = f'''
             <div class="card">
-              <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产业链传导</div>
+              <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产业链传导 · {date_fmt}</div>
               <div style="font-size:12px;line-height:2">{chain_items}</div>
             </div>'''
 
@@ -241,7 +241,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 cells += f'<div style="background:{bg};color:{tc};padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="{name} {avg_pct:+.2f}% 成交{amt:.0f}亿 涨跌比{ud}">{name[:2]}{star}</div>'
             heatmap_html = f'''
             <div class="card">
-              <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 行业热力图</div>
+              <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 行业热力图 · {date_fmt}</div>
               <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px">{cells}</div>
               <div style="font-size:10px;color:#94a3b8;margin-top:6px">悬停查看详情 · 红涨绿跌 · ⭐有涨停</div>
             </div>'''

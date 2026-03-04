@@ -573,60 +573,70 @@ def fit_arbitrage(config):
 # ─── 3. 配置建议 ────────────────────────────────────────────
 
 def calc_allocation(macro_result, strategy_results, config):
-    """基于宏观分数和策略适配度计算配置建议"""
+    """基于宏观分数和策略适配度计算配置建议 - 优化版"""
     default = config["default_allocation"]
     macro_score = macro_result["total"]
     
-    # 计算调整
-    allocation = {}
-    total_fit = sum(v["score"] for v in strategy_results.values())
+    # 1. 策略分类
+    offense = ["quant_stock", "momentum_stock"]  # 进攻型
+    defense = ["commodity_cta", "cb_env", "arbitrage"]  # 防御型
     
-    for strat, base_pct in default.items():
+    # 2. 计算每个策略的综合得分（宏观×策略适配度）
+    scores = {}
+    for strat in default.keys():
         fit = strategy_results.get(strat, {}).get("score", 50)
+        # 宏观环境对不同策略的影响权重
+        if strat in offense:
+            macro_weight = macro_score / 100  # 宏观好→进攻型受益
+        else:
+            macro_weight = (100 - macro_score) / 100  # 宏观差→防御型受益
         
-        # 策略适配度调整: 高适配加配，低适配减配
-        fit_adj = (fit - 50) / 50 * 10  # ±10% range
-        
-        # 宏观调整: 宏观差时减风险策略，加防御策略
-        macro_adj = 0
-        if macro_score < 40:  # 防守
-            if strat in ["commodity_cta", "arbitrage"]:
-                macro_adj = 5   # 防御型加配
-            else:
-                macro_adj = -5  # 风险型减配
-        elif macro_score > 75:  # 进攻
-            if strat in ["quant_stock", "momentum_stock"]:
-                macro_adj = 5
-        
-        adjusted = base_pct + fit_adj + macro_adj
-        allocation[strat] = max(5, round(adjusted, 1))  # 最低5%
+        # 综合得分 = 策略适配度 × 宏观权重
+        scores[strat] = fit * (0.7 + 0.3 * macro_weight)
     
-    # 归一化到100%（留一部分现金）
-    cash_ratio = 0
-    if macro_score < 40:
-        cash_ratio = 15
-    elif macro_score < 55:
-        cash_ratio = 10
-    elif macro_score < 75:
-        cash_ratio = 5
+    # 3. 按得分分配权重（高分多配，低分少配）
+    total_score = sum(scores.values())
+    allocation = {}
+    for strat, score in scores.items():
+        # 基础配比 + 得分加成
+        base = default[strat]
+        score_ratio = score / (total_score / len(scores))  # 相对平均分的倍数
+        adjusted = base * score_ratio
+        allocation[strat] = max(5, adjusted)  # 最低5%
     
+    # 4. 动态现金仓位（风险越高现金越多）
+    alerts = load("alerts/alerts.json")
+    risk_score = alerts.get("composite_score", 25) if alerts else 25
+    
+    # 现金 = 基础5% + 风险调整 + 宏观调整
+    cash_base = 5
+    cash_risk = risk_score / 100 * 15  # 风险0→0%, 风险100→15%
+    cash_macro = max(0, (50 - macro_score) / 50 * 10)  # 宏观<50时增加现金
+    cash_ratio = cash_base + cash_risk + cash_macro
+    
+    # 5. 归一化
     total = sum(allocation.values())
     target = 100 - cash_ratio
     for k in allocation:
         allocation[k] = round(allocation[k] / total * target, 1)
+    allocation["cash"] = round(cash_ratio, 1)
     
-    allocation["cash"] = cash_ratio
-    
-    # 计算 vs 默认的变化
+    # 6. 计算变化（vs上次配置）
+    prev_alloc = load("macro/score/prev_allocation.json") or default
     changes = {}
+    labels = {"quant_stock": "量化股票", "momentum_stock": "强势股",
+              "commodity_cta": "商品CTA", "cb_env": "转债", 
+              "arbitrage": "套利", "cash": "现金"}
+    
     for k, v in allocation.items():
-        if k == "cash":
-            changes[k] = {"pct": v, "delta": 0, "label": "现金"}
-        else:
-            delta = v - default.get(k, 0)
-            label = {"quant_stock": "量化股票", "momentum_stock": "强势股/动量",
-                     "commodity_cta": "商品CTA", "cb_env": "转债", "arbitrage": "套利"}.get(k, k)
-            changes[k] = {"pct": v, "delta": round(delta, 1), "label": label}
+        prev = prev_alloc.get(k, default.get(k, 0))
+        delta = v - prev
+        changes[k] = {"pct": v, "delta": round(delta, 1), "label": labels.get(k, k)}
+    
+    # 保存本次配置供下次对比
+    import json
+    with open(os.path.join(BASE, "prev_allocation.json"), "w") as f:
+        json.dump(allocation, f)
     
     return changes
 

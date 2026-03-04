@@ -123,21 +123,39 @@ def inject_cb_nav():
     # 2. 删除旧的图表初始化代码（在 initCbCharts 函数中）
     html = re.sub(r'  // 转债策略 × 归因分析图表.*?  \}\n', '', html, flags=re.DOTALL)
     
-    # 3. 在转债环境指标说明之后插入 HTML
-    marker = '⑥ <b>转股溢价率</b>'
+    # 3. 在分项评分卡片之后插入 HTML
+    marker = '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">📊 分项评分</div>'
     pos = html.find(marker)
     if pos == -1:
-        print("❌ 找不到插入位置标记")
+        print("❌ 找不到分项评分标题")
         return
     
-    # 找到这段说明之后的 </div>
-    end_pos = html.find('</div>', pos)
-    if end_pos == -1:
-        print("❌ 找不到结束标签")
+    # 往后找到包含这个标题的卡片的结束 </div>
+    # 先找到这个标题所在的父级 card div
+    card_start = html.rfind('<div class="card"', 0, pos)
+    if card_start == -1:
+        print("❌ 找不到分项评分卡片开始")
         return
     
-    # 在 </div> 之后插入
-    html = html[:end_pos+6] + '\n\n' + nav_html + html[end_pos+6:]
+    # 从卡片开始位置匹配层级找结束
+    depth = 1
+    i = card_start + 17  # 跳过 '<div class="card"'
+    while i < len(html) and depth > 0:
+        if html[i:i+5] == '<div ':
+            depth += 1
+        elif html[i:i+6] == '</div>':
+            depth -= 1
+            if depth == 0:
+                end_pos = i + 6
+                break
+        i += 1
+    
+    if depth != 0:
+        print("❌ 找不到分项评分卡片结束")
+        return
+    
+    # 在分项评分卡片之后插入
+    html = html[:end_pos] + '\n\n' + nav_html + html[end_pos:]
     
     # 4. 在 initCbCharts 函数末尾插入图表代码
     func_marker = 'function initCbCharts() {'

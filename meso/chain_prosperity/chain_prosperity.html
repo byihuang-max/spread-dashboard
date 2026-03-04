@@ -32,9 +32,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 .chart-box{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;margin-bottom:12px}
 .chart-box h3{font-size:12px;font-weight:700;color:#374151;margin-bottom:10px}
-.chart-wrap{position:relative;height:240px}
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-wrap{position:relative;height:420px}
+.chart-row{display:flex;flex-direction:column;gap:12px}
 
 .chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:12px;padding:10px 12px;background:#f9fafb;border-radius:6px;border:1px solid #f0f1f4}
 .chart-note b{color:#374151}
@@ -126,21 +125,23 @@ function lineChart(canvasId,lines,title){
   var datasets=[];
   for(var i=0;i<lines.length;i++){
     var l=lines[i];if(!l.data||l.data.length==0)continue;
-    datasets.push({label:l.name,data:l.data.map(function(d){return d.value}),borderColor:l.color,borderWidth:2,tension:0.3,pointRadius:0});
+    datasets.push({label:l.name,data:l.data.map(function(d){return d.value}),borderColor:l.color,borderWidth:2,tension:0.3,pointRadius:0,pointHoverRadius:5,pointHoverBorderWidth:2});
   }
   var c=new Chart(document.getElementById(canvasId),{type:'line',
     data:{labels:labels,datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{position:'top',labels:{font:{size:10}}}},
-      scales:{y:{title:{display:true,text:'归一化(首日=100)',font:{size:9}},grid:{color:'#f0f0f0'}},
-        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{size:9}}}}}
+      plugins:{legend:{position:'top',labels:{font:{size:11}}},
+        tooltip:{enabled:true,mode:'index',intersect:false,backgroundColor:'rgba(0,0,0,0.8)',padding:12,titleFont:{size:12,weight:'bold'},bodyFont:{size:11},
+          callbacks:{title:function(ctx){return ctx[0].label},
+            label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y.toFixed(2)}}}},
+      scales:{y:{title:{display:true,text:'归一化(首日=100)',font:{size:10}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
   });
   charts.push(c);
 }
 
 function shareChart(canvasId,shareLines){
   if(!shareLines||!shareLines.length)return;
-  // 合并所有份额变化为堆叠柱
   var sl=shareLines[0];if(!sl.dates||!sl.dates.length)return;
   var datasets=[];
   var colors=['#6366f1','#f59e0b','#10b981','#dc2626'];
@@ -153,9 +154,12 @@ function shareChart(canvasId,shareLines){
   var c=new Chart(document.getElementById(canvasId),{type:'bar',
     data:{labels:sl.dates,datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{size:10}}}},
-      scales:{y:{title:{display:true,text:'份额变化(亿份)',font:{size:9}},grid:{color:'#f0f0f0'}},
-        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{size:9}}}}}
+      plugins:{legend:{position:'top',labels:{font:{size:11}}},
+        tooltip:{enabled:true,mode:'index',intersect:false,backgroundColor:'rgba(0,0,0,0.8)',padding:12,titleFont:{size:12,weight:'bold'},bodyFont:{size:11},
+          callbacks:{title:function(ctx){return ctx[0].label},
+            label:function(ctx){var v=ctx.parsed.y;return ctx.dataset.label+': '+(v>0?'+':'')+v.toFixed(2)+'亿份'}}}},
+      scales:{y:{title:{display:true,text:'份额变化(亿份)',font:{size:10}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
   });
   charts.push(c);
 }
@@ -165,8 +169,8 @@ function renderTech(){
   var c=DATA.chains.tech;if(!c)return;
   var el=document.getElementById('page-tech');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-row"><div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="techTrend"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="techShare"></canvas></div></div></div>'+
+    '<div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="techTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="techShare"></canvas></div></div>'+
     '<div class="chart-note"><b>📖 科技芯片链怎么看：</b><br><br>'+
     '<b>SOXX费城半导体：</b>全球半导体风向标。SOXX涨→国内芯片ETF通常滞后1-3天跟涨，这是正常的传导节奏。<br>'+
     '<b>芯片ETF(512480)：</b>中游代表，跟踪国内半导体设计/封测/制造龙头。<br>'+
@@ -184,8 +188,8 @@ function renderPharma(){
   var c=DATA.chains.pharma;if(!c)return;
   var el=document.getElementById('page-pharma');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-row"><div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="pharmaTrend"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="pharmaShare"></canvas></div></div></div>'+
+    '<div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="pharmaTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="pharmaShare"></canvas></div></div>'+
     '<div class="chart-note"><b>📖 创新药链怎么看：</b><br><br>'+
     '<b>医药生物(申万)：</b>全行业基准指数，包含创新药+仿制药+医疗器械+CRO。走强说明板块整体有资金关注。<br>'+
     '<b>创新药ETF(159992)：</b>聚焦创新药管线公司。跑赢大医药 = 市场愿意给管线溢价，政策环境偏暖。<br>'+
@@ -203,10 +207,10 @@ function renderCycle(){
   var c=DATA.chains.cycle;if(!c)return;
   var el=document.getElementById('page-cycle');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-row"><div class="chart-box"><h3>📈 上游原材料价格（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleUp"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📈 中游建材+南华工业品（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleMid"></canvas></div></div></div>'+
-    '<div class="chart-row"><div class="chart-box"><h3>📈 下游基建/地产ETF走势</h3><div class="chart-wrap"><canvas id="cycleDown"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 下游ETF份额日度变化</h3><div class="chart-wrap"><canvas id="cycleShare"></canvas></div></div></div>'+
+    '<div class="chart-box"><h3>📈 上游原材料价格（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📈 中游建材+南华工业品（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleMid"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📈 下游基建/地产ETF走势</h3><div class="chart-wrap"><canvas id="cycleDown"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 下游ETF份额日度变化</h3><div class="chart-wrap"><canvas id="cycleShare"></canvas></div></div>'+
     '<div class="chart-note"><b>📖 周期链怎么看：</b><br><br>'+
     '<b>上游（铜/铝/铁矿/煤炭）：</b>全球定价品种。铜被称为"铜博士"，是经济景气的领先指标。铜铝同涨 = 全球需求回暖；铁矿煤炭涨 = 国内基建发力。<br>'+
     '<b>中游（螺纹/玻璃/纯碱）：</b>国内定价为主。螺纹=基建晴雨表，玻璃纯碱=地产竣工链。南华工业品是综合景气指标。<br>'+
@@ -226,9 +230,9 @@ function renderConsumer(){
   var c=DATA.chains.consumer;if(!c)return;
   var el=document.getElementById('page-consumer');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-row"><div class="chart-box"><h3>📈 上游农产品价格（60日归一化）</h3><div class="chart-wrap"><canvas id="conUp"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📈 中下游消费ETF+食品饮料（60日归一化）</h3><div class="chart-wrap"><canvas id="conMid"></canvas></div></div></div>'+
-    '<div class="chart-row"><div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="conShare"></canvas></div></div><div class="chart-box" style="display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">更多指标待扩展</div></div>'+
+    '<div class="chart-box"><h3>📈 上游农产品价格（60日归一化）</h3><div class="chart-wrap"><canvas id="conUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📈 中下游消费ETF+食品饮料（60日归一化）</h3><div class="chart-wrap"><canvas id="conMid"></canvas></div></div>'+
+    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="conShare"></canvas></div></div>'+
     '<div class="chart-note"><b>📖 消费链怎么看：</b><br><br>'+
     '<b>上游（生猪/大豆/棕榈油）：</b>农产品价格决定CPI食品分项。猪价是中国CPI的核心驱动——猪周期上行→CPI回升→消费板块关注度提升。<br>'+
     '<b>白酒ETF(512690)：</b>消费信心的晴雨表。商务活动频繁+居民消费意愿强时白酒最先受益。白酒跑赢消费ETF = 市场偏好确定性龙头；跑输 = 风格转向性价比消费。<br>'+

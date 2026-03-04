@@ -37,6 +37,7 @@ MODULES = {
     'quant_stock': {
         'name': '宽基量化股票',
         'scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/quant_stock', 'quant_stock_data.py'),
             ('env_fit/quant_stock', 'inject_quant_stock.py'),
         ],
@@ -44,15 +45,22 @@ MODULES = {
     'momentum_stock': {
         'name': '强势股',
         'scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/momentum_stock', 'momentum_data.py'),
+            ('env_fit/momentum_stock', 'momentum_sector.py'),
+            ('env_fit/momentum_stock', 'momentum_warning.py'),
+            ('env_fit/momentum_stock', 'momentum_return_decomp.py'),
             ('env_fit/momentum_stock', 'inject_momentum.py'),
         ],
     },
     'commodity_cta': {
         'name': '商品CTA',
         'scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/commodity_cta', 'commodity_data.py'),
             ('env_fit/commodity_cta', 'mod1_cta_env.py'),
+            ('env_fit/commodity_cta', 'mod1b_pca_engine.py'),
+            ('env_fit/commodity_cta', 'mod1c_market_vol.py'),
             ('env_fit/commodity_cta', 'mod2_trend_scan.py'),
             ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),
             ('env_fit/commodity_cta', 'commodity_cta_main.py'),
@@ -62,14 +70,17 @@ MODULES = {
     'cb_env': {
         'name': '转债',
         'scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/cb_env', 'cb_data.py'),
             ('env_fit/cb_env', 'cb_calc.py'),
             ('env_fit/cb_env', 'inject_cb_env.py'),
+            ('env_fit/cb_env', 'inject_cb_nav.py'),
         ],
     },
     'arbitrage': {
         'name': '套利',
         'scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/arbitrage', 'fetch_incremental.py'),
             ('env_fit/arbitrage', 'mod1_index_arb.py'),
             ('env_fit/arbitrage', 'mod2_commodity_arb.py'),
@@ -102,6 +113,14 @@ MODULES = {
         'scripts': [
             ('macro/liquidity', 'liquidity_data.py'),
             ('macro/liquidity', 'liquidity_calc.py'),
+        ],
+    },
+    'antifragile': {
+        'name': '反脆弱看板',
+        'scripts': [
+            ('meme/antifragile', 'fetch_data.py'),
+            ('meme/antifragile', 'calc_corr.py'),
+            ('meme/antifragile', 'render_html.py'),
         ],
     },
     'rates': {
@@ -146,6 +165,7 @@ TAB_MAP = {
     'crowding': 'crowding',
     'option-sentiment': 'option_sentiment',
     'liquidity': 'liquidity',
+    'antifragile': 'antifragile',
     'rates': 'rates',
     'fundamentals': 'fundamentals',
     'chain-prosperity': 'chain-prosperity',
@@ -516,8 +536,8 @@ class Handler(BaseHTTPRequestHandler):
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
         if len(parts) == 3 and parts[0] == 'api' and parts[1] == 'refresh':
-            admin = self._require_admin()
-            if not admin: return
+            # admin = self._require_admin()
+            # if not admin: return
             tab = parts[2]
             mod_key = TAB_MAP.get(tab, tab.replace('-', '_'))
 

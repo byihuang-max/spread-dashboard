@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """基金净值模块 - 拉取产品净值 + 基准指数，计算超额"""
 import os, sys, json, time
-sys.path.insert(0, '/tmp/fof99_pkg')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'mall_sdk'))
 
 from fof99 import FundCompanyPrice, FundPrice
 from fof99.requests.indexrequest import IndexPrice
@@ -83,9 +83,20 @@ def fetch_fund_nav(reg_code, start_date):
 
 
 def fetch_index(reg_code, start_date):
-    req = IndexPrice(APPID, APPKEY)
-    req.set_params(reg_code=reg_code, start_date=start_date, end_date='2026-12-31', order_by='price_date', order=1)
-    return req.do_request() or []
+    import time
+    for attempt in range(3):
+        try:
+            req = IndexPrice(APPID, APPKEY)
+            req.set_params(reg_code=reg_code, start_date=start_date, end_date='2026-12-31', order_by='price_date', order=1)
+            result = req.do_request()
+            return result or []
+        except Exception as e:
+            print(f"  ⚠️ 指数{reg_code}拉取失败 (尝试{attempt+1}/3): {e}")
+            if attempt < 2:
+                time.sleep(2)
+            else:
+                print(f"  ❌ 指数{reg_code}最终失败，使用空数据")
+                return []
 
 
 def align_and_calc(fund_data, index_data):

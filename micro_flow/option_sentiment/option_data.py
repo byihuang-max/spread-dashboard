@@ -103,7 +103,11 @@ def _save_incremental(new_data, fname, date_col='trade_date'):
     old = _read_cache(fname)
     combined = pd.concat([old, new_data]).drop_duplicates(
         subset=[c for c in [date_col, 'ts_code'] if c in new_data.columns]
-    ).sort_values(date_col)
+    )
+    # 统一日期列类型为str，避免混合类型导致sort报错
+    if date_col in combined.columns:
+        combined[date_col] = combined[date_col].astype(str)
+    combined = combined.sort_values(date_col)
     combined.to_csv(path, index=False)
 
 
