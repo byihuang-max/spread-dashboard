@@ -150,8 +150,8 @@ def render_html():
                 'hidden_legend': True,  # 前端用
             })
 
-    # 4条主线 + 美元兑日元
-    for name in ['股票中位数', 'COMEX黄金', 'WTI原油', 'BTC', '美元兑日元']:
+    # 4条主线（归一化，左轴）
+    for name in ['股票中位数', 'COMEX黄金', 'WTI原油', 'BTC']:
         if name in df_norm.columns:
             median_datasets.append({
                 'label': name,
@@ -163,7 +163,32 @@ def render_html():
                 'pointHoverRadius': 5,
                 'fill': False,
                 'order': 1,
+                'yAxisID': 'y',
             })
+
+    # 美元兑日元：右轴，显示实际汇率（不归一化）
+    if '美元兑日元' in nav_data:
+        usdjpy_raw = nav_data['美元兑日元']
+        usdjpy_vals = []
+        last_v = None
+        for d in median_dates:
+            v = usdjpy_raw.get(d)
+            if v is not None:
+                last_v = v
+            usdjpy_vals.append(round(last_v, 2) if last_v is not None else None)
+        median_datasets.append({
+            'label': '美元兑日元(右轴)',
+            'data': usdjpy_vals,
+            'borderColor': COLORS['美元兑日元'],
+            'borderWidth': 1.5,
+            'borderDash': [5, 3],
+            'tension': 0.3,
+            'pointRadius': 0,
+            'pointHoverRadius': 5,
+            'fill': False,
+            'order': 1,
+            'yAxisID': 'y2',
+        })
 
     # ─────────────────────────────────────────────
     # 3. 涨跌幅表格
@@ -360,14 +385,37 @@ var medOpts = {{
     }},
     tooltip:{{
       mode:'index', intersect:false,
-      callbacks:{{label:pctLabel}},
+      callbacks:{{
+        label:function(ctx){{
+          var v = ctx.parsed.y;
+          if(v===null||v===undefined) return null;
+          // 右轴（美元兑日元）显示实际汇率
+          if(ctx.dataset.yAxisID === 'y2'){{
+            return ctx.dataset.label + ': ' + v.toFixed(2);
+          }}
+          // 左轴显示归一化变化
+          var chg = ((v-1)*100).toFixed(2);
+          var sign = chg >= 0 ? '+' : '';
+          return ctx.dataset.label + ': ' + v.toFixed(3) + ' (' + sign + chg + '%)';
+        }}
+      }},
       filter:function(item){{ return item.datasetIndex >= {len(EQUITY_INDICES)} && item.parsed.y !== null; }}
     }}
   }},
   scales:{{
     y:{{
+      position:'left',
       grid:{{color:'#f0f0f0'}},
       ticks:{{callback:function(v){{return v.toFixed(2);}}}}
+    }},
+    y2:{{
+      position:'right',
+      grid:{{drawOnChartArea:false}},
+      ticks:{{
+        color:'#be185d',
+        callback:function(v){{return v.toFixed(0);}}
+      }},
+      title:{{display:true, text:'USDJPY', color:'#be185d', font:{{size:10}}}}
     }},
     x:{{ticks:{{maxRotation:0, autoSkip:true, maxTicksLimit:10, font:{{size:10}}}}}}
   }}
