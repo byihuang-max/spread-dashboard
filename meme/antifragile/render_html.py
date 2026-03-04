@@ -128,6 +128,7 @@ def render_html():
         xaxis=dict(title=None, showgrid=True, gridcolor='#e8eaef', zeroline=False),
         yaxis=dict(title='净值', showgrid=True, gridcolor='#e8eaef', zeroline=False, tickformat='.2f'),
         hovermode='x unified', template='plotly_white', height=500,
+        autosize=True,
         margin=dict(l=60, r=20, t=20, b=40),
         legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0, font=dict(size=12)),
         plot_bgcolor='white', paper_bgcolor='white'
@@ -148,6 +149,7 @@ def render_html():
         xaxis=dict(side='bottom', tickangle=-45),
         yaxis=dict(side='left'),
         template='plotly_white', height=500,
+        autosize=True,
         margin=dict(l=120, r=80, t=20, b=120),
         plot_bgcolor='white', paper_bgcolor='white'
     )
@@ -189,6 +191,7 @@ def render_html():
         xaxis=dict(title=None, showgrid=True, gridcolor='#e8eaef', zeroline=False),
         yaxis=dict(title='归一净值', showgrid=True, gridcolor='#e8eaef', zeroline=False, tickformat='.2f'),
         hovermode='x unified', template='plotly_white', height=460,
+        autosize=True,
         margin=dict(l=60, r=20, t=20, b=40),
         legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0, font=dict(size=12)),
         plot_bgcolor='white', paper_bgcolor='white'
@@ -231,14 +234,14 @@ def render_html():
 <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}}
+body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;overflow-x:hidden}}
 h2{{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}}
 .section{{margin-bottom:24px}}
 .signal-bar{{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}}
 .signal-main{{font-size:18px;font-weight:800}}
 .signal-tags{{display:flex;gap:8px;flex-wrap:wrap}}
 .signal-tag{{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}}
-.chart-box{{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}}
+.chart-box{{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;min-width:0;overflow:hidden}}
 .chart-box h3{{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}}
 .chart-note{{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}}
 .chart-note b{{color:#374151}}
@@ -260,7 +263,7 @@ h2{{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}}
 <div class="section">
 <div class="chart-box">
 <h3>📈 全球8大资产归一净值曲线（起点=1）</h3>
-<div id="chart"></div>
+<div id="chart" style="width:100%"></div>
 <div class="chart-note">
   <b>怎么看：</b>全部资产以最早可用日期归一为1，便于跨资产涨跌幅对比。<br>
   <b>包含：</b>纳斯达克100、恒生科技ETF、科创50ETF、BTC、日经225、韩国KOSPI、道琼斯、COMEX黄金。
@@ -271,7 +274,7 @@ h2{{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}}
 <div class="section">
 <div class="chart-box">
 <h3>📊 股票指数中位数 vs 黄金 / 原油 / BTC <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指）</span></h3>
-<div id="chart-median"></div>
+<div id="chart-median" style="width:100%"></div>
 </div>
 <div class="chart-box">
 <h3>涨跌幅汇总</h3>
@@ -283,7 +286,7 @@ h2{{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}}
 <div class="section">
 <div class="chart-box">
 <h3>🔥 30天滚动相关性矩阵 — 叙事联动监控 <span style="font-weight:400;color:#8b92a5;font-size:11px">（日期: {latest_date}）</span></h3>
-<div id="chart-corr"></div>
+<div id="chart-corr" style="width:100%"></div>
 <div class="chart-note">
   <b>怎么看：</b>颜色越红=正相关越强（同涨跌），越蓝=负相关（一涨一跌）。<br>
   <b>注意：</b>WTI原油不参与相关性矩阵（仅用于中位数对标）。
@@ -295,9 +298,18 @@ h2{{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}}
 var navData={fig_nav.to_json()};
 var medianData={fig_median.to_json()};
 var corrData={fig_corr.to_json()};
-Plotly.newPlot('chart',navData.data,navData.layout,{{responsive:true}});
-Plotly.newPlot('chart-median',medianData.data,medianData.layout,{{responsive:true}});
-Plotly.newPlot('chart-corr',corrData.data,corrData.layout,{{responsive:true}});
+var cfg={{responsive:true,displayModeBar:false}};
+Plotly.newPlot('chart',navData.data,navData.layout,cfg);
+Plotly.newPlot('chart-median',medianData.data,medianData.layout,cfg);
+Plotly.newPlot('chart-corr',corrData.data,corrData.layout,cfg);
+// 确保 iframe 加载完后重新适配宽度
+window.addEventListener('load',function(){{
+  setTimeout(function(){{
+    Plotly.Plots.resize(document.getElementById('chart'));
+    Plotly.Plots.resize(document.getElementById('chart-median'));
+    Plotly.Plots.resize(document.getElementById('chart-corr'));
+  }},100);
+}});
 </script>
 </body></html>"""
 
