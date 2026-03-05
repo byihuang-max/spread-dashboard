@@ -215,19 +215,26 @@
             
             <!-- 标的表格 -->
             <div class="chart-box">
-                <h3>标的相对强弱 TOP 10</h3>
+                <h3>🏆 标的相对强弱 TOP 10</h3>
                 <table id="stocks-table">
                     <thead>
                         <tr>
                             <th>排名</th>
                             <th>标的</th>
                             <th>主线</th>
+                            <th>基准指数</th>
                             <th>20日相对强弱</th>
                             <th>最新价格</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
+                <div class="chart-note">
+                    <b>相对强弱算法：</b>标的20日收益率 - 基准指数20日收益率。<br>
+                    <b>基准匹配：</b>美股→SPY，日股→日经225，韩股→KOSPI，A股→沪深300。<br>
+                    <b>主题归因：</b>来自 halo_data.py 中的股票分类（AI能耗/地缘重装/价值兑现）。<br>
+                    <b>解读：</b>正值=跑赢基准，负值=跑输基准。TOP10展示当前最强势的HALO标的。
+                </div>
             </div>
         </div>
     </div>
@@ -479,6 +486,7 @@
                     <td>${i + 1}</td>
                     <td>${stock.name}</td>
                     <td><span class="theme-badge ${themeClass}">${stock.theme}</span></td>
+                    <td style="font-size:11px;color:#64748b">${stock.benchmark}</td>
                     <td class="${strengthClass}">${stock.rel_strength_20d > 0 ? '+' : ''}${stock.rel_strength_20d}%</td>
                     <td>${stock.latest_price}</td>
                 `;
