@@ -269,10 +269,10 @@
             renderPEScissors(financial.eps_scissors);
             
             // 主线强弱图表
-            renderThemeChart(data.theme_strength, data.normalized_nav);
+            
             
             // 叙事热度雷达图
-            renderNarrativeChart(data.narrative_scores);
+            
             
             // 标的表格
             renderStocksTable(data.stocks);
@@ -443,129 +443,7 @@
             window.addEventListener('resize', () => chart.resize());
         }
         
-        function renderThemeChart(themeStrength, normalizedNav) {
-    const chart = echarts.init(document.getElementById('theme-chart'), null, {
-        devicePixelRatio: window.devicePixelRatio || 2
-    });
-    
-    if (!normalizedNav || Object.keys(normalizedNav).length === 0) {
-        document.getElementById('theme-chart').innerHTML = '<div style="text-align:center;padding:40px;color:#888">数据加载中...</div>';
-        return;
-    }
-    
-    // 主题颜色
-    const themeColors = {
-        'AI能耗': '#3b82f6',
-        '地缘重装': '#ef4444',
-        '价值兑现': '#10b981'
-    };
-    
-    // 准备系列数据
-    const series = [];
-    let allDates = new Set();
-    
-    for (const [ticker, data] of Object.entries(normalizedNav)) {
-        data.dates.forEach(d => allDates.add(d));
-        
-        series.push({
-            name: data.name,
-            type: 'line',
-            data: data.nav,
-            smooth: false,
-            symbol: 'none',
-            lineStyle: { 
-                width: 1.5, 
-                color: themeColors[data.theme],
-                opacity: 0.7
-            },
-            emphasis: {
-                lineStyle: { width: 2.5, opacity: 1 }
-            }
-        });
-    }
-    
-    const xAxisData = Array.from(allDates).sort();
-    
-    const option = {
-        backgroundColor: 'transparent',
-        tooltip: {
-            trigger: 'axis',
-            formatter: params => {
-                let html = `<strong>${params[0].axisValue}</strong><br/>`;
-                params.slice(0, 5).forEach(p => {
-                    html += `${p.marker} ${p.seriesName}: ${(p.value * 100 - 100).toFixed(2)}%<br/>`;
-                });
-                if (params.length > 5) html += `<span style="color:#888">...及其他${params.length - 5}只</span>`;
-                return html;
-            }
-        },
-        legend: {
-            show: false
-        },
-        grid: { left: '8%', right: '5%', top: '10%', bottom: '15%', containLabel: true },
-        xAxis: {
-            type: 'category',
-            data: xAxisData,
-            axisLabel: { color: '#64748b', fontSize: 10, rotate: 30, interval: Math.floor(xAxisData.length / 8) },
-            axisLine: { lineStyle: { color: '#e8eaef' } }
-        },
-        yAxis: {
-            type: 'value',
-            name: '归一净值',
-            axisLabel: { 
-                color: '#64748b',
-                formatter: v => ((v - 1) * 100).toFixed(0) + '%'
-            },
-            axisLine: { lineStyle: { color: '#e8eaef' } },
-            splitLine: { lineStyle: { color: '#e8eaef' } }
-        },
-        series: series
-    };
-    
-    chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
-}
-
-        
-        function renderNarrativeChart(scores) {
-            const chart = echarts.init(document.getElementById('narrative-chart'), null, {
-                devicePixelRatio: window.devicePixelRatio || 2
-            });
-            const option = {
-                backgroundColor: 'transparent',
-                radar: {
-                    indicator: [
-                        { name: 'AI CapEx', max: 10 },
-                        { name: '全球再武装', max: 10 },
-                        { name: '地缘风险', max: 10 },
-                        { name: '通胀通缩', max: 10 }
-                    ],
-                    center: ['50%', '50%'],
-                    radius: '65%',
-                    splitArea: { areaStyle: { color: ['#f9fafb', '#fff'] } },
-                    axisLine: { lineStyle: { color: '#e8eaef' } },
-                    splitLine: { lineStyle: { color: '#e8eaef' } },
-                    name: { textStyle: { color: '#374151', fontSize: 12 } }
-                },
-                series: [{
-                    type: 'radar',
-                    data: [{
-                        value: [
-                            scores['AI_CapEx'],
-                            scores['全球再武装'],
-                            scores['地缘风险'],
-                            scores['通胀通缩']
-                        ],
-                        areaStyle: { color: 'rgba(59, 130, 246, 0.3)' },
-                        lineStyle: { color: '#3b82f6', width: 2 },
-                        itemStyle: { color: '#3b82f6' }
-                    }]
-                }]
-            };
-            chart.setOption(option);
-            window.addEventListener('resize', () => chart.resize());
-        }
-        
+                
         function renderStocksTable(stocks) {
             const sorted = stocks.sort((a, b) => b.rel_strength_20d - a.rel_strength_20d);
             const tbody = document.querySelector('#stocks-table tbody');
