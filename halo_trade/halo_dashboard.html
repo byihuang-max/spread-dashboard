@@ -18,6 +18,7 @@
             color: #2d3142;
             padding: 20px;
             font-size: 14px;
+            overflow-x: hidden;
         }
         
         .container {
@@ -25,65 +26,74 @@
             margin: 0 auto;
         }
         
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #2d3142;
-        }
-        
-        .subtitle {
-            color: #8b92a5;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        
-        .scenario-card {
+        .signal-bar {
             background: linear-gradient(135deg, #1e2433, #2a3350);
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 16px 20px;
+            color: #e2e6ed;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         
-        .scenario-title {
+        .signal-main {
             font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #e2e6ed;
+            font-weight: 800;
         }
         
-        .scenario-content {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #e2e6ed;
+        .signal-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+        .signal-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #b8bfce;
+        }
+        
+        .section {
             margin-bottom: 24px;
         }
         
-        .card {
+        .chart-box {
             background: #fff;
             border-radius: 10px;
-            padding: 20px;
+            padding: 16px;
             border: 1px solid #e8eaef;
-        }
-        
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
             margin-bottom: 16px;
-            color: #374151;
-            border-bottom: 2px solid #3b82f6;
-            padding-bottom: 8px;
+            overflow: hidden;
         }
         
-        .chart {
-            width: 100%;
-            height: 300px;
+        .chart-box h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+        
+        .chart-wrap {
+            position: relative;
+            height: 380px;
+        }
+        
+        .chart-note {
+            font-size: 11px;
+            color: #8b92a5;
+            line-height: 1.7;
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        
+        .chart-note b {
+            color: #374151;
         }
         
         table {
@@ -140,34 +150,49 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎯 HALO 交易仪表盘</h1>
-        <div class="subtitle">重资产范式转移 · 全球标的追踪</div>
+        <div id="loading" class="loading">⏳ 加载中...</div>
         
-        <div id="loading" class="loading">加载中...</div>
-        <div id="content" style="display: none;">
-            <!-- 场景判断卡片 -->
-            <div class="scenario-card">
-                <div class="scenario-title">📊 当前场景</div>
-                <div class="scenario-content">
-                    <strong id="scenario-name"></strong><br>
-                    <span id="scenario-action"></span>
+        <div id="content" style="display:none">
+            <!-- 顶部信号栏 -->
+            <div class="signal-bar">
+                <div class="signal-main">🎯 HALO 交易看板</div>
+                <div class="signal-tags">
+                    <span class="signal-tag">重资产范式转移</span>
+                    <span class="signal-tag">全球标的追踪</span>
+                    <span class="signal-tag">CapEx二阶导</span>
+                    <span class="signal-tag">PE剪刀差</span>
+                </div>
+                <div style="margin-left:auto;font-size:11px;color:#7c8598" id="update-time"></div>
+            </div>
+            
+            <!-- 场景判断 -->
+            <div class="section">
+                <div class="chart-box">
+                    <h3>📊 当前场景判断</h3>
+                    <div style="display:flex;gap:16px;margin-bottom:16px">
+                        <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
+                            <div style="font-size:18px;font-weight:900" id="scenario-name"></div>
+                            <div style="font-size:12px;color:#7c8598;margin-top:8px" id="scenario-action"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <!-- 核心指标卡片 -->
-            <div style="display:flex;flex-direction:column;gap:24px;margin-bottom:24px">
-                <div class="card">
-                    <div class="card-title">🚀 CapEx 二阶导趋势（季度）</div>
-                    <div id="capex-chart" class="chart"></div>
+            <!-- 核心指标 -->
+            
+                <div class="section">
+                <div class="chart-box">
+                    <h3>🚀 CapEx 二阶导趋势（季度）</h3>
+                    <div class="chart-wrap"><div id="capex-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
                         <b>CapEx 二阶导：</b>资本支出增速的变化率。正值=加速扩张，负值=减速。<br>
                         <b>数据来源：</b>yfinance 季度财报（MSFT/AMZN/GOOGL/META）。<br>
                         <b>HALO 逻辑：</b>超大规模 CapEx 持续加速 = 重资产范式转移仍在强化。
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-title">⚖️ PE 剪刀差趋势（每日）</div>
-                    <div id="pe-chart" class="chart"></div>
+                <div class="chart-box">
+                    <h3>⚖️ PE 剪刀差趋势（每日）</h3>
+                    <div class="chart-wrap"><div id="pe-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
                         <b>PE 剪刀差：</b>重资产 PE - 轻资产 PE。负值=重资产估值更便宜。<br>
                         <b>数据来源：</b>yfinance ETF 实时数据（重资产：XLU/XLE/ITA，轻资产：IGV/XLK）。<br>
@@ -175,23 +200,24 @@
                     </div>
                 </div>
             </div>
+            </div>
             
             <!-- 图表区 -->
             <div class="grid">
-                <div class="card">
-                    <div class="card-title">主线强弱对比（20日相对收益）</div>
-                    <div id="theme-chart" class="chart"></div>
+                <div class="chart-box">
+                    <h3>主线强弱对比（20日相对收益）</h3>
+                    <div id="theme-chart" class="chart-wrap"></div>
                 </div>
                 
-                <div class="card">
-                    <div class="card-title">叙事热度雷达</div>
-                    <div id="narrative-chart" class="chart"></div>
+                <div class="chart-box">
+                    <h3>叙事热度雷达</h3>
+                    <div id="narrative-chart" class="chart-wrap"></div>
                 </div>
             </div>
             
             <!-- 标的表格 -->
-            <div class="card">
-                <div class="card-title">标的相对强弱 TOP 10</div>
+            <div class="chart-box">
+                <h3>标的相对强弱 TOP 10</h3>
                 <table id="stocks-table">
                     <thead>
                         <tr>
@@ -224,6 +250,7 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 renderDashboard(analysisData, financialData);
+                document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {
                 document.getElementById('loading').innerHTML = `❌ 数据加载失败<br><small style="color:#888">${err.message}</small>`;
