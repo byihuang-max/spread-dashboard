@@ -150,49 +150,34 @@
 </head>
 <body>
     <div class="container">
-        <div id="loading" class="loading">⏳ 加载中...</div>
+        <h1>🎯 HALO 交易仪表盘</h1>
+        <div class="subtitle">重资产范式转移 · 全球标的追踪</div>
         
-        <div id="content" style="display:none">
-            <!-- 顶部信号栏 -->
-            <div class="signal-bar">
-                <div class="signal-main">🎯 HALO 交易看板</div>
-                <div class="signal-tags">
-                    <span class="signal-tag">重资产范式转移</span>
-                    <span class="signal-tag">全球标的追踪</span>
-                    <span class="signal-tag">CapEx二阶导</span>
-                    <span class="signal-tag">PE剪刀差</span>
-                </div>
-                <div style="margin-left:auto;font-size:11px;color:#7c8598" id="update-time"></div>
-            </div>
-            
-            <!-- 场景判断 -->
-            <div class="section">
-                <div class="chart-box">
-                    <h3>📊 当前场景判断</h3>
-                    <div style="display:flex;gap:16px;margin-bottom:16px">
-                        <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
-                            <div style="font-size:18px;font-weight:900" id="scenario-name"></div>
-                            <div style="font-size:12px;color:#7c8598;margin-top:8px" id="scenario-action"></div>
-                        </div>
-                    </div>
+        <div id="loading" class="loading">加载中...</div>
+        <div id="content" style="display: none;">
+            <!-- 场景判断卡片 -->
+            <div class="scenario-card">
+                <div class="scenario-title">📊 当前场景</div>
+                <div class="scenario-content">
+                    <strong id="scenario-name"></strong><br>
+                    <span id="scenario-action"></span>
                 </div>
             </div>
             
-            <!-- 核心指标 -->
-            
-                <div class="section">
-                <div class="chart-box">
-                    <h3>🚀 CapEx 二阶导趋势（季度）</h3>
-                    <div class="chart-wrap"><div id="capex-chart" style="width:100%;height:100%"></div></div>
+            <!-- 核心指标卡片 -->
+            <div style="display:flex;flex-direction:column;gap:24px;margin-bottom:24px">
+                <div class="card">
+                    <div class="card-title">🚀 CapEx 二阶导趋势（季度）</div>
+                    <div id="capex-chart" class="chart"></div>
                     <div class="chart-note">
                         <b>CapEx 二阶导：</b>资本支出增速的变化率。正值=加速扩张，负值=减速。<br>
                         <b>数据来源：</b>yfinance 季度财报（MSFT/AMZN/GOOGL/META）。<br>
                         <b>HALO 逻辑：</b>超大规模 CapEx 持续加速 = 重资产范式转移仍在强化。
                     </div>
                 </div>
-                <div class="chart-box">
-                    <h3>⚖️ PE 剪刀差趋势（每日）</h3>
-                    <div class="chart-wrap"><div id="pe-chart" style="width:100%;height:100%"></div></div>
+                <div class="card">
+                    <div class="card-title">⚖️ PE 剪刀差趋势（每日）</div>
+                    <div id="pe-chart" class="chart"></div>
                     <div class="chart-note">
                         <b>PE 剪刀差：</b>重资产 PE - 轻资产 PE。负值=重资产估值更便宜。<br>
                         <b>数据来源：</b>yfinance ETF 实时数据（重资产：XLU/XLE/ITA，轻资产：IGV/XLK）。<br>
@@ -200,24 +185,23 @@
                     </div>
                 </div>
             </div>
-            </div>
             
             <!-- 图表区 -->
             <div class="grid">
-                <div class="chart-box">
-                    <h3>主线强弱对比（20日相对收益）</h3>
-                    <div id="theme-chart" class="chart-wrap"></div>
+                <div class="card">
+                    <div class="card-title">主线强弱对比（20日相对收益）</div>
+                    <div id="theme-chart" class="chart"></div>
                 </div>
                 
-                <div class="chart-box">
-                    <h3>叙事热度雷达</h3>
-                    <div id="narrative-chart" class="chart-wrap"></div>
+                <div class="card">
+                    <div class="card-title">叙事热度雷达</div>
+                    <div id="narrative-chart" class="chart"></div>
                 </div>
             </div>
             
             <!-- 标的表格 -->
-            <div class="chart-box">
-                <h3>标的相对强弱 TOP 10</h3>
+            <div class="card">
+                <div class="card-title">标的相对强弱 TOP 10</div>
                 <table id="stocks-table">
                     <thead>
                         <tr>
@@ -250,7 +234,6 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 renderDashboard(analysisData, financialData);
-                document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {
                 document.getElementById('loading').innerHTML = `❌ 数据加载失败<br><small style="color:#888">${err.message}</small>`;
@@ -269,7 +252,7 @@
             renderPEScissors(financial.eps_scissors);
             
             // 主线强弱图表
-            renderThemeChart(data.theme_strength, data.normalized_nav);
+            renderThemeChart(data.theme_strength);
             
             // 叙事热度雷达图
             renderNarrativeChart(data.narrative_scores);
@@ -443,89 +426,44 @@
             window.addEventListener('resize', () => chart.resize());
         }
         
-        function renderThemeChart(themeStrength, normalizedNav) {
-    const chart = echarts.init(document.getElementById('theme-chart'), null, {
-        devicePixelRatio: window.devicePixelRatio || 2
-    });
-    
-    if (!normalizedNav || Object.keys(normalizedNav).length === 0) {
-        document.getElementById('theme-chart').innerHTML = '<div style="text-align:center;padding:40px;color:#888">数据加载中...</div>';
-        return;
-    }
-    
-    // 主题颜色
-    const themeColors = {
-        'AI能耗': '#3b82f6',
-        '地缘重装': '#ef4444',
-        '价值兑现': '#10b981'
-    };
-    
-    // 准备系列数据
-    const series = [];
-    let allDates = new Set();
-    
-    for (const [ticker, data] of Object.entries(normalizedNav)) {
-        data.dates.forEach(d => allDates.add(d));
-        
-        series.push({
-            name: data.name,
-            type: 'line',
-            data: data.nav,
-            smooth: false,
-            symbol: 'none',
-            lineStyle: { 
-                width: 1.5, 
-                color: themeColors[data.theme],
-                opacity: 0.7
-            },
-            emphasis: {
-                lineStyle: { width: 2.5, opacity: 1 }
-            }
-        });
-    }
-    
-    const xAxisData = Array.from(allDates).sort();
-    
-    const option = {
-        backgroundColor: 'transparent',
-        tooltip: {
-            trigger: 'axis',
-            formatter: params => {
-                let html = `<strong>${params[0].axisValue}</strong><br/>`;
-                params.slice(0, 5).forEach(p => {
-                    html += `${p.marker} ${p.seriesName}: ${(p.value * 100 - 100).toFixed(2)}%<br/>`;
-                });
-                if (params.length > 5) html += `<span style="color:#888">...及其他${params.length - 5}只</span>`;
-                return html;
-            }
-        },
-        legend: {
-            show: false
-        },
-        grid: { left: '8%', right: '5%', top: '10%', bottom: '15%', containLabel: true },
-        xAxis: {
-            type: 'category',
-            data: xAxisData,
-            axisLabel: { color: '#64748b', fontSize: 10, rotate: 30, interval: Math.floor(xAxisData.length / 8) },
-            axisLine: { lineStyle: { color: '#e8eaef' } }
-        },
-        yAxis: {
-            type: 'value',
-            name: '归一净值',
-            axisLabel: { 
-                color: '#64748b',
-                formatter: v => ((v - 1) * 100).toFixed(0) + '%'
-            },
-            axisLine: { lineStyle: { color: '#e8eaef' } },
-            splitLine: { lineStyle: { color: '#e8eaef' } }
-        },
-        series: series
-    };
-    
-    chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
-}
-
+        function renderThemeChart(themeStrength) {
+            const chart = echarts.init(document.getElementById('theme-chart'), null, {
+                devicePixelRatio: window.devicePixelRatio || 2
+            });
+            const option = {
+                backgroundColor: 'transparent',
+                grid: { left: '20%', right: '15%', top: '10%', bottom: '15%', containLabel: true },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { color: '#64748b', formatter: '{value}%' },
+                    axisLine: { lineStyle: { color: '#e8eaef' } },
+                    splitLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['价值兑现', 'AI能耗', '地缘重装'],
+                    axisLabel: { color: '#374151', fontSize: 13 },
+                    axisLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [
+                        { value: themeStrength['价值兑现'], itemStyle: { color: '#10b981' } },
+                        { value: themeStrength['AI能耗'], itemStyle: { color: '#3b82f6' } },
+                        { value: themeStrength['地缘重装'], itemStyle: { color: '#ef4444' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: '{c}%',
+                        color: '#374151',
+                        fontSize: 12
+                    }
+                }]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
         
         function renderNarrativeChart(scores) {
             const chart = echarts.init(document.getElementById('narrative-chart'), null, {

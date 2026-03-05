@@ -75,6 +75,56 @@ def load_narrative_scores():
 
 # ==================== 相对强弱计算 ====================
 
+def calculate_normalized_nav(df, window=60):
+    """
+    计算归一净值（起点=1.0）
+    返回每只股票和基准的归一净值曲线
+    """
+    print(f"⏳ 计算归一净值（窗口={window}天）...")
+    
+    pivot = df.pivot(index='date', columns='ticker', values='close')
+    pivot = pivot.sort_index().tail(window)
+    
+    results = {}
+    
+    for ticker, benchmark in TICKER_TO_BENCHMARK.items():
+        if ticker not in pivot.columns or benchmark not in pivot.columns:
+            continue
+        
+        stock_prices = pivot[ticker].dropna()
+        bench_prices = pivot[benchmark].dropna()
+        
+        if len(stock_prices) < 2:
+            continue
+        
+        # 对齐日期
+        common_dates = stock_prices.index.intersection(bench_prices.index)
+        if len(common_dates) < 2:
+            continue
+        
+        stock_prices = stock_prices.loc[common_dates]
+        bench_prices = bench_prices.loc[common_dates]
+        
+        # 归一化
+        stock_nav = stock_prices / stock_prices.iloc[0]
+        bench_nav = bench_prices / bench_prices.iloc[0]
+        excess_nav = stock_nav - bench_nav
+        
+        # 获取股票信息
+        stock_info = df[df["ticker"] == ticker].iloc[0]
+        
+        results[ticker] = {
+            "name": stock_info["name"],
+            "theme": stock_info["theme"],
+            "dates": [str(d.date()) for d in common_dates],
+            "nav": [round(float(v), 4) for v in stock_nav],
+            "benchmark_nav": [round(float(v), 4) for v in bench_nav],
+            "excess_nav": [round(float(v), 4) for v in excess_nav],
+        }
+    
+    print(f"✅ 完成 {len(results)} 只标的")
+    return results
+
 def calculate_relative_strength(df, window=20):
     """
     计算相对强弱：标的 vs 基准
@@ -182,19 +232,23 @@ def main():
     df = load_prices()
     narrative_scores = load_narrative_scores()
     
-    # 2. 计算相对强弱
+    # 2. 计算归一净值
+    normalized_nav = calculate_normalized_nav(df, window=60)
+    
+    # 3. 计算相对强弱
     rel_strength = calculate_relative_strength(df, window=20)
     
-    # 3. 场景判断
+    # 4. 场景判断
     judgment = judge_scenario(rel_strength, narrative_scores)
     
-    # 4. 输出
+    # 5. 输出
     output = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "scenario": judgment["scenario"],
         "action": judgment["action"],
         "theme_strength": judgment["theme_strength"],
         "narrative_scores": judgment["narrative_scores"],
+        "normalized_nav": normalized_nav,
         "stocks": rel_strength,
     }
     
