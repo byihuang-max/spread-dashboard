@@ -481,6 +481,8 @@ def analyze_narratives(news_list):
         results[key] = {
             "score": score,
             "sentiment": sentiment,
+            "matched_count": matched_count,     # 命中条数（原始舆情强度）
+            "total_news": len(deduped),          # 当日去重总新闻量（分母）
             "summary": f"匹配到 {matched_count} 条相关新闻（去重后 {len(deduped)} 条，{match_ratio:.1f}%）",
             "key_news": [
                 str(n.get('title', ''))[:60]

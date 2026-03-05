@@ -808,6 +808,8 @@ new Chart(document.getElementById('medianChart'),{{
     var name   = (r.narrative_name || key);
     var assets = (r.assets   || '-');
     var news   = r.key_news  || [];  // 重点事件标题列表（最多3条）
+    var cnt    = r.matched_count;    // 命中条数（原始舆情强度）
+    var total  = r.total_news;       // 当日总新闻量
 
     var momSign  = mom >= 0 ? '+' : '';
     var momColor = mom >= 0 ? '#16a34a' : '#dc2626';
@@ -834,8 +836,11 @@ new Chart(document.getElementById('medianChart'),{{
       '<td style="font-weight:600;color:#1e293b;">' + name + newsHtml + '</td>' +
       // 对应资产
       '<td style="color:#64748b;">' + assets + '</td>' +
-      // 今日热度
-      '<td style="text-align:center;font-weight:600;">' + score.toFixed(0) + '/10</td>' +
+      // 今日热度 + 命中条数（原始舆情强度）
+      '<td style="text-align:center;">' +
+        '<span style="font-weight:600;">' + score.toFixed(0) + '/10</span>' +
+        (cnt != null ? '<br><span style="font-size:10px;color:#94a3b8;" title="今日命中' + cnt + '条（共' + (total||'?') + '条去重新闻）">n=' + cnt + '</span>' : '') +
+      '</td>' +
       // MA7
       '<td style="text-align:center;color:#475569;">' + ma7.toFixed(1) + '</td>' +
       // 历史分位（进度条）

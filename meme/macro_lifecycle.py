@@ -74,11 +74,13 @@ def load_history() -> dict:
 
 def load_latest_key_news() -> dict:
     """
-    从最新的 narrative_YYYYMMDD_HHMM.json 读取每条叙事的重点新闻标题
-    返回 {narrative_key: [headline1, headline2, ...]}（已去重，最多3条）
+    从最新的 narrative_YYYYMMDD_HHMM.json 读取每条叙事的：
+    - key_news：重点新闻标题（最多3条，已去重）
+    - matched_count：命中条数（原始舆情强度）
+    - total_news：当日去重总新闻量（分母）
+    返回 {narrative_key: {"key_news": [...], "matched_count": N, "total_news": N}}
     """
     cache_dir = HISTORY_FILE.parent
-    # 按文件名排序，取最新的带时间戳的缓存
     files = sorted(cache_dir.glob("narrative_2*.json"), reverse=True)
     if not files:
         return {}
@@ -89,7 +91,6 @@ def load_latest_key_news() -> dict:
         result = {}
         for key, val in analysis.items():
             raw = val.get("key_news", [])
-            # 去重 + 过滤空/无效条目
             seen, deduped = set(), []
             for title in raw:
                 t = str(title).strip()
@@ -98,7 +99,11 @@ def load_latest_key_news() -> dict:
                     deduped.append(t)
                 if len(deduped) >= 3:
                     break
-            result[key] = deduped
+            result[key] = {
+                "key_news":      deduped,
+                "matched_count": val.get("matched_count", None),
+                "total_news":    val.get("total_news", None),
+            }
         return result
     except Exception as e:
         print(f"⚠️  读取 key_news 失败: {e}")
@@ -283,21 +288,24 @@ def append_new_rows_to_csv(all_rows: list[dict], existing_pairs: set):
 
 # ==================== 写 JSON 快照 ====================
 def write_json_snapshot(all_rows: list[dict], history: dict):
-    """取最新日期的所有叙事写入 JSON（含重点新闻）"""
+    """取最新日期的所有叙事写入 JSON（含重点新闻 + 舆情强度）"""
     if not all_rows:
         return
     latest_date = max(r["date"] for r in all_rows)
     latest_rows = [r for r in all_rows if r["date"] == latest_date]
 
-    # 加载最新重点新闻
-    key_news = load_latest_key_news()
+    # 加载最新重点新闻 + 匹配条数
+    latest_info = load_latest_key_news()
 
     results = {}
     for r in latest_rows:
         k = r["narrative_key"]
+        info = latest_info.get(k, {})
         results[k] = {
             **r,
-            "key_news": key_news.get(k, []),  # 重点事件（最多3条，已去重）
+            "key_news":      info.get("key_news", []),       # 重点事件（最多3条，已去重）
+            "matched_count": info.get("matched_count"),       # 命中条数（原始舆情强度）
+            "total_news":    info.get("total_news"),          # 当日去重总新闻量
         }
 
     snapshot = {
