@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HALO 交易仪表盘</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .scenario-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        
+        .scenario-content {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card {
+            background: #1a1f3a;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #fff;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 8px;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 300px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background: #2a2f4a;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #2a2f4a;
+        }
+        
+        tr:hover {
+            background: #252a45;
+        }
+        
+        .positive {
+            color: #10b981;
+        }
+        
+        .negative {
+            color: #ef4444;
+        }
+        
+        .theme-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .theme-ai { background: #3b82f6; color: #fff; }
+        .theme-defense { background: #ef4444; color: #fff; }
+        .theme-value { background: #10b981; color: #fff; }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 HALO 交易仪表盘</h1>
+        <div class="subtitle">重资产范式转移 · 全球标的追踪</div>
+        
+        <div id="loading" class="loading">加载中...</div>
+        <div id="content" style="display: none;">
+            <!-- 场景判断卡片 -->
+            <div class="scenario-card">
+                <div class="scenario-title">📊 当前场景</div>
+                <div class="scenario-content">
+                    <strong id="scenario-name"></strong><br>
+                    <span id="scenario-action"></span>
+                </div>
+            </div>
+            
+            <!-- 图表区 -->
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">主线强弱对比（20日相对收益）</div>
+                    <div id="theme-chart" class="chart"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">叙事热度雷达</div>
+                    <div id="narrative-chart" class="chart"></div>
+                </div>
+            </div>
+            
+            <!-- 标的表格 -->
+            <div class="card">
+                <div class="card-title">标的相对强弱 TOP 10</div>
+                <table id="stocks-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>标的</th>
+                            <th>主线</th>
+                            <th>20日相对强弱</th>
+                            <th>最新价格</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 加载数据
+        fetch('data/halo_analysis.json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                renderDashboard(data);
+            })
+            .catch(err => {
+                document.getElementById('loading').innerHTML = '❌ 数据加载失败';
+                console.error(err);
+            });
+        
+        function renderDashboard(data) {
+            // 场景判断
+            document.getElementById('scenario-name').textContent = data.scenario;
+            document.getElementById('scenario-action').textContent = data.action;
+            
+            // 主线强弱图表
+            renderThemeChart(data.theme_strength);
+            
+            // 叙事热度雷达图
+            renderNarrativeChart(data.narrative_scores);
+            
+            // 标的表格
+            renderStocksTable(data.stocks);
+        }
+        
+        function renderThemeChart(themeStrength) {
+            const chart = echarts.init(document.getElementById('theme-chart'));
+            const option = {
+                backgroundColor: 'transparent',
+                grid: { left: '15%', right: '10%', top: '10%', bottom: '15%' },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { color: '#888', formatter: '{value}%' },
+                    splitLine: { lineStyle: { color: '#2a2f4a' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['价值兑现', 'AI能耗', '地缘重装'],
+                    axisLabel: { color: '#e0e0e0' }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [
+                        { value: themeStrength['价值兑现'], itemStyle: { color: '#10b981' } },
+                        { value: themeStrength['AI能耗'], itemStyle: { color: '#3b82f6' } },
+                        { value: themeStrength['地缘重装'], itemStyle: { color: '#ef4444' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: '{c}%',
+                        color: '#fff'
+                    }
+                }]
+            };
+            chart.setOption(option);
+        }
+        
+        function renderNarrativeChart(scores) {
+            const chart = echarts.init(document.getElementById('narrative-chart'));
+            const option = {
+                backgroundColor: 'transparent',
+                radar: {
+                    indicator: [
+                        { name: 'AI CapEx', max: 10 },
+                        { name: '全球再武装', max: 10 },
+                        { name: '地缘风险', max: 10 },
+                        { name: '通胀通缩', max: 10 }
+                    ],
+                    splitArea: { areaStyle: { color: ['#1a1f3a', '#252a45'] } },
+                    axisLine: { lineStyle: { color: '#3b82f6' } },
+                    splitLine: { lineStyle: { color: '#3b82f6' } },
+                    name: { textStyle: { color: '#e0e0e0' } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{
+                        value: [
+                            scores['AI_CapEx'],
+                            scores['全球再武装'],
+                            scores['地缘风险'],
+                            scores['通胀通缩']
+                        ],
+                        areaStyle: { color: 'rgba(59, 130, 246, 0.3)' },
+                        lineStyle: { color: '#3b82f6' }
+                    }]
+                }]
+            };
+            chart.setOption(option);
+        }
+        
+        function renderStocksTable(stocks) {
+            const sorted = stocks.sort((a, b) => b.rel_strength_20d - a.rel_strength_20d);
+            const tbody = document.querySelector('#stocks-table tbody');
+            
+            sorted.slice(0, 10).forEach((stock, i) => {
+                const row = tbody.insertRow();
+                const themeClass = stock.theme === 'AI能耗' ? 'theme-ai' : 
+                                  stock.theme === '地缘重装' ? 'theme-defense' : 'theme-value';
+                const strengthClass = stock.rel_strength_20d >= 0 ? 'positive' : 'negative';
+                
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${stock.name}</td>
+                    <td><span class="theme-badge ${themeClass}">${stock.theme}</span></td>
+                    <td class="${strengthClass}">${stock.rel_strength_20d > 0 ? '+' : ''}${stock.rel_strength_20d}%</td>
+                    <td>${stock.latest_price}</td>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

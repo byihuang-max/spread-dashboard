@@ -2629,6 +2629,7 @@ function initCbCharts() {
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
           <div class="strat-tab active" data-strat="antifragile">🌐 反脆弱看板</div>
+          <div class="strat-tab" data-strat="halo">🎯 HALO交易</div>
           <div class="strat-tab" data-strat="liquidity">💧 境内流动性</div>
           <div class="strat-tab" data-strat="rates">📊 全球利率与汇率</div>
           <div class="strat-tab" data-strat="fundamentals">📈 经济基本面</div>
@@ -2639,6 +2640,9 @@ function initCbCharts() {
       </div>
       <div class="strat-page active" id="strat-antifragile">
         <iframe src="meme/antifragile/antifragile.html" class="embed-frame" style="height:2000px"></iframe>
+      </div>
+      <div class="strat-page" id="strat-halo">
+        <iframe src="halo_trade/halo_dashboard.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
       <div class="strat-page" id="strat-liquidity">
         <iframe src="macro/liquidity/liquidity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
