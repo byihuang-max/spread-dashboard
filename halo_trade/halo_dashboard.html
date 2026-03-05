@@ -290,19 +290,23 @@
         }
         
         function renderThemeChart(themeStrength) {
-            const chart = echarts.init(document.getElementById('theme-chart'));
+            const chart = echarts.init(document.getElementById('theme-chart'), null, {
+                devicePixelRatio: window.devicePixelRatio || 2
+            });
             const option = {
                 backgroundColor: 'transparent',
-                grid: { left: '15%', right: '10%', top: '10%', bottom: '15%' },
+                grid: { left: '20%', right: '15%', top: '10%', bottom: '15%', containLabel: true },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { color: '#888', formatter: '{value}%' },
-                    splitLine: { lineStyle: { color: '#2a2f4a' } }
+                    axisLabel: { color: '#64748b', formatter: '{value}%' },
+                    axisLine: { lineStyle: { color: '#e8eaef' } },
+                    splitLine: { lineStyle: { color: '#e8eaef' } }
                 },
                 yAxis: {
                     type: 'category',
                     data: ['价值兑现', 'AI能耗', '地缘重装'],
-                    axisLabel: { color: '#e0e0e0' }
+                    axisLabel: { color: '#374151', fontSize: 13 },
+                    axisLine: { lineStyle: { color: '#e8eaef' } }
                 },
                 series: [{
                     type: 'bar',
@@ -315,15 +319,19 @@
                         show: true,
                         position: 'right',
                         formatter: '{c}%',
-                        color: '#fff'
+                        color: '#374151',
+                        fontSize: 12
                     }
                 }]
             };
             chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
         }
         
         function renderNarrativeChart(scores) {
-            const chart = echarts.init(document.getElementById('narrative-chart'));
+            const chart = echarts.init(document.getElementById('narrative-chart'), null, {
+                devicePixelRatio: window.devicePixelRatio || 2
+            });
             const option = {
                 backgroundColor: 'transparent',
                 radar: {
@@ -333,10 +341,12 @@
                         { name: '地缘风险', max: 10 },
                         { name: '通胀通缩', max: 10 }
                     ],
-                    splitArea: { areaStyle: { color: ['#1a1f3a', '#252a45'] } },
-                    axisLine: { lineStyle: { color: '#3b82f6' } },
-                    splitLine: { lineStyle: { color: '#3b82f6' } },
-                    name: { textStyle: { color: '#e0e0e0' } }
+                    center: ['50%', '50%'],
+                    radius: '65%',
+                    splitArea: { areaStyle: { color: ['#f9fafb', '#fff'] } },
+                    axisLine: { lineStyle: { color: '#e8eaef' } },
+                    splitLine: { lineStyle: { color: '#e8eaef' } },
+                    name: { textStyle: { color: '#374151', fontSize: 12 } }
                 },
                 series: [{
                     type: 'radar',
@@ -348,11 +358,13 @@
                             scores['通胀通缩']
                         ],
                         areaStyle: { color: 'rgba(59, 130, 246, 0.3)' },
-                        lineStyle: { color: '#3b82f6' }
+                        lineStyle: { color: '#3b82f6', width: 2 },
+                        itemStyle: { color: '#3b82f6' }
                     }]
                 }]
             };
             chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
         }
         
         function renderStocksTable(stocks) {
