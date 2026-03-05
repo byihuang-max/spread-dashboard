@@ -32,14 +32,60 @@ CHUNK_DAYS = 7
 SLEEP_SEC  = 1.5
 
 NARRATIVES = {
-    "AI_CapEx":   ["AI", "人工智能", "英伟达", "NVIDIA", "算力", "芯片", "半导体", "HBM", "数据中心", "CapEx", "资本开支"],
-    "去美元化":   ["美元", "去美元化", "人民币", "黄金", "央行购金", "储备货币", "SWIFT", "BRICS", "货币贬值", "通胀"],
-    "全球再武装":  ["国防", "军费", "武器", "军工", "北约", "军事", "国防预算", "军备"],
-    "财政主导":   ["财政赤字", "国债", "财政政策", "实际利率", "收益率曲线", "QE", "量化宽松", "央行"],
-    "地缘风险":   ["俄乌", "中东", "台海", "伊朗", "以色列", "战争", "冲突", "制裁", "地缘政治"],
-    "美国衰退":   ["衰退", "经济放缓", "失业率", "非农", "GDP", "消费疲软", "企业盈利", "裁员"],
-    "中国刺激":   ["中国", "刺激", "降息", "降准", "财政政策", "基建", "房地产", "消费券", "政策宽松"],
-    "通胀通缩":   ["通胀", "通缩", "CPI", "PPI", "物价", "价格", "通胀预期", "通缩风险"],
+    "AI_CapEx":   [
+        "英伟达", "NVIDIA", "博通", "Broadcom", "AMD",
+        "H100", "H200", "B200", "B100", "GB200", "Blackwell", "Hopper",
+        "HBM", "CoWoS", "AI芯片", "GPU集群", "算力集群",
+        "AI数据中心", "AI资本开支", "AI CapEx",
+        "AWS算力", "Azure AI", "谷歌TPU",
+        "OpenAI融资", "Anthropic", "大模型训练", "推理算力",
+    ],
+    "去美元化":   [
+        "央行购金", "黄金储备", "去美元化", "黄金ETF",
+        "BRICS结算", "人民币国际化", "储备货币多元化",
+        "美元霸权", "SWIFT替代", "抛售美债",
+        "金价创新高", "黄金价格",
+    ],
+    "全球再武装":  [
+        "国防预算", "军费增加", "北约", "NATO",
+        "欧洲军备", "德国军费", "防务支出", "军事开支",
+        "洛克希德", "雷神", "军工股", "武器出口",
+        "军备竞赛", "防务预算",
+    ],
+    "财政主导":   [
+        "美国国债", "美国赤字", "美国债务上限", "DOGE", "美联储资产负债表",
+        "特别国债", "地方政府债务", "城投债", "中国财政赤字",
+        "YCC", "日本国债", "植田和男", "日本央行政策",
+        "收益率曲线控制", "财政扩张",
+    ],
+    "地缘风险":   [
+        "以色列", "伊朗", "哈马斯", "加沙", "黎巴嫩真主党",
+        "俄乌", "乌克兰", "泽连斯基",
+        "台海", "台湾军事", "台海紧张",
+        "朝鲜导弹", "朝鲜核",
+        "出口管制", "贸易战", "关税报复",
+        "军事打击", "空袭", "停火协议", "地缘政治风险",
+    ],
+    "美国衰退":   [
+        "非农就业", "美国失业率", "初请失业金",
+        "美国GDP收缩", "美国经济衰退", "美国消费者信心",
+        "科技裁员", "大规模裁员", "美国消费疲软",
+        "ISM制造业", "美国零售销售下滑",
+    ],
+    "中国刺激":   [
+        "降息", "降准", "PBOC宽松", "中国货币政策",
+        "消费补贴", "以旧换新", "房地产救市", "限购取消",
+        "两会GDP", "政府工作报告增长目标", "中国PMI", "中国社零",
+        "中国经济刺激",
+    ],
+    "通胀通缩":   [
+        "美国CPI", "美国PCE", "美国PPI", "核心通胀", "服务通胀", "薪资通胀",
+        "美联储加息", "美联储降息", "FOMC", "美联储利率",
+        "日本央行加息", "日银加息", "日本利率", "植田和男通胀",
+        "中国CPI", "中国PPI", "中国通缩", "中国物价",
+        "能源通胀", "大宗商品通胀", "供应链通胀", "粮食价格",
+        "通胀预期", "通缩压力", "滞涨", "再通胀", "盈亏平衡通胀率",
+    ],
 }
 SOURCES = ["wallstreetcn", "cls", "sina"]
 
@@ -58,22 +104,45 @@ def save_history(history: dict):
 
 
 def score_day(news_list: list) -> dict:
-    """与 narrative_monitor.py 完全相同的评分逻辑"""
+    """
+    与 narrative_monitor.py 完全相同的评分逻辑（v2）
+    1. 跨源去重（按标题）
+    2. 标题命中 ≥1 个关键词 → 匹配
+    3. 标题未命中，正文命中 ≥2 个关键词 → 才算匹配
+    """
     if not news_list:
+        return {k: 0 for k in NARRATIVES}
+
+    # 跨源去重
+    seen_titles, deduped = set(), []
+    for news in news_list:
+        title = str(news.get("title", "")).strip()
+        if not title or title == "nan":
+            continue
+        if title not in seen_titles:
+            seen_titles.add(title)
+            deduped.append(news)
+
+    if not deduped:
         return {k: 0 for k in NARRATIVES}
 
     results = {}
     for key, keywords in NARRATIVES.items():
         matched = 0
-        for news in news_list:
-            title   = str(news.get("title", ""))
-            content = str(news.get("content", ""))
-            if title == "nan" or not title.strip():
-                continue
-            text = (title + " " + content).lower()
-            if any(kw.lower() in text for kw in keywords):
+        for news in deduped:
+            title   = str(news.get("title",   "")).strip().lower()
+            content = str(news.get("content", "")).strip().lower()
+
+            title_hits = sum(1 for kw in keywords if kw.lower() in title)
+            if title_hits >= 1:
                 matched += 1
-        ratio = matched / max(len(news_list), 1) * 100
+                continue
+
+            content_hits = sum(1 for kw in keywords if kw.lower() in content)
+            if content_hits >= 2:
+                matched += 1
+
+        ratio = matched / max(len(deduped), 1) * 100
         results[key] = min(10, int(ratio * 2))
     return results
 
