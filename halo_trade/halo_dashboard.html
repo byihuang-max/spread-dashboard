@@ -248,10 +248,17 @@
                 return;
             }
             
-            let html = '';
+            let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
             capexData.forEach(c => {
-                html += `<div>${c.signal} <strong>${c.name}</strong>: YoY ${c.yoy_growth}%, 二阶导 ${c.second_derivative} (${c.trend})</div>`;
+                html += `
+                    <div style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid ${c.signal === '🟢' ? '#10b981' : '#ca8a04'}">
+                        <div style="font-size:11px;color:#64748b;margin-bottom:4px">${c.signal} ${c.name}</div>
+                        <div style="font-size:18px;font-weight:700;color:#1e293b">${c.yoy_growth}%</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:2px">二阶导 ${c.second_derivative} (${c.trend})</div>
+                    </div>
+                `;
             });
+            html += '</div>';
             container.innerHTML = html;
         }
         
@@ -262,11 +269,23 @@
                 return;
             }
             
+            const isHeavyCheaper = scissors.pe_gap < 0;
             container.innerHTML = `
-                <div><strong>重资产 PE:</strong> ${scissors.heavy_asset_pe}</div>
-                <div><strong>轻资产 PE:</strong> ${scissors.light_asset_pe}</div>
-                <div><strong>PE 差距:</strong> ${scissors.pe_gap} (${scissors.pe_gap < 0 ? '重资产更便宜' : '轻资产更便宜'})</div>
-                <div><strong>Earnings Yield 差距:</strong> ${scissors.yield_gap} 百分点</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <div style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #ef4444">
+                        <div style="font-size:11px;color:#64748b;margin-bottom:4px">重资产 PE</div>
+                        <div style="font-size:18px;font-weight:700;color:#1e293b">${scissors.heavy_asset_pe}</div>
+                    </div>
+                    <div style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #3b82f6">
+                        <div style="font-size:11px;color:#64748b;margin-bottom:4px">轻资产 PE</div>
+                        <div style="font-size:18px;font-weight:700;color:#1e293b">${scissors.light_asset_pe}</div>
+                    </div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:12px">
+                    <div style="font-size:11px;color:#64748b;margin-bottom:4px">估值差距</div>
+                    <div style="font-size:16px;font-weight:700;color:${isHeavyCheaper ? '#10b981' : '#ef4444'}">${scissors.pe_gap} PE点 (${isHeavyCheaper ? '重资产更便宜' : '轻资产更便宜'})</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:4px">Earnings Yield 差距: ${scissors.yield_gap} 百分点</div>
+                </div>
             `;
         }
         
