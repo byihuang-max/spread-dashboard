@@ -18,6 +18,7 @@ DATA_DIR = Path(__file__).parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
 FINANCIAL_JSON = DATA_DIR / "halo_financials.json"
+PE_HISTORY_CSV = DATA_DIR / "pe_scissors_history.csv"
 
 # 超大规模科技（CapEx 追踪）
 HYPERSCALERS = {
@@ -181,6 +182,7 @@ def calculate_eps_scissors():
     """
     计算重资产 vs 轻资产估值剪刀差
     使用 PE 比率：PE 越低 = 估值越便宜 = earnings yield 越高
+    同时积累历史数据
     """
     print("⏳ 拉取 PE 数据...")
     
@@ -203,6 +205,29 @@ def calculate_eps_scissors():
     light_yield = (1 / light_pe) * 100
     yield_gap = heavy_yield - light_yield
     
+    # 追加到历史文件
+    today = datetime.now().strftime("%Y-%m-%d")
+    new_row = {
+        "date": today,
+        "heavy_pe": round(heavy_pe, 2),
+        "light_pe": round(light_pe, 2),
+        "pe_gap": round(pe_gap, 2),
+        "yield_gap": round(yield_gap, 2),
+    }
+    
+    # 读取或创建历史数据
+    if PE_HISTORY_CSV.exists():
+        history_df = pd.read_csv(PE_HISTORY_CSV)
+        # 去重（同一天只保留最新）
+        history_df = history_df[history_df['date'] != today]
+        history_df = pd.concat([history_df, pd.DataFrame([new_row])], ignore_index=True)
+    else:
+        history_df = pd.DataFrame([new_row])
+    
+    # 保存历史（保留最近60天）
+    history_df = history_df.tail(60)
+    history_df.to_csv(PE_HISTORY_CSV, index=False)
+    
     result = {
         "heavy_asset_pe": round(heavy_pe, 2),
         "light_asset_pe": round(light_pe, 2),
@@ -214,6 +239,7 @@ def calculate_eps_scissors():
                          ("重资产估值更便宜" if pe_gap < 0 else "轻资产估值更便宜"),
         "heavy_details": list(heavy_data.values()),
         "light_details": list(light_data.values()),
+        "history": history_df.to_dict('records')
     }
     
     print(f"✅ PE 剪刀差: 重资产 {heavy_pe:.1f} vs 轻资产 {light_pe:.1f}")

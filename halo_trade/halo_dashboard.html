@@ -161,8 +161,8 @@
                     <div id="capex-chart" class="chart"></div>
                 </div>
                 <div class="card">
-                    <div class="card-title">⚖️ PE 剪刀差（估值对比）</div>
-                    <div id="pe-scissors" style="font-size:14px;line-height:2"></div>
+                    <div class="card-title">⚖️ PE 剪刀差趋势（每日）</div>
+                    <div id="pe-chart" class="chart"></div>
                 </div>
             </div>
             
@@ -322,30 +322,88 @@
         }
         
         function renderPEScissors(scissors) {
-            const container = document.getElementById('pe-scissors');
-            if (!scissors) {
-                container.innerHTML = '<span style="color:#888">数据加载中...</span>';
+            const chart = echarts.init(document.getElementById('pe-chart'), null, {
+                devicePixelRatio: window.devicePixelRatio || 2
+            });
+            
+            if (!scissors || !scissors.history || scissors.history.length === 0) {
+                document.getElementById('pe-chart').innerHTML = '<div style="text-align:center;padding:40px;color:#888">数据积累中...（每日运行后显示趋势）</div>';
                 return;
             }
             
-            const isHeavyCheaper = scissors.pe_gap < 0;
-            container.innerHTML = `
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-                    <div style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #ef4444">
-                        <div style="font-size:11px;color:#64748b;margin-bottom:4px">重资产 PE</div>
-                        <div style="font-size:18px;font-weight:700;color:#1e293b">${scissors.heavy_asset_pe}</div>
-                    </div>
-                    <div style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid #3b82f6">
-                        <div style="font-size:11px;color:#64748b;margin-bottom:4px">轻资产 PE</div>
-                        <div style="font-size:18px;font-weight:700;color:#1e293b">${scissors.light_asset_pe}</div>
-                    </div>
-                </div>
-                <div style="background:#f8fafc;border-radius:8px;padding:12px">
-                    <div style="font-size:11px;color:#64748b;margin-bottom:4px">估值差距</div>
-                    <div style="font-size:16px;font-weight:700;color:${isHeavyCheaper ? '#10b981' : '#ef4444'}">${scissors.pe_gap} PE点 (${isHeavyCheaper ? '重资产更便宜' : '轻资产更便宜'})</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:4px">Earnings Yield 差距: ${scissors.yield_gap} 百分点</div>
-                </div>
-            `;
+            const history = scissors.history;
+            const dates = history.map(h => h.date);
+            const heavyPE = history.map(h => h.heavy_pe);
+            const lightPE = history.map(h => h.light_pe);
+            const peGap = history.map(h => h.pe_gap);
+            
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: params => {
+                        let html = `<strong>${params[0].axisValue}</strong><br/>`;
+                        params.forEach(p => {
+                            html += `${p.marker} ${p.seriesName}: ${p.value !== null ? p.value.toFixed(2) : 'N/A'}<br/>`;
+                        });
+                        return html;
+                    }
+                },
+                legend: {
+                    data: ['重资产 PE', '轻资产 PE', 'PE 差距'],
+                    top: 10,
+                    textStyle: { color: '#374151' }
+                },
+                grid: { left: '10%', right: '10%', top: '20%', bottom: '15%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { color: '#64748b', fontSize: 11, rotate: 30 },
+                    axisLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'PE',
+                    axisLabel: { color: '#64748b' },
+                    axisLine: { lineStyle: { color: '#e8eaef' } },
+                    splitLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                series: [
+                    {
+                        name: '重资产 PE',
+                        type: 'line',
+                        data: heavyPE,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: { width: 2, color: '#ef4444' },
+                        itemStyle: { color: '#ef4444' }
+                    },
+                    {
+                        name: '轻资产 PE',
+                        type: 'line',
+                        data: lightPE,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: { width: 2, color: '#3b82f6' },
+                        itemStyle: { color: '#3b82f6' }
+                    },
+                    {
+                        name: 'PE 差距',
+                        type: 'line',
+                        data: peGap,
+                        smooth: true,
+                        symbol: 'diamond',
+                        symbolSize: 6,
+                        lineStyle: { width: 2, color: '#10b981', type: 'dashed' },
+                        itemStyle: { color: '#10b981' }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
         }
         
         function renderThemeChart(themeStrength) {
