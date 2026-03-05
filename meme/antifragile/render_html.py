@@ -101,6 +101,13 @@ def render_html():
     latest_date  = sorted(corr_matrices.keys())[-1]
     latest_corr  = corr_matrices[latest_date]
 
+    # ── Meme反身性信号（如果calc_meme.py已运行）─────
+    import os as _os
+    meme_data = None
+    if _os.path.exists('meme_signal.json'):
+        with open('meme_signal.json', 'r', encoding='utf-8') as f:
+            meme_data = json.load(f)
+
     # ─────────────────────────────────────────────
     # 1. 归一净值曲线（全量日期）
     # ─────────────────────────────────────────────
@@ -247,6 +254,226 @@ def render_html():
     )
 
     # ─────────────────────────────────────────────
+    # 5. Meme反身性信号模块数据准备
+    # ─────────────────────────────────────────────
+    meme_section_html = ''
+
+    if meme_data:
+        cur        = meme_data.get('current', {})
+        phase      = cur.get('phase', {})
+        history    = meme_data.get('history', {})
+        wts        = meme_data.get('vol_weights', {})
+
+        # 当前状态卡片
+        score      = cur.get('meme_score', '--')
+        phase_emoji = phase.get('emoji', '')
+        phase_label = phase.get('label', '')
+        phase_desc  = phase.get('desc', '')
+        nli_val    = cur.get('nli', '--')
+        nli_pct    = cur.get('nli_percentile', '--')
+        va_val     = cur.get('va', '--')
+        va_pct     = cur.get('va_percentile', '--')
+        meme_date  = cur.get('date', '--')
+
+        # 权重说明
+        wt_html = ' · '.join([f'{k} <b>{int(v*100)}%</b>' for k, v in wts.items()])
+
+        # 颜色：按阶段决定
+        level = phase.get('level', 1)
+        phase_color = {'1': '#16a34a', '2': '#ca8a04', '3': '#ea580c', '4': '#dc2626'}.get(str(level), '#6b7280')
+
+        # NLI历史折线（分位数）
+        nli_hist  = history.get('nli_pct', {})
+        nli_dates = sorted(nli_hist.keys())
+        nli_vals  = [nli_hist[d] for d in nli_dates]
+
+        # VA历史折线（原始值×100 转成百分比显示）
+        va_hist   = history.get('va', {})
+        va_dates  = sorted(va_hist.keys())
+        va_vals   = [round(va_hist[d] * 100, 2) for d in va_dates]
+
+        # 综合Meme信号历史
+        ms_hist   = history.get('meme_score', {})
+        ms_dates  = sorted(ms_hist.keys())
+        ms_vals   = [ms_hist[d] for d in ms_dates]
+
+        meme_nli_labels_json = json.dumps(nli_dates)
+        meme_nli_vals_json   = json.dumps(nli_vals)
+        meme_va_labels_json  = json.dumps(va_dates)
+        meme_va_vals_json    = json.dumps(va_vals)
+        meme_ms_labels_json  = json.dumps(ms_dates)
+        meme_ms_vals_json    = json.dumps(ms_vals)
+
+        va_str = f'{va_val:+.1f}%' if isinstance(va_val, (int, float)) else '--'
+        va_pct_str = f'{va_pct:.0f}%' if isinstance(va_pct, (int, float)) else '--'
+        nli_str = f'{nli_val:.3f}' if isinstance(nli_val, (int, float)) else '--'
+        nli_pct_str = f'{nli_pct:.0f}%' if isinstance(nli_pct, (int, float)) else '--'
+        score_str = f'{score:.0f}' if isinstance(score, (int, float)) else '--'
+
+        meme_section_html = f"""
+<div class="section">
+  <div class="chart-box">
+    <h3>🚦 Meme反身性信号 <span style="font-weight:400;color:#8b92a5;font-size:11px">（截至 {meme_date}）</span></h3>
+
+    <!-- 当前状态大卡片 -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;align-items:stretch">
+      <!-- 主信号 -->
+      <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
+        <div style="font-size:36px;margin-bottom:4px">{phase_emoji}</div>
+        <div style="font-size:22px;font-weight:900;color:{phase_color}">{score_str}</div>
+        <div style="font-size:11px;color:#7c8598;margin-top:2px">综合信号 / 100</div>
+        <div style="font-size:13px;font-weight:700;color:{phase_color};margin-top:8px">{phase_label}</div>
+      </div>
+      <!-- 分项指标 -->
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #2563eb">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">叙事联动指数 (NLI)</div>
+          <div style="font-size:18px;font-weight:700;color:#1e293b">{nli_str}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 {nli_pct_str} 分位</div>
+        </div>
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #F7931A">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">量能加速度 (VA)</div>
+          <div style="font-size:18px;font-weight:700;color:#1e293b">{va_str}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 {va_pct_str} 分位</div>
+        </div>
+        <div style="background:#f8fafc;border-radius:8px;padding:12px 16px;grid-column:1/-1">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">信号解读</div>
+          <div style="font-size:12px;color:#374151;line-height:1.6">{phase_desc}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 综合Meme信号历史走势 -->
+    <div style="margin-bottom:8px;font-size:12px;font-weight:600;color:#374151">综合Meme信号历史（0-100）</div>
+    <div style="position:relative;height:160px;margin-bottom:16px"><canvas id="memeScoreChart"></canvas></div>
+
+    <!-- 双图：NLI + VA -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px">叙事联动指数历史分位（%）</div>
+        <div style="position:relative;height:140px"><canvas id="memeNliChart"></canvas></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px">量能加速度 VA（%，正=放量 负=缩量）</div>
+        <div style="position:relative;height:140px"><canvas id="memeVaChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-note" style="margin-top:12px">
+      <b>叙事联动指数(NLI)：</b>相关性矩阵中正相关系数的均值，衡量资产同涨同跌程度。越高=叙事越趋同。<br>
+      <b>量能加速度(VA)：</b>近5日均量 / 近30日均量 - 1，多资产加权（{wt_html}）。<br>
+      <b>综合信号：</b>两指标各取历史分位后加权平均（各50%）。分位基于过去252个交易日。<br>
+      <b>⚠️ 注意：</b>恐慌暴跌时NLI也会升高（全面崩跌也是联动），需结合价格方向判断是Meme狂欢还是系统性风险。
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Meme信号数据 ───────────────────────────────
+var MEME_SCORE_LABELS = {meme_ms_labels_json};
+var MEME_SCORE_VALS   = {meme_ms_vals_json};
+var MEME_NLI_LABELS   = {meme_nli_labels_json};
+var MEME_NLI_VALS     = {meme_nli_vals_json};
+var MEME_VA_LABELS    = {meme_va_labels_json};
+var MEME_VA_VALS      = {meme_va_vals_json};
+
+// 综合Meme信号折线图（带阶段背景色）
+new Chart(document.getElementById('memeScoreChart'), {{
+  type: 'line',
+  data: {{
+    labels: MEME_SCORE_LABELS,
+    datasets: [{{
+      label: '综合Meme信号',
+      data: MEME_SCORE_VALS,
+      borderColor: '#7c3aed',
+      backgroundColor: 'rgba(124,58,237,0.08)',
+      borderWidth: 2,
+      tension: 0.3,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      fill: true,
+    }}]
+  }},
+  options: {{
+    responsive: true, maintainAspectRatio: false,
+    plugins: {{
+      legend: {{ display: false }},
+      tooltip: {{
+        callbacks: {{
+          label: function(ctx) {{ return '信号强度: ' + ctx.parsed.y.toFixed(1) + '分'; }}
+        }}
+      }},
+      annotation: {{ /* 可用chartjs-plugin-annotation加阶段分界线 */ }}
+    }},
+    scales: {{
+      y: {{ min: 0, max: 100, grid: {{ color: '#f0f0f0' }},
+            ticks: {{ callback: function(v) {{ return v + '分'; }} }} }},
+      x: {{ ticks: {{ maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font: {{ size: 9 }} }} }}
+    }}
+  }}
+}});
+
+// 叙事联动指数分位历史
+new Chart(document.getElementById('memeNliChart'), {{
+  type: 'line',
+  data: {{
+    labels: MEME_NLI_LABELS,
+    datasets: [{{
+      label: 'NLI历史分位',
+      data: MEME_NLI_VALS,
+      borderColor: '#2563eb',
+      backgroundColor: 'rgba(37,99,235,0.08)',
+      borderWidth: 1.5,
+      tension: 0.3,
+      pointRadius: 0,
+      fill: true,
+    }}]
+  }},
+  options: {{
+    responsive: true, maintainAspectRatio: false,
+    plugins: {{ legend: {{ display: false }},
+      tooltip: {{ callbacks: {{ label: function(ctx) {{ return 'NLI分位: ' + ctx.parsed.y.toFixed(1) + '%'; }} }} }}
+    }},
+    scales: {{
+      y: {{ min: 0, max: 100, grid: {{ color: '#f0f0f0' }},
+            ticks: {{ callback: function(v) {{ return v + '%'; }}, font: {{ size: 9 }} }} }},
+      x: {{ ticks: {{ maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: {{ size: 9 }} }} }}
+    }}
+  }}
+}});
+
+// 量能加速度柱状图（正=蓝，负=橙）
+var va_colors = MEME_VA_VALS.map(function(v) {{ return v >= 0 ? 'rgba(37,99,235,0.65)' : 'rgba(234,88,12,0.65)'; }});
+new Chart(document.getElementById('memeVaChart'), {{
+  type: 'bar',
+  data: {{
+    labels: MEME_VA_LABELS,
+    datasets: [{{
+      label: '量能加速度',
+      data: MEME_VA_VALS,
+      backgroundColor: va_colors,
+      borderWidth: 0,
+    }}]
+  }},
+  options: {{
+    responsive: true, maintainAspectRatio: false,
+    plugins: {{ legend: {{ display: false }},
+      tooltip: {{ callbacks: {{ label: function(ctx) {{
+        var v = ctx.parsed.y;
+        return '量能加速度: ' + (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+      }} }} }}
+    }},
+    scales: {{
+      y: {{ grid: {{ color: '#f0f0f0' }},
+            ticks: {{ callback: function(v) {{ return (v >= 0 ? '+' : '') + v + '%'; }}, font: {{ size: 9 }} }} }},
+      x: {{ ticks: {{ maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: {{ size: 9 }} }} }}
+    }}
+  }}
+}});
+</script>
+"""
+
+    # ─────────────────────────────────────────────
     # 序列化到 JSON
     # ─────────────────────────────────────────────
     nav_labels_json    = json.dumps(all_dates)
@@ -286,9 +513,12 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
     <span class="signal-tag">全球风险资产</span>
     <span class="signal-tag">归一净值</span>
     <span class="signal-tag">30天相关性</span>
+    <span class="signal-tag">Meme反身性信号</span>
   </div>
   <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: {update_time}</div>
 </div>
+
+{meme_section_html}
 
 <div class="section">
   <div class="chart-box">

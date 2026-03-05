@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-叙事监控系统 - 基于 Tushare 新闻 + LLM 分析
+叙事监控系统 - 基于 Tushare 新闻 + LLM 分析 + 价格背离检测
 每天 08:30 和 20:30 推送到飞书
 """
 import tushare as ts
 import json
 import requests
+import yfinance as yf
+import numpy as np
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -177,6 +179,134 @@ NARRATIVE_ASSETS = {
     }
 }
 
+# ==================== 叙事-价格映射 ====================
+# 每条叙事对应的可监控资产（yfinance ticker → 展示名）
+NARRATIVE_PRICE_MAP = {
+    "AI_CapEx":  {"QQQ": "纳指ETF", "NVDA": "英伟达", "HG=F": "铜"},
+    "去美元化":  {"GC=F": "黄金", "BTC-USD": "BTC"},
+    "全球再武装": {"GC=F": "黄金", "CL=F": "原油"},
+    "财政主导":  {"GC=F": "黄金", "TLT": "美债20Y"},
+    "地缘风险":  {"GC=F": "黄金", "CL=F": "原油"},
+    "美国衰退":  {"GC=F": "黄金", "QQQ": "纳指ETF"},
+    "中国刺激":  {"3033.HK": "恒生科技ETF", "000300.SS": "沪深300"},
+    "通胀通缩":  {"GC=F": "黄金", "HG=F": "铜"},
+}
+
+def fetch_asset_prices():
+    """
+    拉取所有叙事关联资产的近期涨跌幅（1D / 1W / 1M）
+    返回：{ticker: {"name": ..., "1D": %, "1W": %, "1M": %}}
+    """
+    # 汇总所有 ticker
+    all_tickers = {}
+    for mapping in NARRATIVE_PRICE_MAP.values():
+        all_tickers.update(mapping)
+
+    results = {}
+
+    for ticker, name in all_tickers.items():
+        try:
+            # 沪深300走Tushare
+            if ticker == "000300.SS":
+                ret = _fetch_a_stock_return("000300.SH")
+                if ret:
+                    results[ticker] = {"name": name, **ret}
+                continue
+
+            # 其余走 yfinance（直连，不走代理）
+            data = yf.download(
+                ticker,
+                period="35d",
+                interval="1d",
+                progress=False,
+                auto_adjust=True,
+            )
+            if data.empty or len(data) < 2:
+                continue
+
+            # 新版 yfinance 下载单 ticker 时 Close 是 DataFrame（MultiIndex）
+            closes = data["Close"].squeeze().dropna()
+            if len(closes) < 2:
+                continue
+
+            last   = float(closes.iloc[-1])
+            prev1  = float(closes.iloc[-2])
+            prev5  = float(closes.iloc[-6])  if len(closes) >= 6  else float(closes.iloc[0])
+            prev22 = float(closes.iloc[-23]) if len(closes) >= 23 else float(closes.iloc[0])
+
+            results[ticker] = {
+                "name":  name,
+                "price": round(last, 2),
+                "1D":    round((last / prev1  - 1) * 100, 2),
+                "1W":    round((last / prev5  - 1) * 100, 2),
+                "1M":    round((last / prev22 - 1) * 100, 2),
+            }
+        except Exception:
+            pass
+
+    return results
+
+
+def _fetch_a_stock_return(ts_code):
+    """用Tushare HTTP API拉A股指数近期涨跌幅"""
+    try:
+        url = "https://api.tushare.pro"
+        payload = {
+            "api_name": "index_daily",
+            "token": TUSHARE_TOKEN,
+            "params": {"ts_code": ts_code, "limit": 25},
+            "fields": "trade_date,close"
+        }
+        resp = requests.post(url, json=payload, timeout=15)
+        data = resp.json().get("data", {})
+        items = data.get("items", [])
+        if len(items) < 2:
+            return None
+        # items按日期倒序，items[0]=最新
+        closes = [float(r[1]) for r in items if r[1] is not None]
+        if len(closes) < 2:
+            return None
+        last = closes[0]
+        return {
+            "price": round(last, 2),
+            "1D": round((closes[0] / closes[1] - 1) * 100, 2),
+            "1W": round((closes[0] / closes[min(5, len(closes)-1)] - 1) * 100, 2),
+            "1M": round((closes[0] / closes[min(22, len(closes)-1)] - 1) * 100, 2),
+        }
+    except Exception:
+        return None
+
+
+def get_divergence_signal(narrative_key, score, prices):
+    """
+    叙事-价格背离检测
+    返回：(信号emoji, 信号文字) 或 None
+    """
+    mapping = NARRATIVE_PRICE_MAP.get(narrative_key, {})
+    if not mapping or score < 5:
+        return None
+
+    signals = []
+    for ticker, name in mapping.items():
+        p = prices.get(ticker)
+        if not p:
+            continue
+        w1 = p.get("1W", 0)
+        w4 = p.get("1M", 0)
+
+        # 叙事热但价格没动 → 未price in，潜在机会
+        if score >= 7 and w1 < 1.0:
+            signals.append(f"💡{name}1W仅+{w1:.1f}%，叙事未price in")
+        # 叙事热且价格已大涨 → 追顶风险
+        elif score >= 7 and w1 >= 8.0:
+            signals.append(f"⚠️{name}1W已+{w1:.1f}%，追顶风险")
+        # 叙事强但资产近月已涨很多 → 小心反转
+        elif score >= 6 and w4 >= 15.0:
+            signals.append(f"🔔{name}1M+{w4:.1f}%，注意叙事衰退")
+
+    return signals if signals else None
+
+
 # ==================== 飞书认证 ====================
 def get_feishu_token():
     """获取飞书 access_token"""
@@ -256,8 +386,8 @@ def analyze_narratives(news_list):
     return results
 
 # ==================== 生成报告 ====================
-def generate_report(analysis, news_count):
-    """生成简洁版飞书报告"""
+def generate_report(analysis, news_count, prices=None):
+    """生成简洁版飞书报告（含价格背离信号）"""
     now = datetime.now().strftime("%m-%d %H:%M")
     
     # 按分数排序
@@ -288,6 +418,25 @@ def generate_report(analysis, news_count):
         # 简洁输出
         report += f"{lifecycle} {NARRATIVES[key]['name']}\n"
         report += f"   {score}/10 {trend_emoji} | {sentiment}{asset_text}\n"
+        
+        # 价格层：显示关联资产涨跌幅
+        if prices:
+            mapping = NARRATIVE_PRICE_MAP.get(key, {})
+            price_parts = []
+            for ticker, name in mapping.items():
+                p = prices.get(ticker)
+                if p:
+                    w1 = p.get("1W", 0)
+                    sign = "+" if w1 >= 0 else ""
+                    price_parts.append(f"{name} 1W:{sign}{w1:.1f}%")
+            if price_parts:
+                report += f"   💰 {' | '.join(price_parts)}\n"
+            
+            # 背离信号
+            div_signals = get_divergence_signal(key, score, prices)
+            if div_signals:
+                for sig in div_signals:
+                    report += f"   {sig}\n"
         
         # 只显示高分叙事的关键新闻
         if score >= 7 and data['key_news']:
@@ -333,19 +482,24 @@ def main():
     # 3. 保存历史
     save_history(analysis)
     print(f"✅ 保存历史数据")
+
+    # 4. 拉取资产价格
+    print(f"⏳ 拉取资产价格...")
+    prices = fetch_asset_prices()
+    print(f"✅ 获取到 {len(prices)} 个资产价格")
     
-    # 4. 生成报告
-    report = generate_report(analysis, len(news))
+    # 5. 生成报告
+    report = generate_report(analysis, len(news), prices=prices)
     print(f"✅ 生成报告")
     
-    # 5. 推送飞书
+    # 6. 推送飞书
     result = send_to_feishu(report)
     print(f"✅ 推送飞书: {result.get('code')}")
     
-    # 6. 保存到本地
+    # 7. 保存到本地
     cache_file = CACHE_DIR / f"narrative_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
     with open(cache_file, 'w', encoding='utf-8') as f:
-        json.dump({"analysis": analysis, "report": report}, f, ensure_ascii=False, indent=2)
+        json.dump({"analysis": analysis, "report": report, "prices": prices}, f, ensure_ascii=False, indent=2)
     print(f"✅ 保存到 {cache_file}")
 
 if __name__ == "__main__":
