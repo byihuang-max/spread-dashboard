@@ -163,10 +163,10 @@ def save_history(analysis):
         key: data['score'] for key, data in analysis.items()
     }
     
-    # 只保留最近60天
+    # 只保留最近 400 天（超过1年，保证历史分位有足够窗口）
     dates = sorted(history.keys())
-    if len(dates) > 60:
-        for old_date in dates[:-60]:
+    if len(dates) > 400:
+        for old_date in dates[:-400]:
             del history[old_date]
     
     with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
