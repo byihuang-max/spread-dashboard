@@ -199,8 +199,14 @@
     <script>
         // 加载数据
         Promise.all([
-            fetch('data/halo_analysis.json').then(res => res.json()),
-            fetch('data/halo_financials.json').then(res => res.json())
+            fetch('data/halo_analysis.json').then(res => {
+                if (!res.ok) throw new Error(`分析数据加载失败: ${res.status}`);
+                return res.json();
+            }),
+            fetch('data/halo_financials.json').then(res => {
+                if (!res.ok) throw new Error(`财务数据加载失败: ${res.status}`);
+                return res.json();
+            })
         ])
             .then(([analysisData, financialData]) => {
                 document.getElementById('loading').style.display = 'none';
@@ -208,8 +214,8 @@
                 renderDashboard(analysisData, financialData);
             })
             .catch(err => {
-                document.getElementById('loading').innerHTML = '❌ 数据加载失败';
-                console.error(err);
+                document.getElementById('loading').innerHTML = `❌ 数据加载失败<br><small style="color:#888">${err.message}</small>`;
+                console.error('HALO数据加载错误:', err);
             });
         
         function renderDashboard(data, financial) {
