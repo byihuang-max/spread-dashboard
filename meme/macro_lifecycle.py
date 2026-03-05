@@ -72,6 +72,39 @@ def load_history() -> dict:
         return json.load(f)
 
 
+def load_latest_key_news() -> dict:
+    """
+    从最新的 narrative_YYYYMMDD_HHMM.json 读取每条叙事的重点新闻标题
+    返回 {narrative_key: [headline1, headline2, ...]}（已去重，最多3条）
+    """
+    cache_dir = HISTORY_FILE.parent
+    # 按文件名排序，取最新的带时间戳的缓存
+    files = sorted(cache_dir.glob("narrative_2*.json"), reverse=True)
+    if not files:
+        return {}
+    try:
+        with open(files[0], "r", encoding="utf-8") as f:
+            data = json.load(f)
+        analysis = data.get("analysis", {})
+        result = {}
+        for key, val in analysis.items():
+            raw = val.get("key_news", [])
+            # 去重 + 过滤空/无效条目
+            seen, deduped = set(), []
+            for title in raw:
+                t = str(title).strip()
+                if t and t != "nan" and t not in seen:
+                    seen.add(t)
+                    deduped.append(t)
+                if len(deduped) >= 3:
+                    break
+            result[key] = deduped
+        return result
+    except Exception as e:
+        print(f"⚠️  读取 key_news 失败: {e}")
+        return {}
+
+
 def load_last_processed_date() -> str | None:
     """从 lifecycle_output.json 读取上次处理的最新日期"""
     if not OUTPUT_JSON.exists():
@@ -250,17 +283,28 @@ def append_new_rows_to_csv(all_rows: list[dict], existing_pairs: set):
 
 # ==================== 写 JSON 快照 ====================
 def write_json_snapshot(all_rows: list[dict], history: dict):
-    """取最新日期的所有叙事写入 JSON"""
+    """取最新日期的所有叙事写入 JSON（含重点新闻）"""
     if not all_rows:
         return
     latest_date = max(r["date"] for r in all_rows)
     latest_rows = [r for r in all_rows if r["date"] == latest_date]
 
+    # 加载最新重点新闻
+    key_news = load_latest_key_news()
+
+    results = {}
+    for r in latest_rows:
+        k = r["narrative_key"]
+        results[k] = {
+            **r,
+            "key_news": key_news.get(k, []),  # 重点事件（最多3条，已去重）
+        }
+
     snapshot = {
-        "generated_at":   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "latest_date":    latest_date,
+        "generated_at":    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "latest_date":     latest_date,
         "days_of_history": len(history),
-        "results":        {r["narrative_key"]: r for r in latest_rows},
+        "results":         results,
     }
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(snapshot, f, ensure_ascii=False, indent=2)

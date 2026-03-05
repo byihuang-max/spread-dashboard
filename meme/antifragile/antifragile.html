@@ -482,17 +482,31 @@ new Chart(document.getElementById('medianChart'),{
     var action = r.action    || '';
     var name   = (r.narrative_name || key);
     var assets = (r.assets   || '-');
+    var news   = r.key_news  || [];  // 重点事件标题列表（最多3条）
 
     var momSign  = mom >= 0 ? '+' : '';
     var momColor = mom >= 0 ? '#16a34a' : '#dc2626';
     var fillColor = pctColor(pct);
 
+    // 重点事件：每条用小号字展示，截断超长标题
+    var newsHtml = '';
+    if (news.length > 0) {
+      newsHtml = '<div style="margin-top:4px;">';
+      news.forEach(function(t) {
+        var short = t.length > 28 ? t.slice(0,28)+'…' : t;
+        newsHtml += '<div title="' + t.replace(/"/g,'&quot;') + '" ' +
+          'style="font-size:10.5px;color:#94a3b8;line-height:1.5;white-space:nowrap;overflow:hidden;' +
+          'text-overflow:ellipsis;max-width:200px;cursor:default;">📌 ' + short + '</div>';
+      });
+      newsHtml += '</div>';
+    }
+
     return '<tr data-stage="' + STAGE_ORDER[stage] + '" data-score="' + score + '"' +
            ' data-hist="' + pct + '" data-mom="' + mom + '" data-dur="' + dur + '">' +
       // 阶段徽章
       '<td><span class="lc-badge lc-badge-' + stage + '">' + emoji + ' ' + stage + '</span></td>' +
-      // 叙事名称
-      '<td style="font-weight:600;color:#1e293b;">' + name + '</td>' +
+      // 叙事名称 + 重点事件
+      '<td style="font-weight:600;color:#1e293b;">' + name + newsHtml + '</td>' +
       // 对应资产
       '<td style="color:#64748b;">' + assets + '</td>' +
       // 今日热度
