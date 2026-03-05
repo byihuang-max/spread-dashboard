@@ -185,9 +185,10 @@
                     <h3>🚀 CapEx 二阶导趋势（季度）</h3>
                     <div class="chart-wrap"><div id="capex-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
-                        <b>CapEx 二阶导：</b>资本支出增速的变化率。正值=加速扩张，负值=减速。<br>
+                        <b>一阶导（虚线）：</b>CapEx 同比增速（YoY%），表示"花钱速度"。正值=扩张，负值=收缩。<br>
+                        <b>二阶导（实线）：</b>增速的变化率，表示"加速度"。正值=加速扩张，负值=减速。<br>
                         <b>数据来源：</b>yfinance 季度财报（MSFT/AMZN/GOOGL/META）。<br>
-                        <b>HALO 逻辑：</b>超大规模 CapEx 持续加速 = 重资产范式转移仍在强化。
+                        <b>HALO 逻辑：</b>二阶导持续为正 = 重资产范式转移仍在强化。
                     </div>
                 </div>
                 <div class="chart-box">
@@ -279,84 +280,113 @@
         }
         
         function renderCapexIndicators(capexData) {
-            const chart = echarts.init(document.getElementById('capex-chart'), null, {
-                devicePixelRatio: window.devicePixelRatio || 2
-            });
-            
-            if (!capexData || Object.keys(capexData).length === 0) {
-                document.getElementById('capex-chart').innerHTML = '<div style="text-align:center;padding:40px;color:#888">数据加载中...</div>';
-                return;
-            }
-            
-            // 准备数据
-            const companies = {
-                'MSFT': { name: '微软', color: '#3b82f6' },
-                'GOOGL': { name: '谷歌', color: '#10b981' },
-                'AMZN': { name: '亚马逊', color: '#f59e0b' },
-                'META': { name: 'Meta', color: '#8b5cf6' }
-            };
-            
-            const series = [];
-            let allQuarters = new Set();
-            
-            for (const [ticker, data] of Object.entries(capexData)) {
-                const history = data.history || [];
-                const quarters = history.map(h => h.quarter);
-                const values = history.map(h => h.second_derivative);
-                
-                quarters.forEach(q => allQuarters.add(q));
-                
-                series.push({
-                    name: companies[ticker]?.name || ticker,
-                    type: 'line',
-                    data: values,
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 6,
-                    lineStyle: { width: 2, color: companies[ticker]?.color },
-                    itemStyle: { color: companies[ticker]?.color }
+    const chart = echarts.init(document.getElementById('capex-chart'), null, {
+        devicePixelRatio: window.devicePixelRatio || 2
+    });
+    
+    if (!capexData || Object.keys(capexData).length === 0) {
+        document.getElementById('capex-chart').innerHTML = '<div style="text-align:center;padding:40px;color:#888">数据加载中...</div>';
+        return;
+    }
+    
+    const companies = {
+        'MSFT': { name: '微软', color: '#3b82f6' },
+        'GOOGL': { name: '谷歌', color: '#10b981' },
+        'AMZN': { name: '亚马逊', color: '#f59e0b' },
+        'META': { name: 'Meta', color: '#8b5cf6' }
+    };
+    
+    const series = [];
+    let allQuarters = new Set();
+    
+    for (const [ticker, data] of Object.entries(capexData)) {
+        const history = data.history || [];
+        const quarters = history.map(h => h.quarter);
+        const yoyGrowth = history.map(h => h.yoy_growth);
+        const secondDeriv = history.map(h => h.second_derivative);
+        
+        quarters.forEach(q => allQuarters.add(q));
+        
+        // 一阶导（YoY增速）
+        series.push({
+            name: companies[ticker]?.name + ' 增速',
+            type: 'line',
+            yAxisIndex: 0,
+            data: yoyGrowth,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 4,
+            lineStyle: { width: 1.5, color: companies[ticker]?.color, type: 'dashed' },
+            itemStyle: { color: companies[ticker]?.color }
+        });
+        
+        // 二阶导（加速度）
+        series.push({
+            name: companies[ticker]?.name + ' 加速度',
+            type: 'line',
+            yAxisIndex: 1,
+            data: secondDeriv,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 6,
+            lineStyle: { width: 2, color: companies[ticker]?.color },
+            itemStyle: { color: companies[ticker]?.color }
+        });
+    }
+    
+    const xAxisData = Array.from(allQuarters).sort();
+    
+    const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'axis',
+            formatter: params => {
+                let html = `<strong>${params[0].axisValue}</strong><br/>`;
+                params.forEach(p => {
+                    const val = p.value !== null ? p.value.toFixed(2) : 'N/A';
+                    const unit = p.seriesName.includes('增速') ? '%' : '';
+                    html += `${p.marker} ${p.seriesName}: ${val}${unit}<br/>`;
                 });
+                return html;
             }
-            
-            const xAxisData = Array.from(allQuarters).sort();
-            
-            const option = {
-                backgroundColor: 'transparent',
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: params => {
-                        let html = `<strong>${params[0].axisValue}</strong><br/>`;
-                        params.forEach(p => {
-                            html += `${p.marker} ${p.seriesName}: ${p.value !== null ? p.value.toFixed(2) : 'N/A'}<br/>`;
-                        });
-                        return html;
-                    }
-                },
-                legend: {
-                    data: series.map(s => s.name),
-                    top: 10,
-                    textStyle: { color: '#374151' }
-                },
-                grid: { left: '10%', right: '10%', top: '20%', bottom: '15%', containLabel: true },
-                xAxis: {
-                    type: 'category',
-                    data: xAxisData,
-                    axisLabel: { color: '#64748b', fontSize: 11, rotate: 30 },
-                    axisLine: { lineStyle: { color: '#e8eaef' } }
-                },
-                yAxis: {
-                    type: 'value',
-                    name: '二阶导',
-                    axisLabel: { color: '#64748b' },
-                    axisLine: { lineStyle: { color: '#e8eaef' } },
-                    splitLine: { lineStyle: { color: '#e8eaef' } }
-                },
-                series: series
-            };
-            
-            chart.setOption(option);
-            window.addEventListener('resize', () => chart.resize());
-        }
+        },
+        legend: {
+            data: series.map(s => s.name),
+            top: 10,
+            textStyle: { color: '#374151', fontSize: 11 }
+        },
+        grid: { left: '10%', right: '10%', top: '20%', bottom: '15%', containLabel: true },
+        xAxis: {
+            type: 'category',
+            data: xAxisData,
+            axisLabel: { color: '#64748b', fontSize: 11 },
+            axisLine: { lineStyle: { color: '#e8eaef' } }
+        },
+        yAxis: [
+            {
+                type: 'value',
+                name: 'YoY增速 (%)',
+                position: 'left',
+                axisLabel: { color: '#64748b', formatter: '{value}%' },
+                axisLine: { lineStyle: { color: '#e8eaef' } },
+                splitLine: { lineStyle: { color: '#e8eaef', type: 'dashed' } }
+            },
+            {
+                type: 'value',
+                name: '二阶导',
+                position: 'right',
+                axisLabel: { color: '#64748b' },
+                axisLine: { lineStyle: { color: '#e8eaef' } },
+                splitLine: { show: false }
+            }
+        ],
+        series: series
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
         
         function renderPEScissors(scissors) {
             const chart = echarts.init(document.getElementById('pe-chart'), null, {
