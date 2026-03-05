@@ -82,9 +82,10 @@ def calculate_capex_derivatives(capex_data):
     """
     计算 CapEx 一阶导（QoQ 增速）和二阶导（增速变化率）
     改用 QoQ 而非 YoY，因为历史数据不够深
+    返回：{ticker: {latest: {...}, history: [...]}}
     """
     print("⏳ 计算 CapEx 二阶导...")
-    results = []
+    results = {}
     
     for ticker, df in capex_data.items():
         if len(df) < 3:  # 至少需要 3 个季度
@@ -117,17 +118,29 @@ def calculate_capex_derivatives(capex_data):
             trend = "数据不足"
             signal = "⚪"
         
-        results.append({
-            "ticker": ticker,
+        # 历史数据（最近8个季度）
+        history = []
+        for _, row in df.tail(8).iterrows():
+            history.append({
+                "quarter": str(row['date'].date()),
+                "capex": round(float(row['capex']) / 1e9, 2) if pd.notna(row['capex']) else None,
+                "yoy_growth": round(float(row['yoy_growth']), 2) if pd.notna(row['yoy_growth']) else None,
+                "second_derivative": round(float(row['second_derivative']), 2) if pd.notna(row['second_derivative']) else None,
+            })
+        
+        results[ticker] = {
             "name": [k for k, v in HYPERSCALERS.items() if v == ticker][0],
-            "latest_capex": round(float(latest['capex']) / 1e9, 2),  # 转为十亿美元
-            "qoq_growth": round(float(latest['qoq_growth']), 2) if pd.notna(latest['qoq_growth']) else None,
-            "yoy_growth": round(float(latest['yoy_growth']), 2) if pd.notna(latest['yoy_growth']) else None,
-            "second_derivative": round(float(latest['second_derivative']), 2) if pd.notna(latest['second_derivative']) else None,
-            "trend": trend,
-            "signal": signal,
-            "quarter": str(latest['date'].date()),
-        })
+            "latest": {
+                "capex": round(float(latest['capex']) / 1e9, 2),
+                "qoq_growth": round(float(latest['qoq_growth']), 2) if pd.notna(latest['qoq_growth']) else None,
+                "yoy_growth": round(float(latest['yoy_growth']), 2) if pd.notna(latest['yoy_growth']) else None,
+                "second_derivative": round(float(latest['second_derivative']), 2) if pd.notna(latest['second_derivative']) else None,
+                "trend": trend,
+                "signal": signal,
+                "quarter": str(latest['date'].date()),
+            },
+            "history": history
+        }
     
     print(f"✅ 完成 {len(results)} 家公司")
     return results
@@ -233,8 +246,9 @@ def main():
     
     print("=" * 60)
     print("✅ CapEx 二阶导:")
-    for r in capex_results:
-        print(f"   {r['signal']} {r['name']}: {r['yoy_growth']}% YoY, 二阶导 {r['second_derivative']} ({r['trend']})")
+    for ticker, data in capex_results.items():
+        latest = data['latest']
+        print(f"   {latest['signal']} {data['name']}: {latest['yoy_growth']}% YoY, 二阶导 {latest['second_derivative']} ({latest['trend']})")
     
     if eps_scissors:
         print(f"\n✅ PE 剪刀差: 重资产 {eps_scissors['heavy_asset_pe']} vs 轻资产 {eps_scissors['light_asset_pe']}")
