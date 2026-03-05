@@ -114,8 +114,8 @@ def calculate_relative_strength(df, window=20):
             "name": stock_info["name"],
             "theme": stock_info["theme"],
             "benchmark": benchmark,
-            "rel_strength_20d": round(float(latest), 2),
-            "latest_price": round(float(pivot[ticker].iloc[-1]), 2),
+            "rel_strength_20d": round(float(latest), 2) if pd.notna(latest) else 0,
+            "latest_price": round(float(pivot[ticker].iloc[-1]), 2) if pd.notna(pivot[ticker].iloc[-1]) else None,
         })
     
     print(f"✅ 完成 {len(results)} 只标的")
@@ -198,8 +198,12 @@ def main():
         "stocks": rel_strength,
     }
     
+    # 将 NaN 转为 None（JSON 中的 null）
+    import json
+    output_str = json.dumps(output, ensure_ascii=False, indent=2, default=lambda x: None if pd.isna(x) else x)
+    
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        f.write(output_str)
     
     print("=" * 60)
     print(f"✅ 场景判断：{judgment['scenario']}")
