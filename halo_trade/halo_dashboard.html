@@ -152,6 +152,18 @@
                 </div>
             </div>
             
+            <!-- 核心指标卡片 -->
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">🚀 CapEx 二阶导（最核心）</div>
+                    <div id="capex-indicators" style="font-size:14px;line-height:2"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⚖️ PE 剪刀差（估值对比）</div>
+                    <div id="pe-scissors" style="font-size:14px;line-height:2"></div>
+                </div>
+            </div>
+            
             <!-- 图表区 -->
             <div class="grid">
                 <div class="card">
@@ -186,22 +198,30 @@
     
     <script>
         // 加载数据
-        fetch('data/halo_analysis.json')
-            .then(res => res.json())
-            .then(data => {
+        Promise.all([
+            fetch('data/halo_analysis.json').then(res => res.json()),
+            fetch('data/halo_financials.json').then(res => res.json())
+        ])
+            .then(([analysisData, financialData]) => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
-                renderDashboard(data);
+                renderDashboard(analysisData, financialData);
             })
             .catch(err => {
                 document.getElementById('loading').innerHTML = '❌ 数据加载失败';
                 console.error(err);
             });
         
-        function renderDashboard(data) {
+        function renderDashboard(data, financial) {
             // 场景判断
             document.getElementById('scenario-name').textContent = data.scenario;
             document.getElementById('scenario-action').textContent = data.action;
+            
+            // CapEx 二阶导
+            renderCapexIndicators(financial.capex_second_derivative);
+            
+            // PE 剪刀差
+            renderPEScissors(financial.eps_scissors);
             
             // 主线强弱图表
             renderThemeChart(data.theme_strength);
@@ -211,6 +231,35 @@
             
             // 标的表格
             renderStocksTable(data.stocks);
+        }
+        
+        function renderCapexIndicators(capexData) {
+            const container = document.getElementById('capex-indicators');
+            if (!capexData || capexData.length === 0) {
+                container.innerHTML = '<span style="color:#888">数据加载中...</span>';
+                return;
+            }
+            
+            let html = '';
+            capexData.forEach(c => {
+                html += `<div>${c.signal} <strong>${c.name}</strong>: YoY ${c.yoy_growth}%, 二阶导 ${c.second_derivative} (${c.trend})</div>`;
+            });
+            container.innerHTML = html;
+        }
+        
+        function renderPEScissors(scissors) {
+            const container = document.getElementById('pe-scissors');
+            if (!scissors) {
+                container.innerHTML = '<span style="color:#888">数据加载中...</span>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div><strong>重资产 PE:</strong> ${scissors.heavy_asset_pe}</div>
+                <div><strong>轻资产 PE:</strong> ${scissors.light_asset_pe}</div>
+                <div><strong>PE 差距:</strong> ${scissors.pe_gap} (${scissors.pe_gap < 0 ? '重资产更便宜' : '轻资产更便宜'})</div>
+                <div><strong>Earnings Yield 差距:</strong> ${scissors.yield_gap} 百分点</div>
+            `;
         }
         
         function renderThemeChart(themeStrength) {
