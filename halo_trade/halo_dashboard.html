@@ -185,10 +185,10 @@
                     <h3>🚀 CapEx 二阶导趋势（季度）</h3>
                     <div class="chart-wrap"><div id="capex-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
-                        <b>一阶导（虚线）：</b>CapEx 同比增速（YoY%），衡量"花钱速度"。<br>
+                        <b>一阶导（细线半透明）：</b>CapEx 同比增速（YoY%），衡量"花钱速度"。<br>
                         &nbsp;&nbsp;• 正值 = 扩张（例如 +50% = CapEx 从100亿增至150亿）<br>
                         &nbsp;&nbsp;• 负值 = 收缩（例如 -20% = CapEx 从100亿降至80亿）<br>
-                        <b>二阶导（实线）：</b>增速的变化率，衡量"加速度"。<br>
+                        <b>二阶导（粗线不透明）：</b>增速的变化率，衡量"加速度"。<br>
                         &nbsp;&nbsp;• 正值 = 加速扩张（例如增速从 +30% → +50%，二阶导 = +20）<br>
                         &nbsp;&nbsp;• 负值 = 减速（例如增速从 +50% → +40%，二阶导 = -10，虽仍增长但放缓）<br>
                         <b>组合解读：</b><br>
@@ -315,9 +315,9 @@
             data: yoyGrowth,
             smooth: true,
             symbol: 'circle',
-            symbolSize: 4,
-            lineStyle: { width: 1.5, color: companies[ticker]?.color, type: [8, 4] },
-            itemStyle: { color: companies[ticker]?.color }
+            symbolSize: 3,
+            lineStyle: { width: 1, color: companies[ticker]?.color, opacity: 0.5 },
+            itemStyle: { color: companies[ticker]?.color, opacity: 0.5 }
         });
         
         // 二阶导（加速度）
@@ -329,7 +329,7 @@
             smooth: true,
             symbol: 'circle',
             symbolSize: 6,
-            lineStyle: { width: 2, color: companies[ticker]?.color },
+            lineStyle: { width: 2.5, color: companies[ticker]?.color },
             itemStyle: { color: companies[ticker]?.color }
         });
     }
