@@ -236,6 +236,40 @@
                     <b>解读：</b>正值=跑赢基准，负值=跑输基准。TOP10展示当前最强势的HALO标的。
                 </div>
             </div>
+            
+            <!-- 中国版 HALO：重资产 vs 轻资产 -->
+            <div class="section">
+                <div class="chart-box">
+                    <h3>🇨🇳 重资产 vs 轻资产趋势（中美对比）</h3>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                        <div style="background:#f9fafb;border-radius:8px;padding:16px;border:1px solid #e8eaef">
+                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">🇨🇳 中国市场</div>
+                            <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="cn-trend"></div>
+                            <div style="font-size:11px;color:#64748b" id="cn-signal"></div>
+                            <div style="margin-top:12px;font-size:11px;color:#374151">
+                                <div>相对强弱: <span id="cn-rs" style="font-weight:600"></span></div>
+                                <div>20日动量: <span id="cn-momentum" style="font-weight:600"></span></div>
+                            </div>
+                        </div>
+                        <div style="background:#f9fafb;border-radius:8px;padding:16px;border:1px solid #e8eaef">
+                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">🇺🇸 美国市场（罗素3000拟合）</div>
+                            <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="us-trend"></div>
+                            <div style="font-size:11px;color:#64748b">XLE+XLU+XLI+XLB vs XLK+XLV+XLC+XLY</div>
+                            <div style="margin-top:12px;font-size:11px;color:#374151">
+                                <div>相对强弱: <span id="us-rs" style="font-weight:600"></span></div>
+                                <div>20日动量: <span id="us-momentum" style="font-weight:600"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-wrap"><div id="asset-style-chart" style="width:100%;height:100%"></div></div>
+                    <div class="chart-note">
+                        <b>相对强弱：</b>重资产净值 / 轻资产净值 × 100，>100表示重资产占优。<br>
+                        <b>中国重资产：</b>有色/钢铁/煤炭/公用事业/建筑（申万一级）。<br>
+                        <b>中国轻资产：</b>计算机/传媒/电子/医药（申万一级）。<br>
+                        <b>美国拟合：</b>行业ETF等权组合，代表罗素3000风格分化。
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -249,12 +283,17 @@
             fetch('data/halo_financials.json').then(res => {
                 if (!res.ok) throw new Error(`财务数据加载失败: ${res.status}`);
                 return res.json();
+            }),
+            fetch('data/china_halo.json').then(res => {
+                if (!res.ok) throw new Error(`中国HALO数据加载失败: ${res.status}`);
+                return res.json();
             })
         ])
-            .then(([analysisData, financialData]) => {
+            .then(([analysisData, financialData, chinaHaloData]) => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 renderDashboard(analysisData, financialData);
+                renderChinaHalo(chinaHaloData);
                 document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {
@@ -491,6 +530,112 @@
                     <td>${stock.latest_price}</td>
                 `;
             });
+        }
+
+        function renderChinaHalo(data) {
+            const cn = data.china;
+            const us = data.us;
+            
+            // 填充中国信号
+            document.getElementById('cn-trend').textContent = cn.trend;
+            document.getElementById('cn-signal').textContent = cn.signal;
+            document.getElementById('cn-rs').textContent = cn.latest_rs;
+            document.getElementById('cn-momentum').textContent = cn.momentum_20d + '%';
+            document.getElementById('cn-momentum').style.color = cn.momentum_20d >= 0 ? '#16a34a' : '#dc2626';
+            
+            // 填充美国信号
+            if (us && us.trend) {
+                document.getElementById('us-trend').textContent = us.trend;
+                document.getElementById('us-rs').textContent = us.latest_rs;
+                document.getElementById('us-momentum').textContent = us.momentum_20d + '%';
+                document.getElementById('us-momentum').style.color = us.momentum_20d >= 0 ? '#16a34a' : '#dc2626';
+            }
+            
+            // 绘制图表
+            Promise.all([
+                fetch('data/china_halo_history.csv').then(r => r.text()),
+                fetch('data/us_halo_history.csv').then(r => r.text())
+            ]).then(([cnCsv, usCsv]) => {
+                const cnData = parseCsv(cnCsv);
+                const usData = parseCsv(usCsv);
+                renderAssetStyleChart(cnData, usData);
+            });
+        }
+
+        function parseCsv(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',');
+            return lines.slice(1).map(line => {
+                const values = line.split(',');
+                const obj = {};
+                headers.forEach((h, i) => obj[h] = values[i]);
+                return obj;
+            });
+        }
+
+        function renderAssetStyleChart(cnData, usData) {
+            const chart = echarts.init(document.getElementById('asset-style-chart'));
+            
+            const dates = cnData.map(d => d.trade_date.slice(0, 10));
+            const cnRS = cnData.map(d => parseFloat(d.relative_strength));
+            const usRS = usData.map(d => parseFloat(d.relative_strength));
+            
+            chart.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: params => {
+                        let html = `<strong>${params[0].axisValue}</strong><br/>`;
+                        params.forEach(p => {
+                            html += `${p.marker} ${p.seriesName}: ${p.value ? p.value.toFixed(2) : 'N/A'}<br/>`;
+                        });
+                        return html;
+                    }
+                },
+                legend: {
+                    data: ['🇨🇳 中国相对强弱', '🇺🇸 美国相对强弱'],
+                    top: 10,
+                    textStyle: { color: '#374151' }
+                },
+                grid: { left: '8%', right: '8%', top: '18%', bottom: '12%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { color: '#64748b', fontSize: 11, rotate: 30 },
+                    axisLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '相对强弱',
+                    axisLabel: { color: '#64748b' },
+                    axisLine: { lineStyle: { color: '#e8eaef' } },
+                    splitLine: { lineStyle: { color: '#e8eaef' } }
+                },
+                series: [
+                    {
+                        name: '🇨🇳 中国相对强弱',
+                        type: 'line',
+                        data: cnRS,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 4,
+                        lineStyle: { width: 2, color: '#ef4444' },
+                        itemStyle: { color: '#ef4444' }
+                    },
+                    {
+                        name: '🇺🇸 美国相对强弱',
+                        type: 'line',
+                        data: usRS,
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 4,
+                        lineStyle: { width: 2, color: '#3b82f6' },
+                        itemStyle: { color: '#3b82f6' }
+                    }
+                ]
+            });
+            
+            window.addEventListener('resize', () => chart.resize());
         }
     </script>
 </body>
