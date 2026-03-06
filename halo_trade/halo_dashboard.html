@@ -261,7 +261,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="chart-wrap"><div id="asset-style-chart" style="width:100%;height:100%"></div></div>
+                    <div class="chart-wrap" style="height:500px"><div id="asset-style-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
                         <b>相对强弱：</b>重资产净值 / 轻资产净值 × 100，>100表示重资产占优。<br>
                         <b>中国重资产：</b>有色/钢铁/煤炭/公用事业/建筑（申万一级）。<br>
@@ -607,6 +607,8 @@
                 yAxis: {
                     type: 'value',
                     name: '相对强弱',
+                    min: 90,
+                    max: 120,
                     axisLabel: { color: '#64748b' },
                     axisLine: { lineStyle: { color: '#e8eaef' } },
                     splitLine: { lineStyle: { color: '#e8eaef' } }
