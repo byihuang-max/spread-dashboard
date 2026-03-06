@@ -1,38 +1,32 @@
 {
-  "update_time": "2026-03-04 22:39",
+  "update_time": "2026-03-06 16:23",
   "three_flows": {
     "details": {
       "north_net": {
         "name": "北向资金",
         "direction": "inflow",
-        "latest": 3297.82,
-        "ma5": 3561.66,
-        "ma20": 3262.28
+        "latest": 3163.47,
+        "ma5": 3560.66,
+        "ma20": 3232.57
       },
       "etf_share_chg": {
         "name": "ETF净流入",
         "direction": "inflow",
-        "latest": 6700.0,
-        "ma5": -151468.0,
-        "ma20": -198077.0
+        "latest": -219650.0,
+        "ma5": -119184.0,
+        "ma20": -132496.5
       },
       "margin_chg": {
         "name": "两融变化",
         "direction": "inflow",
-        "latest": 0.0,
-        "ma5": 9.37,
-        "ma20": -36.04
+        "latest": 91.18,
+        "ma5": -30.47,
+        "ma20": -45.42
       }
     },
     "consensus": "三路共振流入 🟢"
   },
   "direction_chart": [
-    {
-      "date": "11-27",
-      "north_net": 1925.44,
-      "etf_share_chg": -154070.0,
-      "margin_chg": 26.9
-    },
     {
       "date": "11-28",
       "north_net": 1863.53,
@@ -384,8 +378,14 @@
     {
       "date": "03-04",
       "north_net": 3297.82,
-      "etf_share_chg": 6700.0,
-      "margin_chg": null
+      "etf_share_chg": 68990.0,
+      "margin_chg": -86.23
+    },
+    {
+      "date": "03-05",
+      "north_net": 3163.47,
+      "etf_share_chg": -219650.0,
+      "margin_chg": 91.18
     }
   ],
   "rolling_cum": [
@@ -393,10 +393,6 @@
       "name": "北向资金",
       "key": "north_net",
       "data": [
-        {
-          "date": "11-27",
-          "value": 45227.49
-        },
         {
           "date": "11-28",
           "value": 44248.44
@@ -632,6 +628,10 @@
         {
           "date": "03-04",
           "value": 65245.53
+        },
+        {
+          "date": "03-05",
+          "value": 64651.35
         }
       ]
     },
@@ -639,10 +639,6 @@
       "name": "ETF净流入",
       "key": "etf_share_chg",
       "data": [
-        {
-          "date": "11-27",
-          "value": 295450.0
-        },
         {
           "date": "11-28",
           "value": -38530.0
@@ -877,7 +873,11 @@
         },
         {
           "date": "03-04",
-          "value": -3961540.0
+          "value": -3899250.0
+        },
+        {
+          "date": "03-05",
+          "value": -2649930.0
         }
       ]
     },
@@ -885,10 +885,6 @@
       "name": "两融变化",
       "key": "margin_chg",
       "data": [
-        {
-          "date": "11-27",
-          "value": -270.41
-        },
         {
           "date": "11-28",
           "value": -128.24
@@ -1123,7 +1119,11 @@
         },
         {
           "date": "03-04",
-          "value": -720.79
+          "value": -807.03
+        },
+        {
+          "date": "03-05",
+          "value": -908.37
         }
       ]
     }
@@ -1131,426 +1131,430 @@
   "industry_heatmap": [
     {
       "name": "石油石化",
-      "pct_5d": 12.2,
-      "crowding_ratio": 2.81,
+      "pct_5d": 11.31,
+      "crowding_ratio": 2.11,
       "crowd_label": "hot",
-      "etf_chg": -1200.0,
+      "etf_chg": -22400.0,
       "etf_dir": "outflow",
       "tags": [
         "🔥拥挤",
         "▼ETF流出"
       ],
       "signal": "⚠️ 追高风险",
-      "amount_latest": 10596876.0
+      "amount_latest": 8400203.0
     },
     {
       "name": "煤炭",
-      "pct_5d": 7.2,
-      "crowding_ratio": 1.45,
-      "crowd_label": "warm",
-      "etf_chg": 40400.0,
+      "pct_5d": 7.71,
+      "crowding_ratio": 1.14,
+      "crowd_label": "normal",
+      "etf_chg": 55700.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": "✅ 资金确认",
-      "amount_latest": 3161031.0
+      "amount_latest": 2485314.0
     },
     {
       "name": "公用事业",
-      "pct_5d": 4.86,
-      "crowding_ratio": 1.77,
+      "pct_5d": 4.98,
+      "crowding_ratio": 1.71,
       "crowd_label": "hot",
-      "etf_chg": -75000.0,
+      "etf_chg": -30000.0,
       "etf_dir": "outflow",
       "tags": [
         "🔥拥挤",
         "▼ETF流出"
       ],
       "signal": "⚠️ 追高风险",
-      "amount_latest": 8587903.0
-    },
-    {
-      "name": "农林牧渔",
-      "pct_5d": 2.55,
-      "crowding_ratio": 1.49,
-      "crowd_label": "warm",
-      "etf_chg": 8300.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": "✅ 资金确认",
-      "amount_latest": 4400996.0
+      "amount_latest": 8629472.0
     },
     {
       "name": "银行",
-      "pct_5d": 0.36,
-      "crowding_ratio": 1.22,
+      "pct_5d": 1.49,
+      "crowding_ratio": 0.86,
+      "crowd_label": "normal",
+      "etf_chg": 42180.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": null,
+      "amount_latest": 2591002.0
+    },
+    {
+      "name": "农林牧渔",
+      "pct_5d": 0.5,
+      "crowding_ratio": 1.24,
       "crowd_label": "warm",
-      "etf_chg": 20700.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": null,
-      "amount_latest": 3777029.0
-    },
-    {
-      "name": "钢铁",
-      "pct_5d": 0.27,
-      "crowding_ratio": 1.02,
-      "crowd_label": "normal",
-      "etf_chg": -15650.0,
-      "etf_dir": "outflow",
-      "tags": [
-        "▼ETF流出"
-      ],
-      "signal": null,
-      "amount_latest": 2198594.0
-    },
-    {
-      "name": "有色金属",
-      "pct_5d": -0.53,
-      "crowding_ratio": 0.94,
-      "crowd_label": "normal",
-      "etf_chg": 78400.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": null,
-      "amount_latest": 20956507.0
-    },
-    {
-      "name": "交通运输",
-      "pct_5d": -0.57,
-      "crowding_ratio": 1.83,
-      "crowd_label": "hot",
-      "etf_chg": 86220.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "🔥拥挤",
-        "▲ETF流入"
-      ],
-      "signal": null,
-      "amount_latest": 6104440.0
-    },
-    {
-      "name": "通信",
-      "pct_5d": -0.94,
-      "crowding_ratio": 0.83,
-      "crowd_label": "cool",
       "etf_chg": 19800.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": null,
-      "amount_latest": 13653532.0
-    },
-    {
-      "name": "国防军工",
-      "pct_5d": -1.71,
-      "crowding_ratio": 1.03,
-      "crowd_label": "normal",
-      "etf_chg": 78400.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": null,
-      "amount_latest": 12372066.0
-    },
-    {
-      "name": "环保",
-      "pct_5d": -1.77,
-      "crowding_ratio": 1.14,
-      "crowd_label": "normal",
-      "etf_chg": null,
-      "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 2363886.0
-    },
-    {
-      "name": "建筑装饰",
-      "pct_5d": -2.27,
-      "crowding_ratio": 0.94,
-      "crowd_label": "normal",
-      "etf_chg": 2100.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": "🔄 逆势吸筹",
-      "amount_latest": 4081456.0
-    },
-    {
-      "name": "综合",
-      "pct_5d": -2.28,
-      "crowding_ratio": 0.76,
-      "crowd_label": "cool",
-      "etf_chg": null,
-      "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 331079.0
-    },
-    {
-      "name": "基础化工",
-      "pct_5d": -2.59,
-      "crowding_ratio": 1.04,
-      "crowd_label": "normal",
-      "etf_chg": 1600.0,
-      "etf_dir": "inflow",
-      "tags": [
-        "▲ETF流入"
-      ],
-      "signal": "🔄 逆势吸筹",
-      "amount_latest": 14036438.0
+      "amount_latest": 3668094.0
     },
     {
       "name": "电力设备",
-      "pct_5d": -3.21,
-      "crowding_ratio": 0.97,
+      "pct_5d": -0.4,
+      "crowding_ratio": 1.09,
       "crowd_label": "normal",
-      "etf_chg": -3150.0,
+      "etf_chg": -2100.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
       ],
       "signal": null,
-      "amount_latest": 25120849.0
+      "amount_latest": 28174819.0
     },
     {
-      "name": "机械设备",
-      "pct_5d": -4.01,
+      "name": "钢铁",
+      "pct_5d": -0.63,
+      "crowding_ratio": 0.99,
+      "crowd_label": "normal",
+      "etf_chg": -15400.0,
+      "etf_dir": "outflow",
+      "tags": [
+        "▼ETF流出"
+      ],
+      "signal": null,
+      "amount_latest": 2121054.0
+    },
+    {
+      "name": "有色金属",
+      "pct_5d": -0.77,
+      "crowding_ratio": 0.84,
+      "crowd_label": "cool",
+      "etf_chg": 35750.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": null,
+      "amount_latest": 18069216.0
+    },
+    {
+      "name": "通信",
+      "pct_5d": -0.94,
+      "crowding_ratio": 1.08,
+      "crowd_label": "normal",
+      "etf_chg": 22950.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": null,
+      "amount_latest": 17734654.0
+    },
+    {
+      "name": "交通运输",
+      "pct_5d": -1.03,
+      "crowding_ratio": 1.34,
+      "crowd_label": "warm",
+      "etf_chg": 86760.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": null,
+      "amount_latest": 4575007.0
+    },
+    {
+      "name": "建筑装饰",
+      "pct_5d": -1.56,
+      "crowding_ratio": 1.04,
+      "crowd_label": "normal",
+      "etf_chg": -4650.0,
+      "etf_dir": "outflow",
+      "tags": [
+        "▼ETF流出"
+      ],
+      "signal": null,
+      "amount_latest": 4451403.0
+    },
+    {
+      "name": "综合",
+      "pct_5d": -1.69,
+      "crowding_ratio": 0.65,
+      "crowd_label": "cold",
+      "etf_chg": null,
+      "etf_dir": null,
+      "tags": [
+        "❄️冷清"
+      ],
+      "signal": null,
+      "amount_latest": 272714.0
+    },
+    {
+      "name": "环保",
+      "pct_5d": -1.79,
+      "crowding_ratio": 1.07,
+      "crowd_label": "normal",
+      "etf_chg": null,
+      "etf_dir": null,
+      "tags": [],
+      "signal": null,
+      "amount_latest": 2232326.0
+    },
+    {
+      "name": "基础化工",
+      "pct_5d": -2.41,
       "crowding_ratio": 0.95,
       "crowd_label": "normal",
-      "etf_chg": 1300.0,
+      "etf_chg": 1900.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": "🔄 逆势吸筹",
-      "amount_latest": 16943534.0
+      "amount_latest": 12635668.0
     },
     {
-      "name": "美容护理",
-      "pct_5d": -4.91,
-      "crowding_ratio": 0.77,
-      "crowd_label": "cool",
-      "etf_chg": 178515.0,
+      "name": "国防军工",
+      "pct_5d": -2.8,
+      "crowding_ratio": 1.0,
+      "crowd_label": "normal",
+      "etf_chg": 73500.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": "🔄 逆势吸筹",
-      "amount_latest": 402738.0
+      "amount_latest": 11954398.0
     },
     {
       "name": "社会服务",
-      "pct_5d": -4.93,
-      "crowding_ratio": 0.71,
+      "pct_5d": -3.18,
+      "crowding_ratio": 0.78,
       "crowd_label": "cool",
-      "etf_chg": -101300.0,
+      "etf_chg": -89200.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
       ],
       "signal": null,
-      "amount_latest": 1043162.0
+      "amount_latest": 1137340.0
     },
     {
-      "name": "纺织服饰",
-      "pct_5d": -4.97,
-      "crowding_ratio": 0.79,
-      "crowd_label": "cool",
-      "etf_chg": null,
-      "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 1320140.0
-    },
-    {
-      "name": "食品饮料",
-      "pct_5d": -5.22,
-      "crowding_ratio": 0.72,
-      "crowd_label": "cool",
-      "etf_chg": -16400.0,
-      "etf_dir": "outflow",
+      "name": "机械设备",
+      "pct_5d": -3.41,
+      "crowding_ratio": 1.07,
+      "crowd_label": "normal",
+      "etf_chg": 1000.0,
+      "etf_dir": "inflow",
       "tags": [
-        "▼ETF流出"
+        "▲ETF流入"
       ],
-      "signal": null,
-      "amount_latest": 2817748.0
+      "signal": "🔄 逆势吸筹",
+      "amount_latest": 19112782.0
     },
     {
       "name": "非银金融",
-      "pct_5d": -5.27,
-      "crowding_ratio": 1.06,
-      "crowd_label": "normal",
-      "etf_chg": -30400.0,
+      "pct_5d": -3.55,
+      "crowding_ratio": 0.77,
+      "crowd_label": "cool",
+      "etf_chg": -58300.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
       ],
       "signal": null,
-      "amount_latest": 5518072.0
+      "amount_latest": 3874503.0
+    },
+    {
+      "name": "纺织服饰",
+      "pct_5d": -3.74,
+      "crowding_ratio": 0.7,
+      "crowd_label": "cold",
+      "etf_chg": null,
+      "etf_dir": null,
+      "tags": [
+        "❄️冷清"
+      ],
+      "signal": "👀 超跌冷门",
+      "amount_latest": 1133296.0
+    },
+    {
+      "name": "食品饮料",
+      "pct_5d": -3.98,
+      "crowding_ratio": 0.52,
+      "crowd_label": "cold",
+      "etf_chg": 11800.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "❄️冷清",
+        "▲ETF流入"
+      ],
+      "signal": "👀 超跌冷门",
+      "amount_latest": 1962281.0
     },
     {
       "name": "汽车",
-      "pct_5d": -5.36,
-      "crowding_ratio": 0.84,
+      "pct_5d": -4.06,
+      "crowding_ratio": 0.83,
       "crowd_label": "cool",
-      "etf_chg": -200.0,
-      "etf_dir": "outflow",
+      "etf_chg": 800.0,
+      "etf_dir": "inflow",
       "tags": [
-        "▼ETF流出"
+        "▲ETF流入"
       ],
-      "signal": null,
-      "amount_latest": 7344616.0
+      "signal": "🔄 逆势吸筹",
+      "amount_latest": 7074515.0
+    },
+    {
+      "name": "美容护理",
+      "pct_5d": -4.08,
+      "crowding_ratio": 0.8,
+      "crowd_label": "cool",
+      "etf_chg": 195795.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": "🔄 逆势吸筹",
+      "amount_latest": 415552.0
     },
     {
       "name": "家用电器",
-      "pct_5d": -5.57,
-      "crowding_ratio": 0.83,
+      "pct_5d": -4.17,
+      "crowding_ratio": 0.73,
       "crowd_label": "cool",
-      "etf_chg": -200.0,
-      "etf_dir": "outflow",
-      "tags": [
-        "▼ETF流出"
-      ],
-      "signal": null,
-      "amount_latest": 2407215.0
-    },
-    {
-      "name": "电子",
-      "pct_5d": -5.75,
-      "crowding_ratio": 0.86,
-      "crowd_label": "normal",
-      "etf_chg": -40450.0,
-      "etf_dir": "outflow",
-      "tags": [
-        "▼ETF流出"
-      ],
-      "signal": null,
-      "amount_latest": 33692154.0
-    },
-    {
-      "name": "建筑材料",
-      "pct_5d": -6.29,
-      "crowding_ratio": 0.72,
-      "crowd_label": "cool",
-      "etf_chg": null,
-      "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 2082987.0
-    },
-    {
-      "name": "医药生物",
-      "pct_5d": -6.3,
-      "crowding_ratio": 0.86,
-      "crowd_label": "normal",
-      "etf_chg": 94600.0,
+      "etf_chg": 800.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": "🔄 逆势吸筹",
-      "amount_latest": 7890529.0
+      "amount_latest": 2054594.0
     },
     {
       "name": "商贸零售",
-      "pct_5d": -6.3,
-      "crowding_ratio": 0.72,
-      "crowd_label": "cool",
+      "pct_5d": -4.26,
+      "crowding_ratio": 0.65,
+      "crowd_label": "cold",
       "etf_chg": null,
       "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 1795160.0
-    },
-    {
-      "name": "计算机",
-      "pct_5d": -6.34,
-      "crowding_ratio": 0.79,
-      "crowd_label": "cool",
-      "etf_chg": -360.0,
-      "etf_dir": "outflow",
       "tags": [
-        "▼ETF流出"
+        "❄️冷清"
       ],
-      "signal": null,
-      "amount_latest": 13515557.0
+      "signal": "👀 超跌冷门",
+      "amount_latest": 1597216.0
     },
     {
-      "name": "轻工制造",
-      "pct_5d": -6.49,
-      "crowding_ratio": 0.79,
+      "name": "医药生物",
+      "pct_5d": -4.72,
+      "crowding_ratio": 0.8,
       "crowd_label": "cool",
-      "etf_chg": null,
-      "etf_dir": null,
-      "tags": [],
-      "signal": null,
-      "amount_latest": 1972103.0
-    },
-    {
-      "name": "房地产",
-      "pct_5d": -7.82,
-      "crowding_ratio": 0.71,
-      "crowd_label": "cool",
-      "etf_chg": 3150.0,
+      "etf_chg": 113600.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
       ],
       "signal": "🔄 逆势吸筹",
-      "amount_latest": 1589471.0
+      "amount_latest": 7144254.0
     },
     {
-      "name": "传媒",
-      "pct_5d": -9.62,
-      "crowding_ratio": 0.4,
+      "name": "轻工制造",
+      "pct_5d": -4.72,
+      "crowding_ratio": 0.78,
+      "crowd_label": "cool",
+      "etf_chg": null,
+      "etf_dir": null,
+      "tags": [],
+      "signal": null,
+      "amount_latest": 1922244.0
+    },
+    {
+      "name": "房地产",
+      "pct_5d": -5.08,
+      "crowding_ratio": 0.66,
       "crowd_label": "cold",
-      "etf_chg": -117450.0,
+      "etf_chg": -8250.0,
       "etf_dir": "outflow",
       "tags": [
         "❄️冷清",
         "▼ETF流出"
       ],
       "signal": "👀 超跌冷门",
-      "amount_latest": 4439944.0
+      "amount_latest": 1460202.0
+    },
+    {
+      "name": "计算机",
+      "pct_5d": -5.14,
+      "crowding_ratio": 0.9,
+      "crowd_label": "normal",
+      "etf_chg": -1860.0,
+      "etf_dir": "outflow",
+      "tags": [
+        "▼ETF流出"
+      ],
+      "signal": null,
+      "amount_latest": 15215319.0
+    },
+    {
+      "name": "建筑材料",
+      "pct_5d": -5.66,
+      "crowding_ratio": 0.73,
+      "crowd_label": "cool",
+      "etf_chg": null,
+      "etf_dir": null,
+      "tags": [],
+      "signal": null,
+      "amount_latest": 2087383.0
+    },
+    {
+      "name": "电子",
+      "pct_5d": -5.71,
+      "crowding_ratio": 1.04,
+      "crowd_label": "normal",
+      "etf_chg": 33500.0,
+      "etf_dir": "inflow",
+      "tags": [
+        "▲ETF流入"
+      ],
+      "signal": "🔄 逆势吸筹",
+      "amount_latest": 39984499.0
+    },
+    {
+      "name": "传媒",
+      "pct_5d": -6.95,
+      "crowding_ratio": 0.45,
+      "crowd_label": "cold",
+      "etf_chg": -153750.0,
+      "etf_dir": "outflow",
+      "tags": [
+        "❄️冷清",
+        "▼ETF流出"
+      ],
+      "signal": "👀 超跌冷门",
+      "amount_latest": 4779819.0
     }
   ],
   "crowding_signal": {
     "signals": [
       "三路共振流入 🟢",
-      "石油石化 ⚠️ 追高风险(+12.2%)",
-      "煤炭 ✅ 资金确认(+7.2%)",
-      "公用事业 ⚠️ 追高风险(+4.9%)",
-      "农林牧渔 ✅ 资金确认(+2.5%)",
-      "建筑装饰 🔄 逆势吸筹(-2.3%)",
-      "基础化工 🔄 逆势吸筹(-2.6%)",
-      "机械设备 🔄 逆势吸筹(-4.0%)",
-      "美容护理 🔄 逆势吸筹(-4.9%)",
-      "医药生物 🔄 逆势吸筹(-6.3%)",
-      "房地产 🔄 逆势吸筹(-7.8%)",
-      "传媒 👀 超跌冷门(-9.6%)"
+      "石油石化 ⚠️ 追高风险(+11.3%)",
+      "煤炭 ✅ 资金确认(+7.7%)",
+      "公用事业 ⚠️ 追高风险(+5.0%)",
+      "基础化工 🔄 逆势吸筹(-2.4%)",
+      "国防军工 🔄 逆势吸筹(-2.8%)",
+      "机械设备 🔄 逆势吸筹(-3.4%)",
+      "纺织服饰 👀 超跌冷门(-3.7%)",
+      "食品饮料 👀 超跌冷门(-4.0%)",
+      "汽车 🔄 逆势吸筹(-4.1%)",
+      "美容护理 🔄 逆势吸筹(-4.1%)",
+      "家用电器 🔄 逆势吸筹(-4.2%)",
+      "商贸零售 👀 超跌冷门(-4.3%)",
+      "医药生物 🔄 逆势吸筹(-4.7%)",
+      "房地产 👀 超跌冷门(-5.1%)",
+      "电子 🔄 逆势吸筹(-5.7%)",
+      "传媒 👀 超跌冷门(-7.0%)"
     ],
     "consensus": "三路共振流入 🟢"
   },
   "margin_trend": [
-    {
-      "date": "11-26",
-      "balance": 24694.0
-    },
-    {
-      "date": "11-27",
-      "balance": 24720.0
-    },
     {
       "date": "11-28",
       "balance": 24736.0
@@ -1782,6 +1786,14 @@
     {
       "date": "03-03",
       "balance": 26513.0
+    },
+    {
+      "date": "03-04",
+      "balance": 26427.0
+    },
+    {
+      "date": "03-05",
+      "balance": 26518.0
     }
   ]
 }
