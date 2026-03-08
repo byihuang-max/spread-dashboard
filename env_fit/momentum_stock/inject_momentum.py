@@ -25,7 +25,7 @@ def fmt_date(d):
     return f"{d[4:6]}/{d[6:8]}"
 
 
-def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data=None):
+def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data=None, limit_index_data=None):
     daily = sent_data['daily']
     meta = sent_data['meta']
     show = daily[-60:] if len(daily) > 60 else daily
@@ -92,6 +92,217 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
     sector_latest = None
     if sector_data and sector_data.get('daily'):
         sector_latest = sector_data['daily'][-1]
+
+    # ═══ 涨停指数 & 高低开 ═══
+    li_html = ''
+    li_js_data = ''
+    li_signal_html = ''
+    if limit_index_data and limit_index_data.get('daily'):
+        li_daily = limit_index_data['daily']
+        li_show = li_daily[-60:] if len(li_daily) > 60 else li_daily
+        li_latest = li_show[-1]
+
+        # JS 数据数组
+        li_dates_js = json.dumps([fmt_date(d['date']) for d in li_show])
+        li_all_nav_js = json.dumps([d['all_nav'] for d in li_show])
+        li_first_nav_js = json.dumps([d['first_nav'] for d in li_show])
+        li_all_bias_js = json.dumps([d['all_bias'] for d in li_show])
+        li_first_bias_js = json.dumps([d['first_bias'] for d in li_show])
+        li_all_gap_js = json.dumps([d['all_gap'] if d['all_gap'] is not None else 0 for d in li_show])
+        li_first_gap_js = json.dumps([d['first_gap'] if d['first_gap'] is not None else 0 for d in li_show])
+        li_all_ret_js = json.dumps([d['all_return'] if d['all_return'] is not None else 0 for d in li_show])
+        li_first_ret_js = json.dumps([d['first_return'] if d['first_return'] is not None else 0 for d in li_show])
+
+        li_js_data = f'''
+        var liDates={li_dates_js};
+        var liAllNav={li_all_nav_js};
+        var liFirstNav={li_first_nav_js};
+        var liAllBias={li_all_bias_js};
+        var liFirstBias={li_first_bias_js};
+        var liAllGap={li_all_gap_js};
+        var liFirstGap={li_first_gap_js};
+        var liAllRet={li_all_ret_js};
+        var liFirstRet={li_first_ret_js};
+        '''
+
+        # ═══ 信号灯判定 v3：涨停指数 × 情绪周期 三重交叉验证 ═══
+        # 
+        # 数据验证结论（120日回测）：
+        #   退潮日：BIASΔ<0占比75%，平均收益仅+0.50%，收益<0占比39%
+        #   加速日：BIASΔ>0占比90%，平均收益+3.15%，收益<0占比0%
+        #   → 情绪周期与涨停指数高度共振，可做交叉验证
+        #
+        # 三重信号：① 净值回撤/上行 ② BIAS变化方向 ③ 情绪周期标签
+        #   三者一致 = 高置信信号 | 两者一致 = 中置信 | 矛盾 = 分歧/观望
+
+        bias_val = li_latest['all_bias']
+        gap_val = li_latest['all_gap'] if li_latest['all_gap'] is not None else 0
+
+        # ── 因子1：净值回撤 ──
+        li_nav_window = li_daily[-20:] if len(li_daily) >= 20 else li_daily
+        nav_peak = max(d['all_nav'] for d in li_nav_window)
+        nav_current = li_latest['all_nav']
+        nav_drawdown = (nav_current - nav_peak) / nav_peak * 100 if nav_peak > 0 else 0
+
+        # ── 因子2：BIAS变化方向（近3日均 vs 前3日均）──
+        if len(li_daily) >= 6:
+            bias_recent_3 = sum(d['all_bias'] for d in li_daily[-3:]) / 3
+            bias_prev_3 = sum(d['all_bias'] for d in li_daily[-6:-3]) / 3
+            bias_delta = bias_recent_3 - bias_prev_3
+        elif len(li_daily) >= 2:
+            bias_delta = li_daily[-1]['all_bias'] - li_daily[-2]['all_bias']
+        else:
+            bias_delta = 0
+
+        # 净值趋势：近3日收益率之和
+        if len(li_daily) >= 3:
+            nav_trend = sum(d['all_return'] for d in li_daily[-3:] if d['all_return'] is not None)
+        else:
+            nav_trend = li_latest['all_return'] if li_latest['all_return'] is not None else 0
+
+        # 首板BIAS同步检查
+        first_bias_val = li_latest['first_bias']
+        if len(li_daily) >= 6:
+            first_bias_recent = sum(d['first_bias'] for d in li_daily[-3:] if d['first_bias'] is not None) / 3
+            first_bias_prev = sum(d['first_bias'] for d in li_daily[-6:-3] if d['first_bias'] is not None) / 3
+            first_bias_delta = first_bias_recent - first_bias_prev
+        elif len(li_daily) >= 2:
+            first_bias_delta = (li_daily[-1]['first_bias'] or 0) - (li_daily[-2]['first_bias'] or 0)
+        else:
+            first_bias_delta = 0
+
+        # ── 因子3：情绪周期标签 ──
+        cycle_label = latest.get('cycle_label', '震荡')
+        sentiment_val = latest.get('sentiment', 50)
+        cycle_is_cooling = cycle_label in ('退潮', '冰点')
+        cycle_is_heating = cycle_label in ('加速', '回暖')
+        cycle_is_neutral = cycle_label in ('震荡', '分歧')
+
+        # ── 涨停指数方向判定 ──
+        li_cooling = nav_drawdown < -1.5 and bias_delta < -0.5
+        li_deep_cooling = nav_drawdown < -3.0 and bias_delta < -1.0
+        li_heating = nav_drawdown > -0.5 and nav_trend > 1.5 and bias_delta > 0.5
+        li_strong_heating = nav_drawdown > -0.3 and nav_trend > 3.0 and bias_delta > 1.0
+        li_bottoming = nav_drawdown < -2.0 and bias_delta > 0.3 and nav_trend > 0
+        li_divergence = nav_drawdown > -1.0 and bias_delta < -0.8 and bias_val > 2
+
+        # ── 三重交叉判定（置信度标注）──
+        # 🔵 降温系列
+        if li_deep_cooling and cycle_is_cooling:
+            li_signal = '🔵 快速降温 ★★★'
+            li_sig_color = '#3b82f6'
+            li_sig_desc = f'三重确认：净值回撤{nav_drawdown:.1f}% + BIAS下行 + 情绪{cycle_label}（{sentiment_val:.0f}）'
+        elif li_deep_cooling:
+            li_signal = '🔵 快速降温 ★★'
+            li_sig_color = '#3b82f6'
+            li_sig_desc = f'净值回撤{nav_drawdown:.1f}% + BIAS大幅下行，情绪{cycle_label}'
+        elif li_cooling and cycle_is_cooling and first_bias_delta < -0.3:
+            li_signal = '🔵 全面降温 ★★★'
+            li_sig_color = '#60a5fa'
+            li_sig_desc = f'三重确认：全板+首板BIAS同步下行 + 情绪{cycle_label}（{sentiment_val:.0f}）'
+        elif li_cooling and cycle_is_cooling:
+            li_signal = '🔵 降温 ★★★'
+            li_sig_color = '#60a5fa'
+            li_sig_desc = f'三重确认：净值回撤{nav_drawdown:.1f}% + BIAS下行 + 情绪{cycle_label}'
+        elif li_cooling:
+            li_signal = '⬇️ 边际降温 ★★'
+            li_sig_color = '#93c5fd'
+            li_sig_desc = f'净值回撤{nav_drawdown:.1f}% + BIAS下行，但情绪{cycle_label}未同步'
+        elif cycle_is_cooling and bias_delta < -0.3:
+            li_signal = '⬇️ 情绪降温 ★★'
+            li_sig_color = '#93c5fd'
+            li_sig_desc = f'情绪{cycle_label}（{sentiment_val:.0f}）+ BIAS下行（Δ{bias_delta:+.1f}），净值回撤{nav_drawdown:.1f}%'
+        # 🟡 分歧系列
+        elif li_divergence and cycle_is_cooling:
+            li_signal = '🟡 见顶退潮 ★★★'
+            li_sig_color = '#f59e0b'
+            li_sig_desc = f'BIAS掉头（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}，高位风险加大'
+        elif li_divergence:
+            li_signal = '🟡 见顶分歧 ★★'
+            li_sig_color = '#f59e0b'
+            li_sig_desc = f'净值高位但BIAS掉头（Δ{bias_delta:+.1f}），情绪{cycle_label}'
+        elif cycle_is_cooling and li_heating:
+            li_signal = '🟡 多空分歧'
+            li_sig_color = '#f59e0b'
+            li_sig_desc = f'涨停指数上行但情绪{cycle_label}（{sentiment_val:.0f}），信号矛盾观望'
+        elif cycle_is_heating and li_cooling:
+            li_signal = '🟡 多空分歧'
+            li_sig_color = '#f59e0b'
+            li_sig_desc = f'情绪{cycle_label}但涨停指数回撤{nav_drawdown:.1f}%，信号矛盾观望'
+        # 🟢 回暖系列
+        elif li_bottoming and cycle_is_heating:
+            li_signal = '🟢 筑底回暖 ★★★'
+            li_sig_color = '#10b981'
+            li_sig_desc = f'三重确认：净值止跌 + BIAS回升（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}'
+        elif li_bottoming:
+            li_signal = '🟢 筑底回暖 ★★'
+            li_sig_color = '#10b981'
+            li_sig_desc = f'净值止跌 + BIAS回升（Δ{bias_delta:+.1f}），情绪{cycle_label}'
+        # 🔴 升温系列
+        elif li_strong_heating and cycle_is_heating:
+            li_signal = '🔴 加速升温 ★★★'
+            li_sig_color = '#ef4444'
+            li_sig_desc = f'三重确认：净值连涨{nav_trend:.1f}% + BIAS加速 + 情绪{cycle_label}（{sentiment_val:.0f}），警惕过热'
+        elif li_strong_heating:
+            li_signal = '🔴 加速升温 ★★'
+            li_sig_color = '#ef4444'
+            li_sig_desc = f'净值连涨{nav_trend:.1f}% + BIAS加速上行，情绪{cycle_label}'
+        elif li_heating and cycle_is_heating:
+            li_signal = '🟠 持续升温 ★★★'
+            li_sig_color = '#f97316'
+            li_sig_desc = f'三重确认：净值上行 + BIAS上升（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}'
+        elif li_heating:
+            li_signal = '🟠 持续升温 ★★'
+            li_sig_color = '#f97316'
+            li_sig_desc = f'净值上行 + BIAS上升（Δ{bias_delta:+.1f}），情绪{cycle_label}'
+        elif cycle_is_heating and bias_delta > 0.3:
+            li_signal = '🟠 情绪升温 ★★'
+            li_sig_color = '#f97316'
+            li_sig_desc = f'情绪{cycle_label}（{sentiment_val:.0f}）+ BIAS上行（Δ{bias_delta:+.1f}）'
+        # ⚪ 中性
+        else:
+            li_signal = '⚪ 中性震荡'
+            li_sig_color = '#94a3b8'
+            li_sig_desc = f'无明显共振信号，情绪{cycle_label}（{sentiment_val:.0f}），观望'
+
+        # ── 置信度说明 ──
+        # ★★★ = 涨停指数 + BIAS方向 + 情绪周期 三者一致
+        # ★★  = 两者一致，第三个中性或矛盾
+        # 无星  = 信号矛盾或无方向
+
+        bias_color = '#ef4444' if bias_delta > 0.5 else '#3b82f6' if bias_delta < -0.5 else '#64748b'
+        gap_color = '#ef4444' if gap_val > 0 else '#10b981'
+        dd_color = '#ef4444' if nav_drawdown < -2 else '#f59e0b' if nav_drawdown < -1 else '#64748b'
+        cycle_color = {'退潮': '#8b5cf6', '冰点': '#3b82f6', '加速': '#ef4444', '回暖': '#10b981', '分歧': '#f59e0b', '震荡': '#94a3b8'}.get(cycle_label, '#94a3b8')
+
+        li_signal_html = f'''
+      <div class="card" style="padding:14px 20px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="dot" style="background:{li_sig_color}"></span>
+            <span style="font-size:14px;font-weight:700;color:#1e293b">涨停指数信号</span>
+            <span style="font-size:14px;font-weight:700;color:{li_sig_color}">{li_signal}</span>
+          </div>
+          <span style="font-size:11px;color:#94a3b8">{li_sig_desc}</span>
+          <div style="margin-left:auto;display:flex;gap:16px;font-size:12px">
+            <span>BIAS <b style="color:{bias_color}">{bias_val:+.1f}%</b> <span style="color:#94a3b8;font-size:10px">Δ{bias_delta:+.1f}</span></span>
+            <span>回撤 <b style="color:{dd_color}">{nav_drawdown:+.1f}%</b></span>
+            <span>高低开 <b style="color:{gap_color}">{gap_val:+.2f}%</b></span>
+            <span>情绪 <b style="color:{cycle_color}">{cycle_label}</b> <span style="color:#94a3b8;font-size:10px">{sentiment_val:.0f}</span></span>
+            <span style="color:#94a3b8">首板BIAS <b>{first_bias_val:+.1f}%</b> <span style="font-size:10px">Δ{first_bias_delta:+.1f}</span></span>
+          </div>
+        </div>
+      </div>'''
+
+        li_html = '''
+      <div class="card" style="padding:16px 20px">
+        <div class="card-title"><span class="dot" style="background:#6366f1"></span> 涨停指数 & 乖离率（BIAS）</div>
+        <div style="position:relative;height:300px"><canvas id="ms-li-chart"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
+          灰线=全涨停净值（左轴） · 灰虚线=首板净值（左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
+          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · ★★★=三重确认 · ★★=两重确认
+        </div>
+      </div>'''
 
     # ====== Block 1: Overview ======
     # ── 预警条件链面板 ──
@@ -427,6 +638,12 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         <div id="ms-decomp-content" style="margin-top:12px">{decomp_html}</div>
       </details>
 
+      <!-- 涨停指数信号灯 -->
+      {li_signal_html}
+
+      <!-- 涨停指数 BIAS 图 -->
+      {li_html}
+
       <div class="card">
         <div class="card-title"><span class="dot" style="background:{ls_color}"></span> 合成情绪指数（0-100）</div>
         <div style="position:relative;height:280px"><canvas id="ms-c1"></canvas></div>
@@ -447,8 +664,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
       {sector_html}
 
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板数量</div>
-        <div style="position:relative;height:260px"><canvas id="ms-c3"></canvas></div>
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板 & 次日高低开</div>
+        <div style="position:relative;height:300px"><canvas id="ms-c3"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px">柱状=涨跌停/炸板家数（左轴） · 实线=全涨停次日高低开 · 虚线=首板次日高低开（右轴,%）</div>
       </div>
 
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
@@ -560,14 +778,37 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           }});
         }});}}
 
+        // ── 涨停指数数据 ──
+        {li_js_data if li_js_data else ''}
+
+        // 对齐高低开数据到情绪日期轴（limit_index日期可能比情绪数据少）
+        var liGapAll=[], liGapFirst=[];
+        if(typeof liDates!=='undefined'){{
+          var liMap={{}};
+          liDates.forEach(function(d,i){{ liMap[d]={{allGap:liAllGap[i],firstGap:liFirstGap[i]}}; }});
+          msL.forEach(function(d){{
+            var m=liMap[d];
+            liGapAll.push(m?m.allGap:null);
+            liGapFirst.push(m?m.firstGap:null);
+          }});
+        }}
+
         new Chart(document.getElementById('ms-c3'),{{
           type:'bar',
           data:{{labels:msL,datasets:[
-            {{label:'涨停',data:msU,backgroundColor:'rgba(239,68,68,0.7)',borderRadius:2,barPercentage:0.7}},
-            {{label:'跌停',data:msD.map(function(v){{return -v}}),backgroundColor:'rgba(16,185,129,0.7)',borderRadius:2,barPercentage:0.7}},
-            {{label:'炸板',data:msZ,backgroundColor:'rgba(245,158,11,0.5)',borderRadius:2,barPercentage:0.7}}
-          ]}},
-          options:msB
+            {{label:'涨停',data:msU,backgroundColor:'rgba(239,68,68,0.7)',borderRadius:2,barPercentage:0.7,yAxisID:'y'}},
+            {{label:'跌停',data:msD.map(function(v){{return -v}}),backgroundColor:'rgba(16,185,129,0.7)',borderRadius:2,barPercentage:0.7,yAxisID:'y'}},
+            {{label:'炸板',data:msZ,backgroundColor:'rgba(245,158,11,0.5)',borderRadius:2,barPercentage:0.7,yAxisID:'y'}}
+          ].concat(liGapAll.length?[
+            {{label:'全涨停高低开(%)',data:liGapAll,type:'line',borderColor:'#6366f1',borderWidth:2,pointRadius:1,pointBackgroundColor:liGapAll.map(function(v){{return v!==null&&v>0?'#ef4444':'#10b981'}}),tension:.2,yAxisID:'y1',spanGaps:true}},
+            {{label:'首板高低开(%)',data:liGapFirst,type:'line',borderColor:'#a78bfa',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.2,yAxisID:'y1',spanGaps:true}}
+          ]:[])
+          }},
+          options:Object.assign({{}},msB,{{scales:{{
+            x:msB.scales.x,
+            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}}}},
+            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{display:false}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
+          }}}})
         }});
 
         new Chart(document.getElementById('ms-c4'),{{
@@ -583,6 +824,65 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
             y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{display:false}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
           }}}})
         }});
+
+        // ── 涨停指数 & BIAS 图 ──
+        {f"""
+        (function(){{
+          var el=document.getElementById('ms-li-chart');
+          if(!el||typeof liDates==='undefined')return;
+
+          // BIAS 背景色带数据：超过阈值区域
+          var biasBgAll=liAllBias.map(function(v){{
+            if(v>3)return v;
+            if(v<-3)return v;
+            return null;
+          }});
+
+          new Chart(el,{{
+            type:'line',
+            data:{{labels:liDates,datasets:[
+              // 净值（左轴，灰色调背景）
+              {{label:'全涨停净值',data:liAllNav,borderColor:'#94a3b8',borderWidth:1.5,pointRadius:0,tension:.3,fill:false,yAxisID:'y',order:3}},
+              {{label:'首板净值',data:liFirstNav,borderColor:'#cbd5e1',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.3,fill:false,yAxisID:'y',order:4}},
+              // BIAS（右轴，彩色突出）
+              {{label:'全涨停BIAS',data:liAllBias,borderColor:'#6366f1',borderWidth:2,pointRadius:1.5,pointBackgroundColor:liAllBias.map(function(v){{return v>3?'#ef4444':v<-3?'#3b82f6':'#6366f1'}}),tension:.2,fill:false,yAxisID:'y1',order:1}},
+              {{label:'首板BIAS',data:liFirstBias,borderColor:'#a78bfa',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.2,fill:false,yAxisID:'y1',order:2}}
+            ]}},
+            options:{{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{{mode:'index',intersect:false}},
+              plugins:{{
+                legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
+                tooltip:{{
+                  callbacks:{{
+                    afterBody:function(ctx){{
+                      var i=ctx[0].dataIndex;
+                      var ret='\\n收益: '+liAllRet[i].toFixed(2)+'%';
+                      ret+='\\n高低开: '+liAllGap[i].toFixed(2)+'%';
+                      if(liAllBias[i]>3)ret+='\\n⚠️ BIAS偏高，拥挤警告';
+                      if(liAllBias[i]<-3)ret+='\\n💡 BIAS偏低，关注反转';
+                      return ret;
+                    }}
+                  }}
+                }},
+                annotation:{{
+                  annotations:{{
+                    biasHigh:{{type:'line',yMin:3,yMax:3,yScaleID:'y1',borderColor:'rgba(239,68,68,0.4)',borderWidth:1,borderDash:[4,4],label:{{display:true,content:'+3%',position:'end',font:{{size:9}},color:'#ef4444',backgroundColor:'transparent'}}}},
+                    biasLow:{{type:'line',yMin:-3,yMax:-3,yScaleID:'y1',borderColor:'rgba(59,130,246,0.4)',borderWidth:1,borderDash:[4,4],label:{{display:true,content:'-3%',position:'end',font:{{size:9}},color:'#3b82f6',backgroundColor:'transparent'}}}},
+                    biasZero:{{type:'line',yMin:0,yMax:0,yScaleID:'y1',borderColor:'rgba(148,163,184,0.3)',borderWidth:1}}
+                  }}
+                }}
+              }},
+              scales:{{
+                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{color:'#f1f5f9'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{display:false}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
+              }}
+            }}
+          }});
+        }})();
+        """ if limit_index_data and limit_index_data.get('daily') else ''}
+
         // ── 产品净值图表 ──
         {nav_js_data if nav_js_data else ''}
         {f"""
@@ -735,9 +1035,16 @@ def main():
         with open(nav_path, 'r', encoding='utf-8') as f:
             nav_chart_data = json.load(f).get('fund', {})
 
-    print(f"📖 情绪: {sent_data['meta']['count']}天 | 板块: {'✅' if sector_data else '❌'} | 预警: {'✅' if warning_data else '❌'} | 归因: {'✅' if decomp_data else '❌'} | 净值: {'✅' if nav_chart_data else '❌'}")
+    # 加载涨停指数数据
+    li_path = os.path.join(BASE_DIR, 'limit_index', 'limit_index.json')
+    limit_index_data = None
+    if os.path.exists(li_path):
+        with open(li_path, 'r', encoding='utf-8') as f:
+            limit_index_data = json.load(f)
 
-    html = build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data)
+    print(f"📖 情绪: {sent_data['meta']['count']}天 | 板块: {'✅' if sector_data else '❌'} | 预警: {'✅' if warning_data else '❌'} | 归因: {'✅' if decomp_data else '❌'} | 净值: {'✅' if nav_chart_data else '❌'} | 涨停指数: {'✅' if limit_index_data else '❌'}")
+
+    html = build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data, limit_index_data)
     print(f"🎨 生成 {len(html)} 字符")
 
     if inject(html):

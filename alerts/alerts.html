@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>红灯预警</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:16px;font-size:14px}
@@ -43,6 +44,25 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 .chart-note b{color:#374151}
 
 .loading{text-align:center;padding:60px;color:#8b92a5}
+
+.tab-bar{display:flex;gap:8px;margin-bottom:18px;background:#fff;padding:8px;border-radius:10px;border:1px solid #e8eaef}
+.tab-btn{flex:1;padding:10px 20px;border:none;background:transparent;color:#6b7280;font-size:14px;font-weight:600;border-radius:6px;cursor:pointer;transition:all .2s}
+.tab-btn:hover{background:#f3f4f6}
+.tab-btn.active{background:linear-gradient(135deg,#1e2433,#2a3350);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.indicator-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:1200px){.indicator-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.indicator-grid{grid-template-columns:repeat(2,1fr)}}
+.indicator-card{background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:14px}
+.indicator-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.indicator-name{font-size:12px;font-weight:700;color:#374151}
+.indicator-value{font-size:24px;font-weight:900;margin-bottom:4px}
+.indicator-change{font-size:11px;color:#6b7280;margin-bottom:8px}
+.indicator-chart{height:120px;margin-top:8px}
+.indicator-note{font-size:10px;color:#6b7280;line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0}
+
 </style>
 </head>
 <body>
@@ -52,6 +72,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 <div class="header-bar">
   <div class="header-top">
     <div class="header-title">🚨 红灯预警</div>
+    <div style="font-size:11px;color:#7c8598" id="updateTime"></div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('cn')">🇨🇳 A股风险</button>
+  <button class="tab-btn" onclick="switchTab('us')">🇺🇸 美股风险</button>
+</div>
+
+<div id="cn-content" class="tab-content active">
+<div class="header-bar" style="margin-top:0">
+  <div class="header-top">
     <div class="composite">
       <div class="composite-score" id="compScore"></div>
       <div>
@@ -59,7 +91,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
         <div class="composite-label" id="compLabel" style="margin-top:4px"></div>
       </div>
     </div>
-    <div style="font-size:11px;color:#7c8598" id="updateTime"></div>
   </div>
   <div class="alert-list" id="alertList"></div>
 </div>
@@ -76,15 +107,47 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
   <b>🌍外部冲击：</b>中美利差恶化+汇率急贬+期权IV飙升=海外风险传导。<br>
   <b>🏃微观恶化：</b>北向连续净流出+期权PCR极端看空=聪明钱在跑路。
 </div>
+</div>
+
+<div id="us-content" class="tab-content">
+  <div class="indicator-grid" id="usIndicatorGrid"></div>
+  <div class="chart-note">
+    <b>📖 美股风险监控说明：</b><br><br>
+    展示核心指标的历史趋势，不做固定权重打分。你根据当下环境自主判断哪些指标更重要，观察多指标共振信号。<br><br>
+    <b>危机事件标注：</b>图表上标注了2008金融危机、2020疫情崩盘、2022加息周期等关键时点，帮助理解指标在历史危机中的表现。
+  </div>
+</div>
 
 </div>
 <script>
-var DATA;
+var DATA, US_DATA;
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  document.getElementById('cn-content').classList.toggle('active', tab==='cn');
+  document.getElementById('us-content').classList.toggle('active', tab==='us');
+  
+  if(tab==='us' && !US_DATA){
+    loadUSData();
+  }
+}
+
 function loadData(){
   fetch('alerts.json?t='+Date.now())
     .then(function(r){return r.json()})
     .then(function(d){DATA=d;render()})
     .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+
+function loadUSData(){
+  fetch('us_alerts.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){US_DATA=d;renderUS()})
+    .catch(function(e){console.error('美股数据加载失败:',e)})
 }
 
 function scoreColor(s){
@@ -135,19 +198,23 @@ function render(){
   var chartConfigs=[];
 
   if(DATA.dimensions.liquidity&&DATA.dimensions.liquidity.trend&&DATA.dimensions.liquidity.trend.length){
-    html+='<div class="chart-box"><h3>💧 DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div></div>';
+    html+='<div class="chart-box"><h3>💧 DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div>'+
+      '<div class="indicator-note">💡 DR007上升=资金面收紧。>2.5%=央行在收紧流动性，市场容易杀估值。</div></div>';
     chartConfigs.push({id:'chartLiq',data:DATA.dimensions.liquidity.trend,label:'DR007 %',color:'#dc2626'});
   }
   if(DATA.dimensions.valuation&&DATA.dimensions.valuation.trend&&DATA.dimensions.valuation.trend.length){
-    html+='<div class="chart-box"><h3>📊 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div></div>';
+    html+='<div class="chart-box"><h3>📊 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div>'+
+      '<div class="indicator-note">💡 PE分位>90%=比过去90%的时间都贵。估值越高，未来回报越低。</div></div>';
     chartConfigs.push({id:'chartVal',data:DATA.dimensions.valuation.trend,label:'PE(TTM)',color:'#6366f1'});
   }
   if(DATA.dimensions.sentiment&&DATA.dimensions.sentiment.trend&&DATA.dimensions.sentiment.trend.length){
-    html+='<div class="chart-box"><h3>🔥 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div></div>';
+    html+='<div class="chart-box"><h3>🔥 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div>'+
+      '<div class="indicator-note">💡 成交额/MA20>1.8倍=市场过热。放量上涨易见顶，放量下跌易恐慌。</div></div>';
     chartConfigs.push({id:'chartSent',data:DATA.dimensions.sentiment.trend,label:'成交额(亿)',color:'#f59e0b'});
   }
   if(DATA.dimensions.external&&DATA.dimensions.external.trend&&DATA.dimensions.external.trend.length){
-    html+='<div class="chart-box"><h3>🌍 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div></div>';
+    html+='<div class="chart-box"><h3>🌍 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div>'+
+      '<div class="indicator-note">💡 利差<-2%=资金外流压力大。利差收窄=人民币贬值+北向资金流出。</div></div>';
     chartConfigs.push({id:'chartExt',data:DATA.dimensions.external.trend,label:'中美利差 %',color:'#2563eb',fill:true});
   }
 
@@ -164,6 +231,99 @@ function render(){
     });
   });
 }
+
+function renderUS(){
+  if(!US_DATA || !US_DATA.indicators)return;
+  
+  var grid=document.getElementById('usIndicatorGrid');
+  grid.innerHTML=US_DATA.indicators.map(function(ind){
+    var changeText='';
+    if(ind.change_1w!=null)changeText='1周: '+(ind.change_1w>0?'+':'')+ind.change_1w.toFixed(2);
+    if(ind.change_1m!=null)changeText+=' | 1月: '+(ind.change_1m>0?'+':'')+ind.change_1m.toFixed(2);
+    
+    return '<div class="indicator-card">'+
+      '<div class="indicator-header">'+
+        '<span class="indicator-name">'+ind.name+'</span>'+
+        '<span style="font-size:20px">'+ind.level+'</span>'+
+      '</div>'+
+      '<div class="indicator-value">'+ind.current+' <span style="font-size:16px;color:#6b7280">'+ind.trend+'</span></div>'+
+      '<div class="indicator-change">'+changeText+'</div>'+
+      '<div class="indicator-chart"><canvas id="chart-'+ind.name.replace(/\s/g,'')+'"></canvas></div>'+
+      (ind.note?'<div class="indicator-note">💡 '+ind.note+'</div>':'')+
+    '</div>';
+  }).join('');
+  
+  // 渲染趋势图
+  US_DATA.indicators.forEach(function(ind){
+    if(!ind.history || ind.history.length<2)return;
+    var canvasId='chart-'+ind.name.replace(/\s/g,'');
+    var canvas=document.getElementById(canvasId);
+    if(!canvas)return;
+    
+    // 筛选相关危机事件
+    var relevantCrisis = (US_DATA.crisis_events||[]).filter(function(c){
+      var name = ind.name;
+      if(name.includes('VIX')) return c.date>='2008-10-10';
+      if(name.includes('标普')||name.includes('纳指')) return true;
+      if(name.includes('黄金')||name.includes('美元')) return c.type!='加息周期';
+      if(name.includes('比特币')) return c.date>='2020-01-01';
+      if(name.includes('原油')) return c.type!='加息周期';
+      if(name.includes('美债')||name.includes('利差')) return c.type=='加息周期';
+      return false;
+    });
+    
+    // 构建annotation配置
+    var annotations = {};
+    relevantCrisis.forEach(function(crisis,idx){
+      annotations['crisis'+idx] = {
+        type: 'line',
+        xMin: crisis.date,
+        xMax: crisis.date,
+        borderColor: '#dc2626',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        label: {
+          display: true,
+          content: crisis.name,
+          position: 'start',
+          backgroundColor: 'rgba(220, 38, 38, 0.8)',
+          color: '#fff',
+          font: {size: 8},
+          padding: 2
+        }
+      };
+    });
+    
+    var ctx=canvas.getContext('2d');
+    new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:ind.history.map(function(h){return h.date}),
+        datasets:[{
+          data:ind.history.map(function(h){return h.value}),
+          borderColor:ind.level=='🔴'?'#dc2626':ind.level=='🟡'?'#f59e0b':'#22c55e',
+          borderWidth:2,
+          pointRadius:0,
+          tension:0.3,
+          fill:false
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          annotation:{annotations:annotations}
+        },
+        scales:{
+          y:{ticks:{font:{size:9}},grid:{color:'#f0f0f0'}},
+          x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:6,font:{size:8}}}
+        }
+      }
+    });
+  });
+}
+
 loadData();
 </script>
 </body></html>

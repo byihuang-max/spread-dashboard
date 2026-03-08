@@ -858,6 +858,37 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div></div>
       </details>
 
+      <!-- 涨停指数信号灯 -->
+      
+      <div class="card" style="padding:14px 20px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="dot" style="background:#f59e0b"></span>
+            <span style="font-size:14px;font-weight:700;color:#1e293b">涨停指数信号</span>
+            <span style="font-size:14px;font-weight:700;color:#f59e0b">🟡 见顶分歧 ★★</span>
+          </div>
+          <span style="font-size:11px;color:#94a3b8">净值高位但BIAS掉头（Δ-4.8），情绪震荡</span>
+          <div style="margin-left:auto;display:flex;gap:16px;font-size:12px">
+            <span>BIAS <b style="color:#3b82f6">+13.3%</b> <span style="color:#94a3b8;font-size:10px">Δ-4.8</span></span>
+            <span>回撤 <b style="color:#64748b">+0.0%</b></span>
+            <span>高低开 <b style="color:#10b981">-0.09%</b></span>
+            <span>情绪 <b style="color:#94a3b8">震荡</b> <span style="color:#94a3b8;font-size:10px">46</span></span>
+            <span style="color:#94a3b8">首板BIAS <b>+8.7%</b> <span style="font-size:10px">Δ-6.6</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 涨停指数 BIAS 图 -->
+      
+      <div class="card" style="padding:16px 20px">
+        <div class="card-title"><span class="dot" style="background:#6366f1"></span> 涨停指数 & 乖离率（BIAS）</div>
+        <div style="position:relative;height:300px"><canvas id="ms-li-chart"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
+          灰线=全涨停净值（左轴） · 灰虚线=首板净值（左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
+          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · ★★★=三重确认 · ★★=两重确认
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#10b981"></span> 合成情绪指数（0-100）</div>
         <div style="position:relative;height:280px"><canvas id="ms-c1"></canvas></div>
@@ -912,8 +943,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             </div>
 
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板数量</div>
-        <div style="position:relative;height:260px"><canvas id="ms-c3"></canvas></div>
+        <div class="card-title"><span class="dot" style="background:#ef4444"></span> 涨停 / 跌停 / 炸板 & 次日高低开</div>
+        <div style="position:relative;height:300px"><canvas id="ms-c3"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px">柱状=涨跌停/炸板家数（左轴） · 实线=全涨停次日高低开 · 虚线=首板次日高低开（右轴,%）</div>
       </div>
 
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
@@ -923,7 +955,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <p>③ 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
         <p>④ 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
         <p>⑤ 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
-        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare · 更新：2026-03-08 18:31:22 · 区间：20250902 ~ 20260306</p>
+        <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare · 更新：2026-03-08 22:10:14 · 区间：20250902 ~ 20260306</p>
       </div>
 
       <script>
@@ -1025,14 +1057,47 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           });
         });}
 
+        // ── 涨停指数数据 ──
+        
+        var liDates=["12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "03/02", "03/04", "03/05", "03/06"];
+        var liAllNav=[3.298587, 3.366404, 3.409618, 3.417716, 3.468754, 3.663046, 3.736375, 3.79131, 3.780225, 3.936409, 3.996829, 3.991843, 3.975859, 4.114699, 4.243816, 4.33645, 4.39535, 4.513393, 4.682384, 4.826793, 4.824187, 4.878026, 4.979323, 5.080253, 5.397998, 5.462066, 5.698589, 5.870968, 6.284747, 6.351549, 6.630092, 6.464267, 6.434561, 6.620954, 6.782234, 6.889749, 7.07745, 7.209962, 7.225857, 7.429926, 7.580343, 7.826174, 7.736215, 7.8027, 8.166856, 8.453881, 8.487856, 8.480073, 8.765997, 9.052867, 9.032526, 9.28212, 9.128303, 9.364656, 9.698522, 9.832567, 10.109899, 9.735266, 9.977723, 10.116305];
+        var liFirstNav=[2.825402, 2.839704, 2.867383, 2.881337, 2.88903, 3.046507, 3.105836, 3.133335, 3.116835, 3.30667, 3.337698, 3.31418, 3.291908, 3.389012, 3.477467, 3.554816, 3.588321, 3.656509, 3.76338, 3.823278, 3.810244, 3.840154, 3.908382, 4.021763, 4.272488, 4.299304, 4.430558, 4.527324, 4.828591, 4.858613, 5.019479, 4.879363, 4.915191, 5.061699, 5.180166, 5.246448, 5.379132, 5.487847, 5.504539, 5.633504, 5.684913, 5.856068, 5.79486, 5.814494, 6.060965, 6.278123, 6.285144, 6.194801, 6.386802, 6.639585, 6.50041, 6.700548, 6.56942, 6.746619, 6.98107, 7.035371, 7.240939, 6.753893, 6.975058, 7.038639];
+        var liAllBias=[16.7, 16.85, 16.24, 14.49, 14.25, 18.45, 18.68, 18.32, 16.16, 18.92, 18.78, 16.73, 14.58, 16.6, 18.02, 18.45, 17.99, 19.07, 21.12, 22.28, 19.9, 19.0, 19.19, 19.23, 23.89, 22.82, 25.37, 26.28, 31.63, 29.75, 31.89, 25.51, 22.02, 22.64, 22.74, 21.87, 22.29, 21.74, 19.45, 20.23, 19.99, 21.06, 17.17, 15.79, 18.75, 20.31, 18.44, 16.22, 18.13, 19.81, 17.67, 18.74, 14.8, 15.77, 17.78, 17.31, 18.47, 12.42, 13.42, 13.26];
+        var liFirstBias=[14.18, 12.98, 12.44, 11.38, 10.24, 14.55, 15.12, 14.52, 12.52, 17.6, 17.01, 14.57, 12.41, 14.04, 15.13, 15.93, 15.35, 15.87, 17.34, 17.26, 15.12, 14.3, 14.56, 15.94, 20.76, 19.41, 20.83, 21.16, 26.33, 24.59, 26.0, 20.12, 18.63, 19.75, 20.13, 19.33, 19.91, 19.88, 18.0, 18.47, 17.24, 18.31, 14.88, 13.26, 16.04, 17.96, 16.07, 12.67, 14.54, 17.2, 13.26, 14.93, 11.1, 12.5, 14.68, 13.9, 15.49, 6.64, 8.87, 8.67];
+        var liAllGap=[2.3794, 2.0531, 2.6751, 2.0579, 2.2865, 3.886, 2.0622, 2.8218, 2.927, 2.0879, 2.022, 1.7521, 1.2292, 2.948, 1.5347, 3.0177, 3.0094, 2.1095, 2.9692, 2.5405, 0.9667, 1.4735, 2.1167, 2.4526, 4.5239, 2.379, 3.4052, 3.5324, 5.7832, 5.4547, 0.8158, 0.0262, 1.591, 2.0555, 1.7447, 2.134, 1.9618, 1.8851, 3.118, 0.0414, 2.2729, 3.6619, 0.0043, 1.4253, 1.5088, 3.1596, 0.1873, 0.8388, 2.752, 3.6661, 1.6696, 1.1186, 0.1039, 2.1403, 1.851, 1.5472, 1.7182, 0.0291, 4.1932, -0.0908];
+        var liFirstGap=[2.0732, 1.5315, 2.1064, 2.1843, 1.5907, 3.7645, 2.2612, 1.4754, 2.6496, 2.9226, 1.5715, 1.19, 1.2515, 2.8774, 1.329, 2.3068, 2.5868, 1.6571, 2.2331, 1.7438, 0.9173, 1.319, 1.4416, 2.8595, 4.6482, 1.4212, 2.957, 2.5523, 5.4481, 4.5745, 0.6291, -0.0889, 2.2755, 1.8619, 1.6288, 1.7027, 1.79, 1.5219, 3.0863, 0.1875, 2.1701, 3.1931, 0.5075, 1.5397, 0.7634, 2.8637, 0.2216, -0.0183, 2.2067, 3.7571, -0.5987, 1.4256, -0.6972, 1.792, 1.679, 1.3297, 1.3973, -1.0276, 5.1129, -0.6832];
+        var liAllRet=[3.0449, 2.0559, 1.2837, 0.2375, 1.4933, 5.6012, 2.0018, 1.4703, -0.2924, 4.1316, 1.5349, -0.1248, -0.4004, 3.4921, 3.138, 2.1828, 1.3582, 2.6856, 3.7442, 3.0841, -0.054, 1.116, 2.0766, 2.027, 6.2545, 1.1869, 4.3303, 3.0249, 7.0479, 1.0629, 4.3854, -2.5011, -0.4595, 2.8967, 2.4359, 1.5852, 2.7244, 1.8723, 0.2205, 2.8242, 2.0245, 3.243, -1.1495, 0.8594, 4.667, 3.5145, 0.4019, -0.0917, 3.3717, 3.2725, -0.2247, 2.7633, -1.6571, 2.5892, 3.5652, 1.3821, 2.8205, -3.7056, 2.4905, 1.3889];
+        var liFirstRet=[2.3921, 0.5062, 0.9747, 0.4867, 0.267, 5.4509, 1.9474, 0.8854, -0.5266, 6.0907, 0.9383, -0.7046, -0.672, 2.9498, 2.6101, 2.2243, 0.9425, 1.9003, 2.9227, 1.5916, -0.3409, 0.785, 1.7767, 2.901, 6.2342, 0.6276, 3.0529, 2.1841, 6.6544, 0.6218, 3.3109, -2.7915, 0.7343, 2.9807, 2.3405, 1.2795, 2.529, 2.0211, 0.3042, 2.3429, 0.9126, 3.0107, -1.0452, 0.3388, 4.2389, 3.5829, 0.1118, -1.4374, 3.0994, 3.9579, -2.0961, 3.0789, -1.957, 2.6973, 3.4751, 0.7778, 2.9219, -6.7263, 3.2746, 0.9115];
+        
+
+        // 对齐高低开数据到情绪日期轴（limit_index日期可能比情绪数据少）
+        var liGapAll=[], liGapFirst=[];
+        if(typeof liDates!=='undefined'){
+          var liMap={};
+          liDates.forEach(function(d,i){ liMap[d]={allGap:liAllGap[i],firstGap:liFirstGap[i]}; });
+          msL.forEach(function(d){
+            var m=liMap[d];
+            liGapAll.push(m?m.allGap:null);
+            liGapFirst.push(m?m.firstGap:null);
+          });
+        }
+
         new Chart(document.getElementById('ms-c3'),{
           type:'bar',
           data:{labels:msL,datasets:[
-            {label:'涨停',data:msU,backgroundColor:'rgba(239,68,68,0.7)',borderRadius:2,barPercentage:0.7},
-            {label:'跌停',data:msD.map(function(v){return -v}),backgroundColor:'rgba(16,185,129,0.7)',borderRadius:2,barPercentage:0.7},
-            {label:'炸板',data:msZ,backgroundColor:'rgba(245,158,11,0.5)',borderRadius:2,barPercentage:0.7}
-          ]},
-          options:msB
+            {label:'涨停',data:msU,backgroundColor:'rgba(239,68,68,0.7)',borderRadius:2,barPercentage:0.7,yAxisID:'y'},
+            {label:'跌停',data:msD.map(function(v){return -v}),backgroundColor:'rgba(16,185,129,0.7)',borderRadius:2,barPercentage:0.7,yAxisID:'y'},
+            {label:'炸板',data:msZ,backgroundColor:'rgba(245,158,11,0.5)',borderRadius:2,barPercentage:0.7,yAxisID:'y'}
+          ].concat(liGapAll.length?[
+            {label:'全涨停高低开(%)',data:liGapAll,type:'line',borderColor:'#6366f1',borderWidth:2,pointRadius:1,pointBackgroundColor:liGapAll.map(function(v){return v!==null&&v>0?'#ef4444':'#10b981'}),tension:.2,yAxisID:'y1',spanGaps:true},
+            {label:'首板高低开(%)',data:liGapFirst,type:'line',borderColor:'#a78bfa',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.2,yAxisID:'y1',spanGaps:true}
+          ]:[])
+          },
+          options:Object.assign({},msB,{scales:{
+            x:msB.scales.x,
+            y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}},
+            y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{display:false},title:{display:true,text:'高低开 %',font:{size:9},color:'#6366f1'}}
+          }})
         });
 
         new Chart(document.getElementById('ms-c4'),{
@@ -1048,6 +1113,65 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             y1:{position:'right',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{display:false},title:{display:true,text:'晋级率',font:{size:9},color:'#94a3b8'}}
           }})
         });
+
+        // ── 涨停指数 & BIAS 图 ──
+        
+        (function(){
+          var el=document.getElementById('ms-li-chart');
+          if(!el||typeof liDates==='undefined')return;
+
+          // BIAS 背景色带数据：超过阈值区域
+          var biasBgAll=liAllBias.map(function(v){
+            if(v>3)return v;
+            if(v<-3)return v;
+            return null;
+          });
+
+          new Chart(el,{
+            type:'line',
+            data:{labels:liDates,datasets:[
+              // 净值（左轴，灰色调背景）
+              {label:'全涨停净值',data:liAllNav,borderColor:'#94a3b8',borderWidth:1.5,pointRadius:0,tension:.3,fill:false,yAxisID:'y',order:3},
+              {label:'首板净值',data:liFirstNav,borderColor:'#cbd5e1',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.3,fill:false,yAxisID:'y',order:4},
+              // BIAS（右轴，彩色突出）
+              {label:'全涨停BIAS',data:liAllBias,borderColor:'#6366f1',borderWidth:2,pointRadius:1.5,pointBackgroundColor:liAllBias.map(function(v){return v>3?'#ef4444':v<-3?'#3b82f6':'#6366f1'}),tension:.2,fill:false,yAxisID:'y1',order:1},
+              {label:'首板BIAS',data:liFirstBias,borderColor:'#a78bfa',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.2,fill:false,yAxisID:'y1',order:2}
+            ]},
+            options:{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{mode:'index',intersect:false},
+              plugins:{
+                legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
+                tooltip:{
+                  callbacks:{
+                    afterBody:function(ctx){
+                      var i=ctx[0].dataIndex;
+                      var ret='\n收益: '+liAllRet[i].toFixed(2)+'%';
+                      ret+='\n高低开: '+liAllGap[i].toFixed(2)+'%';
+                      if(liAllBias[i]>3)ret+='\n⚠️ BIAS偏高，拥挤警告';
+                      if(liAllBias[i]<-3)ret+='\n💡 BIAS偏低，关注反转';
+                      return ret;
+                    }
+                  }
+                },
+                annotation:{
+                  annotations:{
+                    biasHigh:{type:'line',yMin:3,yMax:3,yScaleID:'y1',borderColor:'rgba(239,68,68,0.4)',borderWidth:1,borderDash:[4,4],label:{display:true,content:'+3%',position:'end',font:{size:9},color:'#ef4444',backgroundColor:'transparent'}},
+                    biasLow:{type:'line',yMin:-3,yMax:-3,yScaleID:'y1',borderColor:'rgba(59,130,246,0.4)',borderWidth:1,borderDash:[4,4],label:{display:true,content:'-3%',position:'end',font:{size:9},color:'#3b82f6',backgroundColor:'transparent'}},
+                    biasZero:{type:'line',yMin:0,yMax:0,yScaleID:'y1',borderColor:'rgba(148,163,184,0.3)',borderWidth:1}
+                  }
+                }
+              },
+              scales:{
+                x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)}},grid:{color:'#f1f5f9'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
+                y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{display:false},title:{display:true,text:'BIAS %',font:{size:9},color:'#6366f1'}}
+              }
+            }
+          });
+        })();
+        
+
         // ── 产品净值图表 ──
         
         var navDates=["03-21", "03-24", "03-25", "03-26", "03-27", "03-28", "03-31", "04-01", "04-02", "04-03", "04-07", "04-08", "04-09", "04-10", "04-11", "04-14", "04-15", "04-16", "04-17", "04-18", "04-21", "04-22", "04-23", "04-24", "04-25", "04-28", "04-29", "04-30", "05-06", "05-07", "05-08", "05-09", "05-12", "05-13", "05-14", "05-15", "05-16", "05-19", "05-20", "05-21", "05-22", "05-23", "05-26", "05-27", "05-28", "05-29", "05-30", "06-03", "06-04", "06-05", "06-06", "06-09", "06-10", "06-11", "06-12", "06-13", "06-16", "06-17", "06-18", "06-19", "06-20", "06-23", "06-24", "06-25", "06-26", "06-27", "06-30", "07-01", "07-02", "07-03", "07-04", "07-07", "07-08", "07-09", "07-10", "07-11", "07-14", "07-15", "07-16", "07-17", "07-18", "07-21", "07-22", "07-23", "07-24", "07-25", "07-28", "07-29", "07-30", "07-31", "08-01", "08-04", "08-05", "08-06", "08-07", "08-08", "08-11", "08-12", "08-13", "08-14", "08-15", "08-18", "08-19", "08-20", "08-21", "08-22", "08-25", "08-26", "08-27", "08-28", "08-29", "09-01", "09-02", "09-03", "09-04", "09-05", "09-08", "09-09", "09-10", "09-11", "09-12", "09-15", "09-16", "09-17", "09-18", "09-19", "09-22", "09-23", "09-24", "09-25", "09-26", "09-29", "09-30", "10-09", "10-10", "10-13", "10-14", "10-15", "10-16", "10-17", "10-20", "10-21", "10-22", "10-23", "10-24", "10-27", "10-28", "10-29", "10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-25", "12-26", "12-29", "12-30", "12-31", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05"];

@@ -63,7 +63,7 @@ def calc():
         deviation = (latest_dr - ma20) / ma20 * 100
 
         liq['items'].append(f"DR007: {latest_dr:.2f}% (MA20: {ma20:.2f}%)")
-        liq['trend'] = [{'date': str(int(r['trade_date']))[4:8], 'value': round(float(r['close']), 3)}
+        liq['trend'] = [{'date': str(int(r['trade_date']))[:4]+'-'+str(int(r['trade_date']))[4:6]+'-'+str(int(r['trade_date']))[6:8], 'value': round(float(r['close']), 3)}
                         for _, r in dr_df.iterrows()]
 
         # R-D价差
@@ -113,7 +113,7 @@ def calc():
             val['items'].append(f"{name} PE(TTM): {latest_pe:.1f} (分位: {pct:.0f}%)")
 
             if code == '000001':
-                val['trend'] = [{'date': str(int(r['trade_date']))[4:8], 'value': round(float(r['pe_ttm']), 1)}
+                val['trend'] = [{'date': str(int(r['trade_date']))[:4]+'-'+str(int(r['trade_date']))[4:6]+'-'+str(int(r['trade_date']))[6:8], 'value': round(float(r['pe_ttm']), 1)}
                                 for _, r in df.iterrows()]
 
             # 评分
@@ -164,7 +164,7 @@ def calc():
         ma20_amt = float(amt_df['amount'].tail(20).mean())
         ratio = latest_amt / ma20_amt if ma20_amt > 0 else 1
         senti['items'].append(f"上证成交额/MA20: {ratio:.2f}x")
-        senti['trend'] = [{'date': str(int(r['trade_date']))[4:8], 'value': round(float(r['amount']) / 1e8, 1)}
+        senti['trend'] = [{'date': str(int(r['trade_date']))[:4]+'-'+str(int(r['trade_date']))[4:6]+'-'+str(int(r['trade_date']))[6:8], 'value': round(float(r['amount']) / 1e8, 1)}
                           for _, r in amt_df.iterrows()]
 
         if ratio > 1.8:
@@ -281,7 +281,7 @@ def calc():
             recent5 = nb_df[buy_col].tail(5)
             consecutive_out = int((recent5 < 0).sum())
             micro['items'].append(f"北向近5日净流出天数: {consecutive_out}")
-            micro['trend'] = [{'date': str(int(r['trade_date']))[4:8],
+            micro['trend'] = [{'date': str(int(r['trade_date']))[:4]+'-'+str(int(r['trade_date']))[4:6]+'-'+str(int(r['trade_date']))[6:8],
                               'value': round(float(r[buy_col]) / 1e4, 2) if pd.notna(r[buy_col]) else None}
                              for _, r in nb_df.tail(30).iterrows()]
 

@@ -61,6 +61,77 @@ MODULES = {
         'inject_script': ('env_fit/cb_env', 'inject_cb_env.py'),
         'post_inject': [('env_fit/cb_env', 'inject_cb_nav.py')],  # 注入产品净值
     },
+    'alerts': {
+        'name': '红灯预警（A股）',
+        'data_scripts': [
+            ('alerts', 'alerts_data.py'),    # 拉取估值/涨跌停/成交额数据
+            ('alerts', 'alerts_calc.py'),    # 计算5维度风险评分
+        ],
+        'inject_script': None,  # 独立HTML页面
+    },
+    'us_alerts': {
+        'name': '美股风险监控',
+        'data_scripts': [
+            ('alerts', 'us_alerts_data.py'),    # 拉取美股数据（VIX/标普/纳指等）
+            ('alerts', 'us_alerts_calc.py'),    # 计算趋势+风险等级
+        ],
+        'inject_script': None,  # 与A股共用alerts.html
+    },
+    'crowding': {
+        'name': '资金流拥挤度',
+        'data_scripts': [
+            ('micro_flow/crowding', 'crowding_data.py'),    # 北向/ETF/两融/申万/行业ETF
+            ('micro_flow/crowding', 'crowding_calc.py'),    # 计算拥挤度指标
+        ],
+        'inject_script': None,
+    },
+    'option_sentiment': {
+        'name': '期权情绪',
+        'data_scripts': [
+            ('micro_flow/option_sentiment', 'option_data.py'),    # 期权数据
+            ('micro_flow/option_sentiment', 'option_calc.py'),    # PCR/IV等指标
+        ],
+        'inject_script': None,
+    },
+    'patient_capital': {
+        'name': '耐心资本',
+        'data_scripts': [
+            ('micro_flow/patient_capital', 'patient_data.py'),    # 机构持仓数据
+            ('micro_flow/patient_capital', 'patient_calc.py'),    # 计算耐心资本指标
+        ],
+        'inject_script': None,
+    },
+    'macro_liquidity': {
+        'name': '宏观流动性',
+        'data_scripts': [
+            ('macro/liquidity', 'liquidity_data.py'),    # DR007/Shibor/M1M2等
+            ('macro/liquidity', 'liquidity_calc.py'),    # 流动性指标计算
+        ],
+        'inject_script': None,
+    },
+    'macro_rates': {
+        'name': '利率数据',
+        'data_scripts': [
+            ('macro/rates', 'rates_data.py'),    # 中美利率数据
+            ('macro/rates', 'rates_calc.py'),    # 利差计算
+        ],
+        'inject_script': None,
+    },
+    'macro_fundamentals': {
+        'name': '基本面数据',
+        'data_scripts': [
+            ('macro/fundamentals', 'fundamentals_data.py'),    # CPI/PPI/PMI等
+            ('macro/fundamentals', 'fundamentals_calc.py'),    # 基本面指标
+        ],
+        'inject_script': None,
+    },
+    'fund_nav': {
+        'name': '产品净值',
+        'data_scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),    # 拉取产品净值数据
+        ],
+        'inject_script': None,
+    },
     'macro_score': {
         'name': '宏观打分+策略适配',
         'data_scripts': [

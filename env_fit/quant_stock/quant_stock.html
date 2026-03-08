@@ -71,7 +71,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <div class="header-bar">
   <div class="date-label" id="dateLabel">📊 宽基量化股票 · 加载中...</div>
-  <button class="refresh-btn" onclick="doRefresh()" id="refreshBtn">🔄 刷新</button>
+  <button class="refresh-btn" onclick="doRefresh()" id="refreshBtn" style="display:none">🔄 刷新</button>
+  <script>if(window.self===window.top)document.getElementById('refreshBtn').style.display='';</script>
 </div>
 
 <!-- ═══ 超额环境诊断面板 ═══ -->
