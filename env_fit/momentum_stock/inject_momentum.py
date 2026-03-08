@@ -583,7 +583,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         ss_up_js = json.dumps([d['up_seal_total'] for d in ss_show])
         ss_down_js = json.dumps([-d['down_seal_total'] for d in ss_show])  # 负值画向下
 
-        ss_js_data = f'''
+        seal_js_data = f'''
         var ssDates={ss_dates_js};
         var ssSpread={ss_spread_js};
         var ssMa5={ss_ma5_js};
