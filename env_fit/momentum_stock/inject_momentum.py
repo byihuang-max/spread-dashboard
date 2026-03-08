@@ -430,7 +430,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
       <div class="card">
         <div class="card-title"><span class="dot" style="background:{ls_color}"></span> 合成情绪指数（0-100）</div>
         <div style="position:relative;height:280px"><canvas id="ms-c1"></canvas></div>
-        <div id="ms-timeline" style="display:flex;gap:1px;margin-top:4px;height:14px;border-radius:3px;overflow:hidden"></div>
+        <div id="ms-timeline" style="display:flex;gap:0;margin-top:6px;height:20px;border-radius:4px;overflow:hidden"></div>
       </div>
 
       <div class="card">
@@ -487,61 +487,6 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
         function msMA(a,n){{var r=[];for(var i=0;i<a.length;i++){{if(i<n-1)r.push(null);else{{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}}}return r;}}
 
-        // 周期背景色带 plugin
-        var cycleBgPlugin={{
-          id:'cycleBg',
-          beforeDraw:function(chart){{
-            var ctx=chart.ctx;
-            var xAxis=chart.scales.x;
-            var yAxis=chart.scales.y;
-            var top=yAxis.top;
-            var bottom=yAxis.bottom;
-            for(var i=0;i<msCL.length;i++){{
-              var lb=msCL[i];
-              var c=cycleColors[lb]||'#94a3b8';
-              var x0=xAxis.getPixelForValue(i)-((xAxis.getPixelForValue(1)-xAxis.getPixelForValue(0))/2);
-              var x1=x0+(xAxis.getPixelForValue(1)-xAxis.getPixelForValue(0));
-              ctx.save();
-              ctx.fillStyle=c+'12';
-              ctx.fillRect(x0,top,x1-x0,bottom-top);
-              ctx.restore();
-            }}
-          }}
-        }};
-        // 周期文字标注 plugin（仅在周期变化时显示）
-        var cycleLabelPlugin={{
-          id:'cycleLabel',
-          afterDraw:function(chart){{
-            var ctx=chart.ctx;
-            var xAxis=chart.scales.x;
-            var yAxis=chart.scales.y;
-            var top=yAxis.top;
-            ctx.save();
-            ctx.font='bold 9px sans-serif';
-            ctx.textAlign='center';
-            var lastLabel='';
-            for(var i=0;i<msCL.length;i++){{
-              var lb=msCL[i];
-              if(lb!==lastLabel && lb!=='—'){{
-                var x=xAxis.getPixelForValue(i);
-                var c=cycleColors[lb]||'#94a3b8';
-                // 画标签背景
-                var tw=ctx.measureText(lb).width+8;
-                var th=14;
-                var ty=top+4;
-                ctx.fillStyle=c+'22';
-                ctx.beginPath();
-                ctx.roundRect(x-tw/2,ty,tw,th,3);
-                ctx.fill();
-                // 画文字
-                ctx.fillStyle=c;
-                ctx.fillText(lb,x,ty+10);
-                lastLabel=lb;
-              }}
-            }}
-            ctx.restore();
-          }}
-        }};
         new Chart(document.getElementById('ms-c1'),{{
           type:'line',
           data:{{labels:msL,datasets:[
@@ -549,7 +494,6 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
             {{label:'MA5',data:msMA(msS,5),borderColor:'#f59e0b',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.2}},
             {{label:'MA20',data:msMA(msS,20),borderColor:'#94a3b8',borderWidth:1,borderDash:[2,2],pointRadius:0,tension:.2}}
           ]}},
-          plugins:[cycleBgPlugin,cycleLabelPlugin],
           options:Object.assign({{}},msB,{{
             plugins:{{
               legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
@@ -566,16 +510,37 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           }})
         }});
 
-        // Cycle timeline
+        // Cycle timeline with text labels
         var cycleColors={cycle_colors_js};
         var tl=document.getElementById('ms-timeline');
-        if(tl){{msL.forEach(function(d,i){{
-          var lb=msCL[i];var c=cycleColors[lb]||'#94a3b8';
-          var el=document.createElement('div');
-          el.style.cssText='flex:1;background:'+c+'88;height:100%';
-          el.title=d+' '+lb+' 情绪='+msS[i];
-          tl.appendChild(el);
-        }});}}
+        if(tl){{
+          // 先把连续相同周期合并成段
+          var segments=[];
+          var curLabel=msCL[0], startIdx=0;
+          for(var i=1;i<=msCL.length;i++){{
+            if(i===msCL.length || msCL[i]!==curLabel){{
+              segments.push({{label:curLabel, start:startIdx, end:i-1, len:i-startIdx}});
+              if(i<msCL.length){{ curLabel=msCL[i]; startIdx=i; }}
+            }}
+          }}
+          // 渲染每段为一个带文字的块
+          segments.forEach(function(seg){{
+            var c=cycleColors[seg.label]||'#94a3b8';
+            var el=document.createElement('div');
+            el.style.cssText='flex:'+seg.len+';background:'+c+'30;height:100%;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid #fff;overflow:hidden;cursor:default';
+            // 只在段宽够时显示文字（>=3天）
+            if(seg.len>=3 && seg.label!=='—'){{
+              var txt=document.createElement('span');
+              txt.textContent=seg.label;
+              txt.style.cssText='font-size:9px;font-weight:700;color:'+c+';white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff';
+              el.appendChild(txt);
+            }}
+            // tooltip 显示日期范围
+            var d0=msL[seg.start], d1=msL[seg.end];
+            el.title=seg.label+' ('+d0+'~'+d1+', '+seg.len+'天)';
+            tl.appendChild(el);
+          }});
+        }}
 
         // Sub-factor chart (lazy init on details open)
         var c2Init=false;
