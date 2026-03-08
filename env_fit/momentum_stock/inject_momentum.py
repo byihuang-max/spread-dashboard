@@ -25,7 +25,7 @@ def fmt_date(d):
     return f"{d[4:6]}/{d[6:8]}"
 
 
-def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data=None, limit_index_data=None):
+def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data=None, limit_index_data=None, seal_spread_data=None):
     daily = sent_data['daily']
     meta = sent_data['meta']
     show = daily[-60:] if len(daily) > 60 else daily
@@ -567,6 +567,70 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         # 把 decomp chart 初始化加入 JS
         # 我们需要在 initMsCharts 里加
 
+    # ═══ 封单额轧差 (Seal Spread) ═══
+    seal_html = ''
+    seal_js_data = ''
+    if seal_spread_data and seal_spread_data.get('daily'):
+        ss_daily = seal_spread_data['daily']
+        ss_show = ss_daily[-60:] if len(ss_daily) > 60 else ss_daily
+        ss_latest = ss_show[-1]
+
+        ss_dates_js = json.dumps([fmt_date(d['date']) for d in ss_show])
+        ss_spread_js = json.dumps([d['seal_spread'] for d in ss_show])
+        ss_ma5_js = json.dumps([d['spread_ma5'] for d in ss_show])
+        ss_ma20_js = json.dumps([d['spread_ma20'] for d in ss_show])
+        ss_ratio_js = json.dumps([d['seal_ratio'] for d in ss_show])
+        ss_up_js = json.dumps([d['up_seal_total'] for d in ss_show])
+        ss_down_js = json.dumps([-d['down_seal_total'] for d in ss_show])  # 负值画向下
+
+        ss_js_data = f'''
+        var ssDates={ss_dates_js};
+        var ssSpread={ss_spread_js};
+        var ssMa5={ss_ma5_js};
+        var ssMa20={ss_ma20_js};
+        var ssRatio={ss_ratio_js};
+        var ssUp={ss_up_js};
+        var ssDown={ss_down_js};
+        '''
+
+        # 信号标签颜色
+        ss_signal = ss_latest.get('signal', '⚪ 均衡')
+        ss_pct = ss_latest.get('spread_pct_1y')
+        ss_pct_str = f"{ss_pct*100:.1f}%" if ss_pct is not None else "N/A"
+        if '极度恐慌' in ss_signal:
+            ss_sig_color = '#10b981'
+            ss_bg = '#f0fdf4'
+        elif '偏空' in ss_signal:
+            ss_sig_color = '#3b82f6'
+            ss_bg = '#eff6ff'
+        elif '偏多' in ss_signal:
+            ss_sig_color = '#f59e0b'
+            ss_bg = '#fefce8'
+        elif '极度亢奋' in ss_signal:
+            ss_sig_color = '#ef4444'
+            ss_bg = '#fef2f2'
+        else:
+            ss_sig_color = '#64748b'
+            ss_bg = '#f8fafc'
+
+        seal_html = f'''
+      <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="card-title" style="margin:0"><span class="dot" style="background:#6366f1"></span> 涨跌停封单额轧差（抄底指标）</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="background:{ss_bg};color:{ss_sig_color};padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600">{ss_signal}</span>
+            <span style="font-size:11px;color:#94a3b8">分位 {ss_pct_str}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+          <div style="font-size:12px;color:#64748b">轧差 <b style="color:{"#10b981" if ss_latest["seal_spread"] >= 0 else "#ef4444"};font-size:16px">{ss_latest["seal_spread"]:+.1f}</b> 亿</div>
+          <div style="font-size:12px;color:#64748b">涨停封单 <b>{ss_latest["up_seal_total"]:.1f}</b>亿 ({ss_latest["up_count"]}只)</div>
+          <div style="font-size:12px;color:#64748b">跌停封单 <b>{ss_latest["down_seal_total"]:.1f}</b>亿 ({ss_latest["down_count"]}只)</div>
+        </div>
+        <div style="position:relative;height:280px"><canvas id="ms-seal"></canvas></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px">绿色柱=涨停封单额 · 红色柱=跌停封单额（向下） · 紫色线=轧差 · 橙虚线=MA5 · 灰虚线=MA20 · 轧差<5%分位=🟢抄底信号</div>
+      </div>'''
+
     # ====== Build full HTML ======
     html = f'''
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
@@ -643,6 +707,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
       <!-- 涨停指数 BIAS 图 -->
       {li_html}
+
+      <!-- 封单额轧差图 -->
+      {seal_html}
 
       <div class="card">
         <div class="card-title"><span class="dot" style="background:{ls_color}"></span> 合成情绪指数（0-100）</div>
@@ -780,6 +847,42 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
         // ── 涨停指数数据 ──
         {li_js_data if li_js_data else ''}
+
+        // ── 封单额轧差数据 ──
+        {seal_js_data if seal_js_data else ''}
+        if(typeof ssDates!=='undefined' && document.getElementById('ms-seal')){{
+          new Chart(document.getElementById('ms-seal'),{{
+            type:'bar',
+            data:{{labels:ssDates,datasets:[
+              {{label:'涨停封单(亿)',data:ssUp,backgroundColor:'rgba(16,185,129,0.6)',borderRadius:2,barPercentage:0.6,stack:'seal',yAxisID:'y'}},
+              {{label:'跌停封单(亿)',data:ssDown,backgroundColor:'rgba(239,68,68,0.6)',borderRadius:2,barPercentage:0.6,stack:'seal',yAxisID:'y'}},
+              {{label:'轧差(亿)',data:ssSpread,type:'line',borderColor:'#6366f1',borderWidth:2.5,pointRadius:1.5,pointBackgroundColor:ssSpread.map(function(v){{return v>=0?'#10b981':'#ef4444'}}),tension:.2,yAxisID:'y1',order:0}},
+              {{label:'MA5',data:ssMa5,type:'line',borderColor:'#f59e0b',borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.2,yAxisID:'y1',order:1}},
+              {{label:'MA20',data:ssMa20,type:'line',borderColor:'#94a3b8',borderWidth:1,borderDash:[2,2],pointRadius:0,tension:.2,yAxisID:'y1',order:2}}
+            ]}},
+            options:{{
+              responsive:true,maintainAspectRatio:false,
+              interaction:{{mode:'index',intersect:false}},
+              plugins:{{
+                legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
+                tooltip:{{
+                  callbacks:{{
+                    afterBody:function(ctx){{
+                      var idx=ctx[0].dataIndex;
+                      var r=ssRatio[idx];
+                      return '涨停封单占比: '+(r*100).toFixed(1)+'%';
+                    }}
+                  }}
+                }}
+              }},
+              scales:{{
+                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},stacked:true}},
+                y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{display:false}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
+              }}
+            }}
+          }});
+        }}
 
         // 对齐高低开数据到情绪日期轴（limit_index日期可能比情绪数据少）
         var liGapAll=[], liGapFirst=[];
@@ -1042,9 +1145,16 @@ def main():
         with open(li_path, 'r', encoding='utf-8') as f:
             limit_index_data = json.load(f)
 
-    print(f"📖 情绪: {sent_data['meta']['count']}天 | 板块: {'✅' if sector_data else '❌'} | 预警: {'✅' if warning_data else '❌'} | 归因: {'✅' if decomp_data else '❌'} | 净值: {'✅' if nav_chart_data else '❌'} | 涨停指数: {'✅' if limit_index_data else '❌'}")
+    # 加载封单额轧差数据
+    ss_path = os.path.join(BASE_DIR, 'limit_index', 'seal_spread', 'seal_spread.json')
+    seal_spread_data = None
+    if os.path.exists(ss_path):
+        with open(ss_path, 'r', encoding='utf-8') as f:
+            seal_spread_data = json.load(f)
 
-    html = build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data, limit_index_data)
+    print(f"📖 情绪: {sent_data['meta']['count']}天 | 板块: {'✅' if sector_data else '❌'} | 预警: {'✅' if warning_data else '❌'} | 归因: {'✅' if decomp_data else '❌'} | 净值: {'✅' if nav_chart_data else '❌'} | 涨停指数: {'✅' if limit_index_data else '❌'} | 封单轧差: {'✅' if seal_spread_data else '❌'}")
+
+    html = build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data, limit_index_data, seal_spread_data)
     print(f"🎨 生成 {len(html)} 字符")
 
     if inject(html):
