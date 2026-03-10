@@ -73,8 +73,11 @@ def _create_user(conn, username, password, is_admin=0, display_name=''):
 def register(username, password, display_name=''):
     """注册新用户，返回 (ok, msg)"""
     username = username.strip().lower()
+    display_name = display_name.strip()
     if not username or not password:
         return False, '用户名和密码不能为空'
+    if not display_name:
+        return False, '请填写姓名'
     if len(username) < 2 or len(username) > 30:
         return False, '用户名长度 2-30 字符'
     if len(password) < 6:
