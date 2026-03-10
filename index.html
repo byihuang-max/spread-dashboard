@@ -3009,12 +3009,15 @@ function initCbCharts() {
   var STATUS_API=null;
   (function(){
     // 优先尝试本机
+    function isJsonResp(r){var ct=r.headers.get('content-type')||'';return r.ok&&ct.indexOf('application/json')>=0;}
     fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-      if(r.ok){REFRESH_API='http://localhost:9876/api/refresh/';STATUS_API='http://localhost:9876/api/status';console.log('[refresh] using localhost')}
+      if(isJsonResp(r)){REFRESH_API='http://localhost:9876/api/refresh/';STATUS_API='http://localhost:9876/api/status';console.log('[refresh] using localhost')}
+      else{throw new Error('not json');}
     }).catch(function(){
       // 尝试同源（tunnel模式）
       fetch('/api/status').then(function(r){
-        if(r.ok){REFRESH_API='/api/refresh/';STATUS_API='/api/status';console.log('[refresh] using same-origin')}
+        if(isJsonResp(r)){REFRESH_API='/api/refresh/';STATUS_API='/api/status';console.log('[refresh] using same-origin')}
+        else{throw new Error('not json');}
       }).catch(function(){
         // fallback: 读 tunnel_url.json
         fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
@@ -3382,8 +3385,12 @@ function initCbCharts() {
       attempts++;
       // 优先同源（通过 tunnel 访问时，API 就在同域）
       fetch('/api/status').then(function(r){
-        if(r.ok){AUTH_API='';console.log('[auth] using same-origin');cb();return;}
-        throw new Error('status '+r.status);
+        if(!r.ok) throw new Error('status '+r.status);
+        var ct=r.headers.get('content-type')||'';
+        if(ct.indexOf('application/json')<0) throw new Error('not json: '+ct);
+        return r.json();
+      }).then(function(d){
+        AUTH_API='';console.log('[auth] using same-origin');cb();
       }).catch(function(e){
         console.log('[auth] same-origin failed:',e.message||e);
         // 再试 localhost
