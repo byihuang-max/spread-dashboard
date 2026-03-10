@@ -144,7 +144,7 @@ def fetch_prices(tickers, start_date, end_date):
         return pd.DataFrame()
     
     result = pd.concat(all_data, ignore_index=True)
-    result["date"] = pd.to_datetime(result["date"]).dt.date
+    result["date"] = pd.to_datetime(result["date"])
     return result
 
 

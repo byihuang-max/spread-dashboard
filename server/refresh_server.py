@@ -153,6 +153,7 @@ MODULES = {
         'scripts': [
             ('meme/antifragile', 'fetch_data.py'),
             ('meme/antifragile', 'calc_corr.py'),
+            ('meme/antifragile', 'calc_meme.py'),
             ('meme/antifragile', 'render_html.py'),
         ],
     },
