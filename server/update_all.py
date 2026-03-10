@@ -133,6 +133,22 @@ MODULES = {
         ],
         'inject_script': None,
     },
+    'antifragile': {
+        'name': '反脆弱看板',
+        'data_scripts': [
+            ('meme/antifragile', 'fetch_data.py'),    # 拉取海外资产价格（yfinance）
+            ('meme/antifragile', 'calc_corr.py'),     # 30日滚动相关性矩阵
+            ('meme/antifragile', 'calc_meme.py'),     # Meme反身性信号
+        ],
+        'inject_script': None,
+    },
+    'narrative_lifecycle': {
+        'name': '叙事生命周期',
+        'data_scripts': [
+            ('meme', 'macro_lifecycle.py'),    # 宏观Meme叙事生命周期判断
+        ],
+        'inject_script': None,
+    },
     'macro_score': {
         'name': '宏观打分+策略适配',
         'data_scripts': [
