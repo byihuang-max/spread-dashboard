@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>择时研究 · GAMT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#0d1117;color:#c9d1d9;padding:20px}
+.container{max-width:1100px;margin:0 auto}
+h1{color:#58a6ff;font-size:24px;margin-bottom:4px}
+h2{color:#f0883e;font-size:17px;margin:28px 0 12px;padding-bottom:5px;border-bottom:2px solid #30363d}
+.subtitle{color:#8b949e;font-size:12px;margin-bottom:24px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:10px 0}
+.card-title{color:#79c0ff;font-size:14px;font-weight:bold;margin-bottom:8px}
+.metric{display:inline-block;background:#21262d;border-radius:6px;padding:6px 12px;margin:3px;font-size:12px}
+.metric .val{font-weight:bold;font-size:15px}
+.green{color:#7ee787}.red{color:#ff7b72}.blue{color:#58a6ff}.orange{color:#ffa657}.purple{color:#d2a8ff}
+.insight{background:#1a1f29;border-left:4px solid #58a6ff;padding:10px 14px;margin:10px 0;border-radius:0 8px 8px 0;font-size:13px;line-height:1.6}
+.insight.warn{border-left-color:#ffa657}
+.insight.good{border-left-color:#7ee787}
+.insight.bad{border-left-color:#ff7b72}
+table{width:100%;border-collapse:collapse;margin:8px 0}
+th{background:#0d1117;color:#58a6ff;padding:7px;font-size:11px;border-bottom:2px solid #30363d;text-align:center}
+td{padding:6px;font-size:12px;border-bottom:1px solid #21262d;text-align:center}
+.note{color:#8b949e;font-size:11px;font-style:italic}
+a.btn{display:inline-block;background:#21262d;border:1px solid #30363d;color:#58a6ff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:13px;margin:4px}
+a.btn:hover{background:#30363d}
+.back{position:fixed;top:12px;left:12px;background:#161b22;border:1px solid #30363d;color:#58a6ff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;z-index:10}
+.factor-explain{margin:6px 0;font-size:12px;line-height:1.5}
+.factor-explain dt{color:#79c0ff;font-weight:bold;margin-top:6px}
+.factor-explain dd{color:#8b949e;margin-left:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/">← 返回看板</a>
+<div class="container">
+
+<h1>🔬 择时研究</h1>
+<p class="subtitle">强势股情绪因子 → 沪深300 仓位择时 · 数据: 2024-01-02 ~ 2026-03-06 (524天) · 仅管理员可见</p>
+
+<!-- ========== 研究背景 ========== -->
+<h2>📖 研究背景</h2>
+<div class="card">
+<p style="font-size:13px;line-height:1.6">
+<strong>核心问题：</strong>用强势股情绪数据来择时沪深300的仓位，到底有没有用？<br><br>
+<strong>方法：</strong>每天根据强势股的涨跌停数据计算情绪指数（0-100分），然后把情绪分数映射成仓位（0%-100%）。<br>
+<strong>标的：</strong>沪深300指数 · <strong>回测区间：</strong>2024年1月-2026年3月 · <strong>交易成本：</strong>每次调仓0.5% · <strong>执行延迟：</strong>T+1
+</p>
+</div>
+
+<!-- ========== 因子说明 ========== -->
+<h2>📊 因子说明</h2>
+<div class="card">
+<dl class="factor-explain">
+<dt>🔴 sentiment（综合情绪指数）</dt>
+<dd>五个子因子加权合成的总分，0-100分。<strong>越高说明强势股生态越火热</strong>。权重：晋级率25% + 封板质量25% + 连板高度20% + 反炸板率20% + 涨跌停比10%</dd>
+
+<dt>📈 up_count（涨停家数）</dt>
+<dd>当天涨停板的股票数量。<strong>越多说明市场做多热情越高</strong>，但极端值可能是过热信号。</dd>
+
+<dt>📉 down_count（跌停家数）</dt>
+<dd>当天跌停板的股票数量。<strong>越多说明恐慌越重</strong>，但恐慌出清后往往反弹（"别人恐惧时我贪婪"）。</dd>
+
+<dt>🏔️ max_height（连板高度）</dt>
+<dd>当天最高连板股票的连板天数。比如"8天7板"则max_height=7。<strong>高度越高说明市场龙头效应越强</strong>。</dd>
+
+<dt>🔄 promotion_rate（晋级率）</dt>
+<dd>昨天涨停的股票中，今天继续涨停的比例。<strong>越高说明强势股的延续性越好</strong>，资金愿意接力。</dd>
+
+<dt>💥 zha_rate（炸板率）</dt>
+<dd>涨停后又打开（炸板）的比例。<strong>越高说明封板意愿弱</strong>，资金分歧大。</dd>
+
+<dt>⚖️ ud_ratio（涨跌停比）</dt>
+<dd>涨停家数 / 跌停家数。<strong>越高说明多头越占优</strong>。极端值（>10）可能是过热。</dd>
+
+<dt>🔒 seal_quality（封板质量）</dt>
+<dd>大市值（100亿+）和超大市值（300亿+）涨停股占比。<strong>越高说明主力资金参与度越高</strong>，不只是小票在炒。</dd>
+
+<dt>1️⃣→2️⃣ rate_1to2（一进二率）</dt>
+<dd>昨天首板涨停的股票中，今天继续涨停（变成2连板）的比例。<strong>衡量首板次日的溢价效应</strong>。</dd>
+
+<dt>🏷️ cycle_label（周期标签）</dt>
+<dd>根据情绪走势自动判定的市场阶段：冰点→回暖→加速→分歧→退潮→震荡，<strong>对应强势股生态的生命周期</strong>。</dd>
+</dl>
+</div>
+
+<!-- ========== 单因子检验结果 ========== -->
+<h2>🔬 单因子检验</h2>
+<div class="card">
+<p class="card-title">IC（信息系数）= 因子值和未来收益的相关性</p>
+<p class="note">IC > 0 → 趋势型（因子高则未来涨）· IC < 0 → 反转型（因子高则未来跌）· |IC| > 0.03 有参考价值</p>
+<table>
+<tr><th>因子</th><th>中文名</th><th>20日IC</th><th>方向</th><th>最低档→最高档<br>(20日收益)</th><th>解读</th></tr>
+<tr><td>sentiment</td><td>综合情绪</td><td class="blue">+0.087</td><td>趋势↗</td><td>0.98% → 3.19%</td><td>情绪高时沪深300未来涨得更多</td></tr>
+<tr><td>max_height</td><td>连板高度</td><td class="blue">+0.069</td><td>趋势↗</td><td>0.87% → 1.83%</td><td>龙头效应强时市场表现好</td></tr>
+<tr><td>promotion_rate</td><td>晋级率</td><td class="blue">+0.054</td><td>趋势↗</td><td>1.14% → 2.03%</td><td>接力意愿强时看涨</td></tr>
+<tr><td>down_count</td><td>跌停家数</td><td class="blue">+0.049</td><td>趋势↗</td><td>1.63% → 2.06%</td><td>恐慌出清后反弹</td></tr>
+<tr><td>ud_ratio</td><td>涨跌停比</td><td class="red">-0.027</td><td>弱反转↘</td><td>2.04% → 1.64%</td><td>多头过强略微看跌</td></tr>
+<tr><td>up_count</td><td>涨停家数</td><td>+0.016</td><td>无信号→</td><td>1.53% → 0.97%</td><td>涨停多反而不涨（可能过热）</td></tr>
+<tr><td>zha_rate</td><td>炸板率</td><td>+0.005</td><td>无信号→</td><td>1.31% → 1.89%</td><td>基本无预测力</td></tr>
+</table>
+</div>
+
+<div class="insight good">
+<strong>核心发现：情绪是趋势信号，不是逆向信号！</strong><br>
+情绪最高的20%时间段，未来20天沪深300平均涨3.19%；最低的20%只涨0.98%。<br>
+这意味着：<strong>情绪高→加仓，情绪低→减仓</strong>，而不是反过来。
+</div>
+
+<div class="insight warn">
+<strong>⚠️ 数据局限</strong><br>
+524天（2年）的回测虽然覆盖了牛熊，但仍然偏短。2024年1-9月下跌、924行情暴涨、2025年震荡——一个完整周期不够得出稳定结论。IC绝对值都在0.1以下，信号偏弱。
+</div>
+
+<!-- ========== 周期标签择时 ========== -->
+<h2>🏷️ 周期标签择时效果</h2>
+<div class="card">
+<table>
+<tr><th>周期标签</th><th>出现天数</th><th>占比</th><th>未来20天<br>沪深300平均涨跌</th><th>解读</th></tr>
+<tr><td>🔥 加速</td><td>103</td><td>19.6%</td><td class="green">+2.79%</td><td>强势股加速期，大盘也跟着涨</td></tr>
+<tr><td>⚡ 分歧</td><td>59</td><td>11.2%</td><td class="green">+1.91%</td><td>分歧不是坏事，往往是换手后继续涨</td></tr>
+<tr><td>📉 退潮</td><td>168</td><td>31.9%</td><td class="green">+1.40%</td><td>退潮期竟然也涨——说明市场结构性轮动</td></tr>
+<tr><td>🌱 回暖</td><td>131</td><td>24.9%</td><td>+0.80%</td><td>温和修复，表现中性</td></tr>
+<tr><td>🔄 震荡</td><td>58</td><td>11.0%</td><td>+1.15%</td><td>震荡偏中性</td></tr>
+<tr><td>🧊 冰点</td><td>5</td><td>1.0%</td><td class="red">-0.39%</td><td>冰点反而跌！（样本太少仅5天，不能当真）</td></tr>
+</table>
+</div>
+
+<div class="insight warn">
+<strong>意外发现：冰点不等于抄底信号</strong><br>
+直觉上"冰点→反弹"，但数据显示冰点期未来20天反而微跌（仅5天样本，统计意义弱）。<strong>加速期</strong>是最强的看涨信号。这再次验证了情绪是趋势型而非逆向型。
+</div>
+
+<!-- ========== 仓位回测结果 ========== -->
+<h2>⏱️ 仓位择时回测</h2>
+<div class="card">
+<p class="card-title">6种仓位映射方案 vs 满仓持有 vs 60%固定仓位</p>
+<p class="note">所有方案都假设"情绪高→减仓"（反转逻辑），但数据证明方向反了，所以全部跑输。下一步会加"顺势"方案。</p>
+<table>
+<tr><th>方案</th><th>总收益</th><th>年化</th><th>夏普</th><th>最大回撤</th><th>回撤改善</th><th>说明</th></tr>
+<tr style="color:#ffa657;font-weight:bold"><td>📌 满仓持有</td><td>37.6%</td><td>19.5%</td><td>0.88</td><td>-15.7%</td><td>—</td><td>基准</td></tr>
+<tr><td>A1: 现有权重+离散</td><td>7.0%</td><td>3.5%</td><td>0.91</td><td class="green"><strong>-3.2%</strong></td><td class="green">+12.5%</td><td>回撤控制最好</td></tr>
+<tr><td>B2: IC加权+sigmoid</td><td>11.6%</td><td>5.8%</td><td>0.61</td><td>-8.2%</td><td>+7.5%</td><td>收益最高的择时方案</td></tr>
+<tr><td>C: 反转情绪</td><td>-23.2%</td><td>-12.4%</td><td>-1.07</td><td class="red">-24.1%</td><td class="red">-8.4%</td><td>方向完全反了</td></tr>
+<tr><td>D: 周期标签</td><td>-31.5%</td><td>-16.8%</td><td>-1.37</td><td class="red">-32.5%</td><td class="red">-16.8%</td><td>最差</td></tr>
+</table>
+</div>
+
+<div class="insight good">
+<strong>✅ 回撤控制是实在的</strong><br>
+A1方案最大回撤只有-3.2%（满仓-15.7%），夏普比满仓还高（0.91 vs 0.88）。<br>
+<strong>虽然收益跑输，但风险调整后的表现不差。</strong>对FOF来说，回撤控制≈客户留存。
+</div>
+
+<div class="insight bad">
+<strong>❌ 方向搞反了</strong><br>
+所有方案都用"情绪高→减仓"的逻辑。但数据证明情绪高时市场涨得更多。<br>
+<strong>下一步：加入"顺势择时"方案（情绪高→加仓），预计会显著改善。</strong>
+</div>
+
+<!-- ========== 归因分析 ========== -->
+<h2>🔍 归因分析</h2>
+<div class="card">
+<p class="card-title">为什么择时全部跑输？</p>
+<div style="font-size:13px;line-height:1.7">
+<p><strong>1. 仓位映射方向反了</strong> — 情绪是趋势型信号，应该"顺势"（高→加仓）而不是"逆势"（高→减仓）。</p>
+<p><strong>2. 2024年9月24日行情</strong> — "924行情"暴涨期，情绪同步飙升，反转逻辑减仓后踏空了最大的一波涨幅。</p>
+<p><strong>3. 交易成本和延迟</strong> — 每次调仓0.5%成本 + T+1执行延迟，在频繁换仓时吃掉了收益。</p>
+<p><strong>4. 因子信号偏弱</strong> — 最强因子IC也只有0.087，不足以覆盖交易成本。需要多因子组合增强信号。</p>
+</div>
+</div>
+
+<!-- ========== 下一步 ========== -->
+<h2>🚀 下一步计划</h2>
+<div class="card">
+<div style="font-size:13px;line-height:1.7">
+<p>✅ <s>补齐2024年数据</s>（已完成，526天）</p>
+<p>✅ <s>单因子检验 + 仓位回测</s>（已完成）</p>
+<p>🔲 <strong>加入顺势方案</strong>：情绪高→加仓，低→减仓</p>
+<p>🔲 <strong>叠加耐心资本</strong>：把非市场化资金作为修正信号</p>
+<p>🔲 <strong>多因子组合</strong>：情绪 + 成交额CV + 拥挤度 + 耐心资本成本指数</p>
+<p>🔲 <strong>优化仓位曲线</strong>：sigmoid参数调优、滞后参数扫描</p>
+<p>🔲 <strong>更长历史数据</strong>：接入iFind扩展到3-5年</p>
+</div>
+</div>
+
+<!-- ========== 详细报告链接 ========== -->
+<h2>📂 详细报告</h2>
+<div class="card">
+<a class="btn" href="single_factor_test.html">📊 单因子检验（沪深300）</a>
+<a class="btn" href="timing_backtest.html">⏱️ 仓位回测（沪深300）</a>
+<a class="btn" href="multi_index_timing.html" style="background:#1a2332;border-color:#58a6ff;font-weight:bold">🆕 多指数对比（中证1000/国证2000/沪深300）</a>
+</div>
+
+<div style="text-align:center;color:#484f58;margin-top:40px;padding:20px 0;font-size:11px;border-top:1px solid #21262d">
+择时研究 · GAMT 投研看板 · Musk 🚀
+</div>
+
+</div>
+</body>
+</html>

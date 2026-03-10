@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>单因子择时能力检验</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,sans-serif; background:#0d1117; color:#c9d1d9; }
+.container { max-width:1200px; margin:0 auto; padding:20px; }
+h1 { color:#58a6ff; font-size:26px; margin-bottom:5px; }
+h2 { color:#f0883e; font-size:18px; margin:25px 0 12px; padding-bottom:6px; border-bottom:2px solid #30363d; }
+.subtitle { color:#8b949e; font-size:13px; margin-bottom:20px; }
+.box { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:18px; margin:12px 0; }
+.chart { width:100%; height:350px; }
+table { width:100%; border-collapse:collapse; margin:10px 0; }
+th { background:#161b22; color:#58a6ff; padding:8px; text-align:center; font-size:12px; border-bottom:2px solid #30363d; }
+td { padding:7px 8px; text-align:center; border-bottom:1px solid #21262d; font-size:12px; }
+.positive { color:#7ee787; }
+.negative { color:#ff7b72; }
+.strong { font-weight:bold; }
+.insight { background:#1a1f29; border-left:4px solid #58a6ff; padding:10px 15px; margin:10px 0; border-radius:0 8px 8px 0; font-size:13px; line-height:1.5; }
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; margin:2px; }
+.tag-green { background:#1a3a2a; color:#7ee787; }
+.tag-red { background:#3a1a1a; color:#ff7b72; }
+.tag-yellow { background:#3a3a1a; color:#ffa657; }
+.tag-gray { background:#2a2a2a; color:#8b949e; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🔬 单因子择时能力检验</h1>
+<p class="subtitle" id="subtitle"></p>
+
+<h2>📊 IC 汇总表</h2>
+<div class="box" id="ic-table-box"></div>
+
+<h2>📈 分档收益（20日前瞻）</h2>
+<div id="bin-charts"></div>
+
+<h2>🏷️ 周期标签择时效果</h2>
+<div class="box">
+  <div id="chart-labels" class="chart"></div>
+</div>
+
+<h2>📋 总结</h2>
+<div class="box" id="summary"></div>
+
+</div>
+
+<script>
+const D = {"factors": ["sentiment", "promotion_rate", "zha_rate", "ud_ratio", "seal_quality", "max_height", "up_count", "down_count", "rate_1to2"], "windows": [5, 10, 20], "ic_table": [{"factor": "sentiment", "ic_5d": 0.0223, "icir_5d": -0.0874, "ic_10d": 0.0789, "icir_10d": 0.2417, "ic_20d": 0.0867, "icir_20d": 0.0099}, {"factor": "promotion_rate", "ic_5d": 0.0079, "icir_5d": -0.082, "ic_10d": 0.0834, "icir_10d": 0.4093, "ic_20d": 0.0537, "icir_20d": -0.0916}, {"factor": "zha_rate", "ic_5d": -0.0314, "icir_5d": -0.2696, "ic_10d": -0.0192, "icir_10d": -0.2664, "ic_20d": 0.0054, "icir_20d": -0.0494}, {"factor": "ud_ratio", "ic_5d": -0.0548, "icir_5d": -0.6233, "ic_10d": 0.0019, "icir_10d": -0.3164, "ic_20d": -0.0268, "icir_20d": -0.534}, {"factor": "seal_quality", "ic_5d": -0.0965, "icir_5d": -6.0039, "ic_10d": -0.0916, "icir_10d": -6.2825, "ic_20d": -0.0937, "icir_20d": -6.2825}, {"factor": "max_height", "ic_5d": 0.0059, "icir_5d": -0.3359, "ic_10d": 0.0199, "icir_10d": -0.2582, "ic_20d": 0.0685, "icir_20d": 0.0999}, {"factor": "up_count", "ic_5d": 0.0514, "icir_5d": -0.0538, "ic_10d": 0.131, "icir_10d": 0.3413, "ic_20d": 0.0161, "icir_20d": -0.208}, {"factor": "down_count", "ic_5d": 0.0878, "icir_5d": 1.2935, "ic_10d": 0.0532, "icir_10d": 1.0542, "ic_20d": 0.0485, "icir_20d": 0.8208}, {"factor": "rate_1to2", "ic_5d": -0.0046, "icir_5d": -0.0689, "ic_10d": 0.0488, "icir_10d": 0.3789, "ic_20d": 0.0204, "icir_20d": -0.2337}], "bin_data": {"sentiment": {"5": {"bin_means": [0.11, 0.12, 0.12, 0.19, 1.21], "bin_counts": [100, 105, 104, 105, 105], "monotonicity": 1.0, "mono_p": 0.0, "direction": "趋势型（高→涨）", "spread": 1.09}, "10": {"bin_means": [0.37, 0.32, 0.46, 0.5, 2.0], "bin_counts": [98, 103, 104, 104, 105], "monotonicity": 0.9, "mono_p": 0.0374, "direction": "趋势型（高→涨）", "spread": 1.63}, "20": {"bin_means": [0.98, 1.27, 1.07, 1.02, 3.19], "bin_counts": [95, 100, 104, 100, 105], "monotonicity": 0.6, "mono_p": 0.2848, "direction": "趋势型（高→涨）", "spread": 2.21}, "distribution": {"min": 12.73, "max": 84.9, "mean": 49.1, "median": 48.47, "std": 13.91}}, "promotion_rate": {"5": {"bin_means": [-0.17, 0.14, 0.76, 0.56, 0.47], "bin_counts": [101, 109, 101, 103, 105], "monotonicity": 0.6, "mono_p": 0.2848, "direction": "趋势型（高→涨）", "spread": 0.64}, "10": {"bin_means": [-0.11, 0.33, 1.1, 1.36, 1.01], "bin_counts": [98, 109, 99, 103, 105], "monotonicity": 0.7, "mono_p": 0.1881, "direction": "趋势型（高→涨）", "spread": 1.12}, "20": {"bin_means": [1.14, 0.59, 1.58, 2.33, 2.03], "bin_counts": [97, 106, 97, 100, 104], "monotonicity": 0.8, "mono_p": 0.1041, "direction": "趋势型（高→涨）", "spread": 0.89}, "distribution": {"min": 0.0, "max": 77.61, "mean": 19.57, "median": 20.55, "std": 12.09}}, "zha_rate": {"5": {"bin_means": [0.44, 0.75, 0.2, 0.11, 0.26], "bin_counts": [103, 104, 104, 103, 105], "monotonicity": -0.6, "mono_p": 0.2848, "direction": "反转型（高→跌）", "spread": -0.18}, "10": {"bin_means": [0.89, 1.3, 0.78, 0.08, 0.64], "bin_counts": [101, 104, 103, 101, 105], "monotonicity": -0.8, "mono_p": 0.1041, "direction": "反转型（高→跌）", "spread": -0.25}, "20": {"bin_means": [1.31, 2.3, 1.47, 0.64, 1.89], "bin_counts": [100, 99, 102, 98, 105], "monotonicity": 0.0, "mono_p": 1.0, "direction": "无明显方向", "spread": 0.57}, "distribution": {"min": 0.0, "max": 100.0, "mean": 26.35, "median": 27.12, "std": 12.81}}, "ud_ratio": {"5": {"bin_means": [0.39, 0.21, -0.05, 0.6], "bin_counts": [102, 104, 105, 208], "monotonicity": 0.2, "mono_p": 0.8, "direction": "无明显方向", "spread": 0.21}, "10": {"bin_means": [0.78, 0.45, 0.36, 1.05], "bin_counts": [101, 103, 104, 206], "monotonicity": 0.2, "mono_p": 0.8, "direction": "无明显方向", "spread": 0.27}, "20": {"bin_means": [2.04, 1.0, 1.32, 1.64], "bin_counts": [99, 101, 100, 204], "monotonicity": -0.2, "mono_p": 0.8, "direction": "无明显方向", "spread": -0.4}, "distribution": {"min": 0.0, "max": 20.0, "mean": 10.58, "median": 9.27, "std": 7.98}}, "seal_quality": {"5": {"bin_means": [0.35], "bin_counts": [519], "monotonicity": 0, "mono_p": 1, "direction": "无明显方向", "spread": 0.0}, "10": {"bin_means": [0.74], "bin_counts": [514], "monotonicity": 0, "mono_p": 1, "direction": "无明显方向", "spread": 0.0}, "20": {"bin_means": [1.53], "bin_counts": [504], "monotonicity": 0, "mono_p": 1, "direction": "无明显方向", "spread": 0.0}, "distribution": {"min": 0.0, "max": 8.33, "mean": 0.03, "median": 0.0, "std": 0.44}}, "max_height": {"5": {"bin_means": [0.12, 0.28, 0.53, 0.45, 0.66], "bin_counts": [182, 106, 78, 53, 100], "monotonicity": 0.9, "mono_p": 0.0374, "direction": "趋势型（高→涨）", "spread": 0.54}, "10": {"bin_means": [0.62, 0.83, 1.09, 0.41, 0.76], "bin_counts": [180, 104, 78, 52, 100], "monotonicity": -0.1, "mono_p": 0.8729, "direction": "无明显方向", "spread": 0.14}, "20": {"bin_means": [0.87, 2.01, 1.78, 1.8, 1.83], "bin_counts": [171, 103, 78, 52, 100], "monotonicity": 0.4, "mono_p": 0.5046, "direction": "趋势型（高→涨）", "spread": 0.96}, "distribution": {"min": 0, "max": 14, "mean": 5.43, "median": 5.0, "std": 2.73}}, "up_count": {"5": {"bin_means": [0.12, 0.16, 0.62, 0.07, 0.82], "bin_counts": [105, 108, 99, 105, 102], "monotonicity": 0.4, "mono_p": 0.5046, "direction": "趋势型（高→涨）", "spread": 0.7}, "10": {"bin_means": [0.51, 0.47, 1.23, 0.42, 1.09], "bin_counts": [103, 108, 99, 103, 101], "monotonicity": 0.1, "mono_p": 0.8729, "direction": "无明显方向", "spread": 0.58}, "20": {"bin_means": [1.53, 2.01, 2.02, 1.12, 0.97], "bin_counts": [103, 105, 95, 101, 100], "monotonicity": -0.6, "mono_p": 0.2848, "direction": "反转型（高→跌）", "spread": -0.56}, "distribution": {"min": 0, "max": 679, "mean": 60.53, "median": 55.0, "std": 48.87}}, "down_count": {"5": {"bin_means": [0.25, 0.59, 0.05, 0.22, 0.61], "bin_counts": [127, 103, 85, 101, 103], "monotonicity": 0.2, "mono_p": 0.7471, "direction": "无明显方向", "spread": 0.36}, "10": {"bin_means": [0.61, 0.83, 0.52, 0.74, 1.0], "bin_counts": [125, 102, 85, 100, 102], "monotonicity": 0.5, "mono_p": 0.391, "direction": "趋势型（高→涨）", "spread": 0.39}, "20": {"bin_means": [1.63, 1.71, 1.02, 1.11, 2.06], "bin_counts": [125, 100, 82, 98, 99], "monotonicity": 0.2, "mono_p": 0.7471, "direction": "无明显方向", "spread": 0.43}, "distribution": {"min": 0, "max": 2804, "mean": 21.05, "median": 4.0, "std": 138.9}}, "rate_1to2": {"5": {"bin_means": [-0.21, 0.18, 0.6, 1.09, 0.1], "bin_counts": [101, 108, 102, 103, 105], "monotonicity": 0.4, "mono_p": 0.5046, "direction": "趋势型（高→涨）", "spread": 0.31}, "10": {"bin_means": [-0.03, 0.27, 1.18, 1.82, 0.46], "bin_counts": [98, 108, 100, 103, 105], "monotonicity": 0.7, "mono_p": 0.1881, "direction": "趋势型（高→涨）", "spread": 0.49}, "20": {"bin_means": [1.43, 0.42, 1.35, 2.97, 1.51], "bin_counts": [98, 105, 97, 101, 103], "monotonicity": 0.6, "mono_p": 0.2848, "direction": "趋势型（高→涨）", "spread": 0.08}, "distribution": {"min": 0.0, "max": 69.23, "mean": 15.39, "median": 15.14, "std": 10.69}}}, "label_data": {"5": {"labels": ["—", "冰点", "分歧", "加速", "回暖", "退潮", "震荡"], "means": [-2.91, -0.676, 0.867, 0.917, 0.154, 0.182, -0.064], "counts": [2, 5, 59, 103, 129, 165, 56]}, "10": {"labels": ["—", "冰点", "分歧", "加速", "回暖", "退潮", "震荡"], "means": [-3.505, -0.328, 1.295, 1.683, 0.389, 0.441, 0.313], "counts": [2, 5, 59, 103, 126, 163, 56]}, "20": {"labels": ["—", "冰点", "分歧", "加速", "回暖", "退潮", "震荡"], "means": [-4.484, -0.385, 1.912, 2.789, 0.797, 1.395, 1.148], "counts": [2, 5, 59, 103, 122, 158, 55]}}, "data_range": "20240102 ~ 20260306", "n_days": 524};
+
+document.getElementById('subtitle').textContent = 
+  `数据: ${D.data_range} (${D.n_days}天) | 因子: ${D.factors.length}个 | 前瞻窗口: ${D.windows.join('/')}天`;
+
+// IC 表格
+let icHTML = '<table><tr><th>因子</th>';
+D.windows.forEach(w => { icHTML += `<th>IC(${w}d)</th><th>ICIR(${w}d)</th>`; });
+icHTML += '<th>评级</th></tr>';
+
+D.ic_table.forEach(row => {
+  icHTML += `<tr><td style="color:#79c0ff;font-weight:bold">${row.factor}</td>`;
+  let maxIC = 0;
+  D.windows.forEach(w => {
+    const ic = row[`ic_${w}d`];
+    const icir = row[`icir_${w}d`];
+    const cls = Math.abs(ic) > 0.03 ? (ic > 0 ? 'positive strong' : 'negative strong') : '';
+    icHTML += `<td class="${cls}">${ic > 0 ? '+' : ''}${ic.toFixed(4)}</td>`;
+    icHTML += `<td>${icir.toFixed(2)}</td>`;
+    if (Math.abs(ic) > maxIC) maxIC = Math.abs(ic);
+  });
+  
+  let tag = '';
+  if (maxIC > 0.05) tag = '<span class="tag tag-green">强</span>';
+  else if (maxIC > 0.03) tag = '<span class="tag tag-yellow">中</span>';
+  else tag = '<span class="tag tag-gray">弱</span>';
+  icHTML += `<td>${tag}</td></tr>`;
+});
+icHTML += '</table>';
+document.getElementById('ic-table-box').innerHTML = icHTML;
+
+// 分档收益柱状图
+let binHTML = '';
+D.factors.forEach(f => {
+  const bins = D.bin_data[f];
+  if (!bins || !bins[20]) return;
+  const b = bins[20];
+  binHTML += `<div class="box"><div id="chart-bin-${f}" class="chart" style="height:280px"></div></div>`;
+});
+document.getElementById('bin-charts').innerHTML = binHTML;
+
+// 渲染分档图表
+D.factors.forEach(f => {
+  const bins = D.bin_data[f];
+  if (!bins || !bins[20]) return;
+  const b = bins[20];
+  const el = document.getElementById(`chart-bin-${f}`);
+  if (!el) return;
+  
+  const chart = echarts.init(el, 'dark');
+  const labels = b.bin_means.map((_,i) => `第${i+1}档`);
+  chart.setOption({
+    backgroundColor: 'transparent',
+    title: { text: `${f} — 20日前瞻收益 (${b.direction})`, left:'center', top:5, textStyle:{color:'#8b949e',fontSize:13} },
+    tooltip: { trigger:'axis' },
+    grid: { left:50, right:30, top:40, bottom:30 },
+    xAxis: { type:'category', data: labels },
+    yAxis: { type:'value', axisLabel:{formatter:v=>v+'%'} },
+    series: [{
+      type:'bar',
+      data: b.bin_means.map(v => ({
+        value: v,
+        itemStyle: { color: v >= 0 ? '#7ee787' : '#ff7b72' }
+      }))
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+});
+
+// 周期标签图
+if (D.label_data[20]) {
+  const lb = D.label_data[20];
+  const labelChart = echarts.init(document.getElementById('chart-labels'), 'dark');
+  const order = ['冰点','回暖','加速','分歧','退潮','震荡','—'];
+  const sorted_labels = lb.labels.sort((a,b) => order.indexOf(a) - order.indexOf(b));
+  const sorted_means = sorted_labels.map(l => {
+    const idx = lb.labels.indexOf(l);
+    return lb.means[idx];
+  });
+  const sorted_counts = sorted_labels.map(l => {
+    const idx = lb.labels.indexOf(l);
+    return lb.counts[idx];
+  });
+  const colors = {
+    '冰点':'#58a6ff','回暖':'#7ee787','加速':'#ffa657',
+    '分歧':'#d2a8ff','退潮':'#ff7b72','震荡':'#8b949e','—':'#484f58'
+  };
+  
+  labelChart.setOption({
+    backgroundColor:'transparent',
+    title:{ text:'周期标签 → 未来20天沪深300平均涨跌(%)', left:'center', top:5, textStyle:{color:'#8b949e',fontSize:13} },
+    tooltip:{ trigger:'axis', formatter:p => `${p[0].name}: ${p[0].value}% (${sorted_counts[p[0].dataIndex]}天)` },
+    grid:{ left:60, right:30, top:40, bottom:30 },
+    xAxis:{ type:'category', data:sorted_labels },
+    yAxis:{ type:'value', axisLabel:{formatter:v=>v+'%'} },
+    series:[{
+      type:'bar',
+      data:sorted_means.map((v,i) => ({ value:v, itemStyle:{ color: colors[sorted_labels[i]] || '#8b949e' } }))
+    }]
+  });
+  window.addEventListener('resize', () => labelChart.resize());
+}
+
+// 总结
+const strong = D.ic_table.filter(r => {
+  return D.windows.some(w => Math.abs(r[`ic_${w}d`]) > 0.03);
+});
+let sumHTML = '<div class="insight">';
+sumHTML += `<strong>数据覆盖：</strong>${D.n_days} 天`;
+if (D.n_days < 200) sumHTML += ' ⚠️ 数据不足200天，结论仅供参考';
+sumHTML += '<br><br>';
+sumHTML += `<strong>有效因子（|IC|>0.03）：</strong>${strong.length} / ${D.factors.length} 个<br>`;
+strong.forEach(r => {
+  const ic20 = r.ic_20d;
+  const dir = ic20 > 0 ? '趋势型↗' : '反转型↘';
+  sumHTML += `&nbsp;&nbsp;• ${r.factor}: IC=${ic20>0?'+':''}${ic20.toFixed(4)} (${dir})<br>`;
+});
+sumHTML += '</div>';
+document.getElementById('summary').innerHTML = sumHTML;
+
+</script>
+</body>
+</html>
