@@ -20,6 +20,39 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ═══ 更新日志 ═══
+UPDATE_LOG_PATH = os.path.join(BASE_DIR, 'server', 'update_log.json')
+UPDATE_LOG_MAX = 500  # 最多保留500条
+
+def _load_update_log():
+    if os.path.exists(UPDATE_LOG_PATH):
+        try:
+            with open(UPDATE_LOG_PATH, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def _save_update_log(logs):
+    # 只保留最近 MAX 条
+    logs = logs[-UPDATE_LOG_MAX:]
+    with open(UPDATE_LOG_PATH, 'w', encoding='utf-8') as f:
+        json.dump(logs, f, ensure_ascii=False, indent=1)
+
+def _record_update(mod_key, mod_name, ok, elapsed, user=None):
+    """记录一次模块更新"""
+    logs = _load_update_log()
+    logs.append({
+        'module': mod_key,
+        'name': mod_name,
+        'ok': ok,
+        'elapsed': round(elapsed, 1),
+        'time': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': time.strftime('%Y-%m-%d'),
+        'user': user or 'system',
+    })
+    _save_update_log(logs)
+
 # ═══ 认证模块 ═══
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import auth
@@ -295,13 +328,18 @@ def _run_in_background(mod_keys):
 
             ok, logs = run_module(mod_key)
 
+            mod_elapsed = time.time() - t0
             state['progress']['completed_modules'] = i + 1
             state['progress']['results'][mod_key] = {
                 'ok': ok,
                 'name': mod['name'],
-                'elapsed': round(time.time() - t0, 1),
+                'elapsed': round(mod_elapsed, 1),
             }
-            state['progress']['elapsed'] = round(time.time() - t0, 1)
+            state['progress']['elapsed'] = round(mod_elapsed, 1)
+
+            # 记录更新日志
+            _record_update(mod_key, mod['name'], ok, mod_elapsed,
+                           user=state.get('triggered_by', 'system'))
 
         state['progress']['elapsed'] = round(time.time() - t0, 1)
         state['last_result'] = {
@@ -456,6 +494,16 @@ class Handler(BaseHTTPRequestHandler):
             admin = self._require_admin()
             if admin:
                 self._json(200, {'logs': auth.list_login_log(200)})
+        elif self.path == '/api/update-log':
+            # 更新日志（需要登录）
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'})
+            else:
+                logs = _load_update_log()
+                # 按日期倒序，最近的在前
+                logs.reverse()
+                self._json(200, {'logs': logs})
         elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
         else:
@@ -563,6 +611,8 @@ class Handler(BaseHTTPRequestHandler):
             state['module_name'] = MODULES[mod_key]['name']
             state['step'] = 'starting'
             state['started'] = time.strftime('%H:%M:%S')
+            user = self._get_user()
+            state['triggered_by'] = user['display_name'] if user else 'system'
 
             t = threading.Thread(target=_run_in_background, args=([mod_key],), daemon=True)
             t.start()
@@ -586,6 +636,8 @@ class Handler(BaseHTTPRequestHandler):
             state['module_name'] = MODULES[mod_keys[0]]['name']
             state['step'] = 'starting'
             state['started'] = time.strftime('%H:%M:%S')
+            user = self._get_user()
+            state['triggered_by'] = user['display_name'] if user else 'system'
 
             t = threading.Thread(target=_run_in_background, args=(mod_keys,), daemon=True)
             t.start()

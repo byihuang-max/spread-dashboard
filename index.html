@@ -379,6 +379,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
+      <div class="nav-item" data-module="update-log"><span class="icon">📝</span> 更新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
     </div>
     <div class="nav-group" id="adminNavGroup" style="display:none">
@@ -2897,9 +2898,23 @@ function initCbCharts() {
       </div>
       <iframe src="alerts/alerts.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 80px)"></iframe>
     </div><!-- /page-alerts -->
+
+    <!-- ══ 更新记录 ══ -->
+    <div class="module-page" id="page-update-log">
+      <div id="update-log-container" style="max-width:900px;margin:0 auto">
+        <div id="update-log-loading" style="text-align:center;padding:40px;color:#8b92a5">加载更新记录...</div>
+        <div id="update-log-content" style="display:none"></div>
+        <div id="update-log-empty" style="display:none;text-align:center;padding:60px;color:#8b92a5">
+          <div style="font-size:48px;margin-bottom:16px">📝</div>
+          <div style="font-size:14px">暂无更新记录</div>
+          <div style="font-size:12px;margin-top:8px;opacity:.6">模块刷新后会自动记录</div>
+        </div>
+      </div>
+    </div><!-- /page-update-log -->
+
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','report':'每日报告'};
+  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','update-log':'更新记录','report':'每日报告'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -2922,6 +2937,8 @@ function initCbCharts() {
       this.classList.add('active');
       page.classList.add('active');
       document.getElementById('pageTitle').textContent=titles[mod]||mod;
+      // 切到更新记录时加载数据
+      if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
       // 切换模块时，确保第一个 tab 和对应 strat-page 处于激活状态
       var firstTab=page.querySelector('.strat-tab');
       var firstPage=page.querySelector('.strat-page');
@@ -3211,6 +3228,113 @@ function initCbCharts() {
 
   // 更新时间
   document.getElementById('updateTime').textContent='更新: '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+})();
+</script>
+
+<!-- ═══ 更新记录逻辑 ═══ -->
+<script>
+(function(){
+  var logLoaded = false;
+
+  window.loadUpdateLog = function(){
+    if(logLoaded) return;
+    var token = localStorage.getItem('gamt_token');
+    if(!token) return;
+
+    // 尝试多种 API 地址
+    var apis = ['', 'http://localhost:9876'];
+    function tryFetch(i){
+      if(i >= apis.length){
+        document.getElementById('update-log-loading').style.display='none';
+        document.getElementById('update-log-empty').style.display='block';
+        return;
+      }
+      var h = {'Content-Type':'application/json','Authorization':'Bearer '+token};
+      fetch(apis[i]+'/api/update-log',{headers:h}).then(function(r){return r.json()}).then(function(d){
+        if(d.logs){
+          logLoaded = true;
+          renderUpdateLog(d.logs);
+        } else {
+          tryFetch(i+1);
+        }
+      }).catch(function(){tryFetch(i+1)});
+    }
+    tryFetch(0);
+  };
+
+  function renderUpdateLog(logs){
+    var loading = document.getElementById('update-log-loading');
+    var content = document.getElementById('update-log-content');
+    var empty = document.getElementById('update-log-empty');
+    loading.style.display='none';
+
+    if(!logs.length){
+      empty.style.display='block';
+      return;
+    }
+    content.style.display='block';
+
+    // 按日期分组
+    var groups = {};
+    logs.forEach(function(l){
+      var date = l.date || l.time.split(' ')[0];
+      if(!groups[date]) groups[date]=[];
+      groups[date].push(l);
+    });
+
+    var html = '';
+    var dates = Object.keys(groups).sort().reverse();
+    dates.forEach(function(date){
+      var items = groups[date];
+      // 日期标题
+      var d = new Date(date);
+      var weekdays = ['日','一','二','三','四','五','六'];
+      var dateLabel = date + ' 周' + weekdays[d.getDay()];
+
+      // 统计
+      var total = items.length;
+      var success = items.filter(function(x){return x.ok}).length;
+      var fail = total - success;
+
+      html += '<div style="margin-bottom:24px">';
+      html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e5e7eb">';
+      html += '<span style="font-size:15px;font-weight:700;color:#1e293b">📅 '+dateLabel+'</span>';
+      html += '<span style="font-size:12px;color:#64748b">共 '+total+' 次更新';
+      if(fail > 0) html += '，<span style="color:#ef4444">'+fail+' 次失败</span>';
+      html += '</span></div>';
+
+      // 时间线
+      html += '<div style="padding-left:12px;border-left:2px solid #e2e8f0">';
+      items.forEach(function(item){
+        var timeStr = item.time.split(' ')[1] || item.time;
+        var icon = item.ok ? '✅' : '❌';
+        var statusColor = item.ok ? '#10b981' : '#ef4444';
+        var statusText = item.ok ? '成功' : '失败';
+
+        html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0 8px 12px;position:relative">';
+        // 时间线圆点
+        html += '<div style="position:absolute;left:-7px;width:12px;height:12px;border-radius:50%;background:'+(item.ok?'#10b981':'#ef4444')+';border:2px solid #fff"></div>';
+        // 时间
+        html += '<span style="font-size:12px;color:#94a3b8;min-width:50px;font-family:monospace">'+timeStr+'</span>';
+        // 模块名
+        html += '<span style="font-size:13px;font-weight:600;color:#334155;min-width:100px">'+item.name+'</span>';
+        // 状态
+        html += '<span style="font-size:11px;color:'+statusColor+';font-weight:600">'+icon+' '+statusText+'</span>';
+        // 耗时
+        html += '<span style="font-size:11px;color:#94a3b8">'+item.elapsed+'s</span>';
+        // 操作人
+        if(item.user && item.user !== 'system'){
+          html += '<span style="font-size:11px;background:#f1f5f9;color:#64748b;padding:1px 8px;border-radius:10px">'+item.user+'</span>';
+        } else {
+          html += '<span style="font-size:11px;background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px">定时</span>';
+        }
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+
+    content.innerHTML = html;
+  }
 })();
 </script>
 
