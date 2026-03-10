@@ -93,14 +93,19 @@ def register(username, password, display_name=''):
         return False, '用户名已存在'
 
 def login(username, password, ip=''):
-    """登录，返回 (ok, data)"""
-    username = username.strip().lower()
+    """登录，支持用户名或姓名登录，返回 (ok, data)"""
+    login_input = username.strip()
+    login_lower = login_input.lower()
     c = _conn()
-    row = c.execute('SELECT * FROM users WHERE username=?', (username,)).fetchone()
+    # 先按用户名精确匹配（小写）
+    row = c.execute('SELECT * FROM users WHERE username=?', (login_lower,)).fetchone()
+    # 没找到则按姓名匹配（原始大小写）
+    if not row:
+        row = c.execute('SELECT * FROM users WHERE display_name=?', (login_input,)).fetchone()
 
     if not row:
         c.execute('INSERT INTO login_log (username, ip, action, success) VALUES (?,?,?,?)',
-                  (username, ip, 'login', 0))
+                  (login_input, ip, 'login', 0))
         c.commit(); c.close()
         return False, '用户名或密码错误'
 
@@ -111,7 +116,7 @@ def login(username, password, ip=''):
     h, _ = _hash_pw(password, row['salt'])
     if h != row['password_hash']:
         c.execute('INSERT INTO login_log (user_id, username, ip, action, success) VALUES (?,?,?,?,?)',
-                  (row['id'], username, ip, 'login', 0))
+                  (row['id'], login_input, ip, 'login', 0))
         c.commit(); c.close()
         return False, '用户名或密码错误'
 
@@ -123,13 +128,13 @@ def login(username, password, ip=''):
     c.execute('UPDATE users SET last_login=datetime("now","localtime"), login_count=login_count+1 WHERE id=?',
               (row['id'],))
     c.execute('INSERT INTO login_log (user_id, username, ip, action, success) VALUES (?,?,?,?,?)',
-              (row['id'], username, ip, 'login', 1))
+              (row['id'], login_input, ip, 'login', 1))
     c.commit(); c.close()
 
     return True, {
         'token': token,
-        'username': username,
-        'display_name': row['display_name'] or username,
+        'username': row['username'],
+        'display_name': row['display_name'] or row['username'],
         'is_admin': bool(row['is_admin']),
     }
 
