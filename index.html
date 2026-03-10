@@ -181,6 +181,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .module-status-table .status-running{background:#dcfce7;color:#15803d}
 .module-status-table .status-error{background:#fee2e2;color:#dc2626}
 .module-status-table .status-stale{background:#fef3c7;color:#b45309}
+.new-badge{display:inline-block;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px;vertical-align:middle;line-height:16px;letter-spacing:.3px;box-shadow:0 1px 3px rgba(249,115,22,0.3)}
+.module-group-row td{padding:10px 12px;font-size:14px;font-weight:700;color:#334155;border-bottom:2px solid #e8eaef;background:#f8fafc}
+.module-sub-row td{padding:6px 12px 6px 20px;font-size:12px;color:#64748b;border-bottom:1px solid #f3f4f6}
+.module-sub-list{font-size:12px;color:#64748b;font-weight:400;padding-top:2px}
 
 /* ── 汉堡菜单按钮 ── */
 .menu-toggle{display:none;position:fixed;top:10px;left:10px;z-index:30;background:var(--sidebar-bg);color:#e2e6ed;border:none;border-radius:8px;width:38px;height:38px;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
@@ -483,6 +487,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <table class="module-status-table">
             <thead><tr>
               <th>模块</th>
+              <th>子模块</th>
               <th>状态</th>
               <th>更新</th>
               <th>关键信号</th>
@@ -680,11 +685,64 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               '<div style="font-size:11px;color:#6b7280;margin-bottom:4px">'+c.label+'</div>'+
               '<div style="font-size:13px;font-weight:700;color:'+cc+'">'+c.value+'</div></div>';
           }).join('');
-          document.getElementById('ov-table').innerHTML=(D.modules||[]).map(function(m){
-            var st=m.status==='on'?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
-            var sigs=(m.signals||[]).slice(0,2).join(' | ')||'-';
-            return '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px 6px;font-weight:600">'+m.name+'</td><td style="padding:8px 6px">'+st+'</td><td style="padding:8px 6px;color:#6b7280">'+m.updated+'</td><td style="padding:8px 6px;color:#374151;font-size:11px">'+sigs+'</td></tr>';
-          }).join('');
+
+          /* ── 模块分组映射 ── */
+          var moduleGroups=[
+            {group:'📈 风格轧差',keys:['style-spread'],subs:[
+              {name:'经济敏感轧差'},{name:'拥挤-反身性'},{name:'风格轧差净值'},{name:'双创等权'}
+            ]},
+            {group:'🎯 策略环境适配度',keys:['env-fit'],subs:[
+              {name:'宽基量化'},{name:'强势股'},{name:'CTA'},{name:'转债'},{name:'套利'}
+            ]},
+            {group:'💰 资金流与微观结构',keys:['patient-capital','crowding','option-sentiment'],subs:[
+              {name:'耐心资本持筹'},{name:'拥挤度监控'},{name:'期权异常值监控'}
+            ]},
+            {group:'🌍 宏观与流动性',keys:['liquidity','rates','fundamentals'],subs:[
+              {name:'境内流动性'},{name:'全球利率与汇率'},{name:'经济基本面'},
+              {name:'反脆弱看板',isNew:true},{name:'HALO交易',isNew:true}
+            ]},
+            {group:'🏭 中观景气',keys:['chain-prosperity'],subs:[
+              {name:'产业链景气'}
+            ]},
+            {group:'🚨 红灯预警',keys:['alerts'],subs:[
+              {name:'A股风险'},{name:'美股风险'}
+            ]}
+          ];
+
+          var modMap={};
+          (D.modules||[]).forEach(function(m){modMap[m.key]=m;});
+
+          var html='';
+          moduleGroups.forEach(function(g){
+            /* 汇总该组状态：任一在线则在线 */
+            var anyOn=false,latestTime='-',allSigs=[];
+            g.keys.forEach(function(k){
+              var m=modMap[k];
+              if(m){
+                if(m.status==='on')anyOn=true;
+                if(m.updated&&m.updated!=='-')latestTime=m.updated;
+                allSigs=allSigs.concat(m.signals||[]);
+              }
+            });
+            var st=anyOn?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
+            var sigStr=allSigs.slice(0,2).join(' | ')||'-';
+
+            /* 子模块列 */
+            var subHtml=g.subs.map(function(s){
+              var txt=s.name;
+              if(s.isNew)txt+=(' <span class="new-badge">NEW</span>');
+              return txt;
+            }).join(' · ');
+
+            html+='<tr style="border-bottom:1px solid #f1f5f9">'+
+              '<td style="padding:10px 8px;font-weight:700;font-size:13px;color:#334155;white-space:nowrap">'+g.group+'</td>'+
+              '<td style="padding:10px 8px;font-size:12px;color:#64748b">'+subHtml+'</td>'+
+              '<td style="padding:10px 8px">'+st+'</td>'+
+              '<td style="padding:10px 8px;color:#6b7280;white-space:nowrap">'+latestTime+'</td>'+
+              '<td style="padding:10px 8px;color:#374151;font-size:11px">'+sigStr+'</td>'+
+            '</tr>';
+          });
+          document.getElementById('ov-table').innerHTML=html;
         }).catch(function(e){
           document.getElementById('ov-loading').textContent='加载失败: '+e.message;
         });
