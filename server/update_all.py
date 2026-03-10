@@ -18,6 +18,13 @@ os.chdir(BASE_DIR)
 # ═══ 模块定义 ═══
 # 每个模块：(名称, 数据脚本列表, 注入脚本)
 MODULES = {
+    'fund_nav': {
+        'name': '产品净值',
+        'data_scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),    # 拉取产品净值数据
+        ],
+        'inject_script': None,
+    },
     'style_spread': {
         'name': '风格轧差',
         'data_scripts': [
@@ -31,6 +38,7 @@ MODULES = {
         'name': '宽基量化股票',
         'data_scripts': [
             ('env_fit/quant_stock', 'quant_stock_data.py'),
+            ('env_fit/quant_stock', 'excess_attribution.py'),    # 超额归因（依赖fund_nav）
         ],
         'inject_script': ('env_fit/quant_stock', 'inject_quant_stock.py'),
     },
@@ -122,13 +130,6 @@ MODULES = {
         'data_scripts': [
             ('macro/fundamentals', 'fundamentals_data.py'),    # CPI/PPI/PMI等
             ('macro/fundamentals', 'fundamentals_calc.py'),    # 基本面指标
-        ],
-        'inject_script': None,
-    },
-    'fund_nav': {
-        'name': '产品净值',
-        'data_scripts': [
-            ('size_spread/fund_nav', 'fund_nav_data.py'),    # 拉取产品净值数据
         ],
         'inject_script': None,
     },
