@@ -686,59 +686,23 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               '<div style="font-size:13px;font-weight:700;color:'+cc+'">'+c.value+'</div></div>';
           }).join('');
 
-          /* ── 模块分组映射 ── */
-          var moduleGroups=[
-            {group:'📈 风格轧差',keys:['style-spread'],subs:[
-              {name:'经济敏感轧差'},{name:'拥挤-反身性'},{name:'风格轧差净值'},{name:'双创等权'}
-            ]},
-            {group:'🎯 策略环境适配度',keys:['env-fit'],subs:[
-              {name:'宽基量化'},{name:'强势股'},{name:'CTA'},{name:'转债'},{name:'套利'}
-            ]},
-            {group:'💰 资金流与微观结构',keys:['patient-capital','crowding','option-sentiment'],subs:[
-              {name:'耐心资本持筹'},{name:'拥挤度监控'},{name:'期权异常值监控'}
-            ]},
-            {group:'🌍 宏观与流动性',keys:['liquidity','rates','fundamentals'],subs:[
-              {name:'境内流动性'},{name:'全球利率与汇率'},{name:'经济基本面'},
-              {name:'反脆弱看板',isNew:true},{name:'HALO交易',isNew:true}
-            ]},
-            {group:'🏭 中观景气',keys:['chain-prosperity'],subs:[
-              {name:'产业链景气'}
-            ]},
-            {group:'🚨 红灯预警',keys:['alerts'],subs:[
-              {name:'A股风险'},{name:'美股风险'}
-            ]}
-          ];
-
-          var modMap={};
-          (D.modules||[]).forEach(function(m){modMap[m.key]=m;});
-
+          /* ── 模块分组渲染（使用后端 module_groups）── */
+          var groups=D.module_groups||[];
           var html='';
-          moduleGroups.forEach(function(g){
-            /* 汇总该组状态：任一在线则在线 */
-            var anyOn=false,latestTime='-',allSigs=[];
-            g.keys.forEach(function(k){
-              var m=modMap[k];
-              if(m){
-                if(m.status==='on')anyOn=true;
-                if(m.updated&&m.updated!=='-')latestTime=m.updated;
-                allSigs=allSigs.concat(m.signals||[]);
-              }
-            });
-            var st=anyOn?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
-            var sigStr=allSigs.slice(0,2).join(' | ')||'-';
-
-            /* 子模块列 */
-            var subHtml=g.subs.map(function(s){
-              var txt=s.name;
-              if(s.isNew)txt+=(' <span class="new-badge">NEW</span>');
-              return txt;
+          groups.forEach(function(g){
+            var st=g.status==='on'?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
+            var newSet={};
+            (g.new_subs||[]).forEach(function(n){newSet[n]=true;});
+            var subHtml=(g.subs||[]).map(function(s){
+              return newSet[s]?(s+' <span class="new-badge">NEW</span>'):s;
             }).join(' · ');
+            var sigStr=(g.signals||[]).slice(0,2).join(' | ')||'-';
 
             html+='<tr style="border-bottom:1px solid #f1f5f9">'+
-              '<td style="padding:10px 8px;font-weight:700;font-size:13px;color:#334155;white-space:nowrap">'+g.group+'</td>'+
+              '<td style="padding:10px 8px;font-weight:700;font-size:13px;color:#334155;white-space:nowrap">'+g.name+'</td>'+
               '<td style="padding:10px 8px;font-size:12px;color:#64748b">'+subHtml+'</td>'+
               '<td style="padding:10px 8px">'+st+'</td>'+
-              '<td style="padding:10px 8px;color:#6b7280;white-space:nowrap">'+latestTime+'</td>'+
+              '<td style="padding:10px 8px;color:#6b7280;white-space:nowrap">'+(g.updated||'-')+'</td>'+
               '<td style="padding:10px 8px;color:#374151;font-size:11px">'+sigStr+'</td>'+
             '</tr>';
           });
