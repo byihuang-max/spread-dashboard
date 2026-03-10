@@ -52,15 +52,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-.indicator-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-@media(max-width:1200px){.indicator-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.indicator-grid{grid-template-columns:1fr}}
-.indicator-card{background:#fff;border-radius:10px;border:1px solid #e8eaef;padding:16px}
-.indicator-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.indicator-name{font-size:12px;font-weight:700;color:#374151}
-.indicator-value{font-size:24px;font-weight:900;margin-bottom:4px}
-.indicator-change{font-size:11px;color:#6b7280;margin-bottom:8px}
-.indicator-chart{height:220px;margin-top:10px}
 .indicator-note{font-size:10px;color:#6b7280;line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0}
 
 </style>
@@ -81,6 +72,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
   <button class="tab-btn" onclick="switchTab('us')">🇺🇸 美股风险</button>
 </div>
 
+<!-- ===== A股风险 ===== -->
 <div id="cn-content" class="tab-content active">
 <div class="header-bar" style="margin-top:0">
   <div class="header-top">
@@ -109,33 +101,33 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 </div>
 </div>
 
+<!-- ===== 美股风险 ===== -->
 <div id="us-content" class="tab-content">
-  <div class="header-bar" style="margin-top:0">
-    <div class="header-top">
-      <div class="composite">
-        <div class="composite-score" id="usCompScore"></div>
-        <div>
-          <div class="composite-bar"><div class="composite-fill" id="usCompBar"></div></div>
-          <div class="composite-label" id="usCompLabel" style="margin-top:4px"></div>
-        </div>
+<div class="header-bar" style="margin-top:0">
+  <div class="header-top">
+    <div class="composite">
+      <div class="composite-score" id="usCompScore"></div>
+      <div>
+        <div class="composite-bar"><div class="composite-fill" id="usCompBar"></div></div>
+        <div class="composite-label" id="usCompLabel" style="margin-top:4px"></div>
       </div>
     </div>
-    <div class="alert-list" id="usAlertList"></div>
   </div>
+  <div class="alert-list" id="usAlertList"></div>
+</div>
 
-  <div class="dim-grid" id="usDimGrid"></div>
-  <div class="detail-grid" id="usDetailGrid"></div>
+<div class="dim-grid" id="usDimGrid"></div>
+<div class="detail-grid" id="usDetailGrid"></div>
 
-  <div class="chart-note">
-    <b>📖 美股风险预警怎么看：</b><br><br>
-    <b>综合风险评分(0-100)：</b>5个维度加权求和。>60=高风险（建议减仓防守），40-60=中高风险（控制仓位），20-40=中低风险（正常操作），<20=低风险（可以进攻）。<br><br>
-    <b>💰 流动性风险：</b>10Y美债收益率飙升=融资成本高企，高估值股票承压。>5%=极端紧缩。<br>
-    <b>📊 估值&技术：</b>标普/纳指偏离200MA衡量趋势强弱。跌破=-趋势转空。<-10%=技术熊市。<br>
-    <b>😱 情绪风险：</b>VIX>30=极度恐慌。单周飙升>10点=恐慌急升，历史上常对应崩盘。<br>
-    <b>🌍 跨市场：</b>黄金暴涨+美元飙升+原油高位=多重风险共振。BTC暴跌=流动性紧张。<br>
-    <b>📈 基本面：</b>失业率上升+PMI<50+收益率曲线倒挂=衰退信号。<br><br>
-    <b>危机事件标注：</b>图表上标注了2008金融危机、2020疫情崩盘、2022加息周期等关键时点。
-  </div>
+<div class="chart-note">
+  <b>📖 美股风险预警怎么看：</b><br><br>
+  <b>综合风险评分(0-100)：</b>5个维度加权求和。>60=高风险（建议减仓防守），40-60=中高风险（控制仓位），20-40=中低风险（正常操作），<20=低风险（可以进攻）。<br><br>
+  <b>🔥情绪风险：</b>VIX>30=极度恐慌。单周飙升>10点=恐慌急升，历史上常对应崩盘。<br>
+  <b>📊技术面：</b>标普/纳指偏离200MA衡量趋势强弱。跌破=趋势转空。<-10%=技术性熊市确认。<br>
+  <b>🌍跨市场：</b>黄金暴涨+美元飙升+原油高位=多重风险共振。BTC暴跌=流动性紧张。<br>
+  <b>💧流动性：</b>10Y美债>5%=融资成本高企。收益率曲线倒挂=衰退预警。TED利差走阔=银行间信用风险。<br>
+  <b>📉基本面：</b>失业率上升+ISM PMI<50=经济衰退信号。
+</div>
 </div>
 
 </div>
@@ -173,16 +165,13 @@ function loadUSData(){
 function scoreColor(s){
   if(s>=60)return '#dc2626';if(s>=40)return '#f97316';if(s>=20)return '#eab308';return '#22c55e';
 }
-function levelEmoji(l){
-  if(l=='🔴')return '🔴';if(l=='🟡')return '🟡';return '🟢';
-}
 
+/* ===== A股渲染 ===== */
 function render(){
   document.getElementById('loadingMsg').style.display='none';
   document.getElementById('app').style.display='';
   document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
 
-  // 综合评分
   var s=DATA.composite_score||0;
   document.getElementById('compScore').textContent=s.toFixed(0);
   document.getElementById('compScore').style.color=scoreColor(s);
@@ -191,71 +180,28 @@ function render(){
   document.getElementById('compLabel').textContent=DATA.composite_level||'';
   document.getElementById('compLabel').style.color=scoreColor(s);
 
-  // 预警列表
   document.getElementById('alertList').innerHTML=(DATA.alerts||[]).map(function(a){
     return '<div class="alert-item">⚠️ '+a+'</div>';
   }).join('');
 
   // 5维卡片
   var dimOrder=['liquidity','valuation','sentiment','external','micro'];
-  var grid=document.getElementById('dimGrid');
-  grid.innerHTML=dimOrder.map(function(key){
-    var d=DATA.dimensions[key];if(!d)return '';
-    var sc=d.score||0;
-    return '<div class="dim-card">'+
-      '<div class="dim-emoji">'+d.level+'</div>'+
-      '<div class="dim-name">'+d.name+'</div>'+
-      '<div class="dim-score-bar"><div class="dim-score-fill" style="width:'+sc+'%;background:'+scoreColor(sc)+'"></div></div>'+
-      '<div class="dim-score-text" style="color:'+scoreColor(sc)+'">'+sc+'</div>'+
-      '<ul class="dim-items">'+
-        (d.items||[]).map(function(it){return '<li>• '+it+'</li>'}).join('')+
-      '</ul></div>';
-  }).join('');
+  renderDimGrid('dimGrid', DATA, dimOrder);
 
   // 趋势图
-  var dg=document.getElementById('detailGrid');
-  var html='';
-  var chartConfigs=[];
-
-  if(DATA.dimensions.liquidity&&DATA.dimensions.liquidity.trend&&DATA.dimensions.liquidity.trend.length){
-    html+='<div class="chart-box"><h3>💧 DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div>'+
-      '<div class="indicator-note">💡 DR007上升=资金面收紧。>2.5%=央行在收紧流动性，市场容易杀估值。</div></div>';
-    chartConfigs.push({id:'chartLiq',data:DATA.dimensions.liquidity.trend,label:'DR007 %',color:'#dc2626'});
-  }
-  if(DATA.dimensions.valuation&&DATA.dimensions.valuation.trend&&DATA.dimensions.valuation.trend.length){
-    html+='<div class="chart-box"><h3>📊 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div>'+
-      '<div class="indicator-note">💡 PE分位>90%=比过去90%的时间都贵。估值越高，未来回报越低。</div></div>';
-    chartConfigs.push({id:'chartVal',data:DATA.dimensions.valuation.trend,label:'PE(TTM)',color:'#6366f1'});
-  }
-  if(DATA.dimensions.sentiment&&DATA.dimensions.sentiment.trend&&DATA.dimensions.sentiment.trend.length){
-    html+='<div class="chart-box"><h3>🔥 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div>'+
-      '<div class="indicator-note">💡 成交额/MA20>1.8倍=市场过热。放量上涨易见顶，放量下跌易恐慌。</div></div>';
-    chartConfigs.push({id:'chartSent',data:DATA.dimensions.sentiment.trend,label:'成交额(亿)',color:'#f59e0b'});
-  }
-  if(DATA.dimensions.external&&DATA.dimensions.external.trend&&DATA.dimensions.external.trend.length){
-    html+='<div class="chart-box"><h3>🌍 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div>'+
-      '<div class="indicator-note">💡 利差<-2%=资金外流压力大。利差收窄=人民币贬值+北向资金流出。</div></div>';
-    chartConfigs.push({id:'chartExt',data:DATA.dimensions.external.trend,label:'中美利差 %',color:'#2563eb',fill:true});
-  }
-
-  dg.innerHTML=html;
-
-  chartConfigs.forEach(function(cfg){
-    new Chart(document.getElementById(cfg.id),{type:'line',
-      data:{labels:cfg.data.map(function(d){return d.date}),
-        datasets:[{label:cfg.label,data:cfg.data.map(function(d){return d.value!=null?d.value:d.spread}),
-          borderColor:cfg.color,backgroundColor:cfg.fill?cfg.color+'18':'transparent',
-          fill:!!cfg.fill,tension:0.3,borderWidth:2,pointRadius:0}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-        scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8,font:{size:9}}}}}
-    });
-  });
+  var chartDefs=[
+    {key:'liquidity', title:'💧 DR007走势', label:'DR007 %', color:'#dc2626', note:'DR007上升=资金面收紧。>2.5%=央行在收紧流动性。'},
+    {key:'valuation', title:'📊 上证PE(TTM)走势', label:'PE(TTM)', color:'#6366f1', note:'PE分位>90%=比过去90%的时间都贵。'},
+    {key:'sentiment', title:'🔥 上证成交额(亿)', label:'成交额(亿)', color:'#f59e0b', note:'成交额/MA20>1.8倍=市场过热。'},
+    {key:'external', title:'🌍 中美利差走势', label:'中美利差 %', color:'#2563eb', fill:true, note:'利差<-2%=资金外流压力大。'}
+  ];
+  renderDetailGrid('detailGrid', DATA, chartDefs, 'cn');
 }
 
+/* ===== 美股渲染 ===== */
 function renderUS(){
   if(!US_DATA || !US_DATA.dimensions)return;
 
-  // 综合评分
   var s=US_DATA.composite_score||0;
   document.getElementById('usCompScore').textContent=s.toFixed(0);
   document.getElementById('usCompScore').style.color=scoreColor(s);
@@ -264,16 +210,29 @@ function renderUS(){
   document.getElementById('usCompLabel').textContent=US_DATA.composite_level||'';
   document.getElementById('usCompLabel').style.color=scoreColor(s);
 
-  // 预警列表
   document.getElementById('usAlertList').innerHTML=(US_DATA.alerts||[]).map(function(a){
     return '<div class="alert-item">⚠️ '+a+'</div>';
   }).join('');
 
   // 5维卡片
-  var dimOrder=['liquidity','valuation','sentiment','cross_market','fundamentals'];
-  var grid=document.getElementById('usDimGrid');
+  var dimOrder=['emotion','technical','crossmarket','liquidity','fundamental'];
+  renderDimGrid('usDimGrid', US_DATA, dimOrder);
+
+  // 趋势图
+  var chartDefs=[
+    {key:'emotion', title:'🔥 VIX恐慌指数', label:'VIX', color:'#dc2626', note:'VIX>30=极度恐慌。快速飙升比绝对值更危险。'},
+    {key:'technical', title:'📊 标普500偏离200MA(%)', label:'偏离度 %', color:'#6366f1', note:'跌破200MA=长期趋势转弱。<-10%=技术性熊市。'},
+    {key:'crossmarket', title:'🌍 黄金价格', label:'黄金 $', color:'#f59e0b', note:'黄金上涨=避险情绪升温。突破新高=对法币/股市信心下降。'},
+    {key:'liquidity', title:'💧 10Y美债收益率', label:'10Y %', color:'#2563eb', note:'10Y美债>5%=融资成本高企，股市估值承压。'}
+  ];
+  renderDetailGrid('usDetailGrid', US_DATA, chartDefs, 'us');
+}
+
+/* ===== 通用: 渲染维度卡片 ===== */
+function renderDimGrid(gridId, data, dimOrder){
+  var grid=document.getElementById(gridId);
   grid.innerHTML=dimOrder.map(function(key){
-    var d=US_DATA.dimensions[key];if(!d)return '';
+    var d=data.dimensions[key];if(!d)return '';
     var sc=d.score||0;
     return '<div class="dim-card">'+
       '<div class="dim-emoji">'+d.level+'</div>'+
@@ -284,63 +243,49 @@ function renderUS(){
         (d.items||[]).map(function(it){return '<li>• '+it+'</li>'}).join('')+
       '</ul></div>';
   }).join('');
+}
 
-  // 趋势图（从各维度的charts数组中提取）
-  var dg=document.getElementById('usDetailGrid');
+/* ===== 通用: 渲染趋势图 ===== */
+function renderDetailGrid(gridId, data, chartDefs, prefix){
+  var dg=document.getElementById(gridId);
   var html='';
   var chartConfigs=[];
 
-  dimOrder.forEach(function(key){
-    var d=US_DATA.dimensions[key];if(!d||!d.charts)return;
-    d.charts.forEach(function(cfg){
-      if(!cfg.data||cfg.data.length<2)return;
-      html+='<div class="chart-box"><h3>'+cfg.title+'</h3><div class="chart-wrap"><canvas id="'+cfg.id+'"></canvas></div>'+
-        (cfg.note?'<div class="indicator-note">💡 '+cfg.note+'</div>':'')+
+  chartDefs.forEach(function(def){
+    var dim=data.dimensions[def.key];
+    if(dim && dim.trend && dim.trend.length){
+      var canvasId='chart-'+prefix+'-'+def.key;
+      html+='<div class="chart-box"><h3>'+def.title+'</h3><div class="chart-wrap"><canvas id="'+canvasId+'"></canvas></div>'+
+        (def.note?'<div class="indicator-note">💡 '+def.note+'</div>':'')+
       '</div>';
-      chartConfigs.push(cfg);
-    });
+      chartConfigs.push({id:canvasId, data:dim.trend, label:def.label, color:def.color, fill:!!def.fill});
+    }
   });
 
   dg.innerHTML=html;
 
-  // 危机事件标注
-  var crisisEvents=US_DATA.crisis_events||[];
-
   chartConfigs.forEach(function(cfg){
-    var canvas=document.getElementById(cfg.id);
-    if(!canvas)return;
-
-    // 筛选相关危机事件
-    var title=cfg.title||'';
-    var relevantCrisis=crisisEvents.filter(function(c){
-      if(title.includes('VIX')) return c.date>='2008-10-10';
-      if(title.includes('标普')||title.includes('纳指')) return true;
-      if(title.includes('黄金')||title.includes('美元')) return c.type!='加息周期';
-      if(title.includes('比特币')) return c.date>='2020-01-01';
-      if(title.includes('原油')) return c.type!='加息周期';
-      if(title.includes('美债')||title.includes('利差')) return c.type=='加息周期';
-      return false;
-    });
-
+    // 构建危机事件标注（仅美股）
     var annotations={};
-    relevantCrisis.forEach(function(crisis,idx){
-      annotations['crisis'+idx]={
-        type:'line',xMin:crisis.date,xMax:crisis.date,
-        borderColor:'#dc2626',borderWidth:1,borderDash:[5,5],
-        label:{display:true,content:crisis.name,position:'start',
-          backgroundColor:'rgba(220,38,38,0.8)',color:'#fff',font:{size:8},padding:2}
-      };
-    });
+    if(prefix==='us' && data.crisis_events){
+      data.crisis_events.forEach(function(crisis,idx){
+        annotations['crisis'+idx]={
+          type:'line', xMin:crisis.date, xMax:crisis.date,
+          borderColor:'#dc2626', borderWidth:1, borderDash:[5,5],
+          label:{display:true, content:crisis.name, position:'start',
+            backgroundColor:'rgba(220,38,38,0.8)', color:'#fff', font:{size:8}, padding:2}
+        };
+      });
+    }
 
-    new Chart(canvas,{type:'line',
+    new Chart(document.getElementById(cfg.id),{type:'line',
       data:{labels:cfg.data.map(function(d){return d.date}),
-        datasets:[{label:cfg.label,data:cfg.data.map(function(d){return d.value}),
+        datasets:[{label:cfg.label,data:cfg.data.map(function(d){return d.value!=null?d.value:d.spread}),
           borderColor:cfg.color,backgroundColor:cfg.fill?cfg.color+'18':'transparent',
           fill:!!cfg.fill,tension:0.3,borderWidth:2,pointRadius:0}]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},annotation:{annotations:annotations}},
-        scales:{y:{grid:{color:'#f0f0f0'}},
-          x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8,font:{size:9}}}}}
+        plugins:{legend:{display:false}, annotation:{annotations:annotations}},
+        scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8,font:{size:9}}}}}
     });
   });
 }
