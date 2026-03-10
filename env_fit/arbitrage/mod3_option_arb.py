@@ -48,7 +48,7 @@ def ts_api(api_name, params, fields=None):
     for attempt in range(3):
         try:
             _last_call = time.time()
-            r = requests.post(TS_URL, json=body, timeout=60)
+            r = requests.post(TS_URL, json=body, timeout=60, proxies={'http': None, 'https': None})
             if not r.text:
                 time.sleep(3)
                 continue

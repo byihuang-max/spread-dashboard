@@ -38,7 +38,7 @@ def ts_query(api_name, params, fields='', retries=3):
             r = requests.post(TS_API, json={
                 'api_name': api_name, 'token': TS_TOKEN,
                 'params': params, 'fields': fields,
-            }, timeout=60)
+            }, timeout=60, proxies={'http': None, 'https': None})
             d = r.json()
             if d.get('code') == 0:
                 data = d.get('data', {})

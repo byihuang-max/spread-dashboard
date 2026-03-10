@@ -14,7 +14,7 @@ PROXY = None  # iFind 直连，不走代理
 def ts(api_name, params=None, fields=''):
     req = {'api_name': api_name, 'token': TS_TOKEN, 'params': params or {}, 'fields': fields}
     try:
-        r = requests.post(TS_SERVER, json=req, timeout=30)
+        r = requests.post(TS_SERVER, json=req, timeout=30, proxies={'http': None, 'https': None})
         result = r.json()
         if result.get('code') != 0: return None
         data = result.get('data', {})

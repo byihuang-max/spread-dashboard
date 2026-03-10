@@ -40,7 +40,7 @@ def ts_api(api_name, params=None, fields='', retries=3):
         body["fields"] = fields
     for attempt in range(retries):
         try:
-            r = requests.post(TUSHARE_URL, json=body, timeout=60)
+            r = requests.post(TUSHARE_URL, json=body, timeout=60, proxies={'http': None, 'https': None})
             d = r.json()
             if d.get("code") != 0:
                 log(f"  API error ({api_name}): {d.get('msg','')}")

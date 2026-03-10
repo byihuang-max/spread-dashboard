@@ -71,7 +71,7 @@ def ts_api(api_name, fields='', **kwargs):
         body['fields'] = fields
     for attempt in range(3):
         try:
-            r = requests.post(TUSHARE_URL, json=body, timeout=30)
+            r = requests.post(TUSHARE_URL, json=body, timeout=30, proxies={'http': None, 'https': None})
             j = r.json()
             if j.get('code') != 0:
                 print(f"  API error {api_name}: {j.get('msg')}")

@@ -31,7 +31,7 @@ def tushare_call(api_name, params, fields='', retries=5):
             resp = requests.post(TUSHARE_URL, json={
                 'api_name': api_name, 'token': TUSHARE_TOKEN,
                 'params': params, 'fields': fields
-            }, timeout=20)
+            }, timeout=20, proxies={'http': None, 'https': None})
             data = resp.json()
             if data.get('code') == 0 and data.get('data'):
                 cols = data['data']['fields']

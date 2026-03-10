@@ -38,7 +38,7 @@ def tushare_call(api_name, params, retries=3):
             resp = requests.post(TUSHARE_URL, json={
                 'api_name': api_name, 'token': TUSHARE_TOKEN,
                 'params': params, 'fields': ''
-            }, timeout=20)
+            }, timeout=20, proxies={'http': None, 'https': None})
             data = resp.json()
             if data.get('code') == 0 and data.get('data'):
                 cols = data['data']['fields']
@@ -187,7 +187,7 @@ def fetch_daily_basic(trade_date, retries=3):
                 'api_name': 'daily_basic', 'token': TUSHARE_TOKEN,
                 'params': {'trade_date': trade_date},
                 'fields': 'ts_code,total_mv'
-            }, timeout=20)
+            }, timeout=20, proxies={'http': None, 'https': None})
             data = resp.json()
             if data.get('code') == 0 and data.get('data'):
                 cols = data['data']['fields']

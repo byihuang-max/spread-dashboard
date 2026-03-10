@@ -12,8 +12,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_DIR = os.path.join(SCRIPT_DIR, 'cache')
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-TUSHARE_TOKEN = '33b3ff939d0d7954cd76cacce7cf6cbb2b3c3feda13d1ca2cfa594e20ecd'
-TUSHARE_URL = 'http://lianghua.nanyangqiankun.top'
+TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
+TUSHARE_URL = 'https://api.tushare.pro'
 
 # 复用路径
 BASE = os.path.dirname(os.path.dirname(SCRIPT_DIR))
@@ -31,7 +31,7 @@ def ts_api(api_name, fields='', **kwargs):
         body['fields'] = fields
     for attempt in range(3):
         try:
-            r = requests.post(TUSHARE_URL, json=body, timeout=30)
+            r = requests.post(TUSHARE_URL, json=body, timeout=30, proxies={'http': None, 'https': None})
             if not r.text.strip():
                 if attempt < 2:
                     time.sleep(1)

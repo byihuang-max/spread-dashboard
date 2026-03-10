@@ -54,7 +54,7 @@ def fetch_index_daily(ts_code, start_date='20230701'):
         'api_name': 'index_daily',
         'token': TS_TOKEN,
         'params': {'ts_code': ts_code, 'start_date': start_date, 'fields': 'trade_date,close'},
-    }, timeout=30)
+    }, timeout=30, proxies={'http': None, 'https': None})
     data = resp.json()
     items = data.get('data', {}).get('items', [])
     fields = data.get('data', {}).get('fields', [])

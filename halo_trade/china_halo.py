@@ -30,7 +30,7 @@ def tushare_query(api_name, fields, **params):
         "fields": fields
     }
     try:
-        resp = requests.post(TUSHARE_API, json=data, timeout=30)
+        resp = requests.post(TUSHARE_API, json=data, timeout=30, proxies={'http': None, 'https': None})
         result = resp.json()
         if result['code'] != 0:
             print(f"❌ Tushare API 错误: {result.get('msg', 'Unknown')}")

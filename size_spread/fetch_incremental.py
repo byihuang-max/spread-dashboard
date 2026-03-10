@@ -60,7 +60,7 @@ def ts(api, params, fields=''):
         body["fields"] = fields
     for attempt in range(3):
         try:
-            r = requests.post(TS_URL, json=body, timeout=90)
+            r = requests.post(TS_URL, json=body, timeout=90, proxies={'http': None, 'https': None})
             if not r.text.strip():
                 print(f"  空响应，重试 {attempt+1}/3...")
                 time.sleep(2)
