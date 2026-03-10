@@ -184,6 +184,34 @@ MODULES = {
             ('alerts', 'alerts_calc.py'),
         ],
     },
+    'halo_trade': {
+        'name': 'HALO交易',
+        'scripts': [
+            ('halo_trade', 'halo_data.py'),
+            ('halo_trade', 'halo_financials.py'),
+            ('halo_trade', 'halo_calc.py'),
+            ('halo_trade', 'china_halo.py'),
+        ],
+    },
+    'us_alerts': {
+        'name': '美股风险监控',
+        'scripts': [
+            ('alerts', 'us_alerts_data.py'),
+            ('alerts', 'us_alerts_calc.py'),
+        ],
+    },
+    'macro_score': {
+        'name': '宏观打分',
+        'scripts': [
+            ('macro/score', 'macro_score.py'),
+        ],
+    },
+    'overview': {
+        'name': '仪表盘汇总',
+        'scripts': [
+            ('server', 'overview_calc.py'),
+        ],
+    },
 }
 
 # Tab 名 → 模块名映射（前端 data-strat 到后端 module key）
@@ -203,6 +231,10 @@ TAB_MAP = {
     'fundamentals': 'fundamentals',
     'chain-prosperity': 'chain-prosperity',
     'alerts': 'alerts',
+    'halo': 'halo_trade',
+    'us-alerts': 'us_alerts',
+    'macro-score': 'macro_score',
+    'overview': 'overview',
 }
 
 # ═══ 全局状态 ═══
