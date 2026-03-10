@@ -21,12 +21,10 @@ def load_csv(name):
         return pd.DataFrame()
     df = pd.read_csv(path)
     if 'trade_date' in df.columns:
-        # 处理纯数字日期 (20260227) 和字符串日期 (2026-02-27)
-        sample = df['trade_date'].dropna().iloc[0] if len(df) > 0 else None
-        if sample is not None and isinstance(sample, (int, float, np.integer, np.floating)):
-            df['trade_date'] = pd.to_datetime(df['trade_date'].astype(int).astype(str), format='%Y%m%d')
-        else:
-            df['trade_date'] = pd.to_datetime(df['trade_date'])
+        # 处理纯数字日期 (20260227) 和字符串日期 (2026-02-27) 混合情况
+        # 先统一转字符串，再用 mixed 格式解析
+        df['trade_date'] = df['trade_date'].astype(str).str.strip()
+        df['trade_date'] = pd.to_datetime(df['trade_date'], format='mixed', dayfirst=False)
     return df
 
 
