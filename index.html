@@ -379,7 +379,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
-      <div class="nav-item" data-module="update-log"><span class="icon">📝</span> 更新记录</div>
+      <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
     </div>
     <div class="nav-group" id="adminNavGroup" style="display:none">
@@ -2899,14 +2899,14 @@ function initCbCharts() {
       <iframe src="alerts/alerts.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 80px)"></iframe>
     </div><!-- /page-alerts -->
 
-    <!-- ══ 更新记录 ══ -->
+    <!-- ══ 刷新记录 ══ -->
     <div class="module-page" id="page-update-log">
       <div id="update-log-container" style="max-width:900px;margin:0 auto">
-        <div id="update-log-loading" style="text-align:center;padding:40px;color:#8b92a5">加载更新记录...</div>
+        <div id="update-log-loading" style="text-align:center;padding:40px;color:#8b92a5">加载刷新记录...</div>
         <div id="update-log-content" style="display:none"></div>
         <div id="update-log-empty" style="display:none;text-align:center;padding:60px;color:#8b92a5">
           <div style="font-size:48px;margin-bottom:16px">📝</div>
-          <div style="font-size:14px">暂无更新记录</div>
+          <div style="font-size:14px">暂无刷新记录</div>
           <div style="font-size:12px;margin-top:8px;opacity:.6">模块刷新后会自动记录</div>
         </div>
       </div>
@@ -2914,7 +2914,7 @@ function initCbCharts() {
 
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','update-log':'更新记录','report':'每日报告'};
+  var titles={'overview':'仪表盘','style-spread':'风格轧差','env-fit':'策略环境适配度','fund-flow':'资金流与微观结构','macro':'宏观与流动性','meso':'中观景气','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -2937,7 +2937,7 @@ function initCbCharts() {
       this.classList.add('active');
       page.classList.add('active');
       document.getElementById('pageTitle').textContent=titles[mod]||mod;
-      // 切到更新记录时加载数据
+      // 切到刷新记录时加载数据
       if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
       // 切换模块时，确保第一个 tab 和对应 strat-page 处于激活状态
       var firstTab=page.querySelector('.strat-tab');
@@ -3231,7 +3231,7 @@ function initCbCharts() {
 })();
 </script>
 
-<!-- ═══ 更新记录逻辑 ═══ -->
+<!-- ═══ 刷新记录逻辑 ═══ -->
 <script>
 (function(){
   var logLoaded = false;
@@ -3499,6 +3499,8 @@ function initCbCharts() {
     if(user.is_admin){
       var ag=document.getElementById('adminNavGroup');
       if(ag) ag.style.display='';
+      var ul=document.getElementById('navUpdateLog');
+      if(ul) ul.style.display='';
     }
     // 检查是否有正在运行的刷新任务
     if(typeof STATUS_API!=='undefined'&&STATUS_API){
