@@ -110,11 +110,31 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 </div>
 
 <div id="us-content" class="tab-content">
-  <div class="indicator-grid" id="usIndicatorGrid"></div>
+  <div class="header-bar" style="margin-top:0">
+    <div class="header-top">
+      <div class="composite">
+        <div class="composite-score" id="usCompScore"></div>
+        <div>
+          <div class="composite-bar"><div class="composite-fill" id="usCompBar"></div></div>
+          <div class="composite-label" id="usCompLabel" style="margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert-list" id="usAlertList"></div>
+  </div>
+
+  <div class="dim-grid" id="usDimGrid"></div>
+  <div class="detail-grid" id="usDetailGrid"></div>
+
   <div class="chart-note">
-    <b>📖 美股风险监控说明：</b><br><br>
-    展示核心指标的历史趋势，不做固定权重打分。你根据当下环境自主判断哪些指标更重要，观察多指标共振信号。<br><br>
-    <b>危机事件标注：</b>图表上标注了2008金融危机、2020疫情崩盘、2022加息周期等关键时点，帮助理解指标在历史危机中的表现。
+    <b>📖 美股风险预警怎么看：</b><br><br>
+    <b>综合风险评分(0-100)：</b>5个维度加权求和。>60=高风险（建议减仓防守），40-60=中高风险（控制仓位），20-40=中低风险（正常操作），<20=低风险（可以进攻）。<br><br>
+    <b>💰 流动性风险：</b>10Y美债收益率飙升=融资成本高企，高估值股票承压。>5%=极端紧缩。<br>
+    <b>📊 估值&技术：</b>标普/纳指偏离200MA衡量趋势强弱。跌破=-趋势转空。<-10%=技术熊市。<br>
+    <b>😱 情绪风险：</b>VIX>30=极度恐慌。单周飙升>10点=恐慌急升，历史上常对应崩盘。<br>
+    <b>🌍 跨市场：</b>黄金暴涨+美元飙升+原油高位=多重风险共振。BTC暴跌=流动性紧张。<br>
+    <b>📈 基本面：</b>失业率上升+PMI<50+收益率曲线倒挂=衰退信号。<br><br>
+    <b>危机事件标注：</b>图表上标注了2008金融危机、2020疫情崩盘、2022加息周期等关键时点。
   </div>
 </div>
 
@@ -233,93 +253,94 @@ function render(){
 }
 
 function renderUS(){
-  if(!US_DATA || !US_DATA.indicators)return;
-  
-  var grid=document.getElementById('usIndicatorGrid');
-  grid.innerHTML=US_DATA.indicators.map(function(ind){
-    var changeText='';
-    if(ind.change_1w!=null)changeText='1周: '+(ind.change_1w>0?'+':'')+ind.change_1w.toFixed(2);
-    if(ind.change_1m!=null)changeText+=' | 1月: '+(ind.change_1m>0?'+':'')+ind.change_1m.toFixed(2);
-    
-    return '<div class="indicator-card">'+
-      '<div class="indicator-header">'+
-        '<span class="indicator-name">'+ind.name+'</span>'+
-        '<span style="font-size:20px">'+ind.level+'</span>'+
-      '</div>'+
-      '<div class="indicator-value">'+ind.current+' <span style="font-size:16px;color:#6b7280">'+ind.trend+'</span></div>'+
-      '<div class="indicator-change">'+changeText+'</div>'+
-      '<div class="indicator-chart"><canvas id="chart-'+ind.name.replace(/\s/g,'')+'"></canvas></div>'+
-      (ind.note?'<div class="indicator-note">💡 '+ind.note+'</div>':'')+
-    '</div>';
+  if(!US_DATA || !US_DATA.dimensions)return;
+
+  // 综合评分
+  var s=US_DATA.composite_score||0;
+  document.getElementById('usCompScore').textContent=s.toFixed(0);
+  document.getElementById('usCompScore').style.color=scoreColor(s);
+  var bar=document.getElementById('usCompBar');
+  bar.style.width=s+'%';bar.style.background=scoreColor(s);
+  document.getElementById('usCompLabel').textContent=US_DATA.composite_level||'';
+  document.getElementById('usCompLabel').style.color=scoreColor(s);
+
+  // 预警列表
+  document.getElementById('usAlertList').innerHTML=(US_DATA.alerts||[]).map(function(a){
+    return '<div class="alert-item">⚠️ '+a+'</div>';
   }).join('');
-  
-  // 渲染趋势图
-  US_DATA.indicators.forEach(function(ind){
-    if(!ind.history || ind.history.length<2)return;
-    var canvasId='chart-'+ind.name.replace(/\s/g,'');
-    var canvas=document.getElementById(canvasId);
+
+  // 5维卡片
+  var dimOrder=['liquidity','valuation','sentiment','cross_market','fundamentals'];
+  var grid=document.getElementById('usDimGrid');
+  grid.innerHTML=dimOrder.map(function(key){
+    var d=US_DATA.dimensions[key];if(!d)return '';
+    var sc=d.score||0;
+    return '<div class="dim-card">'+
+      '<div class="dim-emoji">'+d.level+'</div>'+
+      '<div class="dim-name">'+d.name+'</div>'+
+      '<div class="dim-score-bar"><div class="dim-score-fill" style="width:'+sc+'%;background:'+scoreColor(sc)+'"></div></div>'+
+      '<div class="dim-score-text" style="color:'+scoreColor(sc)+'">'+sc+'</div>'+
+      '<ul class="dim-items">'+
+        (d.items||[]).map(function(it){return '<li>• '+it+'</li>'}).join('')+
+      '</ul></div>';
+  }).join('');
+
+  // 趋势图（从各维度的charts数组中提取）
+  var dg=document.getElementById('usDetailGrid');
+  var html='';
+  var chartConfigs=[];
+
+  dimOrder.forEach(function(key){
+    var d=US_DATA.dimensions[key];if(!d||!d.charts)return;
+    d.charts.forEach(function(cfg){
+      if(!cfg.data||cfg.data.length<2)return;
+      html+='<div class="chart-box"><h3>'+cfg.title+'</h3><div class="chart-wrap"><canvas id="'+cfg.id+'"></canvas></div>'+
+        (cfg.note?'<div class="indicator-note">💡 '+cfg.note+'</div>':'')+
+      '</div>';
+      chartConfigs.push(cfg);
+    });
+  });
+
+  dg.innerHTML=html;
+
+  // 危机事件标注
+  var crisisEvents=US_DATA.crisis_events||[];
+
+  chartConfigs.forEach(function(cfg){
+    var canvas=document.getElementById(cfg.id);
     if(!canvas)return;
-    
+
     // 筛选相关危机事件
-    var relevantCrisis = (US_DATA.crisis_events||[]).filter(function(c){
-      var name = ind.name;
-      if(name.includes('VIX')) return c.date>='2008-10-10';
-      if(name.includes('标普')||name.includes('纳指')) return true;
-      if(name.includes('黄金')||name.includes('美元')) return c.type!='加息周期';
-      if(name.includes('比特币')) return c.date>='2020-01-01';
-      if(name.includes('原油')) return c.type!='加息周期';
-      if(name.includes('美债')||name.includes('利差')) return c.type=='加息周期';
+    var title=cfg.title||'';
+    var relevantCrisis=crisisEvents.filter(function(c){
+      if(title.includes('VIX')) return c.date>='2008-10-10';
+      if(title.includes('标普')||title.includes('纳指')) return true;
+      if(title.includes('黄金')||title.includes('美元')) return c.type!='加息周期';
+      if(title.includes('比特币')) return c.date>='2020-01-01';
+      if(title.includes('原油')) return c.type!='加息周期';
+      if(title.includes('美债')||title.includes('利差')) return c.type=='加息周期';
       return false;
     });
-    
-    // 构建annotation配置
-    var annotations = {};
+
+    var annotations={};
     relevantCrisis.forEach(function(crisis,idx){
-      annotations['crisis'+idx] = {
-        type: 'line',
-        xMin: crisis.date,
-        xMax: crisis.date,
-        borderColor: '#dc2626',
-        borderWidth: 1,
-        borderDash: [5, 5],
-        label: {
-          display: true,
-          content: crisis.name,
-          position: 'start',
-          backgroundColor: 'rgba(220, 38, 38, 0.8)',
-          color: '#fff',
-          font: {size: 8},
-          padding: 2
-        }
+      annotations['crisis'+idx]={
+        type:'line',xMin:crisis.date,xMax:crisis.date,
+        borderColor:'#dc2626',borderWidth:1,borderDash:[5,5],
+        label:{display:true,content:crisis.name,position:'start',
+          backgroundColor:'rgba(220,38,38,0.8)',color:'#fff',font:{size:8},padding:2}
       };
     });
-    
-    var ctx=canvas.getContext('2d');
-    new Chart(ctx,{
-      type:'line',
-      data:{
-        labels:ind.history.map(function(h){return h.date}),
-        datasets:[{
-          data:ind.history.map(function(h){return h.value}),
-          borderColor:ind.level=='🔴'?'#dc2626':ind.level=='🟡'?'#f59e0b':'#22c55e',
-          borderWidth:2,
-          pointRadius:0,
-          tension:0.3,
-          fill:false
-        }]
-      },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins:{
-          legend:{display:false},
-          annotation:{annotations:annotations}
-        },
-        scales:{
-          y:{ticks:{font:{size:9}},grid:{color:'#f0f0f0'}},
-          x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:6,font:{size:8}}}
-        }
-      }
+
+    new Chart(canvas,{type:'line',
+      data:{labels:cfg.data.map(function(d){return d.date}),
+        datasets:[{label:cfg.label,data:cfg.data.map(function(d){return d.value}),
+          borderColor:cfg.color,backgroundColor:cfg.fill?cfg.color+'18':'transparent',
+          fill:!!cfg.fill,tension:0.3,borderWidth:2,pointRadius:0}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},annotation:{annotations:annotations}},
+        scales:{y:{grid:{color:'#f0f0f0'}},
+          x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8,font:{size:9}}}}}
     });
   });
 }
