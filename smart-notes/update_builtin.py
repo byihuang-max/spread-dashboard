@@ -5,8 +5,9 @@
 import json, re
 from pathlib import Path
 
-NOTES_DIR = Path.home() / "Desktop/gamt-dashboard/smart-notes/notes"
-INDEX_HTML = Path.home() / "Desktop/gamt-dashboard/smart-notes/index.html"
+_BASE = Path(__file__).resolve().parent
+NOTES_DIR = _BASE / "notes"
+INDEX_HTML = _BASE / "index.html"
 
 # 读 index.json
 with open(NOTES_DIR / "index.json", encoding="utf-8") as f:

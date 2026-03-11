@@ -2,9 +2,10 @@
 """从 style_spread.json 生成静态 HTML 看板（v2 card格式 + MA20）"""
 import json, sys, os
 
-json_path = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/data/style_spread.json')
-out_en = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread.html')
-out_cn = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/风格轧差看板.html')
+_BASE = os.path.dirname(os.path.abspath(__file__))
+json_path = os.path.join(_BASE, 'data', 'style_spread.json')
+out_en = os.path.join(_BASE, 'style_spread.html')
+out_cn = os.path.join(_BASE, '风格轧差看板.html')
 
 if not os.path.exists(json_path):
     print("❌ style_spread.json 不存在，请先运行 compute_spreads.py")

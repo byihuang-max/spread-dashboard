@@ -8,8 +8,9 @@ DIR = Path(__file__).resolve().parent
 CSV_PATH = DIR / "momentum_warning.csv"
 JSON_PATH = DIR / "momentum_warning.json"
 SENTIMENT_PATH = DIR / "momentum_sentiment.json"
-AMOUNT_PATH = Path.home() / "Desktop/gamt-dashboard/env_fit/quant_stock/amount_vol.json"
-PATIENT_PATH = Path.home() / "Desktop/gamt-dashboard/micro_flow/patient_capital/patient_capital.json"
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+AMOUNT_PATH = _PROJECT_ROOT / "env_fit/quant_stock/amount_vol.json"
+PATIENT_PATH = _PROJECT_ROOT / "micro_flow/patient_capital/patient_capital.json"
 
 LOOKBACK = 120
 

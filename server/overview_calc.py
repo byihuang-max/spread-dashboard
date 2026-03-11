@@ -3,7 +3,7 @@
 import os, json
 from datetime import datetime
 
-BASE = os.path.expanduser("~/Desktop/gamt-dashboard")
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT = os.path.join(BASE, "server", "overview.json")
 
 

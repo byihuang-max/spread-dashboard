@@ -3,12 +3,13 @@ import statistics
 import os
 import csv
 
-CACHE_FILE_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_cache.json')
-STYLE_SPREAD_JSON_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/data/style_spread.json')
-SHEET1_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet1.csv')
-SHEET2_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet2.csv')
-SHEET3_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet3.csv')
-SHEET4_CSV_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread_sheet4.csv')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CACHE_FILE_PATH = os.path.join(BASE_DIR, 'style_spread_cache.json')
+STYLE_SPREAD_JSON_PATH = os.path.join(BASE_DIR, 'data', 'style_spread.json')
+SHEET1_CSV_PATH = os.path.join(BASE_DIR, 'style_spread_sheet1.csv')
+SHEET2_CSV_PATH = os.path.join(BASE_DIR, 'style_spread_sheet2.csv')
+SHEET3_CSV_PATH = os.path.join(BASE_DIR, 'style_spread_sheet3.csv')
+SHEET4_CSV_PATH = os.path.join(BASE_DIR, 'style_spread_sheet4.csv')
 
 # Ensure directory exists
 os.makedirs(os.path.dirname(STYLE_SPREAD_JSON_PATH), exist_ok=True)
@@ -247,7 +248,7 @@ def convert_results_to_csv():
     )
     write_csv(SHEET4_CSV_PATH, sheet4_header, list(sheet4_rows))
 
-XLSX_PATH = os.path.expanduser('~/Desktop/gamt-dashboard/size_spread/style_spread.xlsx')
+XLSX_PATH = os.path.join(BASE_DIR, 'style_spread.xlsx')
 
 def write_xlsx(results):
     """输出 Excel（4 个 sheet），与原 style_spread.py 格式一致"""
