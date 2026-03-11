@@ -390,6 +390,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     </div>
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
+      <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')" style="cursor:pointer"><span class="icon">🔬</span> 择时研究</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
@@ -3538,6 +3539,8 @@ function initCbCharts() {
       if(ag) ag.style.display='';
       var ul=document.getElementById('navUpdateLog');
       if(ul) ul.style.display='';
+      var tr=document.getElementById('navTimingResearch');
+      if(tr) tr.style.display='';
     }
     // 检查是否有正在运行的刷新任务
     if(typeof STATUS_API!=='undefined'&&STATUS_API){
