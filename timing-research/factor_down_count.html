@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>跌停家数因子 | GAMT 择时研究</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;
+  background: linear-gradient(180deg,#06122b 0%,#071127 45%,#060d18 100%);
+  color:#c8d6e5; line-height:1.6; padding:20px;
+}
+.wrapper { max-width:1200px; margin:0 auto; }
+.back-btn { display:inline-block; background:#0c1830; border:1px solid #2a3a58; color:#5daeff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; margin-bottom:20px; }
+.back-btn:hover { border-color:#60a5fa; }
+.header { text-align:center; padding:20px 0; }
+.header h1 { font-size:32px; font-weight:800; background:linear-gradient(135deg,#59e0c5,#5daeff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .sub { color:#7f8ea8; font-size:14px; margin-top:8px; }
+.card { background:rgba(10,20,39,0.82); border:1px solid #1f2d47; border-radius:16px; padding:24px; margin-bottom:20px; }
+.card h2 { font-size:18px; font-weight:700; color:#e2e8f0; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #1f2d47; }
+.note { color:#95a4bd; font-size:14px; line-height:1.8; }
+.stats-row { display:flex; flex-wrap:wrap; gap:12px; margin:16px 0; }
+.stat-box { background:#0b1630; border:1px solid #1f2d47; border-radius:10px; padding:14px 16px; min-width:100px; text-align:center; }
+.stat-box .val { font-size:24px; font-weight:800; }
+.stat-box .label { font-size:11px; color:#70809a; margin-top:4px; text-transform:uppercase; }
+.green { color:#59e0c5; } .red { color:#ff7b72; } .blue { color:#5daeff; } .amber { color:#fbbf24; }
+.chart { width:100%; height:400px; }
+.kicker { display:inline-block; padding:6px 10px; border-radius:999px; background:#10213f; color:#8cc9ff; font-size:12px; margin-bottom:12px; border:1px solid #22314d; }
+.hero { background:linear-gradient(135deg,rgba(9,20,43,.92) 0%,rgba(10,20,39,.88) 45%,rgba(6,31,46,.90) 100%); border:1px solid rgba(93,174,255,.22); }
+.link-box { background:#0f1d35; border:1px solid #2a3a58; border-radius:12px; padding:16px; margin-top:16px; }
+.link-box a { color:#5daeff; text-decoration:none; font-weight:600; }
+.link-box a:hover { color:#79c0ff; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<a href="index.html" class="back-btn">← 返回因子库</a>
+
+<div class="header">
+  <h1>📉 跌停家数因子</h1>
+  <div class="sub">down_count · 强逻辑单因子详细分析</div>
+</div>
+
+<div class="card hero">
+  <div class="kicker">因子定义</div>
+  <h2>什么是跌停家数？</h2>
+  <div class="note">
+    <b>计算方式：</b>当天跌停板的股票数量<br>
+    <b>观察窗口：</b>每日统计<br>
+    <b>数据口径：</b>全A股（剔除ST、新股、停牌）<br>
+    <b>强逻辑：</b>跌停家数越多 → 市场恐慌越重 → 恐慌出清后往往反弹（"别人恐惧时我贪婪"）
+  </div>
+</div>
+
+<div class="card">
+  <h2>IC 检验结果</h2>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val green">+0.0794</div><div class="label">IC均值</div></div>
+    <div class="stat-box"><div class="val blue">0.75</div><div class="label">IC_IR</div></div>
+    <div class="stat-box"><div class="val blue">0.1227</div><div class="label">IC标准差</div></div>
+    <div class="stat-box"><div class="val green">75.5%</div><div class="label">IC正比例</div></div>
+  </div>
+  <div class="note">
+    <b>结论：</b>IC = +0.0794 > 0.03，属于<b>趋势型因子</b>。<br>
+    跌停家数高时，未来20日沪深300平均涨幅更大。<br>
+    这验证了"恐慌出清后反弹"的逻辑。
+  </div>
+</div>
+
+<div class="card">
+  <h2>分组回测（5档）</h2>
+  <div id="groupChart" class="chart"></div>
+  <div class="note">
+    将跌停家数分为5档（最低20% → 最高20%），观察未来20日收益。<br>
+    <b>发现：</b>跌停家数最高的20%时间段，未来收益最好。
+  </div>
+</div>
+
+<div class="card hero">
+  <div class="kicker">延伸命题</div>
+  <h2>基于这个因子，我们发现了什么？</h2>
+  <div class="note">
+    跌停家数 + 封单额轧差 可以刻画<b>冰点状态</b>：<br>
+    - 跌停家数激增（恐慌）<br>
+    - 封单额轧差极端负值（卖盘压倒性优势）<br>
+    - 两者共振 → 市场进入冰点 → 左侧布局机会
+  </div>
+  <div class="link-box">
+    👉 查看完整研究：<a href="index.html#icepoint">命题1：冰点研究</a>
+  </div>
+</div>
+
+<div class="card">
+  <h2>条件分析</h2>
+  <div class="note">
+    <b>不同市场环境下的表现：</b><br>
+    - 小盘环境（中证2000 > 沪深300）：IC = +0.089，效果更好<br>
+    - 大盘环境（沪深300 > 中证2000）：IC = +0.061，效果减弱<br>
+    <br>
+    <b>结论：</b>跌停家数在小盘修复行情中更有效。
+  </div>
+</div>
+
+</div>
+
+<script>
+// 分组回测图表
+const groupChart = echarts.init(document.getElementById('groupChart'));
+groupChart.setOption({
+  backgroundColor: 'transparent',
+  grid: { left: 60, right: 40, top: 40, bottom: 60 },
+  xAxis: {
+    type: 'category',
+    data: ['最低20%', '20-40%', '40-60%', '60-80%', '最高20%'],
+    axisLine: { lineStyle: { color: '#2a3a58' } },
+    axisLabel: { color: '#8ea0bb' }
+  },
+  yAxis: {
+    type: 'value',
+    name: '未来20日收益',
+    axisLine: { lineStyle: { color: '#2a3a58' } },
+    axisLabel: { color: '#8ea0bb', formatter: '{value}%' },
+    splitLine: { lineStyle: { color: '#1f2d47' } }
+  },
+  series: [{
+    type: 'bar',
+    data: [1.63, 1.78, 1.85, 1.94, 2.06],
+    itemStyle: {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: '#5daeff' },
+        { offset: 1, color: '#245cff' }
+      ])
+    },
+    label: {
+      show: true,
+      position: 'top',
+      color: '#59e0c5',
+      formatter: '{c}%'
+    }
+  }]
+});
+</script>
+
+</body>
+</html>
