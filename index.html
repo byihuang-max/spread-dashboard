@@ -3357,10 +3357,10 @@ function initCbCharts() {
         // 耗时
         html += '<span style="font-size:11px;color:#94a3b8">'+item.elapsed+'s</span>';
         // 操作人
-        if(item.user && item.user !== 'system'){
+        if(item.user && item.user !== 'system' && item.user !== 'cron'){
           html += '<span style="font-size:11px;background:#f1f5f9;color:#64748b;padding:1px 8px;border-radius:10px">'+item.user+'</span>';
         } else {
-          html += '<span style="font-size:11px;background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px">定时</span>';
+          html += '<span style="font-size:11px;background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px">⏰ 定时</span>';
         }
         html += '</div>';
       });
