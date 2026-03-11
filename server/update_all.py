@@ -10,7 +10,8 @@ GAMT 投研看板 — 一键更新脚本
   python3 update_all.py --module quant_stock  # 只更新某个模块
 """
 
-import subprocess, sys, os, time, argparse
+import subprocess, sys, os, time, argparse, json
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(BASE_DIR)
@@ -283,6 +284,32 @@ def main():
         status = '✅' if ok else '❌'
         log(f"  {status} {MODULES[k]['name']:12s} ({t:.1f}s)")
     log(f"总耗时: {total_time:.1f}s")
+
+    # 更新 update_log.json（与 refresh_server 格式一致）
+    update_log_path = os.path.join(BASE_DIR, 'server', 'update_log.json')
+    try:
+        with open(update_log_path, 'r', encoding='utf-8') as f:
+            logs = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        logs = []
+    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    date_str = datetime.now().strftime('%Y-%m-%d')
+    for k, (ok, t) in results.items():
+        entry = {
+            'module': k,
+            'name': MODULES[k]['name'],
+            'ok': ok,
+            'elapsed': round(t, 1),
+            'time': now_str,
+            'date': date_str,
+            'user': 'cron'
+        }
+        # 替换同模块旧记录
+        logs = [l for l in logs if l.get('module') != k]
+        logs.append(entry)
+    with open(update_log_path, 'w', encoding='utf-8') as f:
+        json.dump(logs, f, indent=1, ensure_ascii=False)
+    log("已更新 update_log.json")
 
     # Git push
     if not args.no_push:
