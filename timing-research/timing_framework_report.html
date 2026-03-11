@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🧭 择时框架总报告 | 命题1：冰点研究</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif; background:#0a0e1a; color:#c8d6e5; line-height:1.6; }
+.wrapper { max-width:1500px; margin:0 auto; padding:24px; }
+.header { text-align:center; padding:40px 0 28px; }
+.header h1 { font-size:38px; font-weight:800; background:linear-gradient(135deg,#38bdf8,#818cf8,#c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .sub { color:#64748b; font-size:14px; margin-top:10px; }
+.header .sub span { background:#1e293b; padding:4px 10px; border-radius:12px; margin:0 4px; font-size:12px; }
+.card { background:#111827; border:1px solid #1f2937; border-radius:16px; padding:24px; margin-bottom:20px; }
+.card h2 { font-size:18px; font-weight:700; color:#e2e8f0; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #1f2937; }
+.hero { background:linear-gradient(135deg,#0f1d35 0%,#111827 50%,#1a0f2e 100%); border:1px solid #2563eb40; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+@media (max-width:900px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+.stats-row { display:flex; flex-wrap:wrap; gap:8px; }
+.stat-box { background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:16px 20px; min-width:120px; text-align:center; }
+.stat-box .val { font-size:26px; font-weight:800; }
+.stat-box .label { font-size:11px; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
+.blue { color:#38bdf8; } .green { color:#4ade80; } .purple { color:#a78bfa; } .amber { color:#fbbf24; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { background:#1e293b; color:#94a3b8; padding:10px 8px; text-align:right; font-weight:600; }
+.tbl th:first-child,.tbl td:first-child { text-align:left; }
+.tbl td { padding:8px; border-bottom:1px solid #1f2937; text-align:right; }
+.tbl .pos { color:#4ade80; font-weight:600; }
+.tbl .neg { color:#f87171; font-weight:600; }
+.tbl tr:hover { background:#1e293b; }
+.best-row { background:#1e3a5f30; }
+.top-tabs { display:flex; flex-wrap:wrap; gap:12px; margin:10px 0 24px; }
+.top-tab { background:#111827; border:1px solid #334155; color:#cbd5e1; padding:10px 14px; border-radius:12px; font-size:13px; }
+.subtabs { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.subtab-btn { background:#0f172a; border:1px solid #334155; color:#cbd5e1; padding:10px 16px; border-radius:12px; cursor:pointer; font-size:13px; }
+.subtab-btn.active { background:linear-gradient(135deg,#1d4ed8,#7c3aed); border-color:#7c3aed; color:#fff; }
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+.note { color:#94a3b8; font-size:14px; line-height:1.9; }
+.chart { width:100%; height:420px; }
+.footer { text-align:center; padding:30px 0; color:#475569; font-size:12px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<div class="header">
+  <h1>🧭 择时框架总报告</h1>
+  <div class="sub">
+    <span>母架构：Timing Framework</span>
+    <span>研究命题1：冰点研究</span>
+    <span>版本演进：V1 → V1.1 → V1.2</span>
+    <span>样本：2019-01 ~ 2026-03</span>
+  </div>
+</div>
+
+<div class="card hero">
+  <h2>主架构：择时框架是什么</h2>
+  <div class="note">
+    这份报告的母体不是“冰点策略”，而是更大的 <b>择时框架（Timing Framework）</b>。<br>
+    冰点研究只是从择时框架中拆出来的 <b>研究命题1</b>。<br><br>
+    整个框架的核心逻辑是：<br>
+    <b>情绪 / 资金 / 风格 / 风险状态</b> → <b>状态识别</b> → <b>指数映射与执行动作</b>
+  </div>
+</div>
+
+<div class="card">
+  <h2>框架图：输入层 → 状态层 → 动作层</h2>
+  <div id="frameworkChart" class="chart"></div>
+  <div class="note" style="margin-top:14px;">
+    这个图想表达的是：择时不是单点预测，而是一个分层系统。<br>
+    先从输入变量里识别“市场现在处于什么状态”，再把状态映射成真正可执行的动作。
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="card">
+    <h2>框架输入层</h2>
+    <div class="note">
+      - 涨停家数 / 跌停家数<br>
+      - 封单额轧差 / 封板质量 / 晋级率<br>
+      - 综合情绪 / 炸板率 / 连板高度<br>
+      - 风格相对强弱（300 / 500 / 1000 / 2000）<br>
+      - 风险状态（risk-on / risk-off）
+    </div>
+  </div>
+  <div class="card">
+    <h2>中间状态层</h2>
+    <div class="note">
+      - 冰点 / 过热 / 中性<br>
+      - small-cap / large-cap / neutral<br>
+      - 情绪修复 / 情绪退潮<br>
+      - 风险开 / 风险关
+    </div>
+  </div>
+  <div class="card">
+    <h2>输出动作层</h2>
+    <div class="note">
+      - 做不做<br>
+      - 做哪个指数（300 / 500 / 2000）<br>
+      - 做多久（3 / 5 / 10 / 15 / 20天）<br>
+      - 未来可扩展到：仓位 / 分批建仓 / 动态持有期
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>从主架构衍生出的研究命题</h2>
+  <div class="top-tabs">
+    <div class="top-tab">命题1：冰点研究（当前）</div>
+    <div class="top-tab">命题2：封单额轧差研究（待展开）</div>
+    <div class="top-tab">命题3：强势股接力研究（待展开）</div>
+    <div class="top-tab">命题4：牛熊 / 风格分段研究（待展开）</div>
+  </div>
+  <div class="note">
+    当前先聚焦 <b>命题1：冰点研究</b>。下面的版本 tab，展示的是命题1内部如何从基线策略逐步演化出过滤层，再推进到更接近实盘表达的增强开关。
+  </div>
+</div>
+
+<div class="card">
+  <h2>命题1：冰点研究</h2>
+  <div class="subtabs">
+    <button class="subtab-btn active" data-tab="v1">V1 基线冰点</button>
+    <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
+    <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
+  </div>
+
+  <div id="v1" class="tab-pane active">
+    <div class="card hero">
+      <h2>V1 更新了什么思路</h2>
+      <div class="note">
+        V1 先不碰风格过滤，不做复杂状态机，先回答最基础的问题：<br>
+        <b>极端恐慌（冰点）本身，能不能作为稳定可回测的择时信号？</b><br><br>
+        所以 V1 的工作是：
+        - 补齐 2019-2026 全样本数据
+        - 跑 10 个因子的 7 年 IC 检验
+        - 专门拆出“冰点策略”做参数网格回测
+        - 找出基线最优解，作为后续版本的比较基准
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>V1 关键发现</h2>
+        <div class="note">
+          - 涨停家数 IC = <b>+0.078</b><br>
+          - 跌停家数 IC = <b>+0.069</b><br>
+          - 封单额轧差 IC = <b>+0.057</b><br>
+          - 涨跌停比 IC = <b>-0.043</b>（反向）<br><br>
+          冰点类信号在 7 年全样本里成立，说明“抄底比逃顶更容易量化”这个判断是有统计基础的。
+        </div>
+      </div>
+      <div class="card">
+        <h2>V1 最优基线策略</h2>
+        <div class="stats-row">
+          <div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div>
+          <div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div>
+          <div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div>
+          <div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div>
+          <div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div>
+          <div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div>
+          <div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div>
+          <div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div>
+          <div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>V1 结论</h2>
+      <div class="note">
+        V1 证明了：<br>
+        <b>冰点不是拍脑袋的情绪故事，而是一个具备统计基础的择时命题。</b><br><br>
+        但 V1 也暴露出新问题：<br>
+        <b>同样的冰点，可能并不在所有风格环境下都一样有效。</b><br>
+        这就是 V1.1 的起点。
+      </div>
+    </div>
+  </div>
+
+  <div id="v11" class="tab-pane">
+    <div class="card hero">
+      <h2>V1.1 更新了什么思路</h2>
+      <div class="note">
+        V1 解决了“冰点有没有用”，V1.1 进一步追问：<br>
+        <b>冰点是否依赖风格环境？</b><br><br>
+        所以 V1.1 新增了 <b>Regime Filter</b>：
+        用 <b>中证2000 - 沪深300</b> 去刻画市场更偏小盘还是大盘，
+        再判断冰点信号是否应该放行，以及该映射到什么指数。
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h2>V1.1 新增模块</h2>
+        <div class="note">
+          - 新增中证2000历史日线（增量模式）<br>
+          - 定义 small / large / neutral 三类环境<br>
+          - 先做条件收益、条件IC，再做策略回测<br>
+          - 避免直接从收益反推 regime
+        </div>
+      </div>
+      <div class="card">
+        <h2>Regime 分布</h2>
+        <div class="stats-row">
+          <div class="stat-box"><div class="val purple">974</div><div class="label">small</div></div>
+          <div class="stat-box"><div class="val blue">429</div><div class="label">large</div></div>
+          <div class="stat-box"><div class="val amber">335</div><div class="label">neutral</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>V1.1 想解决什么</h2>
+        <div class="note">
+          - 剔除错误环境里的冰点<br>
+          - 识别小盘修复 vs 权重修复<br>
+          - 判断过滤层更像“放行器”还是“换挡器”
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>V1.1 四版本对比</h2>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>模式</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+        <tr><td>baseline</td><td>冰点 → 固定做中证500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.40</b></td></tr>
+        <tr><td>filtered_500</td><td>只在 small 环境做中证500</td><td>6</td><td>83.3%</td><td class="pos">+6.16%</td><td class="pos">+41.65%</td><td>0.46%</td><td><b>11.19</b></td></tr>
+        <tr><td>filtered_2000</td><td>只在 small 环境做中证2000</td><td>6</td><td>83.3%</td><td class="pos">+7.59%</td><td class="pos">+53.13%</td><td>1.65%</td><td><b>3.80</b></td></tr>
+        <tr><td>filtered_dynamic</td><td>small 做2000，large 做300，neutral 跳过</td><td>15</td><td>60.0%</td><td class="pos">+4.58%</td><td class="pos">+90.00%</td><td>5.82%</td><td><b>1.65</b></td></tr>
+      </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>条件收益</h2>
+        <div class="note">
+          15日持有口径下：<br><br>
+          <b>中证500：</b><br>
+          - small：平均收益 <b>4.25%</b>，胜率 <b>85.7%</b><br>
+          - large：平均收益 <b>5.83%</b>，胜率 <b>85.7%</b><br><br>
+          <b>中证2000：</b><br>
+          - small：平均收益 <b>5.07%</b>，胜率 <b>85.7%</b><br>
+          - large：平均收益 <b>6.03%</b>，胜率 <b>78.6%</b>
+        </div>
+      </div>
+      <div class="card">
+        <h2>条件 IC</h2>
+        <div class="note">
+          以跌停家数对中证2000未来10日收益为例：<br><br>
+          - small 环境 IC：<b>+0.0510</b><br>
+          - large 环境 IC：<b>+0.0255</b><br><br>
+          这说明：同一个因子，不同环境下的传导效率并不完全一样。
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>V1.1 结论</h2>
+      <div class="note">
+        - `2000-300` 这个 proxy 是有信息量的<br>
+        - small-only 过滤后，胜率 / 单笔收益 / 回撤控制都更好<br>
+        - 但 `large -> 做300` 当前并没有跑赢 baseline<br><br>
+        所以 V1.1 得出的核心判断是：<br>
+        <b>过滤层更像 small-only 放行器 / 避坑器，而不是自动切换器。</b><br>
+        这就自然推到下一步：V1.2 不再硬切换，而是做增强开关。
+      </div>
+    </div>
+  </div>
+
+  <div id="v12" class="tab-pane">
+    <div class="card hero">
+      <h2>V1.2 更新了什么思路</h2>
+      <div class="note">
+        V1.1 已经说明：过滤层有价值，但不适合立刻做成完整的资产切换器。<br>
+        所以 V1.2 的核心升级是：<br>
+        <b>不再强行 large → 300，而是保留 baseline，再用 small regime 做增强开关。</b><br><br>
+        也就是说：
+        - 默认仍然围绕 csi500 这个基线
+        - 但如果处于 small regime，就尝试切到更有弹性的 csi2000
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h2>V1.2 相对 V1.1 的修正</h2>
+        <div class="note">
+          - 去掉了“large 必须做300”的强假设<br>
+          - 把过滤层从“换挡器”降级为“增强器”<br>
+          - 更接近真实可执行的策略表达
+        </div>
+      </div>
+      <div class="card">
+        <h2>V1.2 重点验证什么</h2>
+        <div class="note">
+          - small 环境是否应该切到 2000<br>
+          - 非 small 环境是否继续保留 500 baseline<br>
+          - 过滤层该做“切指数”还是只做“跳过”
+        </div>
+      </div>
+      <div class="card">
+        <h2>V1.2 当前最佳版本</h2>
+        <div class="stats-row">
+          <div class="stat-box"><div class="val blue">switch</div><div class="label">模式</div></div>
+          <div class="stat-box"><div class="val purple">500→2000</div><div class="label">small增强</div></div>
+          <div class="stat-box"><div class="val green">+101.5%</div><div class="label">总收益</div></div>
+          <div class="stat-box"><div class="val green">2.72</div><div class="label">Calmar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>V1.2 六版本对比</h2>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>模式</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+        <tr><td>baseline</td><td>冰点 → 固定做中证500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.40</b></td></tr>
+        <tr><td>small_only_500</td><td>只有 small 时做中证500</td><td>6</td><td>83.3%</td><td class="pos">+6.16%</td><td class="pos">+41.65%</td><td>0.46%</td><td><b>11.19</b></td></tr>
+        <tr><td>small_only_2000</td><td>只有 small 时做中证2000</td><td>6</td><td>83.3%</td><td class="pos">+7.59%</td><td class="pos">+53.13%</td><td>1.65%</td><td><b>3.80</b></td></tr>
+        <tr class="best-row"><td>baseline_switch_2000</td><td>默认做500，small 时切到2000</td><td>15</td><td>73.3%</td><td class="pos">+5.00%</td><td class="pos">+101.48%</td><td>3.87%</td><td><b>2.72</b></td></tr>
+        <tr><td>small_2000_else_500</td><td>small 做2000，其他做500</td><td>15</td><td>73.3%</td><td class="pos">+5.00%</td><td class="pos">+101.48%</td><td>3.87%</td><td><b>2.72</b></td></tr>
+        <tr><td>small_2000_non_small_skip</td><td>只有 small 时做2000，非 small 跳过</td><td>6</td><td>83.3%</td><td class="pos">+7.59%</td><td class="pos">+53.13%</td><td>1.65%</td><td><b>3.80</b></td></tr>
+      </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>V1.2 最核心发现</h2>
+        <div class="note">
+          相比 baseline：<br><br>
+          <b>baseline：</b><br>
+          - 总收益 <b>+86.37%</b><br>
+          - 平均收益 <b>+4.43%</b><br>
+          - Calmar <b>2.40</b><br><br>
+          <b>baseline_switch_2000：</b><br>
+          - 总收益 <b>+101.48%</b><br>
+          - 平均收益 <b>+5.00%</b><br>
+          - Calmar <b>2.72</b><br><br>
+          关键点在于：<br>
+          <b>交易次数没减少，最大回撤也没恶化，但把 small 环境的弹性吃进来了。</b>
+        </div>
+      </div>
+      <div class="card">
+        <h2>V1.2 对策略表达的启发</h2>
+        <div class="note">
+          V1.2 给出的不是“只做 small”的极端过滤器，
+          而是一个更自然的第一版实盘表达：<br><br>
+          <b>默认做 csi500；如果处于 small regime，就增强成 csi2000。</b><br><br>
+          这比 V1.1 的 hard filter 更平衡：
+          - 保留了 baseline 的交易覆盖
+          - 又利用了 small 环境下更高的弹性
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>V1.2 结论</h2>
+      <div class="note">
+        V1.2 的结果把整条研究链闭环了：<br><br>
+        - V1：证明冰点有效<br>
+        - V1.1：证明环境层有意义，但 large→300 不成立<br>
+        - V1.2：证明过滤层更适合做 <b>small-regime 增强开关</b><br><br>
+        当前最靠谱的表述就是：<br>
+        <b>冰点策略以 csi500 为基线，small 环境时切到 csi2000。</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Generated by Musk 🚀 · 2026-03-12 00:29:14 · Quant Backtest Timing Framework
+</div>
+</div>
+
+<script>
+// 命题1 内部版本 tab 切换
+// 这样 V1 / V1.1 / V1.2 都在同一张报告里，不需要多开页面
+
+document.querySelectorAll('.subtab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// 主架构框架图
+// 用桑基图表达：输入层 -> 状态层 -> 动作层
+const frameworkChart = echarts.init(document.getElementById('frameworkChart'));
+frameworkChart.setOption({
+  backgroundColor: 'transparent',
+  tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+  series: [{
+    type: 'sankey',
+    layout: 'none',
+    emphasis: { focus: 'adjacency' },
+    data: [
+      { name: '涨停 / 跌停' },
+      { name: '封单额 / 晋级率' },
+      { name: '风格强弱(2000-300)' },
+      { name: '综合情绪 / 风险' },
+
+      { name: '冰点 / 过热 / 中性' },
+      { name: 'small / large / neutral' },
+      { name: 'risk-on / risk-off' },
+
+      { name: '做不做' },
+      { name: '做 300 / 500 / 2000' },
+      { name: '持有期 / 仓位' }
+    ],
+    links: [
+      { source: '涨停 / 跌停', target: '冰点 / 过热 / 中性', value: 8 },
+      { source: '封单额 / 晋级率', target: '冰点 / 过热 / 中性', value: 5 },
+      { source: '风格强弱(2000-300)', target: 'small / large / neutral', value: 8 },
+      { source: '综合情绪 / 风险', target: 'risk-on / risk-off', value: 7 },
+
+      { source: '冰点 / 过热 / 中性', target: '做不做', value: 8 },
+      { source: 'small / large / neutral', target: '做 300 / 500 / 2000', value: 8 },
+      { source: 'risk-on / risk-off', target: '持有期 / 仓位', value: 7 },
+
+      { source: '冰点 / 过热 / 中性', target: '做 300 / 500 / 2000', value: 4 },
+      { source: 'small / large / neutral', target: '做不做', value: 4 },
+      { source: 'risk-on / risk-off', target: '做不做', value: 3 }
+    ],
+    lineStyle: {
+      color: 'gradient',
+      curveness: 0.5,
+      opacity: 0.35
+    },
+    itemStyle: {
+      borderWidth: 1,
+      borderColor: '#334155',
+      color: '#60a5fa'
+    },
+    label: {
+      color: '#cbd5e1',
+      fontSize: 13
+    }
+  }]
+});
+
+window.addEventListener('resize', () => frameworkChart.resize());
+</script>
+</body>
+</html>
