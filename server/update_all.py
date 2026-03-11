@@ -140,6 +140,7 @@ MODULES = {
             ('meme/antifragile', 'fetch_data.py'),    # 拉取海外资产价格（yfinance）
             ('meme/antifragile', 'calc_corr.py'),     # 30日滚动相关性矩阵
             ('meme/antifragile', 'calc_meme.py'),     # Meme反身性信号
+            ('meme/antifragile', 'render_html.py'),   # 渲染 antifragile.html
         ],
         'inject_script': None,
     },
