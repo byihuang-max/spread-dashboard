@@ -137,7 +137,7 @@ MODULES = {
     'antifragile': {
         'name': '反脆弱看板',
         'data_scripts': [
-            ('meme/antifragile', 'fetch_data.py'),    # 拉取海外资产价格（yfinance）
+            ('meme/antifragile', 'fetch_data_ifind.py'),  # iFind 拉取海外资产价格（优先）
             ('meme/antifragile', 'calc_corr.py'),     # 30日滚动相关性矩阵
             ('meme/antifragile', 'calc_meme.py'),     # Meme反身性信号
             ('meme/antifragile', 'render_html.py'),   # 渲染 antifragile.html
