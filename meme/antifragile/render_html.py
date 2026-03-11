@@ -9,14 +9,14 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta
 
-EQUITY_INDICES = ['纳斯达克100', '恒生科技ETF', '科创50ETF', '日经225', '韩国KOSPI', '道琼斯']
+EQUITY_INDICES = ['纳斯达克100', '恒生科技ETF', '科创50ETF', '日经225', '韩国KOSPI', '标普500']
 COMPARISON_ASSETS = ['COMEX黄金', 'WTI原油', 'BTC', '美元兑日元']
-MAIN_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '道琼斯', 'COMEX黄金']
+MAIN_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '标普500', 'COMEX黄金']
 
 COLORS = {
     '纳斯达克100': '#2563eb', '恒生科技ETF': '#10b981', '科创50ETF': '#f59e0b',
     'BTC': '#F7931A',        '日经225': '#ef4444',    '韩国KOSPI': '#8b5cf6',
-    '道琼斯': '#06b6d4',     'COMEX黄金': '#eab308',
+    '标普500': '#06b6d4',     'COMEX黄金': '#eab308',
     'WTI原油': '#0ea5e9',    '股票中位数': '#475569',
     '美元兑日元': '#be185d', # 日元套息杠杆（玫红）
 }
@@ -526,7 +526,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
     <div class="chart-wrap"><canvas id="navChart"></canvas></div>
     <div class="chart-note">
       <b>怎么看：</b>全部资产以各自最早数据日期归一为1，便于跨资产涨跌幅对比。<br>
-      <b>包含：</b>纳斯达克100、恒生科技ETF、科创50ETF、BTC、日经225、韩国KOSPI、道琼斯、COMEX黄金。
+      <b>包含：</b>纳斯达克100、恒生科技ETF、科创50ETF、BTC、日经225、韩国KOSPI、标普500、COMEX黄金。
     </div>
   </div>
 </div>
@@ -539,7 +539,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
   <div class="chart-box">
     <h3>涨跌幅汇总</h3>
     <div style="overflow-x:auto">{table_html}</div>
-    <div class="chart-note"><b>股票中位数</b>为纳斯达克100/恒生科技ETF/科创50ETF/日经225/韩国KOSPI/道琼斯共6只指数各周期涨跌幅的中位数。</div>
+    <div class="chart-note"><b>股票中位数</b>为纳斯达克100/恒生科技ETF/科创50ETF/日经225/韩国KOSPI/标普500共6只指数各周期涨跌幅的中位数。</div>
   </div>
 </div>
 
