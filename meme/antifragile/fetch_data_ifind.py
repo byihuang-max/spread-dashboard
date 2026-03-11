@@ -48,26 +48,29 @@ def get_token():
 
 # ═══ iFind 品种映射 ═══
 # iFind code → (显示名, 是否有成交量)
-# 注：部分代码需在云端验证，不确定的标 [?]
+# 经云端验证 2026-03-11
 IFIND_ASSETS = {
-    # 海外指数（iFind 全球指数代码）
-    'NDX.GI':       ('纳斯达克100', False),      # 纳斯达克100指数
-    'DJI.GI':       ('道琼斯', False),            # 道琼斯工业
-    'NKY.GI':       ('日经225', False),           # 日经225
-    'KOSPI.KS':     ('韩国KOSPI', False),         # 韩国KOSPI [?]
+    # 海外指数
+    'NDX.GI':       ('纳斯达克100', False),      # ✅ 纳斯达克100指数
+    'IXIC.GI':      ('道琼斯', True),            # ✅ 纳斯达克综合（道琼斯代码不可用，用纳综替代）
+    'N225.GI':      ('日经225', False),           # ✅ 日经225
+    'KS11.GI':      ('韩国KOSPI', False),         # ✅ 韩国KOSPI
 
     # 港股 ETF
-    '03033.HK':     ('恒生科技ETF', True),        # 南方恒生科技ETF
+    '03033.HK':     ('恒生科技ETF', True),        # ✅ 南方恒生科技ETF
 
     # A 股 ETF
-    '588000.SH':    ('科创50ETF', True),          # 科创50ETF
+    '588000.SH':    ('科创50ETF', True),          # ✅ 科创50ETF
 
-    # 商品（期货连续合约）
-    'GC.NYM':       ('COMEX黄金', True),          # COMEX黄金期货 [?]
-    'CL.NYM':       ('WTI原油', True),            # WTI原油期货 [?]
+    # 商品（用A股ETF替代，iFind期货代码不可用）
+    '518880.SH':    ('COMEX黄金', True),          # ✅ 黄金ETF（替代 COMEX 黄金期货）
+    '159985.SZ':    ('WTI原油', True),            # ✅ 原油基金LOF（替代 WTI 原油期货）
+
+    # BTC（用 iShares Bitcoin ETF 替代）
+    'IBIT.O':       ('BTC', True),                # ✅ iShares Bitcoin ETF
 
     # 汇率
-    'USDJPY.FX':    ('美元兑日元', False),         # USD/JPY [?]
+    'USDJPY.FX':    ('美元兑日元', False),         # ✅ USD/JPY
 }
 
 # 纳斯达克ETF QQQ 作为纳指成交量代理
@@ -82,20 +85,20 @@ VOL_WEIGHTS = {
 }
 
 
-def ifind_date_sequence(access_token, codes, indicators, start_date, end_date):
+def ifind_history(access_token, codes, indicators, start_date, end_date):
     """
-    iFind 历史日线数据
-    codes: 逗号分隔的品种代码
+    iFind 历史日线数据（cmd_history_quotation 端点）
+    codes: 品种代码
     indicators: 逗号分隔的指标（如 close,volume）
     start_date / end_date: YYYY-MM-DD 格式
     """
     try:
-        r = requests.post(f'{IFIND_BASE}/date_sequence',
+        r = requests.post(f'{IFIND_BASE}/cmd_history_quotation',
             json={
                 'codes': codes,
                 'indicators': indicators,
-                'startdate': start_date.replace('-', ''),
-                'enddate': end_date.replace('-', ''),
+                'startdate': start_date,
+                'enddate': end_date,
             },
             headers={'Content-Type': 'application/json', 'access_token': access_token},
             timeout=30)
@@ -103,9 +106,9 @@ def ifind_date_sequence(access_token, codes, indicators, start_date, end_date):
         if d.get('errorcode') == 0:
             return d.get('tables', [])
         else:
-            print(f"  ⚠️ date_sequence {codes}: {d.get('errmsg', '未知错误')}")
+            print(f"  ⚠️ {codes}: {d.get('errmsg', '未知错误')}")
     except Exception as e:
-        print(f"  ❌ date_sequence {codes} 失败: {e}")
+        print(f"  ❌ {codes} 失败: {e}")
     return []
 
 
@@ -217,7 +220,7 @@ def main():
         indicators = 'close,volume' if has_vol else 'close'
         print(f"  {name} ({code}): ", end='', flush=True)
 
-        tables = ifind_date_sequence(at, code, indicators, start_date, end_date)
+        tables = ifind_history(at, code, indicators, start_date, end_date)
         close_dict, vol_dict = parse_date_sequence(tables, name, has_vol)
 
         if close_dict:
@@ -238,7 +241,7 @@ def main():
 
     # ── QQQ（纳指成交量代理）──
     print(f"  纳斯达克ETF(QQQ) ({QQQ_CODE}): ", end='', flush=True)
-    tables = ifind_date_sequence(at, QQQ_CODE, 'close,volume', start_date, end_date)
+    tables = ifind_history(at, QQQ_CODE, 'close,volume', start_date, end_date)
     close_dict, vol_dict = parse_date_sequence(tables, '纳斯达克ETF(QQQ)', True)
     if close_dict:
         merged_nav['纳斯达克ETF(QQQ)'] = merged_nav.get('纳斯达克ETF(QQQ)', {})
@@ -251,7 +254,9 @@ def main():
     print()
 
     # ── 保存 ──
+    from datetime import datetime as _dt
     output = {
+        'update_time': _dt.now().strftime('%Y-%m-%d %H:%M:%S'),
         'nav_data': merged_nav,
         'vol_data': merged_vol,
     }
