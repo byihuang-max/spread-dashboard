@@ -274,6 +274,9 @@ def build_json_from_csv(dates):
             total_amount.append({'date': d, 'amount_yi': round(amt / 100000, 2)})
 
     # ── 指标2: 宽基成交额占比 ──
+    # 每日计算各宽基指数成交额占中证全指(全A)的百分比
+    # 用于 quant_env_diag.py → calc_style_concentration() 的动态迁移速度分析
+    # 输出: index_share 列表，每行含 date + 各风格占比(%)
     share_codes = [
         ('000300.SH', '沪深300'), ('000905.SH', '中证500'),
         ('000852.SH', '中证1000'), ('932000.CSI', '中证2000'),
