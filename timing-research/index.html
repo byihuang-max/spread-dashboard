@@ -59,12 +59,12 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 .path-tip { margin-top:12px; color:#6f83a1; font-size:13px; }
 .nav-node { cursor:pointer; transition:opacity .2s ease; }
 .nav-node:hover { opacity:.92; }
-.factor-link { color:#5daeff; text-decoration:none; border-bottom:1px dashed #5daeff; }
-.factor-link:hover { color:#79c0ff; border-bottom-color:#79c0ff; }
-.red { color:#ff7b72; }
+.back-btn { position:fixed; top:20px; left:20px; z-index:100; background:rgba(10,20,39,0.95); border:1px solid #2a3a58; color:#5daeff; padding:10px 18px; border-radius:12px; text-decoration:none; font-size:13px; font-weight:600; backdrop-filter:blur(10px); transition:all .2s; }
+.back-btn:hover { border-color:#60a5fa; background:rgba(15,25,45,0.98); transform:translateX(-2px); }
 </style>
 </head>
 <body>
+<a href="../index.html" class="back-btn">← 返回 FOF 看板</a>
 <div class="wrapper">
 <div class="header">
   <div class="brand-mark"><div class="brand-gamt">GAMT</div></div>
@@ -75,17 +75,15 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
 <div class="page-tabs">
   <button class="page-tab-btn active" data-page="overview">总览</button>
-  <button class="page-tab-btn" data-page="icepoint">命题1：冰点研究</button>
-  <button class="page-tab-btn" data-page="exposure">敞口输出</button>
   <button class="page-tab-btn" data-page="factorlib">研究方法 / 因子库</button>
-  <button class="page-tab-btn" data-page="future1">命题2：封单额轧差</button>
-  <button class="page-tab-btn" data-page="future2">命题3：强势股接力</button>
+  <button class="page-tab-btn" data-page="research">命题研究</button>
+  <button class="page-tab-btn" data-page="exposure">敞口输出</button>
 </div>
 
 <div id="overview" class="page-pane active">
-  <div class="card hero"><div class="kicker">总目标</div><h2>这条线最终不是为了做一个冰点策略，而是为了输出股票敞口值</h2><div class="note"><b>通过股票择时研究，最终回答“当前股票敞口应该给多少合适”。</b><br><br>模块职责边界是：识别市场状态 → 提供股票敞口决策依据。</div></div>
+  <div class="card hero"><div class="kicker">总目标</div><h2>这条线最终不是为了做一个冰点策略，而是为了输出股票敞口值</h2><div class="note"><b>通过股票择时研究，最终回答"当前股票敞口应该给多少合适"。</b><br><br>模块职责边界是：识别市场状态 → 提供股票敞口决策依据。</div></div>
   <div class="grid-2">
-    <div class="card"><h2>研究起点</h2><div class="note">起点不是“先找一个显著因子”，而是 Roni 在强势股研究框架里，先基于自己的市场理解写了很多 <b>强逻辑单因子</b>。这些单因子最终服务于：<b>股票敞口应该如何给。</b></div></div>
+    <div class="card"><h2>研究起点</h2><div class="note">起点不是"先找一个显著因子"，而是 Roni 在强势股研究框架里，先基于自己的市场理解写了很多 <b>强逻辑单因子</b>。这些单因子最终服务于：<b>股票敞口应该如何给。</b></div></div>
     <div class="card"><h2>冰点的真实定位</h2><div class="note">冰点不是整个框架本身，而是：<b>股票敞口研究框架中的第一个优先展开命题。</b></div></div>
   </div>
   <div class="card hero">
@@ -95,181 +93,99 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   </div>
 </div>
 
-<div id="icepoint" class="page-pane">
-
-  <div class="card hero">
-    <div class="kicker">冰点研究摘要</div>
-    <h2>此前已完成的冰点因子研究结果，直接嵌入当前框架</h2>
-    <div class="stats-row">
-      <div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div>
-      <div class="stat-box"><div class="val purple">5</div><div class="label">阈值</div></div>
-      <div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div>
-      <div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div>
-      <div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div>
-      <div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div>
-      <div class="stat-box"><div class="val green">+86.37%</div><div class="label">总收益</div></div>
-      <div class="stat-box"><div class="val amber">3.87%</div><div class="label">最大回撤</div></div>
-      <div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div>
-      <div class="stat-box"><div class="val blue">15</div><div class="label">交易次数</div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>命题1：冰点研究</h2>
-    <div class="subtabs">
-      <button class="subtab-btn active" data-tab="v1">V1 基线冰点</button>
-      <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
-      <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
-      <button class="subtab-btn" data-tab="factorstudy">因子研究嵌入</button>
-    </div>
-    <div id="v1" class="tab-pane active"><div class="card hero"><h2>V1 更新了什么思路</h2><div class="note">V1 先不碰复杂状态机，先回答：<b>极端恐慌（冰点）本身，能不能作为稳定可回测的股票择时命题？</b><br><br>工作包括：补齐 2019-2026 全样本数据、跑 10 个因子的 7 年 IC 检验、拆出冰点命题做参数网格回测、找到第一条可闭环样板。</div></div><div class="grid-2"><div class="card"><h2>V1 关键发现</h2><div class="note">- 涨停家数 IC = <b>+0.078</b><br>- 跌停家数 IC = <b>+0.069</b><br>- 封单额轧差 IC = <b>+0.057</b><br>- 涨跌停比 IC = <b>-0.043</b>（反向）</div></div><div class="card"><h2>V1 最优基线策略</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div></div></div></div>
-    <div id="v11" class="tab-pane"><div class="card hero"><h2>V1.1 更新了什么思路</h2><div class="note">新增 <b>Regime Filter</b>：用 <b>中证2000 - 沪深300</b> 刻画市场更偏小盘还是大盘，回答“同样的冰点，是否在所有风格环境下都同样支持加大敞口”。</div></div><div class="grid-3"><div class="card"><h2>V1.1 新增模块</h2><div class="note">- 新增中证2000历史日线<br>- 定义 small / large / neutral 三类环境<br>- 先做条件收益、条件IC，再做策略回测</div></div><div class="card"><h2>Regime 分布</h2><div class="stats-row"><div class="stat-box"><div class="val purple">974</div><div class="label">small</div></div><div class="stat-box"><div class="val blue">429</div><div class="label">large</div></div><div class="stat-box"><div class="val amber">335</div><div class="label">neutral</div></div></div></div><div class="card"><h2>V1.1 想解决什么</h2><div class="note">剔除错误环境里的冰点，识别小盘修复 vs 权重修复，把状态命题往“敞口怎么给”推进一步。</div></div></div></div>
-    <div id="v12" class="tab-pane"><div class="card hero"><h2>V1.2 更新了什么思路</h2><div class="note">核心升级是：<b>不再强行 large → 300，而是保留 baseline，再用 small regime 做增强开关。</b></div></div><div class="card"><h2>V1.2 六版本对比</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>模式</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr><td>baseline</td><td>冰点 → 固定做中证500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.40</b></td></tr><tr class="best-row"><td>baseline_switch_2000</td><td>默认做500，small 时切到2000</td><td>15</td><td>73.3%</td><td class="pos">+5.00%</td><td class="pos">+101.48%</td><td>3.87%</td><td><b>2.72</b></td></tr></table></div></div></div>
-    <div id="factorstudy" class="tab-pane"><div class="card hero"><div class="kicker">研究嵌入</div><h2>把之前已经完成的冰点因子研究，直接并入当前总框架</h2><div class="note">这样命题1 tab 里同时包含：<b>因子研究 → 冰点命题抽象 → 风格过滤 → 增强开关</b></div></div><div class="grid-2"><div class="card"><h2>Top20 策略 Calmar 排名</h2><div id="iceTop20Chart" class="chart-mid"></div></div><div class="card"><h2>共振信号 × 中证500 Calmar 热力图</h2><div id="iceHeatChart" class="chart-mid"></div></div></div><div class="card"><h2>冰点 Top20 策略表</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr class="best-row"><td>#1</td><td>both</td><td>5</td><td>15d</td><td>csi500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.44</b></td></tr><tr class=""><td>#2</td><td>both</td><td>5</td><td>10d</td><td>csi500</td><td>15</td><td>53.3%</td><td class="pos">+2.83%</td><td class="pos">+49.93%</td><td>2.87%</td><td><b>2.11</b></td></tr><tr class=""><td>#3</td><td>both</td><td>5</td><td>15d</td><td>csi1000</td><td>15</td><td>66.7%</td><td class="pos">+5.01%</td><td class="pos">+100.76%</td><td>5.26%</td><td><b>2.02</b></td></tr><tr class=""><td>#4</td><td>both</td><td>20</td><td>5d</td><td>csi300</td><td>62</td><td>74.2%</td><td class="pos">+1.27%</td><td class="pos">+114.90%</td><td>9.11%</td><td><b>1.29</b></td></tr><tr class=""><td>#5</td><td>both</td><td>5</td><td>20d</td><td>csi500</td><td>14</td><td>71.4%</td><td class="pos">+4.33%</td><td class="pos">+74.62%</td><td>6.74%</td><td><b>1.25</b></td></tr><tr class=""><td>#6</td><td>both</td><td>5</td><td>10d</td><td>csi300</td><td>15</td><td>73.3%</td><td class="pos">+2.50%</td><td class="pos">+43.43%</td><td>4.45%</td><td><b>1.21</b></td></tr><tr class=""><td>#7</td><td>both</td><td>5</td><td>5d</td><td>csi300</td><td>15</td><td>66.7%</td><td class="pos">+1.66%</td><td class="pos">+27.39%</td><td>2.99%</td><td><b>1.19</b></td></tr><tr class=""><td>#8</td><td>both</td><td>20</td><td>5d</td><td>csi500</td><td>62</td><td>72.6%</td><td class="pos">+1.42%</td><td class="pos">+132.09%</td><td>11.64%</td><td><b>1.12</b></td></tr><tr class=""><td>#9</td><td>both</td><td>5</td><td>20d</td><td>csi1000</td><td>14</td><td>78.6%</td><td class="pos">+5.12%</td><td class="pos">+92.17%</td><td>9.05%</td><td><b>1.10</b></td></tr><tr class=""><td>#10</td><td>both</td><td>5</td><td>15d</td><td>csi300</td><td>15</td><td>60.0%</td><td class="pos">+3.23%</td><td class="pos">+58.13%</td><td>6.38%</td><td><b>1.08</b></td></tr><tr class=""><td>#11</td><td>both</td><td>10</td><td>10d</td><td>csi300</td><td>31</td><td>61.3%</td><td class="pos">+1.60%</td><td class="pos">+60.13%</td><td>6.61%</td><td><b>1.07</b></td></tr><tr class=""><td>#12</td><td>both</td><td>10</td><td>10d</td><td>csi500</td><td>31</td><td>61.3%</td><td class="pos">+1.94%</td><td class="pos">+75.57%</td><td>8.27%</td><td><b>1.03</b></td></tr><tr class=""><td>#13</td><td>down</td><td>20</td><td>20d</td><td>csi500</td><td>59</td><td>61.0%</td><td class="pos">+2.04%</td><td class="pos">+192.41%</td><td>16.89%</td><td><b>1.00</b></td></tr><tr class=""><td>#14</td><td>both</td><td>5</td><td>5d</td><td>csi1000</td><td>15</td><td>73.3%</td><td class="pos">+2.02%</td><td class="pos">+33.85%</td><td>4.43%</td><td><b>0.97</b></td></tr><tr class=""><td>#15</td><td>both</td><td>10</td><td>5d</td><td>csi300</td><td>35</td><td>68.6%</td><td class="pos">+1.30%</td><td class="pos">+55.21%</td><td>7.10%</td><td><b>0.93</b></td></tr><tr class=""><td>#16</td><td>both</td><td>20</td><td>10d</td><td>csi300</td><td>53</td><td>64.2%</td><td class="pos">+1.34%</td><td class="pos">+96.76%</td><td>11.17%</td><td><b>0.92</b></td></tr><tr class=""><td>#17</td><td>down</td><td>20</td><td>20d</td><td>csi1000</td><td>59</td><td>59.3%</td><td class="pos">+1.99%</td><td class="pos">+179.50%</td><td>17.60%</td><td><b>0.91</b></td></tr><tr class=""><td>#18</td><td>down</td><td>15</td><td>10d</td><td>csi300</td><td>84</td><td>60.7%</td><td class="pos">+0.96%</td><td class="pos">+111.59%</td><td>12.86%</td><td><b>0.89</b></td></tr><tr class=""><td>#19</td><td>down</td><td>20</td><td>15d</td><td>csi500</td><td>74</td><td>64.9%</td><td class="pos">+1.71%</td><td class="pos">+207.52%</td><td>19.99%</td><td><b>0.89</b></td></tr><tr class=""><td>#20</td><td>both</td><td>5</td><td>3d</td><td>csi300</td><td>16</td><td>75.0%</td><td class="pos">+1.28%</td><td class="pos">+22.02%</td><td>3.38%</td><td><b>0.87</b></td></tr></table></div></div></div>
-  </div>
-</div>
-
-<div id="exposure" class="page-pane"><div class="card hero"><div class="kicker">最终输出</div><h2>这个模块成熟后，最终每天应该输出的是股票敞口值</h2><div class="note">未来要输出的核心结论，不是“某个因子今天是多少”，而是：<b>当前股票敞口该给多少。</b></div></div></div>
 <div id="factorlib" class="page-pane">
-<div class="card hero">
-<div class="kicker">因子库</div>
-<h2>强逻辑单因子验证结果总览</h2>
-<div class="note">
-这些因子来自强势股研究框架和 Roni 的市场理解，不是数据挖掘出来的。<br>
-每个因子都经过 IC 检验，点击因子名称可查看详细分析。<br>
-<b>数据：</b>沪深300，2019-2026（7年），window=20日
-</div>
-</div>
-
-<div class="card">
-<h2>单因子 IC 排名</h2>
-<table class="tbl">
-<tr>
-<th>排名</th>
-<th>因子名称</th>
-<th>英文名</th>
-<th>IC均值</th>
-<th>IC_IR</th>
-<th>IC标准差</th>
-<th>IC正比例</th>
-<th>方向</th>
-</tr>
-<tr>
-<td>#1</td>
-<td><a href="factor_down_count.html" class="factor-link">跌停家数</a></td>
-<td>down_count</td>
-<td class="green">+0.0794</td>
-<td>0.75</td>
-<td>0.1227</td>
-<td>75.5%</td>
-<td>趋势↗</td>
-</tr>
-<tr>
-<td>#2</td>
-<td><a href="factor_ud_ratio.html" class="factor-link">涨跌停比</a></td>
-<td>ud_ratio</td>
-<td class="red">-0.0735</td>
-<td>-0.63</td>
-<td>0.1271</td>
-<td>29.8%</td>
-<td>反转↘</td>
-</tr>
-<tr>
-<td>#3</td>
-<td><a href="factor_rate_1to2.html" class="factor-link">一进二率</a></td>
-<td>rate_1to2</td>
-<td class="red">-0.0684</td>
-<td>0.10</td>
-<td>0.1402</td>
-<td>54.1%</td>
-<td>反转↘</td>
-</tr>
-<tr>
-<td>#4</td>
-<td><a href="factor_promotion_rate.html" class="factor-link">晋级率</a></td>
-<td>promotion_rate</td>
-<td class="green">+0.0536</td>
-<td>0.11</td>
-<td>0.1648</td>
-<td>58.1%</td>
-<td>趋势↗</td>
-</tr>
-<tr>
-<td>#5</td>
-<td><a href="factor_zha_rate.html" class="factor-link">炸板率</a></td>
-<td>zha_rate</td>
-<td class="green">+0.0476</td>
-<td>0.29</td>
-<td>0.0851</td>
-<td>58.2%</td>
-<td>趋势↗</td>
-</tr>
-<tr>
-<td>#6</td>
-<td><a href="factor_seal_quality.html" class="factor-link">封板质量</a></td>
-<td>seal_quality</td>
-<td class="red">-0.0438</td>
-<td>-0.39</td>
-<td>0.1850</td>
-<td>32.0%</td>
-<td>反转↘</td>
-</tr>
-<tr>
-<td>#7</td>
-<td><a href="factor_seal_diff.html" class="factor-link">seal_diff</a></td>
-<td>seal_diff</td>
-<td class="red">-0.0306</td>
-<td>-0.29</td>
-<td>0.1763</td>
-<td>36.7%</td>
-<td>反转↘</td>
-</tr>
-<tr>
-<td>#8</td>
-<td><a href="factor_sentiment.html" class="factor-link">综合情绪</a></td>
-<td>sentiment</td>
-<td class="blue">+0.0298</td>
-<td>-0.11</td>
-<td>0.1389</td>
-<td>45.1%</td>
-<td>弱信号→</td>
-</tr>
-<tr>
-<td>#9</td>
-<td><a href="factor_max_height.html" class="factor-link">连板高度</a></td>
-<td>max_height</td>
-<td class="blue">-0.0210</td>
-<td>0.32</td>
-<td>0.2283</td>
-<td>60.6%</td>
-<td>弱信号→</td>
-</tr>
-<tr>
-<td>#10</td>
-<td><a href="factor_up_count.html" class="factor-link">涨停家数</a></td>
-<td>up_count</td>
-<td class="blue">+0.0051</td>
-<td>-0.08</td>
-<td>0.1951</td>
-<td>46.7%</td>
-<td>弱信号→</td>
-</tr>
-</table>
+  <div class="card hero">
+    <div class="kicker">研究方法</div>
+    <h2>未来工作流：你给逻辑，我生成因子、回测、再沉淀成独立 Tab</h2>
+    <div class="note">看板改成横向 Tab，就是为了让每个命题独立承载完整研究线。</div>
+  </div>
+  
+  <div class="card">
+    <h2>📚 因子库说明 & 单因子检验</h2>
+    <div class="note" style="margin-bottom:16px">这是因子研究的起点：10个强势股情绪因子的定义、IC检验、方向判断。</div>
+    <iframe src="index_old_sentiment.html" style="width:100%;height:1200px;border:1px solid #1f2d47;border-radius:12px;background:#0d1117"></iframe>
+  </div>
+  
+  <div class="card">
+    <h2>📊 多因子组合回测</h2>
+    <div class="note" style="margin-bottom:16px">基于单因子检验结果，测试不同加权方案和映射函数的择时效果。</div>
+    <iframe src="timing_backtest.html" style="width:100%;height:800px;border:1px solid #1f2d47;border-radius:12px;background:#0d1117"></iframe>
+  </div>
 </div>
 
-<div class="card">
-<h2>因子 → 命题 映射</h2>
-<div class="note">
-<b>命题1：冰点</b> ← 跌停家数 + 封单额轧差（待补）<br>
-<b>命题2：封单额轧差</b> ← 封单额轧差因子<br>
-<b>命题3：强势股接力</b> ← 晋级率 + 一进二率 + 连板高度
-</div>
-</div>
-</div></div></div></div>
-<div id="future1" class="page-pane">
+<div id="research" class="page-pane">
+  <div class="card hero">
+    <div class="kicker">命题研究容器</div>
+    <h2>每个命题都是一条独立的研究线，最终服务于股票敞口决策</h2>
+    <div class="note">这里不是简单的因子列表，而是：<b>每个命题都有完整的研究框架、验证逻辑、对敞口的意义。</b></div>
+  </div>
+
+  <div class="subtabs">
+    <button class="subtab-btn active" data-tab="icepoint">冰点策略</button>
+    <button class="subtab-btn" data-tab="seal">封单额轧差</button>
+    <button class="subtab-btn" data-tab="momentum">强势股接力</button>
+  </div>
+
+  <div id="icepoint" class="tab-pane active">
     <div class="card hero">
-      <div class="kicker">占位命题</div>
-      <h2>命题2：封单额轧差研究</h2>
+      <div class="kicker">冰点研究摘要</div>
+      <h2>此前已完成的冰点因子研究结果，直接嵌入当前框架</h2>
+      <div class="stats-row">
+        <div class="stat-box"><div class="val blue">双因子共振</div><div class="label">信号</div></div>
+        <div class="stat-box"><div class="val purple">5%分位</div><div class="label">阈值</div></div>
+        <div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div>
+        <div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div>
+        <div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div>
+        <div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div>
+        <div class="stat-box"><div class="val green">+86.37%</div><div class="label">总收益</div></div>
+        <div class="stat-box"><div class="val amber">3.87%</div><div class="label">最大回撤</div></div>
+        <div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div>
+        <div class="stat-box"><div class="val blue">15</div><div class="label">交易次数</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>冰点研究迭代版本</h2>
+      <div class="subtabs">
+        <button class="subtab-btn active" data-tab="v1">V1 基线冰点</button>
+        <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
+        <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
+        <button class="subtab-btn" data-tab="factorstudy">因子研究嵌入</button>
+      </div>
+      <div id="v1" class="tab-pane active">
+        <div class="card hero"><h2>V1 更新了什么思路</h2><div class="note">V1 先不碰复杂状态机，先回答：<b>极端恐慌（冰点）本身，能不能作为稳定可回测的股票择时命题？</b><br><br>工作包括：补齐 2019-2026 全样本数据、跑 10 个因子的 7 年 IC 检验、拆出冰点命题做参数网格回测、找到第一条可闭环样板。</div></div>
+        <div class="grid-2">
+          <div class="card"><h2>V1 关键发现</h2><div class="note">- 涨停家数 IC = <b>+0.078</b><br>- 跌停家数 IC = <b>+0.069</b><br>- 封单额轧差 IC = <b>+0.057</b><br>- 涨跌停比 IC = <b>-0.043</b>（反向）</div></div>
+          <div class="card"><h2>V1 最优基线策略</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div></div>
+        </div>
+      </div>
+      <div id="v11" class="tab-pane">
+        <div class="card hero"><h2>V1.1 更新了什么思路</h2><div class="note">新增 <b>Regime Filter</b>：用 <b>中证2000 - 沪深300</b> 刻画市场更偏小盘还是大盘，回答"同样的冰点，是否在所有风格环境下都同样支持加大敞口"。</div></div>
+        <div class="grid-3">
+          <div class="card"><h2>V1.1 新增模块</h2><div class="note">- 新增中证2000历史日线<br>- 定义 small / large / neutral 三类环境<br>- 先做条件收益、条件IC，再做策略回测</div></div>
+          <div class="card"><h2>Regime 分布</h2><div class="stats-row"><div class="stat-box"><div class="val purple">974</div><div class="label">small</div></div><div class="stat-box"><div class="val blue">429</div><div class="label">large</div></div><div class="stat-box"><div class="val amber">335</div><div class="label">neutral</div></div></div></div>
+          <div class="card"><h2>V1.1 想解决什么</h2><div class="note">剔除错误环境里的冰点，识别小盘修复 vs 权重修复，把状态命题往"敞口怎么给"推进一步。</div></div>
+        </div>
+      </div>
+      <div id="v12" class="tab-pane">
+        <div class="card hero"><h2>V1.2 更新了什么思路</h2><div class="note">核心升级是：<b>不再强行 large → 300，而是保留 baseline，再用 small regime 做增强开关。</b></div></div>
+        <div class="card"><h2>V1.2 六版本对比</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>模式</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr><td>baseline</td><td>冰点 → 固定做中证500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.40</b></td></tr><tr class="best-row"><td>baseline_switch_2000</td><td>默认做500，small 时切到2000</td><td>15</td><td>73.3%</td><td class="pos">+5.00%</td><td class="pos">+101.48%</td><td>3.87%</td><td><b>2.72</b></td></tr></table></div></div>
+      </div>
+      <div id="factorstudy" class="tab-pane">
+        <div class="card hero"><div class="kicker">研究嵌入</div><h2>把之前已经完成的冰点因子研究，直接并入当前总框架</h2><div class="note">这样命题1 tab 里同时包含：<b>因子研究 → 冰点命题抽象 → 风格过滤 → 增强开关</b></div></div>
+        <div class="grid-2">
+          <div class="card"><h2>Top20 策略 Calmar 排名</h2><div id="iceTop20Chart" class="chart-mid"></div></div>
+          <div class="card"><h2>共振信号 × 中证500 Calmar 热力图</h2><div id="iceHeatChart" class="chart-mid"></div></div>
+        </div>
+        <div class="card"><h2>冰点 Top20 策略表</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr class="best-row"><td>#1</td><td>both</td><td>5</td><td>15d</td><td>csi500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.44</b></td></tr><tr><td>#2</td><td>both</td><td>5</td><td>10d</td><td>csi500</td><td>15</td><td>53.3%</td><td class="pos">+2.83%</td><td class="pos">+49.93%</td><td>2.87%</td><td><b>2.11</b></td></tr><tr><td>#3</td><td>both</td><td>5</td><td>15d</td><td>csi1000</td><td>15</td><td>66.7%</td><td class="pos">+5.01%</td><td class="pos">+100.76%</td><td>5.26%</td><td><b>2.02</b></td></tr><tr><td>#4</td><td>both</td><td>20</td><td>5d</td><td>csi300</td><td>62</td><td>74.2%</td><td class="pos">+1.27%</td><td class="pos">+114.90%</td><td>9.11%</td><td><b>1.29</b></td></tr><tr><td>#5</td><td>both</td><td>5</td><td>20d</td><td>csi500</td><td>14</td><td>71.4%</td><td class="pos">+4.33%</td><td class="pos">+74.62%</td><td>6.74%</td><td><b>1.25</b></td></tr></table></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="seal" class="tab-pane">
+    <div class="card hero">
+      <div class="kicker">命题2</div>
+      <h2>封单额轧差研究</h2>
       <div class="note">这里会承载一条独立的命题研究线，不再只是一个短占位，而是未来完整的深读页面模板。</div>
     </div>
     <div class="grid-2">
@@ -280,11 +196,12 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <div class="card"><h2>验证框架</h2><div class="note">这里写：单因子 IC、条件收益、分风格检验、事件驱动回测或持有期回测。</div></div>
       <div class="card"><h2>对敞口的意义</h2><div class="note">这里写：这条命题如果成立，会怎样影响最终股票敞口值，是做加分项、减分项，还是作为过滤器。</div></div>
     </div>
-    </div>
-<div id="future2" class="page-pane">
+  </div>
+
+  <div id="momentum" class="tab-pane">
     <div class="card hero">
-      <div class="kicker">占位命题</div>
-      <h2>命题3：强势股接力研究</h2>
+      <div class="kicker">命题3</div>
+      <h2>强势股接力研究</h2>
       <div class="note">这里会承载一条独立的命题研究线，用同样模板持续扩展，保持每个 Tab 都能单独思考。</div>
     </div>
     <div class="grid-2">
@@ -295,8 +212,18 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <div class="card"><h2>验证框架</h2><div class="note">这里写：单因子 IC、条件收益、分风格检验、事件驱动回测或持有期回测。</div></div>
       <div class="card"><h2>对敞口的意义</h2><div class="note">这里写：这条命题如果成立，会怎样影响最终股票敞口值，是做加分项、减分项，还是作为过滤器。</div></div>
     </div>
-    </div>
-<div class="footer">Produced by the GAMT Team · General Asset Management Team · 2026-03-12 02:03:39</div>
+  </div>
+</div>
+
+<div id="exposure" class="page-pane">
+  <div class="card hero">
+    <div class="kicker">最终输出</div>
+    <h2>这个模块成熟后，最终每天应该输出的是股票敞口值</h2>
+    <div class="note">未来要输出的核心结论，不是"某个因子今天是多少"，而是：<b>当前股票敞口该给多少。</b></div>
+  </div>
+</div>
+
+<div class="footer">Produced by the GAMT Team · General Asset Management Team · 2026-03-12 10:40</div>
 </div>
 
 <script>
@@ -310,9 +237,10 @@ window.switchPage = function(pageId) {
   if (pane) pane.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
 window.switchSubtab = function(tabId, el) {
   if (!tabId || !el) return;
-  const container = el.closest('.card');
+  const container = el.closest('.card') || el.closest('#research');
   if (!container) return;
   container.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
   container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -320,6 +248,7 @@ window.switchSubtab = function(tabId, el) {
   const target = document.getElementById(tabId);
   if (target) target.classList.add('active');
 };
+
 document.addEventListener('click', (e) => {
   const pageBtn = e.target.closest('.page-tab-btn');
   if (pageBtn) { e.preventDefault(); e.stopPropagation(); window.switchPage(pageBtn.dataset.page); return; }
@@ -328,6 +257,7 @@ document.addEventListener('click', (e) => {
   const navNode = e.target.closest('.nav-node');
   if (navNode) { e.preventDefault(); e.stopPropagation(); window.switchPage(navNode.dataset.page); }
 });
+
 const fluidDom = document.getElementById('fluidFrameworkChart');
 if (fluidDom) {
   fluidDom.innerHTML = `
@@ -339,18 +269,45 @@ if (fluidDom) {
     <g class="nav-node" data-page="exposure"><circle cx="140" cy="250" r="58" fill="#5de0c2" fill-opacity="0.16" stroke="#5de0c2" stroke-width="2" filter="url(#glow)"/><text x="140" y="242" text-anchor="middle" fill="#eafaf7" font-size="22" font-weight="800">总目标</text><text x="140" y="270" text-anchor="middle" fill="#d7fff5" font-size="22" font-weight="800">股票敞口值</text></g>
     <g class="nav-node" data-page="factorlib"><circle cx="330" cy="140" r="50" fill="#5daeff" fill-opacity="0.16" stroke="#5daeff" stroke-width="2" filter="url(#glow)"/><text x="330" y="132" text-anchor="middle" fill="#edf6ff" font-size="20" font-weight="800">强势股</text><text x="330" y="158" text-anchor="middle" fill="#edf6ff" font-size="20" font-weight="800">研究框架</text></g>
     <g class="nav-node" data-page="factorlib"><circle cx="330" cy="360" r="48" fill="#5daeff" fill-opacity="0.14" stroke="#5daeff" stroke-width="2" filter="url(#glow)"/><text x="330" y="352" text-anchor="middle" fill="#edf6ff" font-size="19" font-weight="800">强逻辑</text><text x="330" y="378" text-anchor="middle" fill="#edf6ff" font-size="19" font-weight="800">单因子</text></g>
-    <g class="nav-node" data-page="icepoint"><circle cx="585" cy="100" r="54" fill="#9f8bff" fill-opacity="0.16" stroke="#9f8bff" stroke-width="2" filter="url(#glow)"/><text x="585" y="92" text-anchor="middle" fill="#f3efff" font-size="20" font-weight="800">命题1</text><text x="585" y="118" text-anchor="middle" fill="#f3efff" font-size="20" font-weight="800">冰点</text></g>
-    <g class="nav-node" data-page="future1"><circle cx="600" cy="235" r="38" fill="#6b7a93" fill-opacity="0.16" stroke="#8ea0bb" stroke-width="2" filter="url(#glow)"/><text x="600" y="229" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">命题2</text><text x="600" y="249" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">封单额轧差</text></g>
-    <g class="nav-node" data-page="future2"><circle cx="600" cy="385" r="38" fill="#6b7a93" fill-opacity="0.16" stroke="#8ea0bb" stroke-width="2" filter="url(#glow)"/><text x="600" y="379" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">命题3</text><text x="600" y="399" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">强势股接力</text></g>
+    <g class="nav-node" data-page="research"><circle cx="585" cy="100" r="54" fill="#9f8bff" fill-opacity="0.16" stroke="#9f8bff" stroke-width="2" filter="url(#glow)"/><text x="585" y="92" text-anchor="middle" fill="#f3efff" font-size="20" font-weight="800">命题1</text><text x="585" y="118" text-anchor="middle" fill="#f3efff" font-size="20" font-weight="800">冰点</text></g>
+    <g class="nav-node" data-page="research"><circle cx="600" cy="235" r="38" fill="#6b7a93" fill-opacity="0.16" stroke="#8ea0bb" stroke-width="2" filter="url(#glow)"/><text x="600" y="229" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">命题2</text><text x="600" y="249" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">封单额轧差</text></g>
+    <g class="nav-node" data-page="research"><circle cx="600" cy="385" r="38" fill="#6b7a93" fill-opacity="0.16" stroke="#8ea0bb" stroke-width="2" filter="url(#glow)"/><text x="600" y="379" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">命题3</text><text x="600" y="399" text-anchor="middle" fill="#e5edf7" font-size="15" font-weight="700">强势股接力</text></g>
     <g class="nav-node" data-page="factorlib"><circle cx="765" cy="255" r="40" fill="#4f6382" fill-opacity="0.18" stroke="#7c90ae" stroke-width="2" filter="url(#glow)"/><text x="765" y="247" text-anchor="middle" fill="#eef4fb" font-size="16" font-weight="700">其他命题</text><text x="765" y="269" text-anchor="middle" fill="#eef4fb" font-size="16" font-weight="700">待补齐</text></g>
     <g class="nav-node" data-page="exposure"><circle cx="765" cy="95" r="44" fill="#22c55e" fill-opacity="0.16" stroke="#59e0c5" stroke-width="2" filter="url(#glow)"/><text x="765" y="87" text-anchor="middle" fill="#ecfff5" font-size="16" font-weight="700">风格过滤</text><text x="765" y="109" text-anchor="middle" fill="#ecfff5" font-size="16" font-weight="700">执行映射</text></g>
     <g class="nav-node" data-page="exposure"><circle cx="1050" cy="240" r="62" fill="#245cff" fill-opacity="0.18" stroke="#5daeff" stroke-width="2.5" filter="url(#glow)"/><text x="1050" y="230" text-anchor="middle" fill="#f3f8ff" font-size="22" font-weight="800">最终整合</text><text x="1050" y="260" text-anchor="middle" fill="#f3f8ff" font-size="22" font-weight="800">输出敞口</text></g>
   </svg>`;
 }
+
 const iceTop20Dom = document.getElementById('iceTop20Chart');
-if (iceTop20Dom) { const c = echarts.init(iceTop20Dom); c.setOption({ backgroundColor:'transparent', tooltip:{ trigger:'axis', axisPointer:{ type:'shadow' } }, grid:{ left:120, right:30, top:20, bottom:20 }, xAxis:{ type:'value', axisLabel:{ color:'#8ea0bb' }, splitLine:{ lineStyle:{ color:'rgba(255,255,255,0.06)' } } }, yAxis:{ type:'category', data:["#1 both/csi500/15d", "#2 both/csi500/10d", "#3 both/csi1000/15d", "#4 both/csi300/5d", "#5 both/csi500/20d", "#6 both/csi300/10d", "#7 both/csi300/5d", "#8 both/csi500/5d", "#9 both/csi1000/20d", "#10 both/csi300/15d", "#11 both/csi300/10d", "#12 both/csi500/10d", "#13 down/csi500/20d", "#14 both/csi1000/5d", "#15 both/csi300/5d", "#16 both/csi300/10d", "#17 down/csi1000/20d", "#18 down/csi300/10d", "#19 down/csi500/15d", "#20 both/csi300/3d"], axisLabel:{ color:'#cbd5e1', fontSize:11 }, inverse:true }, series:[{ name:'Calmar', type:'bar', data:[2.44, 2.11, 2.02, 1.29, 1.25, 1.21, 1.19, 1.12, 1.1, 1.08, 1.07, 1.03, 1.0, 0.97, 0.93, 0.92, 0.91, 0.89, 0.89, 0.87], itemStyle:{ color:'#5de0c2', borderRadius:[0,6,6,0] } }] }); window.addEventListener('resize', () => c.resize()); }
+if (iceTop20Dom) { 
+  const c = echarts.init(iceTop20Dom); 
+  c.setOption({ 
+    backgroundColor:'transparent', 
+    tooltip:{ trigger:'axis', axisPointer:{ type:'shadow' } }, 
+    grid:{ left:120, right:30, top:20, bottom:20 }, 
+    xAxis:{ type:'value', axisLabel:{ color:'#8ea0bb' }, splitLine:{ lineStyle:{ color:'rgba(255,255,255,0.06)' } } }, 
+    yAxis:{ type:'category', data:["#1 both/csi500/15d", "#2 both/csi500/10d", "#3 both/csi1000/15d", "#4 both/csi300/5d", "#5 both/csi500/20d"], axisLabel:{ color:'#cbd5e1', fontSize:11 }, inverse:true }, 
+    series:[{ name:'Calmar', type:'bar', data:[2.44, 2.11, 2.02, 1.29, 1.25], itemStyle:{ color:'#5de0c2', borderRadius:[0,6,6,0] } }] 
+  }); 
+  window.addEventListener('resize', () => c.resize()); 
+}
+
 const iceHeatDom = document.getElementById('iceHeatChart');
-if (iceHeatDom) { const c = echarts.init(iceHeatDom); const xCats = ['5%','10%','15%','20%']; const yCats = [3,5,10,15,20]; c.setOption({ backgroundColor:'transparent', tooltip:{ position:'top' }, grid:{ left:60, right:30, top:20, bottom:40 }, xAxis:{ type:'category', data:xCats, axisLabel:{ color:'#8ea0bb' } }, yAxis:{ type:'category', data:yCats, axisLabel:{ color:'#8ea0bb' } }, visualMap:{ min:0, max:3, calculable:true, orient:'horizontal', left:'center', bottom:0, textStyle:{ color:'#8ea0bb' }, inRange:{ color:['#13233f','#245cff','#59e0c5'] } }, series:[{ type:'heatmap', data:[["5", 3, 0.54], ["5", 5, 0.72], ["5", 10, 2.11], ["5", 15, 2.44], ["5", 20, 1.25], ["10", 3, 0.71], ["10", 5, 0.76], ["10", 10, 1.03], ["10", 15, 0.75], ["10", 20, 0.68], ["15", 3, 0.42], ["15", 5, 0.59], ["15", 10, 0.56], ["15", 15, 0.31], ["15", 20, 0.29], ["20", 3, 0.41], ["20", 5, 1.12], ["20", 10, 0.64], ["20", 15, 0.55], ["20", 20, 0.48]].map(d => [xCats.indexOf(String(d[0])), yCats.indexOf(Number(d[1])), d[2]]), label:{ show:true, color:'#fff', formatter:p => p.data[2].toFixed(2) } }] }); window.addEventListener('resize', () => c.resize()); }
+if (iceHeatDom) { 
+  const c = echarts.init(iceHeatDom); 
+  const xCats = ['5%','10%','15%','20%']; 
+  const yCats = [3,5,10,15,20]; 
+  c.setOption({ 
+    backgroundColor:'transparent', 
+    tooltip:{ position:'top' }, 
+    grid:{ left:60, right:30, top:20, bottom:40 }, 
+    xAxis:{ type:'category', data:xCats, axisLabel:{ color:'#8ea0bb' } }, 
+    yAxis:{ type:'category', data:yCats, axisLabel:{ color:'#8ea0bb' } }, 
+    visualMap:{ min:0, max:3, calculable:true, orient:'horizontal', left:'center', bottom:0, textStyle:{ color:'#8ea0bb' }, inRange:{ color:['#13233f','#245cff','#59e0c5'] } }, 
+    series:[{ type:'heatmap', data:[["5%", 3, 0.54], ["5%", 5, 0.72], ["5%", 10, 2.11], ["5%", 15, 2.44], ["5%", 20, 1.25], ["10%", 3, 0.71], ["10%", 5, 0.76], ["10%", 10, 1.03], ["10%", 15, 0.75], ["10%", 20, 0.68], ["15%", 3, 0.42], ["15%", 5, 0.59], ["15%", 10, 0.56], ["15%", 15, 0.31], ["15%", 20, 0.29], ["20%", 3, 0.41], ["20%", 5, 1.12], ["20%", 10, 0.64], ["20%", 15, 0.55], ["20%", 20, 0.48]].map(d => [xCats.indexOf(d[0]), yCats.indexOf(d[1]), d[2]]), label:{ show:true, color:'#fff', formatter:p => p.data[2].toFixed(2) } }] 
+  }); 
+  window.addEventListener('resize', () => c.resize()); 
+}
 </script>
 </body>
 </html>
