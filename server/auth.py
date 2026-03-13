@@ -27,6 +27,7 @@ def init_db():
             password_hash TEXT NOT NULL,
             salt TEXT NOT NULL,
             is_admin INTEGER DEFAULT 0,
+            tier INTEGER DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now','localtime')),
             last_login TEXT,
             login_count INTEGER DEFAULT 0,
@@ -49,6 +50,13 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now','localtime'))
         );
     ''')
+    # 自动迁移：给旧表加 tier 列（如果不存在）
+    try:
+        c.execute('SELECT tier FROM users LIMIT 1')
+    except sqlite3.OperationalError:
+        c.execute('ALTER TABLE users ADD COLUMN tier INTEGER DEFAULT 0')
+        c.commit()
+        print('[auth] 已迁移: 添加 tier 列')
     # 确保有默认管理员（首次运行）
     row = c.execute('SELECT COUNT(*) FROM users WHERE is_admin=1').fetchone()
     if row[0] == 0:
@@ -136,6 +144,7 @@ def login(username, password, ip=''):
         'username': row['username'],
         'display_name': row['display_name'] or row['username'],
         'is_admin': bool(row['is_admin']),
+        'tier': row['tier'] if 'tier' in row.keys() else 0,
     }
 
 def verify_token(token):
@@ -155,6 +164,7 @@ def verify_token(token):
         'username': row['username'],
         'display_name': row['display_name'] or row['username'],
         'is_admin': bool(row['is_admin']),
+        'tier': row['tier'] if 'tier' in row.keys() else 0,
     }
 
 def logout(token):
@@ -166,7 +176,7 @@ def list_users():
     """管理后台：列出所有用户"""
     c = _conn()
     rows = c.execute('''
-        SELECT id, username, display_name, is_admin, created_at, last_login, login_count, status
+        SELECT id, username, display_name, is_admin, tier, created_at, last_login, login_count, status
         FROM users ORDER BY created_at DESC
     ''').fetchall()
     c.close()
@@ -200,6 +210,12 @@ def reset_password(user_id, new_password):
     c = _conn()
     c.execute('UPDATE users SET password_hash=?, salt=? WHERE id=?', (h, s, user_id))
     c.execute('DELETE FROM sessions WHERE user_id=?', (user_id,))
+    c.commit(); c.close()
+
+def set_tier(user_id, tier):
+    """设置用户等级: 0=普通, 1=高级"""
+    c = _conn()
+    c.execute('UPDATE users SET tier=? WHERE id=? AND is_admin=0', (int(tier), user_id))
     c.commit(); c.close()
 
 # 初始化

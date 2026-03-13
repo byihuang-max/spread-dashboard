@@ -51,7 +51,7 @@ tr:hover td{background:#fafbfc}
 
   <div class="tab-content active" id="tab-users">
     <div class="card"><table><thead><tr>
-      <th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th>
+      <th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>等级</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th>
     </tr></thead><tbody id="usersBody"></tbody></table></div>
   </div>
 
@@ -105,27 +105,34 @@ function loadUsers(){
     // Stats
     var total=users.length;
     var active=users.filter(function(u){return u.status==='active'}).length;
+    var premium=users.filter(function(u){return (u.tier||0)>=1 && !u.is_admin}).length;
     var today=new Date().toISOString().slice(0,10);
     var todayNew=users.filter(function(u){return (u.created_at||'').slice(0,10)===today}).length;
     document.getElementById('statsRow').innerHTML=
       '<div class="stat"><div class="label">总用户数</div><div class="value">'+total+'</div></div>'+
       '<div class="stat"><div class="label">活跃用户</div><div class="value">'+active+'</div></div>'+
+      '<div class="stat"><div class="label">高级客户</div><div class="value">'+premium+'</div></div>'+
       '<div class="stat"><div class="label">今日新注册</div><div class="value">'+todayNew+'</div></div>';
     // Table
     var html='';
     users.forEach(function(u){
       var role=u.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-gray">用户</span>';
+      var tierVal=u.tier||0;
+      var tierTag=u.is_admin?'<span class="tag tag-blue">全部</span>':(tierVal>=1?'<span class="tag tag-green">高级</span>':'<span class="tag tag-gray">普通</span>');
       var status=u.status==='active'?'<span class="tag tag-green">正常</span>':'<span class="tag tag-red">已禁用</span>';
       var actions='';
       if(!u.is_admin){
         var toggleBtn=u.status==='active'
           ?'<button class="btn btn-danger" onclick="toggleUser('+u.id+',\'disabled\')">禁用</button>'
           :'<button class="btn" onclick="toggleUser('+u.id+',\'active\')">启用</button>';
-        actions=toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> <button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
+        var tierBtn=tierVal>=1
+          ?'<button class="btn" onclick="setTier('+u.id+',0)">降为普通</button>'
+          :'<button class="btn" style="color:#16a34a;border-color:#86efac" onclick="setTier('+u.id+',1)">升为高级</button>';
+        actions=tierBtn+' '+toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> <button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
       }
-      html+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+(u.display_name||'-')+'</td><td>'+role+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.last_login||'从未')+'</td><td>'+u.login_count+'</td><td>'+status+'</td><td>'+actions+'</td></tr>';
+      html+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+(u.display_name||'-')+'</td><td>'+role+'</td><td>'+tierTag+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.last_login||'从未')+'</td><td>'+u.login_count+'</td><td>'+status+'</td><td>'+actions+'</td></tr>';
     });
-    document.getElementById('usersBody').innerHTML=html||'<tr><td colspan="9" class="empty">暂无用户</td></tr>';
+    document.getElementById('usersBody').innerHTML=html||'<tr><td colspan="10" class="empty">暂无用户</td></tr>';
   });
 }
 
@@ -143,6 +150,10 @@ function loadLogs(){
 
 function toggleUser(id,status){
   apiCall('POST','/api/admin/toggle-user',{user_id:id,status:status}).then(function(){loadUsers()});
+}
+
+function setTier(id,tier){
+  apiCall('POST','/api/admin/set-tier',{user_id:id,tier:tier}).then(function(){loadUsers()});
 }
 
 function delUser(id,name){

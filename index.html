@@ -3445,7 +3445,7 @@ function initCbCharts() {
     apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(d){
       if(d.ok){
         localStorage.setItem('gamt_token',d.token);
-        localStorage.setItem('gamt_user',JSON.stringify({username:d.username,display_name:d.display_name,is_admin:d.is_admin}));
+        localStorage.setItem('gamt_user',JSON.stringify({username:d.username,display_name:d.display_name,is_admin:d.is_admin,tier:d.tier||0}));
         showApp(d);
       }else{
         document.getElementById('authErr').textContent=d.msg||'登录失败';
@@ -3472,7 +3472,7 @@ function initCbCharts() {
         apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(d2){
           if(d2.ok){
             localStorage.setItem('gamt_token',d2.token);
-            localStorage.setItem('gamt_user',JSON.stringify({username:d2.username,display_name:d2.display_name,is_admin:d2.is_admin}));
+            localStorage.setItem('gamt_user',JSON.stringify({username:d2.username,display_name:d2.display_name,is_admin:d2.is_admin,tier:d2.tier||0}));
             showApp(d2);
           }else{
             // 自动登录失败，切到登录tab让用户手动登录
@@ -3539,6 +3539,9 @@ function initCbCharts() {
       if(ag) ag.style.display='';
       var ul=document.getElementById('navUpdateLog');
       if(ul) ul.style.display='';
+    }
+    // 管理员 或 高级客户(tier>=1)：显示择时研究
+    if(user.is_admin || (user.tier && user.tier >= 1)){
       var tr=document.getElementById('navTimingResearch');
       if(tr) tr.style.display='';
     }

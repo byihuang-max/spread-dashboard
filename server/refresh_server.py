@@ -601,6 +601,18 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {'ok': True})
             return
 
+        if self.path == '/api/admin/set-tier':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            tier = body.get('tier', 0)
+            if tier not in (0, 1):
+                self._json(400, {'error': 'tier 只能是 0 或 1'})
+                return
+            auth.set_tier(body.get('user_id'), tier)
+            self._json(200, {'ok': True})
+            return
+
         # ═══ 取消 API（仅管理员）═══
         if self.path == '/api/cancel':
             admin = self._require_admin()
