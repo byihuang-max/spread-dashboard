@@ -18,11 +18,14 @@ def calculate_rolling_correlation(window=30):
     nav_data = data['nav_data']
     
     # 转换为DataFrame（排除WTI原油，只用8个核心资产）
-    CORR_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '标普500', 'COMEX黄金']
+    CORR_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '道琼斯', 'COMEX黄金']
     filtered = {k: v for k, v in nav_data.items() if k in CORR_ASSETS}
     df = pd.DataFrame(filtered)
     df.index = pd.to_datetime(df.index)
     df = df.sort_index()
+    
+    # 删除有NaN的行（不同资产数据起始日期不同）
+    df = df.dropna()
     
     # 计算收益率
     returns = df.pct_change().dropna()
