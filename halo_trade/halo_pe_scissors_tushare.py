@@ -145,7 +145,7 @@ def calc_scissors(heavy_pe, light_pe):
             'date': date,
             'heavy_pe': round(heavy_avg[date], 2),
             'light_pe': round(light_avg[date], 2),
-            'scissors': round(scissors, 2),
+            'pe_gap': round(scissors, 2),  # 前端期望pe_gap
         })
     
     return {
@@ -200,7 +200,7 @@ if __name__ == '__main__':
         print(f"   日期: {latest['date']}")
         print(f"   重资产PE: {latest['heavy_pe']}")
         print(f"   轻资产PE: {latest['light_pe']}")
-        print(f"   剪刀差: {latest['scissors']} ({'负值=重资产便宜' if latest['scissors'] < 0 else '正值=轻资产便宜'})")
+        print(f"   剪刀差: {latest['pe_gap']} ({'负值=重资产便宜' if latest['pe_gap'] < 0 else '正值=轻资产便宜'})")
         print(f"   历史点数: {len(scissors['history'])}")
     
     print(f"✅ 结果已保存：{OUTPUT_JSON}")
