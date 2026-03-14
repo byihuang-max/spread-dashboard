@@ -210,6 +210,13 @@ MODULES = {
             ('macro/score', 'macro_score.py'),
         ],
     },
+    'macro_meme': {
+        'name': '宏观Meme叙事',
+        'scripts': [
+            ('daily_report/meme交易', 'narrative_monitor.py'),
+            ('meme', 'macro_lifecycle.py'),
+        ],
+    },
     'overview': {
         'name': '仪表盘汇总',
         'scripts': [
@@ -238,6 +245,7 @@ TAB_MAP = {
     'halo': 'halo_trade',
     'us-alerts': 'us_alerts',
     'macro-score': 'macro_score',
+    'macro-meme': 'macro_meme',
     'overview': 'overview',
 }
 
