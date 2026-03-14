@@ -15,7 +15,7 @@ from datetime import datetime
 # ==================== 配置 ====================
 
 DATA_DIR = Path(__file__).parent / "data"
-PRICE_CSV = DATA_DIR / "halo_prices.csv"
+PRICE_CSV = DATA_DIR / "halo_prices_ifind.csv"
 OUTPUT_JSON = DATA_DIR / "halo_analysis.json"
 
 # 叙事监控系统输出路径
@@ -23,24 +23,16 @@ LIFECYCLE_JSON = Path(__file__).parent.parent / "meme" / "lifecycle_output.json"
 
 # 标的 → 基准映射
 TICKER_TO_BENCHMARK = {
-    # 美股 → SPY
-    "CEG": "SPY", "GEV": "SPY", "NEE": "SPY", "ETN": "SPY",
-    "LMT": "SPY", "RTX": "SPY",
-    "XOM": "SPY", "JPM": "SPY",
-    
-    # 日股 → 日经225
-    "9501.T": "^N225", "9503.T": "^N225",
-    "7011.T": "^N225", "7012.T": "^N225",
-    "8058.T": "^N225", "8306.T": "^N225",
-    
-    # 韩股 → KOSPI
-    "015760.KS": "^KS11", "012450.KS": "^KS11", "009540.KS": "^KS11",
-    "005490.KS": "^KS11", "105560.KS": "^KS11",
+    # 美股 → 标普500ETF
+    "SO.N": "513500.SH", "NEE.N": "513500.SH", "DUK.N": "513500.SH", "ETN.N": "513500.SH",
+    "LMT.N": "513500.SH", "RTX.N": "513500.SH", "GD.N": "513500.SH", "NOC.N": "513500.SH",
+    "XOM.N": "513500.SH", "JPM.N": "513500.SH", "GS.N": "513500.SH", 
+    "MS.N": "513500.SH", "BAC.N": "513500.SH",
     
     # A股 → 沪深300
-    "600900.SS": "000300.SS", "601985.SS": "000300.SS",
-    "600150.SS": "000300.SS", "600760.SS": "000300.SS",
-    "601857.SS": "000300.SS", "600036.SS": "000300.SS",
+    "600900.SH": "000300.SH", "601985.SH": "000300.SH",
+    "600150.SH": "000300.SH", "600760.SH": "000300.SH",
+    "601857.SH": "000300.SH", "600036.SH": "000300.SH",
 }
 
 
@@ -49,6 +41,8 @@ TICKER_TO_BENCHMARK = {
 def load_prices():
     """加载价格数据"""
     df = pd.read_csv(PRICE_CSV, parse_dates=["date"])
+    # iFind 数据用 code 列，重命名为 ticker
+    df = df.rename(columns={'code': 'ticker'})
     print(f"✅ 加载价格数据：{len(df)} 行")
     return df
 

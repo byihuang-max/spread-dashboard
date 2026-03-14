@@ -80,6 +80,7 @@ MODULES = {
         'scripts': [
             ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/momentum_stock', 'momentum_data.py'),
+            ('env_fit/momentum_stock/limit_index', 'limit_index_data.py'),
             ('env_fit/momentum_stock', 'momentum_sector.py'),
             ('env_fit/momentum_stock', 'momentum_warning.py'),
             ('env_fit/momentum_stock', 'momentum_return_decomp.py'),
