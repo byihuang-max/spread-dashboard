@@ -81,6 +81,7 @@ MODULES = {
             ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/momentum_stock', 'momentum_data.py'),
             ('env_fit/momentum_stock/limit_index', 'limit_index_data.py'),
+            ('env_fit/momentum_stock/limit_index/seal_spread', 'seal_spread_data.py'),
             ('env_fit/momentum_stock', 'momentum_sector.py'),
             ('env_fit/momentum_stock', 'momentum_warning.py'),
             ('env_fit/momentum_stock', 'momentum_return_decomp.py'),
@@ -152,7 +153,7 @@ MODULES = {
     'antifragile': {
         'name': '反脆弱看板',
         'scripts': [
-            ('meme/antifragile', 'fetch_data.py'),
+            ('meme/antifragile', 'fetch_data_ifind.py'),
             ('meme/antifragile', 'calc_corr.py'),
             ('meme/antifragile', 'calc_meme.py'),
             ('meme/antifragile', 'render_html.py'),
@@ -189,8 +190,8 @@ MODULES = {
     'halo_trade': {
         'name': 'HALO交易',
         'scripts': [
-            ('halo_trade', 'halo_data.py'),
-            ('halo_trade', 'halo_financials.py'),
+            ('halo_trade', 'halo_data_ifind_full.py'),
+            ('halo_trade', 'halo_financials_tushare.py'),
             ('halo_trade', 'halo_calc.py'),
             ('halo_trade', 'china_halo.py'),
         ],
