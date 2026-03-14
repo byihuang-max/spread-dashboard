@@ -629,8 +629,8 @@ class Handler(BaseHTTPRequestHandler):
         # POST /api/refresh/<tab-name>
         parts = self.path.strip('/').split('/')
         if len(parts) == 3 and parts[0] == 'api' and parts[1] == 'refresh':
-            # admin = self._require_admin()
-            # if not admin: return
+            admin = self._require_admin()
+            if not admin: return
             tab = parts[2]
             mod_key = TAB_MAP.get(tab, tab.replace('-', '_'))
 

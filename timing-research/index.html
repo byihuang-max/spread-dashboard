@@ -77,6 +77,25 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="made-by">Made by the GAMT Team · Research cockpit for stock timing & exposure</div>
 </div>
 
+<div id="updateBanner" class="card" style="max-width:1200px;margin:20px auto;background:linear-gradient(135deg,#1e3a5f,#1e293b);border:2px solid #38bdf8;position:relative">
+  <button onclick="closeUpdateBanner()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;padding:4px 8px">&times;</button>
+  <div style="display:flex;align-items:start;gap:16px">
+    <div style="font-size:32px;line-height:1">🆕</div>
+    <div style="flex:1">
+      <h2 style="margin:0 0 8px 0;font-size:16px;color:#38bdf8">最新更新 (2026-03-14)</h2>
+      <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:12px">V3 版本上线 — 修正过拟合问题</div>
+      <div style="font-size:13px;color:#cbd5e1;line-height:1.7">
+        <b>核心改动：</b><br>
+        • 发现 V1 的"涨停+跌停家数"存在过拟合（涨停 ICIR=0.02，信号不稳定）<br>
+        • 改用"跌停家数+封单额轧差"，两因子相关性低，信息互补<br>
+        • 胜率从 73.3% → <span style="color:#4ade80">80.0%</span>，Calmar 从 2.44 → <span style="color:#4ade80">6.14</span><br>
+        • 回撤从 3.9% → <span style="color:#4ade80">0.8%</span>，信号更稀缺但质量更高（10次交易）
+      </div>
+      <button onclick="goToV3()" style="margin-top:12px;padding:8px 16px;background:#38bdf8;color:#0f172a;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">查看 V3 详情 →</button>
+    </div>
+  </div>
+</div>
+
 <div class="page-tabs">
   <button class="page-tab-btn active" data-page="overview">总览</button>
   <button class="page-tab-btn" data-page="factorlib">研究方法 / 因子库</button>
@@ -228,6 +247,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <div class="subtabs">
         <button class="subtab-btn active" data-tab="v1">V1 基线冰点</button>
         <button class="subtab-btn" data-tab="v2">V2 因子升级</button>
+        <button class="subtab-btn" data-tab="v3">V3 修正过拟合</button>
         <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
         <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
         <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
@@ -240,7 +260,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
           <div class="card"><h2>V1 想表达什么</h2><div class="note">不是说"任何恐慌都能抄底"，而是说：<b>极端恐慌本身，是有统计优势的。</b> 所以冰点可以作为择时框架里的第一条主命题。</div></div>
         </div>
         <div class="grid-2">
-          <div class="card"><h2>V1 关键发现</h2><div class="note">- 涨停家数 IC = <b>+0.078</b><br>- 跌停家数 IC = <b>+0.069</b><br>- 封单额轧差 IC = <b>+0.057</b><br>- 涨跌停比 IC = <b>-0.043</b>（方向相反）</div><div class="explain">这张卡想表达的是：冰点相关的情绪变量，在长样本里不是瞎猜，确实和后续市场表现存在可重复的关系。</div></div>
+          <div class="card"><h2>V1 关键发现</h2><div class="note">- 跌停家数 IC = <b>+0.069</b> (ICIR=0.77，稳定)<br>- 涨停家数 IC = <b>+0.078</b> (ICIR=0.02，<span style="color:#f87171">不稳定，过拟合</span>)<br>- 封单额轧差 IC = <b>+0.057</b> (ICIR=-0.13)<br>- 涨跌停比 IC = <b>-0.043</b>（方向相反）</div><div class="explain">⚠️ <b>重要发现：</b>涨停家数虽然IC高，但ICIR极低，说明信号不稳定。涨停和跌停本质是同一信号的两面（股票总数固定），组合使用会过拟合。</div></div>
           <div class="card"><h2>V1 最优基线策略</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div><div class="explain">这张卡想表达的是：如果只用最基础的冰点定义，不做任何风格过滤，最稳妥的落点先出现在中证500上。</div></div>
         </div>
         <div class="card full-span"><h2>V1 基线净值：最优冰点策略 vs 三个主要指数</h2><div id="v1BaseCurve" class="chart-tall"></div><div class="explain">这张图想表达的是：最优基线并不是只在个别年份碰巧有效，而是在长期里大体能沿着更陡的斜率向上。你重点看：冰点信号后的修复，500整体比300和1000更均衡。</div></div>
@@ -286,6 +306,27 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
           <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🔍 V2 的优势</h2><div class="note">1. <b>逻辑更扎实</b>：比值和轧差直接衡量多空力量对比<br>2. <b>交易次数更多</b>：21次 vs V1的15次，样本更充分<br>3. <b>双因子共振胜率更高</b>：76.2% vs 73.3%<br>4. <b>300也能做</b>：V1集中在500，V2在300上也有稳定信号</div></div>
           <div class="card hero" style="padding:20px"><h2 style="font-size:15px">⚠️ V2 的不足 & 下一步</h2><div class="note">1. <b>Calmar 下降</b>：最优从2.44降到1.21，回撤控制弱于V1<br>2. <b>封单额数据质量</b>：早期fd_amount可能不完整<br>3. <b>下一步</b>：在V2基础上叠加风格过滤（V2.1），看看相对因子+风格的组合效果</div></div>
         </div>
+      </div>
+
+      <div id="v3" class="tab-pane">
+        <div class="card hero"><h2>V3：修正过拟合 — 跌停家数 + 封单额轧差</h2><div class="note">V1用"涨停+跌停家数"发现了过拟合问题：股票总数固定，涨停少必然跌停多，本质是同一信号。<br><br>V3改为：<b>跌停家数（恐慌广度）+ 封单额轧差（恐慌深度）</b>，两因子相关性低，信息互补。</div></div>
+        
+        <div class="grid-2">
+          <div class="card"><h2>🧬 因子1：跌停家数</h2><div class="note"><b>定义：</b>全市场跌停股票数量<br><b>逻辑：</b>刻画恐慌的<b>广度</b>，跌停越多→恐慌越严重<br><b>IC：</b><span style="color:#4ade80">+0.069</span> (10日窗口)<br><b>ICIR：</b><span style="color:#4ade80">0.77</span> (信号稳定)</div></div>
+          <div class="card"><h2>💰 因子2：封单额轧差</h2><div class="note"><b>定义：</b>涨停封单额 - 跌停封单额（亿元）<br><b>逻辑：</b>刻画恐慌的<b>深度</b>，轧差大幅为负→卖盘压倒性优势<br><b>IC：</b><span style="color:#4ade80">+0.057</span> (10日窗口)<br><b>ICIR：</b>-0.13</div></div>
+        </div>
+
+        <div class="card hero"><h2>🥇 V3 最佳策略（双因子共振）</h2>
+          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">5天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">80.0%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+3.50%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+40.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val green">0.8%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">6.14</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">10</div><div class="label">交易次数</div></div></div>
+          <div class="explain" style="margin-top:16px">⚡ <b>关键改进：</b>胜率从73.3%提升到80.0%，Calmar从2.44提升到6.14，回撤从3.9%降到0.8%。信号更稀缺（10次 vs 15次），但质量更高。</div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">✅ V3 vs V1 对比</h2><div class="note">1. <b>胜率更高</b>：80.0% vs 73.3%<br>2. <b>Calmar更优</b>：6.14 vs 2.44<br>3. <b>回撤更小</b>：0.8% vs 3.9%<br>4. <b>信号更精准</b>：10次交易，每次都是真冰点</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🔬 为什么V3更好</h2><div class="note">1. <b>避免过拟合</b>：跌停+封单额相关性低<br>2. <b>逻辑互补</b>：广度+深度，双重确认<br>3. <b>信号稀缺</b>：5%阈值，只抓极端冰点<br>4. <b>持有期短</b>：5天快进快出，降低风险</div></div>
+        </div>
+
+        <div class="card full-span"><h2>📊 完整回测报告</h2><div class="note" style="margin-bottom:12px">查看详细的参数网格、热力图、交易记录：</div><a href="ice_point_report.html" target="_blank" style="display:inline-block;padding:10px 20px;background:#38bdf8;color:#0f172a;border-radius:6px;text-decoration:none;font-weight:600">打开 V3 回测报告 →</a></div>
       </div>
 
       <div id="v11" class="tab-pane">
@@ -670,6 +711,25 @@ if (iceHeatDom) {
   });
   resizeOnWindow(c);
   bindDelayedResize(c);
+}
+
+function closeUpdateBanner() {
+  document.getElementById('updateBanner').style.display = 'none';
+  localStorage.setItem('hideUpdateBanner_v3', 'true');
+}
+
+function goToV3() {
+  document.querySelector('.page-tab-btn[data-page="research"]').click();
+  setTimeout(() => {
+    document.querySelector('.subtab-btn[data-tab="v3"]').click();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, 100);
+}
+
+// 检查是否已关闭过
+if (localStorage.getItem('hideUpdateBanner_v3') === 'true') {
+  const banner = document.getElementById('updateBanner');
+  if (banner) banner.style.display = 'none';
 }
 </script>
 </body>
