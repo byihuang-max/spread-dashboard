@@ -315,8 +315,8 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <h2>📈 最优策略净值曲线（封单额轧差 vs 沪深300）</h2>
       <canvas id="sealNavChart" style="height:360px"></canvas>
       <div class="explain">
-        冰点策略在7年里12次交易，11次盈利，累计收益38.4%，最大回撤仅1.0%。
-        关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。紫色=策略净值，灰色虚线=沪深300基准。
+        冰点策略在7年里12次交易，11次盈利，累计收益26.9%，最大回撤仅1.0%。
+        关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。紫色粗线=策略净值，虚线=4个宽基指数对比。
       </div>
     </div>
 
@@ -771,7 +771,10 @@ let sealChart = null;
   
   const dates = data.nav_data.map(d => d.date.substring(4,6)+'/'+d.date.substring(6,8));
   const strategyNav = data.nav_data.map(d => d.strategy_nav);
-  const benchmarkNav = data.nav_data.map(d => d.benchmark_nav);
+  const csi300Nav = data.nav_data.map(d => d.csi300_nav);
+  const csi500Nav = data.nav_data.map(d => d.csi500_nav);
+  const csi1000Nav = data.nav_data.map(d => d.csi1000_nav);
+  const csi2000Nav = data.nav_data.map(d => d.csi2000_nav);
   
   const canvas = document.getElementById('sealNavChart');
   if (!canvas) {
@@ -785,18 +788,48 @@ let sealChart = null;
       labels: dates,
       datasets: [
         {
-          label: '策略净值',
+          label: '策略净值（封单额轧差）',
           data: strategyNav,
           borderColor: '#8b5cf6',
-          borderWidth: 2,
+          borderWidth: 2.5,
           pointRadius: 0,
           tension: 0.2,
           fill: false
         },
         {
           label: '沪深300',
-          data: benchmarkNav,
-          borderColor: '#94a3b8',
+          data: csi300Nav,
+          borderColor: '#ef4444',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false
+        },
+        {
+          label: '中证500',
+          data: csi500Nav,
+          borderColor: '#3b82f6',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false
+        },
+        {
+          label: '中证1000',
+          data: csi1000Nav,
+          borderColor: '#10b981',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false
+        },
+        {
+          label: '中证2000',
+          data: csi2000Nav,
+          borderColor: '#f59e0b',
           borderWidth: 1.5,
           borderDash: [4, 4],
           pointRadius: 0,
