@@ -312,8 +312,10 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     </div>
 
     <div class="card full-span">
-      <h2>📈 最优策略净值曲线（封单额轧差 vs 沪深300）</h2>
-      <canvas id="sealNavChart" style="height:360px"></canvas>
+      <h2>📈 最优策略净值曲线（封单额轧差 vs 4指数）</h2>
+      <div style="position:relative;height:360px;margin-bottom:12px">
+        <canvas id="sealNavChart"></canvas>
+      </div>
       <div class="explain">
         冰点策略在7年里12次交易，11次盈利，累计收益26.9%，最大回撤仅1.0%。
         关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。紫色粗线=策略净值，虚线=4个宽基指数对比。
