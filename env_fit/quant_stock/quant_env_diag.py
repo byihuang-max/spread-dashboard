@@ -112,10 +112,16 @@ def _calc_index_return(ts_code, days):
 # ═══════════════════════════════════════
 # 【逻辑】
 # 量化策略的基础生存条件——没有流动性，选股再好也无法执行。
-# 不只看成交额绝对值，还看稳定性：
+# 不只看成交额绝对值，还看稳定性和相对变化：
 # - 稳定放量 > 脉冲放量（脉冲=情绪驱动，量化难赚）
 # - 用变异系数(CV)衡量稳定性
+# - 周度环比(MA5 vs MA20)捕捉相对水位变化
 # 枯竭（<8000亿）→ 直接红灯，其他因子都不用看
+#
+# 【2026-03-15 优化 by Roni】
+# 绝对值有滞后性：之前常态3.2万亿，现在2.5万亿，decay了22%
+# 按旧逻辑2.5万亿→90分(过热)，但实际是缩量信号
+# 解决：加入周度环比修正，捕捉相对于近期常态的变化
 # ═══════════════════════════════════════
 def calc_liquidity():
     lat = amount_vol.get('latest', {})
@@ -127,13 +133,50 @@ def calc_liquidity():
     pulse = lat.get('pulse', False)     # 脉冲检测（偏离>2σ）
     level = lat.get('level', '')        # 水位等级文本
 
-    # ── 基础评分：按成交额绝对值 ──
-    if amount < 8000:    score = 10  # 枯竭
-    elif amount < 10000: score = 30  # 偏低
-    elif amount < 12000: score = 50  # 一般
-    elif amount < 15000: score = 65  # 正常
-    elif amount < 20000: score = 80  # 充裕
-    else:                score = 90  # 过热
+    # ── 基础评分：按成交额绝对值（降低权重，60-80分区间）──
+    # 2026-03-15 优化：量化占比6成+，基础流动性需求提高
+    # 阈值整体上移，同时降低绝对值权重，让环比修正更有效
+    if amount < 12000:   score = 20  # 枯竭（+4000）
+    elif amount < 15000: score = 40  # 偏低（+5000）
+    elif amount < 18000: score = 55  # 一般（+6000）
+    elif amount < 22000: score = 65  # 正常（+7000）
+    elif amount < 28000: score = 75  # 充裕（+8000）
+    else:                score = 80  # 过热（降低上限）
+
+    # ── 周度环比修正（相对水位，扩大权重到-40~+20分）──
+    # 关键洞察：2.5万亿在牛市=缩量(危险)，在熊市=过热(也危险)
+    # 要看相对于近期常态的变化，而不是绝对值
+    # 环比权重加大，可以大幅改变评级
+    decay_signal = None
+    if ma20 > 0:
+        ma5_vs_ma20_pct = (ma5 / ma20 - 1) * 100  # 周度环比百分比
+        
+        if ma5_vs_ma20_pct < -20:      # 周度缩量超20%
+            score -= 40
+            decay_signal = '暴跌式缩量'
+        elif ma5_vs_ma20_pct < -15:    # 周度缩量15-20%
+            score -= 30
+            decay_signal = '急剧缩量'
+        elif ma5_vs_ma20_pct < -10:    # 周度缩量10-15%
+            score -= 20
+            decay_signal = '明显缩量'
+        elif ma5_vs_ma20_pct < -5:     # 周度缩量5-10%
+            score -= 10
+            decay_signal = '温和缩量'
+        elif ma5_vs_ma20_pct > 20:     # 周度放量超20%
+            score += 20
+            decay_signal = '暴涨式放量'
+        elif ma5_vs_ma20_pct > 15:     # 周度放量15-20%
+            score += 15
+            decay_signal = '急剧放量'
+        elif ma5_vs_ma20_pct > 10:     # 周度放量10-15%
+            score += 10
+            decay_signal = '明显放量'
+        else:
+            decay_signal = '平稳'
+    else:
+        ma5_vs_ma20_pct = 0
+        decay_signal = '数据不足'
 
     # ── 稳定性修正：CV越高说明成交额波动越大，不是好事 ──
     # CV > 20% 说明成交额忽高忽低，情绪驱动明显
@@ -159,6 +202,7 @@ def calc_liquidity():
     signals = [
         f'成交额{amount:.0f}亿 ({level})',
         f'趋势{trend} (MA5={ma5:.0f} vs MA20={ma20:.0f})',
+        f'周度环比: {decay_signal} ({ma5_vs_ma20_pct:+.1f}%)',
         f'稳定性: {stability} (CV={cv:.1%})',
     ]
     if pulse: signals.append('⚡ 脉冲放量')
@@ -166,7 +210,9 @@ def calc_liquidity():
     return {
         'score': score, 'grade': grade, 'emoji': emoji,
         'amount': amount, 'trend': trend, 'stability': stability,
-        'cv': round(cv, 4), 'signals': signals
+        'cv': round(cv, 4), 'signals': signals,
+        'decay_signal': decay_signal,
+        'ma5_vs_ma20_pct': round(ma5_vs_ma20_pct, 2)
     }
 
 
