@@ -298,24 +298,58 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       </div>
 
       <div id="v3" class="tab-pane">
-        <div class="card hero"><h2>V3：修正过拟合 — 跌停家数 + 封单额轧差</h2><div class="note">V1用"涨停+跌停家数"发现了过拟合问题：股票总数固定，涨停少必然跌停多，本质是同一信号。<br><br>V3改为：<b>跌停家数（恐慌广度）+ 封单额轧差（恐慌深度）</b>，两因子相关性低，信息互补。</div></div>
+        <div class="card hero"><h2>V3：涨跌停比例 — 消除市场规模影响</h2><div class="note">V1/V2用"涨跌停家数"存在问题：市场规模不同时不可比（3000只股票的30个跌停 vs 5000只股票的30个跌停）。<br><br>V3改为：<b>涨跌停比例（家数/总股票数）</b>，标准化后可跨时期比较。同时发现：<b>封单额轧差单因子表现极强</b>。</div></div>
         
+        <div class="card hero"><h2>🔬 核心发现：封单额轧差是关键信号</h2>
+          <div class="note" style="margin-bottom:16px">在测试涨跌停比例时，意外发现<b>封单额轧差单因子</b>表现远超预期：</div>
+          <div class="grid-2">
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 封单额轧差（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">5%阈值，10天持有，沪深300</div></div>
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 涨停比例（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">15%阈值，15天持有，中证2000</div></div>
+          </div>
+          <div class="explain" style="margin-top:16px">⚡ <b>关键洞察：</b>封单额轧差刻画的是<b>资金力量对比</b>，比涨跌停家数/比例更直接。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。</div>
+        </div>
+
+        <div class="card hero"><h2>🥇 V3.1 最优策略（涨停比例，单因子）</h2>
+          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">up_ratio</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">15%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi2000</div><div class="label">标的</div></div><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+1.96%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+101.8%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">14.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52</div><div class="label">交易次数</div></div></div>
+        </div>
+
+        <div class="card hero"><h2>🥇 V3.2 最优策略（封单额轧差，单因子）</h2>
+          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi300</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12</div><div class="label">交易次数</div></div></div>
+          <div class="explain" style="margin-top:16px">⚡ <b>关键改进：</b>胜率从53.8%飙升到91.7%，Calmar从0.99提升到5.71，回撤从14.9%降到1.0%。封单额轧差是真正的核心信号。</div>
+        </div>
+
+        <div class="card"><h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
+          <div style="overflow-x:auto"><table class="tbl">
+            <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+            <tr class="best-row"><td>沪深300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+            <tr><td>中证500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+            <tr><td>中证1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+            <tr><td>中证2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+          </table></div>
+          <div class="explain">封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。越大盘越稳定。</div>
+        </div>
+
+        <div class="card"><h2>📊 V3 Top10 策略（封单额轧差主导）</h2>
+          <div style="overflow-x:auto"><table class="tbl">
+            <tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+            <tr class="best-row"><td>#1</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+            <tr><td>#2</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+            <tr><td>#3</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+            <tr><td>#4</td><td>seal_diff</td><td>5%</td><td>3d</td><td>csi1000</td><td>16</td><td>62.5%</td><td class="pos">+2.00%</td><td class="pos">+32.0%</td><td>2.3%</td><td><b>2.05</b></td></tr>
+            <tr><td>#5</td><td>seal_diff</td><td>5%</td><td>3d</td><td>csi500</td><td>16</td><td>75.0%</td><td class="pos">+1.97%</td><td class="pos">+31.5%</td><td>2.3%</td><td><b>1.96</b></td></tr>
+            <tr><td>#6</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi300</td><td>9</td><td>77.8%</td><td class="pos">+4.78%</td><td class="pos">+43.0%</td><td>3.2%</td><td><b>1.94</b></td></tr>
+            <tr><td>#7</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+            <tr><td>#8</td><td>seal_diff</td><td>5%</td><td>15d</td><td>csi300</td><td>10</td><td>70.0%</td><td class="pos">+4.69%</td><td class="pos">+46.9%</td><td>4.0%</td><td><b>1.70</b></td></tr>
+            <tr><td>#9</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi500</td><td>9</td><td>88.9%</td><td class="pos">+6.11%</td><td class="pos">+55.0%</td><td>5.6%</td><td><b>1.43</b></td></tr>
+            <tr><td>#10</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi1000</td><td>9</td><td>88.9%</td><td class="pos">+6.27%</td><td class="pos">+56.5%</td><td>6.0%</td><td><b>1.36</b></td></tr>
+          </table></div>
+          <div class="explain">Top10全部是<b>封单额轧差</b>单因子，5%极端阈值。涨跌停比例表现平平，封单额轧差才是核心。</div>
+        </div>
+
         <div class="grid-2">
-          <div class="card"><h2>🧬 因子1：跌停家数</h2><div class="note"><b>定义：</b>全市场跌停股票数量<br><b>逻辑：</b>刻画恐慌的<b>广度</b>，跌停越多→恐慌越严重<br><b>IC：</b><span style="color:#4ade80">+0.069</span> (10日窗口)<br><b>ICIR：</b><span style="color:#4ade80">0.77</span> (信号稳定)</div></div>
-          <div class="card"><h2>💰 因子2：封单额轧差</h2><div class="note"><b>定义：</b>涨停封单额 - 跌停封单额（亿元）<br><b>逻辑：</b>刻画恐慌的<b>深度</b>，轧差大幅为负→卖盘压倒性优势<br><b>IC：</b><span style="color:#4ade80">+0.057</span> (10日窗口)<br><b>ICIR：</b>-0.13</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2><div class="note">1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>4. <b>跨指数稳定</b>：300/500/1000/2000都有效</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🎯 V3 核心结论</h2><div class="note">1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>4. <b>最优参数</b>：5%阈值（极端冰点），10天持有</div></div>
         </div>
-
-        <div class="card hero"><h2>🥇 V3 最佳策略（双因子共振）</h2>
-          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">5天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">80.0%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+3.50%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+40.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val green">0.8%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">6.14</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">10</div><div class="label">交易次数</div></div></div>
-          <div class="explain" style="margin-top:16px">⚡ <b>关键改进：</b>胜率从73.3%提升到80.0%，Calmar从2.44提升到6.14，回撤从3.9%降到0.8%。信号更稀缺（10次 vs 15次），但质量更高。</div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">✅ V3 vs V1 对比</h2><div class="note">1. <b>胜率更高</b>：80.0% vs 73.3%<br>2. <b>Calmar更优</b>：6.14 vs 2.44<br>3. <b>回撤更小</b>：0.8% vs 3.9%<br>4. <b>信号更精准</b>：10次交易，每次都是真冰点</div></div>
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🔬 为什么V3更好</h2><div class="note">1. <b>避免过拟合</b>：跌停+封单额相关性低<br>2. <b>逻辑互补</b>：广度+深度，双重确认<br>3. <b>信号稀缺</b>：5%阈值，只抓极端冰点<br>4. <b>持有期短</b>：5天快进快出，降低风险</div></div>
-        </div>
-
-        <div class="card full-span"><h2>📊 完整回测报告</h2><div class="note" style="margin-bottom:12px">查看详细的参数网格、热力图、交易记录：</div><a href="ice_point_report.html" target="_blank" style="display:inline-block;padding:10px 20px;background:#38bdf8;color:#0f172a;border-radius:6px;text-decoration:none;font-weight:600">打开 V3 回测报告 →</a></div>
       </div>
 
       <div id="v11" class="tab-pane">
