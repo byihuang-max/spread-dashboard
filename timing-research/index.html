@@ -771,12 +771,32 @@ let sealChart = null;
   const resp = await fetch('data/seal_diff_nav.json');
   const data = await resp.json();
   
-  const dates = data.nav_data.map(d => d.date.substring(4,6)+'/'+d.date.substring(6,8));
+  // 日期格式：带年份
+  const dates = data.nav_data.map(d => {
+    const y = d.date.substring(2,4);
+    const m = d.date.substring(4,6);
+    const day = d.date.substring(6,8);
+    return y + '/' + m + '/' + day;
+  });
+  
   const strategyNav = data.nav_data.map(d => d.strategy_nav);
   const csi300Nav = data.nav_data.map(d => d.csi300_nav);
   const csi500Nav = data.nav_data.map(d => d.csi500_nav);
   const csi1000Nav = data.nav_data.map(d => d.csi1000_nav);
   const csi2000Nav = data.nav_data.map(d => d.csi2000_nav);
+  
+  // 构建开仓点数据
+  const tradePoints = [];
+  data.trades.forEach(trade => {
+    const entryIdx = data.nav_data.findIndex(d => d.date === trade.entry_date);
+    if (entryIdx >= 0) {
+      tradePoints.push({
+        x: entryIdx,
+        y: trade.entry_nav,
+        return: trade.return
+      });
+    }
+  });
   
   const canvas = document.getElementById('sealNavChart');
   if (!canvas) {
@@ -796,7 +816,22 @@ let sealChart = null;
           borderWidth: 2.5,
           pointRadius: 0,
           tension: 0.2,
-          fill: false
+          fill: false,
+          order: 2
+        },
+        {
+          label: '开仓点',
+          data: tradePoints,
+          type: 'scatter',
+          backgroundColor: function(ctx) {
+            const point = tradePoints[ctx.dataIndex];
+            return point && point.return > 0 ? '#10b981' : '#ef4444';
+          },
+          borderColor: '#fff',
+          borderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          order: 1
         },
         {
           label: '沪深300',
@@ -849,6 +884,13 @@ let sealChart = null;
         tooltip: {
           callbacks: {
             label: function(ctx) {
+              if (ctx.dataset.label === '开仓点') {
+                const point = tradePoints[ctx.dataIndex];
+                return [
+                  '开仓净值: ' + ctx.parsed.y.toFixed(4),
+                  '收益: ' + (point.return > 0 ? '+' : '') + point.return.toFixed(2) + '%'
+                ];
+              }
               return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4);
             }
           }
