@@ -122,14 +122,29 @@ function saveUserData(data) {
   localStorage.setItem('smartnotes_user', JSON.stringify(data));
 }
 
-function loadNotes() {
+async function loadNotes() {
   const userData = loadUserData();
-  // Load builtins
-  for (const entry of BUILTIN_NOTES) {
-    const id = entry.path.replace(/\.md$/, '');
-    const content = userData[id]?.content || entry.content;
-    parseNote(id, entry.path, entry.category, entry.name, content);
+  
+  // 从API加载笔记
+  try {
+    const response = await fetch('/api/notes');
+    const notes = await response.json();
+    
+    for (const entry of notes) {
+      const id = entry.path.replace(/\.md$/, '');
+      const content = userData[id]?.content || entry.content;
+      parseNote(id, entry.path, entry.category, entry.name, content);
+    }
+  } catch (error) {
+    console.error('Failed to load notes from API:', error);
+    // 降级：使用BUILTIN_NOTES
+    for (const entry of BUILTIN_NOTES) {
+      const id = entry.path.replace(/\.md$/, '');
+      const content = userData[id]?.content || entry.content;
+      parseNote(id, entry.path, entry.category, entry.name, content);
+    }
   }
+  
   // Load user-created notes
   if (userData._created) {
     for (const entry of userData._created) {
@@ -137,6 +152,7 @@ function loadNotes() {
       if (!NOTES[id]) parseNote(id, entry.path, entry.category, entry.name, entry.content);
     }
   }
+  
   renderNav();
   showWelcome();
 }

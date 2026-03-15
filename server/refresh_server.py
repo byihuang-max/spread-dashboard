@@ -453,6 +453,44 @@ class Handler(BaseHTTPRequestHandler):
             return None
         return user
 
+    def _serve_notes_list(self):
+        """返回Smart Notes所有笔记的元数据列表"""
+        from pathlib import Path
+        notes_dir = Path(BASE_DIR) / 'smart-notes' / 'notes'
+        notes = []
+        
+        if not notes_dir.exists():
+            self._json(200, notes)
+            return
+        
+        # 递归扫描 notes/ 目录
+        for md_file in notes_dir.rglob("*.md"):
+            rel_path = md_file.relative_to(notes_dir.parent)
+            
+            # 推断分类（根据目录结构）
+            parts = md_file.relative_to(notes_dir).parts
+            if len(parts) > 1:
+                category = parts[0]  # 第一级目录作为分类
+            else:
+                category = "uncategorized"
+            
+            # 读取内容
+            try:
+                with open(md_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+            except:
+                content = ""
+            
+            notes.append({
+                "name": md_file.stem,  # 文件名（不含扩展名）
+                "path": str(rel_path),
+                "category": category,
+                "content": content
+            })
+        
+        self._json(200, notes)
+        return user
+
     def _client_ip(self):
         return self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
 
@@ -525,6 +563,9 @@ class Handler(BaseHTTPRequestHandler):
                 'progress': state['progress'],
                 'modules': {k: v['name'] for k, v in MODULES.items()},
             })
+        elif self.path == '/api/notes':
+            # Smart Notes API - 动态加载笔记
+            self._serve_notes_list()
         elif self.path == '/api/auth/me':
             user = self._get_user()
             if user:
