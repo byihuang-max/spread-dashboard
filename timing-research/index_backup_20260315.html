@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>📈 GAMT | 股票择时与敞口输出框架</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -231,228 +230,165 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     <div class="explain">当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。具体的回测数据和参数对比，请看下方各个迭代版本。</div>
   </div>
 
-<!-- 新的冰点策略Tab结构 - 替换原有的subtabs部分 -->
-
-<div class="card">
-  <h2>冰点策略研究</h2>
-  <div class="subtabs">
-    <button class="subtab-btn active" data-tab="evolution">因子迭代</button>
-    <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
-    <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
-    <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
-    <button class="subtab-btn" data-tab="factorcard">📊 因子回测</button>
-  </div>
-
-  <!-- Tab: 因子迭代 -->
-  <div id="evolution" class="tab-pane active">
-    
-    <div class="card hero">
-      <h2>🔬 因子演进：从涨跌停家数到封单额轧差</h2>
-      <div class="note">冰点策略的核心是找到"极端恐慌"的信号。我们测试了三代因子，最终发现：<b>封单额轧差</b>才是关键。</div>
-    </div>
-
     <div class="card">
-      <h2>📊 三代因子对比</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr>
-            <th>版本</th>
-            <th>因子</th>
-            <th>问题</th>
-            <th>胜率</th>
-            <th>Calmar</th>
-            <th>结论</th>
-          </tr>
-          <tr>
-            <td>V1</td>
-            <td>涨停+跌停家数</td>
-            <td>过拟合（股票总数固定，涨停少必然跌停多）</td>
-            <td>73.3%</td>
-            <td>2.44</td>
-            <td style="color:#f59e0b">信号不稳定</td>
-          </tr>
-          <tr>
-            <td>V2</td>
-            <td>涨跌停比例</td>
-            <td>标准化后可比，但信号偏弱</td>
-            <td>53.8%</td>
-            <td>0.99</td>
-            <td style="color:#f59e0b">表现平平</td>
-          </tr>
-          <tr style="background:#dcfce7">
-            <td><b>V3</b></td>
-            <td><b>封单额轧差</b></td>
-            <td>直接刻画资金力量对比</td>
-            <td style="color:#16a34a"><b>91.7%</b></td>
-            <td style="color:#16a34a"><b>5.71</b></td>
-            <td style="color:#16a34a"><b>✅ 核心信号</b></td>
-          </tr>
-        </table>
+      <h2>冰点研究迭代版本</h2>
+      <div class="subtabs">
+        <button class="subtab-btn active" data-tab="v1">V1 基线冰点</button>
+        <button class="subtab-btn" data-tab="v2">V2 因子升级</button>
+        <button class="subtab-btn" data-tab="v3">V3 修正过拟合</button>
+        <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
+        <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
+        <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
+        <button class="subtab-btn" data-tab="factorcard">📊 因子回测</button>
       </div>
-      <div class="explain">
-        ⚡ <b>关键洞察：</b>封单额轧差 = 涨停封单额 - 跌停封单额。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。
-        不只看家数，看资金堆在哪边，这才是真正的恐慌深度。
-      </div>
-    </div>
 
-    <div class="card hero">
-      <h2>🥇 最优策略（封单额轧差）</h2>
-      <div class="stats-row" style="margin-top:16px">
-        <div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div>
-        <div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div>
-        <div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div>
-        <div class="stat-box"><div class="val purple">沪深300</div><div class="label">标的</div></div>
-        <div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div>
-        <div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div>
-        <div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div>
-        <div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div>
-        <div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div>
-        <div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div>
+      <div id="v1" class="tab-pane active">
+        <div class="card hero"><h2>V1：先回答最朴素的问题--极端恐慌本身，值不值得加仓？</h2><div class="note">这一版先不引入复杂状态，只验证一件事：当市场进入很极端的恐慌区间，之后是不是更容易出现一段可交易的修复。</div></div>
+        <div class="grid-2">
+          <div class="card"><h2>V1 这一版做了什么</h2><div class="note">1. 补齐 2019-2026 全样本数据；<br>2. 先做 10 个因子的单因子检验；<br>3. 把"冰点"单独抽出来做参数网格；<br>4. 比较不同阈值、持有期、目标指数的结果。</div></div>
+          <div class="card"><h2>V1 想表达什么</h2><div class="note">不是说"任何恐慌都能抄底"，而是说：<b>极端恐慌本身，是有统计优势的。</b> 所以冰点可以作为择时框架里的第一条主命题。</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h2>V1 关键发现</h2><div class="note">- 跌停家数 IC = <b>+0.069</b> (ICIR=0.77，稳定)<br>- 涨停家数 IC = <b>+0.078</b> (ICIR=0.02，<span style="color:#f87171">不稳定，过拟合</span>)<br>- 封单额轧差 IC = <b>+0.057</b> (ICIR=-0.13)<br>- 涨跌停比 IC = <b>-0.043</b>（方向相反）</div><div class="explain">⚠️ <b>重要发现：</b>涨停家数虽然IC高，但ICIR极低，说明信号不稳定。涨停和跌停本质是同一信号的两面（股票总数固定），组合使用会过拟合。</div></div>
+          <div class="card"><h2>V1 最优基线策略</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div><div class="explain">这张卡想表达的是：如果只用最基础的冰点定义，不做任何风格过滤，最稳妥的落点先出现在中证500上。</div></div>
+        </div>
+        <div class="card full-span"><h2>V1 基线净值：最优冰点策略 vs 三个主要指数</h2><div id="v1BaseCurve" class="chart-tall"></div><div class="explain">这张图想表达的是：最优基线并不是只在个别年份碰巧有效，而是在长期里大体能沿着更陡的斜率向上。你重点看：冰点信号后的修复，500整体比300和1000更均衡。</div></div>
+        <div class="card full-span"><h2>Top20 策略 Calmar 排名</h2><div id="iceTop20Chart" class="chart-rank"></div><div class="explain">这张图想表达的是：冰点不是只有一个偶然最优参数，前排策略大多都围绕"共振 + 较极端阈值 + 中等持有期"展开，说明这条命题的结构是稳定的。</div></div>
       </div>
-    </div>
 
-    <div class="card full-span">
-      <h2>📈 最优策略净值曲线（封单额轧差 vs 沪深300）</h2>
-      <canvas id="sealNavChart" style="height:360px"></canvas>
-      <div class="explain">
-        冰点策略在7年里12次交易，11次盈利，累计收益38.4%，最大回撤仅1.0%。
-        关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。紫色=策略净值，灰色虚线=沪深300基准。
-      </div>
-    </div>
+      <div id="v2" class="tab-pane">
+        <div class="card hero"><h2>V2：把因子从"绝对量"升级为"多空力量对比"</h2><div class="note">V1 用的是涨停家数+跌停家数的绝对值。V2 改为：<b>涨跌停家数比（ud_ratio）+ 封单额轧差（seal_diff）</b>。<br><br>逻辑是：比值和轧差才能真正刻画多空力量的相对强弱，绝对家数只是表象。</div></div>
+        <div class="grid-2">
+          <div class="card"><h2>为什么换因子</h2><div class="note">V1 的"跌停多+涨停少"是朴素的恐慌定义。但同样是30个跌停，在牛市和熊市的含义完全不同。<br><br><b>涨跌停比</b>把多空放在一起看，值低=空头压倒性占优。<br><b>封单额轧差</b>加入了资金维度：不只看家数，还看资金到底在哪边堆积。</div></div>
+          <div class="card"><h2>V2 做了什么</h2><div class="note">1. 从缓存数据计算每日封单额轧差（1740天全覆盖）<br>2. 用 ud_ratio 和 seal_diff 替代 up_count 和 down_count<br>3. 保持同样的参数网格：3信号×4阈值×5持有期×3指数<br>4. 对比 V1 和 V2 的最优策略</div></div>
+        </div>
 
-    <div class="card">
-      <h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
-          <tr style="background:#f0fdf4"><td><b>沪深300</b></td><td>12</td><td><b>91.7%</b></td><td class="pos"><b>+3.20%</b></td><td class="pos"><b>+38.4%</b></td><td><b>1.0%</b></td><td><b>5.71</b></td></tr>
-          <tr><td>中证500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td>3.23</td></tr>
-          <tr><td>中证1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td>2.13</td></tr>
-          <tr><td>中证2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td>1.73</td></tr>
-        </table>
-      </div>
-      <div class="explain">
-        封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。
-        越大盘越稳定，这是因为大盘股的封单额数据更可靠，流动性更好。
-      </div>
-    </div>
+        <div class="card hero"><h2>V1 vs V2 最优策略对比</h2>
+          <div class="grid-2" style="margin-top:16px">
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">V1 最优（涨停+跌停家数）</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div></div>
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">V2 最优（涨跌停比+封单额轧差）</h2><div class="stats-row"><div class="stat-box"><div class="val blue">ud_ratio</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">20%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">5天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi300</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">61.0%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+0.72%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val amber">1.21</div><div class="label">Calmar</div></div></div></div>
+          </div>
+          <div class="explain" style="margin-top:16px">V2 的 Calmar 比 V1 低，说明从绝对值看比值类因子信号更分散。但 V2 的逻辑更扎实——后续叠加风格过滤时，相对因子的优势可能会显现出来。</div>
+        </div>
 
-    <div class="card">
-      <h2>📊 Top10 策略（全部是封单额轧差）</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr><th>排名</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
-          <tr style="background:#f0fdf4"><td><b>#1</b></td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
-          <tr><td>#2</td><td>5%</td><td>10d</td><td>csi500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td>3.23</td></tr>
-          <tr><td>#3</td><td>5%</td><td>10d</td><td>csi1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td>2.13</td></tr>
-          <tr><td>#4</td><td>5%</td><td>3d</td><td>csi1000</td><td>16</td><td>62.5%</td><td class="pos">+2.00%</td><td class="pos">+32.0%</td><td>2.3%</td><td>2.05</td></tr>
-          <tr><td>#5</td><td>5%</td><td>3d</td><td>csi500</td><td>16</td><td>75.0%</td><td class="pos">+1.97%</td><td class="pos">+31.5%</td><td>2.3%</td><td>1.96</td></tr>
-          <tr><td>#6</td><td>5%</td><td>20d</td><td>csi300</td><td>9</td><td>77.8%</td><td class="pos">+4.78%</td><td class="pos">+43.0%</td><td>3.2%</td><td>1.94</td></tr>
-          <tr><td>#7</td><td>5%</td><td>10d</td><td>csi2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td>1.73</td></tr>
-          <tr><td>#8</td><td>5%</td><td>15d</td><td>csi300</td><td>10</td><td>70.0%</td><td class="pos">+4.69%</td><td class="pos">+46.9%</td><td>4.0%</td><td>1.70</td></tr>
-          <tr><td>#9</td><td>5%</td><td>20d</td><td>csi500</td><td>9</td><td>88.9%</td><td class="pos">+6.11%</td><td class="pos">+55.0%</td><td>5.6%</td><td>1.43</td></tr>
-          <tr><td>#10</td><td>5%</td><td>20d</td><td>csi1000</td><td>9</td><td>88.9%</td><td class="pos">+6.27%</td><td class="pos">+56.5%</td><td>6.0%</td><td>1.36</td></tr>
-        </table>
-      </div>
-      <div class="explain">
-        Top10全部是<b>封单额轧差</b>单因子，5%极端阈值。涨跌停比例表现平平，封单额轧差才是核心。
-        参数特征：极端阈值（5%）+ 中短持有期（3-20天）+ 跨指数稳定。
-      </div>
-    </div>
+        <div class="card"><h2>V2 双因子共振最优</h2>
+          <div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">5天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">76.2%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+2.11%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+52.84%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">5.26%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">1.17</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">21</div><div class="label">交易次数</div></div></div>
+          <div class="explain" style="margin-top:12px">双因子共振在 V2 下胜率76.2%比 V1 的73.3%更高，交易次数也更多（21 vs 15），说明用比值+轧差定义的冰点覆盖面更广。</div>
+        </div>
 
-    <div class="grid-2">
-      <div class="card hero" style="padding:20px">
-        <h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2>
-        <div class="note">
-          1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>
-          2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>
-          3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>
-          4. <b>跨指数稳定</b>：300/500/1000/2000都有效
+        <div class="card"><h2>V2 Top20 策略表</h2><div style="overflow-x:auto"><table class="tbl">
+          <tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+          <tr class="best-row"><td>#1</td><td>ud_ratio</td><td>20%</td><td>5d</td><td>csi300</td><td>141</td><td>61.0%</td><td class="pos">+0.72%</td><td class="pos">+162.26%</td><td>11.99%</td><td><b>1.21</b></td></tr>
+          <tr><td>#2</td><td>both</td><td>5%</td><td>5d</td><td>csi500</td><td>21</td><td>76.2%</td><td class="pos">+2.11%</td><td class="pos">+52.84%</td><td>5.26%</td><td><b>1.17</b></td></tr>
+          <tr><td>#3</td><td>ud_ratio</td><td>10%</td><td>5d</td><td>csi300</td><td>89</td><td>66.3%</td><td class="pos">+0.93%</td><td class="pos">+122.69%</td><td>10.52%</td><td><b>1.14</b></td></tr>
+          <tr><td>#4</td><td>ud_ratio</td><td>15%</td><td>10d</td><td>csi300</td><td>89</td><td>60.7%</td><td class="pos">+1.18%</td><td class="pos">+165.31%</td><td>13.74%</td><td><b>1.07</b></td></tr>
+          <tr><td>#5</td><td>ud_ratio</td><td>20%</td><td>20d</td><td>csi500</td><td>65</td><td>64.6%</td><td class="pos">+2.13%</td><td class="pos">+245.99%</td><td>18.09%</td><td><b>1.06</b></td></tr>
+          <tr><td>#6</td><td>both</td><td>5%</td><td>5d</td><td>csi300</td><td>21</td><td>81.0%</td><td class="pos">+1.64%</td><td class="pos">+39.85%</td><td>4.67%</td><td><b>1.04</b></td></tr>
+          <tr><td>#7</td><td>seal_diff</td><td>5%</td><td>15d</td><td>csi500</td><td>37</td><td>54.1%</td><td class="pos">+2.14%</td><td class="pos">+105.46%</td><td>10.36%</td><td><b>1.03</b></td></tr>
+          <tr><td>#8</td><td>ud_ratio</td><td>20%</td><td>5d</td><td>csi500</td><td>141</td><td>61.7%</td><td class="pos">+0.72%</td><td class="pos">+156.99%</td><td>14.06%</td><td><b>1.01</b></td></tr>
+          <tr><td>#9</td><td>ud_ratio</td><td>20%</td><td>20d</td><td>csi300</td><td>65</td><td>60.0%</td><td class="pos">+1.80%</td><td class="pos">+190.24%</td><td>16.63%</td><td><b>0.97</b></td></tr>
+          <tr><td>#10</td><td>both</td><td>5%</td><td>15d</td><td>csi1000</td><td>17</td><td>70.6%</td><td class="pos">+3.63%</td><td class="pos">+75.50%</td><td>8.47%</td><td><b>0.97</b></td></tr>
+        </table></div>
+        <div class="explain">V2 的特点：ud_ratio 单因子在放宽阈值时表现不错（交易次数141次），适合做常态化择时；both 共振在极端阈值时胜率最高（81%），适合做冰点精准打击。</div></div>
+
+        <div class="grid-2">
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🔍 V2 的优势</h2><div class="note">1. <b>逻辑更扎实</b>：比值和轧差直接衡量多空力量对比<br>2. <b>交易次数更多</b>：21次 vs V1的15次，样本更充分<br>3. <b>双因子共振胜率更高</b>：76.2% vs 73.3%<br>4. <b>300也能做</b>：V1集中在500，V2在300上也有稳定信号</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">⚠️ V2 的不足 & 下一步</h2><div class="note">1. <b>Calmar 下降</b>：最优从2.44降到1.21，回撤控制弱于V1<br>2. <b>封单额数据质量</b>：早期fd_amount可能不完整<br>3. <b>下一步</b>：在V2基础上叠加风格过滤（V2.1），看看相对因子+风格的组合效果</div></div>
         </div>
       </div>
-      <div class="card hero" style="padding:20px">
-        <h2 style="font-size:15px">🎯 核心结论</h2>
-        <div class="note">
-          1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>
-          2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>
-          3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>
-          4. <b>最优参数</b>：5%阈值（极端冰点），10天持有
+
+      <div id="v3" class="tab-pane">
+        <div class="card hero"><h2>V3：涨跌停比例 — 消除市场规模影响</h2><div class="note">V1/V2用"涨跌停家数"存在问题：市场规模不同时不可比（3000只股票的30个跌停 vs 5000只股票的30个跌停）。<br><br>V3改为：<b>涨跌停比例（家数/总股票数）</b>，标准化后可跨时期比较。同时发现：<b>封单额轧差单因子表现极强</b>。</div></div>
+        
+        <div class="card hero"><h2>🔬 核心发现：封单额轧差是关键信号</h2>
+          <div class="note" style="margin-bottom:16px">在测试涨跌停比例时，意外发现<b>封单额轧差单因子</b>表现远超预期：</div>
+          <div class="grid-2">
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 封单额轧差（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">5%阈值，10天持有，沪深300</div></div>
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 涨停比例（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">15%阈值，15天持有，中证2000</div></div>
+          </div>
+          <div class="explain" style="margin-top:16px">⚡ <b>关键洞察：</b>封单额轧差刻画的是<b>资金力量对比</b>，比涨跌停家数/比例更直接。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。</div>
+        </div>
+
+        <div class="card hero"><h2>🥇 V3.1 最优策略（涨停比例，单因子）</h2>
+          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">up_ratio</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">15%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi2000</div><div class="label">标的</div></div><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+1.96%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+101.8%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">14.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52</div><div class="label">交易次数</div></div></div>
+        </div>
+
+        <div class="card hero"><h2>🥇 V3.2 最优策略（封单额轧差，单因子）</h2>
+          <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi300</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12</div><div class="label">交易次数</div></div></div>
+          <div class="explain" style="margin-top:16px">⚡ <b>关键改进：</b>胜率从53.8%飙升到91.7%，Calmar从0.99提升到5.71，回撤从14.9%降到1.0%。封单额轧差是真正的核心信号。</div>
+        </div>
+
+        <div class="card"><h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
+          <div style="overflow-x:auto"><table class="tbl">
+            <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+            <tr class="best-row"><td>沪深300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+            <tr><td>中证500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+            <tr><td>中证1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+            <tr><td>中证2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+          </table></div>
+          <div class="explain">封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。越大盘越稳定。</div>
+        </div>
+
+        <div class="card"><h2>📊 V3 Top10 策略（封单额轧差主导）</h2>
+          <div style="overflow-x:auto"><table class="tbl">
+            <tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+            <tr class="best-row"><td>#1</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+            <tr><td>#2</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+            <tr><td>#3</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+            <tr><td>#4</td><td>seal_diff</td><td>5%</td><td>3d</td><td>csi1000</td><td>16</td><td>62.5%</td><td class="pos">+2.00%</td><td class="pos">+32.0%</td><td>2.3%</td><td><b>2.05</b></td></tr>
+            <tr><td>#5</td><td>seal_diff</td><td>5%</td><td>3d</td><td>csi500</td><td>16</td><td>75.0%</td><td class="pos">+1.97%</td><td class="pos">+31.5%</td><td>2.3%</td><td><b>1.96</b></td></tr>
+            <tr><td>#6</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi300</td><td>9</td><td>77.8%</td><td class="pos">+4.78%</td><td class="pos">+43.0%</td><td>3.2%</td><td><b>1.94</b></td></tr>
+            <tr><td>#7</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+            <tr><td>#8</td><td>seal_diff</td><td>5%</td><td>15d</td><td>csi300</td><td>10</td><td>70.0%</td><td class="pos">+4.69%</td><td class="pos">+46.9%</td><td>4.0%</td><td><b>1.70</b></td></tr>
+            <tr><td>#9</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi500</td><td>9</td><td>88.9%</td><td class="pos">+6.11%</td><td class="pos">+55.0%</td><td>5.6%</td><td><b>1.43</b></td></tr>
+            <tr><td>#10</td><td>seal_diff</td><td>5%</td><td>20d</td><td>csi1000</td><td>9</td><td>88.9%</td><td class="pos">+6.27%</td><td class="pos">+56.5%</td><td>6.0%</td><td><b>1.36</b></td></tr>
+          </table></div>
+          <div class="explain">Top10全部是<b>封单额轧差</b>单因子，5%极端阈值。涨跌停比例表现平平，封单额轧差才是核心。</div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2><div class="note">1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>4. <b>跨指数稳定</b>：300/500/1000/2000都有效</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🎯 V3 核心结论</h2><div class="note">1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>4. <b>最优参数</b>：5%阈值（极端冰点），10天持有</div></div>
         </div>
       </div>
-    </div>
 
-  </div>
+      <div id="v11" class="tab-pane">
+        <div class="card hero"><h2>V1.1：同样是冰点，但小盘环境和大盘环境可能不是一回事</h2><div class="note">这一步开始回答"加仓加在哪里"。方法是用 <b>中证2000 - 沪深300</b> 和 <b>中证2000 - 中证1000</b> 的相对强弱，判断当时是不是小票更占优。</div></div>
+        <div class="grid-3">
+          <div class="card"><h2>V1.1 新增模块</h2><div class="note">- 新增风格代理：2000-300、2000-1000<br>- 定义 small / large / neutral 三类环境<br>- 先做条件收益，再看条件 IC</div></div>
+          <div class="card"><h2>Regime 分布</h2><div class="stats-row"><div class="stat-box"><div class="val purple">974</div><div class="label">small</div></div><div class="stat-box"><div class="val blue">429</div><div class="label">large</div></div><div class="stat-box"><div class="val amber">335</div><div class="label">neutral</div></div></div><div class="explain">这组数字想表达的是：风格状态不是少数几天才有，而是历史上经常切换，所以值得专门建模。</div></div>
+          <div class="card"><h2>V1.1 想解决什么</h2><div class="note">剔除掉"信号对了，但打错方向"的情况。也就是：冰点来了以后，这次修复更像大票修复，还是小票修复？</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h2>2000 / 300 相对净值</h2><div id="ratio2000_300" class="chart-tall"></div><div class="explain">这张图想表达的是：如果曲线往上，说明小盘整体在跑赢大盘；如果往下，说明大盘更强。背景色就是风格分区，所以你可以直观看到"small regime"不是空口定义，而是相对强弱真的在变化。</div></div>
+          <div class="card"><h2>2000 / 1000 相对净值</h2><div id="ratio2000_1000" class="chart-tall"></div><div class="explain">这张图想表达的是：就算已经进入小盘风格，2000 也不一定总是比 1000 更强。它帮助判断：这次如果要往更小票打，是不是有足够的弹性优势。</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h2>不同风格下的 15 天平均收益</h2><div id="condReturnChart" class="chart-mid"></div><div class="explain">这张图想表达的是：冰点后的收益并不是在所有环境里都一样。你重点看 small 环境下，2000 和 1000 的修复斜率是否明显强于 large 环境。</div></div>
+          <div class="card"><h2>不同风格下的冰点解释力（IC）</h2><div id="condIcChart" class="chart-mid"></div><div class="explain">这张图想表达的是：风格不仅影响最终收益，也影响"冰点信号本身是否更有用"。如果某一类 regime 下 IC 更高，就说明信号在那种环境里更可信。</div></div>
+        </div>
+      </div>
 
-  <!-- 保留原有的V1.1/V1.2/factorstudy/factorcard tabs -->
-  <!-- 这里不改动，继续使用原有代码 -->
+      <div id="v12" class="tab-pane">
+        <div class="card hero"><h2>V1.2：风格不再只是解释层，而是直接进入执行层</h2><div class="note">这一步不再停留在"知道 small 更强"，而是把它写成执行逻辑：冰点触发后，默认做 500；如果当下明显是小盘主导，就切到 2000。</div></div>
+        <div class="grid-2">
+          <div class="card"><h2>V1.2 核心结论</h2><div class="note">最优增强版本不是完全推翻 baseline，而是：<b>保留 baseline 的稳定性，再用风格信号做增强开关。</b></div><div class="explain">这想表达的是：风格过滤不是为了替代冰点，而是为了让冰点在更对的地方发力。</div></div>
+          <div class="card"><h2>最关键的两组结果</h2><div class="stats-row"><div class="stat-box"><div class="val blue">73.3%</div><div class="label">baseline 胜率</div></div><div class="stat-box"><div class="val green">+86.37%</div><div class="label">baseline 总收益</div></div><div class="stat-box"><div class="val blue">73.3%</div><div class="label">switch2000 胜率</div></div><div class="stat-box"><div class="val green">+101.48%</div><div class="label">switch2000 总收益</div></div><div class="stat-box"><div class="val purple">2.40</div><div class="label">baseline Calmar</div></div><div class="stat-box"><div class="val purple">2.72</div><div class="label">switch2000 Calmar</div></div></div><div class="explain">这组数字想表达的是：切到 2000 不是为了追求花哨，而是为了在不明显增加失误率的前提下，把收益斜率抬上去。</div></div>
+        </div>
+        <div class="card full-span"><h2>V1.2 不同执行版本绩效对比</h2><div id="v12CompareChart" class="chart-tall"></div><div class="explain">这张图想表达的是：不同执行逻辑的优劣非常直观。你重点看哪一根柱子既高、又不是靠极端回撤硬堆出来的。</div></div>
+        <div class="card full-span"><h2>交易目标分布：到底切到了哪些指数</h2><div id="v12TargetChart" class="chart-tall"></div><div class="explain">这张图想表达的是：增强开关不是抽象口号，它具体改变了"每次冰点后你买谁"。如果很多 small 时段都切到 2000，说明策略在执行层已经真正吸收了风格信息。</div></div>
+        <div class="card"><h2>V1.2 版本对比表</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>模式</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr><td>baseline</td><td>冰点 → 固定做中证500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.40</b></td></tr><tr class="best-row"><td>baseline_switch_2000</td><td>默认做500，small 时切到2000</td><td>15</td><td>73.3%</td><td class="pos">+5.00%</td><td class="pos">+101.48%</td><td>3.87%</td><td><b>2.72</b></td></tr><tr><td>small_only_2000</td><td>只在 small 环境里做中证2000</td><td>6</td><td>83.3%</td><td class="pos">+7.59%</td><td class="pos">+53.13%</td><td>1.65%</td><td><b>3.80</b></td></tr></table></div><div class="explain">这张表想表达的是：完全只做 small 环境虽然也强，但更像过滤型打法；当前更自然的升级方向，是保留 baseline 的连续性，再在小票风格里增强到2000。</div></div>
+      </div>
 
-</div>
+      <div id="factorstudy" class="tab-pane">
+        <div class="card hero"><div class="kicker">研究结果总览</div><h2>把冰点这条命题从"因子 → 参数 → 执行"完整串起来看</h2><div class="note">如果前面是按版本看，这里就是把最重要的结果压缩在一页里，方便你快速回顾。</div></div>
+        <div class="card full-span"><h2>共振信号 × 中证500 Calmar 热力图</h2><div id="iceHeatChart" class="chart-tall"></div><div class="explain">这张图想表达的是：不是持有越久越好，也不是阈值越宽越好。最好的区域集中在"更极端的冰点 + 中等持有期"。</div></div>
+        <div class="card"><h2>冰点 Top20 策略表</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr class="best-row"><td>#1</td><td>both</td><td>5</td><td>15d</td><td>csi500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.44</b></td></tr><tr class=""><td>#2</td><td>both</td><td>5</td><td>10d</td><td>csi500</td><td>15</td><td>53.3%</td><td class="pos">+2.83%</td><td class="pos">+49.93%</td><td>2.87%</td><td><b>2.11</b></td></tr><tr class=""><td>#3</td><td>both</td><td>5</td><td>15d</td><td>csi1000</td><td>15</td><td>66.7%</td><td class="pos">+5.01%</td><td class="pos">+100.76%</td><td>5.26%</td><td><b>2.02</b></td></tr><tr class=""><td>#4</td><td>both</td><td>20</td><td>5d</td><td>csi300</td><td>62</td><td>74.2%</td><td class="pos">+1.27%</td><td class="pos">+114.90%</td><td>9.11%</td><td><b>1.29</b></td></tr><tr class=""><td>#5</td><td>both</td><td>5</td><td>20d</td><td>csi500</td><td>14</td><td>71.4%</td><td class="pos">+4.33%</td><td class="pos">+74.62%</td><td>6.74%</td><td><b>1.25</b></td></tr><tr class=""><td>#6</td><td>both</td><td>5</td><td>10d</td><td>csi300</td><td>15</td><td>73.3%</td><td class="pos">+2.50%</td><td class="pos">+43.43%</td><td>4.45%</td><td><b>1.21</b></td></tr><tr class=""><td>#7</td><td>both</td><td>5</td><td>5d</td><td>csi300</td><td>15</td><td>66.7%</td><td class="pos">+1.66%</td><td class="pos">+27.39%</td><td>2.99%</td><td><b>1.19</b></td></tr><tr class=""><td>#8</td><td>both</td><td>20</td><td>5d</td><td>csi500</td><td>62</td><td>72.6%</td><td class="pos">+1.42%</td><td class="pos">+132.09%</td><td>11.64%</td><td><b>1.12</b></td></tr><tr class=""><td>#9</td><td>both</td><td>5</td><td>20d</td><td>csi1000</td><td>14</td><td>78.6%</td><td class="pos">+5.12%</td><td class="pos">+92.17%</td><td>9.05%</td><td><b>1.10</b></td></tr><tr class=""><td>#10</td><td>both</td><td>5</td><td>15d</td><td>csi300</td><td>15</td><td>60.0%</td><td class="pos">+3.23%</td><td class="pos">+58.13%</td><td>6.38%</td><td><b>1.08</b></td></tr><tr class=""><td>#11</td><td>both</td><td>10</td><td>10d</td><td>csi300</td><td>31</td><td>61.3%</td><td class="pos">+1.60%</td><td class="pos">+60.13%</td><td>6.61%</td><td><b>1.07</b></td></tr><tr class=""><td>#12</td><td>both</td><td>10</td><td>10d</td><td>csi500</td><td>31</td><td>61.3%</td><td class="pos">+1.94%</td><td class="pos">+75.57%</td><td>8.27%</td><td><b>1.03</b></td></tr><tr class=""><td>#13</td><td>down</td><td>20</td><td>20d</td><td>csi500</td><td>59</td><td>61.0%</td><td class="pos">+2.04%</td><td class="pos">+192.41%</td><td>16.89%</td><td><b>1.00</b></td></tr><tr class=""><td>#14</td><td>both</td><td>5</td><td>5d</td><td>csi1000</td><td>15</td><td>73.3%</td><td class="pos">+2.02%</td><td class="pos">+33.85%</td><td>4.43%</td><td><b>0.97</b></td></tr><tr class=""><td>#15</td><td>both</td><td>10</td><td>5d</td><td>csi300</td><td>35</td><td>68.6%</td><td class="pos">+1.30%</td><td class="pos">+55.21%</td><td>7.10%</td><td><b>0.93</b></td></tr><tr class=""><td>#16</td><td>both</td><td>20</td><td>10d</td><td>csi300</td><td>53</td><td>64.2%</td><td class="pos">+1.34%</td><td class="pos">+96.76%</td><td>11.17%</td><td><b>0.92</b></td></tr><tr class=""><td>#17</td><td>down</td><td>20</td><td>20d</td><td>csi1000</td><td>59</td><td>59.3%</td><td class="pos">+1.99%</td><td class="pos">+179.50%</td><td>17.60%</td><td><b>0.91</b></td></tr><tr class=""><td>#18</td><td>down</td><td>15</td><td>10d</td><td>csi300</td><td>84</td><td>60.7%</td><td class="pos">+0.96%</td><td class="pos">+111.59%</td><td>12.86%</td><td><b>0.89</b></td></tr><tr class=""><td>#19</td><td>down</td><td>20</td><td>15d</td><td>csi500</td><td>74</td><td>64.9%</td><td class="pos">+1.71%</td><td class="pos">+207.52%</td><td>19.99%</td><td><b>0.89</b></td></tr><tr class=""><td>#20</td><td>both</td><td>5</td><td>3d</td><td>csi300</td><td>16</td><td>75.0%</td><td class="pos">+1.28%</td><td class="pos">+22.02%</td><td>3.38%</td><td><b>0.87</b></td></tr></table></div><div class="explain">这张表想表达的是：前排结果并不只出现在一个指数上，但最稳的中心仍然落在中证500，然后在加入风格过滤后往2000延展。</div></div>
+      </div>
 
-<script>
-// Chart.js净值曲线渲染
-(async function(){
-  const resp = await fetch('data/seal_diff_nav.json');
-  const data = await resp.json();
-  
-  const dates = data.nav_data.map(d => d.date.substring(4,6)+'/'+d.date.substring(6,8));
-  const strategyNav = data.nav_data.map(d => d.strategy_nav);
-  const benchmarkNav = data.nav_data.map(d => d.benchmark_nav);
-  
-  new Chart(document.getElementById('sealNavChart'), {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [
-        {
-          label: '策略净值',
-          data: strategyNav,
-          borderColor: '#8b5cf6',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.2,
-          fill: false
-        },
-        {
-          label: '沪深300',
-          data: benchmarkNav,
-          borderColor: '#94a3b8',
-          borderWidth: 1.5,
-          borderDash: [4, 4],
-          pointRadius: 0,
-          tension: 0.2,
-          fill: false
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {mode: 'index', intersect: false},
-      plugins: {
-        legend: {display: true, position: 'top', labels: {font: {size: 11}, color: '#64748b'}},
-        tooltip: {
-          callbacks: {
-            label: function(ctx) {
-              return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4);
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {maxTicksLimit: 15, font: {size: 9}, color: '#94a3b8'},
-          grid: {display: false}
-        },
-        y: {
-          ticks: {font: {size: 9}, color: '#94a3b8', callback: v => v.toFixed(2)},
-          grid: {color: '#f1f5f9'}
-        }
-      }
-    }
-  });
-})();
-</script>
-
+      <div id="factorcard" class="tab-pane">
+        <iframe src="ice_point_card_v2.html" style="width:100%;height:800px;border:none;border-radius:8px;"></iframe>
+      </div>
     </div>
   </div>
 

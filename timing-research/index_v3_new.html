@@ -1,0 +1,196 @@
+<!-- 新的冰点策略Tab结构 -->
+
+<div class="card">
+  <h2>冰点策略研究</h2>
+  <div class="subtabs">
+    <button class="subtab-btn active" data-tab="factor-evolution">因子迭代</button>
+    <button class="subtab-btn" data-tab="style-filter">风格调优</button>
+  </div>
+
+  <!-- Tab 1: 因子迭代 -->
+  <div id="factor-evolution" class="tab-pane active">
+    
+    <div class="card hero">
+      <h2>🔬 因子演进：从涨跌停家数到封单额轧差</h2>
+      <div class="note">冰点策略的核心是找到"极端恐慌"的信号。我们测试了三代因子，最终发现：<b>封单额轧差</b>才是关键。</div>
+    </div>
+
+    <div class="card">
+      <h2>📊 三代因子对比</h2>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <tr>
+            <th>版本</th>
+            <th>因子</th>
+            <th>问题</th>
+            <th>胜率</th>
+            <th>Calmar</th>
+            <th>结论</th>
+          </tr>
+          <tr>
+            <td>V1</td>
+            <td>涨停+跌停家数</td>
+            <td>过拟合（股票总数固定，涨停少必然跌停多）</td>
+            <td>73.3%</td>
+            <td>2.44</td>
+            <td class="amber">信号不稳定</td>
+          </tr>
+          <tr>
+            <td>V2</td>
+            <td>涨跌停比例</td>
+            <td>标准化后可比，但信号偏弱</td>
+            <td>53.8%</td>
+            <td>0.99</td>
+            <td class="amber">表现平平</td>
+          </tr>
+          <tr class="best-row">
+            <td>V3</td>
+            <td>封单额轧差</td>
+            <td>直接刻画资金力量对比</td>
+            <td class="pos">91.7%</td>
+            <td class="pos">5.71</td>
+            <td class="pos">✅ 核心信号</td>
+          </tr>
+        </table>
+      </div>
+      <div class="explain">
+        ⚡ <b>关键洞察：</b>封单额轧差 = 涨停封单额 - 跌停封单额。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。
+        不只看家数，看资金堆在哪边，这才是真正的恐慌深度。
+      </div>
+    </div>
+
+    <div class="card hero">
+      <h2>🥇 最优策略（封单额轧差）</h2>
+      <div class="stats-row" style="margin-top:16px">
+        <div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div>
+        <div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div>
+        <div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div>
+        <div class="stat-box"><div class="val purple">沪深300</div><div class="label">标的</div></div>
+        <div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div>
+        <div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div>
+        <div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div>
+        <div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div>
+        <div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div>
+        <div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div>
+      </div>
+    </div>
+
+    <div class="card full-span">
+      <h2>📈 最优策略净值曲线（封单额轧差 vs 沪深300）</h2>
+      <div id="sealDiffCurve" class="chart-tall"></div>
+      <div class="explain">
+        冰点策略在7年里12次交易，11次盈利，累计收益38.4%，最大回撤仅1.0%。
+        关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+          <tr class="best-row"><td>沪深300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+          <tr><td>中证500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+          <tr><td>中证1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+          <tr><td>中证2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+        </table>
+      </div>
+      <div class="explain">
+        封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。
+        越大盘越稳定，这是因为大盘股的封单额数据更可靠，流动性更好。
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Top10 策略（全部是封单额轧差）</h2>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <tr><th>排名</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+          <tr class="best-row"><td>#1</td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+          <tr><td>#2</td><td>5%</td><td>10d</td><td>csi500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td><b>3.23</b></td></tr>
+          <tr><td>#3</td><td>5%</td><td>10d</td><td>csi1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td><b>2.13</b></td></tr>
+          <tr><td>#4</td><td>5%</td><td>3d</td><td>csi1000</td><td>16</td><td>62.5%</td><td class="pos">+2.00%</td><td class="pos">+32.0%</td><td>2.3%</td><td><b>2.05</b></td></tr>
+          <tr><td>#5</td><td>5%</td><td>3d</td><td>csi500</td><td>16</td><td>75.0%</td><td class="pos">+1.97%</td><td class="pos">+31.5%</td><td>2.3%</td><td><b>1.96</b></td></tr>
+          <tr><td>#6</td><td>5%</td><td>20d</td><td>csi300</td><td>9</td><td>77.8%</td><td class="pos">+4.78%</td><td class="pos">+43.0%</td><td>3.2%</td><td><b>1.94</b></td></tr>
+          <tr><td>#7</td><td>5%</td><td>10d</td><td>csi2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td><b>1.73</b></td></tr>
+          <tr><td>#8</td><td>5%</td><td>15d</td><td>csi300</td><td>10</td><td>70.0%</td><td class="pos">+4.69%</td><td class="pos">+46.9%</td><td>4.0%</td><td><b>1.70</b></td></tr>
+          <tr><td>#9</td><td>5%</td><td>20d</td><td>csi500</td><td>9</td><td>88.9%</td><td class="pos">+6.11%</td><td class="pos">+55.0%</td><td>5.6%</td><td><b>1.43</b></td></tr>
+          <tr><td>#10</td><td>5%</td><td>20d</td><td>csi1000</td><td>9</td><td>88.9%</td><td class="pos">+6.27%</td><td class="pos">+56.5%</td><td>6.0%</td><td><b>1.36</b></td></tr>
+        </table>
+      </div>
+      <div class="explain">
+        Top10全部是封单额轧差，5%极端阈值。涨跌停家数/比例完全不在榜单上，说明封单额轧差是压倒性的核心信号。
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card hero" style="padding:20px">
+        <h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2>
+        <div class="note">
+          1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>
+          2. <b>信号质量高</b>：胜率70-90%，远超家数/比例的50-60%<br>
+          3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>
+          4. <b>跨指数稳定</b>：300/500/1000/2000都有效
+        </div>
+      </div>
+      <div class="card hero" style="padding:20px">
+        <h2 style="font-size:15px">🎯 核心结论</h2>
+        <div class="note">
+          1. <b>核心信号</b>：封单额轧差（seal_diff）<br>
+          2. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>
+          3. <b>最优参数</b>：5%阈值（极端冰点），10天持有<br>
+          4. <b>信号特征</b>：稀缺但质量极高（7年12次交易）
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tab 2: 风格调优 -->
+  <div id="style-filter" class="tab-pane">
+    
+    <div class="card hero">
+      <h2>🎯 风格调优：在封单额轧差基础上叠加市值风格判断</h2>
+      <div class="note">
+        基础策略：封单额轧差触发冰点 → 默认做沪深300（最稳）<br>
+        风格增强：如果当前是小盘风格主导 → 切换到中证2000（增强收益）
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 风格判断逻辑</h2>
+      <div class="note">
+        用<b>中证2000 / 沪深300</b>相对强弱判断风格：<br>
+        • 相对强弱 > 20日均线 → small（小盘风格）<br>
+        • 相对强弱 < 20日均线 → large（大盘风格）<br>
+        • 其他 → neutral（中性）
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🥇 策略对比</h2>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <tr><th>策略</th><th>逻辑</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
+          <tr><td>baseline</td><td>冰点 → 固定做沪深300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
+          <tr class="best-row"><td>风格增强</td><td>默认做300，small时切到2000</td><td>12</td><td>91.7%</td><td class="pos">+3.85%</td><td class="pos">+46.2%</td><td>1.2%</td><td><b>6.42</b></td></tr>
+        </table>
+      </div>
+      <div class="explain">
+        风格增强在保持高胜率的同时，Calmar从5.71提升到6.42，总收益从38.4%提升到46.2%。
+        关键：不是完全切换到小盘，而是在小盘风格时增强，保留了baseline的稳定性。
+      </div>
+    </div>
+
+    <div class="card full-span">
+      <h2>📈 净值曲线对比（baseline vs 风格增强）</h2>
+      <div id="styleCompareCurve" class="chart-tall"></div>
+      <div class="explain">
+        风格增强策略在小盘风格期间获得了额外收益，但在大盘风格期间保持了baseline的稳定性。
+        这是一个"锦上添花"的优化，而不是推翻重来。
+      </div>
+    </div>
+
+  </div>
+
+</div>
