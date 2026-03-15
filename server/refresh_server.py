@@ -171,6 +171,7 @@ MODULES = {
         'scripts': [
             ('macro/fundamentals', 'fundamentals_data.py'),
             ('macro/fundamentals', 'fundamentals_calc.py'),
+            ('macro/fundamentals/profit_cycle', 'profit_cycle_data.py'),
         ],
     },
     'chain-prosperity': {

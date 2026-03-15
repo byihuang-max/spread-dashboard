@@ -126,6 +126,38 @@ def calc():
     if not result['signals']:
         result['signals'] = ['基本面指标无极端信号 ✅']
 
+    # ── 利润周期 + 内需接棒 ──
+    profit_cycle_json = os.path.join(SCRIPT_DIR, 'profit_cycle', 'profit_cycle.json')
+    if os.path.exists(profit_cycle_json):
+        try:
+            with open(profit_cycle_json, 'r', encoding='utf-8') as f:
+                pc_data = json.load(f)
+            
+            latest = pc_data.get('latest', {})
+            if latest:
+                # 利润周期信号
+                stage = latest.get('profit_cycle_stage', '')
+                score = latest.get('profit_cycle_score', 0)
+                ppi_mom = latest.get('ppi_mom', 0)
+                
+                if stage == '上行':
+                    result['signals'].append(f"利润周期: {stage}（{score}/4分），股票策略适配度提升 🟢")
+                elif stage == '见顶':
+                    result['signals'].append(f"利润周期: {stage}（{score}/4分），警惕回调风险 ⚠️")
+                elif stage == '下行':
+                    result['signals'].append(f"利润周期: {stage}（{score}/4分），防御为主 🔴")
+                elif stage == '筑底' and ppi_mom > -0.5:
+                    result['signals'].append(f"利润周期: {stage}（{score}/4分），等待拐点 🟡")
+                
+                # 内需接棒信号
+                demand_score = latest.get('demand_recovery_score', 0)
+                if demand_score >= 67:
+                    result['signals'].append(f"内需接棒: {demand_score}/100分，内需强劲，大盘价值受益 🌱")
+                elif demand_score >= 34:
+                    result['signals'].append(f"内需接棒: {demand_score}/100分，结构性改善 🟡")
+        except Exception as e:
+            print(f"  ⚠️ 读取利润周期数据失败: {e}")
+
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     print(f"输出: {OUTPUT_JSON}")
