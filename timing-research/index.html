@@ -227,19 +227,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="card hero">
     <div class="kicker">冰点研究摘要</div>
     <h2>先把一句人话讲清楚：冰点不是孤立抄底技巧，而是股票择时框架里第一条已经跑通的命题</h2>
-    <div class="stats-row">
-      <div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div>
-      <div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div>
-      <div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div>
-      <div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div>
-      <div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div>
-      <div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div>
-      <div class="stat-box"><div class="val green">+86.37%</div><div class="label">总收益</div></div>
-      <div class="stat-box"><div class="val amber">3.87%</div><div class="label">最大回撤</div></div>
-      <div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div>
-      <div class="stat-box"><div class="val blue">15</div><div class="label">交易次数</div></div>
-    </div>
-    <div class="explain">这组数字想表达的是：当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。</div>
+    <div class="explain">当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。具体的回测数据和参数对比，请看下方各个迭代版本。</div>
   </div>
 
     <div class="card">
@@ -251,6 +239,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
         <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
         <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
+        <button class="subtab-btn" data-tab="factorcard">📊 因子回测</button>
       </div>
 
       <div id="v1" class="tab-pane active">
@@ -361,6 +350,10 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         <div class="card hero"><div class="kicker">研究结果总览</div><h2>把冰点这条命题从"因子 → 参数 → 执行"完整串起来看</h2><div class="note">如果前面是按版本看，这里就是把最重要的结果压缩在一页里，方便你快速回顾。</div></div>
         <div class="card full-span"><h2>共振信号 × 中证500 Calmar 热力图</h2><div id="iceHeatChart" class="chart-tall"></div><div class="explain">这张图想表达的是：不是持有越久越好，也不是阈值越宽越好。最好的区域集中在"更极端的冰点 + 中等持有期"。</div></div>
         <div class="card"><h2>冰点 Top20 策略表</h2><div style="overflow-x:auto"><table class="tbl"><tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr><tr class="best-row"><td>#1</td><td>both</td><td>5</td><td>15d</td><td>csi500</td><td>15</td><td>73.3%</td><td class="pos">+4.43%</td><td class="pos">+86.37%</td><td>3.87%</td><td><b>2.44</b></td></tr><tr class=""><td>#2</td><td>both</td><td>5</td><td>10d</td><td>csi500</td><td>15</td><td>53.3%</td><td class="pos">+2.83%</td><td class="pos">+49.93%</td><td>2.87%</td><td><b>2.11</b></td></tr><tr class=""><td>#3</td><td>both</td><td>5</td><td>15d</td><td>csi1000</td><td>15</td><td>66.7%</td><td class="pos">+5.01%</td><td class="pos">+100.76%</td><td>5.26%</td><td><b>2.02</b></td></tr><tr class=""><td>#4</td><td>both</td><td>20</td><td>5d</td><td>csi300</td><td>62</td><td>74.2%</td><td class="pos">+1.27%</td><td class="pos">+114.90%</td><td>9.11%</td><td><b>1.29</b></td></tr><tr class=""><td>#5</td><td>both</td><td>5</td><td>20d</td><td>csi500</td><td>14</td><td>71.4%</td><td class="pos">+4.33%</td><td class="pos">+74.62%</td><td>6.74%</td><td><b>1.25</b></td></tr><tr class=""><td>#6</td><td>both</td><td>5</td><td>10d</td><td>csi300</td><td>15</td><td>73.3%</td><td class="pos">+2.50%</td><td class="pos">+43.43%</td><td>4.45%</td><td><b>1.21</b></td></tr><tr class=""><td>#7</td><td>both</td><td>5</td><td>5d</td><td>csi300</td><td>15</td><td>66.7%</td><td class="pos">+1.66%</td><td class="pos">+27.39%</td><td>2.99%</td><td><b>1.19</b></td></tr><tr class=""><td>#8</td><td>both</td><td>20</td><td>5d</td><td>csi500</td><td>62</td><td>72.6%</td><td class="pos">+1.42%</td><td class="pos">+132.09%</td><td>11.64%</td><td><b>1.12</b></td></tr><tr class=""><td>#9</td><td>both</td><td>5</td><td>20d</td><td>csi1000</td><td>14</td><td>78.6%</td><td class="pos">+5.12%</td><td class="pos">+92.17%</td><td>9.05%</td><td><b>1.10</b></td></tr><tr class=""><td>#10</td><td>both</td><td>5</td><td>15d</td><td>csi300</td><td>15</td><td>60.0%</td><td class="pos">+3.23%</td><td class="pos">+58.13%</td><td>6.38%</td><td><b>1.08</b></td></tr><tr class=""><td>#11</td><td>both</td><td>10</td><td>10d</td><td>csi300</td><td>31</td><td>61.3%</td><td class="pos">+1.60%</td><td class="pos">+60.13%</td><td>6.61%</td><td><b>1.07</b></td></tr><tr class=""><td>#12</td><td>both</td><td>10</td><td>10d</td><td>csi500</td><td>31</td><td>61.3%</td><td class="pos">+1.94%</td><td class="pos">+75.57%</td><td>8.27%</td><td><b>1.03</b></td></tr><tr class=""><td>#13</td><td>down</td><td>20</td><td>20d</td><td>csi500</td><td>59</td><td>61.0%</td><td class="pos">+2.04%</td><td class="pos">+192.41%</td><td>16.89%</td><td><b>1.00</b></td></tr><tr class=""><td>#14</td><td>both</td><td>5</td><td>5d</td><td>csi1000</td><td>15</td><td>73.3%</td><td class="pos">+2.02%</td><td class="pos">+33.85%</td><td>4.43%</td><td><b>0.97</b></td></tr><tr class=""><td>#15</td><td>both</td><td>10</td><td>5d</td><td>csi300</td><td>35</td><td>68.6%</td><td class="pos">+1.30%</td><td class="pos">+55.21%</td><td>7.10%</td><td><b>0.93</b></td></tr><tr class=""><td>#16</td><td>both</td><td>20</td><td>10d</td><td>csi300</td><td>53</td><td>64.2%</td><td class="pos">+1.34%</td><td class="pos">+96.76%</td><td>11.17%</td><td><b>0.92</b></td></tr><tr class=""><td>#17</td><td>down</td><td>20</td><td>20d</td><td>csi1000</td><td>59</td><td>59.3%</td><td class="pos">+1.99%</td><td class="pos">+179.50%</td><td>17.60%</td><td><b>0.91</b></td></tr><tr class=""><td>#18</td><td>down</td><td>15</td><td>10d</td><td>csi300</td><td>84</td><td>60.7%</td><td class="pos">+0.96%</td><td class="pos">+111.59%</td><td>12.86%</td><td><b>0.89</b></td></tr><tr class=""><td>#19</td><td>down</td><td>20</td><td>15d</td><td>csi500</td><td>74</td><td>64.9%</td><td class="pos">+1.71%</td><td class="pos">+207.52%</td><td>19.99%</td><td><b>0.89</b></td></tr><tr class=""><td>#20</td><td>both</td><td>5</td><td>3d</td><td>csi300</td><td>16</td><td>75.0%</td><td class="pos">+1.28%</td><td class="pos">+22.02%</td><td>3.38%</td><td><b>0.87</b></td></tr></table></div><div class="explain">这张表想表达的是：前排结果并不只出现在一个指数上，但最稳的中心仍然落在中证500，然后在加入风格过滤后往2000延展。</div></div>
+      </div>
+
+      <div id="factorcard" class="tab-pane">
+        <iframe src="ice_point_card_v2.html" style="width:100%;height:800px;border:none;border-radius:8px;"></iframe>
       </div>
     </div>
   </div>
