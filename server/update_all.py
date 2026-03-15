@@ -151,6 +151,14 @@ MODULES = {
         ],
         'inject_script': None,
     },
+    'chain_prosperity': {
+        'name': '中观景气度',
+        'data_scripts': [
+            ('meso/chain_prosperity', 'chain_data.py'),    # 拉取产业链数据
+            ('meso/chain_prosperity', 'chain_calc.py'),    # 计算景气度指标
+        ],
+        'inject_script': None,
+    },
     'macro_score': {
         'name': '宏观打分+策略适配',
         'data_scripts': [
