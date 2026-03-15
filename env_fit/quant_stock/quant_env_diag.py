@@ -783,11 +783,22 @@ def calc_neutral_aux():
 # ═══════════════════════════════════════
 # 综合诊断（嵌套逻辑）
 # ═══════════════════════════════════════
+# 【2026-03-15 优化 by Roni】
+# 流动性是母项（大权重），其他是子项（系数）
+# 
+# 旧逻辑问题：
+#   流动性25% + alpha环境50% → 流动性52分被alpha 90分拉高
+#   结果：流动性偏低，但显示"alpha环境极佳"（不合理）
+#
+# 新逻辑：
+#   流动性是前提和主导（70%权重）
+#   子项（离散度、集中度、预期、微观）是修正系数（30%）
+#   Alpha环境 = 流动性 × 0.7 + 子项综合 × 0.3
+#
 # 【嵌套，不是加权！】
 # Step 1: 流动性门槛 — 枯竭直接出局
-# Step 2: 离散度 × 集中度 — 交互项，决定alpha环境基调
-# Step 3: 市场预期修正 — 条件验证，不粗暴扣分
-# Step 4: 微观尾部叠加 — 踩踏预警红旗
+# Step 2: 流动性主导 — 作为alpha环境的基础分（70%）
+# Step 3: 子项修正 — 离散度、集中度、预期、微观（30%）
 # ═══════════════════════════════════════
 def diagnose(liq, disp, conc, mkt, micro):
     factors_detail = {
@@ -802,71 +813,82 @@ def diagnose(liq, disp, conc, mkt, micro):
     # 枯竭=没水，量化活不了，不用看其他因子
     if liq['score'] < 30:
         env_score = 15
+        alpha_env = 15
         narrative = f"⛔ 流动性枯竭（{liq['amount']:.0f}亿），量化生存环境恶劣"
-        return build_result(env_score, '防御', '🔴', narrative, factors_detail)
+        return build_result(env_score, '防御', '🔴', narrative, factors_detail,
+                          alpha_env=alpha_env, alpha_label='枯竭')
 
-    # ── Step 2: 离散度 × 风格集中度（交互项） ──
-    # 这两个因子不是独立的！组合才有意义：
+    # ── Step 2: 流动性主导（70%权重）──
+    liq_base = liq['score']  # 流动性作为基础分
+
+    # ── Step 3: 子项修正（30%权重）──
+    # 3.1 离散度 × 风格集中度（交互项）
     d, c = disp['score'], conc['score']
-
+    
     if d >= 65 and c >= 65:
-        # 离散度高 + 风格分散 = 最佳环境
-        alpha_env, alpha_label = 90, '极佳'
-        alpha_note = f"离散度{disp['grade']}+风格{conc['grade']}，alpha空间充裕"
+        # 离散度高 + 风格分散 = 最佳
+        sub_score = 90
+        sub_note = f"离散度{disp['grade']}+风格{conc['grade']}，alpha空间充裕"
     elif d >= 65 and c < 45:
-        # 离散度高但风格集中 = 有空间但alpha不稳
-        # （某风格独涨时，量化的多因子分散逻辑可能失效）
-        alpha_env, alpha_label = 55, '不稳定'
-        alpha_note = f"离散度{disp['grade']}但{conc['dominant']}主导({conc['dominant_pct']:.0f}%)，alpha可能被风格碾压"
+        # 离散度高但风格集中 = 有空间但不稳
+        sub_score = 55
+        sub_note = f"离散度{disp['grade']}但{conc['dominant']}主导({conc['dominant_pct']:.0f}%)，alpha可能被风格碾压"
     elif d < 40:
-        # 离散度低 = 不管集中不集中，alpha都难做
-        alpha_env, alpha_label = 25, '困难'
-        alpha_note = f"离散度{disp['grade']}(波动率{disp.get('cross_vol','?')})，同涨同跌选股难"
+        # 离散度低 = alpha难做
+        sub_score = 25
+        sub_note = f"离散度{disp['grade']}(波动率{disp.get('cross_vol','?')})，同涨同跌选股难"
     else:
-        # 中间状态：加权
-        alpha_env = d * 0.6 + c * 0.4
-        alpha_label = '中等'
-        alpha_note = f"离散度{disp['grade']}+风格{conc['grade']}，超额环境一般"
+        # 中间状态
+        sub_score = d * 0.6 + c * 0.4
+        sub_note = f"离散度{disp['grade']}+风格{conc['grade']}，超额环境一般"
 
-    # ── Step 3: 市场预期修正 ──
-    # 不粗暴扣分，只有虹吸确认才降级
+    # 3.2 市场预期修正
     mkt_adj = 0
     mkt_note = ''
     if mkt.get('siphon_confirmed'):
-        # 三条件全满足：大票虹吸确认
         mkt_adj = -15
         sd = mkt.get('siphon_details', {})
         mkt_note = f"🚨 大票虹吸确认(占比+{sd.get('share_surge',0):.1f}pp+跑赢{sd.get('big_outperform',0):.1f}%)，超额承压"
     elif mkt['grade'] == '升水观察':
-        mkt_adj = 0  # 升水但没虹吸证据，暂不调整
+        mkt_adj = 0
         mkt_note = f"升水但虹吸未确认，暂不调整"
     elif mkt['grade'] == '极端悲观':
-        mkt_adj = -3  # 极端贴水时超额波动可能加大
+        mkt_adj = -3
         mkt_note = f"极端贴水(分位{mkt.get('im_pctile',0):.0f}%)，超额波动可能加大"
     else:
         mkt_note = f"市场预期{mkt['grade']}(IM分位{mkt.get('im_pctile',0):.0f}%)"
 
-    # ── Step 4: 微观尾部叠加 ──
+    # 3.3 微观尾部叠加
     micro_adj = 0
     micro_note = ''
     if micro['score'] < 30:
-        micro_adj = -12  # 踩踏预警，大幅降级
+        micro_adj = -12
         micro_note = f"🚨 踩踏预警！{micro['hot_count']}行业拥挤+资金{micro['consensus']}"
     elif micro['score'] < 50:
-        micro_adj = -5   # 有压力，小幅降级
+        micro_adj = -5
         micro_note = f"微观有压力（{micro['hot_count']}行业拥挤）"
     else:
         micro_note = f"微观{micro['grade']}"
 
-    # ── 综合评分 ──
-    # 权重：流动性25% + alpha环境50% + 市场预期10% + 微观15%
-    raw = liq['score'] * 0.25 + alpha_env * 0.50 + mkt['score'] * 0.10 + micro['score'] * 0.15
-    env_score = max(0, min(100, round(raw + mkt_adj + micro_adj)))
+    # ── Alpha环境综合评分 ──
+    # 流动性70% + 子项30%
+    alpha_env = liq_base * 0.7 + sub_score * 0.3 + mkt_adj + micro_adj
+    alpha_env = max(0, min(100, round(alpha_env)))
 
-    # 构建诊断叙事（用箭头串联每一步逻辑）
+    # Alpha环境等级
+    if alpha_env >= 75:   alpha_label = '极佳'
+    elif alpha_env >= 60: alpha_label = '良好'
+    elif alpha_env >= 45: alpha_label = '一般'
+    elif alpha_env >= 30: alpha_label = '困难'
+    else:                 alpha_label = '恶劣'
+
+    # ── 综合评分（与alpha_env相同，因为alpha环境就是最终评分）──
+    env_score = alpha_env
+
+    # 构建诊断叙事
     parts = [
-        f"流动性{liq['grade']}({liq['amount']:.0f}亿，{liq['trend']}，{liq['stability']})",
-        alpha_note, mkt_note, micro_note
+        f"流动性{liq['grade']}({liq['amount']:.0f}亿，{liq.get('decay_signal','')}{liq['trend']}，{liq['stability']})",
+        sub_note, mkt_note, micro_note
     ]
     narrative = ' → '.join(p for p in parts if p)
 
