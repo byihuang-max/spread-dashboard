@@ -785,16 +785,15 @@ let sealChart = null;
   const csi1000Nav = data.nav_data.map(d => d.csi1000_nav);
   const csi2000Nav = data.nav_data.map(d => d.csi2000_nav);
   
-  // 构建开仓点数据
-  const tradePoints = [];
+  // 构建开仓点数据（使用稀疏数组，只在开仓点有值）
+  const tradePoints = new Array(dates.length).fill(null);
+  const tradeInfo = {}; // 存储交易信息
+  
   data.trades.forEach(trade => {
     const entryIdx = data.nav_data.findIndex(d => d.date === trade.entry_date);
     if (entryIdx >= 0) {
-      tradePoints.push({
-        x: entryIdx,
-        y: trade.entry_nav,
-        return: trade.return
-      });
+      tradePoints[entryIdx] = trade.entry_nav;
+      tradeInfo[entryIdx] = trade.return;
     }
   });
   
@@ -822,15 +821,23 @@ let sealChart = null;
         {
           label: '开仓点',
           data: tradePoints,
-          type: 'scatter',
+          type: 'line',
           backgroundColor: function(ctx) {
-            const point = tradePoints[ctx.dataIndex];
-            return point && point.return > 0 ? '#10b981' : '#ef4444';
+            const idx = ctx.dataIndex;
+            const ret = tradeInfo[idx];
+            return ret !== undefined ? (ret > 0 ? '#10b981' : '#ef4444') : 'transparent';
           },
-          borderColor: '#fff',
-          borderWidth: 2,
-          pointRadius: 6,
-          pointHoverRadius: 8,
+          borderColor: 'transparent',
+          borderWidth: 0,
+          pointRadius: function(ctx) {
+            return tradePoints[ctx.dataIndex] !== null ? 6 : 0;
+          },
+          pointHoverRadius: function(ctx) {
+            return tradePoints[ctx.dataIndex] !== null ? 8 : 0;
+          },
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          showLine: false,
           order: 1
         },
         {
@@ -884,11 +891,11 @@ let sealChart = null;
         tooltip: {
           callbacks: {
             label: function(ctx) {
-              if (ctx.dataset.label === '开仓点') {
-                const point = tradePoints[ctx.dataIndex];
+              if (ctx.dataset.label === '开仓点' && tradePoints[ctx.dataIndex] !== null) {
+                const ret = tradeInfo[ctx.dataIndex];
                 return [
                   '开仓净值: ' + ctx.parsed.y.toFixed(4),
-                  '收益: ' + (point.return > 0 ? '+' : '') + point.return.toFixed(2) + '%'
+                  '收益: ' + (ret > 0 ? '+' : '') + ret.toFixed(2) + '%'
                 ];
               }
               return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4);
