@@ -72,6 +72,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <div class="chart-wrap"><canvas id="profitCycleChart"></canvas></div>
     <div class="chart-note">
       <b>利润周期得分（0-4分）：</b>综合PPI环比、PPI同比改善、核心CPI抬升、M1-M2剪刀差改善。<br>
+      <b>计算规则：</b><br>
+      • PPI环比>0 → +1分（价格止跌）<br>
+      • PPI同比改善（本月-上月>0）→ +1分（价格趋势向上）<br>
+      • 核心CPI同比改善（本月-上月>0）→ +1分（需求驱动）<br>
+      • M1-M2剪刀差改善（本月-上月>0）→ +1分（流动性改善）<br>
       <b>筑底（0-1分）：</b>价格下跌，利润承压，等待拐点。<br>
       <b>上行（2分）：</b>价格止跌回升，利润开始改善，股票策略适配度提升。<br>
       <b>见顶（3-4分）：</b>价格高位，利润见顶，警惕回调风险。<br>
@@ -84,6 +89,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <div class="chart-wrap"><canvas id="demandRecoveryChart"></canvas></div>
     <div class="chart-note">
       <b>内需接棒得分（0-100分）：</b>综合核心CPI、M1-M2剪刀差、PPI环比。<br>
+      <b>计算规则：</b><br>
+      • 核心CPI同比>1% → +33分（消费需求强劲）<br>
+      • M1增速>M2增速（剪刀差>0）→ +33分（企业活跃度提升）<br>
+      • PPI环比>0 → +34分（价格止跌，供需改善）<br>
       <b>0-33分：</b>内需疲弱，依赖外需或政策刺激。<br>
       <b>34-66分：</b>内需逐步接棒，结构性改善。<br>
       <b>67-100分：</b>内需强劲，消费和投资共振，大盘价值风格受益。<br>
