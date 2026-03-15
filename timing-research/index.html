@@ -389,68 +389,6 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 </div>
 
 <script>
-// Chart.js净值曲线渲染
-(async function(){
-  const resp = await fetch('data/seal_diff_nav.json');
-  const data = await resp.json();
-  
-  const dates = data.nav_data.map(d => d.date.substring(4,6)+'/'+d.date.substring(6,8));
-  const strategyNav = data.nav_data.map(d => d.strategy_nav);
-  const benchmarkNav = data.nav_data.map(d => d.benchmark_nav);
-  
-  new Chart(document.getElementById('sealNavChart'), {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [
-        {
-          label: '策略净值',
-          data: strategyNav,
-          borderColor: '#8b5cf6',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.2,
-          fill: false
-        },
-        {
-          label: '沪深300',
-          data: benchmarkNav,
-          borderColor: '#94a3b8',
-          borderWidth: 1.5,
-          borderDash: [4, 4],
-          pointRadius: 0,
-          tension: 0.2,
-          fill: false
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {mode: 'index', intersect: false},
-      plugins: {
-        legend: {display: true, position: 'top', labels: {font: {size: 11}, color: '#64748b'}},
-        tooltip: {
-          callbacks: {
-            label: function(ctx) {
-              return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4);
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {maxTicksLimit: 15, font: {size: 9}, color: '#94a3b8'},
-          grid: {display: false}
-        },
-        y: {
-          ticks: {font: {size: 9}, color: '#94a3b8', callback: v => v.toFixed(2)},
-          grid: {color: '#f1f5f9'}
-        }
-      }
-    }
-  });
-})();
 </script>
 
     </div>
@@ -822,6 +760,72 @@ if (localStorage.getItem('hideUpdateBanner_v3') === 'true') {
   const banner = document.getElementById('updateBanner');
   if (banner) banner.style.display = 'none';
 }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+// Chart.js净值曲线渲染
+(async function(){
+  const resp = await fetch('data/seal_diff_nav.json');
+  const data = await resp.json();
+  
+  const dates = data.nav_data.map(d => d.date.substring(4,6)+'/'+d.date.substring(6,8));
+  const strategyNav = data.nav_data.map(d => d.strategy_nav);
+  const benchmarkNav = data.nav_data.map(d => d.benchmark_nav);
+  
+  new Chart(document.getElementById('sealNavChart'), {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: '策略净值',
+          data: strategyNav,
+          borderColor: '#8b5cf6',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false
+        },
+        {
+          label: '沪深300',
+          data: benchmarkNav,
+          borderColor: '#94a3b8',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {mode: 'index', intersect: false},
+      plugins: {
+        legend: {display: true, position: 'top', labels: {font: {size: 11}, color: '#64748b'}},
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {maxTicksLimit: 15, font: {size: 9}, color: '#94a3b8'},
+          grid: {display: false}
+        },
+        y: {
+          ticks: {font: {size: 9}, color: '#94a3b8', callback: v => v.toFixed(2)},
+          grid: {color: '#f1f5f9'}
+        }
+      }
+    }
+  });
+})();
+});
 </script>
 </body>
 </html>
