@@ -764,6 +764,7 @@ if (localStorage.getItem('hideUpdateBanner_v3') === 'true') {
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 // Chart.js净值曲线渲染
+let sealChart = null;
 (async function(){
   const resp = await fetch('data/seal_diff_nav.json');
   const data = await resp.json();
@@ -772,7 +773,13 @@ document.addEventListener("DOMContentLoaded", function() {
   const strategyNav = data.nav_data.map(d => d.strategy_nav);
   const benchmarkNav = data.nav_data.map(d => d.benchmark_nav);
   
-  new Chart(document.getElementById('sealNavChart'), {
+  const canvas = document.getElementById('sealNavChart');
+  if (!canvas) {
+    console.error('Canvas element not found');
+    return;
+  }
+  
+  sealChart = new Chart(canvas, {
     type: 'line',
     data: {
       labels: dates,
@@ -825,6 +832,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 })();
+
+// 监听tab切换，确保图表可见时重新渲染
+document.addEventListener('click', (e) => {
+  const subBtn = e.target.closest('.subtab-btn');
+  if (subBtn && subBtn.dataset.tab === 'evolution') {
+    setTimeout(() => {
+      if (sealChart) sealChart.resize();
+    }, 100);
+  }
+});
 });
 </script>
 </body>
