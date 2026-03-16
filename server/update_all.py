@@ -177,6 +177,14 @@ MODULES = {
         ],
         'inject_script': None,
     },
+    'timing_factors': {
+        'name': '择时因子系统',
+        'data_scripts': [
+            # 使用绝对路径调用 quant-backtest 项目的脚本
+        ],
+        'inject_script': None,
+        'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py'),
+    },
 }
 
 def log(msg, level='INFO'):
@@ -226,7 +234,35 @@ def update_module(mod_key):
     all_ok = True
     total_time = 0
 
-    # 1. 数据脚本
+    # 1. 外部脚本（如果有）
+    if mod.get('external_script'):
+        external_path = mod['external_script']
+        if not os.path.exists(external_path):
+            log(f"外部脚本不存在: {external_path}", 'ERR')
+            return False, 0
+        
+        log(f"运行外部脚本: {external_path}", 'RUN')
+        t0 = time.time()
+        try:
+            result = subprocess.run(
+                [sys.executable, external_path],
+                cwd=os.path.dirname(external_path),
+                capture_output=True, text=True, timeout=600
+            )
+            elapsed = time.time() - t0
+            if result.returncode != 0:
+                log(f"  失败 ({elapsed:.1f}s): {result.stderr[-200:]}", 'ERR')
+                return False, elapsed
+            log(f"  完成 ({elapsed:.1f}s)", 'OK')
+            total_time += elapsed
+        except subprocess.TimeoutExpired:
+            log(f"  超时 (>600s)", 'ERR')
+            return False, 600
+        except Exception as e:
+            log(f"  异常: {e}", 'ERR')
+            return False, 0
+
+    # 2. 数据脚本
     for subdir, script in mod['data_scripts']:
         ok, t = run_script(subdir, script)
         total_time += t
@@ -235,7 +271,7 @@ def update_module(mod_key):
             log(f"  数据脚本失败，跳过注入", 'ERR')
             return False, total_time
 
-    # 2. 注入脚本
+    # 3. 注入脚本
     if mod.get('inject_script'):
         subdir, script = mod['inject_script']
         ok, t = run_script(subdir, script)
@@ -243,7 +279,7 @@ def update_module(mod_key):
         if not ok:
             all_ok = False
 
-    # 3. 后置注入脚本（可选）
+    # 4. 后置注入脚本（可选）
     if mod.get('post_inject'):
         for subdir, script in mod['post_inject']:
             ok, t = run_script(subdir, script)
