@@ -61,6 +61,7 @@ MODULES = {
             ('env_fit/commodity_cta', 'mod2b_pca_loading.py'),        # 计算 PCA loading
             ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),         # 计算 mod3
             ('env_fit/commodity_cta', 'commodity_cta_main.py'),       # 合并 JSON
+            ('env_fit/commodity_cta', 'cta_return_decomp.py'),        # CTA产品收益归因
         ],
         'inject_script': ('env_fit/commodity_cta', 'inject_commodity_cta.py'),
     },
