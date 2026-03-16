@@ -332,8 +332,140 @@ def get_feishu_token():
     resp = requests.post(url, json=payload)
     return resp.json()["tenant_access_token"]
 
+def generate_feishu_card(fixed_analysis, dynamic_themes, news_count):
+    """生成飞书交互式卡片"""
+    now = datetime.now().strftime("%m-%d %H:%M")
+    
+    # 卡片元素列表
+    elements = []
+    
+    # 标题
+    elements.append({
+        "tag": "div",
+        "text": {
+            "tag": "lark_md",
+            "content": f"**📊 叙事监控 V2** {now} | 分析 {news_count} 条新闻"
+        }
+    })
+    
+    elements.append({"tag": "hr"})
+    
+    # 固定叙事
+    elements.append({
+        "tag": "div",
+        "text": {
+            "tag": "lark_md",
+            "content": "**🔖 固定叙事监控**"
+        }
+    })
+    
+    sorted_fixed = sorted(
+        fixed_analysis.items(),
+        key=lambda x: x[1]['score'],
+        reverse=True
+    )
+    
+    for key, data in sorted_fixed:
+        score = data['score']
+        trend_emoji, _ = get_trend(key, days=7)
+        
+        # 构建内容
+        content = f"**{key}**: {score}/10 {trend_emoji}\n"
+        
+        # 如果有新闻，直接添加到内容里
+        if score >= 3 and data['key_news']:
+            for i, news_title in enumerate(data['key_news'][:3], 1):
+                if news_title:
+                    # 获取完整新闻内容
+                    news_obj = next((n for n in data.get('matched_news_objects', []) if n['title'] == news_title), None)
+                    news_content = news_obj.get('content', '') if news_obj else ''
+                    
+                    # 截取内容前150字
+                    if news_content and news_content != 'nan':
+                        preview = news_content[:150] + "..." if len(news_content) > 150 else news_content
+                        content += f"  {i}. {news_title}\n     _{preview}_\n"
+                    else:
+                        content += f"  {i}. {news_title}\n"
+        
+        elements.append({
+            "tag": "div",
+            "text": {
+                "tag": "lark_md",
+                "content": content
+            }
+        })
+    
+    elements.append({"tag": "hr"})
+    
+    # 动态主题
+    if dynamic_themes:
+        elements.append({
+            "tag": "div",
+            "text": {
+                "tag": "lark_md",
+                "content": "**🆕 今日新兴主题（LLM发现）**"
+            }
+        })
+        
+        for i, theme in enumerate(dynamic_themes, 1):
+            # 构建内容
+            content = f"**{i}. {theme['theme']}** ({theme['count']}条)\n"
+            content += f"关键词: {', '.join(theme['keywords'][:3])}\n"
+            
+            # 添加新闻列表
+            for j, ex in enumerate(theme['examples'][:3], 1):
+                if ex:
+                    content += f"  {j}. {ex}\n"
+            
+            elements.append({
+                "tag": "div",
+                "text": {
+                    "tag": "lark_md",
+                    "content": content
+                }
+            })
+    
+    # 构建完整卡片
+    card = {
+        "config": {
+            "wide_screen_mode": True
+        },
+        "header": {
+            "title": {
+                "tag": "plain_text",
+                "content": "📊 叙事监控 V2"
+            },
+            "template": "blue"
+        },
+        "elements": elements
+    }
+    
+    return card
+
+def send_to_feishu_card(fixed_analysis, dynamic_themes, news_count):
+    """推送交互式卡片到飞书"""
+    token = get_feishu_token()
+    url = "https://open.feishu.cn/open-apis/im/v1/messages"
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    card = generate_feishu_card(fixed_analysis, dynamic_themes, news_count)
+    
+    payload = {
+        "receive_id": RONI_OPEN_ID,
+        "msg_type": "interactive",
+        "content": json.dumps(card)
+    }
+    
+    params = {"receive_id_type": "open_id"}
+    resp = requests.post(url, headers=headers, json=payload, params=params)
+    return resp.json()
+
 def send_to_feishu(report):
-    """推送报告到飞书"""
+    """推送报告到飞书（纯文本，保留作为备用）"""
     token = get_feishu_token()
     url = "https://open.feishu.cn/open-apis/im/v1/messages"
     
@@ -382,13 +514,13 @@ def main():
     save_history(fixed_analysis)
     print(f"✅ 保存历史数据")
     
-    # 6. 生成报告
+    # 6. 生成报告（纯文本，用于保存）
     report = generate_report(fixed_analysis, dynamic_themes, len(news))
     print(f"✅ 生成报告")
     
-    # 7. 推送飞书
-    result = send_to_feishu(report)
-    print(f"✅ 推送飞书: {result.get('code')}")
+    # 7. 推送飞书交互式卡片
+    result = send_to_feishu_card(fixed_analysis, dynamic_themes, len(news))
+    print(f"✅ 推送飞书卡片: {result.get('code')}")
     
     # 8. 保存到本地
     cache_file = CACHE_DIR / f"narrative_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
