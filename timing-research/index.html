@@ -99,6 +99,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
 <div class="page-tabs">
   <button class="page-tab-btn active" data-page="overview">总览</button>
+  <button class="page-tab-btn" data-page="factorsystem">📊 因子系统</button>
   <button class="page-tab-btn" data-page="factorlib">研究方法 / 因子库</button>
   <button class="page-tab-btn" data-page="research">命题研究</button>
   <button class="page-tab-btn" data-page="exposure">敞口输出</button>
@@ -115,6 +116,15 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     <div id="fluidFrameworkChart" class="chart"></div>
     <div class="path-tip">提示：点节点可以直接跳到对应 Tab。</div>
   </div>
+</div>
+
+<div id="factorsystem" class="page-pane">
+  <div class="card hero">
+    <div class="kicker">每日更新</div>
+    <h2>📊 因子系统 - 最新因子值 + IC值</h2>
+    <div class="note">每天下午5点自动更新，展示10个核心因子的最新值和IC值（信息系数）。<br><br><b>数据：</b>2019-01-02 ~ 最新（1741天）· <b>标的：</b>沪深300 · <b>更新频率：</b>每日盘后</div>
+  </div>
+  <iframe src="factor_system.html" style="width:100%; height:2000px; border:none; border-radius:12px;"></iframe>
 </div>
 
 <div id="factorlib" class="page-pane">
