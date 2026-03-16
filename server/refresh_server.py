@@ -489,6 +489,45 @@ class Handler(BaseHTTPRequestHandler):
             })
         
         self._json(200, notes)
+
+    def _serve_narrative_latest(self):
+        """返回最新的叙事监控数据"""
+        from pathlib import Path
+        from datetime import datetime
+        
+        cache_dir = Path(BASE_DIR) / "daily_report" / "meme交易" / "cache"
+        
+        # 找到最新的narrative文件
+        narrative_files = sorted(cache_dir.glob("narrative_*.json"))
+        if not narrative_files:
+            self._json(404, {"error": "No data available"})
+            return
+        
+        latest_file = narrative_files[-1]
+        
+        try:
+            with open(latest_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # 提取时间戳
+            filename = latest_file.stem  # narrative_20260316_2315
+            parts = filename.split('_')
+            if len(parts) >= 3:
+                timestamp = datetime.strptime(parts[1] + parts[2], '%Y%m%d%H%M').strftime('%Y-%m-%d %H:%M')
+            else:
+                timestamp = "Unknown"
+            
+            # 格式化数据
+            result = {
+                "timestamp": timestamp,
+                "news_count": data.get("news_count", 0),
+                "fixed_analysis": data.get("fixed_analysis", {}),
+                "dynamic_themes": data.get("dynamic_themes", [])
+            }
+            
+            self._json(200, result)
+        except Exception as e:
+            self._json(500, {"error": str(e)})
         return user
 
     def _client_ip(self):
@@ -563,6 +602,9 @@ class Handler(BaseHTTPRequestHandler):
                 'progress': state['progress'],
                 'modules': {k: v['name'] for k, v in MODULES.items()},
             })
+        elif self.path == '/api/narrative_latest':
+            # 叙事监控最新数据
+            self._serve_narrative_latest()
         elif self.path == '/api/notes':
             # Smart Notes API - 动态加载笔记
             self._serve_notes_list()

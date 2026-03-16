@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>叙事监控 V2</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .header .meta {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .narrative-item {
+            border-left: 3px solid #e2e8f0;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .narrative-item.high { border-left-color: #ef4444; }
+        .narrative-item.medium { border-left-color: #f59e0b; }
+        .narrative-item.low { border-left-color: #94a3b8; }
+        .narrative-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .narrative-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .narrative-score {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .news-list {
+            margin-top: 12px;
+        }
+        .news-item {
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .news-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .news-title {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .news-content {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+            display: none;
+        }
+        .news-item.expanded .news-content {
+            display: block;
+        }
+        .keywords {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 6px;
+            font-size: 11px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 叙事监控 V2</h1>
+            <div class="meta" id="meta">加载中...</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔖 固定叙事监控</div>
+            <div id="fixed-narratives" class="loading">加载中...</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🆕 今日新兴主题（LLM发现）</div>
+            <div id="dynamic-themes" class="loading">加载中...</div>
+        </div>
+    </div>
+
+    <script>
+        // 加载最新数据
+        async function loadData() {
+            try {
+                const response = await fetch('/api/narrative_latest');
+                const data = await response.json();
+                
+                // 更新元信息
+                document.getElementById('meta').textContent = 
+                    `最后更新: ${data.timestamp} | 分析 ${data.news_count} 条新闻`;
+                
+                // 渲染固定叙事
+                renderFixedNarratives(data.fixed_analysis);
+                
+                // 渲染动态主题
+                renderDynamicThemes(data.dynamic_themes);
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                document.getElementById('fixed-narratives').innerHTML = 
+                    '<div style="color:#ef4444">加载失败，请刷新页面重试</div>';
+            }
+        }
+
+        function renderFixedNarratives(analysis) {
+            const container = document.getElementById('fixed-narratives');
+            const sorted = Object.entries(analysis).sort((a, b) => b[1].score - a[1].score);
+            
+            container.innerHTML = sorted.map(([key, data]) => {
+                const level = data.score >= 7 ? 'high' : data.score >= 4 ? 'medium' : 'low';
+                const newsHtml = data.key_news && data.key_news.length > 0 ? `
+                    <div class="news-list">
+                        ${data.key_news.map((news, i) => `
+                            <div class="news-item" onclick="this.classList.toggle('expanded')">
+                                <div class="news-title">${i + 1}. ${news.title || news}</div>
+                                ${news.content ? `<div class="news-content">${news.content}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+                
+                return `
+                    <div class="narrative-item ${level}">
+                        <div class="narrative-header">
+                            <div class="narrative-name">${key}</div>
+                            <div class="narrative-score">${data.score}/10</div>
+                        </div>
+                        ${newsHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderDynamicThemes(themes) {
+            const container = document.getElementById('dynamic-themes');
+            
+            if (!themes || themes.length === 0) {
+                container.innerHTML = '<div style="color:#64748b">暂无数据</div>';
+                return;
+            }
+            
+            container.innerHTML = themes.map((theme, i) => `
+                <div class="narrative-item medium">
+                    <div class="narrative-header">
+                        <div class="narrative-name">${i + 1}. ${theme.theme}</div>
+                        <div class="narrative-score">${theme.count}条</div>
+                    </div>
+                    <div class="keywords">
+                        ${theme.keywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('')}
+                    </div>
+                    <div class="news-list">
+                        ${theme.examples.map((ex, j) => `
+                            <div class="news-item">
+                                <div class="news-title">${j + 1}. ${ex}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 页面加载时获取数据
+        loadData();
+        
+        // 每5分钟自动刷新
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
