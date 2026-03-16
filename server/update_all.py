@@ -55,7 +55,10 @@ MODULES = {
         'data_scripts': [
             ('env_fit/commodity_cta', 'commodity_data.py'),           # 拉数据
             ('env_fit/commodity_cta', 'mod1_cta_env.py'),             # 计算 mod1
+            ('env_fit/commodity_cta', 'mod1b_pca_engine.py'),         # 计算 PCA引擎
+            ('env_fit/commodity_cta', 'mod1c_market_vol.py'),         # 计算市场波动率
             ('env_fit/commodity_cta', 'mod2_trend_scan.py'),          # 计算 mod2
+            ('env_fit/commodity_cta', 'mod2b_pca_loading.py'),        # 计算 PCA loading
             ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),         # 计算 mod3
             ('env_fit/commodity_cta', 'commodity_cta_main.py'),       # 合并 JSON
         ],
