@@ -415,17 +415,24 @@ def fit_commodity_cta(config):
     
     cta = load("env_fit/commodity_cta/commodity_cta.json")
     if cta:
-        # Mod1: CTA环境
-        mod1 = cta.get("mod1_cta_env", {})
-        summary = mod1.get("summary", {})
-        trend_up = summary.get("trend_up", 0) if isinstance(summary, dict) else 0
-        total = summary.get("total", 1) if isinstance(summary, dict) else 1
-        if isinstance(summary, str):
-            # parse "0/1品种趋势向上" pattern
-            import re
-            m = re.search(r'(\d+)/(\d+)', summary)
-            if m:
-                trend_up, total = int(m.group(1)), int(m.group(2))
+        # Mod2: 趋势扫描（优先使用，数据更详细）
+        mod2 = cta.get("mod2_trend_scan", {})
+        syms = mod2.get("symbols", [])
+        trend_up = 0
+        trend_down = 0
+        total = 0
+        
+        if syms:
+            trend_up = sum(1 for s in syms if isinstance(s, dict) and s.get("trend_dir") == "多头")
+            trend_down = sum(1 for s in syms if isinstance(s, dict) and s.get("trend_dir") == "空头")
+            total = len(syms)
+        
+        # 如果 mod2 没有数据，回退到 mod1
+        if total == 0:
+            mod1 = cta.get("mod1_cta_env", {})
+            summary = mod1.get("summary", {})
+            trend_up = summary.get("trend_count", 0) if isinstance(summary, dict) else 0
+            total = summary.get("n_active", 1) if isinstance(summary, dict) else 1
         
         ratio = trend_up / max(total, 1)
         if ratio > 0.6:
@@ -438,13 +445,9 @@ def fit_commodity_cta(config):
             score -= 15
             signals.append(f"{trend_up}/{total}品种趋势向上，趋势弱 🔴")
 
-        # Mod2: 趋势扫描
-        mod2 = cta.get("mod2_trend_scan", {})
-        syms = mod2.get("symbols", [])
+        # 添加详细的趋势扫描信息
         if syms:
-            strong = sum(1 for s in syms if isinstance(s, dict) and s.get("trend") == "up")
-            weak = sum(1 for s in syms if isinstance(s, dict) and s.get("trend") == "down")
-            signals.append(f"趋势扫描: {strong}个向上, {weak}个向下")
+            signals.append(f"趋势扫描: {trend_up}个向上, {trend_down}个向下")
 
         # Mod3: 宏观比值
         mod3 = cta.get("mod3_macro_ratio", {})
