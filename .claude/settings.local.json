@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la /Users/apple/Desktop/gamt-dashboard/macro/*/)",
+      "Bash(git -C /Users/apple/Desktop/gamt-dashboard log --oneline)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d[-3:] if isinstance\\(d, list\\) else list\\(d.items\\(\\)\\)[:5], ensure_ascii=False, indent=2\\)\\)\")",
+      "Bash(mkdir -p \"/Users/apple/Desktop/claude code记忆\")",
+      "Bash(mkdir -p \"/Users/apple/Desktop/quant-backtest/sessions\")",
+      "Bash(grep -r \"webhook\\\\|WEBHOOK\\\\|feishu\\\\|lark\\\\|https://open.feishu\\\\|chat.lark\" /Users/apple/Desktop/gamt-dashboard/ --include=*.py -l)",
+      "Bash(python3 quant-backtest/scripts/momentum_signal.py --dry)"
+    ]
+  }
+}
