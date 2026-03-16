@@ -524,13 +524,21 @@ def main():
     
     # 8. 保存到本地
     cache_file = CACHE_DIR / f"narrative_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
+    latest_file = CACHE_DIR / "narrative_latest.json"
+    
+    output_data = {
+        "fixed_analysis": {k: {**v, 'matched_news_objects': None} for k, v in fixed_analysis.items()},
+        "dynamic_themes": dynamic_themes,
+        "report": report,
+        "news_count": len(news)
+    }
+    
     with open(cache_file, 'w', encoding='utf-8') as f:
-        json.dump({
-            "fixed_analysis": {k: {**v, 'matched_news_objects': None} for k, v in fixed_analysis.items()},
-            "dynamic_themes": dynamic_themes,
-            "report": report,
-            "news_count": len(news)
-        }, f, ensure_ascii=False, indent=2)
+        json.dump(output_data, f, ensure_ascii=False, indent=2)
+    
+    # 同时保存最新版本供前端读取
+    with open(latest_file, 'w', encoding='utf-8') as f:
+        json.dump(output_data, f, ensure_ascii=False, indent=2)
     
     print(f"✅ 完成！")
 

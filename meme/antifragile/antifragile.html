@@ -392,6 +392,20 @@ new Chart(document.getElementById('medianChart'),{
     <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">🔍观察</span> 热度偏低，暂无信号</span>
   </div>
 
+  <!-- 今日新兴主题（LLM动态发现） -->
+  <div id="dynamic-themes-section" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">🔍 今日新兴主题</h3>
+      <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新）</span>
+    </div>
+    <div id="dynamic-themes-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
+      <!-- 动态主题卡片将在这里渲染 -->
+    </div>
+    <div id="dynamic-themes-error" style="display:none;color:#94a3b8;font-size:12px;padding:12px 0;">
+      暂无新兴主题数据
+    </div>
+  </div>
+
   <!-- 数据说明脚注 -->
   <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
     数据来源：Tushare 财经新闻关键词频次（wallstreetcn / cls / sina），每日更新。
@@ -602,6 +616,52 @@ new Chart(document.getElementById('medianChart'),{
     .catch(function(e) {
       console.warn('lifecycle_output.json 加载失败:', e);
       document.getElementById('lc-error').style.display = 'block';
+    });
+
+  // ─── 加载今日新兴主题（动态主题） ───
+  fetch('../../daily_report/meme交易/cache/narrative_latest.json')
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(data) {
+      var themes = data.dynamic_themes || [];
+      if (themes.length === 0) {
+        document.getElementById('dynamic-themes-error').style.display = 'block';
+        return;
+      }
+
+      var html = '';
+      themes.forEach(function(theme) {
+        var name = theme.theme || '未命名主题';
+        var count = theme.count || 0;
+        var keywords = (theme.keywords || []).join('、');
+        var examples = theme.examples || [];
+        
+        // 根据新闻数量判断热度颜色
+        var heatColor = count >= 20 ? '#dc2626' : count >= 10 ? '#ea580c' : '#64748b';
+        
+        html += '<div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid ' + heatColor + ';">';
+        html += '  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+        html += '    <span style="font-size:13px;font-weight:600;color:#1e293b;">' + name + '</span>';
+        html += '    <span style="margin-left:auto;font-size:11px;color:' + heatColor + ';font-weight:600;">' + count + '条新闻</span>';
+        html += '  </div>';
+        html += '  <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：' + keywords + '</p>';
+        
+        // 显示示例新闻（最多2条）
+        if (examples.length > 0) {
+          html += '  <div style="font-size:11px;color:#64748b;line-height:1.6;">';
+          examples.slice(0, 2).forEach(function(ex) {
+            html += '    <div style="margin-bottom:4px;">• ' + ex + '</div>';
+          });
+          html += '  </div>';
+        }
+        
+        html += '</div>';
+      });
+      
+      document.getElementById('dynamic-themes-content').innerHTML = html;
+    })
+    .catch(function(e) {
+      console.warn('动态主题加载失败:', e);
+      document.getElementById('dynamic-themes-error').style.display = 'block';
     });
 })();
 </script>
