@@ -148,6 +148,13 @@ MODULES = {
         ],
         'inject_script': None,
     },
+    'narrative_monitor': {
+        'name': '叙事监控',
+        'data_scripts': [
+            ('daily_report/meme交易', 'narrative_monitor.py'),    # 拉取新闻并生成 narrative_history.json
+        ],
+        'inject_script': None,
+    },
     'narrative_lifecycle': {
         'name': '叙事生命周期',
         'data_scripts': [
