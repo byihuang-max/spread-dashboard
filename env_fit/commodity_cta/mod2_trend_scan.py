@@ -366,8 +366,14 @@ def compute_scan(series):
 
     results.sort(key=lambda x: x['trend_score'], reverse=True)
 
+    from datetime import datetime
     latest_date = max(d['date'] for data in series.values() for d in data)
-    return {'scan_date': latest_date, 'n_scanned': len(results), 'symbols': results}
+    return {
+        'scan_date': latest_date,
+        'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'n_scanned': len(results),
+        'symbols': results
+    }
 
 
 def write_output(result):

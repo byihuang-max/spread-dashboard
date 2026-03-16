@@ -597,10 +597,14 @@ def build_html(data):
         pc1_exp = pca_ld.get('pc1_explained', 0)
         pc2_exp = pca_ld.get('pc2_explained', 0)
 
+        pca_update_time = pca_ld.get('update_time', '')
         html += f'''
       <!-- ═══ PCA Loading品种扫描（主角） ═══ -->
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> PCA品种结构分析</div>
+        <div class="card-title">
+          <span class="dot" style="background:#8b5cf6"></span> PCA品种结构分析
+          {f'<span style="font-size:10px;color:#94a3b8;font-weight:400;margin-left:8px">更新: {pca_update_time}</span>' if pca_update_time else ''}
+        </div>
         <div style="font-size:11px;color:#94a3b8;margin-bottom:12px">
           PC1解释{pc1_exp:.1%} · PC2解释{pc2_exp:.1%} · 分化轴: <b style="color:#64748b">{divergence}</b>
         </div>
@@ -693,8 +697,9 @@ def build_html(data):
 
     # ─── Section 4: mod2 传统品种扫描（可折叠，默认收起）───
     top_symbols = symbols_list[:15]
+    scan_update_time = scan.get('update_time', '')
 
-    html += '''
+    html += f'''
       <!-- ═══ 传统品种趋势扫描（可折叠） ═══ -->
       <div class="card" style="padding:0;overflow:hidden">
         <div onclick="this.parentElement.classList.toggle('collapsed-section')" 
@@ -702,9 +707,10 @@ def build_html(data):
           <div style="display:flex;align-items:center;gap:8px">
             <span class="dot" style="background:#94a3b8"></span>
             <span style="font-size:13px;font-weight:600;color:#64748b">传统品种趋势扫描（涨跌幅驱动）</span>
+            {f'<span style="font-size:10px;color:#94a3b8;font-weight:400;margin-left:8px">更新: {scan_update_time}</span>' if scan_update_time else ''}
             <span style="font-size:11px;color:#94a3b8">点击展开</span>
           </div>
-          <span style="font-size:12px;color:#94a3b8">''' + str(len(symbols_list)) + ''' 品种</span>
+          <span style="font-size:12px;color:#94a3b8">{len(symbols_list)} 品种</span>
         </div>
         <div class="collapsible-content" style="display:none;padding:16px">
         <div style="overflow-x:auto">

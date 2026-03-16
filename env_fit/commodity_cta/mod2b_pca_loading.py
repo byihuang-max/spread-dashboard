@@ -194,8 +194,10 @@ def analyze_loadings(pca_data, prices):
     else:
         divergence_desc = '无明显分化'
 
+    from datetime import datetime
     return {
         'date': date,
+        'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'pc1_explained': pc1_explained,
         'pc2_explained': pc2_explained,
         'n_symbols': len(enhanced),
