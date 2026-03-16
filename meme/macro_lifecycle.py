@@ -87,13 +87,20 @@ def load_latest_key_news() -> dict:
     try:
         with open(files[0], "r", encoding="utf-8") as f:
             data = json.load(f)
-        analysis = data.get("analysis", {})
+        # V2版本用 fixed_analysis，兼容旧版 analysis
+        analysis = data.get("fixed_analysis") or data.get("analysis", {})
         result = {}
         for key, val in analysis.items():
+            # V2版本 key_news 是对象列表，旧版是字符串列表
             raw = val.get("key_news", [])
             seen, deduped = set(), []
-            for title in raw:
-                t = str(title).strip()
+            for item in raw:
+                # 兼容新旧格式
+                if isinstance(item, dict):
+                    title = item.get("title", "")
+                else:
+                    title = str(item)
+                t = title.strip()
                 if t and t != "nan" and t not in seen:
                     seen.add(t)
                     deduped.append(t)
@@ -102,7 +109,7 @@ def load_latest_key_news() -> dict:
             result[key] = {
                 "key_news":      deduped,
                 "matched_count": val.get("matched_count", None),
-                "total_news":    val.get("total_news", None),
+                "total_news":    data.get("news_count", None),
             }
         return result
     except Exception as e:
