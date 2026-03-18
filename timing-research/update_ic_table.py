@@ -51,9 +51,9 @@ for factor in factor_order:
         color_class = ''
     
     row = f'      <tr><td style="text-align:left">{name}</td>'
-    row += f'<td class="{color_class if ic_20d > 0 else "style=color:#ff7b72"}">{ic_5d:+.4f}</td>'
-    row += f'<td class="{color_class if ic_20d > 0 else "style=color:#ff7b72"}">{ic_10d:+.4f}</td>'
-    row += f'<td class="{color_class if ic_20d > 0 else "style=color:#ff7b72"}">{ic_20d:+.4f}</td>'
+    row += f'<td class="{"green" if ic_5d > 0 else ""}" style="{"color:#ff7b72" if ic_5d < 0 else ""}">{ic_5d:+.4f}</td>'
+    row += f'<td class="{"green" if ic_10d > 0 else ""}" style="{"color:#ff7b72" if ic_10d < 0 else ""}">{ic_10d:+.4f}</td>'
+    row += f'<td class="{"green" if ic_20d > 0 else ""}" style="{"color:#ff7b72" if ic_20d < 0 else ""}">{ic_20d:+.4f}</td>'
     row += f'<td>{icir_20d:.2f}</td>'
     row += f'<td>{direction}</td></tr>'
     rows.append(row)
