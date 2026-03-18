@@ -253,8 +253,16 @@ const factorsData = {"sentiment": [50.37, 57.15, 31.23, 68.55, 39.5, 35.08, 50.6
 const sentimentChart = echarts.init(document.getElementById('sentimentChart'));
 sentimentChart.setOption({
   backgroundColor: 'transparent',
-  grid: { left: 60, right: 40, top: 40, bottom: 60 },
-  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  grid: { left: 60, right: 40, top: 40, bottom: 80 },
+  xAxis: { 
+    type: 'category', 
+    data: dates, 
+    axisLabel: { 
+      color: '#8ea0bb',
+      interval: Math.floor(dates.length / 10),
+      rotate: 30
+    } 
+  },
   yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
   series: [{
     name: '综合情绪',
@@ -271,8 +279,16 @@ sentimentChart.setOption({
 const limitChart = echarts.init(document.getElementById('limitChart'));
 limitChart.setOption({
   backgroundColor: 'transparent',
-  grid: { left: 60, right: 40, top: 40, bottom: 60 },
-  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  grid: { left: 60, right: 40, top: 40, bottom: 80 },
+  xAxis: { 
+    type: 'category', 
+    data: dates, 
+    axisLabel: { 
+      color: '#8ea0bb',
+      interval: Math.floor(dates.length / 10),
+      rotate: 30
+    } 
+  },
   yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
   series: [
     {
@@ -296,8 +312,16 @@ limitChart.setOption({
 const relayChart = echarts.init(document.getElementById('relayChart'));
 relayChart.setOption({
   backgroundColor: 'transparent',
-  grid: { left: 60, right: 40, top: 40, bottom: 60 },
-  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  grid: { left: 60, right: 40, top: 40, bottom: 80 },
+  xAxis: { 
+    type: 'category', 
+    data: dates, 
+    axisLabel: { 
+      color: '#8ea0bb',
+      interval: Math.floor(dates.length / 10),
+      rotate: 30
+    } 
+  },
   yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
   series: [
     {
@@ -323,8 +347,16 @@ relayChart.setOption({
 const sealDiffChart = echarts.init(document.getElementById('sealDiffChart'));
 sealDiffChart.setOption({
   backgroundColor: 'transparent',
-  grid: { left: 60, right: 40, top: 40, bottom: 60 },
-  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  grid: { left: 60, right: 40, top: 40, bottom: 80 },
+  xAxis: { 
+    type: 'category', 
+    data: dates, 
+    axisLabel: { 
+      color: '#8ea0bb',
+      interval: Math.floor(dates.length / 10),
+      rotate: 30
+    } 
+  },
   yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
   series: [{
     name: '封单额轧差',
