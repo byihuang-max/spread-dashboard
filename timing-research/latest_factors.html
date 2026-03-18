@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📊 因子系统 | GAMT 择时研究</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;
+  background: linear-gradient(180deg,#06122b 0%,#071127 45%,#060d18 100%);
+  color:#c8d6e5; line-height:1.65;
+}
+.wrapper { max-width:1540px; margin:0 auto; padding:24px; }
+.header { text-align:center; padding:24px 0 18px; }
+.header h1 { font-size:36px; font-weight:800; background:linear-gradient(135deg,#59e0c5,#5daeff,#8b7dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .sub { color:#7f8ea8; font-size:14px; margin-top:10px; }
+.update-time { text-align:center; color:#5ad9c3; font-size:13px; margin-bottom:20px; }
+.card { background:rgba(10,20,39,0.82); border:1px solid #1f2d47; border-radius:20px; padding:24px; margin-bottom:20px; box-shadow:0 16px 44px rgba(0,0,0,.24); }
+.card h2 { font-size:18px; font-weight:700; color:#e2e8f0; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #1f2d47; }
+.grid-5 { display:grid; grid-template-columns:repeat(5, 1fr); gap:16px; }
+.factor-card { background:#0c1830; border:1px solid #2a3a58; border-radius:12px; padding:16px; text-align:center; }
+.factor-name { font-size:13px; color:#8ea0bb; margin-bottom:8px; }
+.factor-value { font-size:28px; font-weight:700; color:#59e0c5; }
+.factor-label { font-size:12px; color:#7f8ea8; margin-top:4px; }
+.chart { width:100%; height:400px; }
+.back-btn { position:fixed; top:20px; left:20px; z-index:100; background:rgba(10,20,39,0.95); border:1px solid #2a3a58; color:#5daeff; padding:10px 18px; border-radius:12px; text-decoration:none; font-size:13px; font-weight:600; }
+.back-btn:hover { border-color:#60a5fa; background:rgba(15,25,45,0.98); }
+.ic-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:16px; }
+.ic-table th { background:#13233f; color:#8ea0bb; padding:10px 8px; text-align:center; font-weight:600; }
+.ic-table td { padding:8px; border-bottom:1px solid #1f2d47; text-align:center; }
+.ic-positive { color:#59e0c5; font-weight:600; }
+.ic-negative { color:#ff6b6b; font-weight:600; }
+.ic-strong { background:#173c6530; }
+@media (max-width:980px) { .grid-5 { grid-template-columns:repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<a href="../index.html" class="back-btn">← 返回择时研究</a>
+<div class="wrapper">
+<div class="header">
+  <h1>📊 因子系统</h1>
+  <div class="sub">GAMT 择时研究 · 每日更新因子值 + IC值</div>
+</div>
+
+<div class="update-time">
+  📅 更新时间: 20260317 · 数据来源: Tushare Pro · 样本: 1742 天
+</div>
+
+<div class="card">
+  <h2>🎯 最新因子值</h2>
+  <div class="grid-5">
+    <div class="factor-card">
+      <div class="factor-name">综合情绪</div>
+      <div class="factor-value">13.2</div>
+      <div class="factor-label">0-100分</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">涨停家数</div>
+      <div class="factor-value">39</div>
+      <div class="factor-label">只</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">跌停家数</div>
+      <div class="factor-value">10</div>
+      <div class="factor-label">只</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">连板高度</div>
+      <div class="factor-value">0</div>
+      <div class="factor-label">板</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">晋级率</div>
+      <div class="factor-value">0.0%</div>
+      <div class="factor-label">昨涨停→今涨停</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">炸板率</div>
+      <div class="factor-value">43.6%</div>
+      <div class="factor-label">封板后打开</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">涨跌停比</div>
+      <div class="factor-value">3.9</div>
+      <div class="factor-label">涨停/跌停</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">封板质量</div>
+      <div class="factor-value">0.0%</div>
+      <div class="factor-label">大市值占比</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">一进二率</div>
+      <div class="factor-value">0.0%</div>
+      <div class="factor-label">首板→连板</div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-name">封单额轧差</div>
+      <div class="factor-value">386.5</div>
+      <div class="factor-label">亿元</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📊 因子IC值（信息系数）</h2>
+  <div style="font-size:13px;color:#8ea0bb;margin-bottom:12px">
+    IC = 因子值和未来N天沪深300收益的相关性 · IC>0趋势型 · IC<0反转型 · |IC|>0.03有参考价值
+  </div>
+  <table class="ic-table">
+    <tr>
+      <th>因子</th>
+      <th>5日IC</th>
+      <th>5日ICIR</th>
+      <th>10日IC</th>
+      <th>10日ICIR</th>
+      <th>20日IC</th>
+      <th>20日ICIR</th>
+      <th>方向</th>
+    </tr>
+    <tr class="ic-strong">
+      <td style="text-align:left">跌停家数</td>
+      <td class="ic-positive">0.1294</td>
+      <td>0.87</td>
+      <td class="ic-positive">0.0933</td>
+      <td>0.77</td>
+      <td class="ic-positive">0.0791</td>
+      <td>0.58</td>
+      <td>✅ 趋势</td>
+    </tr>
+    <tr class="ic-strong">
+      <td style="text-align:left">晋级率</td>
+      <td class="ic-negative">-0.0028</td>
+      <td>-0.21</td>
+      <td class="ic-positive">0.0636</td>
+      <td>0.13</td>
+      <td class="ic-positive">0.0542</td>
+      <td>0.07</td>
+      <td>✅ 趋势</td>
+    </tr>
+    <tr class="ic-strong">
+      <td style="text-align:left">封单额轧差</td>
+      <td class="ic-positive">0.0320</td>
+      <td>-0.57</td>
+      <td class="ic-positive">0.0992</td>
+      <td>-0.35</td>
+      <td class="ic-positive">0.0509</td>
+      <td>-0.66</td>
+      <td>✅ 趋势</td>
+    </tr>
+    <tr class="">
+      <td style="text-align:left">炸板率</td>
+      <td class="ic-positive">0.0652</td>
+      <td>0.40</td>
+      <td class="ic-positive">0.0577</td>
+      <td>0.30</td>
+      <td class="ic-positive">0.0477</td>
+      <td>0.22</td>
+      <td>✅ 趋势</td>
+    </tr>
+    <tr class="">
+      <td style="text-align:left">综合情绪</td>
+      <td class="ic-negative">-0.0423</td>
+      <td>-0.56</td>
+      <td class="ic-positive">0.0330</td>
+      <td>-0.17</td>
+      <td class="ic-positive">0.0300</td>
+      <td>-0.21</td>
+      <td>—</td>
+    </tr>
+    <tr class="">
+      <td style="text-align:left">涨停家数</td>
+      <td class="ic-positive">0.0077</td>
+      <td>-0.21</td>
+      <td class="ic-positive">0.0426</td>
+      <td>-0.10</td>
+      <td class="ic-positive">0.0049</td>
+      <td>-0.24</td>
+      <td>—</td>
+    </tr>
+    <tr class="">
+      <td style="text-align:left">连板高度</td>
+      <td class="ic-negative">-0.0268</td>
+      <td>-0.06</td>
+      <td class="ic-negative">-0.0072</td>
+      <td>0.09</td>
+      <td class="ic-negative">-0.0209</td>
+      <td>0.29</td>
+      <td>—</td>
+    </tr>
+    <tr class="">
+      <td style="text-align:left">封板质量</td>
+      <td class="ic-negative">-0.0368</td>
+      <td>-0.46</td>
+      <td class="ic-negative">-0.0201</td>
+      <td>-0.41</td>
+      <td class="ic-negative">-0.0443</td>
+      <td>-0.52</td>
+      <td>⚠️ 反向</td>
+    </tr>
+    <tr class="ic-strong">
+      <td style="text-align:left">一进二率</td>
+      <td class="ic-negative">-0.0406</td>
+      <td>0.02</td>
+      <td class="ic-negative">-0.0297</td>
+      <td>0.21</td>
+      <td class="ic-negative">-0.0679</td>
+      <td>0.11</td>
+      <td>⚠️ 反向</td>
+    </tr>
+    <tr class="ic-strong">
+      <td style="text-align:left">涨跌停比</td>
+      <td class="ic-negative">-0.1045</td>
+      <td>-0.70</td>
+      <td class="ic-negative">-0.0659</td>
+      <td>-0.58</td>
+      <td class="ic-negative">-0.0733</td>
+      <td>-0.57</td>
+      <td>⚠️ 反向</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>📈 综合情绪指数（近60天）</h2>
+  <div id="sentimentChart" class="chart"></div>
+</div>
+
+<div class="card">
+  <h2>📊 涨跌停家数（近60天）</h2>
+  <div id="limitChart" class="chart"></div>
+</div>
+
+<div class="card">
+  <h2>🔄 接力情绪（近60天）</h2>
+  <div id="relayChart" class="chart"></div>
+</div>
+
+<div class="card">
+  <h2>💰 封单额轧差（近60天）</h2>
+  <div id="sealDiffChart" class="chart"></div>
+</div>
+
+</div>
+
+<script>
+const dates = ["20251209", "20251210", "20251211", "20251212", "20251215", "20251216", "20251217", "20251218", "20251219", "20251222", "20251223", "20251224", "20251225", "20251226", "20251229", "20251230", "20251231", "20260105", "20260106", "20260107", "20260108", "20260109", "20260112", "20260113", "20260114", "20260115", "20260116", "20260119", "20260120", "20260121", "20260122", "20260123", "20260126", "20260127", "20260128", "20260129", "20260130", "20260202", "20260203", "20260204", "20260205", "20260206", "20260209", "20260210", "20260211", "20260212", "20260213", "20260224", "20260225", "20260226", "20260227", "20260302", "20260303", "20260304", "20260305", "20260306", "20260309", "20260310", "20260316", "20260317"];
+const factorsData = {"sentiment": [50.37, 57.15, 31.23, 68.55, 39.5, 35.08, 50.67, 60.42, 55.25, 65.77, 53.46, 77.83, 78.35, 83.58, 63.88, 54.13, 63.83, 71.96, 86.91, 60.5, 84.5, 67.21, 91.12, 40.96, 50.89, 36.71, 33.63, 48.31, 35.08, 48.62, 55.87, 61.62, 38.12, 67.52, 68.27, 69.42, 22.42, 19.6, 67.83, 48.06, 29.98, 31.04, 65.0, 65.9, 49.67, 67.69, 36.0, 48.27, 51.94, 20.25, 65.69, 20.6, 35.48, 29.92, 36.83, 20.96, 33.56, 50.5, 14.68, 13.23], "up_count": [53, 57, 34, 78, 59, 42, 49, 61, 70, 80, 54, 76, 79, 82, 72, 54, 57, 108, 120, 80, 92, 94, 183, 66, 102, 55, 58, 88, 54, 79, 73, 104, 70, 53, 80, 82, 48, 36, 69, 68, 44, 55, 83, 60, 51, 60, 32, 92, 75, 0, 75, 0, 82, 44, 69, 0, 42, 56, 44, 39], "down_count": [7, 3, 19, 15, 9, 15, 19, 4, 1, 8, 9, 4, 0, 1, 16, 13, 6, 8, 1, 3, 3, 1, 3, 49, 14, 63, 46, 23, 16, 4, 2, 0, 30, 2, 5, 11, 52, 98, 9, 5, 14, 5, 3, 2, 5, 13, 12, 15, 3, 0, 0, 0, 53, 11, 3, 0, 3, 4, 5, 10], "max_height": [6, 6, 5, 5, 6, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 10, 6, 6, 7, 8, 9, 10, 11, 12, 5, 4, 5, 4, 3, 4, 4, 5, 5, 6, 7, 8, 5, 3, 4, 4, 4, 3, 4, 3, 4, 4, 5, 4, 5, 0, 7, 0, 3, 4, 2, 0, 4, 5, 0, 0], "promotion_rate": [22.97, 30.19, 15.79, 38.24, 16.67, 20.34, 19.05, 34.69, 24.59, 22.86, 21.25, 25.93, 28.95, 27.85, 21.95, 25.0, 22.22, 24.56, 38.89, 19.17, 32.5, 20.65, 45.74, 15.85, 28.79, 13.73, 10.91, 17.24, 13.64, 14.81, 21.52, 15.07, 14.42, 20.0, 18.87, 23.75, 8.54, 20.83, 27.78, 17.39, 14.71, 18.18, 25.45, 25.3, 18.33, 33.33, 8.33, 21.88, 19.57, 0.0, 0.0, 0.0, 0.0, 7.32, 15.91, 0.0, 0.0, 14.29, 4.76, 0.0], "zha_rate": [30.26, 32.94, 44.26, 13.33, 35.87, 31.15, 28.99, 23.75, 23.91, 28.57, 28.0, 21.65, 23.3, 19.61, 26.53, 32.5, 25.0, 19.4, 17.24, 35.48, 23.97, 32.86, 20.78, 48.44, 36.65, 24.66, 40.21, 18.52, 21.74, 24.04, 27.0, 14.75, 36.36, 25.35, 24.53, 29.91, 30.43, 33.33, 20.69, 21.84, 18.52, 32.1, 23.85, 11.76, 25.0, 24.05, 25.58, 31.34, 31.82, 0.0, 16.67, 0.0, 22.64, 30.16, 30.3, 0.0, 44.74, 28.21, 54.55, 43.59], "ud_ratio": [7.57, 19.0, 1.79, 5.2, 6.56, 2.8, 2.58, 15.25, 20.0, 10.0, 6.0, 19.0, 20.0, 20.0, 4.5, 4.15, 9.5, 13.5, 20.0, 20.0, 20.0, 20.0, 20.0, 1.35, 7.29, 0.87, 1.26, 3.83, 3.38, 19.75, 20.0, 20.0, 2.33, 20.0, 16.0, 7.45, 0.92, 0.37, 7.67, 13.6, 3.14, 11.0, 20.0, 20.0, 10.2, 4.62, 2.67, 6.13, 20.0, 0.0, 20.0, 0.0, 1.55, 4.0, 20.0, 0.0, 14.0, 14.0, 8.8, 3.9], "seal_quality": [41.51, 56.14, 52.94, 51.28, 49.15, 45.24, 79.59, 26.23, 22.86, 75.0, 40.74, 60.53, 53.16, 63.41, 61.11, 57.41, 68.42, 71.3, 73.33, 81.25, 76.09, 90.43, 86.89, 60.61, 80.39, 61.82, 82.76, 73.86, 55.56, 82.28, 79.45, 94.23, 90.0, 101.89, 117.5, 107.32, 47.92, 27.78, 92.75, 72.06, 36.36, 58.18, 80.72, 80.0, 86.27, 106.67, 65.62, 86.96, 85.33, 0.0, 93.33, 0.0, 78.05, 68.18, 72.46, 0.0, 88.1, 92.86, 0.0, 0.0], "rate_1to2": [20.83, 22.22, 12.2, 44.0, 9.23, 15.22, 16.67, 26.83, 18.18, 20.0, 12.5, 13.51, 20.97, 14.04, 13.33, 22.22, 13.89, 24.44, 35.11, 10.26, 21.05, 13.64, 38.67, 11.43, 13.51, 12.05, 7.32, 17.31, 11.54, 14.29, 18.31, 12.5, 15.05, 16.36, 5.13, 20.0, 7.94, 17.07, 19.23, 13.56, 14.29, 11.76, 21.28, 28.99, 7.69, 30.0, 2.33, 14.81, 16.47, 0.0, 0.0, 0.0, 0.0, 0.0, 18.42, 0.0, 0.0, 12.9, 0.0, 0.0], "seal_diff": [50.95, 45.2, 34.32, 88.44, 66.96, 35.9, 42.2, 67.6, 71.29, 82.59, 44.3, 93.82, 118.68, 118.26, 86.09, 65.56, 95.89, 137.75, 194.65, 126.23, 147.69, 127.73, 256.97, 20.0, 116.86, -320.61, -319.96, -58.1, 19.84, -14.71, 12.95, 128.9, 111.94, 80.92, 91.98, 86.45, -160.94, -651.05, -19.79, 71.84, 28.49, 54.44, 101.38, 93.57, 64.38, 12.77, 4.49, 29.62, 68.69, 0.0, 77.36, 0.0, 82.16, 45.51, 83.54, 0.0, 63.21, 67.26, 4030779.18, 3864893.41]};
+
+// 综合情绪指数
+const sentimentChart = echarts.init(document.getElementById('sentimentChart'));
+sentimentChart.setOption({
+  backgroundColor: 'transparent',
+  grid: { left: 60, right: 40, top: 40, bottom: 60 },
+  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
+  series: [{
+    name: '综合情绪',
+    type: 'line',
+    data: factorsData.sentiment,
+    smooth: true,
+    lineStyle: { color: '#59e0c5', width: 2 },
+    areaStyle: { color: 'rgba(89,224,197,0.1)' }
+  }],
+  tooltip: { trigger: 'axis' }
+});
+
+// 涨跌停家数
+const limitChart = echarts.init(document.getElementById('limitChart'));
+limitChart.setOption({
+  backgroundColor: 'transparent',
+  grid: { left: 60, right: 40, top: 40, bottom: 60 },
+  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
+  series: [
+    {
+      name: '涨停家数',
+      type: 'bar',
+      data: factorsData.up_count,
+      itemStyle: { color: '#59e0c5' }
+    },
+    {
+      name: '跌停家数',
+      type: 'bar',
+      data: factorsData.down_count,
+      itemStyle: { color: '#ff6b6b' }
+    }
+  ],
+  legend: { data: ['涨停家数', '跌停家数'], textStyle: { color: '#8ea0bb' } },
+  tooltip: { trigger: 'axis' }
+});
+
+// 接力情绪
+const relayChart = echarts.init(document.getElementById('relayChart'));
+relayChart.setOption({
+  backgroundColor: 'transparent',
+  grid: { left: 60, right: 40, top: 40, bottom: 60 },
+  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
+  series: [
+    {
+      name: '晋级率',
+      type: 'line',
+      data: factorsData.promotion_rate,
+      smooth: true,
+      lineStyle: { color: '#5daeff', width: 2 }
+    },
+    {
+      name: '炸板率',
+      type: 'line',
+      data: factorsData.zha_rate,
+      smooth: true,
+      lineStyle: { color: '#ff6b6b', width: 2 }
+    }
+  ],
+  legend: { data: ['晋级率', '炸板率'], textStyle: { color: '#8ea0bb' } },
+  tooltip: { trigger: 'axis' }
+});
+
+// 封单额轧差
+const sealDiffChart = echarts.init(document.getElementById('sealDiffChart'));
+sealDiffChart.setOption({
+  backgroundColor: 'transparent',
+  grid: { left: 60, right: 40, top: 40, bottom: 60 },
+  xAxis: { type: 'category', data: dates, axisLabel: { color: '#8ea0bb' } },
+  yAxis: { type: 'value', axisLabel: { color: '#8ea0bb' } },
+  series: [{
+    name: '封单额轧差',
+    type: 'bar',
+    data: factorsData.seal_diff.map(v => v / 10000),
+    itemStyle: {
+      color: function(params) {
+        return params.value > 0 ? '#59e0c5' : '#ff6b6b';
+      }
+    }
+  }],
+  tooltip: { trigger: 'axis', formatter: '{b}<br/>封单额轧差: {c} 亿元' }
+});
+</script>
+</body>
+</html>
