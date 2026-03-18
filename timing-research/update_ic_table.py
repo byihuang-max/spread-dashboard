@@ -7,7 +7,8 @@ import re
 
 # 读取IC数据
 with open('data/factor_ic.json', 'r') as f:
-    ic_data = json.load(f)
+    data = json.load(f)
+    ic_data = data.get('factors', data)  # 兼容新旧格式
 
 # 因子信息
 factor_info = {
