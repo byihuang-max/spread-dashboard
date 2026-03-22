@@ -501,10 +501,11 @@ new Chart(document.getElementById('memeVaChart'), {{
         cards = []
         for idx, theme in enumerate(dynamic_themes, 1):
             name = html_lib.escape(str(theme.get('theme', '未命名主题')))
-            count = theme.get('count', 0)
+            count = int(theme.get('count', 0) or 0)
             keywords = '、'.join(html_lib.escape(str(x)) for x in theme.get('keywords', [])[:3])
             examples = [html_lib.escape(str(x)) for x in theme.get('examples', [])[:2]]
             news_list = theme.get('news_list', [])[:8]
+            stored_count = int(theme.get('news_count_real', len(news_list)) or len(news_list))
             heat_color = '#dc2626' if count >= 20 else '#ea580c' if count >= 10 else '#64748b'
 
             preview_html = ''
@@ -535,7 +536,7 @@ new Chart(document.getElementById('memeVaChart'), {{
                 f'''<details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid {heat_color};overflow:hidden;" {'open' if idx == 1 else ''}>
   <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
     <span style="font-size:13px;font-weight:600;color:#1e293b;">{name}</span>
-    <span style="margin-left:auto;font-size:11px;color:{heat_color};font-weight:600;">{count}条新闻</span>
+    <span style="margin-left:auto;font-size:11px;color:{heat_color};font-weight:600;">主题热度 {count} · 已收录 {stored_count}</span>
   </summary>
   <div style="padding:0 16px 14px;">
     <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：{keywords}</p>
