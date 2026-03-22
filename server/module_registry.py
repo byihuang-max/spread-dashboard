@@ -247,7 +247,7 @@ MODULE_REGISTRY = {
             ('env_fit/arbitrage', 'mod3_option_arb.py'),
         ],
         'aliases': ['arbitrage'],
-        'include_in_update_all': False,
+        'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
     'halo_trade': {
@@ -260,7 +260,7 @@ MODULE_REGISTRY = {
             ('halo_trade', 'china_halo.py'),
         ],
         'aliases': ['halo'],
-        'include_in_update_all': False,
+        'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
     'rates': {
