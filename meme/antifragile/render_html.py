@@ -5,6 +5,7 @@
 """
 
 import json
+import html as html_lib
 import pandas as pd
 import numpy as np
 from datetime import timedelta
@@ -498,29 +499,53 @@ new Chart(document.getElementById('memeVaChart'), {{
     dynamic_themes_html = ''
     if dynamic_themes:
         cards = []
-        for theme in dynamic_themes:
-            name = theme.get('theme', '未命名主题')
+        for idx, theme in enumerate(dynamic_themes, 1):
+            name = html_lib.escape(str(theme.get('theme', '未命名主题')))
             count = theme.get('count', 0)
-            keywords = '、'.join(theme.get('keywords', [])[:3])
-            examples = theme.get('examples', [])[:2]
+            keywords = '、'.join(html_lib.escape(str(x)) for x in theme.get('keywords', [])[:3])
+            examples = [html_lib.escape(str(x)) for x in theme.get('examples', [])[:2]]
+            news_list = theme.get('news_list', [])[:8]
             heat_color = '#dc2626' if count >= 20 else '#ea580c' if count >= 10 else '#64748b'
 
-            examples_html = ''
+            preview_html = ''
             if examples:
-                examples_html = '<div style="font-size:11px;color:#64748b;line-height:1.6;">'
+                preview_html = '<div style="font-size:11px;color:#64748b;line-height:1.6;">'
                 for ex in examples:
-                    examples_html += f'<div style="margin-bottom:4px;">• {ex}</div>'
-                examples_html += '</div>'
+                    preview_html += f'<div style="margin-bottom:4px;">• {ex}</div>'
+                preview_html += '</div>'
+
+            news_items_html = ''
+            if news_list:
+                items = []
+                for i, item in enumerate(news_list, 1):
+                    title = html_lib.escape(str(item.get('title', '')))
+                    source = html_lib.escape(str(item.get('source', '')))
+                    time = html_lib.escape(str(item.get('time', '')))
+                    meta = ' · '.join(x for x in [source, time] if x)
+                    meta_html = f'<div style="font-size:10px;color:#94a3b8;margin-top:2px;">{meta}</div>' if meta else ''
+                    items.append(
+                        f'<li style="margin:0 0 10px 18px;color:#374151;">'
+                        f'<div style="font-size:12px;line-height:1.6;">{title}</div>{meta_html}</li>'
+                    )
+                news_items_html = '<ol style="margin:10px 0 0;padding:0;">' + ''.join(items) + '</ol>'
+            else:
+                news_items_html = '<div style="font-size:11px;color:#94a3b8;padding-top:8px;">暂无可展开新闻列表</div>'
 
             cards.append(
-                f'''<div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid {heat_color};">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                f'''<details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid {heat_color};overflow:hidden;" {'open' if idx == 1 else ''}>
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
     <span style="font-size:13px;font-weight:600;color:#1e293b;">{name}</span>
     <span style="margin-left:auto;font-size:11px;color:{heat_color};font-weight:600;">{count}条新闻</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：{keywords}</p>
+    {preview_html}
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      {news_items_html}
+    </div>
   </div>
-  <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：{keywords}</p>
-  {examples_html}
-</div>'''
+</details>'''
             )
         dynamic_themes_html = ''.join(cards)
 
