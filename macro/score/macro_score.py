@@ -249,12 +249,17 @@ def calc_macro_score(config):
     if fun:
         merrill = fun.get("merrill_clock", {})
 
+    macro_hypothesis = {}
+    if fun:
+        macro_hypothesis = fun.get("macro_hypothesis", {})
+
     return {
         "total": round(total, 1),
         "phase": phase,
         "emoji": emoji,
         "detail": detail,
         "merrill_clock": merrill,
+        "macro_hypothesis": macro_hypothesis,
         "raw_signals": raw_signals,
     }
 
