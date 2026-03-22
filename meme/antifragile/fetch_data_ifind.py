@@ -52,6 +52,7 @@ def get_token():
 IFIND_ASSETS = {
     # 海外指数
     'NDX.GI':       ('纳斯达克100', False),      # ✅ 纳斯达克100指数
+    'SPX.GI':       ('标普500', False),          # ✅ 标普500指数
     'N225.GI':      ('日经225', False),           # ✅ 日经225
     'KS11.GI':      ('韩国KOSPI', False),         # ✅ 韩国KOSPI
 
