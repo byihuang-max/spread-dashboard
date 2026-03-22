@@ -31,7 +31,11 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 .chart-wrap{position:relative;height:280px}
 
 /* 行业热力图 - 增强版 */
+.ind-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
+.ind-subtitle{font-size:12px;font-weight:700;color:#6b7280;margin:4px 0 8px}
+.expand-btn{border:none;background:#eef2ff;color:#4f46e5;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+.expand-btn:hover{background:#e0e7ff}
 .ind-cell{padding:12px 10px;border-radius:10px;text-align:center;font-size:11px;line-height:1.5;transition:transform .15s;position:relative;cursor:default}
 .ind-cell:hover{transform:scale(1.04);z-index:2;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
 .ind-cell .ind-name{font-weight:800;font-size:13px;margin-bottom:3px}
@@ -86,7 +90,10 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 
 <!-- 行业三维热力图 -->
 <div class="section">
-  <h2>🔥 申万行业拥挤度（近5日）</h2>
+  <div class="ind-section-head">
+    <h2>🔥 申万行业拥挤度（近5日）</h2>
+    <button class="expand-btn" id="toggleIndustryBtn" onclick="toggleIndustryView()">展开全部</button>
+  </div>
   <div class="legend">
     <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> 涨 / 红深=涨多</div>
     <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 跌 / 绿深=跌多</div>
@@ -95,7 +102,7 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
     <div class="legend-item">▲ ETF流入</div>
     <div class="legend-item">▼ ETF流出</div>
   </div>
-  <div class="ind-grid" id="indGrid"></div>
+  <div id="indGrid"></div>
 </div>
 
 <div class="margin-box section">
@@ -107,6 +114,7 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 
 <script>
 var DATA;
+var SHOW_ALL_INDUSTRIES=false;
 function loadData(){
   fetch('crowding.json?t='+Date.now())
     .then(function(r){return r.json()})
@@ -228,13 +236,11 @@ function renderEtfCumChart(){
   });
 }
 
-function renderIndustryGrid(){
-  var inds=DATA.industry_heatmap||[];
-  if(!inds.length){document.getElementById('indGrid').innerHTML='<div style="color:#8b92a5;padding:20px">暂无数据</div>';return}
-
-  var maxPct=Math.max.apply(null,inds.map(function(d){return Math.abs(d.pct_5d)}))||1;
-  var html='';
-  inds.forEach(function(d){
+function renderIndustryCards(list){
+  if(!list.length) return '<div style="color:#8b92a5;padding:20px">暂无数据</div>';
+  var maxPct=Math.max.apply(null,(DATA.industry_heatmap||[]).map(function(d){return Math.abs(d.pct_5d)}))||1;
+  var html='<div class="ind-grid">';
+  list.forEach(function(d){
     var ratio=d.pct_5d/maxPct;
     var bg,fg;
     if(d.pct_5d>=0){
@@ -246,19 +252,15 @@ function renderIndustryGrid(){
       bg='rgba(22,163,106,'+alpha+')';
       fg=alpha>0.4?'#fff':'#16a34a';
     }
-
     var tagsHtml='';
     if(d.tags&&d.tags.length){
       tagsHtml='<div class="ind-tags">'+d.tags.map(function(t){return'<span class="ind-tag">'+t+'</span>'}).join('')+'</div>';
     }
-
     var signalHtml='';
     if(d.signal){
       signalHtml='<div class="ind-signal">'+d.signal+'</div>';
     }
-
     var crowdText='量比: '+d.crowding_ratio.toFixed(2);
-
     html+='<div class="ind-cell" style="background:'+bg+';color:'+fg+'" title="'+d.name+' | 5日涨跌:'+d.pct_5d+'% | 量/MA20:'+d.crowding_ratio+'">'+
       '<div class="ind-name">'+d.name+'</div>'+
       '<div class="ind-pct">'+(d.pct_5d>=0?'+':'')+d.pct_5d.toFixed(2)+'%</div>'+
@@ -266,7 +268,33 @@ function renderIndustryGrid(){
       tagsHtml+signalHtml+
     '</div>';
   });
+  html+='</div>';
+  return html;
+}
+
+function renderIndustryGrid(){
+  var inds=DATA.industry_heatmap||[];
+  if(!inds.length){document.getElementById('indGrid').innerHTML='<div style="color:#8b92a5;padding:20px">暂无数据</div>';return}
+
+  var top10=inds.slice(0,10);
+  var bottom10=inds.slice(-10).reverse();
+  var html='';
+  if(SHOW_ALL_INDUSTRIES){
+    html+='<div class="ind-subtitle">全部一级行业</div>';
+    html+=renderIndustryCards(inds);
+  }else{
+    html+='<div class="ind-subtitle">🔥 近5日涨幅最高 TOP10</div>';
+    html+=renderIndustryCards(top10);
+    html+='<div class="ind-subtitle" style="margin-top:14px">❄️ 近5日跌幅最低 TOP10</div>';
+    html+=renderIndustryCards(bottom10);
+  }
   document.getElementById('indGrid').innerHTML=html;
+  document.getElementById('toggleIndustryBtn').textContent=SHOW_ALL_INDUSTRIES?'收起':'展开全部';
+}
+
+function toggleIndustryView(){
+  SHOW_ALL_INDUSTRIES=!SHOW_ALL_INDUSTRIES;
+  renderIndustryGrid();
 }
 
 function renderMarginChart(){
