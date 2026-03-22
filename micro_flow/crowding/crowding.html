@@ -27,7 +27,8 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 .flow-card .ma-info{font-size:11px;color:#8b92a5;margin-top:6px}
 
 .chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
-.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:8px}
+.chart-note{font-size:11px;line-height:1.7;color:#6b7280;margin-bottom:12px}
 .chart-wrap{position:relative;height:280px}
 
 /* 行业热力图 - 增强版 */
@@ -70,21 +71,25 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 
 <div class="chart-box section">
   <h3>📊 北向 / 南向 / 两融每日变化（60日）</h3>
+  <div class="chart-note">表达的是跨境资金与杠杆资金近60个交易日的单日变化方向。北向/南向来自 Tushare <b>moneyflow_hsgt</b>，单位按亿元展示；两融来自 Tushare <b>margin</b>，按三家交易所完整数据汇总后换算为亿元。</div>
   <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
 </div>
 
 <div class="chart-box section">
   <h3>📦 ETF份额变化（60日）</h3>
+  <div class="chart-note">表达的是 7 只主要宽基 ETF 的合计份额日变化，不是全市场 ETF 资金金额。数据源来自 Tushare <b>fund_share</b>，算法为每只 ETF 当日份额减前一交易日份额后再求和，单位为万份。</div>
   <div class="chart-wrap"><canvas id="etfDailyChart"></canvas></div>
 </div>
 
 <div class="chart-box section">
   <h3>📈 北向 / 南向 / 两融 20日滚动累计</h3>
+  <div class="chart-note">表达的是近20个交易日累计变化，用来观察中短期资金趋势，而不是看单日噪音。北向/南向仍来自 <b>moneyflow_hsgt</b>，两融来自 <b>margin</b>。</div>
   <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
 </div>
 
 <div class="chart-box section">
   <h3>📈 ETF 20日滚动累计</h3>
+  <div class="chart-note">表达的是 7 只宽基 ETF 近20个交易日累计申赎变化，适合看宽基被持续申购还是持续赎回。数据源来自 Tushare <b>fund_share</b>，单位为万份。</div>
   <div class="chart-wrap"><canvas id="etfCumChart"></canvas></div>
 </div>
 
@@ -94,6 +99,7 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
     <h2>🔥 申万行业拥挤度（近5日）</h2>
     <button class="expand-btn" id="toggleIndustryBtn" onclick="toggleIndustryView()">展开全部</button>
   </div>
+  <div class="chart-note" style="margin-bottom:10px">表达的是申万一级行业近5个交易日的涨跌强弱，以及成交额相对20日均值的拥挤程度。行业涨跌和成交额来自 Tushare <b>sw_daily</b>；行业ETF份额变化来自 Tushare <b>fund_share</b>，用于辅助判断该行业是否有申购/赎回确认。</div>
   <div class="legend">
     <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> 涨 / 红深=涨多</div>
     <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 跌 / 绿深=跌多</div>
