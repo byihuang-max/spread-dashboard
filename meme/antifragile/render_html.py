@@ -10,14 +10,14 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta
 
-EQUITY_INDICES = ['纳斯达克100', '恒生科技ETF', '科创50ETF', '日经225', '韩国KOSPI', '纳斯达克ETF(QQQ)']
+EQUITY_INDICES = ['纳斯达克100', '标普500', '恒生科技ETF', '科创50ETF', '日经225', '韩国KOSPI']
 COMPARISON_ASSETS = ['COMEX黄金', 'WTI原油', 'BTC', '美元兑日元']
-MAIN_ASSETS = ['纳斯达克100', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', '纳斯达克ETF(QQQ)', 'COMEX黄金']
+MAIN_ASSETS = ['纳斯达克100', '标普500', '恒生科技ETF', '科创50ETF', 'BTC', '日经225', '韩国KOSPI', 'COMEX黄金']
 
 COLORS = {
-    '纳斯达克100': '#2563eb', '恒生科技ETF': '#10b981', '科创50ETF': '#f59e0b',
+    '纳斯达克100': '#2563eb', '标普500': '#06b6d4', '恒生科技ETF': '#10b981', '科创50ETF': '#f59e0b',
     'BTC': '#F7931A',        '日经225': '#ef4444',    '韩国KOSPI': '#8b5cf6',
-    '纳斯达克ETF(QQQ)': '#06b6d4', 'COMEX黄金': '#eab308',
+    'COMEX黄金': '#eab308',
     'WTI原油': '#0ea5e9',    '股票中位数': '#475569',
     '美元兑日元': '#be185d', # 日元套息杠杆（玫红）
 }
@@ -32,7 +32,8 @@ def calc_median_nav(nav_data, window_days=365):
     df = df[df.index >= cutoff].ffill()
     first_valid = df.apply(lambda s: s.dropna().iloc[0] if s.dropna().shape[0] > 0 else 1)
     df_norm = df.div(first_valid, axis=1)
-    df_norm['股票中位数'] = df_norm[EQUITY_INDICES].median(axis=1)
+    equity_cols = [c for c in EQUITY_INDICES if c in df_norm.columns]
+    df_norm['股票中位数'] = df_norm[equity_cols].median(axis=1)
     return df_norm
 
 
