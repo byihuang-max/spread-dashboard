@@ -46,7 +46,13 @@ MODULES = {
     'momentum_stock': {
         'name': '强势股情绪',
         'data_scripts': [
+            ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/momentum_stock', 'momentum_data.py'),
+            ('env_fit/momentum_stock/limit_index', 'limit_index_data.py'),
+            ('env_fit/momentum_stock/limit_index/seal_spread', 'seal_spread_data.py'),
+            ('env_fit/momentum_stock', 'momentum_sector.py'),
+            ('env_fit/momentum_stock', 'momentum_warning.py'),
+            ('env_fit/momentum_stock', 'momentum_return_decomp.py'),
         ],
         'inject_script': ('env_fit/momentum_stock', 'inject_momentum.py'),
     },
