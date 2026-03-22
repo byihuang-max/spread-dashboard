@@ -517,6 +517,20 @@ def main():
             sys.exit(1)
         dates = [r['date'] for r in raw_rows]
         log(f"  从CSV恢复: {len(dates)} 天: {dates[0]} ~ {dates[-1]}")
+
+        # 即使 trade_cal 失败，也尽量补齐 _cache，避免下游 limit_index / seal_spread / sector 卡住
+        missing_cache_dates = [d for d in dates if not os.path.exists(os.path.join(CACHE_DIR, f'{d}.json'))]
+        if missing_cache_dates:
+            log(f"  检测到 {len(missing_cache_dates)} 个缺失缓存，尝试补齐 _cache...")
+            for i, dt in enumerate(missing_cache_dates):
+                log(f"    [{i+1}/{len(missing_cache_dates)}] 补缓存 {dt}")
+                try:
+                    fetch_day_cached(dt)
+                except Exception as e:
+                    log(f"    ⚠️ 补缓存失败 {dt}: {e}")
+        else:
+            log("  _cache 完整，无需补齐")
+
         full_rows = compute_all_metrics(raw_rows)
         write_csv(FULL_CSV, FULL_HEADERS, full_rows)
         build_json(full_rows)
