@@ -78,8 +78,8 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 <div class="section">
   <h2>🔥 申万行业拥挤度（近5日）</h2>
   <div class="legend">
-    <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 涨 / 绿深=涨多</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> 跌 / 红深=跌多</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> 涨 / 红深=涨多</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 跌 / 绿深=跌多</div>
     <div class="legend-item">🔥 拥挤(量/MA20&gt;1.5)</div>
     <div class="legend-item">❄️ 冷清(量/MA20&lt;0.7)</div>
     <div class="legend-item">▲ ETF流入</div>
@@ -190,12 +190,12 @@ function renderIndustryGrid(){
     var bg,fg;
     if(d.pct_5d>=0){
       var alpha=Math.min(Math.abs(ratio)*0.65+0.15,0.85);
-      bg='rgba(22,163,106,'+alpha+')';
-      fg=alpha>0.4?'#fff':'#16a34a';
-    }else{
-      var alpha=Math.min(Math.abs(ratio)*0.65+0.15,0.85);
       bg='rgba(220,38,38,'+alpha+')';
       fg=alpha>0.4?'#fff':'#dc2626';
+    }else{
+      var alpha=Math.min(Math.abs(ratio)*0.65+0.15,0.85);
+      bg='rgba(22,163,106,'+alpha+')';
+      fg=alpha>0.4?'#fff':'#16a34a';
     }
 
     var tagsHtml='';
