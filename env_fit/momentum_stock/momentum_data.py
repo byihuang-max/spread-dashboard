@@ -71,18 +71,18 @@ RAW_HEADERS = [
 ]
 
 FULL_HEADERS = [
-    # 基础数据
     'date', 'up_count', 'down_count', 'zha_count', 'max_height',
     'lianban_count', 'shouban_count', 'seal_zero_count',
     'big_cap_up', 'mega_cap_up', 'mega_cap_names',
-    # 计算指标
-    'duanban_count', 'promotion_rate', 'rate_1to2', 'zha_rate', 'ud_ratio', 'seal_quality',
+    'duanban_count', 'high_duanban_count',
+    'promotion_rate', 'rate_1to2', 'rate_2to3', 'rate_3to4',
+    'refeng_rate', 'zha_rate', 'ud_ratio', 'seal_quality',
     'h_norm', 'p_norm', 'z_norm', 'u_norm', 's_norm',
     'sentiment', 'cycle_label',
-    # 计算公式
-    'formula_duanban_count', 'formula_promotion_rate', 'formula_rate_1to2', 'formula_zha_rate',
-    'formula_ud_ratio', 'formula_seal_quality', 'formula_sentiment',
-    'formula_cycle_label'
+    'formula_duanban_count', 'formula_high_duanban_count',
+    'formula_promotion_rate', 'formula_rate_1to2', 'formula_rate_2to3', 'formula_rate_3to4',
+    'formula_refeng_rate', 'formula_zha_rate', 'formula_ud_ratio', 'formula_seal_quality',
+    'formula_sentiment', 'formula_cycle_label'
 ]
 
 def read_csv_dates(path):
@@ -287,12 +287,43 @@ def compute_all_metrics(raw_rows):
 
         # 昨日连板股中，今天未继续涨停的数量 = 断板数（v1）
         duanban_count = 0
+        high_duanban_count = 0
+        rate_2to3 = 0
+        rate_3to4 = 0
+        refeng_rate = 0
         if prev_up_by_height:
             prev_lb = set()
+            prev_high_lb = set()
             for h, codes in prev_up_by_height.items():
                 if h >= 2:
                     prev_lb.update(codes)
+                if h >= 3:
+                    prev_high_lb.update(codes)
             duanban_count = len(prev_lb - current_up_codes)
+            high_duanban_count = len(prev_high_lb - current_up_codes)
+
+            prev_2b = prev_up_by_height.get(2, set())
+            today_3b = set()
+            for h, codes in current_up_by_height.items():
+                if h >= 3:
+                    today_3b.update(codes)
+            rate_2to3 = len(prev_2b & today_3b) / len(prev_2b) * 100 if prev_2b else 0
+
+            prev_3b = prev_up_by_height.get(3, set())
+            today_4b = set()
+            for h, codes in current_up_by_height.items():
+                if h >= 4:
+                    today_4b.update(codes)
+            rate_3to4 = len(prev_3b & today_4b) / len(prev_3b) * 100 if prev_3b else 0
+
+        # 炸板回封率 = 今日最终涨停且盘中开板(open_times>0) / (最终涨停且盘中开板 + 炸板未封)
+        refeng_success = 0
+        if os.path.exists(cache_file):
+            for u in day_data.get('U', []):
+                if (u.get('open_times') or 0) > 0:
+                    refeng_success += 1
+        refeng_base = refeng_success + zha_count
+        refeng_rate = refeng_success / refeng_base * 100 if refeng_base else 0
 
         # 晋级率 = 今日涨停中昨日也涨停的 / 昨日涨停总数
         promotion_rate = 0
@@ -339,15 +370,22 @@ def compute_all_metrics(raw_rows):
             'mega_cap_up': r.get('mega_cap_up', 0),
             'mega_cap_names': r.get('mega_cap_names', ''),
             'duanban_count': duanban_count,
+            'high_duanban_count': high_duanban_count,
             'promotion_rate': round(promotion_rate, 2),
             'rate_1to2': round(rate_1to2, 2),
+            'rate_2to3': round(rate_2to3, 2),
+            'rate_3to4': round(rate_3to4, 2),
+            'refeng_rate': round(refeng_rate, 2),
             'zha_rate': round(zha_rate, 2),
             'ud_ratio': round(ud_ratio, 2),
             'seal_quality': round(seal_quality, 2),
-            # 公式列
             'formula_duanban_count': '昨日连板股(limit_times≥2)中，今日未继续涨停的数量',
+            'formula_high_duanban_count': '昨日高位连板股(limit_times≥3)中，今日未继续涨停的数量',
             'formula_promotion_rate': '今日涨停∩昨日涨停 / 昨日涨停总数 × 100',
             'formula_rate_1to2': '昨日首板∩今日连板(limit_times≥2) / 昨日首板数 × 100',
+            'formula_rate_2to3': '昨日2板∩今日3板及以上 / 昨日2板总数 × 100',
+            'formula_rate_3to4': '昨日3板∩今日4板及以上 / 昨日3板总数 × 100',
+            'formula_refeng_rate': '今日最终涨停且盘中开板(open_times>0) / (今日最终涨停且盘中开板 + 炸板未封家数) × 100',
             'formula_zha_rate': 'zha_count / (up_count + zha_count) × 100',
             'formula_ud_ratio': 'min(up_count / max(down_count, 1), 20)，clip防极端值',
             'formula_seal_quality': '(big_cap_up + 2*mega_cap_up) / up_count × 100，大市值涨停加权占比',
@@ -471,8 +509,12 @@ def build_json(full_rows):
             'lianban_count': r['lianban_count'],
             'shouban_count': r['shouban_count'],
             'duanban_count': r.get('duanban_count', 0),
+            'high_duanban_count': r.get('high_duanban_count', 0),
             'promotion_rate': r['promotion_rate'],
             'rate_1to2': r['rate_1to2'],
+            'rate_2to3': r.get('rate_2to3', 0),
+            'rate_3to4': r.get('rate_3to4', 0),
+            'refeng_rate': r.get('refeng_rate', 0),
             'zha_rate': r['zha_rate'],
             'ud_ratio': r['ud_ratio'],
             'seal_quality': r['seal_quality'],
