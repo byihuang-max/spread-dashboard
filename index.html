@@ -436,6 +436,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                 <div style="font-size:10px;color:#4b5578;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:6px">MACRO SCORE</div>
                 <div id="ms-phase" style="font-size:18px;font-weight:800;margin-bottom:4px"></div>
                 <div id="ms-merrill" style="font-size:11px;color:#64748b;line-height:1.4"></div>
+                <div id="ms-hypothesis" style="font-size:11px;color:#94a3b8;line-height:1.5;margin-top:6px;max-width:320px"></div>
               </div>
             </div>
             <!-- 中：雷达图 -->
@@ -520,6 +521,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           document.getElementById('ms-phase').style.color=scoreCol;
           var mc=S.macro.merrill_clock||{};
           document.getElementById('ms-merrill').textContent=(mc.emoji||'')+' 美林时钟: '+(mc.phase||'')+(mc.pmi?' | PMI='+mc.pmi:'')+(mc.cpi?' | CPI='+mc.cpi+'%':'');
+          var mh=S.macro.macro_hypothesis||{};
+          document.getElementById('ms-hypothesis').textContent=mh.brief || (mh.title?('宏观交易假设：'+mh.title) : '');
           document.getElementById('ms-time').textContent='更新: '+S.update_time;
 
           // Raw signals (top 4)
