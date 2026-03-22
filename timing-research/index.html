@@ -136,18 +136,48 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
   <!-- ======== 因子库 ======== -->
   <div class="card">
-    <h2>📚 因子库（10个强势股情绪因子）</h2>
-    <div class="grid-2">
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔴 sentiment（综合情绪指数）</h2><div class="note">五个子因子加权合成，0-100分。<b>越高说明强势股生态越火热。</b><br>权重：晋级率25% + 封板质量25% + 连板高度20% + 反炸板率20% + 涨跌停比10%</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📈 up_count（涨停家数）</h2><div class="note">当天涨停板股票数量。<b>越多说明市场做多热情越高</b>，但极端值可能是过热信号。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📉 down_count（跌停家数）</h2><div class="note">当天跌停板股票数量。<b>越多说明恐慌越重</b>，但恐慌出清后往往反弹。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏔️ max_height（连板高度）</h2><div class="note">当天最高连板天数。<b>高度越高说明市场龙头效应越强。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔄 promotion_rate（晋级率）</h2><div class="note">昨天涨停中今天继续涨停的比例。<b>越高说明强势股延续性好</b>，资金愿意接力。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💥 zha_rate（炸板率）</h2><div class="note">涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚖️ ud_ratio（涨跌停比）</h2><div class="note">涨停家数 / 跌停家数。<b>越高说明多头越占优。</b>极端值（>10）可能过热。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔒 seal_quality（封板质量）</h2><div class="note">大市值（100亿+）涨停股占比。<b>越高说明主力资金参与度越高。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1️⃣→2️⃣ rate_1to2（一进二率）</h2><div class="note">首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏷️ cycle_label（周期标签）</h2><div class="note">自动判定市场阶段：冰点→回暖→加速→分歧→退潮→震荡，<b>对应强势股生态生命周期。</b></div></div>
+    <h2>📚 因子库（v1：原始因子 / 合成因子 / 阶段输出）</h2>
+    <div class="note">先把口径拆顺：<b>原始因子</b>看原料，<b>合成因子</b>看加工结果，<b>阶段输出</b>看状态判断。</div>
+
+    <div class="subtabs" style="margin-top:16px">
+      <button class="subtab-btn active" data-tab="rawfactors">原始因子</button>
+      <button class="subtab-btn" data-tab="compositefactors">合成因子</button>
+      <button class="subtab-btn" data-tab="stageoutputs">阶段输出</button>
+    </div>
+
+    <div id="rawfactors" class="tab-pane active">
+      <div class="mini-title">广度类</div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌐 ud_market_ratio（涨跌家数比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>先导<br>全市场上涨家数 / 下跌家数。<b>越高说明市场广度越强</b>，是情绪修复的底层起点。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚖️ ud_ratio（涨跌停比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 极值<br>涨停家数 / 跌停家数。<b>越高说明多头占优</b>，极端高值也可能代表过热。</div></div>
+      </div>
+
+      <div class="mini-title">极值类</div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📈 up_count（涨停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天涨停板股票数量。<b>越多说明做多热情越高</b>，但单独看也容易混入过热噪音。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📉 down_count（跌停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>退潮 / 冰点<br>当天跌停板股票数量。<b>越多说明恐慌越重</b>，也是情绪出清的重要观测量。</div></div>
+      </div>
+
+      <div class="mini-title">接力 / 龙头类</div>
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏔️ max_height（连板高度）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天最高连板天数。<b>高度越高说明龙头效应越强</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔄 promotion_rate（晋级率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认<br>昨天涨停中今天继续涨停的比例。<b>越高说明接力顺畅</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1️⃣→2️⃣ rate_1to2（一进二率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 灵敏补充<br>首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💥 zha_rate（炸板率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧<br>涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔒 seal_quality（封板质量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化 / 质量确认<br>大市值涨停股占比。<b>越高说明主力资金参与度更高</b>。</div></div>
+      </div>
+    </div>
+
+    <div id="compositefactors" class="tab-pane">
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔴 sentiment（综合情绪指数）</h2><div class="note"><b>定位：</b>合成因子 / 总览因子<br>五个子因子加权合成，0-100 分。<b>越高说明强势股生态越火热。</b><br>算法：晋级率25% + 封板质量25% + 连板高度20% + 反炸板率20% + 涨跌停比10%</div></div>
+      </div>
+    </div>
+
+    <div id="stageoutputs" class="tab-pane">
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏷️ cycle_label（周期标签）</h2><div class="note"><b>定位：</b>阶段输出<br>自动判定市场阶段：冰点 → 回暖 → 加速 → 分歧 → 退潮 → 震荡。<b>它不是原始因子，而是由多因子推导出的阶段判断。</b></div></div>
+      </div>
     </div>
   </div>
 
