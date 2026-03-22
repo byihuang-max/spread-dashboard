@@ -76,11 +76,11 @@ FULL_HEADERS = [
     'lianban_count', 'shouban_count', 'seal_zero_count',
     'big_cap_up', 'mega_cap_up', 'mega_cap_names',
     # 计算指标
-    'promotion_rate', 'rate_1to2', 'zha_rate', 'ud_ratio', 'seal_quality',
+    'duanban_count', 'promotion_rate', 'rate_1to2', 'zha_rate', 'ud_ratio', 'seal_quality',
     'h_norm', 'p_norm', 'z_norm', 'u_norm', 's_norm',
     'sentiment', 'cycle_label',
     # 计算公式
-    'formula_promotion_rate', 'formula_rate_1to2', 'formula_zha_rate',
+    'formula_duanban_count', 'formula_promotion_rate', 'formula_rate_1to2', 'formula_zha_rate',
     'formula_ud_ratio', 'formula_seal_quality', 'formula_sentiment',
     'formula_cycle_label'
 ]
@@ -285,6 +285,15 @@ def compute_all_metrics(raw_rows):
                 current_up_codes.add(ts_code)
                 current_up_by_height[lt].add(ts_code)
 
+        # 昨日连板股中，今天未继续涨停的数量 = 断板数（v1）
+        duanban_count = 0
+        if prev_up_by_height:
+            prev_lb = set()
+            for h, codes in prev_up_by_height.items():
+                if h >= 2:
+                    prev_lb.update(codes)
+            duanban_count = len(prev_lb - current_up_codes)
+
         # 晋级率 = 今日涨停中昨日也涨停的 / 昨日涨停总数
         promotion_rate = 0
         if prev_up_codes:
@@ -329,12 +338,14 @@ def compute_all_metrics(raw_rows):
             'big_cap_up': r.get('big_cap_up', 0),
             'mega_cap_up': r.get('mega_cap_up', 0),
             'mega_cap_names': r.get('mega_cap_names', ''),
+            'duanban_count': duanban_count,
             'promotion_rate': round(promotion_rate, 2),
             'rate_1to2': round(rate_1to2, 2),
             'zha_rate': round(zha_rate, 2),
             'ud_ratio': round(ud_ratio, 2),
             'seal_quality': round(seal_quality, 2),
             # 公式列
+            'formula_duanban_count': '昨日连板股(limit_times≥2)中，今日未继续涨停的数量',
             'formula_promotion_rate': '今日涨停∩昨日涨停 / 昨日涨停总数 × 100',
             'formula_rate_1to2': '昨日首板∩今日连板(limit_times≥2) / 昨日首板数 × 100',
             'formula_zha_rate': 'zha_count / (up_count + zha_count) × 100',
@@ -459,6 +470,7 @@ def build_json(full_rows):
             'max_height': r['max_height'],
             'lianban_count': r['lianban_count'],
             'shouban_count': r['shouban_count'],
+            'duanban_count': r.get('duanban_count', 0),
             'promotion_rate': r['promotion_rate'],
             'rate_1to2': r['rate_1to2'],
             'zha_rate': r['zha_rate'],

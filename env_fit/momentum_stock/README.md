@@ -42,6 +42,7 @@ index.html（强势股 tab）
 | max_height | 最高连板天数（limit_times 最大值） |
 | lianban_count | 连板股数量（limit_times > 1） |
 | shouban_count | 首板股数量（limit_times = 1） |
+| duanban_count | 断板数（昨日连板股中，今日未继续涨停的数量） |
 | seal_zero_count | 一字/秒板数量（open_times = 0） |
 
 ### 计算指标
