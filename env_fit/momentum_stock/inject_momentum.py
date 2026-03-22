@@ -104,8 +104,10 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
         # JS 数据数组
         li_dates_js = json.dumps([fmt_date(d['date']) for d in li_show])
-        li_all_nav_js = json.dumps([d['all_nav'] for d in li_show])
-        li_first_nav_js = json.dumps([d['first_nav'] for d in li_show])
+        li_all_nav_base = li_show[0]['all_nav'] if li_show and li_show[0]['all_nav'] else 1
+        li_first_nav_base = li_show[0]['first_nav'] if li_show and li_show[0]['first_nav'] else 1
+        li_all_nav_js = json.dumps([round(d['all_nav'] / li_all_nav_base, 4) for d in li_show])
+        li_first_nav_js = json.dumps([round(d['first_nav'] / li_first_nav_base, 4) for d in li_show])
         li_all_bias_js = json.dumps([d['all_bias'] for d in li_show])
         li_first_bias_js = json.dumps([d['first_bias'] for d in li_show])
         li_all_gap_js = json.dumps([d['all_gap'] if d['all_gap'] is not None else 0 for d in li_show])
@@ -294,12 +296,15 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         </div>
       </div>'''
 
-        li_html = '''
+        li_html = f'''
       <div class="card" style="padding:16px 20px">
-        <div class="card-title"><span class="dot" style="background:#6366f1"></span> 涨停指数 & 乖离率（BIAS）</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="card-title" style="margin:0"><span class="dot" style="background:#6366f1"></span> 涨停指数 & 乖离率（BIAS）</div>
+          <div style="font-size:11px;color:#94a3b8">最新 {fmt_date(li_latest['date'])}</div>
+        </div>
         <div style="position:relative;height:300px"><canvas id="ms-li-chart"></canvas></div>
         <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
-          灰线=全涨停净值（左轴） · 灰虚线=首板净值（左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
+          灰线=全涨停净值（近60日归一化，左轴） · 灰虚线=首板净值（近60日归一化，左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
           信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · ★★★=三重确认 · ★★=两重确认
         </div>
       </div>'''
@@ -619,7 +624,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           <div class="card-title" style="margin:0"><span class="dot" style="background:#6366f1"></span> 涨跌停封单额轧差（抄底指标）</div>
           <div style="display:flex;align-items:center;gap:8px">
             <span style="background:{ss_bg};color:{ss_sig_color};padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600">{ss_signal}</span>
-            <span style="font-size:11px;color:#94a3b8">分位 {ss_pct_str}</span>
+            <span style="font-size:11px;color:#94a3b8">最新 {fmt_date(ss_latest['date'])} · 分位 {ss_pct_str}</span>
           </div>
         </div>
         <div style="display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap">
