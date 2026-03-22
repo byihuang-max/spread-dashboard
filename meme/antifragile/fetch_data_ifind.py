@@ -50,9 +50,9 @@ def get_token():
 # iFind code → (显示名, 是否有成交量)
 # 经云端验证 2026-03-11
 IFIND_ASSETS = {
-    # 海外指数
+    # 海外指数 / 代理ETF
     'NDX.GI':       ('纳斯达克100', False),      # ✅ 纳斯达克100指数
-    'SPX.GI':       ('标普500', False),          # ✅ 标普500指数
+    '513500.SH':    ('标普500', True),           # ✅ 标普500ETF，作为标普500代理
     'N225.GI':      ('日经225', False),           # ✅ 日经225
     'KS11.GI':      ('韩国KOSPI', False),         # ✅ 韩国KOSPI
 
@@ -218,9 +218,13 @@ def main():
     # ── 逐个资产拉取历史日线 ──
     for code, (name, has_vol) in IFIND_ASSETS.items():
         indicators = 'close,volume' if has_vol else 'close'
+        asset_start_date = start_date
+        existing_asset = merged_nav.get(name, {})
+        if not existing_asset or len(existing_asset) < 60:
+            asset_start_date = (datetime.now() - timedelta(days=400)).strftime('%Y-%m-%d')
         print(f"  {name} ({code}): ", end='', flush=True)
 
-        tables = ifind_history(at, code, indicators, start_date, end_date)
+        tables = ifind_history(at, code, indicators, asset_start_date, end_date)
         close_dict, vol_dict = parse_date_sequence(tables, name, has_vol)
 
         if close_dict:
