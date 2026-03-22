@@ -91,6 +91,25 @@ def safe_vals(series):
 def render_html():
     with open('antifragile_nav.json', 'r', encoding='utf-8') as f:
         nav_data_file = json.load(f)
+
+    # 动态主题：直接在生成HTML时内嵌，避免前端二次 fetch 相对路径失效
+    dynamic_themes = []
+    dynamic_themes_date = ''
+    narrative_latest_path = '../../daily_report/meme交易/cache/narrative_latest.json'
+    try:
+        with open(narrative_latest_path, 'r', encoding='utf-8') as f:
+            narrative_latest = json.load(f)
+        dynamic_themes = narrative_latest.get('dynamic_themes', []) or []
+        report_text = narrative_latest.get('report', '') or ''
+        # 从报告第一行里尽量提取日期时间，例如：📊 叙事监控 V2 03-18 08:23 | 分析 186 条新闻
+        if '叙事监控 V2' in report_text:
+            first_line = report_text.splitlines()[0] if report_text.splitlines() else ''
+            parts = first_line.split('叙事监控 V2', 1)
+            if len(parts) > 1:
+                dynamic_themes_date = parts[1].split('|')[0].strip()
+    except Exception:
+        dynamic_themes = []
+        dynamic_themes_date = ''
     nav_data   = nav_data_file['nav_data']
     update_time = nav_data_file['update_time']
 
@@ -474,6 +493,38 @@ new Chart(document.getElementById('memeVaChart'), {{
 """
 
     # ─────────────────────────────────────────────
+    # 6. 今日新兴主题（生成时内嵌，避免前端二次 fetch）
+    # ─────────────────────────────────────────────
+    dynamic_themes_html = ''
+    if dynamic_themes:
+        cards = []
+        for theme in dynamic_themes:
+            name = theme.get('theme', '未命名主题')
+            count = theme.get('count', 0)
+            keywords = '、'.join(theme.get('keywords', [])[:3])
+            examples = theme.get('examples', [])[:2]
+            heat_color = '#dc2626' if count >= 20 else '#ea580c' if count >= 10 else '#64748b'
+
+            examples_html = ''
+            if examples:
+                examples_html = '<div style="font-size:11px;color:#64748b;line-height:1.6;">'
+                for ex in examples:
+                    examples_html += f'<div style="margin-bottom:4px;">• {ex}</div>'
+                examples_html += '</div>'
+
+            cards.append(
+                f'''<div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid {heat_color};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">{name}</span>
+    <span style="margin-left:auto;font-size:11px;color:{heat_color};font-weight:600;">{count}条新闻</span>
+  </div>
+  <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：{keywords}</p>
+  {examples_html}
+</div>'''
+            )
+        dynamic_themes_html = ''.join(cards)
+
+    # ─────────────────────────────────────────────
     # 序列化到 JSON
     # ─────────────────────────────────────────────
     nav_labels_json    = json.dumps(all_dates)
@@ -717,17 +768,14 @@ new Chart(document.getElementById('medianChart'),{{
     <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">🔍观察</span> 热度偏低，暂无信号</span>
   </div>
 
-  <!-- 今日新兴主题（LLM动态发现） -->
+  <!-- 今日新兴主题（LLM动态发现，生成时内嵌） -->
   <div id="dynamic-themes-section" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
       <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">🔍 今日新兴主题</h3>
-      <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新）</span>
+      <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新）{(' · ' + dynamic_themes_date) if dynamic_themes_date else ''}</span>
     </div>
     <div id="dynamic-themes-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
-      <!-- 动态主题卡片将在这里渲染 -->
-    </div>
-    <div id="dynamic-themes-error" style="display:none;color:#94a3b8;font-size:12px;padding:12px 0;">
-      暂无新兴主题数据
+      {dynamic_themes_html if dynamic_themes_html else '<div style="color:#94a3b8;font-size:12px;padding:12px 0;">暂无新兴主题数据</div>'}
     </div>
   </div>
 
@@ -947,51 +995,6 @@ new Chart(document.getElementById('medianChart'),{{
       document.getElementById('lc-error').style.display = 'block';
     }});
 
-  // ─── 加载今日新兴主题（动态主题） ───
-  fetch('../../daily_report/meme交易/cache/narrative_latest.json')
-    .then(function(r) {{ return r.ok ? r.json() : Promise.reject(r.status); }})
-    .then(function(data) {{
-      var themes = data.dynamic_themes || [];
-      if (themes.length === 0) {{
-        document.getElementById('dynamic-themes-error').style.display = 'block';
-        return;
-      }}
-
-      var html = '';
-      themes.forEach(function(theme) {{
-        var name = theme.theme || '未命名主题';
-        var count = theme.count || 0;
-        var keywords = (theme.keywords || []).join('、');
-        var examples = theme.examples || [];
-        
-        // 根据新闻数量判断热度颜色
-        var heatColor = count >= 20 ? '#dc2626' : count >= 10 ? '#ea580c' : '#64748b';
-        
-        html += '<div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid ' + heatColor + ';">';
-        html += '  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
-        html += '    <span style="font-size:13px;font-weight:600;color:#1e293b;">' + name + '</span>';
-        html += '    <span style="margin-left:auto;font-size:11px;color:' + heatColor + ';font-weight:600;">' + count + '条新闻</span>';
-        html += '  </div>';
-        html += '  <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：' + keywords + '</p>';
-        
-        // 显示示例新闻（最多2条）
-        if (examples.length > 0) {{
-          html += '  <div style="font-size:11px;color:#64748b;line-height:1.6;">';
-          examples.slice(0, 2).forEach(function(ex) {{
-            html += '    <div style="margin-bottom:4px;">• ' + ex + '</div>';
-          }});
-          html += '  </div>';
-        }}
-        
-        html += '</div>';
-      }});
-      
-      document.getElementById('dynamic-themes-content').innerHTML = html;
-    }})
-    .catch(function(e) {{
-      console.warn('动态主题加载失败:', e);
-      document.getElementById('dynamic-themes-error').style.display = 'block';
-    }});
 }})();
 </script>
 </body></html>"""
