@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
+import datetime as dt
 import os
 import time
-import datetime as dt
 
 import pandas as pd
 import requests
@@ -12,14 +12,19 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
 TUSHARE_URL = 'https://api.tushare.pro'
-START_DATE = (dt.date.today() - dt.timedelta(days=450)).strftime('%Y%m%d')
+START_DATE = '20241227'
 END_DATE = dt.date.today().strftime('%Y%m%d')
+LOOKBACK_DAYS = 10
 
 NORTHBOUND_CSV = os.path.join(CACHE_DIR, 'northbound.csv')
+NORTHBOUND_DETAIL_CSV = os.path.join(CACHE_DIR, 'northbound_detail.csv')
 ETF_FLOW_CSV = os.path.join(CACHE_DIR, 'etf_flow.csv')
+ETF_FLOW_DETAIL_CSV = os.path.join(CACHE_DIR, 'etf_flow_detail.csv')
 MARGIN_CSV = os.path.join(CACHE_DIR, 'margin.csv')
+MARGIN_DETAIL_CSV = os.path.join(CACHE_DIR, 'margin_detail.csv')
 SW_DAILY_CSV = os.path.join(CACHE_DIR, 'sw_daily.csv')
 INDUSTRY_ETF_CSV = os.path.join(CACHE_DIR, 'industry_etf.csv')
+INDUSTRY_ETF_DETAIL_CSV = os.path.join(CACHE_DIR, 'industry_etf_detail.csv')
 
 BROAD_ETF_MAP = {
     '510300.SH': '沪深300ETF',
@@ -59,6 +64,7 @@ INDUSTRY_ETF_MAP = {
     '交通运输': '512690.SH',
 }
 
+
 def ts_api(api_name, fields='', **kwargs):
     params = {k: v for k, v in kwargs.items() if v is not None}
     body = {'api_name': api_name, 'token': TUSHARE_TOKEN, 'params': params}
@@ -83,50 +89,82 @@ def norm_date(s):
     return pd.to_datetime(str(s).strip()).strftime('%Y%m%d')
 
 
+def read_csv(path):
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    df = pd.read_csv(path)
+    if 'trade_date' in df.columns:
+        df['trade_date'] = df['trade_date'].astype(str).str.strip().map(norm_date)
+    return df
+
+
+def incremental_start(df, col='trade_date', fallback=START_DATE, lookback_days=LOOKBACK_DAYS):
+    if df.empty or col not in df.columns or df[col].dropna().empty:
+        return fallback
+    last = pd.to_datetime(df[col].astype(str).max()) - pd.Timedelta(days=lookback_days)
+    return max(fallback, last.strftime('%Y%m%d'))
+
+
+def merge_dedup(old, new, keys):
+    if old.empty:
+        return new.copy()
+    if new.empty:
+        return old.copy()
+    return pd.concat([old, new], ignore_index=True).drop_duplicates(keys, keep='last')
+
+
 def fetch_northbound():
-    print('全量拉取北向/南向资金...')
-    df = ts_api(
+    print('增量拉取北向/南向资金...')
+    old = read_csv(NORTHBOUND_DETAIL_CSV)
+    start = incremental_start(old)
+    new = ts_api(
         'moneyflow_hsgt',
         fields='trade_date,north_money,south_money,hgt,sgt,ggt_ss,ggt_sz',
-        start_date=START_DATE,
+        start_date=start,
         end_date=END_DATE,
     )
-    if df.empty:
+    if new.empty and old.empty:
         print('  无数据')
         return
-    df['trade_date'] = df['trade_date'].map(norm_date)
-    df['north_money'] = pd.to_numeric(df['north_money'], errors='coerce')
-    df['south_money'] = pd.to_numeric(df['south_money'], errors='coerce')
-    df['north_net'] = df['north_money'] / 10000
-    df['south_net'] = df['south_money'] / 10000
-    df = df[['trade_date', 'north_net', 'south_net']].drop_duplicates('trade_date').sort_values('trade_date')
-    df.to_csv(NORTHBOUND_CSV, index=False)
-    print(f"  北向/南向: {len(df)}条，最新 {df.iloc[-1]['trade_date']}")
+    if not new.empty:
+        new['trade_date'] = new['trade_date'].map(norm_date)
+        for col in ['north_money', 'south_money', 'hgt', 'sgt', 'ggt_ss', 'ggt_sz']:
+            new[col] = pd.to_numeric(new[col], errors='coerce')
+    detail = merge_dedup(old, new, ['trade_date']).sort_values('trade_date')
+    detail.to_csv(NORTHBOUND_DETAIL_CSV, index=False)
+    daily = detail[['trade_date', 'north_money', 'south_money']].copy()
+    daily['north_net'] = daily['north_money'] / 10000
+    daily['south_net'] = daily['south_money'] / 10000
+    daily[['trade_date', 'north_net', 'south_net']].to_csv(NORTHBOUND_CSV, index=False)
+    print(f"  北向/南向: {len(daily)}条，最新 {daily.iloc[-1]['trade_date']}")
 
 
 def fetch_etf_flow():
-    print('全量拉取宽基ETF份额...')
-    all_data = []
+    print('增量拉取宽基ETF份额...')
+    old = read_csv(ETF_FLOW_DETAIL_CSV)
+    start = incremental_start(old)
+    parts = []
     for code in BROAD_ETF_MAP:
         df = ts_api(
             'fund_share',
             fields='ts_code,trade_date,fd_share',
             ts_code=code,
-            start_date=START_DATE,
+            start_date=start,
             end_date=END_DATE,
         )
         if not df.empty:
             df['trade_date'] = df['trade_date'].map(norm_date)
             df['fd_share'] = pd.to_numeric(df['fd_share'], errors='coerce')
-            all_data.append(df)
+            parts.append(df)
         time.sleep(0.25)
-    if not all_data:
+    if not parts and old.empty:
         print('  无数据')
         return
-    combined = pd.concat(all_data, ignore_index=True)
-    combined = combined.drop_duplicates(['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
-    combined['share_chg'] = combined.groupby('ts_code')['fd_share'].diff()
-    daily = combined.groupby('trade_date', as_index=False).agg(
+    new = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=['ts_code', 'trade_date', 'fd_share'])
+    detail = merge_dedup(old, new, ['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
+    detail['share_chg'] = detail.groupby('ts_code')['fd_share'].diff()
+    detail.to_csv(ETF_FLOW_DETAIL_CSV, index=False)
+    daily = detail.groupby('trade_date', as_index=False).agg(
         etf_share_chg=('share_chg', lambda s: float(s.sum(min_count=1)) if s.notna().any() else None)
     )
     daily['etf_share_chg'] = daily['etf_share_chg'].fillna(0.0)
@@ -136,21 +174,26 @@ def fetch_etf_flow():
 
 
 def fetch_margin():
-    print('全量拉取两融数据...')
-    df = ts_api(
+    print('增量拉取两融数据...')
+    old = read_csv(MARGIN_DETAIL_CSV)
+    start = incremental_start(old)
+    new = ts_api(
         'margin',
         fields='trade_date,exchange_id,rzye,rqye,rzrqye',
-        start_date=START_DATE,
+        start_date=start,
         end_date=END_DATE,
     )
-    if df.empty:
+    if new.empty and old.empty:
         print('  无数据')
         return
-    df['trade_date'] = df['trade_date'].map(norm_date)
-    for col in ['rzye', 'rqye', 'rzrqye']:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
-    df['margin_balance_raw'] = df['rzrqye'].fillna(df['rzye'].fillna(0) + df['rqye'].fillna(0))
-    daily = df.groupby('trade_date', as_index=False).agg(
+    if not new.empty:
+        new['trade_date'] = new['trade_date'].map(norm_date)
+        for col in ['rzye', 'rqye', 'rzrqye']:
+            new[col] = pd.to_numeric(new[col], errors='coerce')
+    detail = merge_dedup(old, new, ['trade_date', 'exchange_id']).sort_values(['trade_date', 'exchange_id'])
+    detail.to_csv(MARGIN_DETAIL_CSV, index=False)
+    detail['margin_balance_raw'] = detail['rzrqye'].fillna(detail['rzye'].fillna(0) + detail['rqye'].fillna(0))
+    daily = detail.groupby('trade_date', as_index=False).agg(
         margin_balance_raw=('margin_balance_raw', 'sum'),
         exchange_cnt=('exchange_id', 'nunique'),
     )
@@ -163,54 +206,60 @@ def fetch_margin():
 
 
 def fetch_sw_daily():
-    print('全量拉取申万一级行业...')
-    df = ts_api(
+    print('增量拉取申万一级行业...')
+    old = read_csv(SW_DAILY_CSV)
+    start = incremental_start(old)
+    new = ts_api(
         'sw_daily',
         fields='ts_code,trade_date,close,pct_change,amount,name',
-        start_date=START_DATE,
+        start_date=start,
         end_date=END_DATE,
     )
-    if df.empty:
+    if new.empty and old.empty:
         print('  无数据')
         return
-    df['trade_date'] = df['trade_date'].map(norm_date)
-    df['pct_change'] = pd.to_numeric(df['pct_change'], errors='coerce')
-    df['amount'] = pd.to_numeric(df['amount'], errors='coerce')
-    df = df.drop_duplicates(['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
+    if not new.empty:
+        new['trade_date'] = new['trade_date'].map(norm_date)
+        new['pct_change'] = pd.to_numeric(new['pct_change'], errors='coerce')
+        new['amount'] = pd.to_numeric(new['amount'], errors='coerce')
+    df = merge_dedup(old, new, ['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
     df.to_csv(SW_DAILY_CSV, index=False)
     print(f"  申万行业: {len(df)}条，最新 {df['trade_date'].max()}")
 
 
 def fetch_industry_etf():
-    print('全量拉取行业ETF份额...')
-    all_data = []
+    print('增量拉取行业ETF份额...')
+    old = read_csv(INDUSTRY_ETF_DETAIL_CSV)
+    start = incremental_start(old)
+    parts = []
     for industry, code in INDUSTRY_ETF_MAP.items():
         df = ts_api(
             'fund_share',
             fields='ts_code,trade_date,fd_share',
             ts_code=code,
-            start_date=START_DATE,
+            start_date=start,
             end_date=END_DATE,
         )
         if not df.empty:
             df['industry'] = industry
             df['trade_date'] = df['trade_date'].map(norm_date)
             df['fd_share'] = pd.to_numeric(df['fd_share'], errors='coerce')
-            all_data.append(df)
+            parts.append(df)
         time.sleep(0.25)
-    if not all_data:
+    if not parts and old.empty:
         print('  无数据')
         return
-    combined = pd.concat(all_data, ignore_index=True)
-    combined = combined.drop_duplicates(['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
-    combined['share_chg'] = combined.groupby('ts_code')['fd_share'].diff()
-    combined.to_csv(INDUSTRY_ETF_CSV, index=False)
-    print(f"  行业ETF: {len(combined)}条，最新 {combined['trade_date'].max()}")
+    new = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=['ts_code', 'trade_date', 'fd_share', 'industry'])
+    detail = merge_dedup(old, new, ['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
+    detail['share_chg'] = detail.groupby('ts_code')['fd_share'].diff()
+    detail.to_csv(INDUSTRY_ETF_DETAIL_CSV, index=False)
+    detail.to_csv(INDUSTRY_ETF_CSV, index=False)
+    print(f"  行业ETF: {len(detail)}条，最新 {detail['trade_date'].max()}")
 
 
 def main():
     print('=' * 50)
-    print('拥挤度监控 - 全量重拉')
+    print('拥挤度监控 - 增量更新')
     print('=' * 50)
     print(f'区间: {START_DATE} ~ {END_DATE}')
     fetch_northbound()
@@ -218,7 +267,7 @@ def main():
     fetch_margin()
     fetch_sw_daily()
     fetch_industry_etf()
-    print('\n✅ 数据拉取完成')
+    print('\n✅ 数据更新完成')
 
 
 if __name__ == '__main__':

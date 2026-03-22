@@ -121,7 +121,16 @@ function render(){
   }).join('');
   document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
 
-  // 三路卡片
+  // 数据日期
+  var dates=DATA.data_dates||{};
+  var dateHtml=[];
+  if(dates.northbound) dateHtml.push('北向/南向: '+dates.northbound);
+  if(dates.etf) dateHtml.push('ETF: '+dates.etf);
+  if(dates.margin) dateHtml.push('两融: '+dates.margin);
+  if(dates.industry) dateHtml.push('行业: '+dates.industry);
+  if(dateHtml.length) document.getElementById('updateTime').textContent='数据截至 '+dateHtml.join(' | ');
+
+  // 四路卡片
   var flows=DATA.three_flows||{};
   var details=flows.details||{};
   var html='';
@@ -247,7 +256,7 @@ loadData();
   <div>• <b>✅ 资金确认：</b>涨幅>2% + ETF流入 + 拥挤度正常 → 上涨有真金白银支撑，趋势可能延续</div>
   <div>• <b>👀 超跌冷门：</b>跌幅>2% + 冷清(❄️) → 无人问津的超跌板块，可能存在左侧机会</div>
   <div>• <b>🔄 逆势吸筹：</b>跌幅>2% + ETF流入 → 价格下跌但有资金在逆势买入，关注拐点</div>
-  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据来源：Tushare（港股通/沪深股通 moneyflow_hsgt、申万行业指数 index_daily、ETF份额 fund_share、两融 margin）</div>
+  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据来源：Tushare（港股通/沪深股通 moneyflow_hsgt、申万行业 sw_daily、ETF份额 fund_share、两融 margin）</div>
 </div>
 
 </body></html>
