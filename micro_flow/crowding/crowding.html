@@ -65,7 +65,7 @@ h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1e2433}
 <div class="flow-cards" id="flowCards"></div>
 
 <div class="chart-box section">
-  <h3>📊 三路资金每日净流入（60日）</h3>
+  <h3>📊 四路资金每日净流入（60日）</h3>
   <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
 </div>
 
@@ -125,7 +125,7 @@ function render(){
   var flows=DATA.three_flows||{};
   var details=flows.details||{};
   var html='';
-  ['north_net','etf_share_chg','margin_chg'].forEach(function(k){
+  ['north_net','south_net','etf_share_chg','margin_chg'].forEach(function(k){
     var d=details[k];
     if(!d)return;
     var cls=d.direction==='inflow'?'inflow':'outflow';
@@ -148,9 +148,9 @@ function renderDailyChart(){
   var chart=DATA.direction_chart||[];
   var labels=chart.map(function(d){return d.date});
   var datasets=[];
-  var colors={north_net:'#6366f1',etf_share_chg:'#f59e0b',margin_chg:'#10b981'};
-  var names={north_net:'北向(亿)',etf_share_chg:'ETF份额变化(万份)',margin_chg:'两融变化(亿)'};
-  ['north_net','etf_share_chg','margin_chg'].forEach(function(k){
+  var colors={north_net:'#6366f1',south_net:'#ec4899',etf_share_chg:'#f59e0b',margin_chg:'#10b981'};
+  var names={north_net:'北向(亿)',south_net:'南向(亿)',etf_share_chg:'ETF份额变化(万份)',margin_chg:'两融变化(亿)'};
+  ['north_net','south_net','etf_share_chg','margin_chg'].forEach(function(k){
     if(!chart.some(function(d){return d[k]!=null}))return;
     datasets.push({label:names[k],data:chart.map(function(d){return d[k]}),
       backgroundColor:colors[k]+'88',borderColor:colors[k],borderWidth:1,barPercentage:0.6});
@@ -166,7 +166,7 @@ function renderDailyChart(){
 function renderCumChart(){
   var rolling=DATA.rolling_cum||[];
   if(!rolling.length)return;
-  var colors=['#6366f1','#f59e0b','#10b981'];
+  var colors=['#6366f1','#ec4899','#f59e0b','#10b981'];
   var datasets=rolling.map(function(s,i){
     return{label:s.name+'(20日累计)',data:s.data.map(function(d){return d.value}),
       borderColor:colors[i%3],backgroundColor:colors[i%3]+'18',fill:true,tension:0.3,borderWidth:2,pointRadius:0}
@@ -238,7 +238,7 @@ loadData();
 <!-- 底部注释 -->
 <div style="margin-top:32px;padding:20px;background:#fff;border-radius:10px;border:1px solid #e8eaef;font-size:12px;color:#6b7280;line-height:1.8">
   <div style="font-weight:700;color:#374151;margin-bottom:8px;font-size:13px">📖 指标说明</div>
-  <div><b>三路资金方向一致性：</b>北向资金（沪深股通净买入）、宽基ETF（7只主要宽基ETF份额变化）、两融余额变化。MA5 > MA20 判定为流入方向，三路同向即为"共振"信号。</div>
+  <div><b>四路资金方向一致性：</b>北向资金、南向资金、宽基ETF（7只主要宽基ETF份额变化）、两融余额变化。MA5 > MA20 判定为流入方向，多路同向即为"共振"信号。</div>
   <div><b>行业涨跌幅：</b>申万一级行业（31个）近5个交易日累计涨跌幅（复利计算）。</div>
   <div><b>量比（拥挤度）：</b>当日成交额 / 过去20日成交额均值。>1.5 为🔥拥挤（交易过热），<0.7 为❄️冷清。</div>
   <div><b>ETF资金流向：</b>各行业对应的代表性ETF近5日份额变化（万份）。份额增加 = 资金净申购流入，份额减少 = 资金赎回流出。共覆盖25个行业ETF。</div>
@@ -247,7 +247,7 @@ loadData();
   <div>• <b>✅ 资金确认：</b>涨幅>2% + ETF流入 + 拥挤度正常 → 上涨有真金白银支撑，趋势可能延续</div>
   <div>• <b>👀 超跌冷门：</b>跌幅>2% + 冷清(❄️) → 无人问津的超跌板块，可能存在左侧机会</div>
   <div>• <b>🔄 逆势吸筹：</b>跌幅>2% + ETF流入 → 价格下跌但有资金在逆势买入，关注拐点</div>
-  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据来源：Tushare（申万行业指数 sw_daily + ETF份额 fund_share + 北向 moneyflow_hsgt + 两融 margin）</div>
+  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据来源：Tushare（港股通/沪深股通 moneyflow_hsgt、申万行业指数 index_daily、ETF份额 fund_share、两融 margin）</div>
 </div>
 
 </body></html>
