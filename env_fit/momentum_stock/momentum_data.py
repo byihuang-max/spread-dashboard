@@ -30,6 +30,20 @@ def log(msg):
     print(msg, flush=True)
 
 
+def _hhmmss_to_minutes(val):
+    s = str(val or '').strip()
+    if not s or s == 'None':
+        return None
+    s = s.zfill(6)
+    try:
+        hh = int(s[:2])
+        mm = int(s[2:4])
+        ss = int(s[4:6])
+        return hh * 60 + mm + ss / 60
+    except Exception:
+        return None
+
+
 # ═══ Tushare API ═══
 
 def tushare_call(api_name, params, retries=3):
@@ -77,11 +91,15 @@ FULL_HEADERS = [
     'duanban_count', 'high_duanban_count',
     'promotion_rate', 'rate_1to2', 'rate_2to3', 'rate_3to4',
     'refeng_rate', 'zha_rate', 'ud_ratio', 'seal_quality',
+    'leader_first_limit_time', 'leader_refeng', 'shouban_batch_start_time',
+    'high_level_bomb_group', 'close_high_fade',
     'h_norm', 'p_norm', 'z_norm', 'u_norm', 's_norm',
     'sentiment', 'cycle_label',
     'formula_duanban_count', 'formula_high_duanban_count',
     'formula_promotion_rate', 'formula_rate_1to2', 'formula_rate_2to3', 'formula_rate_3to4',
     'formula_refeng_rate', 'formula_zha_rate', 'formula_ud_ratio', 'formula_seal_quality',
+    'formula_leader_first_limit_time', 'formula_leader_refeng', 'formula_shouban_batch_start_time',
+    'formula_high_level_bomb_group', 'formula_close_high_fade',
     'formula_sentiment', 'formula_cycle_label'
 ]
 
@@ -318,10 +336,40 @@ def compute_all_metrics(raw_rows):
 
         # 炸板回封率 = 今日最终涨停且盘中开板(open_times>0) / (最终涨停且盘中开板 + 炸板未封)
         refeng_success = 0
+        leader_first_limit_time = ''
+        leader_refeng = 0
+        shouban_batch_start_time = ''
+        high_level_bomb_group = 0
+        close_high_fade = 0
         if os.path.exists(cache_file):
+            high_ups = [u for u in day_data.get('U', []) if (u.get('limit_times') or 1) == max_height]
+            if high_ups:
+                leader = sorted(high_ups, key=lambda x: (_hhmmss_to_minutes(x.get('first_time')) or 99999, x.get('ts_code', '')))[0]
+                leader_first_limit_time = str(leader.get('first_time') or '')
+                leader_refeng = 1 if (leader.get('open_times') or 0) > 0 else 0
+
+            shouban_times = sorted([
+                _hhmmss_to_minutes(u.get('first_time')) for u in day_data.get('U', [])
+                if (u.get('limit_times') or 1) == 1 and _hhmmss_to_minutes(u.get('first_time')) is not None
+            ])
+            if len(shouban_times) >= 3:
+                # 第3只首板出现时间，作为“批量启动”时点
+                mins = shouban_times[2]
+                hh = int(mins // 60)
+                mm = int(mins % 60)
+                shouban_batch_start_time = f'{hh:02d}{mm:02d}00'
+
             for u in day_data.get('U', []):
                 if (u.get('open_times') or 0) > 0:
                     refeng_success += 1
+
+            high_zhas = [z for z in day_data.get('Z', []) if (z.get('first_time') and _hhmmss_to_minutes(z.get('first_time')) is not None and (_hhmmss_to_minutes(z.get('first_time')) >= 13 * 60))]
+            high_level_bomb_group = len(high_zhas)
+
+            if high_ups:
+                leader_last = _hhmmss_to_minutes(leader.get('last_time'))
+                if leader_last is not None and leader_last >= (14 * 60 + 30):
+                    close_high_fade = 1
         refeng_base = refeng_success + zha_count
         refeng_rate = refeng_success / refeng_base * 100 if refeng_base else 0
 
@@ -379,6 +427,11 @@ def compute_all_metrics(raw_rows):
             'zha_rate': round(zha_rate, 2),
             'ud_ratio': round(ud_ratio, 2),
             'seal_quality': round(seal_quality, 2),
+            'leader_first_limit_time': leader_first_limit_time,
+            'leader_refeng': leader_refeng,
+            'shouban_batch_start_time': shouban_batch_start_time,
+            'high_level_bomb_group': high_level_bomb_group,
+            'close_high_fade': close_high_fade,
             'formula_duanban_count': '昨日连板股(limit_times≥2)中，今日未继续涨停的数量',
             'formula_high_duanban_count': '昨日高位连板股(limit_times≥3)中，今日未继续涨停的数量',
             'formula_promotion_rate': '今日涨停∩昨日涨停 / 昨日涨停总数 × 100',
@@ -389,6 +442,11 @@ def compute_all_metrics(raw_rows):
             'formula_zha_rate': 'zha_count / (up_count + zha_count) × 100',
             'formula_ud_ratio': 'min(up_count / max(down_count, 1), 20)，clip防极端值',
             'formula_seal_quality': '(big_cap_up + 2*mega_cap_up) / up_count × 100，大市值涨停加权占比',
+            'formula_leader_first_limit_time': '当日最高板股票中，first_time 最早者的首次封板时间',
+            'formula_leader_refeng': '当日最高板代表股 open_times>0 记为1，否则记为0',
+            'formula_shouban_batch_start_time': '当日首板股按 first_time 排序后，第3只首板出现时间，作为批量启动时点',
+            'formula_high_level_bomb_group': '当日炸板股中，13:00后出现 first_time 的炸板家数（v1 近似为午后高位风险代理）',
+            'formula_close_high_fade': '当日最高板代表股 last_time≥14:30 记为1，作为尾盘高位波动风险代理（v1）',
         })
 
         prev_up_codes = current_up_codes
@@ -518,6 +576,11 @@ def build_json(full_rows):
             'zha_rate': r['zha_rate'],
             'ud_ratio': r['ud_ratio'],
             'seal_quality': r['seal_quality'],
+            'leader_first_limit_time': r.get('leader_first_limit_time', ''),
+            'leader_refeng': r.get('leader_refeng', 0),
+            'shouban_batch_start_time': r.get('shouban_batch_start_time', ''),
+            'high_level_bomb_group': r.get('high_level_bomb_group', 0),
+            'close_high_fade': r.get('close_high_fade', 0),
             'sentiment': r['sentiment'],
             'h_norm': r['h_norm'],
             'p_norm': r['p_norm'],
