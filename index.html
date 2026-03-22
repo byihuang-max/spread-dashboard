@@ -436,7 +436,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                 <div style="font-size:10px;color:#4b5578;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:6px">MACRO SCORE</div>
                 <div id="ms-phase" style="font-size:18px;font-weight:800;margin-bottom:4px"></div>
                 <div id="ms-merrill" style="font-size:11px;color:#64748b;line-height:1.4"></div>
-                <a id="ms-hypothesis-link" href="macro/fundamentals/fundamentals.html#macro-hypothesis" style="display:none;align-items:center;gap:6px;margin-top:8px;max-width:360px;padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(59,130,246,.12));border:1px solid rgba(245,158,11,.28);text-decoration:none;cursor:pointer;transition:all .18s ease">
+                <a id="ms-hypothesis-link" href="#macro-hypothesis" style="display:none;align-items:center;gap:6px;margin-top:8px;max-width:360px;padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(59,130,246,.12));border:1px solid rgba(245,158,11,.28);text-decoration:none;cursor:pointer;transition:all .18s ease">
                   <span id="ms-hypothesis" style="font-size:11px;color:#475569;line-height:1.55;font-weight:700;flex:1"></span>
                   <span style="font-size:12px;color:#f59e0b;font-weight:900">↗</span>
                 </a>
@@ -2904,7 +2904,7 @@ function initCbCharts() {
         <iframe src="macro/rates/rates.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
       <div class="strat-page" id="strat-fundamentals">
-        <iframe src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+        <iframe id="macro-fundamentals-frame" src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-macro -->
 
@@ -2957,6 +2957,49 @@ function initCbCharts() {
   if(toggle)toggle.addEventListener('click',openSidebar);
   if(overlay)overlay.addEventListener('click',closeSidebar);
 
+  function activateModuleTab(mod,strat){
+    var nav=document.querySelector('.nav-item[data-module="'+mod+'"]');
+    var page=document.getElementById('page-'+mod);
+    if(!nav||!page)return;
+    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+    document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
+    nav.classList.add('active');
+    page.classList.add('active');
+    document.getElementById('pageTitle').textContent=titles[mod]||mod;
+    if(typeof updateHeaderRefreshBtn==='function') updateHeaderRefreshBtn();
+    if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
+    if(strat){
+      var tab=page.querySelector('.strat-tab[data-strat="'+strat+'"]');
+      var sub=page.querySelector('#strat-'+strat);
+      if(tab&&sub){
+        page.querySelectorAll('.strat-tab').forEach(function(t){t.classList.remove('active')});
+        page.querySelectorAll('.strat-page').forEach(function(p){p.classList.remove('active')});
+        tab.classList.add('active');
+        sub.classList.add('active');
+      }
+    }else{
+      var firstTab=page.querySelector('.strat-tab');
+      var firstPage=page.querySelector('.strat-page');
+      if(firstTab && !page.querySelector('.strat-tab.active')) firstTab.classList.add('active');
+      if(firstPage && !page.querySelector('.strat-page.active')) firstPage.classList.add('active');
+    }
+  }
+
+  function routeByHash(){
+    var h=(location.hash||'').replace(/^#/,'');
+    if(h==='macro-hypothesis'){
+      activateModuleTab('macro','fundamentals');
+      var f=document.getElementById('macro-fundamentals-frame');
+      if(f) f.src='macro/fundamentals/fundamentals.html#macro-hypothesis';
+    }else if(h==='macro-fundamentals'){
+      activateModuleTab('macro','fundamentals');
+      var f2=document.getElementById('macro-fundamentals-frame');
+      if(f2) f2.src='macro/fundamentals/fundamentals.html';
+    }else if(h==='overview'){
+      activateModuleTab('overview');
+    }
+  }
+
   // 侧边栏模块切换
   document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
     item.addEventListener('click',function(){
@@ -2964,22 +3007,7 @@ function initCbCharts() {
       var page=document.getElementById('page-'+mod);
       if(!page)return;
       closeSidebar();
-      document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
-      document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
-      this.classList.add('active');
-      page.classList.add('active');
-      document.getElementById('pageTitle').textContent=titles[mod]||mod;
-      // 切到刷新记录时加载数据
-      if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
-      // 切换模块时，确保第一个 tab 和对应 strat-page 处于激活状态
-      var firstTab=page.querySelector('.strat-tab');
-      var firstPage=page.querySelector('.strat-page');
-      if(firstTab && !page.querySelector('.strat-tab.active')){
-        firstTab.classList.add('active');
-      }
-      if(firstPage && !page.querySelector('.strat-page.active')){
-        firstPage.classList.add('active');
-      }
+      activateModuleTab(mod);
     });
   });
 
@@ -3260,6 +3288,8 @@ function initCbCharts() {
 
   // 初始化按钮文本
   updateHeaderRefreshBtn();
+  routeByHash();
+  window.addEventListener('hashchange', routeByHash);
 
   // 更新时间
   document.getElementById('updateTime').textContent='更新: '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
