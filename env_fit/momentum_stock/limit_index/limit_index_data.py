@@ -255,6 +255,25 @@ def write_json(records):
         json.dump(output, f, ensure_ascii=False, indent=2)
 
 
+def needs_full_rebuild(existing_records, pairs_to_calc):
+    if not existing_records:
+        return False, ''
+
+    existing_records.sort(key=lambda r: r['date'])
+
+    first = existing_records[0]
+    if first.get('all_return') is not None and first.get('all_nav') is not None:
+        expected = 1.0 * (1 + first['all_return'] / 100)
+        if abs(first['all_nav'] - expected) > 1e-6:
+            return True, '首行净值与首日收益率不一致，历史净值序列已串坏'
+
+    last_existing_date = existing_records[-1]['date']
+    if any(t_day <= last_existing_date for _, t_day in pairs_to_calc):
+        return True, '发现中间缺口补算，不能沿用最新净值做增量'
+
+    return False, ''
+
+
 # ═══ 主逻辑 ═══
 
 def main():
@@ -264,6 +283,7 @@ def main():
 
     # 读取已有数据
     existing_records, existing_dates = read_existing_csv()
+    existing_records.sort(key=lambda r: r['date'])
     log(f"📦 已有 CSV: {len(existing_records)} 条记录")
 
     # 获取所有有涨停缓存的交易日
@@ -279,24 +299,28 @@ def main():
     log(f"📊 涨停缓存: {cache_dates[0]} ~ {cache_dates[-1]} ({len(cache_dates)}天)")
 
     # 找出需要新计算的日期对 (t_minus_1, t_day)
-    # t_day 是收益计算日，也是 CSV 中的 date 字段
     pairs_to_calc = []
     for i in range(len(cache_dates) - 1):
         t_day = cache_dates[i + 1]
         if t_day not in existing_dates:
             pairs_to_calc.append((cache_dates[i], t_day))
 
+    rebuild, rebuild_reason = needs_full_rebuild(existing_records, pairs_to_calc)
+    if rebuild:
+        log(f"♻️ 检测到历史序列异常，改为全量重算: {rebuild_reason}")
+        pairs_to_calc = [(cache_dates[i], cache_dates[i + 1]) for i in range(len(cache_dates) - 1)]
+        existing_records = []
+        existing_dates = set()
+
     if not pairs_to_calc:
         log("✅ 无新数据，跳过计算")
-        # 仍然输出 JSON（可能 JSON 不存在）
         if existing_records:
             write_json(existing_records)
             log(f"💾 JSON 已更新")
         return
 
-    log(f"🆕 需计算 {len(pairs_to_calc)} 个新交易日")
+    log(f"🆕 需计算 {len(pairs_to_calc)} 个交易日")
 
-    # 从已有记录恢复净值状态
     if existing_records:
         nav_all = existing_records[-1]['all_nav']
         nav_first = existing_records[-1]['first_nav']
@@ -320,8 +344,6 @@ def main():
             log(f"  ⚠️ {t_day} 无行情数据，跳过")
             continue
 
-        time.sleep(0.3)
-
         all_ret, all_gap, all_valid, all_total = calc_group_return(all_codes, daily_market)
         first_ret, first_gap, first_valid, first_total = calc_group_return(first_codes, daily_market)
 
@@ -329,7 +351,8 @@ def main():
             continue
 
         nav_all *= (1 + all_ret / 100)
-        nav_first *= (1 + (first_ret or 0) / 100) if first_ret is not None else 1.0
+        if first_ret is not None:
+            nav_first *= (1 + first_ret / 100)
 
         nav_all_list.append(nav_all)
         nav_first_list.append(nav_first)
@@ -356,14 +379,11 @@ def main():
         existing_records.append(record)
         new_count += 1
 
-    # 按日期排序（防止乱序）
     existing_records.sort(key=lambda r: r['date'])
-
-    # 写入 CSV + JSON
     write_csv(existing_records)
     write_json(existing_records)
 
-    log(f"\n✅ 新增 {new_count} 条，总计 {len(existing_records)} 条")
+    log(f"\n✅ 新增/重算 {new_count} 条，总计 {len(existing_records)} 条")
     log(f"📈 全涨停净值: {nav_all:.4f} ({(nav_all-1)*100:+.2f}%)")
     log(f"📈 首板净值:   {nav_first:.4f} ({(nav_first-1)*100:+.2f}%)")
 
