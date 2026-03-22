@@ -127,11 +127,12 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
   <!-- ======== 因子库 ======== -->
   <div class="card">
-    <h2>📚 因子库（v1：原始因子 / 合成因子 / 阶段输出）</h2>
-    <div class="note">先把口径拆顺：<b>原始因子</b>看原料，<b>合成因子</b>看加工结果，<b>阶段输出</b>看状态判断。</div>
+    <h2>📚 因子库（v2：原始日频 / 盘中发现 / 合成因子 / 阶段输出）</h2>
+    <div class="note">先把口径拆顺：<b>原始日频因子</b>看底层原料，<b>盘中发现因子</b>看当日确认/证伪，<b>合成因子</b>看加工结果，<b>阶段输出</b>看状态判断。</div>
 
     <div class="subtabs" style="margin-top:16px">
-      <button class="subtab-btn active" data-tab="rawfactors">原始因子</button>
+      <button class="subtab-btn active" data-tab="rawfactors">原始日频因子</button>
+      <button class="subtab-btn" data-tab="intradayfactors">盘中发现因子</button>
       <button class="subtab-btn" data-tab="compositefactors">合成因子</button>
       <button class="subtab-btn" data-tab="stageoutputs">阶段输出</button>
     </div>
@@ -163,6 +164,32 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">♻️ refeng_rate（炸板回封率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧质量确认<br>今日最终涨停且盘中开板的家数，占“回封成功 + 炸板未封”总数的比例。<b>越高说明分歧后仍有资金把板封回去</b>。</div></div>
         <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💥 zha_rate（炸板率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧<br>涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
         <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔒 seal_quality（封板质量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化 / 质量确认<br>大市值涨停股占比。<b>越高说明主力资金参与度更高</b>。</div></div>
+      </div>
+    </div>
+
+    <div id="intradayfactors" class="tab-pane">
+      <div class="card hero" style="margin-bottom:16px;padding:18px 20px">
+        <div class="note"><b>定位：</b>盘中发现因子不和日频原始因子混放。它们是对当日日频判断的<b>确认 / 强化 / 证伪</b>层。<br><b>字段口径：</b>`intraday_signal` + `trigger_type` + `observation_window` + `related_daily_factors` + `impact_on_stage`。</div>
+      </div>
+
+      <div class="mini-title">早盘启动 / 龙头确认</div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⏰ leader_first_limit_time（龙头首次封板时间）</h2><div class="note"><b>类型：</b>event · <b>窗口：</b>morning · <b>输出：</b>timestamp<br>龙头越早封板，说明核心票凝聚力越强。<b>对应日频：</b>max_height / promotion_rate。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">♻️ leader_refeng（龙头炸板后回封）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>full_session · <b>输出：</b>binary<br>龙头被砸后还能封回去，说明分歧承接强。<b>对应日频：</b>refeng_rate / max_height。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🚀 shouban_batch_start_time（首板批量启动时间）</h2><div class="note"><b>类型：</b>event · <b>窗口：</b>morning · <b>输出：</b>timestamp<br>首板若在早盘集中出现，说明试错资金开始集体行动。<b>对应日频：</b>shouban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📶 ladder_sync_strength（二板/三板梯队同步加强）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>late_morning · <b>输出：</b>state_label<br>不是单龙头强，而是梯队一起强，说明生态更健康。<b>对应日频：</b>rate_1to2 / rate_2to3 / rate_3to4 / lianban_count。</div></div>
+      </div>
+
+      <div class="mini-title">午后分歧 / 修复</div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌤️ shouban_afternoon_expand（首板午后继续扩散）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后还能继续扩散，说明资金不是一波流。<b>对应日频：</b>shouban_count / lianban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🩹 afternoon_repair（午后分歧后修复）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后能修回来，比全天硬顶更有质量。<b>对应日频：</b>zha_rate / refeng_rate。</div></div>
+      </div>
+
+      <div class="mini-title">高位风险 / 退潮预警</div>
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💣 high_level_bomb_group（高位股集体炸板）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>afternoon · <b>输出：</b>count<br>高位核心同时松动，杀伤力远大于单票炸板。<b>对应日频：</b>high_duanban_count / duanban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌆 close_high_fade（尾盘高位回落）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>close_near · <b>输出：</b>binary<br>尾盘高位股顶不住，往往说明次日接力承压。<b>对应日频：</b>high_duanban_count / max_height。</div></div>
       </div>
     </div>
 
