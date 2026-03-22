@@ -20,7 +20,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 .clock-info .phase-name{font-size:18px;font-weight:800;margin-bottom:4px}
 .clock-info .phase-advice{font-size:13px;color:#6b7280}
 .clock-info .phase-data{font-size:12px;color:#8b92a5;margin-top:6px}
-.hypothesis-card{background:linear-gradient(135deg,#ffffff,#fbfcff);border:1px solid #e8eaef;border-radius:14px;padding:18px 20px;margin-bottom:20px;box-shadow:0 1px 2px rgba(15,23,42,0.03)}
+.hypothesis-card{background:linear-gradient(135deg,#ffffff,#fbfcff);border:1px solid #e8eaef;border-radius:14px;padding:18px 20px;margin-bottom:20px;box-shadow:0 1px 2px rgba(15,23,42,0.03);scroll-margin-top:18px}
+.hypothesis-card:target{border-color:rgba(245,158,11,.75);box-shadow:0 0 0 4px rgba(245,158,11,.14),0 8px 24px rgba(245,158,11,.16);animation:hypothesisPulse 1.2s ease 1}
+@keyframes hypothesisPulse{0%{transform:scale(.995)}35%{transform:scale(1.006)}100%{transform:scale(1)}}
 .hypothesis-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
 .hypothesis-title{font-size:20px;font-weight:800;color:#111827}
 .hypothesis-summary{font-size:13px;color:#4b5563;line-height:1.8;margin-top:6px;max-width:820px}
@@ -66,7 +68,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 </div>
 
 <div class="clock-card" id="clockCard" style="display:none"></div>
-<div class="hypothesis-card" id="hypothesisCard" style="display:none"></div>
+<div class="hypothesis-card" id="macro-hypothesis" style="display:none"></div>
 
 <div class="chart-row section">
   <div class="chart-box">
@@ -166,7 +168,7 @@ function render(){
 }
 function renderHypothesis(){
   var h=DATA.macro_hypothesis;
-  var box=document.getElementById('hypothesisCard');
+  var box=document.getElementById('macro-hypothesis');
   if(!h) return;
   box.style.display='block';
   box.innerHTML=''
