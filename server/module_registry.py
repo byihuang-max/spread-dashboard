@@ -66,6 +66,7 @@ MODULE_REGISTRY = {
             ('env_fit/momentum_stock', 'inject_momentum.py'),
         ],
         'inject_script': ('env_fit/momentum_stock', 'inject_momentum.py'),
+        'post_inject': [('timing-research', 'generate_leader_pool.py')],
         'aliases': ['momentum-stock'],
         'include_in_update_all': True,
         'include_in_refresh_server': True,

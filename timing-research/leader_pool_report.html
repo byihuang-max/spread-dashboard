@@ -1,1 +1,182 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Leader Pool Report</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:linear-gradient(180deg,#071427,#0b1a32);color:#dce7f5;margin:0;padding:24px} .wrap{max-width:1400px;margin:0 auto}.card{background:rgba(11,22,48,.86);border:1px solid #24365a;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 10px 28px rgba(0,0,0,.2)} h1,h2,h3{margin:0 0 12px 0}.muted{color:#8fa5c2}.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stat{background:#0c1a36;border:1px solid #203455;border-radius:14px;padding:16px}.stat .v{font-size:28px;font-weight:800}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#163150;color:#9fd2ff;font-size:12px;margin:2px}.tag2{display:inline-block;padding:4px 8px;border-radius:999px;background:#143827;color:#8ef0bf;font-size:12px;margin:2px}.tbl{width:100%;border-collapse:collapse;font-size:13px}.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid #223554;text-align:left;vertical-align:top}.tbl th{color:#8fa5c2}.num{text-align:right}.reason{line-height:1.7}.hero{background:linear-gradient(135deg,rgba(20,40,78,.85),rgba(12,26,54,.9))} a{color:#7cc5ff;text-decoration:none}.small{font-size:12px}.pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#2a1f56;color:#c3b5ff;font-size:12px;margin:2px}@media (max-width:980px){.grid,.grid3{grid-template-columns:1fr}}</style></head><body><div class='wrap'><div class='card hero'><h1>龙头观察池 / 龙头确认报告</h1><div class='muted'>trade_date = 20260320 ｜ 页面位置：GAMT → 择时研究 → 命题研究子页</div><p>这页的定位不是正式回测报告，而是 <b>盘中发现层</b> 的前置基础页：先把 <b>龙头观察池</b>、<b>辨识度龙头</b>、<b>成交额龙头</b> 的口径和当日样本跑通。</p><p><b>当前实际数据源：</b>GAMT 本地强势股缓存（上游来自 Tushare <code>limit_list_d</code> 链路），本页暂未接入 iFind。</p></div><div class='grid'><div class='card'><h2>放置建议</h2><p>我建议先把这页放在 <b>择时研究 / 命题研究</b> 下，作为一个独立子页，而不是直接塞进现有大页正文。</p><ul><li>它和“冰点回测/单因子IC”不同，属于 <b>盘中发现层原型页</b></li><li>先独立页面最稳，不破坏现有大页结构</li><li>后面如果你认可，再把它升级成“盘中发现层”正式入口</li></ul><p class='muted small'>建议文件：<code>timing-research/leader_pool_report.html</code></p></div><div class='card'><h2>规则摘要</h2><p><span class='pill'>limit_core</span> 只从涨停池选，优先最高板、连板、高额成交、封板稳定、首次封板早</p><p><span class='pill'>active_core</span> 只在强势行业里选活跃票，优先炸板活跃、强涨幅、高换手、高成交额</p><p><span class='pill'>theme_amount_core</span> 只在强势行业内部比成交额，抓题材中军/容量核心，不从全市场金额榜直接选</p><p class='muted'>focus industries：电力 / 光伏设备 / 电池</p></div></div><div class='grid3'><div class='stat'><div class='muted'>final pool size</div><div class='v'>11</div><div class='small muted'>limit=8 / active=6 / amount=4</div></div><div class='stat'><div class='muted'>辨识度龙头</div><div class='v'>深华发Ａ</div><div class='small'>000020.SZ ｜ score=194.0</div><div><span class='tag2'>最高板=5</span><span class='tag2'>首次封板=92500</span><span class='tag2'>封板稳定</span></div></div><div class='stat'><div class='muted'>成交额龙头</div><div class='v'>上能电气</div><div class='small'>300827.SZ ｜ score=158.0</div><div><span class='tag'>首次封板=102403</span><span class='tag'>盘中开板5次后仍封住</span><span class='tag'>候选池成交额前2</span><span class='tag'>题材内成交额核心</span><span class='tag'>强势行业活跃核心</span></div></div></div><div class='grid'><div class='card'><h2>Top 5 辨识度龙头排序</h2><table class='tbl'><thead><tr><th>#</th><th>股票</th><th>行业</th><th class='num'>score</th><th>原因</th></tr></thead><tbody><tr><td>1</td><td><b>000020.SZ</b><br>深华发Ａ</td><td>光学光电</td><td class='num'>194.0</td><td class='reason'>最高板=5<br>首次封板=92500<br>封板稳定</td></tr><tr><td>2</td><td><b>600396.SH</b><br>华电辽能</td><td>电力</td><td class='num'>177.02</td><td class='reason'>最高板=5<br>首次封板=93326<br>盘中开板8次后仍封住</td></tr><tr><td>3</td><td><b>603687.SH</b><br>大胜达</td><td>包装印刷</td><td class='num'>114.02</td><td class='reason'>连板高度=3<br>首次封板=92502<br>封板稳定</td></tr><tr><td>4</td><td><b>000601.SZ</b><br>韶能股份</td><td>电力</td><td class='num'>111.0</td><td class='reason'>连板高度=3<br>首次封板=93030<br>封板稳定</td></tr><tr><td>5</td><td><b>002310.SZ</b><br>东方新能</td><td>电力</td><td class='num'>87.13</td><td class='reason'>连板高度=2<br>首次封板=93212<br>盘中开板3次后仍封住<br>题材内成交额核心<br>强势行业活跃核心</td></tr></tbody></table></div><div class='card'><h2>Top 5 成交额龙头排序</h2><table class='tbl'><thead><tr><th>#</th><th>股票</th><th>行业</th><th class='num'>score</th><th>原因</th></tr></thead><tbody><tr><td>1</td><td><b>300827.SZ</b><br>上能电气</td><td>光伏设备</td><td class='num'>158.0</td><td class='reason'>首次封板=102403<br>盘中开板5次后仍封住<br>候选池成交额前2<br>题材内成交额核心<br>强势行业活跃核心</td></tr><tr><td>2</td><td><b>300724.SZ</b><br>捷佳伟创</td><td>光伏设备</td><td class='num'>150.85</td><td class='reason'>首次封板=130033<br>炸板活跃票<br>候选池成交额前1<br>题材内成交额核心<br>强势行业活跃核心</td></tr><tr><td>3</td><td><b>600726.SH</b><br>华电能源</td><td>电力</td><td class='num'>121.64</td><td class='reason'>连板高度=2<br>首次封板=93416<br>盘中开板6次后仍封住<br>题材内成交额核心</td></tr><tr><td>4</td><td><b>603778.SH</b><br>国晟科技</td><td>光伏设备</td><td class='num'>114.0</td><td class='reason'>首次封板=111733<br>盘中开板8次后仍封住<br>候选池成交额前5<br>强势行业活跃核心</td></tr><tr><td>5</td><td><b>002310.SZ</b><br>东方新能</td><td>电力</td><td class='num'>109.27</td><td class='reason'>连板高度=2<br>首次封板=93212<br>盘中开板3次后仍封住<br>题材内成交额核心<br>强势行业活跃核心</td></tr></tbody></table></div></div><div class='card'><h2>完整候选池</h2><table class='tbl'><thead><tr><th>#</th><th>股票</th><th>行业</th><th>来源</th><th class='num'>候选分</th><th>角色标签</th><th>入池原因</th></tr></thead><tbody><tr><td>1</td><td><b>600396.SH</b><br>华电辽能<div class='small muted'>涨幅 10.02% / 成交额 24.16 亿</div></td><td>电力</td><td><span class='tag'>limit_core</span></td><td class='num'>124</td><td><span class='tag2'>high_level_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_recognition_leader</span></td><td class='reason'>最高板=5<br>首次封板时间=93326</td></tr><tr><td>2</td><td><b>002310.SZ</b><br>东方新能<div class='small muted'>涨幅 10.13% / 成交额 26.29 亿</div></td><td>电力</td><td><span class='tag'>active_core</span><span class='tag'>limit_core</span><span class='tag'>theme_amount_core</span></td><td class='num'>122.83</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_recognition_leader</span><span class='tag2'>theme_amount_core</span></td><td class='reason'>连板高度=2<br>首次封板时间=93212<br>强势行业=电力<br>涨幅强=10.13%<br>换手活跃=18.28%<br>题材内成交额第2<br>所属强势行业=电力<br>已涨停</td></tr><tr><td>3</td><td><b>300827.SZ</b><br>上能电气<div class='small muted'>涨幅 20.01% / 成交额 57.79 亿</div></td><td>光伏设备</td><td><span class='tag'>active_core</span><span class='tag'>limit_core</span><span class='tag'>theme_amount_core</span></td><td class='num'>121.5</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_amount_leader</span><span class='tag2'>potential_recognition_leader</span><span class='tag2'>theme_amount_core</span></td><td class='reason'>涨停池成交额前1<br>首次封板时间=102403<br>强势行业=光伏设备<br>涨幅强=20.01%<br>焦点池成交额前2<br>换手活跃=34.83%<br>题材内成交额第2<br>所属强势行业=光伏设备<br>已涨停</td></tr><tr><td>4</td><td><b>000020.SZ</b><br>深华发Ａ<div class='small muted'>涨幅 10.0% / 成交额 1.23 亿</div></td><td>光学光电</td><td><span class='tag'>limit_core</span></td><td class='num'>120</td><td><span class='tag2'>high_level_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_recognition_leader</span></td><td class='reason'>最高板=5<br>封板稳定(open_times=0)<br>首次封板时间=92500</td></tr><tr><td>5</td><td><b>300724.SZ</b><br>捷佳伟创<div class='small muted'>涨幅 9.41% / 成交额 69.63 亿</div></td><td>光伏设备</td><td><span class='tag'>active_core</span><span class='tag'>theme_amount_core</span></td><td class='num'>106.03</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>potential_amount_leader</span><span class='tag2'>potential_recognition_leader</span><span class='tag2'>theme_amount_core</span></td><td class='reason'>强势行业=光伏设备<br>炸板活跃票<br>涨幅强=9.41%<br>焦点池成交额前1<br>换手活跃=18.89%<br>题材内成交额第1<br>所属强势行业=光伏设备</td></tr><tr><td>6</td><td><b>600726.SH</b><br>华电能源<div class='small muted'>涨幅 9.96% / 成交额 29.63 亿</div></td><td>电力</td><td><span class='tag'>limit_core</span><span class='tag'>theme_amount_core</span></td><td class='num'>104.29</td><td><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_amount_leader</span><span class='tag2'>theme_amount_core</span></td><td class='reason'>连板高度=2<br>涨停池成交额前3<br>首次封板时间=93416<br>题材内成交额第1<br>所属强势行业=电力<br>已涨停</td></tr><tr><td>7</td><td><b>603778.SH</b><br>国晟科技<div class='small muted'>涨幅 10.0% / 成交额 34.63 亿</div></td><td>光伏设备</td><td><span class='tag'>active_core</span><span class='tag'>limit_core</span></td><td class='num'>81.1</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span><span class='tag2'>potential_amount_leader</span><span class='tag2'>potential_recognition_leader</span></td><td class='reason'>涨停池成交额前2<br>首次封板时间=111733<br>强势行业=光伏设备<br>涨幅强=10.00%<br>焦点池成交额前5<br>换手活跃=23.42%</td></tr><tr><td>8</td><td><b>000601.SZ</b><br>韶能股份<div class='small muted'>涨幅 10.0% / 成交额 10.19 亿</div></td><td>电力</td><td><span class='tag'>limit_core</span></td><td class='num'>80</td><td><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span></td><td class='reason'>连板高度=3<br>封板稳定(open_times=0)<br>首次封板时间=93030</td></tr><tr><td>9</td><td><b>603687.SH</b><br>大胜达<div class='small muted'>涨幅 10.02% / 成交额 0.62 亿</div></td><td>包装印刷</td><td><span class='tag'>limit_core</span></td><td class='num'>80</td><td><span class='tag2'>leader_pool_candidate</span><span class='tag2'>limit_core</span></td><td class='reason'>连板高度=3<br>封板稳定(open_times=0)<br>首次封板时间=92502</td></tr><tr><td>10</td><td><b>605117.SH</b><br>德业股份<div class='small muted'>涨幅 9.91% / 成交额 46.78 亿</div></td><td>光伏设备</td><td><span class='tag'>active_core</span></td><td class='num'>64.15</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>potential_recognition_leader</span></td><td class='reason'>强势行业=光伏设备<br>炸板活跃票<br>涨幅强=9.91%<br>焦点池成交额前3</td></tr><tr><td>11</td><td><b>603659.SH</b><br>璞泰来<div class='small muted'>涨幅 8.0% / 成交额 37.96 亿</div></td><td>电池</td><td><span class='tag'>active_core</span></td><td class='num'>59.38</td><td><span class='tag2'>active_core</span><span class='tag2'>leader_pool_candidate</span><span class='tag2'>potential_recognition_leader</span></td><td class='reason'>强势行业=电池<br>炸板活跃票<br>涨幅强=8.00%<br>焦点池成交额前4</td></tr></tbody></table></div></div></body></html>
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>龙头观察池 · 盘中发现层</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:linear-gradient(180deg,#071427,#0b1a32);color:#dce7f5;padding:24px;min-height:100vh}
+.wrap{max-width:1400px;margin:0 auto}
+.back{display:inline-block;padding:8px 14px;border-radius:10px;background:rgba(10,20,39,.95);border:1px solid #2a3a58;color:#5daeff;text-decoration:none;font-size:13px;font-weight:600;margin-bottom:18px}
+.back:hover{border-color:#60a5fa}
+.card{background:rgba(11,22,48,.86);border:1px solid #24365a;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.hero{background:linear-gradient(135deg,rgba(20,40,78,.85),rgba(12,26,54,.9))}
+h1{font-size:24px;font-weight:800;margin-bottom:6px}
+h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #24365a}
+.muted{color:#8fa5c2;font-size:13px}
+.date-badge{display:inline-block;padding:5px 12px;border-radius:999px;background:#163150;color:#7cc5ff;font-size:14px;font-weight:700;margin:8px 0 12px}
+.step-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.step-tab{padding:10px 18px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid #2a3a58;background:#0c1830;color:#cbd5e1;transition:all .2s}
+.step-tab:hover{border-color:#60a5fa;color:#fff}
+.step-tab.active{background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);border-color:#4f7dff;color:#fff;box-shadow:0 8px 24px rgba(59,130,246,.28)}
+.step-pane{display:none;animation:fadeIn .28s ease}
+.step-pane.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.grid2,.grid3{grid-template-columns:1fr}}
+.stat{background:#0c1a36;border:1px solid #203455;border-radius:14px;padding:16px}
+.stat .v{font-size:28px;font-weight:800}
+.stat .v.green{color:#59e0c5}.stat .v.blue{color:#5daeff}
+.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:#163150;color:#9fd2ff;font-size:11px;margin:2px}
+.tag2{display:inline-block;padding:3px 8px;border-radius:999px;background:#143827;color:#8ef0bf;font-size:11px;margin:2px}
+.pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#2a1f56;color:#c3b5ff;font-size:11px;margin:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid #223554;text-align:left;vertical-align:top}
+.tbl th{color:#8fa5c2;font-weight:600}
+.num{text-align:right}
+.reason{line-height:1.7}
+.small{font-size:12px}
+.note{color:#95a4bd;font-size:14px;line-height:1.8}
+.leader-hero{display:flex;gap:16px;align-items:stretch;flex-wrap:wrap}
+.leader-card{flex:1;min-width:260px;background:#0c1a36;border:1px solid #203455;border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.leader-card::before{content:'';position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;opacity:.12}
+.leader-card.rec::before{background:radial-gradient(circle,#59e0c5,transparent)}
+.leader-card.amt::before{background:radial-gradient(circle,#5daeff,transparent)}
+.leader-label{font-size:12px;color:#8fa5c2;margin-bottom:4px}
+.leader-name{font-size:26px;font-weight:800}
+.leader-name.green{color:#59e0c5}.leader-name.blue{color:#5daeff}
+.leader-code{font-size:13px;color:#8fa5c2;margin-top:2px}
+.leader-tags{margin-top:10px}
+#loading{text-align:center;padding:60px 0;color:#8fa5c2;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="index.html" class="back">← 返回择时研究</a>
+
+<div class="card hero">
+  <h1>🔍 龙头观察池 · 盘中发现层</h1>
+  <div class="muted">角色层 → 龙头观察池 → 龙头确认 ｜ 数据源：Tushare limit_list_d 链路</div>
+  <div class="date-badge" id="dateBadge">加载中...</div>
+</div>
+
+<div class="step-tabs">
+  <div class="step-tab active" data-step="step1">Step 1 · 吐池</div>
+  <div class="step-tab" data-step="step2">Step 2 · 选龙头</div>
+  <div class="step-tab" data-step="step3">Step 3 · 为什么选它</div>
+</div>
+
+<div id="loading">正在加载数据...</div>
+
+<!-- Step 1: 吐池 -->
+<div id="step1" class="step-pane active">
+  <div class="card">
+    <h2>Step 1 · 先吐池：从涨停链 + 强势行业收缩成小候选池</h2>
+    <div class="note" style="margin-bottom:16px">不从全市场 5000 只海选，而是只从三个入口进池，最后压缩到 10~20 只。</div>
+    <div class="grid3" id="sourceStats"></div>
+  </div>
+  <div class="card">
+    <h2>规则摘要</h2>
+    <div class="grid3" id="ruleCards"></div>
+  </div>
+  <div class="card">
+    <h2>完整候选池</h2>
+    <div style="overflow-x:auto"><table class="tbl" id="poolTable"><thead><tr><th>#</th><th>股票</th><th>行业</th><th>来源</th><th class="num">候选分</th><th>入池原因</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<!-- Step 2: 选龙头 -->
+<div id="step2" class="step-pane">
+  <div class="card">
+    <h2>Step 2 · 从候选池里选出两类龙头</h2>
+    <div class="note" style="margin-bottom:16px">辨识度龙头 = 最有高度、最有位置感、市场最认的核心票。<br>成交额龙头 = 候选池里最吸金、最承接资金的核心票。</div>
+    <div class="leader-hero" id="leaderHero"></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Top 5 辨识度排序</h2><table class="tbl" id="recTable"><thead><tr><th>#</th><th>股票</th><th>行业</th><th class="num">score</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><h2>Top 5 成交额排序</h2><table class="tbl" id="amtTable"><thead><tr><th>#</th><th>股票</th><th>行业</th><th class="num">score</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<!-- Step 3: 为什么选它 -->
+<div id="step3" class="step-pane">
+  <div class="card">
+    <h2>Step 3 · 为什么选它？每只票的入池原因</h2>
+    <div class="note" style="margin-bottom:16px">每只票可能被多个入口同时命中，命中越多说明"盘面关注度"越集中。</div>
+    <div id="reasonCards"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const RULES = {
+  limit_core: {label:'limit_core', color:'pill', desc:'只从涨停池选，优先最高板、连板、高额成交、封板稳定、首次封板早'},
+  active_core: {label:'active_core', color:'pill', desc:'只在强势行业里选活跃票，优先炸板活跃、强涨幅、高换手、高成交额'},
+  theme_amount_core: {label:'theme_amount_core', color:'pill', desc:'只在强势行业内部比成交额，抓题材中军/容量核心，不从全市场金额榜直接选'},
+};
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function tags(arr,cls){return arr.map(t=>`<span class="${cls}">${esc(t)}</span>`).join('')}
+function fmtAmt(v){return (v/1e8).toFixed(2)}
+
+document.querySelectorAll('.step-tab').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.step-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.step-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.step).classList.add('active');
+  };
+});
+
+fetch('leader_pool_latest.json').then(r=>r.json()).then(render).catch(e=>{
+  document.getElementById('loading').textContent='数据加载失败: '+e.message;
+});
+
+function render(data){
+  document.getElementById('loading').style.display='none';
+  const pool=data.pool, confirm=data.confirm;
+  const td=data.trade_date;
+  document.getElementById('dateBadge').textContent=td.slice(0,4)+'-'+td.slice(4,6)+'-'+td.slice(6,8)+' 龙头观察池';
+
+  // Step 1
+  const ss=pool.source_summary;
+  const fi=pool.input_summary.focus_industries||[];
+  document.getElementById('sourceStats').innerHTML=`
+    <div class="stat"><div class="muted">最终池大小</div><div class="v green">${ss.final_pool_size}</div><div class="small muted">limit=${ss.limit_core} / active=${ss.active_core} / amount=${ss.theme_amount_core}</div></div>
+    <div class="stat"><div class="muted">涨停总数</div><div class="v blue">${pool.input_summary.up_count}</div><div class="small muted">炸板 ${pool.input_summary.zha_count}</div></div>
+    <div class="stat"><div class="muted">焦点行业</div><div class="v" style="font-size:16px;line-height:1.5">${fi.map(x=>esc(x.industry)).join('<br>')}</div></div>`;
+
+  document.getElementById('ruleCards').innerHTML=Object.values(RULES).map(r=>`<div class="stat"><div><span class="pill">${r.label}</span></div><div class="small muted" style="margin-top:8px">${r.desc}</div></div>`).join('');
+
+  const tbody=document.querySelector('#poolTable tbody');
+  pool.pool.forEach((r,i)=>{
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${r.ts_code}</b><br>${esc(r.name)}<div class="small muted">涨幅 ${r.pct_chg}% / ${fmtAmt(r.amount)} 亿</div></td><td>${esc(r.industry)}</td><td>${tags(r.source_types,'tag')}</td><td class="num">${r.candidate_score}</td><td class="reason">${r.reasons.map(esc).join('<br>')}</td></tr>`;
+  });
+
+  // Step 2
+  const rec=confirm.recognition_leader, amt=confirm.amount_leader;
+  document.getElementById('leaderHero').innerHTML=`
+    <div class="leader-card rec"><div class="leader-label">辨识度龙头</div><div class="leader-name green">${esc(rec.name)}</div><div class="leader-code">${rec.ts_code} ｜ score ${rec.recognition_score}</div><div class="leader-tags">${tags(rec.recognition_reasons,'tag2')}</div></div>
+    <div class="leader-card amt"><div class="leader-label">成交额龙头</div><div class="leader-name blue">${esc(amt.name)}</div><div class="leader-code">${amt.ts_code} ｜ score ${amt.amount_score}</div><div class="leader-tags">${tags(amt.amount_reasons,'tag')}</div></div>`;
+
+  [['recTable',confirm.top_recognition_rank,'recognition_score'],['amtTable',confirm.top_amount_rank,'amount_score']].forEach(([id,arr,scoreKey])=>{
+    const tb=document.querySelector('#'+id+' tbody');
+    arr.forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.ts_code}</b> ${esc(x.name)}</td><td>${esc(x.industry)}</td><td class="num">${x[scoreKey]}</td></tr>`;});
+  });
+
+  // Step 3
+  const rc=document.getElementById('reasonCards');
+  pool.pool.forEach((r,i)=>{
+    const isRec=rec.ts_code===r.ts_code, isAmt=amt.ts_code===r.ts_code;
+    let badge='';
+    if(isRec) badge+='<span class="tag2" style="font-size:13px;font-weight:700">⭐ 辨识度龙头</span> ';
+    if(isAmt) badge+='<span class="tag" style="font-size:13px;font-weight:700">💰 成交额龙头</span> ';
+    rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${r.reasons.map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
+  });
+}
+</script>
+</body>
+</html>
