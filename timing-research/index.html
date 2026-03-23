@@ -209,12 +209,26 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="card hero" style="margin-top:18px">
     <div class="kicker">盘中发现层原型</div>
     <h2>龙头观察池 / 龙头确认</h2>
-    <div class="note">这部分放在 <b>盘中发现因子</b> 与下方 <b>日频因子回测/IC</b> 之间，定位不是正式回测，而是先把 <b>角色层 → 龙头观察池 → 龙头确认</b> 跑通。当前口径基于 Tushare <code>limit_list_d</code> 链路落地后的本地缓存，先解决“哪些票该进池、谁是辨识度龙头、谁是成交额龙头”。</div>
-    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-      <a href="leader_pool_report.html" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(59,130,246,.28)">打开独立原型页 →</a>
-      <span style="font-size:12px;color:#8fa5c2">当前样本页：2026-03-20</span>
+    <div class="note">这部分放在 <b>盘中发现因子</b> 与下方 <b>日频因子回测/IC</b> 之间，定位不是正式回测，而是先把 <b>角色层 → 龙头观察池 → 龙头确认</b> 跑通。当前口径基于 Tushare <code>limit_list_d</code> 链路落地后的本地缓存，后续会继续接板块归因和叙事联动。</div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">最新交易日</div>
+        <div style="font-size:24px;font-weight:800;color:#5daeff;margin-top:6px">每日自动刷新</div>
+        <div style="font-size:12px;color:#8fa5c2;margin-top:6px">跟随强势股模块更新</div>
+      </div>
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">页面结构</div>
+        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">Step 1 吐池<br>Step 2 选龙头<br>Step 3 为什么选它</div>
+      </div>
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">查看方式</div>
+        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">首页看摘要<br>独立页看完整细节</div>
+      </div>
     </div>
-    <iframe class="embed-frame" src="leader_pool_report.html" style="margin-top:16px;height:920px"></iframe>
+    <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <a href="leader_pool_report.html" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(59,130,246,.28)">打开独立原型页 →</a>
+      <span style="font-size:12px;color:#8fa5c2">手机端已改为摘要卡，不再内嵌整页</span>
+    </div>
   </div>
 
   <!-- ======== 单因子IC检验 ======== -->
