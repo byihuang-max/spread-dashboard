@@ -234,7 +234,7 @@ MODULE_REGISTRY = {
     'timing_factors': {
         'name': '择时因子系统',
         'scripts': [],
-        'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py'),
+        'external_script': os.path.expanduser('~/quant-backtest/timing_model/factor_system/daily_update.py'),
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },

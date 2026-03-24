@@ -400,7 +400,7 @@ def fit_momentum_stock(config):
     if cro:
         direction = cro.get("direction_chart", [])
         if len(direction) >= 5:
-            north_5d = sum(x.get("north_net", 0) for x in direction[-5:])
+            north_5d = sum((x.get("north_net", 0) or 0) for x in direction[-5:])
             if north_5d > 50:
                 score += 10
                 signals.append(f"北向5日净流入{north_5d:.0f}亿 🟢")
