@@ -177,8 +177,13 @@ def migrate_from_json():
 
 # ═══ 拉取单日数据 ═══
 
-def fetch_day_cached(trade_date):
-    """拉取某日 U/D/Z 数据，有缓存直接读"""
+def fetch_day_cached(trade_date, allow_empty=False):
+    """拉取某日 U/D/Z 数据，有缓存直接读。
+
+    保护逻辑：
+    - 对历史交易日，空结果一般意味着接口异常，不应静默写入空缓存
+    - 对当日盘中，limit_list_d 也可能暂未就绪；默认同样不落空缓存，交给上层决定是否跳过
+    """
     cache_file = os.path.join(CACHE_DIR, f'{trade_date}.json')
     if os.path.exists(cache_file):
         with open(cache_file) as f:
@@ -192,6 +197,10 @@ def fetch_day_cached(trade_date):
     time.sleep(0.2)
 
     result = {'U': ups, 'D': downs, 'Z': zhas}
+    total_count = len(ups) + len(downs) + len(zhas)
+    if total_count == 0 and not allow_empty:
+        raise ValueError(f'empty limit_list_d result for {trade_date}')
+
     with open(cache_file, 'w') as f:
         json.dump(result, f, ensure_ascii=False)
     return result
@@ -668,17 +677,26 @@ def main():
     if new_dates:
         log("\n[2] 拉取新日期数据...")
         new_raw_rows = []
+        skipped_dates = []
         for i, dt in enumerate(new_dates):
             cached = os.path.exists(os.path.join(CACHE_DIR, f'{dt}.json'))
             tag = '📦' if cached else '🌐'
             log(f"  [{i+1}/{len(new_dates)}] {dt} {tag}")
-            row = compute_raw_day(dt)
+            try:
+                row = compute_raw_day(dt)
+            except Exception as e:
+                skipped_dates.append(dt)
+                log(f"    ⚠️ 跳过 {dt}: {e}")
+                continue
             new_raw_rows.append(row)
             log(f"    U={row['up_count']} D={row['down_count']} Z={row['zha_count']} H={row['max_height']} BigCap={row['big_cap_up']} MegaCap={row['mega_cap_up']}")
 
         # 追加到 raw CSV
-        append_csv(RAW_CSV, RAW_HEADERS, new_raw_rows)
-        log(f"  新增 {len(new_raw_rows)} 行到 momentum_raw.csv")
+        if new_raw_rows:
+            append_csv(RAW_CSV, RAW_HEADERS, new_raw_rows)
+            log(f"  新增 {len(new_raw_rows)} 行到 momentum_raw.csv")
+        if skipped_dates:
+            log(f"  跳过 {len(skipped_dates)} 天（未写入空缓存/空数据）: {', '.join(skipped_dates)}")
     else:
         log("\n[2] 跳过拉取（数据已完整）")
 
