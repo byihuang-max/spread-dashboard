@@ -7,7 +7,22 @@ REMOTE="ubuntu@111.229.129.146"
 REMOTE_PATH="~/gamt-dashboard/"
 LOCAL_PATH="$(dirname "$0")/../"
 
-RSYNC_EXCLUDE="--exclude=.git --exclude=__pycache__ --exclude=*.pyc --exclude=venv/ --exclude=_cache/ --exclude=*.db --exclude=server/update_log.json"
+# 只同步代码/模板，不覆盖云端运行生成的产物。
+# 云端是数据生产源：JSON/CSV/HTML 注入结果应由腾讯云定时任务自己生成。
+RSYNC_EXCLUDE="\
+--exclude=.git \
+--exclude=__pycache__ \
+--exclude=*.pyc \
+--exclude=venv/ \
+--exclude=_cache/ \
+--exclude=*.db \
+--exclude=server/update_log.json \
+--exclude=index.html \
+--exclude=*.json \
+--exclude=*.csv \
+--exclude=*.html \
+--exclude=timing-research/leader_pool_history/\
+"
 
 echo "[$(date '+%H:%M:%S')] 同步到云端..."
 
