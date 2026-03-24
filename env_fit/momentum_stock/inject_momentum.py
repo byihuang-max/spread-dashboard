@@ -31,6 +31,21 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
     show = daily[-60:] if len(daily) > 60 else daily
     latest = show[-1]
 
+    def extract_latest_date(*sources):
+        for src in sources:
+            if not src:
+                continue
+            if isinstance(src, dict):
+                latest_obj = src.get('latest')
+                if isinstance(latest_obj, dict) and latest_obj.get('date'):
+                    return latest_obj.get('date')
+                daily_obj = src.get('daily')
+                if isinstance(daily_obj, list) and daily_obj:
+                    last = daily_obj[-1]
+                    if isinstance(last, dict) and last.get('date'):
+                        return last.get('date')
+        return None
+
     cycle_colors = {
         '冰点': '#3b82f6', '回暖': '#10b981', '加速': '#ef4444',
         '分歧': '#f59e0b', '退潮': '#8b5cf6', '震荡': '#94a3b8', '—': '#94a3b8'
@@ -70,6 +85,20 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
     last_date = latest['date']
     date_fmt = f"{last_date[:4]}-{last_date[4:6]}-{last_date[6:8]}"
+    sector_last_date = extract_latest_date(sector_data) or last_date
+    warning_last_date = extract_latest_date(warning_data) or last_date
+    decomp_last_date = extract_latest_date(decomp_data) or last_date
+    panel_dates = [
+        ('情绪主面板', last_date),
+        ('行业结构', sector_last_date),
+        ('预警链', warning_last_date),
+        ('收益归因', decomp_last_date),
+    ]
+    stale_parts = []
+    for label, dt in panel_dates:
+        if dt != last_date:
+            stale_parts.append(f"{label}:{dt[4:6]}/{dt[6:8]}")
+    stale_hint = ' · 子模块延迟 ' + ' / '.join(stale_parts) if stale_parts else ''
 
     # Warning data
     warn_latest = None
@@ -638,8 +667,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
     # ====== Build full HTML ======
     html = f'''
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 数据截至 <b style="color:#2d3142">{date_fmt}</b></span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px;gap:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">{date_fmt}</b><span style="color:#94a3b8;font-size:11px">{stale_hint}</span></span>
       </div>
 
       <!-- 区块一：环境总览 -->
