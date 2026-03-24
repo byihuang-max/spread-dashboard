@@ -1,0 +1,881 @@
+{
+  "trade_date": "20210729",
+  "pool": {
+    "trade_date": "20210729",
+    "input_summary": {
+      "up_count": 113,
+      "zha_count": 17,
+      "focus_industries": [
+        {
+          "industry": "化工行业",
+          "industry_score": 86,
+          "up_count": 15,
+          "zha_count": 1,
+          "max_height": 15,
+          "amount": 21703898437.0
+        },
+        {
+          "industry": "电子元件",
+          "industry_score": 60,
+          "up_count": 15,
+          "zha_count": 7,
+          "max_height": 1,
+          "amount": 30498968665.0
+        },
+        {
+          "industry": "输配电气",
+          "industry_score": 47,
+          "up_count": 9,
+          "zha_count": 2,
+          "max_height": 4,
+          "amount": 16841939197.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "605020.SH",
+        "name": "永和股份",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 312,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=15",
+          "首次封板时间=93119"
+        ],
+        "limit_times": 15,
+        "open_times": 9,
+        "first_time": "93119",
+        "last_time": "141503",
+        "pct_chg": 10.0,
+        "amount": 1698644528.0,
+        "turnover_ratio": 68.48,
+        "float_mv": 2529459800.0,
+        "total_mv": 10117459800.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 20
+      },
+      {
+        "ts_code": "600703.SH",
+        "name": "三安光电",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.03,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "142209",
+        "last_time": "144209",
+        "pct_chg": 10.0,
+        "amount": 10468884480.0,
+        "turnover_ratio": 6.21,
+        "float_mv": 175861682895.36,
+        "total_mv": 193149197373.44,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 60,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300274.SZ",
+        "name": "阳光电源",
+        "industry": "输配电气",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 100.24,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=输配电气",
+          "涨幅强=20.00%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=输配电气",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "142003",
+        "last_time": "143600",
+        "pct_chg": 20.0,
+        "amount": 8689628160.0,
+        "turnover_ratio": 5.4,
+        "float_mv": 171900160037.92,
+        "total_mv": 228600639220.48,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 47,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "605167.SH",
+        "name": "利柏特",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.95,
+        "amount": 6039684.0,
+        "turnover_ratio": 0.58,
+        "float_mv": 1041855224.96,
+        "total_mv": 4167369600.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 113
+      },
+      {
+        "ts_code": "300077.SZ",
+        "name": "国民技术",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.84,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=20.00%",
+          "焦点池成交额前4",
+          "换手活跃=18.90%",
+          "题材内成交额第2",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145251",
+        "last_time": "145251",
+        "pct_chg": 20.0,
+        "amount": 4075727120.0,
+        "turnover_ratio": 18.9,
+        "float_mv": 22924757785.5,
+        "total_mv": 24927447840.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 60,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002466.SZ",
+        "name": "天齐锂业",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 93.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前3",
+          "题材内成交额第1",
+          "所属强势行业=化工行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "131521",
+        "last_time": "131521",
+        "pct_chg": 10.0,
+        "amount": 7462970880.0,
+        "turnover_ratio": 5.5,
+        "float_mv": 139559185444.25,
+        "total_mv": 139955165876.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 86,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "605066.SH",
+        "name": "天正电气",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "92504",
+        "last_time": "133445",
+        "pct_chg": 10.01,
+        "amount": 249890456.0,
+        "turnover_ratio": 18.01,
+        "float_mv": 1388760000.0,
+        "total_mv": 7904499258.24,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 75
+      },
+      {
+        "ts_code": "002497.SZ",
+        "name": "雅化集团",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.12,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=10.20%"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104621",
+        "last_time": "104621",
+        "pct_chg": 10.0,
+        "amount": 3013671120.0,
+        "turnover_ratio": 10.2,
+        "float_mv": 30965197795.17,
+        "total_mv": 34242632706.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 86
+      },
+      {
+        "ts_code": "301025.SZ",
+        "name": "读客文化",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93003"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93003",
+        "last_time": "93003",
+        "pct_chg": 19.99,
+        "amount": 208940143.0,
+        "turnover_ratio": 20.92,
+        "float_mv": 998850478.28,
+        "total_mv": 10636265900.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 84
+      },
+      {
+        "ts_code": "603115.SH",
+        "name": "海星股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 47531274.0,
+        "turnover_ratio": 5.14,
+        "float_mv": 924560000.0,
+        "total_mv": 3698240000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 108
+      },
+      {
+        "ts_code": "603214.SH",
+        "name": "爱婴室",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92505"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.01,
+        "amount": 45881301.0,
+        "turnover_ratio": 1.3,
+        "float_mv": 3521354416.16,
+        "total_mv": 3574513692.96,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 109
+      },
+      {
+        "ts_code": "603559.SH",
+        "name": "中通国脉",
+        "industry": "通讯行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93007"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93007",
+        "last_time": "93007",
+        "pct_chg": 10.01,
+        "amount": 107161283.0,
+        "turnover_ratio": 4.67,
+        "float_mv": 2315941425.12,
+        "total_mv": 2315941425.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 97
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210729",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "605020.SH",
+      "name": "永和股份",
+      "industry": "化工行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 417.0,
+      "amount_score": 112.0,
+      "candidate_score": 312,
+      "limit_type": "U",
+      "limit_times": 15,
+      "open_times": 9,
+      "first_time": "93119",
+      "last_time": "141503",
+      "pct_chg": 10.0,
+      "amount": 1698644528.0,
+      "turnover_ratio": 68.48,
+      "recognition_reasons": [
+        "最高板=15",
+        "首次封板=93119",
+        "盘中开板9次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=15",
+        "首次封板=93119",
+        "盘中开板9次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600703.SH",
+      "name": "三安光电",
+      "industry": "电子元件",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 46.0,
+      "amount_score": 157.1,
+      "candidate_score": 102.03,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 5,
+      "first_time": "142209",
+      "last_time": "144209",
+      "pct_chg": 10.0,
+      "amount": 10468884480.0,
+      "turnover_ratio": 6.21,
+      "recognition_reasons": [
+        "首次封板=142209",
+        "盘中开板5次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=142209",
+        "盘中开板5次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "605020.SH",
+        "name": "永和股份",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 417.0,
+        "amount_score": 112.0,
+        "candidate_score": 312,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 9,
+        "first_time": "93119",
+        "last_time": "141503",
+        "pct_chg": 10.0,
+        "amount": 1698644528.0,
+        "turnover_ratio": 68.48,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=93119",
+          "盘中开板9次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=93119",
+          "盘中开板9次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "605167.SH",
+        "name": "利柏特",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.95,
+        "amount_score": 50.24,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.95,
+        "amount": 6039684.0,
+        "turnover_ratio": 0.58,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605066.SH",
+        "name": "天正电气",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 132.01,
+        "amount_score": 99.02,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "92504",
+        "last_time": "133445",
+        "pct_chg": 10.01,
+        "amount": 249890456.0,
+        "turnover_ratio": 18.01,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92504",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92504",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "603115.SH",
+        "name": "海星股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.02,
+        "amount_score": 60.59,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 47531274.0,
+        "turnover_ratio": 5.14,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603214.SH",
+        "name": "爱婴室",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.01,
+        "amount_score": 50.66,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.01,
+        "amount": 45881301.0,
+        "turnover_ratio": 1.3,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92505",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92505",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600703.SH",
+        "name": "三安光电",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 46.0,
+        "amount_score": 157.1,
+        "candidate_score": 102.03,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "142209",
+        "last_time": "144209",
+        "pct_chg": 10.0,
+        "amount": 10468884480.0,
+        "turnover_ratio": 6.21,
+        "recognition_reasons": [
+          "首次封板=142209",
+          "盘中开板5次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=142209",
+          "盘中开板5次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300274.SZ",
+        "name": "阳光电源",
+        "industry": "输配电气",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 51,
+        "amount_score": 150.7,
+        "candidate_score": 100.24,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "142003",
+        "last_time": "143600",
+        "pct_chg": 20.0,
+        "amount": 8689628160.0,
+        "turnover_ratio": 5.4,
+        "recognition_reasons": [
+          "首次封板=142003",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=142003",
+          "盘中开板2次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002466.SZ",
+        "name": "天齐锂业",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.0,
+        "amount_score": 140.75,
+        "candidate_score": 93.6,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "131521",
+        "last_time": "131521",
+        "pct_chg": 10.0,
+        "amount": 7462970880.0,
+        "turnover_ratio": 5.5,
+        "recognition_reasons": [
+          "首次封板=131521",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=131521",
+          "封板稳定",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300077.SZ",
+        "name": "国民技术",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 61,
+        "amount_score": 131.45,
+        "candidate_score": 96.84,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145251",
+        "last_time": "145251",
+        "pct_chg": 20.0,
+        "amount": 4075727120.0,
+        "turnover_ratio": 18.9,
+        "recognition_reasons": [
+          "首次封板=145251",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=145251",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605020.SH",
+        "name": "永和股份",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 417.0,
+        "amount_score": 112.0,
+        "candidate_score": 312,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 9,
+        "first_time": "93119",
+        "last_time": "141503",
+        "pct_chg": 10.0,
+        "amount": 1698644528.0,
+        "turnover_ratio": 68.48,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=93119",
+          "盘中开板9次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=93119",
+          "盘中开板9次后仍封住"
+        ]
+      }
+    ]
+  }
+}

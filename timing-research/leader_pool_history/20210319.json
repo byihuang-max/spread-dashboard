@@ -1,0 +1,902 @@
+{
+  "trade_date": "20210319",
+  "pool": {
+    "trade_date": "20210319",
+    "input_summary": {
+      "up_count": 54,
+      "zha_count": 20,
+      "focus_industries": [
+        {
+          "industry": "电力行业",
+          "industry_score": 32.85,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 4924025465.0
+        },
+        {
+          "industry": "公用事业",
+          "industry_score": 30.27,
+          "up_count": 3,
+          "zha_count": 0,
+          "max_height": 10,
+          "amount": 636863201.0
+        },
+        {
+          "industry": "医药制造",
+          "industry_score": 27.15,
+          "up_count": 4,
+          "zha_count": 2,
+          "max_height": 4,
+          "amount": 2577465611.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "003039.SZ",
+        "name": "顺控发展",
+        "industry": "公用事业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 263.2,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=10",
+          "首次封板时间=93742",
+          "强势行业=公用事业",
+          "涨幅强=10.00%",
+          "换手活跃=32.54%",
+          "题材内成交额第1",
+          "所属强势行业=公用事业",
+          "已涨停"
+        ],
+        "limit_times": 10,
+        "open_times": 1,
+        "first_time": "93742",
+        "last_time": "93812",
+        "pct_chg": 10.0,
+        "amount": 383016352.0,
+        "turnover_ratio": 32.54,
+        "float_mv": 1234420000.0,
+        "total_mv": 12294798033.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 18,
+        "amount_rank_in_focus_pool": 8,
+        "industry_score": 30.27,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600744.SH",
+        "name": "华银电力",
+        "industry": "电力行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 110.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电力行业",
+          "涨幅强=10.02%",
+          "焦点池成交额前1",
+          "换手活跃=42.06%",
+          "题材内成交额第1",
+          "所属强势行业=电力行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "104025",
+        "last_time": "144726",
+        "pct_chg": 10.02,
+        "amount": 2151725936.0,
+        "turnover_ratio": 42.06,
+        "float_mv": 5454110709.18,
+        "total_mv": 11737608952.48,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 32.85,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.08,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=10.01%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 15,
+        "first_time": "94533",
+        "last_time": "142409",
+        "pct_chg": 10.01,
+        "amount": 1105674928.0,
+        "turnover_ratio": 4.62,
+        "float_mv": 24064627497.66,
+        "total_mv": 29358668751.84,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 27.15,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002996.SZ",
+        "name": "顺博合金",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93800"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93800",
+        "last_time": "93800",
+        "pct_chg": 10.01,
+        "amount": 447848736.0,
+        "turnover_ratio": 34.69,
+        "float_mv": 1304330000.0,
+        "total_mv": 10803790000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15
+      },
+      {
+        "ts_code": "002900.SZ",
+        "name": "哈三联",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93030"
+        ],
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "93030",
+        "last_time": "93109",
+        "pct_chg": 10.02,
+        "amount": 187790804.0,
+        "turnover_ratio": 5.05,
+        "float_mv": 3754876593.0,
+        "total_mv": 3754876569.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 31
+      },
+      {
+        "ts_code": "600212.SH",
+        "name": "江泉实业",
+        "industry": "综合行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93008"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93008",
+        "last_time": "93008",
+        "pct_chg": 10.02,
+        "amount": 141544660.0,
+        "turnover_ratio": 5.66,
+        "float_mv": 2527784232.22,
+        "total_mv": 2527784247.04,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 38
+      },
+      {
+        "ts_code": "003035.SZ",
+        "name": "南网能源",
+        "industry": "环保工程",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 78,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前2",
+          "首次封板时间=94915"
+        ],
+        "limit_times": 2,
+        "open_times": 2,
+        "first_time": "94915",
+        "last_time": "95321",
+        "pct_chg": 9.96,
+        "amount": 2387414240.0,
+        "turnover_ratio": 27.48,
+        "float_mv": 9030303023.44,
+        "total_mv": 45151515105.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "000966.SZ",
+        "name": "长源电力",
+        "industry": "电力行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 65.56,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电力行业",
+          "涨幅强=9.93%",
+          "焦点池成交额前4",
+          "换手活跃=12.72%"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "94800",
+        "last_time": "94800",
+        "pct_chg": 9.93,
+        "amount": 854303440.0,
+        "turnover_ratio": 12.72,
+        "float_mv": 6993272544.8,
+        "total_mv": 6993272544.8,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 32.85
+      },
+      {
+        "ts_code": "600079.SH",
+        "name": "人福医药",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 63.53,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "炸板活跃票",
+          "涨幅强=9.97%",
+          "焦点池成交额前3"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "94557",
+        "last_time": "",
+        "pct_chg": 9.97,
+        "amount": 1054942832.0,
+        "turnover_ratio": 2.6,
+        "float_mv": 41206758952.88,
+        "total_mv": 49710708757.76,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 27.15
+      },
+      {
+        "ts_code": "002893.SZ",
+        "name": "华通热力",
+        "industry": "公用事业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 26243212.0,
+        "turnover_ratio": 2.43,
+        "float_mv": 1082129135.5,
+        "total_mv": 1775796391.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 54
+      },
+      {
+        "ts_code": "003016.SZ",
+        "name": "欣贺股份",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 121025549.0,
+        "turnover_ratio": 10.64,
+        "float_mv": 1137067022.0,
+        "total_mv": 4548267064.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 41
+      },
+      {
+        "ts_code": "603439.SH",
+        "name": "贵州三力",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93106"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93106",
+        "last_time": "93106",
+        "pct_chg": 10.01,
+        "amount": 53935834.0,
+        "turnover_ratio": 7.08,
+        "float_mv": 779356200.0,
+        "total_mv": 7792074145.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 50
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210319",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "003039.SZ",
+      "name": "顺控发展",
+      "industry": "公用事业",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 305.0,
+      "amount_score": 132.0,
+      "candidate_score": 263.2,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 1,
+      "first_time": "93742",
+      "last_time": "93812",
+      "pct_chg": 10.0,
+      "amount": 383016352.0,
+      "turnover_ratio": 32.54,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=93742",
+        "盘中开板1次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=93742",
+        "盘中开板1次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600744.SH",
+      "name": "华银电力",
+      "industry": "电力行业",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 50.02,
+      "amount_score": 156.02,
+      "candidate_score": 110.33,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 9,
+      "first_time": "104025",
+      "last_time": "144726",
+      "pct_chg": 10.02,
+      "amount": 2151725936.0,
+      "turnover_ratio": 42.06,
+      "recognition_reasons": [
+        "首次封板=104025",
+        "盘中开板9次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=104025",
+        "盘中开板9次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "003039.SZ",
+        "name": "顺控发展",
+        "industry": "公用事业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 305.0,
+        "amount_score": 132.0,
+        "candidate_score": 263.2,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 1,
+        "first_time": "93742",
+        "last_time": "93812",
+        "pct_chg": 10.0,
+        "amount": 383016352.0,
+        "turnover_ratio": 32.54,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=93742",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=93742",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002996.SZ",
+        "name": "顺博合金",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 130.01,
+        "amount_score": 108.01,
+        "candidate_score": 96,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93800",
+        "last_time": "93800",
+        "pct_chg": 10.01,
+        "amount": 447848736.0,
+        "turnover_ratio": 34.69,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93800",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93800",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002900.SZ",
+        "name": "哈三联",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 129.02,
+        "amount_score": 84.55,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "93030",
+        "last_time": "93109",
+        "pct_chg": 10.02,
+        "amount": 187790804.0,
+        "turnover_ratio": 5.05,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93030",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93030",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "600212.SH",
+        "name": "江泉实业",
+        "industry": "综合行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 111.02,
+        "amount_score": 72.85,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93008",
+        "last_time": "93008",
+        "pct_chg": 10.02,
+        "amount": 141544660.0,
+        "turnover_ratio": 5.66,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93008",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93008",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000966.SZ",
+        "name": "长源电力",
+        "industry": "电力行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 92.93,
+        "amount_score": 104.29,
+        "candidate_score": 65.56,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "94800",
+        "last_time": "94800",
+        "pct_chg": 9.93,
+        "amount": 854303440.0,
+        "turnover_ratio": 12.72,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94800",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94800",
+          "封板稳定",
+          "候选池成交额前5",
+          "强势行业活跃核心"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600744.SH",
+        "name": "华银电力",
+        "industry": "电力行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.02,
+        "amount_score": 156.02,
+        "candidate_score": 110.33,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "104025",
+        "last_time": "144726",
+        "pct_chg": 10.02,
+        "amount": 2151725936.0,
+        "turnover_ratio": 42.06,
+        "recognition_reasons": [
+          "首次封板=104025",
+          "盘中开板9次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104025",
+          "盘中开板9次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "003035.SZ",
+        "name": "南网能源",
+        "industry": "环保工程",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 71.96,
+        "amount_score": 149.96,
+        "candidate_score": 78,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 2,
+        "first_time": "94915",
+        "last_time": "95321",
+        "pct_chg": 9.96,
+        "amount": 2387414240.0,
+        "turnover_ratio": 27.48,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94915",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94915",
+          "盘中开板2次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.01,
+        "amount_score": 140.32,
+        "candidate_score": 97.08,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 15,
+        "first_time": "94533",
+        "last_time": "142409",
+        "pct_chg": 10.01,
+        "amount": 1105674928.0,
+        "turnover_ratio": 4.62,
+        "recognition_reasons": [
+          "首次封板=94533",
+          "盘中开板15次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94533",
+          "盘中开板15次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "003039.SZ",
+        "name": "顺控发展",
+        "industry": "公用事业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 305.0,
+        "amount_score": 132.0,
+        "candidate_score": 263.2,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 1,
+        "first_time": "93742",
+        "last_time": "93812",
+        "pct_chg": 10.0,
+        "amount": 383016352.0,
+        "turnover_ratio": 32.54,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=93742",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=93742",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002996.SZ",
+        "name": "顺博合金",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 130.01,
+        "amount_score": 108.01,
+        "candidate_score": 96,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93800",
+        "last_time": "93800",
+        "pct_chg": 10.01,
+        "amount": 447848736.0,
+        "turnover_ratio": 34.69,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93800",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93800",
+          "封板稳定"
+        ]
+      }
+    ]
+  }
+}

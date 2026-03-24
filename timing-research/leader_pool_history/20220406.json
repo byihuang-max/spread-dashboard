@@ -1,0 +1,869 @@
+{
+  "trade_date": "20220406",
+  "pool": {
+    "trade_date": "20220406",
+    "input_summary": {
+      "up_count": 82,
+      "zha_count": 28,
+      "focus_industries": [
+        {
+          "industry": "房地产开发",
+          "industry_score": 78,
+          "up_count": 17,
+          "zha_count": 8,
+          "max_height": 7,
+          "amount": 12599026507.0
+        },
+        {
+          "industry": "中药",
+          "industry_score": 37,
+          "up_count": 8,
+          "zha_count": 1,
+          "max_height": 1,
+          "amount": 8490065871.0
+        },
+        {
+          "industry": "教育",
+          "industry_score": 24.72,
+          "up_count": 5,
+          "zha_count": 2,
+          "max_height": 2,
+          "amount": 1862390276.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "000736.SZ",
+        "name": "中交地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 54696409.0,
+        "turnover_ratio": 0.46,
+        "float_mv": 11898870418.79,
+        "total_mv": 11898870538.56,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 76
+      },
+      {
+        "ts_code": "603051.SH",
+        "name": "鹿山新材",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=7",
+          "首次封板时间=110954"
+        ],
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "110954",
+        "last_time": "130410",
+        "pct_chg": 10.0,
+        "amount": 1108591136.0,
+        "turnover_ratio": 77.42,
+        "float_mv": 1513367370.0,
+        "total_mv": 6053337900.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8
+      },
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 103.68,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=中药",
+          "涨幅强=9.99%",
+          "焦点池成交额前1",
+          "换手活跃=8.99%",
+          "题材内成交额第1",
+          "所属强势行业=中药",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 8,
+        "first_time": "93203",
+        "last_time": "142536",
+        "pct_chg": 9.99,
+        "amount": 4265179136.0,
+        "turnover_ratio": 8.99,
+        "float_mv": 47733405136.55,
+        "total_mv": 57956769493.44,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 37,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002864.SZ",
+        "name": "盘龙药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.79,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=中药",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "换手活跃=40.15%",
+          "题材内成交额第2",
+          "所属强势行业=中药",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "93551",
+        "last_time": "141651",
+        "pct_chg": 9.99,
+        "amount": 1640099216.0,
+        "turnover_ratio": 40.15,
+        "float_mv": 4150807716.78,
+        "total_mv": 6505450200.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 37,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "000014.SZ",
+        "name": "沙河股份",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93003"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93003",
+        "last_time": "93003",
+        "pct_chg": 9.97,
+        "amount": 159762403.0,
+        "turnover_ratio": 5.41,
+        "float_mv": 2981202663.86,
+        "total_mv": 2981202663.86,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 57
+      },
+      {
+        "ts_code": "000797.SZ",
+        "name": "中国武夷",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.05,
+        "amount": 24904991.0,
+        "turnover_ratio": 0.34,
+        "float_mv": 7395172012.65,
+        "total_mv": 7398252395.04,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 82
+      },
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.92,
+        "amount": 111615378.0,
+        "turnover_ratio": 1.66,
+        "float_mv": 6724184530.0,
+        "total_mv": 6728757210.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 61
+      },
+      {
+        "ts_code": "002596.SZ",
+        "name": "海南瑞泽",
+        "industry": "水泥建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "93012",
+        "pct_chg": 10.04,
+        "amount": 321369616.0,
+        "turnover_ratio": 6.15,
+        "float_mv": 5248637190.72,
+        "total_mv": 5783805780.48,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 33
+      },
+      {
+        "ts_code": "003040.SZ",
+        "name": "楚天龙",
+        "industry": "通信设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 90,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=101057"
+        ],
+        "limit_times": 4,
+        "open_times": 3,
+        "first_time": "101057",
+        "last_time": "105003",
+        "pct_chg": 10.0,
+        "amount": 1281324640.0,
+        "turnover_ratio": 23.04,
+        "float_mv": 5834245151.52,
+        "total_mv": 12423002977.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 6
+      },
+      {
+        "ts_code": "600649.SH",
+        "name": "城投控股",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 87.95,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "涨幅强=10.10%",
+          "焦点池成交额前4",
+          "换手活跃=8.36%",
+          "题材内成交额第2",
+          "所属强势行业=房地产开发",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "132208",
+        "last_time": "145208",
+        "pct_chg": 10.1,
+        "amount": 1128078336.0,
+        "turnover_ratio": 8.36,
+        "float_mv": 14064440525.04,
+        "total_mv": 14064440513.92,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 78,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002205.SZ",
+        "name": "国统股份",
+        "industry": "水泥建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93345"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93345",
+        "last_time": "140509",
+        "pct_chg": 10.0,
+        "amount": 668519376.0,
+        "turnover_ratio": 32.27,
+        "float_mv": 2350916834.2,
+        "total_mv": 2350916834.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 17
+      },
+      {
+        "ts_code": "600622.SH",
+        "name": "光大嘉宝",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.44,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "炸板活跃票",
+          "焦点池成交额前3",
+          "换手活跃=16.91%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "132158",
+        "last_time": "",
+        "pct_chg": 6.29,
+        "amount": 1176493680.0,
+        "turnover_ratio": 16.91,
+        "float_mv": 7093511951.46,
+        "total_mv": 7093511979.84,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 78
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220406",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "000736.SZ",
+      "name": "中交地产",
+      "industry": "房地产开发",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 242.03,
+      "amount_score": 62.26,
+      "candidate_score": 160,
+      "limit_type": "U",
+      "limit_times": 7,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.03,
+      "amount": 54696409.0,
+      "turnover_ratio": 0.46,
+      "recognition_reasons": [
+        "最高板=7",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=7",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002603.SZ",
+      "name": "以岭药业",
+      "industry": "中药",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 59.99,
+      "amount_score": 158.49,
+      "candidate_score": 103.68,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 8,
+      "first_time": "93203",
+      "last_time": "142536",
+      "pct_chg": 9.99,
+      "amount": 4265179136.0,
+      "turnover_ratio": 8.99,
+      "recognition_reasons": [
+        "首次封板=93203",
+        "盘中开板8次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=93203",
+        "盘中开板8次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "000736.SZ",
+        "name": "中交地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 242.03,
+        "amount_score": 62.26,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 54696409.0,
+        "turnover_ratio": 0.46,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603051.SH",
+        "name": "鹿山新材",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 214.0,
+        "amount_score": 112.0,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "110954",
+        "last_time": "130410",
+        "pct_chg": 10.0,
+        "amount": 1108591136.0,
+        "turnover_ratio": 77.42,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=110954",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=110954",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "000797.SZ",
+        "name": "中国武夷",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.05,
+        "amount_score": 50.22,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.05,
+        "amount": 24904991.0,
+        "turnover_ratio": 0.34,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.92,
+        "amount_score": 66.75,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.92,
+        "amount": 111615378.0,
+        "turnover_ratio": 1.66,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000014.SZ",
+        "name": "沙河股份",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 134.97,
+        "amount_score": 76.67,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93003",
+        "last_time": "93003",
+        "pct_chg": 9.97,
+        "amount": 159762403.0,
+        "turnover_ratio": 5.41,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93003",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93003",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.99,
+        "amount_score": 158.49,
+        "candidate_score": 103.68,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 8,
+        "first_time": "93203",
+        "last_time": "142536",
+        "pct_chg": 9.99,
+        "amount": 4265179136.0,
+        "turnover_ratio": 8.99,
+        "recognition_reasons": [
+          "首次封板=93203",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93203",
+          "盘中开板8次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002864.SZ",
+        "name": "盘龙药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 54.99,
+        "amount_score": 145.99,
+        "candidate_score": 102.79,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "93551",
+        "last_time": "141651",
+        "pct_chg": 9.99,
+        "amount": 1640099216.0,
+        "turnover_ratio": 40.15,
+        "recognition_reasons": [
+          "首次封板=93551",
+          "盘中开板12次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93551",
+          "盘中开板12次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "003040.SZ",
+        "name": "楚天龙",
+        "industry": "通信设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 132.0,
+        "candidate_score": 90,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 3,
+        "first_time": "101057",
+        "last_time": "105003",
+        "pct_chg": 10.0,
+        "amount": 1281324640.0,
+        "turnover_ratio": 23.04,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=101057",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=101057",
+          "盘中开板3次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "600649.SH",
+        "name": "城投控股",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.1,
+        "amount_score": 116.28,
+        "candidate_score": 87.95,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "132208",
+        "last_time": "145208",
+        "pct_chg": 10.1,
+        "amount": 1128078336.0,
+        "turnover_ratio": 8.36,
+        "recognition_reasons": [
+          "首次封板=132208",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=132208",
+          "盘中开板7次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603051.SH",
+        "name": "鹿山新材",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 214.0,
+        "amount_score": 112.0,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "110954",
+        "last_time": "130410",
+        "pct_chg": 10.0,
+        "amount": 1108591136.0,
+        "turnover_ratio": 77.42,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=110954",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=110954",
+          "盘中开板2次后仍封住"
+        ]
+      }
+    ]
+  }
+}

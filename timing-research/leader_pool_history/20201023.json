@@ -1,0 +1,894 @@
+{
+  "trade_date": "20201023",
+  "pool": {
+    "trade_date": "20201023",
+    "input_summary": {
+      "up_count": 19,
+      "zha_count": 9,
+      "focus_industries": [
+        {
+          "industry": "电子元件",
+          "industry_score": 48.25,
+          "up_count": 5,
+          "zha_count": 1,
+          "max_height": 14,
+          "amount": 2123675914.0
+        },
+        {
+          "industry": "航天航空",
+          "industry_score": 33.02,
+          "up_count": 1,
+          "zha_count": 0,
+          "max_height": 15,
+          "amount": 8191665.0
+        },
+        {
+          "industry": "食品饮料",
+          "industry_score": 32.49,
+          "up_count": 2,
+          "zha_count": 0,
+          "max_height": 10,
+          "amount": 3244257840.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 10
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "003009.SZ",
+        "name": "中天火箭",
+        "industry": "航天航空",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 348.3,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=15",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500",
+          "题材内成交额第1",
+          "所属强势行业=航天航空",
+          "已涨停"
+        ],
+        "limit_times": 15,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 8191665.0,
+        "turnover_ratio": 0.3,
+        "float_mv": 2747726113.0,
+        "total_mv": 10990898298.49,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 16,
+        "amount_rank_in_industry": 1,
+        "industry_score": 33.02
+      },
+      {
+        "ts_code": "605111.SH",
+        "name": "新洁能",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 325.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=14",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92505",
+          "强势行业=电子元件",
+          "涨幅强=10.00%"
+        ],
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 11812284.0,
+        "turnover_ratio": 0.47,
+        "float_mv": 2504700000.0,
+        "total_mv": 10018800000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15,
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 48.25
+      },
+      {
+        "ts_code": "605338.SH",
+        "name": "巴比食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 313.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=10",
+          "涨停池成交额前1",
+          "首次封板时间=93433",
+          "强势行业=食品饮料",
+          "涨幅强=10.01%",
+          "焦点池成交额前1",
+          "换手活跃=62.92%",
+          "题材内成交额第1",
+          "所属强势行业=食品饮料",
+          "已涨停"
+        ],
+        "limit_times": 10,
+        "open_times": 12,
+        "first_time": "93433",
+        "last_time": "143849",
+        "pct_chg": 10.01,
+        "amount": 1659970608.0,
+        "turnover_ratio": 62.92,
+        "float_mv": 2679020000.0,
+        "total_mv": 10716080000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 32.49,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300582.SZ",
+        "name": "英飞特",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 135.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "首次封板时间=94315",
+          "强势行业=电子元件",
+          "涨幅强=20.02%",
+          "焦点池成交额前3",
+          "换手活跃=39.68%",
+          "题材内成交额第1",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "94315",
+        "last_time": "140500",
+        "pct_chg": 20.02,
+        "amount": 1205854656.0,
+        "turnover_ratio": 39.68,
+        "float_mv": 3175226348.92,
+        "total_mv": 4675149116.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 48.25,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300516.SZ",
+        "name": "久之洋",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 91.44,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=20.01%",
+          "焦点池成交额前4",
+          "换手活跃=9.90%",
+          "题材内成交额第2",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "112245",
+        "last_time": "135203",
+        "pct_chg": 20.01,
+        "amount": 754147664.0,
+        "turnover_ratio": 9.9,
+        "float_mv": 8141400000.0,
+        "total_mv": 8141400000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 48.25,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300898.SZ",
+        "name": "熊猫乳品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 90.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "首次封板时间=101654",
+          "强势行业=食品饮料",
+          "涨幅强=20.00%",
+          "焦点池成交额前2",
+          "换手活跃=81.55%"
+        ],
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "101654",
+        "last_time": "145533",
+        "pct_chg": 20.0,
+        "amount": 1584287232.0,
+        "turnover_ratio": 81.55,
+        "float_mv": 2050903073.76,
+        "total_mv": 9612480000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 32.49
+      },
+      {
+        "ts_code": "003015.SZ",
+        "name": "日久光电",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 1322200.0,
+        "turnover_ratio": 0.16,
+        "float_mv": 804553337.15,
+        "total_mv": 3218213394.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 19
+      },
+      {
+        "ts_code": "605058.SH",
+        "name": "澳弘电子",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.01,
+        "amount": 6222313.0,
+        "turnover_ratio": 0.55,
+        "float_mv": 1135173870.0,
+        "total_mv": 4540693891.5,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 17
+      },
+      {
+        "ts_code": "003013.SZ",
+        "name": "地铁设计",
+        "industry": "工程建设",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 1797400.0,
+        "turnover_ratio": 0.21,
+        "float_mv": 851012700.0,
+        "total_mv": 8508212700.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 18
+      },
+      {
+        "ts_code": "002724.SZ",
+        "name": "海洋王",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 55.07,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "炸板活跃票",
+          "焦点池成交额前5"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "101224",
+        "last_time": "",
+        "pct_chg": 7.64,
+        "amount": 144316797.0,
+        "turnover_ratio": 5.72,
+        "float_mv": 2534746600.25,
+        "total_mv": 5934504230.08,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 48.25
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20201023",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 10,
+    "recognition_leader": {
+      "ts_code": "003009.SZ",
+      "name": "中天火箭",
+      "industry": "航天航空",
+      "source_types": [
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 434.0,
+      "amount_score": 122.15,
+      "candidate_score": 348.3,
+      "limit_type": "U",
+      "limit_times": 15,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.0,
+      "amount": 8191665.0,
+      "turnover_ratio": 0.3,
+      "recognition_reasons": [
+        "最高板=15",
+        "首次封板=92500",
+        "封板稳定",
+        "题材内成交额核心"
+      ],
+      "amount_reasons": [
+        "最高板=15",
+        "首次封板=92500",
+        "封板稳定",
+        "题材内成交额核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "605338.SH",
+      "name": "巴比食品",
+      "industry": "食品饮料",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 276.01,
+      "amount_score": 180.01,
+      "candidate_score": 313.0,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 12,
+      "first_time": "93433",
+      "last_time": "143849",
+      "pct_chg": 10.01,
+      "amount": 1659970608.0,
+      "turnover_ratio": 62.92,
+      "recognition_reasons": [
+        "连板高度=10",
+        "首次封板=93433",
+        "盘中开板12次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=10",
+        "首次封板=93433",
+        "盘中开板12次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "003009.SZ",
+        "name": "中天火箭",
+        "industry": "航天航空",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 434.0,
+        "amount_score": 122.15,
+        "candidate_score": 348.3,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 8191665.0,
+        "turnover_ratio": 0.3,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "605111.SH",
+        "name": "新洁能",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 389.0,
+        "amount_score": 102.23,
+        "candidate_score": 325.6,
+        "limit_type": "U",
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 11812284.0,
+        "turnover_ratio": 0.47,
+        "recognition_reasons": [
+          "连板高度=14",
+          "首次封板=92505",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=14",
+          "首次封板=92505",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605338.SH",
+        "name": "巴比食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 276.01,
+        "amount_score": 180.01,
+        "candidate_score": 313.0,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 12,
+        "first_time": "93433",
+        "last_time": "143849",
+        "pct_chg": 10.01,
+        "amount": 1659970608.0,
+        "turnover_ratio": 62.92,
+        "recognition_reasons": [
+          "连板高度=10",
+          "首次封板=93433",
+          "盘中开板12次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=10",
+          "首次封板=93433",
+          "盘中开板12次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605058.SH",
+        "name": "澳弘电子",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.01,
+        "amount_score": 78.29,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.01,
+        "amount": 6222313.0,
+        "turnover_ratio": 0.55,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "003015.SZ",
+        "name": "日久光电",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 62.07,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 1322200.0,
+        "turnover_ratio": 0.16,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "605338.SH",
+        "name": "巴比食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 276.01,
+        "amount_score": 180.01,
+        "candidate_score": 313.0,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 12,
+        "first_time": "93433",
+        "last_time": "143849",
+        "pct_chg": 10.01,
+        "amount": 1659970608.0,
+        "turnover_ratio": 62.92,
+        "recognition_reasons": [
+          "连板高度=10",
+          "首次封板=93433",
+          "盘中开板12次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=10",
+          "首次封板=93433",
+          "盘中开板12次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300582.SZ",
+        "name": "英飞特",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 84,
+        "amount_score": 154.0,
+        "candidate_score": 135.6,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "94315",
+        "last_time": "140500",
+        "pct_chg": 20.02,
+        "amount": 1205854656.0,
+        "turnover_ratio": 39.68,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94315",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94315",
+          "盘中开板3次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300898.SZ",
+        "name": "熊猫乳品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 55,
+        "amount_score": 140.0,
+        "candidate_score": 90.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "101654",
+        "last_time": "145533",
+        "pct_chg": 20.0,
+        "amount": 1584287232.0,
+        "turnover_ratio": 81.55,
+        "recognition_reasons": [
+          "首次封板=101654",
+          "盘中开板3次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101654",
+          "盘中开板3次后仍封住",
+          "候选池成交额前2",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300516.SZ",
+        "name": "久之洋",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 51,
+        "amount_score": 126.95,
+        "candidate_score": 91.44,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "112245",
+        "last_time": "135203",
+        "pct_chg": 20.01,
+        "amount": 754147664.0,
+        "turnover_ratio": 9.9,
+        "recognition_reasons": [
+          "首次封板=112245",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=112245",
+          "盘中开板2次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "003009.SZ",
+        "name": "中天火箭",
+        "industry": "航天航空",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 434.0,
+        "amount_score": 122.15,
+        "candidate_score": 348.3,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 8191665.0,
+        "turnover_ratio": 0.3,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      }
+    ]
+  }
+}

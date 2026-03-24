@@ -1,0 +1,864 @@
+{
+  "trade_date": "20200629",
+  "pool": {
+    "trade_date": "20200629",
+    "input_summary": {
+      "up_count": 49,
+      "zha_count": 13,
+      "focus_industries": [
+        {
+          "industry": "医药制造",
+          "industry_score": 38.3,
+          "up_count": 6,
+          "zha_count": 0,
+          "max_height": 8,
+          "amount": 2149106165.0
+        },
+        {
+          "industry": "玻璃陶瓷",
+          "industry_score": 25.56,
+          "up_count": 4,
+          "zha_count": 3,
+          "max_height": 2,
+          "amount": 3280511904.0
+        },
+        {
+          "industry": "材料行业",
+          "industry_score": 23.91,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 6,
+          "amount": 956471759.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "300841.SZ",
+        "name": "康华生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 180,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=8",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 7880237.0,
+        "turnover_ratio": 0.27,
+        "float_mv": 2962050000.0,
+        "total_mv": 11848200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 46
+      },
+      {
+        "ts_code": "300842.SZ",
+        "name": "帝科股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 3282600.0,
+        "turnover_ratio": 0.35,
+        "float_mv": 925500000.0,
+        "total_mv": 3702000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 47
+      },
+      {
+        "ts_code": "605166.SH",
+        "name": "聚合顺",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.02,
+        "amount": 72354161.0,
+        "turnover_ratio": 5.61,
+        "float_mv": 1290591320.0,
+        "total_mv": 5162349050.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 37
+      },
+      {
+        "ts_code": "300824.SZ",
+        "name": "北鼎股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.97,
+        "amount": 2301847.0,
+        "turnover_ratio": 0.34,
+        "float_mv": 677201000.0,
+        "total_mv": 2708804000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 49
+      },
+      {
+        "ts_code": "600529.SH",
+        "name": "山东药玻",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 101.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=玻璃陶瓷",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=玻璃陶瓷",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 16,
+        "first_time": "93549",
+        "last_time": "145436",
+        "pct_chg": 10.0,
+        "amount": 1826159952.0,
+        "turnover_ratio": 5.5,
+        "float_mv": 33508583511.04,
+        "total_mv": 33508583342.08,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 25.56,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.85,
+        "amount": 40273198.0,
+        "turnover_ratio": 0.77,
+        "float_mv": 5215606811.38,
+        "total_mv": 5219989485.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 43
+      },
+      {
+        "ts_code": "002317.SZ",
+        "name": "众生药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 98.49,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=10.01%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "94415",
+        "last_time": "100333",
+        "pct_chg": 10.01,
+        "amount": 763433152.0,
+        "turnover_ratio": 6.97,
+        "float_mv": 11110950318.0,
+        "total_mv": 12705592723.2,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 38.3,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600993.SH",
+        "name": "马应龙",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 91.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=9.99%",
+          "焦点池成交额前3",
+          "题材内成交额第2",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144124",
+        "last_time": "144124",
+        "pct_chg": 9.99,
+        "amount": 716581808.0,
+        "turnover_ratio": 7.51,
+        "float_mv": 9953001280.08,
+        "total_mv": 9970276429.44,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 38.3,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300612.SZ",
+        "name": "宣亚国际",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=105409"
+        ],
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "105409",
+        "last_time": "135103",
+        "pct_chg": 10.01,
+        "amount": 361238496.0,
+        "turnover_ratio": 23.07,
+        "float_mv": 1679147447.25,
+        "total_mv": 4433940000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 13
+      },
+      {
+        "ts_code": "601888.SH",
+        "name": "中国中免",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "封板稳定(open_times=0)",
+          "首次封板时间=145508"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145508",
+        "last_time": "145508",
+        "pct_chg": 10.0,
+        "amount": 2238653072.0,
+        "turnover_ratio": 0.86,
+        "float_mv": 273405150426.32,
+        "total_mv": 273405151546.56,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "002740.SZ",
+        "name": "爱迪尔",
+        "industry": "珠宝首饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93330"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93330",
+        "last_time": "93330",
+        "pct_chg": 10.07,
+        "amount": 147828336.0,
+        "turnover_ratio": 10.61,
+        "float_mv": 1425906105.9,
+        "total_mv": 2678960324.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 29
+      },
+      {
+        "ts_code": "002571.SZ",
+        "name": "德力股份",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=玻璃陶瓷",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=34.49%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "93015",
+        "last_time": "",
+        "pct_chg": -9.35,
+        "amount": 653040928.0,
+        "turnover_ratio": 34.49,
+        "float_mv": 1708267002.38,
+        "total_mv": 2355623731.04,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 25.56
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20200629",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "300841.SZ",
+      "name": "康华生物",
+      "industry": "医药制造",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 266.0,
+      "amount_score": 70.13,
+      "candidate_score": 180,
+      "limit_type": "U",
+      "limit_times": 8,
+      "open_times": 0,
+      "first_time": "92503",
+      "last_time": "92503",
+      "pct_chg": 10.0,
+      "amount": 7880237.0,
+      "turnover_ratio": 0.27,
+      "recognition_reasons": [
+        "最高板=8",
+        "首次封板=92503",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=8",
+        "首次封板=92503",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600529.SH",
+      "name": "山东药玻",
+      "industry": "玻璃陶瓷",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 55.0,
+      "amount_score": 148.75,
+      "candidate_score": 101.6,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 16,
+      "first_time": "93549",
+      "last_time": "145436",
+      "pct_chg": 10.0,
+      "amount": 1826159952.0,
+      "turnover_ratio": 5.5,
+      "recognition_reasons": [
+        "首次封板=93549",
+        "盘中开板16次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=93549",
+        "盘中开板16次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "300841.SZ",
+        "name": "康华生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 266.0,
+        "amount_score": 70.13,
+        "candidate_score": 180,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 7880237.0,
+        "turnover_ratio": 0.27,
+        "recognition_reasons": [
+          "最高板=8",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=8",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605166.SH",
+        "name": "聚合顺",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 186.02,
+        "amount_score": 88.83,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.02,
+        "amount": 72354161.0,
+        "turnover_ratio": 5.61,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=92504",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=92504",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300842.SZ",
+        "name": "帝科股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 186.01,
+        "amount_score": 62.18,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 3282600.0,
+        "turnover_ratio": 0.35,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300824.SZ",
+        "name": "北鼎股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 161.97,
+        "amount_score": 54.14,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.97,
+        "amount": 2301847.0,
+        "turnover_ratio": 0.34,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.85,
+        "amount_score": 74.23,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.85,
+        "amount": 40273198.0,
+        "turnover_ratio": 0.77,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600529.SH",
+        "name": "山东药玻",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.0,
+        "amount_score": 148.75,
+        "candidate_score": 101.6,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 16,
+        "first_time": "93549",
+        "last_time": "145436",
+        "pct_chg": 10.0,
+        "amount": 1826159952.0,
+        "turnover_ratio": 5.5,
+        "recognition_reasons": [
+          "首次封板=93549",
+          "盘中开板16次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93549",
+          "盘中开板16次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002317.SZ",
+        "name": "众生药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 63.01,
+        "amount_score": 141.5,
+        "candidate_score": 98.49,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "94415",
+        "last_time": "100333",
+        "pct_chg": 10.01,
+        "amount": 763433152.0,
+        "turnover_ratio": 6.97,
+        "recognition_reasons": [
+          "首次封板=94415",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94415",
+          "盘中开板1次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601888.SH",
+        "name": "中国中免",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.0,
+        "amount_score": 136.43,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145508",
+        "last_time": "145508",
+        "pct_chg": 10.0,
+        "amount": 2238653072.0,
+        "turnover_ratio": 0.86,
+        "recognition_reasons": [
+          "首次封板=145508",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=145508",
+          "封板稳定",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "600993.SH",
+        "name": "马应龙",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.99,
+        "amount_score": 123.74,
+        "candidate_score": 91.3,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144124",
+        "last_time": "144124",
+        "pct_chg": 9.99,
+        "amount": 716581808.0,
+        "turnover_ratio": 7.51,
+        "recognition_reasons": [
+          "首次封板=144124",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=144124",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300612.SZ",
+        "name": "宣亚国际",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 91.01,
+        "amount_score": 104.01,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "105409",
+        "last_time": "135103",
+        "pct_chg": 10.01,
+        "amount": 361238496.0,
+        "turnover_ratio": 23.07,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=105409",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=105409",
+          "盘中开板2次后仍封住"
+        ]
+      }
+    ]
+  }
+}

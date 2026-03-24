@@ -1,0 +1,845 @@
+{
+  "trade_date": "20250723",
+  "pool": {
+    "trade_date": "20250723",
+    "input_summary": {
+      "up_count": 50,
+      "zha_count": 56,
+      "focus_industries": [
+        {
+          "industry": "专用设备",
+          "industry_score": 38.04,
+          "up_count": 7,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 4020567261.0
+        },
+        {
+          "industry": "化学制品",
+          "industry_score": 34,
+          "up_count": 5,
+          "zha_count": 6,
+          "max_height": 3,
+          "amount": 14288601762.0
+        },
+        {
+          "industry": "钢铁行业",
+          "industry_score": 28,
+          "up_count": 3,
+          "zha_count": 6,
+          "max_height": 3,
+          "amount": 11626728207.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "600875.SH",
+        "name": "东方电气",
+        "industry": "电源设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 108,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前1",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 3,
+        "open_times": 16,
+        "first_time": "92502",
+        "last_time": "145632",
+        "pct_chg": 10.01,
+        "amount": 5045433344.0,
+        "turnover_ratio": 10.51,
+        "float_mv": 48039766884.4,
+        "total_mv": 80487153996.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "001360.SZ",
+        "name": "南矿集团",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 51256966.0,
+        "turnover_ratio": 3.02,
+        "float_mv": 1699412213.88,
+        "total_mv": 4239120000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 45
+      },
+      {
+        "ts_code": "600801.SH",
+        "name": "华新水泥",
+        "industry": "水泥建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前3",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 4,
+        "first_time": "92503",
+        "last_time": "143636",
+        "pct_chg": 10.03,
+        "amount": 2338092048.0,
+        "turnover_ratio": 9.97,
+        "float_mv": 23444167318.56,
+        "total_mv": 36257684101.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "002497.SZ",
+        "name": "雅化集团",
+        "industry": "化学制品",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 95.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化学制品",
+          "炸板活跃票",
+          "焦点池成交额前3",
+          "换手活跃=20.03%",
+          "题材内成交额第1",
+          "所属强势行业=化学制品"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "93221",
+        "last_time": "",
+        "pct_chg": 6.68,
+        "amount": 3355651248.0,
+        "turnover_ratio": 20.03,
+        "float_mv": 16407545770.0,
+        "total_mv": 17864719184.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 34,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "001239.SZ",
+        "name": "永达股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 181650791.0,
+        "turnover_ratio": 7.56,
+        "float_mv": 2401980000.0,
+        "total_mv": 5056800000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 37
+      },
+      {
+        "ts_code": "002037.SZ",
+        "name": "保利联合",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.97,
+        "amount": 43432288.0,
+        "turnover_ratio": 0.7,
+        "float_mv": 6242098001.4,
+        "total_mv": 6242098027.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 48
+      },
+      {
+        "ts_code": "002096.SZ",
+        "name": "易普力",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 187476605.0,
+        "turnover_ratio": 1.57,
+        "float_mv": 11958100596.78,
+        "total_mv": 21161919502.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 36
+      },
+      {
+        "ts_code": "002097.SZ",
+        "name": "山河智能",
+        "industry": "工程机械",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 145484917.0,
+        "turnover_ratio": 1.27,
+        "float_mv": 11445459738.13,
+        "total_mv": 11466166206.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 38
+      },
+      {
+        "ts_code": "002297.SZ",
+        "name": "博云新材",
+        "industry": "航天航空",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 88146630.0,
+        "turnover_ratio": 1.46,
+        "float_mv": 6034793744.07,
+        "total_mv": 6034793712.48,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 43
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.8,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=钢铁行业",
+          "炸板活跃票",
+          "焦点池成交额前1",
+          "换手活跃=8.71%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95001",
+        "last_time": "",
+        "pct_chg": 4.57,
+        "amount": 6352205824.0,
+        "turnover_ratio": 8.71,
+        "float_mv": 71862028077.23,
+        "total_mv": 103710938114.56,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 28
+      },
+      {
+        "ts_code": "002246.SZ",
+        "name": "北化股份",
+        "industry": "化学制品",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化学制品",
+          "炸板活跃票",
+          "焦点池成交额前2",
+          "换手活跃=30.86%"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "92500",
+        "last_time": "",
+        "pct_chg": -7.9,
+        "amount": 3718806512.0,
+        "turnover_ratio": 30.86,
+        "float_mv": 10887359965.02,
+        "total_mv": 10887360084.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 34
+      },
+      {
+        "ts_code": "601399.SH",
+        "name": "国机重装",
+        "industry": "专用设备",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "candidate_score": 57.95,
+        "role_tags": [
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "94351",
+        "last_time": "94351",
+        "pct_chg": 9.95,
+        "amount": 1216651488.0,
+        "turnover_ratio": 4.25,
+        "float_mv": 29503443590.1,
+        "total_mv": 29503443909.12,
+        "limit_type": "U",
+        "amount_rank_in_industry": 1,
+        "industry_score": 38.04
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20250723",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001360.SZ",
+      "name": "南矿集团",
+      "industry": "专用设备",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 170.01,
+      "amount_score": 59.52,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.01,
+      "amount": 51256966.0,
+      "turnover_ratio": 3.02,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600875.SH",
+      "name": "东方电气",
+      "industry": "电源设备",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 100.01,
+      "amount_score": 141.27,
+      "candidate_score": 108,
+      "limit_type": "U",
+      "limit_times": 3,
+      "open_times": 16,
+      "first_time": "92502",
+      "last_time": "145632",
+      "pct_chg": 10.01,
+      "amount": 5045433344.0,
+      "turnover_ratio": 10.51,
+      "recognition_reasons": [
+        "连板高度=3",
+        "首次封板=92502",
+        "盘中开板16次后仍封住"
+      ],
+      "amount_reasons": [
+        "连板高度=3",
+        "首次封板=92502",
+        "盘中开板16次后仍封住",
+        "候选池成交额前2"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001360.SZ",
+        "name": "南矿集团",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 170.01,
+        "amount_score": 59.52,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 51256966.0,
+        "turnover_ratio": 3.02,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001239.SZ",
+        "name": "永达股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.03,
+        "amount_score": 81.81,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 181650791.0,
+        "turnover_ratio": 7.56,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002297.SZ",
+        "name": "博云新材",
+        "industry": "航天航空",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.03,
+        "amount_score": 62.76,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 88146630.0,
+        "turnover_ratio": 1.46,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002097.SZ",
+        "name": "山河智能",
+        "industry": "工程机械",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 70.63,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 145484917.0,
+        "turnover_ratio": 1.27,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002096.SZ",
+        "name": "易普力",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 86.77,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 187476605.0,
+        "turnover_ratio": 1.57,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600875.SH",
+        "name": "东方电气",
+        "industry": "电源设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 100.01,
+        "amount_score": 141.27,
+        "candidate_score": 108,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 16,
+        "first_time": "92502",
+        "last_time": "145632",
+        "pct_chg": 10.01,
+        "amount": 5045433344.0,
+        "turnover_ratio": 10.51,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92502",
+          "盘中开板16次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92502",
+          "盘中开板16次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "002497.SZ",
+        "name": "雅化集团",
+        "industry": "化学制品",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 22.68,
+        "amount_score": 124.68,
+        "candidate_score": 95.02,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "93221",
+        "last_time": "",
+        "pct_chg": 6.68,
+        "amount": 3355651248.0,
+        "turnover_ratio": 20.03,
+        "recognition_reasons": [
+          "首次封板=93221",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93221",
+          "炸板活跃票",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601399.SH",
+        "name": "国机重装",
+        "industry": "专用设备",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 105.95,
+        "amount_score": 124.08,
+        "candidate_score": 57.95,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "94351",
+        "last_time": "94351",
+        "pct_chg": 9.95,
+        "amount": 1216651488.0,
+        "turnover_ratio": 4.25,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=94351",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=94351",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "600801.SH",
+        "name": "华新水泥",
+        "industry": "水泥建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 102.03,
+        "amount_score": 117.02,
+        "candidate_score": 96,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 4,
+        "first_time": "92503",
+        "last_time": "143636",
+        "pct_chg": 10.03,
+        "amount": 2338092048.0,
+        "turnover_ratio": 9.97,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板4次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 15.57,
+        "amount_score": 112.92,
+        "candidate_score": 69.8,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95001",
+        "last_time": "",
+        "pct_chg": 4.57,
+        "amount": 6352205824.0,
+        "turnover_ratio": 8.71,
+        "recognition_reasons": [
+          "首次封板=95001",
+          "炸板活跃票",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=95001",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

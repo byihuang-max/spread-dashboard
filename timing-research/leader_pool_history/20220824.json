@@ -1,0 +1,912 @@
+{
+  "trade_date": "20220824",
+  "pool": {
+    "trade_date": "20220824",
+    "input_summary": {
+      "up_count": 33,
+      "zha_count": 23,
+      "focus_industries": [
+        {
+          "industry": "多元金融",
+          "industry_score": 32.64,
+          "up_count": 1,
+          "zha_count": 1,
+          "max_height": 14,
+          "amount": 320763983.0
+        },
+        {
+          "industry": "文化传媒",
+          "industry_score": 21.04,
+          "up_count": 3,
+          "zha_count": 0,
+          "max_height": 5,
+          "amount": 1019139303.0
+        },
+        {
+          "industry": "环保行业",
+          "industry_score": 19.46,
+          "up_count": 2,
+          "zha_count": 1,
+          "max_height": 5,
+          "amount": 1230255216.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 300,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=14",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.95,
+        "amount": 20536287.0,
+        "turnover_ratio": 2.2,
+        "float_mv": 935217779.84,
+        "total_mv": 9352177761.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 32
+      },
+      {
+        "ts_code": "000820.SZ",
+        "name": "神雾节能",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 175.28,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=103436",
+          "强势行业=环保行业",
+          "涨幅强=10.07%",
+          "焦点池成交额前2",
+          "换手活跃=27.05%",
+          "题材内成交额第1",
+          "所属强势行业=环保行业",
+          "已涨停"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "103436",
+        "last_time": "103436",
+        "pct_chg": 10.07,
+        "amount": 477888320.0,
+        "turnover_ratio": 27.05,
+        "float_mv": 1887024475.2,
+        "total_mv": 4180328616.96,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 12,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 19.46,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "603721.SH",
+        "name": "中广天择",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 128.78,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93131",
+          "强势行业=文化传媒",
+          "涨幅强=9.99%",
+          "焦点池成交额前4",
+          "换手活跃=17.54%",
+          "题材内成交额第2",
+          "所属强势行业=文化传媒",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 19,
+        "first_time": "93131",
+        "last_time": "142641",
+        "pct_chg": 9.99,
+        "amount": 387473296.0,
+        "turnover_ratio": 17.54,
+        "float_mv": 2233400000.0,
+        "total_mv": 2233400000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15,
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 21.04,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "001222.SZ",
+        "name": "源飞宠物",
+        "industry": "家用轻工",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 12518931.0,
+        "turnover_ratio": 1.27,
+        "float_mv": 985490000.0,
+        "total_mv": 3940515000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 33
+      },
+      {
+        "ts_code": "001330.SZ",
+        "name": "博纳影业",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 23952375.0,
+        "turnover_ratio": 0.82,
+        "float_mv": 2913980248.2,
+        "total_mv": 14569901315.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 31
+      },
+      {
+        "ts_code": "000593.SZ",
+        "name": "德龙汇能",
+        "industry": "燃气",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 104,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93015"
+        ],
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93015",
+        "last_time": "93833",
+        "pct_chg": 9.99,
+        "amount": 770806032.0,
+        "turnover_ratio": 23.11,
+        "float_mv": 3355151145.84,
+        "total_mv": 3356786234.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 5
+      },
+      {
+        "ts_code": "688565.SH",
+        "name": "力源科技",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 100.77,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=环保行业",
+          "涨幅强=20.00%",
+          "焦点池成交额前3",
+          "换手活跃=29.81%",
+          "题材内成交额第2",
+          "所属强势行业=环保行业",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "133116",
+        "last_time": "142437",
+        "pct_chg": 20.0,
+        "amount": 463368912.0,
+        "turnover_ratio": 29.81,
+        "float_mv": 1613814720.0,
+        "total_mv": 2652232800.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 19.46,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "601928.SH",
+        "name": "凤凰传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 100.15,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "涨幅强=10.03%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=文化传媒",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "103007",
+        "last_time": "143035",
+        "pct_chg": 10.03,
+        "amount": 607713632.0,
+        "turnover_ratio": 3.01,
+        "float_mv": 20664588000.0,
+        "total_mv": 20664588000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 21.04,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000040.SZ",
+        "name": "东旭蓝天",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=105642"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "105642",
+        "last_time": "132230",
+        "pct_chg": 9.98,
+        "amount": 2598506992.0,
+        "turnover_ratio": 39.07,
+        "float_mv": 6892214355.0,
+        "total_mv": 9664680168.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "002855.SZ",
+        "name": "捷荣技术",
+        "industry": "消费电子",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "93027",
+        "pct_chg": 10.04,
+        "amount": 237790299.0,
+        "turnover_ratio": 7.95,
+        "float_mv": 2992367899.94,
+        "total_mv": 3049952932.34,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 25
+      },
+      {
+        "ts_code": "000416.SZ",
+        "name": "民生控股",
+        "industry": "多元金融",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 57.86,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=多元金融",
+          "炸板活跃票",
+          "焦点池成交额前5",
+          "换手活跃=14.42%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95348",
+        "last_time": "",
+        "pct_chg": 5.21,
+        "amount": 300227696.0,
+        "turnover_ratio": 14.42,
+        "float_mv": 2041501816.32,
+        "total_mv": 2042386513.92,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 32.64
+      },
+      {
+        "ts_code": "000711.SZ",
+        "name": "京蓝科技",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 51.89,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=环保行业",
+          "炸板活跃票",
+          "换手活跃=12.52%"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "100545",
+        "last_time": "",
+        "pct_chg": 4.92,
+        "amount": 288997984.0,
+        "turnover_ratio": 12.52,
+        "float_mv": 2272508263.15,
+        "total_mv": 2835559872.48,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 19.46
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220824",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001236.SZ",
+      "name": "弘业期货",
+      "industry": "多元金融",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 409.95,
+      "amount_score": 63.05,
+      "candidate_score": 300,
+      "limit_type": "U",
+      "limit_times": 14,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 9.95,
+      "amount": 20536287.0,
+      "turnover_ratio": 2.2,
+      "recognition_reasons": [
+        "最高板=14",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=14",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000820.SZ",
+      "name": "神雾节能",
+      "industry": "环保行业",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 160.07,
+      "amount_score": 156.07,
+      "candidate_score": 175.28,
+      "limit_type": "U",
+      "limit_times": 5,
+      "open_times": 0,
+      "first_time": "103436",
+      "last_time": "103436",
+      "pct_chg": 10.07,
+      "amount": 477888320.0,
+      "turnover_ratio": 27.05,
+      "recognition_reasons": [
+        "连板高度=5",
+        "首次封板=103436",
+        "封板稳定",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=5",
+        "首次封板=103436",
+        "封板稳定",
+        "候选池成交额前4",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 409.95,
+        "amount_score": 63.05,
+        "candidate_score": 300,
+        "limit_type": "U",
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.95,
+        "amount": 20536287.0,
+        "turnover_ratio": 2.2,
+        "recognition_reasons": [
+          "最高板=14",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=14",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001222.SZ",
+        "name": "源飞宠物",
+        "industry": "家用轻工",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 162.01,
+        "amount_score": 54.64,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 12518931.0,
+        "turnover_ratio": 1.27,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001330.SZ",
+        "name": "博纳影业",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 161.96,
+        "amount_score": 70.37,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 23952375.0,
+        "turnover_ratio": 0.82,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000820.SZ",
+        "name": "神雾节能",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 160.07,
+        "amount_score": 156.07,
+        "candidate_score": 175.28,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "103436",
+        "last_time": "103436",
+        "pct_chg": 10.07,
+        "amount": 477888320.0,
+        "turnover_ratio": 27.05,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=103436",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=103436",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000593.SZ",
+        "name": "德龙汇能",
+        "industry": "燃气",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 122.99,
+        "amount_score": 139.99,
+        "candidate_score": 104,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93015",
+        "last_time": "93833",
+        "pct_chg": 9.99,
+        "amount": 770806032.0,
+        "turnover_ratio": 23.11,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93015",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93015",
+          "盘中开板4次后仍封住",
+          "候选池成交额前2"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000820.SZ",
+        "name": "神雾节能",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 160.07,
+        "amount_score": 156.07,
+        "candidate_score": 175.28,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "103436",
+        "last_time": "103436",
+        "pct_chg": 10.07,
+        "amount": 477888320.0,
+        "turnover_ratio": 27.05,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=103436",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=103436",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000040.SZ",
+        "name": "东旭蓝天",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 65.98,
+        "amount_score": 149.98,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "105642",
+        "last_time": "132230",
+        "pct_chg": 9.98,
+        "amount": 2598506992.0,
+        "turnover_ratio": 39.07,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=105642",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=105642",
+          "盘中开板3次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "000593.SZ",
+        "name": "德龙汇能",
+        "industry": "燃气",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 122.99,
+        "amount_score": 139.99,
+        "candidate_score": 104,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93015",
+        "last_time": "93833",
+        "pct_chg": 9.99,
+        "amount": 770806032.0,
+        "turnover_ratio": 23.11,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93015",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93015",
+          "盘中开板4次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "601928.SH",
+        "name": "凤凰传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.03,
+        "amount_score": 139.53,
+        "candidate_score": 100.15,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "103007",
+        "last_time": "143035",
+        "pct_chg": 10.03,
+        "amount": 607713632.0,
+        "turnover_ratio": 3.01,
+        "recognition_reasons": [
+          "首次封板=103007",
+          "盘中开板12次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=103007",
+          "盘中开板12次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "688565.SH",
+        "name": "力源科技",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 71,
+        "amount_score": 128.0,
+        "candidate_score": 100.77,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "133116",
+        "last_time": "142437",
+        "pct_chg": 20.0,
+        "amount": 463368912.0,
+        "turnover_ratio": 29.81,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=133116",
+          "盘中开板6次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=133116",
+          "盘中开板6次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

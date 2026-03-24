@@ -1,0 +1,884 @@
+{
+  "trade_date": "20241224",
+  "pool": {
+    "trade_date": "20241224",
+    "input_summary": {
+      "up_count": 75,
+      "zha_count": 28,
+      "focus_industries": [
+        {
+          "industry": "专用设备",
+          "industry_score": 26.99,
+          "up_count": 4,
+          "zha_count": 1,
+          "max_height": 5,
+          "amount": 1995826085.0
+        },
+        {
+          "industry": "电网设备",
+          "industry_score": 26.37,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 1,
+          "amount": 2683822830.0
+        },
+        {
+          "industry": "通信设备",
+          "industry_score": 20.8,
+          "up_count": 4,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 3398166345.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "600579.SH",
+        "name": "克劳斯",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93001"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "93001",
+        "last_time": "93001",
+        "pct_chg": 9.99,
+        "amount": 372446688.0,
+        "turnover_ratio": 5.7,
+        "float_mv": 6535150262.39,
+        "total_mv": 6535150169.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 35
+      },
+      {
+        "ts_code": "603421.SH",
+        "name": "鼎信通讯",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 112,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=5",
+          "首次封板时间=93012"
+        ],
+        "limit_times": 5,
+        "open_times": 4,
+        "first_time": "93012",
+        "last_time": "95333",
+        "pct_chg": 9.97,
+        "amount": 666098576.0,
+        "turnover_ratio": 9.8,
+        "float_mv": 6834956555.28,
+        "total_mv": 6834956565.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 20
+      },
+      {
+        "ts_code": "603803.SH",
+        "name": "瑞斯康达",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 110.31,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通信设备",
+          "涨幅强=10.01%",
+          "焦点池成交额前1",
+          "换手活跃=29.24%",
+          "题材内成交额第1",
+          "所属强势行业=通信设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "93536",
+        "last_time": "112309",
+        "pct_chg": 10.01,
+        "amount": 1787144336.0,
+        "turnover_ratio": 29.24,
+        "float_mv": 6254285959.04,
+        "total_mv": 6318310584.32,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 20.8,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300040.SZ",
+        "name": "九洲集团",
+        "industry": "电网设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电网设备",
+          "涨幅强=20.06%",
+          "焦点池成交额前3",
+          "换手活跃=25.47%",
+          "题材内成交额第1",
+          "所属强势行业=电网设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "94833",
+        "last_time": "94833",
+        "pct_chg": 20.06,
+        "amount": 937039920.0,
+        "turnover_ratio": 25.47,
+        "float_mv": 3847709767.02,
+        "total_mv": 4855310996.48,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 26.37,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002137.SZ",
+        "name": "实益达",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 103854788.0,
+        "turnover_ratio": 2.57,
+        "float_mv": 4039916761.64,
+        "total_mv": 5884774401.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 63
+      },
+      {
+        "ts_code": "000810.SZ",
+        "name": "创维数字",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 94.94,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通信设备",
+          "涨幅强=10.01%",
+          "焦点池成交额前2",
+          "题材内成交额第2",
+          "所属强势行业=通信设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "111636",
+        "last_time": "111636",
+        "pct_chg": 10.01,
+        "amount": 1104413920.0,
+        "turnover_ratio": 6.88,
+        "float_mv": 16942689398.84,
+        "total_mv": 17437275772.8,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 20.8,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "603666.SH",
+        "name": "亿嘉和",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 89.73,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=10.01%",
+          "焦点池成交额前5",
+          "换手活跃=12.36%",
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "93132",
+        "last_time": "143802",
+        "pct_chg": 10.01,
+        "amount": 686896000.0,
+        "turnover_ratio": 12.36,
+        "float_mv": 5606225654.4,
+        "total_mv": 5606225654.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 26.99,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002730.SZ",
+        "name": "电光科技",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 41007120.0,
+        "turnover_ratio": 1.1,
+        "float_mv": 3730202106.4,
+        "total_mv": 3903221192.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 73
+      },
+      {
+        "ts_code": "600965.SH",
+        "name": "福成股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93106"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93106",
+        "last_time": "93106",
+        "pct_chg": 10.0,
+        "amount": 150477340.0,
+        "turnover_ratio": 3.2,
+        "float_mv": 4773026567.65,
+        "total_mv": 4773026596.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 54
+      },
+      {
+        "ts_code": "600973.SH",
+        "name": "宝胜股份",
+        "industry": "电网设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 64.88,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电网设备",
+          "涨幅强=10.00%",
+          "焦点池成交额前4",
+          "换手活跃=11.46%"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "93155",
+        "last_time": "105637",
+        "pct_chg": 10.0,
+        "amount": 853072912.0,
+        "turnover_ratio": 11.46,
+        "float_mv": 7542514364.0,
+        "total_mv": 7542514408.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 26.37
+      },
+      {
+        "ts_code": "002945.SZ",
+        "name": "华林证券",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=95533"
+        ],
+        "limit_times": 1,
+        "open_times": 14,
+        "first_time": "95533",
+        "last_time": "131954",
+        "pct_chg": 9.99,
+        "amount": 2388360336.0,
+        "turnover_ratio": 4.75,
+        "float_mv": 51435000000.0,
+        "total_mv": 51435000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "603777.SH",
+        "name": "来伊份",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=102958"
+        ],
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "102958",
+        "last_time": "105804",
+        "pct_chg": 10.04,
+        "amount": 886180592.0,
+        "turnover_ratio": 18.79,
+        "float_mv": 5001707228.28,
+        "total_mv": 5018108168.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 10
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20241224",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "600579.SH",
+      "name": "克劳斯",
+      "industry": "专用设备",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 190.99,
+      "amount_score": 80.84,
+      "candidate_score": 120,
+      "limit_type": "U",
+      "limit_times": 5,
+      "open_times": 0,
+      "first_time": "93001",
+      "last_time": "93001",
+      "pct_chg": 9.99,
+      "amount": 372446688.0,
+      "turnover_ratio": 5.7,
+      "recognition_reasons": [
+        "最高板=5",
+        "首次封板=93001",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=5",
+        "首次封板=93001",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "603803.SH",
+      "name": "瑞斯康达",
+      "industry": "通信设备",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 55.01,
+      "amount_score": 156.01,
+      "candidate_score": 110.31,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 9,
+      "first_time": "93536",
+      "last_time": "112309",
+      "pct_chg": 10.01,
+      "amount": 1787144336.0,
+      "turnover_ratio": 29.24,
+      "recognition_reasons": [
+        "首次封板=93536",
+        "盘中开板9次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=93536",
+        "盘中开板9次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "600579.SH",
+        "name": "克劳斯",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 190.99,
+        "amount_score": 80.84,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "93001",
+        "last_time": "93001",
+        "pct_chg": 9.99,
+        "amount": 372446688.0,
+        "turnover_ratio": 5.7,
+        "recognition_reasons": [
+          "最高板=5",
+          "首次封板=93001",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=5",
+          "首次封板=93001",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603421.SH",
+        "name": "鼎信通讯",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 178.97,
+        "amount_score": 90.87,
+        "candidate_score": 112,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 4,
+        "first_time": "93012",
+        "last_time": "95333",
+        "pct_chg": 9.97,
+        "amount": 666098576.0,
+        "turnover_ratio": 9.8,
+        "recognition_reasons": [
+          "最高板=5",
+          "首次封板=93012",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=5",
+          "首次封板=93012",
+          "盘中开板4次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002137.SZ",
+        "name": "实益达",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.04,
+        "amount_score": 59.32,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 103854788.0,
+        "turnover_ratio": 2.57,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002730.SZ",
+        "name": "电光科技",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 46.55,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 41007120.0,
+        "turnover_ratio": 1.1,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600965.SH",
+        "name": "福成股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 111.0,
+        "amount_score": 63.6,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93106",
+        "last_time": "93106",
+        "pct_chg": 10.0,
+        "amount": 150477340.0,
+        "turnover_ratio": 3.2,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93106",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93106",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "603803.SH",
+        "name": "瑞斯康达",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.01,
+        "amount_score": 156.01,
+        "candidate_score": 110.31,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "93536",
+        "last_time": "112309",
+        "pct_chg": 10.01,
+        "amount": 1787144336.0,
+        "turnover_ratio": 29.24,
+        "recognition_reasons": [
+          "首次封板=93536",
+          "盘中开板9次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93536",
+          "盘中开板9次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300040.SZ",
+        "name": "九洲集团",
+        "industry": "电网设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 71,
+        "amount_score": 142.0,
+        "candidate_score": 105.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "94833",
+        "last_time": "94833",
+        "pct_chg": 20.06,
+        "amount": 937039920.0,
+        "turnover_ratio": 25.47,
+        "recognition_reasons": [
+          "首次封板=94833",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94833",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002945.SZ",
+        "name": "华林证券",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 43.99,
+        "amount_score": 138.37,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 14,
+        "first_time": "95533",
+        "last_time": "131954",
+        "pct_chg": 9.99,
+        "amount": 2388360336.0,
+        "turnover_ratio": 4.75,
+        "recognition_reasons": [
+          "首次封板=95533",
+          "盘中开板14次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=95533",
+          "盘中开板14次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "000810.SZ",
+        "name": "创维数字",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.01,
+        "amount_score": 131.45,
+        "candidate_score": 94.94,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "111636",
+        "last_time": "111636",
+        "pct_chg": 10.01,
+        "amount": 1104413920.0,
+        "turnover_ratio": 6.88,
+        "recognition_reasons": [
+          "首次封板=111636",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=111636",
+          "封板稳定",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603666.SH",
+        "name": "亿嘉和",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 62.01,
+        "amount_score": 112.19,
+        "candidate_score": 89.73,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "93132",
+        "last_time": "143802",
+        "pct_chg": 10.01,
+        "amount": 686896000.0,
+        "turnover_ratio": 12.36,
+        "recognition_reasons": [
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

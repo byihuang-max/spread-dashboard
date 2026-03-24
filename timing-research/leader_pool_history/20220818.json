@@ -1,0 +1,905 @@
+{
+  "trade_date": "20220818",
+  "pool": {
+    "trade_date": "20220818",
+    "input_summary": {
+      "up_count": 82,
+      "zha_count": 26,
+      "focus_industries": [
+        {
+          "industry": "汽车零部件",
+          "industry_score": 43,
+          "up_count": 9,
+          "zha_count": 0,
+          "max_height": 3,
+          "amount": 5474851024.0
+        },
+        {
+          "industry": "通用设备",
+          "industry_score": 36,
+          "up_count": 7,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 5569506099.0
+        },
+        {
+          "industry": "消费电子",
+          "industry_score": 31.35,
+          "up_count": 6,
+          "zha_count": 2,
+          "max_height": 1,
+          "amount": 4673966185.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 220,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=10",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.07,
+        "amount": 9603534.0,
+        "turnover_ratio": 1.5,
+        "float_mv": 638931112.52,
+        "total_mv": 6389311099.84,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 81
+      },
+      {
+        "ts_code": "002553.SZ",
+        "name": "南方精工",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 155.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前2",
+          "首次封板时间=144609",
+          "强势行业=汽车零部件",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "换手活跃=45.11%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "144609",
+        "last_time": "145121",
+        "pct_chg": 10.0,
+        "amount": 2210811072.0,
+        "turnover_ratio": 45.11,
+        "float_mv": 5177901842.1,
+        "total_mv": 7690800000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 43,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002272.SZ",
+        "name": "川润股份",
+        "industry": "工程机械",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 112,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "首次封板时间=93024"
+        ],
+        "limit_times": 5,
+        "open_times": 2,
+        "first_time": "93024",
+        "last_time": "93315",
+        "pct_chg": 10.0,
+        "amount": 772646896.0,
+        "turnover_ratio": 20.91,
+        "float_mv": 3727542766.86,
+        "total_mv": 4917277200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 17
+      },
+      {
+        "ts_code": "002866.SZ",
+        "name": "传艺科技",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 106.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=消费电子",
+          "涨幅强=10.02%",
+          "焦点池成交额前2",
+          "换手活跃=27.55%",
+          "题材内成交额第1",
+          "所属强势行业=消费电子",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 13,
+        "first_time": "101215",
+        "last_time": "143909",
+        "pct_chg": 10.02,
+        "amount": 1502072896.0,
+        "turnover_ratio": 27.55,
+        "float_mv": 5544573222.32,
+        "total_mv": 8906078081.92,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 31.35,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002045.SZ",
+        "name": "国光电器",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 94.8,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=消费电子",
+          "涨幅强=10.00%",
+          "焦点池成交额前4",
+          "换手活跃=20.91%",
+          "题材内成交额第2",
+          "所属强势行业=消费电子",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "132836",
+        "last_time": "133727",
+        "pct_chg": 10.0,
+        "amount": 1396325072.0,
+        "turnover_ratio": 20.91,
+        "float_mv": 7040186918.16,
+        "total_mv": 7058545674.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 31.35,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002903.SZ",
+        "name": "宇环数控",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 90.8,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通用设备",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=47.39%",
+          "题材内成交额第2",
+          "所属强势行业=通用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "132006",
+        "last_time": "144730",
+        "pct_chg": 10.0,
+        "amount": 1154731616.0,
+        "turnover_ratio": 47.39,
+        "float_mv": 2546251836.46,
+        "total_mv": 4084706520.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 36,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002689.SZ",
+        "name": "远大智能",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 76,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93854"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93854",
+        "last_time": "93854",
+        "pct_chg": 10.02,
+        "amount": 585950352.0,
+        "turnover_ratio": 10.1,
+        "float_mv": 5941114945.12,
+        "total_mv": 5957304211.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 29
+      },
+      {
+        "ts_code": "600537.SH",
+        "name": "亿晶光电",
+        "industry": "光伏设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 68,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=95454"
+        ],
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "95454",
+        "last_time": "104048",
+        "pct_chg": 10.04,
+        "amount": 1072670096.0,
+        "turnover_ratio": 11.43,
+        "float_mv": 9669673182.96,
+        "total_mv": 9805303150.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 10
+      },
+      {
+        "ts_code": "002132.SZ",
+        "name": "恒星科技",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 66.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=通用设备",
+          "炸板活跃票",
+          "焦点池成交额前3",
+          "换手活跃=14.82%"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "93000",
+        "last_time": "",
+        "pct_chg": 5.41,
+        "amount": 1479588160.0,
+        "turnover_ratio": 14.82,
+        "float_mv": 9822288605.22,
+        "total_mv": 9838843822.08,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 36
+      },
+      {
+        "ts_code": "000821.SZ",
+        "name": "京山轻机",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "封板稳定(open_times=0)",
+          "首次封板时间=143739"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143739",
+        "last_time": "143739",
+        "pct_chg": 10.01,
+        "amount": 3073079360.0,
+        "turnover_ratio": 21.91,
+        "float_mv": 14867518746.66,
+        "total_mv": 15677758313.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "000045.SZ",
+        "name": "深纺织Ａ",
+        "industry": "光学光电",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.05,
+        "amount": 45166292.0,
+        "turnover_ratio": 1.03,
+        "float_mv": 4405690624.36,
+        "total_mv": 4882870691.84,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 78
+      },
+      {
+        "ts_code": "002334.SZ",
+        "name": "英威腾",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.06,
+        "amount": 73846198.0,
+        "turnover_ratio": 1.15,
+        "float_mv": 6395918450.98,
+        "total_mv": 7298277509.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 74
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220818",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001236.SZ",
+      "name": "弘业期货",
+      "industry": "多元金融",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 314.07,
+      "amount_score": 54.82,
+      "candidate_score": 220,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.07,
+      "amount": 9603534.0,
+      "turnover_ratio": 1.5,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002553.SZ",
+      "name": "南方精工",
+      "industry": "汽车零部件",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 97.0,
+      "amount_score": 164.0,
+      "candidate_score": 155.0,
+      "limit_type": "U",
+      "limit_times": 3,
+      "open_times": 2,
+      "first_time": "144609",
+      "last_time": "145121",
+      "pct_chg": 10.0,
+      "amount": 2210811072.0,
+      "turnover_ratio": 45.11,
+      "recognition_reasons": [
+        "连板高度=3",
+        "首次封板=144609",
+        "盘中开板2次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=3",
+        "首次封板=144609",
+        "盘中开板2次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 314.07,
+        "amount_score": 54.82,
+        "candidate_score": 220,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.07,
+        "amount": 9603534.0,
+        "turnover_ratio": 1.5,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002272.SZ",
+        "name": "川润股份",
+        "industry": "工程机械",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 149.0,
+        "amount_score": 96.0,
+        "candidate_score": 112,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 2,
+        "first_time": "93024",
+        "last_time": "93315",
+        "pct_chg": 10.0,
+        "amount": 772646896.0,
+        "turnover_ratio": 20.91,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002689.SZ",
+        "name": "远大智能",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 106.02,
+        "amount_score": 75.07,
+        "candidate_score": 76,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93854",
+        "last_time": "93854",
+        "pct_chg": 10.02,
+        "amount": 585950352.0,
+        "turnover_ratio": 10.1,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93854",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93854",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002553.SZ",
+        "name": "南方精工",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 97.0,
+        "amount_score": 164.0,
+        "candidate_score": 155.0,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "144609",
+        "last_time": "145121",
+        "pct_chg": 10.0,
+        "amount": 2210811072.0,
+        "turnover_ratio": 45.11,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=144609",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=144609",
+          "盘中开板2次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600537.SH",
+        "name": "亿晶光电",
+        "industry": "光伏设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 95.04,
+        "amount_score": 91.75,
+        "candidate_score": 68,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "95454",
+        "last_time": "104048",
+        "pct_chg": 10.04,
+        "amount": 1072670096.0,
+        "turnover_ratio": 11.43,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=95454",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=95454",
+          "盘中开板3次后仍封住"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002553.SZ",
+        "name": "南方精工",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 97.0,
+        "amount_score": 164.0,
+        "candidate_score": 155.0,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "144609",
+        "last_time": "145121",
+        "pct_chg": 10.0,
+        "amount": 2210811072.0,
+        "turnover_ratio": 45.11,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=144609",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=144609",
+          "盘中开板2次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002866.SZ",
+        "name": "传艺科技",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.02,
+        "amount_score": 148.02,
+        "candidate_score": 106.33,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 13,
+        "first_time": "101215",
+        "last_time": "143909",
+        "pct_chg": 10.02,
+        "amount": 1502072896.0,
+        "turnover_ratio": 27.55,
+        "recognition_reasons": [
+          "首次封板=101215",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101215",
+          "盘中开板13次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000821.SZ",
+        "name": "京山轻机",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.01,
+        "amount_score": 146.01,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143739",
+        "last_time": "143739",
+        "pct_chg": 10.01,
+        "amount": 3073079360.0,
+        "turnover_ratio": 21.91,
+        "recognition_reasons": [
+          "首次封板=143739",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=143739",
+          "封板稳定",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002045.SZ",
+        "name": "国光电器",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 49.0,
+        "amount_score": 122.0,
+        "candidate_score": 94.8,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "132836",
+        "last_time": "133727",
+        "pct_chg": 10.0,
+        "amount": 1396325072.0,
+        "turnover_ratio": 20.91,
+        "recognition_reasons": [
+          "首次封板=132836",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=132836",
+          "盘中开板2次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002903.SZ",
+        "name": "宇环数控",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.0,
+        "amount_score": 114.0,
+        "candidate_score": 90.8,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "132006",
+        "last_time": "144730",
+        "pct_chg": 10.0,
+        "amount": 1154731616.0,
+        "turnover_ratio": 47.39,
+        "recognition_reasons": [
+          "首次封板=132006",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=132006",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

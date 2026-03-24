@@ -1,0 +1,921 @@
+{
+  "trade_date": "20191209",
+  "pool": {
+    "trade_date": "20191209",
+    "input_summary": {
+      "up_count": 29,
+      "zha_count": 13,
+      "focus_industries": [
+        {
+          "industry": "软件服务",
+          "industry_score": 51,
+          "up_count": 2,
+          "zha_count": 4,
+          "max_height": 16,
+          "amount": 8212014959.0
+        },
+        {
+          "industry": "电子信息",
+          "industry_score": 28.44,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 4,
+          "amount": 2717833696.0
+        },
+        {
+          "industry": "材料行业",
+          "industry_score": 25.02,
+          "up_count": 1,
+          "zha_count": 0,
+          "max_height": 11,
+          "amount": 8565245.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "300803.SZ",
+        "name": "指南针",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 395.1,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=16",
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93315",
+          "强势行业=软件服务",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=55.98%"
+        ],
+        "limit_times": 16,
+        "open_times": 0,
+        "first_time": "93315",
+        "last_time": "93315",
+        "pct_chg": 10.0,
+        "amount": 1181112608.0,
+        "turnover_ratio": 55.98,
+        "float_mv": 2141147000.0,
+        "total_mv": 15240150000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3,
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 51
+      },
+      {
+        "ts_code": "300806.SZ",
+        "name": "斯迪克",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 268.3,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=11",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503",
+          "题材内成交额第1",
+          "所属强势行业=材料行业",
+          "已涨停"
+        ],
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 8565245.0,
+        "turnover_ratio": 0.7,
+        "float_mv": 1229741000.0,
+        "total_mv": 4918916805.9,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 25,
+        "amount_rank_in_industry": 1,
+        "industry_score": 25.02
+      },
+      {
+        "ts_code": "002351.SZ",
+        "name": "漫步者",
+        "industry": "电子信息",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 187.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "涨停池成交额前1",
+          "首次封板时间=94430",
+          "强势行业=电子信息",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "换手活跃=30.66%",
+          "题材内成交额第1",
+          "所属强势行业=电子信息",
+          "已涨停"
+        ],
+        "limit_times": 4,
+        "open_times": 17,
+        "first_time": "94430",
+        "last_time": "145312",
+        "pct_chg": 9.99,
+        "amount": 2042926960.0,
+        "turnover_ratio": 30.66,
+        "float_mv": 6738721956.0,
+        "total_mv": 13710654635.04,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 28.44,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300808.SZ",
+        "name": "久量股份",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 4050367.0,
+        "turnover_ratio": 0.36,
+        "float_mv": 1126800000.0,
+        "total_mv": 4507200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 28
+      },
+      {
+        "ts_code": "002969.SZ",
+        "name": "嘉美包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.96,
+        "amount": 4289227.0,
+        "turnover_ratio": 0.53,
+        "float_mv": 809736350.0,
+        "total_mv": 8097361256.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 27
+      },
+      {
+        "ts_code": "002968.SZ",
+        "name": "新大正",
+        "industry": "房地产",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 14092628.0,
+        "turnover_ratio": 1.39,
+        "float_mv": 1010340725.47,
+        "total_mv": 4041362845.47,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 24
+      },
+      {
+        "ts_code": "600712.SH",
+        "name": "南宁百货",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.93,
+        "amount": 7517292.0,
+        "turnover_ratio": 0.24,
+        "float_mv": 3159702020.97,
+        "total_mv": 3197126963.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 26
+      },
+      {
+        "ts_code": "600536.SH",
+        "name": "中国软件",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.77,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "炸板活跃票",
+          "焦点池成交额前1",
+          "换手活跃=8.56%",
+          "题材内成交额第1",
+          "所属强势行业=软件服务"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "103542",
+        "last_time": "",
+        "pct_chg": 7.13,
+        "amount": 3425452992.0,
+        "turnover_ratio": 8.56,
+        "float_mv": 40356323011.2,
+        "total_mv": 40356323174.4,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 51,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300400.SZ",
+        "name": "劲拓股份",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93151"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93151",
+        "last_time": "93151",
+        "pct_chg": 9.98,
+        "amount": 145148518.0,
+        "turnover_ratio": 5.74,
+        "float_mv": 2571764641.47,
+        "total_mv": 3657467062.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15
+      },
+      {
+        "ts_code": "300468.SZ",
+        "name": "四方精创",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.29,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "涨幅强=10.00%",
+          "焦点池成交额前4",
+          "换手活跃=18.81%"
+        ],
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "104803",
+        "last_time": "144648",
+        "pct_chg": 10.0,
+        "amount": 1188825024.0,
+        "turnover_ratio": 18.81,
+        "float_mv": 6497553969.92,
+        "total_mv": 6591212943.68,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 51
+      },
+      {
+        "ts_code": "300379.SZ",
+        "name": "东方通",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 67.64,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "炸板活跃票",
+          "焦点池成交额前3",
+          "换手活跃=13.70%"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "142430",
+        "last_time": "",
+        "pct_chg": 7.42,
+        "amount": 1315035104.0,
+        "turnover_ratio": 13.7,
+        "float_mv": 9750111598.39,
+        "total_mv": 11685377549.12,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 51
+      },
+      {
+        "ts_code": "000662.SZ",
+        "name": "天夏智慧",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 56.38,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "炸板活跃票",
+          "涨幅强=8.56%",
+          "换手活跃=13.04%"
+        ],
+        "limit_times": 0,
+        "open_times": 5,
+        "first_time": "95745",
+        "last_time": "",
+        "pct_chg": 8.56,
+        "amount": 897740576.0,
+        "turnover_ratio": 13.04,
+        "float_mv": 6929497821.86,
+        "total_mv": 6930239595.52,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 51
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20191209",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "300803.SZ",
+      "name": "指南针",
+      "industry": "软件服务",
+      "source_types": [
+        "active_core",
+        "limit_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 460.0,
+      "amount_score": 130.0,
+      "candidate_score": 395.1,
+      "limit_type": "U",
+      "limit_times": 16,
+      "open_times": 0,
+      "first_time": "93315",
+      "last_time": "93315",
+      "pct_chg": 10.0,
+      "amount": 1181112608.0,
+      "turnover_ratio": 55.98,
+      "recognition_reasons": [
+        "最高板=16",
+        "首次封板=93315",
+        "封板稳定",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=16",
+        "首次封板=93315",
+        "封板稳定",
+        "候选池成交额前5",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002351.SZ",
+      "name": "漫步者",
+      "industry": "电子信息",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 126.99,
+      "amount_score": 167.99,
+      "candidate_score": 187.6,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 17,
+      "first_time": "94430",
+      "last_time": "145312",
+      "pct_chg": 9.99,
+      "amount": 2042926960.0,
+      "turnover_ratio": 30.66,
+      "recognition_reasons": [
+        "连板高度=4",
+        "首次封板=94430",
+        "盘中开板17次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=4",
+        "首次封板=94430",
+        "盘中开板17次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "300803.SZ",
+        "name": "指南针",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 460.0,
+        "amount_score": 130.0,
+        "candidate_score": 395.1,
+        "limit_type": "U",
+        "limit_times": 16,
+        "open_times": 0,
+        "first_time": "93315",
+        "last_time": "93315",
+        "pct_chg": 10.0,
+        "amount": 1181112608.0,
+        "turnover_ratio": 55.98,
+        "recognition_reasons": [
+          "最高板=16",
+          "首次封板=93315",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=16",
+          "首次封板=93315",
+          "封板稳定",
+          "候选池成交额前5",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300806.SZ",
+        "name": "斯迪克",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 306.01,
+        "amount_score": 106.36,
+        "candidate_score": 268.3,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 8565245.0,
+        "turnover_ratio": 0.7,
+        "recognition_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "300808.SZ",
+        "name": "久量股份",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.0,
+        "amount_score": 54.18,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 4050367.0,
+        "turnover_ratio": 0.36,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002969.SZ",
+        "name": "嘉美包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 185.96,
+        "amount_score": 62.23,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.96,
+        "amount": 4289227.0,
+        "turnover_ratio": 0.53,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002968.SZ",
+        "name": "新大正",
+        "industry": "房地产",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 162.0,
+        "amount_score": 86.69,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 14092628.0,
+        "turnover_ratio": 1.39,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002351.SZ",
+        "name": "漫步者",
+        "industry": "电子信息",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 126.99,
+        "amount_score": 167.99,
+        "candidate_score": 187.6,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 17,
+        "first_time": "94430",
+        "last_time": "145312",
+        "pct_chg": 9.99,
+        "amount": 2042926960.0,
+        "turnover_ratio": 30.66,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=94430",
+          "盘中开板17次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=94430",
+          "盘中开板17次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600536.SH",
+        "name": "中国软件",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 13.13,
+        "amount_score": 143.41,
+        "candidate_score": 96.77,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "103542",
+        "last_time": "",
+        "pct_chg": 7.13,
+        "amount": 3425452992.0,
+        "turnover_ratio": 8.56,
+        "recognition_reasons": [
+          "首次封板=103542",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=103542",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300803.SZ",
+        "name": "指南针",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 460.0,
+        "amount_score": 130.0,
+        "candidate_score": 395.1,
+        "limit_type": "U",
+        "limit_times": 16,
+        "open_times": 0,
+        "first_time": "93315",
+        "last_time": "93315",
+        "pct_chg": 10.0,
+        "amount": 1181112608.0,
+        "turnover_ratio": 55.98,
+        "recognition_reasons": [
+          "最高板=16",
+          "首次封板=93315",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=16",
+          "首次封板=93315",
+          "封板稳定",
+          "候选池成交额前5",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300468.SZ",
+        "name": "四方精创",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 51.0,
+        "amount_score": 111.41,
+        "candidate_score": 69.29,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "104803",
+        "last_time": "144648",
+        "pct_chg": 10.0,
+        "amount": 1188825024.0,
+        "turnover_ratio": 18.81,
+        "recognition_reasons": [
+          "首次封板=104803",
+          "盘中开板5次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104803",
+          "盘中开板5次后仍封住",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300806.SZ",
+        "name": "斯迪克",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 306.01,
+        "amount_score": 106.36,
+        "candidate_score": 268.3,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 8565245.0,
+        "turnover_ratio": 0.7,
+        "recognition_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,920 @@
+{
+  "trade_date": "20200814",
+  "pool": {
+    "trade_date": "20200814",
+    "input_summary": {
+      "up_count": 52,
+      "zha_count": 22,
+      "focus_industries": [
+        {
+          "industry": "食品饮料",
+          "industry_score": 36.6,
+          "up_count": 2,
+          "zha_count": 1,
+          "max_height": 11,
+          "amount": 3799114576.0
+        },
+        {
+          "industry": "机械行业",
+          "industry_score": 34.49,
+          "up_count": 6,
+          "zha_count": 3,
+          "max_height": 4,
+          "amount": 2744533524.0
+        },
+        {
+          "industry": "券商信托",
+          "industry_score": 30.82,
+          "up_count": 2,
+          "zha_count": 0,
+          "max_height": 11,
+          "amount": 1410269664.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002991.SZ",
+        "name": "甘源食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 333.0,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=11",
+          "涨停池成交额前1",
+          "首次封板时间=92503",
+          "强势行业=食品饮料",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "换手活跃=78.66%",
+          "题材内成交额第1",
+          "所属强势行业=食品饮料",
+          "已涨停"
+        ],
+        "limit_times": 11,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "130042",
+        "pct_chg": 10.0,
+        "amount": 2619527280.0,
+        "turnover_ratio": 78.66,
+        "float_mv": 3373487040.0,
+        "total_mv": 13493923695.56,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 36.6,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "601456.SH",
+        "name": "国联证券",
+        "industry": "券商信托",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 269.79,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=11",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503",
+          "强势行业=券商信托",
+          "涨幅强=9.99%",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 537032848.0,
+        "turnover_ratio": 7.12,
+        "float_mv": 7544903340.0,
+        "total_mv": 37716967466.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 16,
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 30.82
+      },
+      {
+        "ts_code": "002995.SZ",
+        "name": "天地在线",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 178,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=8",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 8,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "134757",
+        "pct_chg": 10.0,
+        "amount": 940856800.0,
+        "turnover_ratio": 62.55,
+        "float_mv": 1535664900.0,
+        "total_mv": 6141709900.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 6
+      },
+      {
+        "ts_code": "300859.SZ",
+        "name": "西域旅游",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 2912291.0,
+        "turnover_ratio": 0.41,
+        "float_mv": 711062500.0,
+        "total_mv": 2844250000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 51
+      },
+      {
+        "ts_code": "605100.SH",
+        "name": "华丰股份",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92505"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 21850858.0,
+        "turnover_ratio": 1.33,
+        "float_mv": 1640086000.0,
+        "total_mv": 6552786000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 50
+      },
+      {
+        "ts_code": "300858.SZ",
+        "name": "科拓生物",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 98.8,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=食品饮料",
+          "涨幅强=10.00%",
+          "焦点池成交额前3",
+          "换手活跃=36.29%",
+          "题材内成交额第2",
+          "所属强势行业=食品饮料",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "130451",
+        "last_time": "143433",
+        "pct_chg": 10.0,
+        "amount": 684638464.0,
+        "turnover_ratio": 36.29,
+        "float_mv": 1934268800.0,
+        "total_mv": 7736858801.92,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 36.6,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "600155.SH",
+        "name": "华创阳安",
+        "industry": "券商信托",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.4,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=券商信托",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=券商信托",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "132622",
+        "last_time": "143040",
+        "pct_chg": 9.99,
+        "amount": 873236816.0,
+        "turnover_ratio": 3.52,
+        "float_mv": 25467109326.72,
+        "total_mv": 25467109443.84,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 30.82,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300278.SZ",
+        "name": "华昌达",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=94003"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "94003",
+        "last_time": "94003",
+        "pct_chg": 9.97,
+        "amount": 454169584.0,
+        "turnover_ratio": 24.29,
+        "float_mv": 1931872819.2,
+        "total_mv": 3821973811.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 21
+      },
+      {
+        "ts_code": "002108.SZ",
+        "name": "沧州明珠",
+        "industry": "塑胶制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 90,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "92500",
+        "last_time": "101751",
+        "pct_chg": 10.04,
+        "amount": 1283826432.0,
+        "turnover_ratio": 18.17,
+        "float_mv": 7146337962.96,
+        "total_mv": 7146337927.68,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "600343.SH",
+        "name": "航天动力",
+        "industry": "机械行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 86.88,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=机械行业",
+          "涨幅强=10.01%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=机械行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141321",
+        "last_time": "141321",
+        "pct_chg": 10.01,
+        "amount": 519830736.0,
+        "turnover_ratio": 7.61,
+        "float_mv": 7084090462.8,
+        "total_mv": 7084090507.2,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 34.49,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "605366.SH",
+        "name": "宏柏新材",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.99,
+        "amount": 2285898.0,
+        "turnover_ratio": 0.16,
+        "float_mv": 1443370000.0,
+        "total_mv": 5773480000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 52
+      },
+      {
+        "ts_code": "002702.SZ",
+        "name": "海欣食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 55.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=食品饮料",
+          "炸板活跃票",
+          "涨幅强=9.79%",
+          "换手活跃=15.90%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "145603",
+        "last_time": "",
+        "pct_chg": 9.79,
+        "amount": 494948832.0,
+        "turnover_ratio": 15.9,
+        "float_mv": 3290366880.0,
+        "total_mv": 4961443200.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 36.6
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20200814",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "601456.SH",
+      "name": "国联证券",
+      "industry": "券商信托",
+      "source_types": [
+        "active_core",
+        "limit_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 342.99,
+      "amount_score": 105.55,
+      "candidate_score": 269.79,
+      "limit_type": "U",
+      "limit_times": 11,
+      "open_times": 0,
+      "first_time": "92503",
+      "last_time": "92503",
+      "pct_chg": 9.99,
+      "amount": 537032848.0,
+      "turnover_ratio": 7.12,
+      "recognition_reasons": [
+        "最高板=11",
+        "首次封板=92503",
+        "封板稳定",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=11",
+        "首次封板=92503",
+        "封板稳定",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002991.SZ",
+      "name": "甘源食品",
+      "industry": "食品饮料",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 332.0,
+      "amount_score": 180.0,
+      "candidate_score": 333.0,
+      "limit_type": "U",
+      "limit_times": 11,
+      "open_times": 3,
+      "first_time": "92503",
+      "last_time": "130042",
+      "pct_chg": 10.0,
+      "amount": 2619527280.0,
+      "turnover_ratio": 78.66,
+      "recognition_reasons": [
+        "最高板=11",
+        "首次封板=92503",
+        "盘中开板3次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=11",
+        "首次封板=92503",
+        "盘中开板3次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "601456.SH",
+        "name": "国联证券",
+        "industry": "券商信托",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 342.99,
+        "amount_score": 105.55,
+        "candidate_score": 269.79,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 537032848.0,
+        "turnover_ratio": 7.12,
+        "recognition_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002991.SZ",
+        "name": "甘源食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 332.0,
+        "amount_score": 180.0,
+        "candidate_score": 333.0,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "130042",
+        "pct_chg": 10.0,
+        "amount": 2619527280.0,
+        "turnover_ratio": 78.66,
+        "recognition_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002995.SZ",
+        "name": "天地在线",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 223.0,
+        "amount_score": 136.0,
+        "candidate_score": 178,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "134757",
+        "pct_chg": 10.0,
+        "amount": 940856800.0,
+        "turnover_ratio": 62.55,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "300859.SZ",
+        "name": "西域旅游",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.01,
+        "amount_score": 62.21,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 2912291.0,
+        "turnover_ratio": 0.41,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605100.SH",
+        "name": "华丰股份",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.0,
+        "amount_score": 66.66,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 21850858.0,
+        "turnover_ratio": 1.33,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92505",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92505",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002991.SZ",
+        "name": "甘源食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 332.0,
+        "amount_score": 180.0,
+        "candidate_score": 333.0,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "130042",
+        "pct_chg": 10.0,
+        "amount": 2619527280.0,
+        "turnover_ratio": 78.66,
+        "recognition_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=11",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002995.SZ",
+        "name": "天地在线",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 223.0,
+        "amount_score": 136.0,
+        "candidate_score": 178,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 3,
+        "first_time": "92503",
+        "last_time": "134757",
+        "pct_chg": 10.0,
+        "amount": 940856800.0,
+        "turnover_ratio": 62.55,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "盘中开板3次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "002108.SZ",
+        "name": "沧州明珠",
+        "industry": "塑胶制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 104.04,
+        "amount_score": 135.12,
+        "candidate_score": 90,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 2,
+        "first_time": "92500",
+        "last_time": "101751",
+        "pct_chg": 10.04,
+        "amount": 1283826432.0,
+        "turnover_ratio": 18.17,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板2次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "600155.SH",
+        "name": "华创阳安",
+        "industry": "券商信托",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 46.99,
+        "amount_score": 131.75,
+        "candidate_score": 96.4,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "132622",
+        "last_time": "143040",
+        "pct_chg": 9.99,
+        "amount": 873236816.0,
+        "turnover_ratio": 3.52,
+        "recognition_reasons": [
+          "首次封板=132622",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=132622",
+          "盘中开板4次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300858.SZ",
+        "name": "科拓生物",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.0,
+        "amount_score": 122.0,
+        "candidate_score": 98.8,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "130451",
+        "last_time": "143433",
+        "pct_chg": 10.0,
+        "amount": 684638464.0,
+        "turnover_ratio": 36.29,
+        "recognition_reasons": [
+          "首次封板=130451",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=130451",
+          "盘中开板7次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

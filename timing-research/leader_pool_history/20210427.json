@@ -1,0 +1,880 @@
+{
+  "trade_date": "20210427",
+  "pool": {
+    "trade_date": "20210427",
+    "input_summary": {
+      "up_count": 41,
+      "zha_count": 13,
+      "focus_industries": [
+        {
+          "industry": "医药制造",
+          "industry_score": 44.88,
+          "up_count": 9,
+          "zha_count": 2,
+          "max_height": 3,
+          "amount": 4941834343.0
+        },
+        {
+          "industry": "纺织服装",
+          "industry_score": 37.62,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 6,
+          "amount": 3308534606.0
+        },
+        {
+          "industry": "食品饮料",
+          "industry_score": 28.6,
+          "up_count": 5,
+          "zha_count": 1,
+          "max_height": 5,
+          "amount": 1302119492.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "601279.SH",
+        "name": "英利汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 200,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=9",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 9,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.97,
+        "amount": 4840077.0,
+        "turnover_ratio": 0.51,
+        "float_mv": 956322022.4,
+        "total_mv": 9563220172.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 41
+      },
+      {
+        "ts_code": "605086.SH",
+        "name": "龙高股份",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 172,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=8",
+          "首次封板时间=93035"
+        ],
+        "limit_times": 8,
+        "open_times": 2,
+        "first_time": "93035",
+        "last_time": "94429",
+        "pct_chg": 10.0,
+        "amount": 655090368.0,
+        "turnover_ratio": 57.89,
+        "float_mv": 1154880000.0,
+        "total_mv": 4619520000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8
+      },
+      {
+        "ts_code": "603518.SH",
+        "name": "锦泓集团",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 19511446.0,
+        "turnover_ratio": 0.73,
+        "float_mv": 2664933279.06,
+        "total_mv": 2690566496.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 38
+      },
+      {
+        "ts_code": "605016.SH",
+        "name": "百龙创园",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92505"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 9.99,
+        "amount": 14312612.0,
+        "turnover_ratio": 1.46,
+        "float_mv": 980394000.0,
+        "total_mv": 3909244000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 40
+      },
+      {
+        "ts_code": "002612.SZ",
+        "name": "朗姿股份",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 109.06,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=纺织服装",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "换手活跃=17.93%",
+          "题材内成交额第1",
+          "所属强势行业=纺织服装",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "131554",
+        "last_time": "150000",
+        "pct_chg": 10.0,
+        "amount": 2276053344.0,
+        "turnover_ratio": 17.93,
+        "float_mv": 13107108815.3,
+        "total_mv": 22188635606.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 37.62,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002435.SZ",
+        "name": "长江健康",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.56,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "换手活跃=13.79%",
+          "题材内成交额第1",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "93542",
+        "last_time": "132051",
+        "pct_chg": 9.99,
+        "amount": 1143555024.0,
+        "turnover_ratio": 13.79,
+        "float_mv": 9248873965.08,
+        "total_mv": 9529429115.04,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 44.88,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000908.SZ",
+        "name": "景峰医药",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 93.9,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=95406",
+          "强势行业=医药制造",
+          "涨幅强=10.00%",
+          "焦点池成交额前3",
+          "换手活跃=23.56%"
+        ],
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "95406",
+        "last_time": "105551",
+        "pct_chg": 10.0,
+        "amount": 992819744.0,
+        "turnover_ratio": 23.56,
+        "float_mv": 4376197949.2,
+        "total_mv": 5322634829.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 5,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 44.88
+      },
+      {
+        "ts_code": "002581.SZ",
+        "name": "未名医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 50217697.0,
+        "turnover_ratio": 0.98,
+        "float_mv": 5142150595.63,
+        "total_mv": 8464407542.72,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 34
+      },
+      {
+        "ts_code": "002269.SZ",
+        "name": "美邦服饰",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 79.68,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=纺织服装",
+          "涨幅强=10.12%",
+          "题材内成交额第2",
+          "所属强势行业=纺织服装",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "110906",
+        "last_time": "110906",
+        "pct_chg": 10.12,
+        "amount": 516702928.0,
+        "turnover_ratio": 7.86,
+        "float_mv": 6834000000.0,
+        "total_mv": 6834000000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 37.62,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "603486.SH",
+        "name": "科沃斯",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=145228"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "145228",
+        "last_time": "145228",
+        "pct_chg": 10.0,
+        "amount": 1259049904.0,
+        "turnover_ratio": 4.49,
+        "float_mv": 28700680785.28,
+        "total_mv": 91469634552.32,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "300086.SZ",
+        "name": "康芝药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 72.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "炸板活跃票",
+          "涨幅强=13.02%",
+          "焦点池成交额前4",
+          "换手活跃=23.88%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "133418",
+        "last_time": "",
+        "pct_chg": 13.02,
+        "amount": 768718000.0,
+        "turnover_ratio": 23.88,
+        "float_mv": 3289253656.8,
+        "total_mv": 3397500000.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 44.88
+      },
+      {
+        "ts_code": "300966.SZ",
+        "name": "共同药业",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=19.99%",
+          "焦点池成交额前5",
+          "换手活跃=57.74%"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "104324",
+        "last_time": "104324",
+        "pct_chg": 19.99,
+        "amount": 720157312.0,
+        "turnover_ratio": 57.74,
+        "float_mv": 1327295214.34,
+        "total_mv": 5563268020.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 44.88
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210427",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "601279.SH",
+      "name": "英利汽车",
+      "industry": "汽车行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 289.97,
+      "amount_score": 54.23,
+      "candidate_score": 200,
+      "limit_type": "U",
+      "limit_times": 9,
+      "open_times": 0,
+      "first_time": "92504",
+      "last_time": "92504",
+      "pct_chg": 9.97,
+      "amount": 4840077.0,
+      "turnover_ratio": 0.51,
+      "recognition_reasons": [
+        "最高板=9",
+        "首次封板=92504",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=9",
+        "首次封板=92504",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002612.SZ",
+      "name": "朗姿股份",
+      "industry": "纺织服装",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 45.0,
+      "amount_score": 162.97,
+      "candidate_score": 109.06,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 9,
+      "first_time": "131554",
+      "last_time": "150000",
+      "pct_chg": 10.0,
+      "amount": 2276053344.0,
+      "turnover_ratio": 17.93,
+      "recognition_reasons": [
+        "首次封板=131554",
+        "盘中开板9次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=131554",
+        "盘中开板9次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "601279.SH",
+        "name": "英利汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 289.97,
+        "amount_score": 54.23,
+        "candidate_score": 200,
+        "limit_type": "U",
+        "limit_times": 9,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.97,
+        "amount": 4840077.0,
+        "turnover_ratio": 0.51,
+        "recognition_reasons": [
+          "最高板=9",
+          "首次封板=92504",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=9",
+          "首次封板=92504",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605086.SH",
+        "name": "龙高股份",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 221.0,
+        "amount_score": 104.0,
+        "candidate_score": 172,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 2,
+        "first_time": "93035",
+        "last_time": "94429",
+        "pct_chg": 10.0,
+        "amount": 655090368.0,
+        "turnover_ratio": 57.89,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=93035",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=93035",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "603518.SH",
+        "name": "锦泓集团",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 186.01,
+        "amount_score": 70.38,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 19511446.0,
+        "turnover_ratio": 0.73,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605016.SH",
+        "name": "百龙创园",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 161.99,
+        "amount_score": 62.72,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 9.99,
+        "amount": 14312612.0,
+        "turnover_ratio": 1.46,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92505",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92505",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002581.SZ",
+        "name": "未名医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.03,
+        "amount_score": 70.52,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 50217697.0,
+        "turnover_ratio": 0.98,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002612.SZ",
+        "name": "朗姿股份",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.0,
+        "amount_score": 162.97,
+        "candidate_score": 109.06,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "131554",
+        "last_time": "150000",
+        "pct_chg": 10.0,
+        "amount": 2276053344.0,
+        "turnover_ratio": 17.93,
+        "recognition_reasons": [
+          "首次封板=131554",
+          "盘中开板9次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=131554",
+          "盘中开板9次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002435.SZ",
+        "name": "长江健康",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 62.99,
+        "amount_score": 144.89,
+        "candidate_score": 102.56,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "93542",
+        "last_time": "132051",
+        "pct_chg": 9.99,
+        "amount": 1143555024.0,
+        "turnover_ratio": 13.79,
+        "recognition_reasons": [
+          "首次封板=93542",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93542",
+          "盘中开板1次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603486.SH",
+        "name": "科沃斯",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 72.0,
+        "amount_score": 134.25,
+        "candidate_score": 72,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "145228",
+        "last_time": "145228",
+        "pct_chg": 10.0,
+        "amount": 1259049904.0,
+        "turnover_ratio": 4.49,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=145228",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=145228",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "000908.SZ",
+        "name": "景峰医药",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 87.0,
+        "amount_score": 116.0,
+        "candidate_score": 93.9,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "95406",
+        "last_time": "105551",
+        "pct_chg": 10.0,
+        "amount": 992819744.0,
+        "turnover_ratio": 23.56,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=95406",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=95406",
+          "盘中开板1次后仍封住",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605086.SH",
+        "name": "龙高股份",
+        "industry": "玻璃陶瓷",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 221.0,
+        "amount_score": 104.0,
+        "candidate_score": 172,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 2,
+        "first_time": "93035",
+        "last_time": "94429",
+        "pct_chg": 10.0,
+        "amount": 655090368.0,
+        "turnover_ratio": 57.89,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=93035",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=93035",
+          "盘中开板2次后仍封住"
+        ]
+      }
+    ]
+  }
+}

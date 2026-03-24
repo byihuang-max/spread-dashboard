@@ -1,0 +1,869 @@
+{
+  "trade_date": "20240430",
+  "pool": {
+    "trade_date": "20240430",
+    "input_summary": {
+      "up_count": 54,
+      "zha_count": 20,
+      "focus_industries": [
+        {
+          "industry": "汽车零部件",
+          "industry_score": 28.08,
+          "up_count": 5,
+          "zha_count": 3,
+          "max_height": 2,
+          "amount": 3041071258.0
+        },
+        {
+          "industry": "化学制药",
+          "industry_score": 23.53,
+          "up_count": 6,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 1765432273.0
+        },
+        {
+          "industry": "房地产开发",
+          "industry_score": 22.99,
+          "up_count": 4,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 995182665.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002708.SZ",
+        "name": "光洋股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 110.27,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "涨幅强=9.98%",
+          "焦点池成交额前1",
+          "换手活跃=23.56%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "94903",
+        "last_time": "145236",
+        "pct_chg": 9.98,
+        "amount": 928035456.0,
+        "turnover_ratio": 23.56,
+        "float_mv": 4006133668.7,
+        "total_mv": 5452350289.6,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 28.08,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600789.SH",
+        "name": "鲁抗医药",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.5,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "涨幅强=10.02%",
+          "焦点池成交额前2",
+          "换手活跃=13.61%",
+          "题材内成交额第1",
+          "所属强势行业=化学制药",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "134225",
+        "last_time": "134225",
+        "pct_chg": 10.02,
+        "amount": 843411536.0,
+        "turnover_ratio": 13.61,
+        "float_mv": 6397837155.36,
+        "total_mv": 6397837212.48,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 23.53,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002670.SZ",
+        "name": "国盛金控",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 102,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前2",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "144636",
+        "pct_chg": 10.05,
+        "amount": 1132083376.0,
+        "turnover_ratio": 5.84,
+        "float_mv": 19382806569.96,
+        "total_mv": 23104910792.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 53038165.0,
+        "turnover_ratio": 1.54,
+        "float_mv": 3433524486.48,
+        "total_mv": 3433747236.48,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 48
+      },
+      {
+        "ts_code": "603232.SH",
+        "name": "格尔软件",
+        "industry": "软件开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 90,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93011"
+        ],
+        "limit_times": 3,
+        "open_times": 7,
+        "first_time": "93011",
+        "last_time": "132435",
+        "pct_chg": 10.01,
+        "amount": 999776704.0,
+        "turnover_ratio": 27.08,
+        "float_mv": 3716703091.35,
+        "total_mv": 3716703091.35,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "300381.SZ",
+        "name": "溢多利",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 88.59,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "涨幅强=20.00%",
+          "焦点池成交额前5",
+          "换手活跃=11.82%",
+          "题材内成交额第2",
+          "所属强势行业=化学制药",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "95715",
+        "last_time": "145600",
+        "pct_chg": 20.0,
+        "amount": 413503152.0,
+        "turnover_ratio": 11.82,
+        "float_mv": 3650863605.0,
+        "total_mv": 3675615000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 23.53,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300177.SZ",
+        "name": "中海达",
+        "industry": "计算机设",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 88,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 4,
+        "first_time": "92500",
+        "last_time": "144500",
+        "pct_chg": 20.07,
+        "amount": 1230117760.0,
+        "turnover_ratio": 28.64,
+        "float_mv": 4352999975.08,
+        "total_mv": 5343133936.96,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "603739.SH",
+        "name": "蔚蓝生物",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 35803186.0,
+        "turnover_ratio": 1.02,
+        "float_mv": 3509510371.42,
+        "total_mv": 3509510371.42,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 52
+      },
+      {
+        "ts_code": "603613.SH",
+        "name": "国联股份",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=142147"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "142147",
+        "last_time": "142147",
+        "pct_chg": 10.02,
+        "amount": 1069226880.0,
+        "turnover_ratio": 5.93,
+        "float_mv": 18795112804.26,
+        "total_mv": 18795112778.24,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "600480.SH",
+        "name": "凌云股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 65.8,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "涨幅强=10.04%",
+          "焦点池成交额前3"
+        ],
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "94639",
+        "last_time": "112842",
+        "pct_chg": 10.04,
+        "amount": 634817248.0,
+        "turnover_ratio": 6.26,
+        "float_mv": 10251673283.8,
+        "total_mv": 10514884090.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 28.08
+      },
+      {
+        "ts_code": "000897.SZ",
+        "name": "津滨发展",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 64.18,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=13.92%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "141912",
+        "last_time": "",
+        "pct_chg": 7.83,
+        "amount": 543361344.0,
+        "turnover_ratio": 13.92,
+        "float_mv": 4010766692.32,
+        "total_mv": 4010835155.2,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 22.99
+      },
+      {
+        "ts_code": "002823.SZ",
+        "name": "凯中精密",
+        "industry": "电机",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 47481382.0,
+        "turnover_ratio": 2.12,
+        "float_mv": 2237832643.06,
+        "total_mv": 3654603522.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 50
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20240430",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "002305.SZ",
+      "name": "南国置业",
+      "industry": "房地产开发",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 170.0,
+      "amount_score": 66.77,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.0,
+      "amount": 53038165.0,
+      "turnover_ratio": 1.54,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "300177.SZ",
+      "name": "中海达",
+      "industry": "计算机设",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 80,
+      "amount_score": 152.0,
+      "candidate_score": 88,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 4,
+      "first_time": "92500",
+      "last_time": "144500",
+      "pct_chg": 20.07,
+      "amount": 1230117760.0,
+      "turnover_ratio": 28.64,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=92500",
+        "盘中开板4次后仍封住"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=92500",
+        "盘中开板4次后仍封住",
+        "候选池成交额前1"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "002305.SZ",
+        "name": "南国置业",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 170.0,
+        "amount_score": 66.77,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 53038165.0,
+        "turnover_ratio": 1.54,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603739.SH",
+        "name": "蔚蓝生物",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 46.5,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 35803186.0,
+        "turnover_ratio": 1.02,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002670.SZ",
+        "name": "国盛金控",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 108.05,
+        "amount_score": 138.97,
+        "candidate_score": 102,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "144636",
+        "pct_chg": 10.05,
+        "amount": 1132083376.0,
+        "turnover_ratio": 5.84,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "603232.SH",
+        "name": "格尔软件",
+        "industry": "软件开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 97.01,
+        "amount_score": 120.01,
+        "candidate_score": 90,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 7,
+        "first_time": "93011",
+        "last_time": "132435",
+        "pct_chg": 10.01,
+        "amount": 999776704.0,
+        "turnover_ratio": 27.08,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93011",
+          "盘中开板7次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93011",
+          "盘中开板7次后仍封住",
+          "候选池成交额前4"
+        ]
+      },
+      {
+        "ts_code": "002823.SZ",
+        "name": "凯中精密",
+        "industry": "电机",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 89.98,
+        "amount_score": 51.04,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 47481382.0,
+        "turnover_ratio": 2.12,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "300177.SZ",
+        "name": "中海达",
+        "industry": "计算机设",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 80,
+        "amount_score": 152.0,
+        "candidate_score": 88,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 4,
+        "first_time": "92500",
+        "last_time": "144500",
+        "pct_chg": 20.07,
+        "amount": 1230117760.0,
+        "turnover_ratio": 28.64,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "盘中开板4次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002670.SZ",
+        "name": "国盛金控",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 108.05,
+        "amount_score": 138.97,
+        "candidate_score": 102,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "144636",
+        "pct_chg": 10.05,
+        "amount": 1132083376.0,
+        "turnover_ratio": 5.84,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "002708.SZ",
+        "name": "光洋股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.98,
+        "amount_score": 131.98,
+        "candidate_score": 110.27,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "94903",
+        "last_time": "145236",
+        "pct_chg": 9.98,
+        "amount": 928035456.0,
+        "turnover_ratio": 23.56,
+        "recognition_reasons": [
+          "首次封板=94903",
+          "盘中开板5次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94903",
+          "盘中开板5次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603613.SH",
+        "name": "国联股份",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 72.02,
+        "amount_score": 126.98,
+        "candidate_score": 72,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "142147",
+        "last_time": "142147",
+        "pct_chg": 10.02,
+        "amount": 1069226880.0,
+        "turnover_ratio": 5.93,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=142147",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=142147",
+          "封板稳定",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "600789.SH",
+        "name": "鲁抗医药",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.02,
+        "amount_score": 120.82,
+        "candidate_score": 102.5,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "134225",
+        "last_time": "134225",
+        "pct_chg": 10.02,
+        "amount": 843411536.0,
+        "turnover_ratio": 13.61,
+        "recognition_reasons": [
+          "首次封板=134225",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=134225",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

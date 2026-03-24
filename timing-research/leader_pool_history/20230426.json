@@ -1,0 +1,902 @@
+{
+  "trade_date": "20230426",
+  "pool": {
+    "trade_date": "20230426",
+    "input_summary": {
+      "up_count": 51,
+      "zha_count": 12,
+      "focus_industries": [
+        {
+          "industry": "文化传媒",
+          "industry_score": 31,
+          "up_count": 4,
+          "zha_count": 3,
+          "max_height": 3,
+          "amount": 6691781552.0
+        },
+        {
+          "industry": "光伏设备",
+          "industry_score": 25.58,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 4290374752.0
+        },
+        {
+          "industry": "电源设备",
+          "industry_score": 15.78,
+          "up_count": 3,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 2392460160.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "601900.SH",
+        "name": "南方传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 137.75,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=3",
+          "首次封板时间=131354",
+          "强势行业=文化传媒",
+          "涨幅强=9.99%",
+          "焦点池成交额前3",
+          "换手活跃=8.33%",
+          "题材内成交额第1",
+          "所属强势行业=文化传媒",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "131354",
+        "last_time": "132633",
+        "pct_chg": 9.99,
+        "amount": 1306963888.0,
+        "turnover_ratio": 8.33,
+        "float_mv": 16672262893.26,
+        "total_mv": 16672262781.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 31,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002229.SZ",
+        "name": "鸿博股份",
+        "industry": "造纸印刷",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 98,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=3",
+          "涨停池成交额前2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=134227"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "134227",
+        "last_time": "134227",
+        "pct_chg": 9.97,
+        "amount": 2743993008.0,
+        "turnover_ratio": 34.75,
+        "float_mv": 8373929830.98,
+        "total_mv": 8461885466.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002518.SZ",
+        "name": "科士达",
+        "industry": "电源设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.36,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电源设备",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=电源设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "104815",
+        "last_time": "134124",
+        "pct_chg": 10.0,
+        "amount": 1646565408.0,
+        "turnover_ratio": 6.26,
+        "float_mv": 26854448665.0,
+        "total_mv": 27666156120.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 15.78,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "688032.SH",
+        "name": "禾迈股份",
+        "industry": "光伏设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 88.55,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=光伏设备",
+          "涨幅强=20.00%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=光伏设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 26,
+        "first_time": "110745",
+        "last_time": "135700",
+        "pct_chg": 20.0,
+        "amount": 1076104880.0,
+        "turnover_ratio": 5.92,
+        "float_mv": 19063517283.7,
+        "total_mv": 38236240000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 25.58,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "601949.SH",
+        "name": "中国出版",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 87.24,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "涨幅强=10.04%",
+          "焦点池成交额前4",
+          "题材内成交额第2",
+          "所属强势行业=文化传媒",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "131310",
+        "last_time": "131310",
+        "pct_chg": 10.04,
+        "amount": 1231125744.0,
+        "turnover_ratio": 7.31,
+        "float_mv": 17969850000.0,
+        "total_mv": 17969850000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 31,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002803.SZ",
+        "name": "吉宏股份",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.12,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "炸板活跃票",
+          "焦点池成交额前2",
+          "换手活跃=25.23%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "93130",
+        "last_time": "",
+        "pct_chg": 1.12,
+        "amount": 1565898832.0,
+        "turnover_ratio": 25.23,
+        "float_mv": 6047641893.2,
+        "total_mv": 8192561258.4,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 31
+      },
+      {
+        "ts_code": "601811.SH",
+        "name": "新华文轩",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 68,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=3",
+          "首次封板时间=94256"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94256",
+        "last_time": "131120",
+        "pct_chg": 9.98,
+        "amount": 482160384.0,
+        "turnover_ratio": 3.57,
+        "float_mv": 13969184796.0,
+        "total_mv": 21764955381.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 21
+      },
+      {
+        "ts_code": "002315.SZ",
+        "name": "焦点科技",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 412655232.0,
+        "turnover_ratio": 6.67,
+        "float_mv": 6187464907.82,
+        "total_mv": 9893025016.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 26
+      },
+      {
+        "ts_code": "300499.SZ",
+        "name": "高澜股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 56,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=141812"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "141812",
+        "last_time": "145336",
+        "pct_chg": 20.02,
+        "amount": 3000259888.0,
+        "turnover_ratio": 45.62,
+        "float_mv": 7026184684.48,
+        "total_mv": 7974744107.52,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "002181.SZ",
+        "name": "粤 传 媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 52.27,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "炸板活跃票",
+          "涨幅强=9.08%",
+          "换手活跃=11.99%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95542",
+        "last_time": "",
+        "pct_chg": 9.08,
+        "amount": 860108976.0,
+        "turnover_ratio": 11.99,
+        "float_mv": 7362661443.28,
+        "total_mv": 7535267562.24,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 31
+      },
+      {
+        "ts_code": "603196.SH",
+        "name": "日播时尚",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 52,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=93136"
+        ],
+        "limit_times": 2,
+        "open_times": 5,
+        "first_time": "93136",
+        "last_time": "95254",
+        "pct_chg": 10.02,
+        "amount": 134082500.0,
+        "turnover_ratio": 5.14,
+        "float_mv": 2637726690.08,
+        "total_mv": 2657635458.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 39
+      },
+      {
+        "ts_code": "603322.SH",
+        "name": "超讯通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 52,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=93347"
+        ],
+        "limit_times": 2,
+        "open_times": 9,
+        "first_time": "93347",
+        "last_time": "111514",
+        "pct_chg": 9.99,
+        "amount": 580172496.0,
+        "turnover_ratio": 12.81,
+        "float_mv": 4592707500.0,
+        "total_mv": 4652710500.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 17
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20230426",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "601811.SH",
+      "name": "新华文轩",
+      "industry": "文化传媒",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 131.98,
+      "amount_score": 63.77,
+      "candidate_score": 68,
+      "limit_type": "U",
+      "limit_times": 3,
+      "open_times": 1,
+      "first_time": "94256",
+      "last_time": "131120",
+      "pct_chg": 9.98,
+      "amount": 482160384.0,
+      "turnover_ratio": 3.57,
+      "recognition_reasons": [
+        "最高板=3",
+        "首次封板=94256",
+        "盘中开板1次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=3",
+        "首次封板=94256",
+        "盘中开板1次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "300499.SZ",
+      "name": "高澜股份",
+      "industry": "专用设备",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 38,
+      "amount_score": 148.0,
+      "candidate_score": 56,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 4,
+      "first_time": "141812",
+      "last_time": "145336",
+      "pct_chg": 20.02,
+      "amount": 3000259888.0,
+      "turnover_ratio": 45.62,
+      "recognition_reasons": [
+        "首次封板=141812",
+        "盘中开板4次后仍封住"
+      ],
+      "amount_reasons": [
+        "首次封板=141812",
+        "盘中开板4次后仍封住",
+        "候选池成交额前1"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "601811.SH",
+        "name": "新华文轩",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 131.98,
+        "amount_score": 63.77,
+        "candidate_score": 68,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94256",
+        "last_time": "131120",
+        "pct_chg": 9.98,
+        "amount": 482160384.0,
+        "turnover_ratio": 3.57,
+        "recognition_reasons": [
+          "最高板=3",
+          "首次封板=94256",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=3",
+          "首次封板=94256",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002229.SZ",
+        "name": "鸿博股份",
+        "industry": "造纸印刷",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 127.97,
+        "amount_score": 145.97,
+        "candidate_score": 98,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "134227",
+        "last_time": "134227",
+        "pct_chg": 9.97,
+        "amount": 2743993008.0,
+        "turnover_ratio": 34.75,
+        "recognition_reasons": [
+          "最高板=3",
+          "首次封板=134227",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=3",
+          "首次封板=134227",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "601900.SH",
+        "name": "南方传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 121.99,
+        "amount_score": 134.16,
+        "candidate_score": 137.75,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "131354",
+        "last_time": "132633",
+        "pct_chg": 9.99,
+        "amount": 1306963888.0,
+        "turnover_ratio": 8.33,
+        "recognition_reasons": [
+          "最高板=3",
+          "首次封板=131354",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=3",
+          "首次封板=131354",
+          "盘中开板3次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002315.SZ",
+        "name": "焦点科技",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.0,
+        "amount_score": 53.34,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 412655232.0,
+        "turnover_ratio": 6.67,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603196.SH",
+        "name": "日播时尚",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 74.02,
+        "amount_score": 44.59,
+        "candidate_score": 52,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 5,
+        "first_time": "93136",
+        "last_time": "95254",
+        "pct_chg": 10.02,
+        "amount": 134082500.0,
+        "turnover_ratio": 5.14,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93136",
+          "盘中开板5次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93136",
+          "盘中开板5次后仍封住"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "300499.SZ",
+        "name": "高澜股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 38,
+        "amount_score": 148.0,
+        "candidate_score": 56,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "141812",
+        "last_time": "145336",
+        "pct_chg": 20.02,
+        "amount": 3000259888.0,
+        "turnover_ratio": 45.62,
+        "recognition_reasons": [
+          "首次封板=141812",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=141812",
+          "盘中开板4次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002229.SZ",
+        "name": "鸿博股份",
+        "industry": "造纸印刷",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 127.97,
+        "amount_score": 145.97,
+        "candidate_score": 98,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "134227",
+        "last_time": "134227",
+        "pct_chg": 9.97,
+        "amount": 2743993008.0,
+        "turnover_ratio": 34.75,
+        "recognition_reasons": [
+          "最高板=3",
+          "首次封板=134227",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=3",
+          "首次封板=134227",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "002518.SZ",
+        "name": "科士达",
+        "industry": "电源设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.0,
+        "amount_score": 141.13,
+        "candidate_score": 96.36,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "104815",
+        "last_time": "134124",
+        "pct_chg": 10.0,
+        "amount": 1646565408.0,
+        "turnover_ratio": 6.26,
+        "recognition_reasons": [
+          "首次封板=104815",
+          "盘中开板12次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104815",
+          "盘中开板12次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601900.SH",
+        "name": "南方传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 121.99,
+        "amount_score": 134.16,
+        "candidate_score": 137.75,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "131354",
+        "last_time": "132633",
+        "pct_chg": 9.99,
+        "amount": 1306963888.0,
+        "turnover_ratio": 8.33,
+        "recognition_reasons": [
+          "最高板=3",
+          "首次封板=131354",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=3",
+          "首次封板=131354",
+          "盘中开板3次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "688032.SH",
+        "name": "禾迈股份",
+        "industry": "光伏设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 47,
+        "amount_score": 110.96,
+        "candidate_score": 88.55,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 26,
+        "first_time": "110745",
+        "last_time": "135700",
+        "pct_chg": 20.0,
+        "amount": 1076104880.0,
+        "turnover_ratio": 5.92,
+        "recognition_reasons": [
+          "首次封板=110745",
+          "盘中开板26次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=110745",
+          "盘中开板26次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

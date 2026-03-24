@@ -1,0 +1,881 @@
+{
+  "trade_date": "20220520",
+  "pool": {
+    "trade_date": "20220520",
+    "input_summary": {
+      "up_count": 82,
+      "zha_count": 29,
+      "focus_industries": [
+        {
+          "industry": "有色金属",
+          "industry_score": 48,
+          "up_count": 11,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 7710266901.0
+        },
+        {
+          "industry": "汽车零部件",
+          "industry_score": 35.38,
+          "up_count": 5,
+          "zha_count": 2,
+          "max_height": 7,
+          "amount": 2187664516.0
+        },
+        {
+          "industry": "电网设备",
+          "industry_score": 30.67,
+          "up_count": 4,
+          "zha_count": 1,
+          "max_height": 7,
+          "amount": 1833904269.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002766.SZ",
+        "name": "索菱股份",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 172,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=8",
+          "首次封板时间=93021"
+        ],
+        "limit_times": 8,
+        "open_times": 4,
+        "first_time": "93021",
+        "last_time": "130639",
+        "pct_chg": 10.04,
+        "amount": 527878176.0,
+        "turnover_ratio": 8.24,
+        "float_mv": 6495741670.9,
+        "total_mv": 7583137207.68,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 19
+      },
+      {
+        "ts_code": "001319.SZ",
+        "name": "铭科精技",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 99495790.0,
+        "turnover_ratio": 7.41,
+        "float_mv": 1342239500.0,
+        "total_mv": 5368958000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 60
+      },
+      {
+        "ts_code": "603097.SH",
+        "name": "江苏华辰",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.01,
+        "amount": 44607949.0,
+        "turnover_ratio": 5.12,
+        "float_mv": 870800000.0,
+        "total_mv": 3483200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 75
+      },
+      {
+        "ts_code": "000957.SZ",
+        "name": "中通客车",
+        "industry": "汽车整车",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 76245962.0,
+        "turnover_ratio": 1.67,
+        "float_mv": 4565360307.2,
+        "total_mv": 4565360307.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 65
+      },
+      {
+        "ts_code": "000933.SZ",
+        "name": "神火股份",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.23,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=10.02%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=有色金属",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "132030",
+        "last_time": "133554",
+        "pct_chg": 10.02,
+        "amount": 1896803760.0,
+        "turnover_ratio": 6.5,
+        "float_mv": 30124714171.5,
+        "total_mv": 30388319208.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 48,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000909.SZ",
+        "name": "数源科技",
+        "industry": "综合行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 333651200.0,
+        "turnover_ratio": 9.09,
+        "float_mv": 3668903992.08,
+        "total_mv": 4297756917.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 24
+      },
+      {
+        "ts_code": "002309.SZ",
+        "name": "中利集团",
+        "industry": "光伏设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 86835178.0,
+        "turnover_ratio": 1.92,
+        "float_mv": 4527921008.16,
+        "total_mv": 5178415207.68,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 62
+      },
+      {
+        "ts_code": "002887.SZ",
+        "name": "绿茵生态",
+        "industry": "环保行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93027"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93027",
+        "last_time": "93027",
+        "pct_chg": 10.03,
+        "amount": 131396813.0,
+        "turnover_ratio": 6.55,
+        "float_mv": 2034162881.4,
+        "total_mv": 3834480000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 53
+      },
+      {
+        "ts_code": "603628.SH",
+        "name": "清源股份",
+        "industry": "光伏设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93636"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93636",
+        "last_time": "93636",
+        "pct_chg": 10.02,
+        "amount": 204682139.0,
+        "turnover_ratio": 5.49,
+        "float_mv": 3789392000.0,
+        "total_mv": 3789392000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 39
+      },
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 92.41,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=9.98%",
+          "焦点池成交额前2",
+          "题材内成交额第2",
+          "所属强势行业=有色金属",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "142158",
+        "last_time": "142158",
+        "pct_chg": 9.98,
+        "amount": 1736458512.0,
+        "turnover_ratio": 2.74,
+        "float_mv": 66309044403.81,
+        "total_mv": 86304951582.72,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 48,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002725.SZ",
+        "name": "跃岭股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 90.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "涨幅强=10.02%",
+          "换手活跃=29.61%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "111245",
+        "last_time": "140624",
+        "pct_chg": 10.02,
+        "amount": 659338576.0,
+        "turnover_ratio": 29.61,
+        "float_mv": 2360367335.76,
+        "total_mv": 3092480000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 35.38,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "601126.SH",
+        "name": "XD四方股",
+        "industry": "电网设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 86.25,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电网设备",
+          "涨幅强=9.98%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=电网设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "133249",
+        "last_time": "143146",
+        "pct_chg": 9.98,
+        "amount": 710825104.0,
+        "turnover_ratio": 6.63,
+        "float_mv": 11205510160.0,
+        "total_mv": 11205510160.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 30.67,
+        "amount_rank_in_industry": 1
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220520",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "002766.SZ",
+      "name": "索菱股份",
+      "industry": "互联网服",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 251.04,
+      "amount_score": 114.16,
+      "candidate_score": 172,
+      "limit_type": "U",
+      "limit_times": 8,
+      "open_times": 4,
+      "first_time": "93021",
+      "last_time": "130639",
+      "pct_chg": 10.04,
+      "amount": 527878176.0,
+      "turnover_ratio": 8.24,
+      "recognition_reasons": [
+        "最高板=8",
+        "首次封板=93021",
+        "盘中开板4次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=8",
+        "首次封板=93021",
+        "盘中开板4次后仍封住",
+        "候选池成交额前5"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000933.SZ",
+      "name": "神火股份",
+      "industry": "有色金属",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 53.02,
+      "amount_score": 157.27,
+      "candidate_score": 102.23,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 1,
+      "first_time": "132030",
+      "last_time": "133554",
+      "pct_chg": 10.02,
+      "amount": 1896803760.0,
+      "turnover_ratio": 6.5,
+      "recognition_reasons": [
+        "首次封板=132030",
+        "盘中开板1次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=132030",
+        "盘中开板1次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "002766.SZ",
+        "name": "索菱股份",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 251.04,
+        "amount_score": 114.16,
+        "candidate_score": 172,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 4,
+        "first_time": "93021",
+        "last_time": "130639",
+        "pct_chg": 10.04,
+        "amount": 527878176.0,
+        "turnover_ratio": 8.24,
+        "recognition_reasons": [
+          "最高板=8",
+          "首次封板=93021",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=8",
+          "首次封板=93021",
+          "盘中开板4次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "603097.SH",
+        "name": "江苏华辰",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.01,
+        "amount_score": 56.57,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.01,
+        "amount": 44607949.0,
+        "turnover_ratio": 5.12,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92504",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92504",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001319.SZ",
+        "name": "铭科精技",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 209.99,
+        "amount_score": 81.69,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 99495790.0,
+        "turnover_ratio": 7.41,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000957.SZ",
+        "name": "中通客车",
+        "industry": "汽车整车",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 186.0,
+        "amount_score": 62.84,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 76245962.0,
+        "turnover_ratio": 1.67,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002309.SZ",
+        "name": "中利集团",
+        "industry": "光伏设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.0,
+        "amount_score": 66.96,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 86835178.0,
+        "turnover_ratio": 1.92,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000933.SZ",
+        "name": "神火股份",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 53.02,
+        "amount_score": 157.27,
+        "candidate_score": 102.23,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "132030",
+        "last_time": "133554",
+        "pct_chg": 10.02,
+        "amount": 1896803760.0,
+        "turnover_ratio": 6.5,
+        "recognition_reasons": [
+          "首次封板=132030",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=132030",
+          "盘中开板1次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601126.SH",
+        "name": "XD四方股",
+        "industry": "电网设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 47.98,
+        "amount_score": 141.29,
+        "candidate_score": 86.25,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "133249",
+        "last_time": "143146",
+        "pct_chg": 9.98,
+        "amount": 710825104.0,
+        "turnover_ratio": 6.63,
+        "recognition_reasons": [
+          "首次封板=133249",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=133249",
+          "盘中开板3次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002725.SZ",
+        "name": "跃岭股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 49.02,
+        "amount_score": 140.02,
+        "candidate_score": 90.33,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "111245",
+        "last_time": "140624",
+        "pct_chg": 10.02,
+        "amount": 659338576.0,
+        "turnover_ratio": 29.61,
+        "recognition_reasons": [
+          "首次封板=111245",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=111245",
+          "盘中开板2次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.98,
+        "amount_score": 137.35,
+        "candidate_score": 92.41,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "142158",
+        "last_time": "142158",
+        "pct_chg": 9.98,
+        "amount": 1736458512.0,
+        "turnover_ratio": 2.74,
+        "recognition_reasons": [
+          "首次封板=142158",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=142158",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002766.SZ",
+        "name": "索菱股份",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 251.04,
+        "amount_score": 114.16,
+        "candidate_score": 172,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 4,
+        "first_time": "93021",
+        "last_time": "130639",
+        "pct_chg": 10.04,
+        "amount": 527878176.0,
+        "turnover_ratio": 8.24,
+        "recognition_reasons": [
+          "最高板=8",
+          "首次封板=93021",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=8",
+          "首次封板=93021",
+          "盘中开板4次后仍封住",
+          "候选池成交额前5"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,925 @@
+{
+  "trade_date": "20230613",
+  "pool": {
+    "trade_date": "20230613",
+    "input_summary": {
+      "up_count": 45,
+      "zha_count": 14,
+      "focus_industries": [
+        {
+          "industry": "汽车零部件",
+          "industry_score": 40.49,
+          "up_count": 8,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 3744045288.0
+        },
+        {
+          "industry": "文化传媒",
+          "industry_score": 29,
+          "up_count": 4,
+          "zha_count": 3,
+          "max_height": 2,
+          "amount": 8486612768.0
+        },
+        {
+          "industry": "电网设备",
+          "industry_score": 24.89,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 4,
+          "amount": 945637726.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002536.SZ",
+        "name": "飞龙股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 163.72,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前2",
+          "首次封板时间=92500",
+          "强势行业=汽车零部件",
+          "涨幅强=9.98%",
+          "焦点池成交额前3",
+          "换手活跃=17.82%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "103321",
+        "pct_chg": 9.98,
+        "amount": 1160587200.0,
+        "turnover_ratio": 17.82,
+        "float_mv": 6595719928.0,
+        "total_mv": 7009965312.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 40.49,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "603829.SH",
+        "name": "洛凯股份",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 120.29,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=4",
+          "首次封板时间=93132",
+          "题材内成交额第1",
+          "所属强势行业=电网设备",
+          "已涨停"
+        ],
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93132",
+        "last_time": "95344",
+        "pct_chg": 9.98,
+        "amount": 331372976.0,
+        "turnover_ratio": 10.31,
+        "float_mv": 3297600000.0,
+        "total_mv": 3297600000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 21,
+        "amount_rank_in_industry": 1,
+        "industry_score": 24.89
+      },
+      {
+        "ts_code": "000917.SZ",
+        "name": "电广传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 104.74,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=100442",
+          "强势行业=文化传媒",
+          "涨幅强=10.05%",
+          "焦点池成交额前5",
+          "换手活跃=8.67%"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "100442",
+        "last_time": "100442",
+        "pct_chg": 10.05,
+        "amount": 1049833376.0,
+        "turnover_ratio": 8.67,
+        "float_mv": 12571423077.24,
+        "total_mv": 12573724700.32,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3,
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 29
+      },
+      {
+        "ts_code": "603000.SH",
+        "name": "人民网",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 101.7,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "炸板活跃票",
+          "涨幅强=9.96%",
+          "焦点池成交额前1",
+          "换手活跃=10.41%",
+          "题材内成交额第1",
+          "所属强势行业=文化传媒"
+        ],
+        "limit_times": 0,
+        "open_times": 9,
+        "first_time": "105606",
+        "last_time": "",
+        "pct_chg": 9.96,
+        "amount": 3219275344.0,
+        "turnover_ratio": 10.41,
+        "float_mv": 31854959323.36,
+        "total_mv": 31854959323.36,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 29,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002703.SZ",
+        "name": "浙江世宝",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 100.44,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93109",
+          "强势行业=汽车零部件",
+          "涨幅强=9.96%",
+          "换手活跃=14.08%"
+        ],
+        "limit_times": 3,
+        "open_times": 6,
+        "first_time": "93109",
+        "last_time": "101039",
+        "pct_chg": 9.96,
+        "amount": 769214672.0,
+        "turnover_ratio": 14.08,
+        "float_mv": 5497419650.38,
+        "total_mv": 7849067721.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8,
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 40.49
+      },
+      {
+        "ts_code": "603335.SH",
+        "name": "迪生力",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.06,
+        "amount": 47865951.0,
+        "turnover_ratio": 1.44,
+        "float_mv": 3326683542.0,
+        "total_mv": 3326683604.16,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 43
+      },
+      {
+        "ts_code": "002146.SZ",
+        "name": "荣盛发展",
+        "industry": "房地产服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.86,
+        "amount": 38818747.0,
+        "turnover_ratio": 0.64,
+        "float_mv": 6078573307.56,
+        "total_mv": 6783135590.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 44
+      },
+      {
+        "ts_code": "603006.SH",
+        "name": "联明股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93022"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93022",
+        "last_time": "93022",
+        "pct_chg": 9.97,
+        "amount": 78086460.0,
+        "turnover_ratio": 3.24,
+        "float_mv": 2443889998.94,
+        "total_mv": 3251911857.5,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 41
+      },
+      {
+        "ts_code": "600556.SH",
+        "name": "天下秀",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.74,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "炸板活跃票",
+          "涨幅强=8.29%",
+          "焦点池成交额前2",
+          "换手活跃=9.09%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "100825",
+        "last_time": "",
+        "pct_chg": 8.29,
+        "amount": 1432054480.0,
+        "turnover_ratio": 9.09,
+        "float_mv": 15817791867.5,
+        "total_mv": 15817791920.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 29
+      },
+      {
+        "ts_code": "002995.SZ",
+        "name": "天地在线",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 66.04,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=文化传媒",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=36.73%"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "110421",
+        "last_time": "",
+        "pct_chg": 6.04,
+        "amount": 1054393104.0,
+        "turnover_ratio": 36.73,
+        "float_mv": 2894764909.0,
+        "total_mv": 6352870384.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 29
+      },
+      {
+        "ts_code": "002354.SZ",
+        "name": "天娱数科",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=95524"
+        ],
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "95524",
+        "last_time": "133515",
+        "pct_chg": 10.0,
+        "amount": 2671530352.0,
+        "turnover_ratio": 21.25,
+        "float_mv": 12808588541.76,
+        "total_mv": 13104319726.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "600268.SH",
+        "name": "国电南自",
+        "industry": "电网设备",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "candidate_score": 47.99,
+        "role_tags": [
+          "leader_pool_candidate",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "题材内成交额第2",
+          "所属强势行业=电网设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "95056",
+        "last_time": "95056",
+        "pct_chg": 9.99,
+        "amount": 178429944.0,
+        "turnover_ratio": 2.96,
+        "float_mv": 6157268470.98,
+        "total_mv": 6253325038.08,
+        "limit_type": "U",
+        "amount_rank_in_industry": 2,
+        "industry_score": 24.89
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20230613",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "603335.SH",
+      "name": "迪生力",
+      "industry": "汽车零部件",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 170.06,
+      "amount_score": 58.78,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.06,
+      "amount": 47865951.0,
+      "turnover_ratio": 1.44,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "603000.SH",
+      "name": "人民网",
+      "industry": "文化传媒",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 15.96,
+      "amount_score": 147.17,
+      "candidate_score": 101.7,
+      "limit_type": "Z",
+      "limit_times": 0,
+      "open_times": 9,
+      "first_time": "105606",
+      "last_time": "",
+      "pct_chg": 9.96,
+      "amount": 3219275344.0,
+      "turnover_ratio": 10.41,
+      "recognition_reasons": [
+        "首次封板=105606",
+        "炸板活跃票",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=105606",
+        "炸板活跃票",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "603335.SH",
+        "name": "迪生力",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 170.06,
+        "amount_score": 58.78,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.06,
+        "amount": 47865951.0,
+        "turnover_ratio": 1.44,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603829.SH",
+        "name": "洛凯股份",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 154.98,
+        "amount_score": 115.14,
+        "candidate_score": 120.29,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93132",
+        "last_time": "95344",
+        "pct_chg": 9.98,
+        "amount": 331372976.0,
+        "turnover_ratio": 10.31,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "002536.SZ",
+        "name": "飞龙股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 118.98,
+        "amount_score": 146.89,
+        "candidate_score": 163.72,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "103321",
+        "pct_chg": 9.98,
+        "amount": 1160587200.0,
+        "turnover_ratio": 17.82,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002146.SZ",
+        "name": "荣盛发展",
+        "industry": "房地产服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.86,
+        "amount_score": 46.18,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.86,
+        "amount": 38818747.0,
+        "turnover_ratio": 0.64,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603006.SH",
+        "name": "联明股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 110.97,
+        "amount_score": 63.59,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93022",
+        "last_time": "93022",
+        "pct_chg": 9.97,
+        "amount": 78086460.0,
+        "turnover_ratio": 3.24,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93022",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93022",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "603000.SH",
+        "name": "人民网",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 15.96,
+        "amount_score": 147.17,
+        "candidate_score": 101.7,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 9,
+        "first_time": "105606",
+        "last_time": "",
+        "pct_chg": 9.96,
+        "amount": 3219275344.0,
+        "turnover_ratio": 10.41,
+        "recognition_reasons": [
+          "首次封板=105606",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=105606",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002536.SZ",
+        "name": "飞龙股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 118.98,
+        "amount_score": 146.89,
+        "candidate_score": 163.72,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "103321",
+        "pct_chg": 9.98,
+        "amount": 1160587200.0,
+        "turnover_ratio": 17.82,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002354.SZ",
+        "name": "天娱数科",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 47.0,
+        "amount_score": 138.0,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "95524",
+        "last_time": "133515",
+        "pct_chg": 10.0,
+        "amount": 2671530352.0,
+        "turnover_ratio": 21.25,
+        "recognition_reasons": [
+          "首次封板=95524",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=95524",
+          "盘中开板3次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "603829.SH",
+        "name": "洛凯股份",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 154.98,
+        "amount_score": 115.14,
+        "candidate_score": 120.29,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93132",
+        "last_time": "95344",
+        "pct_chg": 9.98,
+        "amount": 331372976.0,
+        "turnover_ratio": 10.31,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=93132",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "000917.SZ",
+        "name": "电广传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 88.05,
+        "amount_score": 104.38,
+        "candidate_score": 104.74,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "100442",
+        "last_time": "100442",
+        "pct_chg": 10.05,
+        "amount": 1049833376.0,
+        "turnover_ratio": 8.67,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=100442",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=100442",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

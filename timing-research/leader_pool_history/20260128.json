@@ -1,0 +1,885 @@
+{
+  "trade_date": "20260128",
+  "pool": {
+    "trade_date": "20260128",
+    "input_summary": {
+      "up_count": 80,
+      "zha_count": 26,
+      "focus_industries": [
+        {
+          "industry": "有色金属",
+          "industry_score": 84,
+          "up_count": 20,
+          "zha_count": 0,
+          "max_height": 7,
+          "amount": 65764934208.0
+        },
+        {
+          "industry": "贵金属",
+          "industry_score": 43,
+          "up_count": 9,
+          "zha_count": 0,
+          "max_height": 3,
+          "amount": 34958538981.0
+        },
+        {
+          "industry": "珠宝首饰",
+          "industry_score": 33.98,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 3492337120.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "601212.SH",
+        "name": "白银有色",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 176.65,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=7",
+          "首次封板时间=100220",
+          "强势行业=有色金属",
+          "涨幅强=10.04%"
+        ],
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "100220",
+        "last_time": "100656",
+        "pct_chg": 10.04,
+        "amount": 5408662272.0,
+        "turnover_ratio": 5.42,
+        "float_mv": 102259935996.91,
+        "total_mv": 102259934464.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 6,
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 84
+      },
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 122.14,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=103727",
+          "强势行业=有色金属",
+          "涨幅强=10.02%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=有色金属",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "103727",
+        "last_time": "112124",
+        "pct_chg": 10.02,
+        "amount": 11718403840.0,
+        "turnover_ratio": 6.3,
+        "float_mv": 192331131496.6,
+        "total_mv": 250472229068.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 84,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002716.SZ",
+        "name": "湖南白银",
+        "industry": "贵金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 106.27,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=贵金属",
+          "涨幅强=9.98%",
+          "焦点池成交额前2",
+          "换手活跃=21.68%",
+          "题材内成交额第1",
+          "所属强势行业=贵金属",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "135100",
+        "last_time": "135100",
+        "pct_chg": 9.98,
+        "amount": 9415586048.0,
+        "turnover_ratio": 21.68,
+        "float_mv": 45102172062.0,
+        "total_mv": 54767919616.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 43,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600916.SH",
+        "name": "中国黄金",
+        "industry": "珠宝首饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.04,
+        "amount": 373655504.0,
+        "turnover_ratio": 1.81,
+        "float_mv": 20613600000.0,
+        "total_mv": 20613600000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 66
+      },
+      {
+        "ts_code": "003042.SZ",
+        "name": "中农联合",
+        "industry": "农药兽药",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93636"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93636",
+        "last_time": "93636",
+        "pct_chg": 10.0,
+        "amount": 341219104.0,
+        "turnover_ratio": 10.93,
+        "float_mv": 3236363580.45,
+        "total_mv": 3620416800.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 67
+      },
+      {
+        "ts_code": "600531.SH",
+        "name": "豫光金铅",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 84,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=101619"
+        ],
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "101619",
+        "last_time": "103346",
+        "pct_chg": 10.0,
+        "amount": 3741275632.0,
+        "turnover_ratio": 14.17,
+        "float_mv": 27256781212.92,
+        "total_mv": 27256781348.16,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15
+      },
+      {
+        "ts_code": "002155.SZ",
+        "name": "湖南黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 108263781.0,
+        "turnover_ratio": 0.23,
+        "float_mv": 47781563659.06,
+        "total_mv": 47785877120.96,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 80
+      },
+      {
+        "ts_code": "000630.SZ",
+        "name": "铜陵有色",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.04,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=10.01%",
+          "焦点池成交额前3",
+          "换手活跃=10.05%"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "111136",
+        "last_time": "111136",
+        "pct_chg": 10.01,
+        "amount": 8998920704.0,
+        "turnover_ratio": 10.05,
+        "float_mv": 93044145607.5,
+        "total_mv": 111969086924.8,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 84
+      },
+      {
+        "ts_code": "000506.SZ",
+        "name": "招金黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 68,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=94412"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94412",
+        "last_time": "95348",
+        "pct_chg": 10.01,
+        "amount": 1821235792.0,
+        "turnover_ratio": 7.67,
+        "float_mv": 24078192480.73,
+        "total_mv": 24089430516.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 27
+      },
+      {
+        "ts_code": "001337.SZ",
+        "name": "四川黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 68,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=94824"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94824",
+        "last_time": "95042",
+        "pct_chg": 10.0,
+        "amount": 1698566944.0,
+        "turnover_ratio": 8.95,
+        "float_mv": 19286168160.0,
+        "total_mv": 28081200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 29
+      },
+      {
+        "ts_code": "600489.SH",
+        "name": "中金黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.28,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=贵金属",
+          "涨幅强=10.01%",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 1,
+        "open_times": 8,
+        "first_time": "130431",
+        "last_time": "135722",
+        "pct_chg": 10.01,
+        "amount": 6715332864.0,
+        "turnover_ratio": 3.79,
+        "float_mv": 182792156788.44,
+        "total_mv": 182792159654.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 43
+      },
+      {
+        "ts_code": "600988.SH",
+        "name": "赤峰黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 59.03,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=贵金属",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=8.39%"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "143411",
+        "last_time": "144246",
+        "pct_chg": 10.0,
+        "amount": 6375990016.0,
+        "turnover_ratio": 8.39,
+        "float_mv": 77970887173.08,
+        "total_mv": 89053268082.24,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 43
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20260128",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "601212.SH",
+      "name": "白银有色",
+      "industry": "有色金属",
+      "source_types": [
+        "active_core",
+        "limit_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 224.04,
+      "amount_score": 104.75,
+      "candidate_score": 176.65,
+      "limit_type": "U",
+      "limit_times": 7,
+      "open_times": 2,
+      "first_time": "100220",
+      "last_time": "100656",
+      "pct_chg": 10.04,
+      "amount": 5408662272.0,
+      "turnover_ratio": 5.42,
+      "recognition_reasons": [
+        "最高板=7",
+        "首次封板=100220",
+        "盘中开板2次后仍封住",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=7",
+        "首次封板=100220",
+        "盘中开板2次后仍封住",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "601600.SH",
+      "name": "中国铝业",
+      "industry": "有色金属",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 50.02,
+      "amount_score": 157.17,
+      "candidate_score": 122.14,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 9,
+      "first_time": "103727",
+      "last_time": "112124",
+      "pct_chg": 10.02,
+      "amount": 11718403840.0,
+      "turnover_ratio": 6.3,
+      "recognition_reasons": [
+        "首次封板=103727",
+        "盘中开板9次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=103727",
+        "盘中开板9次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "601212.SH",
+        "name": "白银有色",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 224.04,
+        "amount_score": 104.75,
+        "candidate_score": 176.65,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "100220",
+        "last_time": "100656",
+        "pct_chg": 10.04,
+        "amount": 5408662272.0,
+        "turnover_ratio": 5.42,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=100220",
+          "盘中开板2次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=100220",
+          "盘中开板2次后仍封住",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600916.SH",
+        "name": "中国黄金",
+        "industry": "珠宝首饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.04,
+        "amount_score": 66.94,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.04,
+        "amount": 373655504.0,
+        "turnover_ratio": 1.81,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "003042.SZ",
+        "name": "中农联合",
+        "industry": "农药兽药",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 130.0,
+        "amount_score": 63.47,
+        "candidate_score": 96,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93636",
+        "last_time": "93636",
+        "pct_chg": 10.0,
+        "amount": 341219104.0,
+        "turnover_ratio": 10.93,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93636",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93636",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002155.SZ",
+        "name": "湖南黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 46.12,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 108263781.0,
+        "turnover_ratio": 0.23,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600531.SH",
+        "name": "豫光金铅",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 111.0,
+        "amount_score": 97.08,
+        "candidate_score": 84,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "101619",
+        "last_time": "103346",
+        "pct_chg": 10.0,
+        "amount": 3741275632.0,
+        "turnover_ratio": 14.17,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=101619",
+          "盘中开板8次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=101619",
+          "盘中开板8次后仍封住"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.02,
+        "amount_score": 157.17,
+        "candidate_score": 122.14,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "103727",
+        "last_time": "112124",
+        "pct_chg": 10.02,
+        "amount": 11718403840.0,
+        "turnover_ratio": 6.3,
+        "recognition_reasons": [
+          "首次封板=103727",
+          "盘中开板9次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=103727",
+          "盘中开板9次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002716.SZ",
+        "name": "湖南白银",
+        "industry": "贵金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.98,
+        "amount_score": 155.98,
+        "candidate_score": 106.27,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "135100",
+        "last_time": "135100",
+        "pct_chg": 9.98,
+        "amount": 9415586048.0,
+        "turnover_ratio": 21.68,
+        "recognition_reasons": [
+          "首次封板=135100",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=135100",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000630.SZ",
+        "name": "铜陵有色",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 59.01,
+        "amount_score": 115.04,
+        "candidate_score": 68.04,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "111136",
+        "last_time": "111136",
+        "pct_chg": 10.01,
+        "amount": 8998920704.0,
+        "turnover_ratio": 10.05,
+        "recognition_reasons": [
+          "首次封板=111136",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=111136",
+          "封板稳定",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601212.SH",
+        "name": "白银有色",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 224.04,
+        "amount_score": 104.75,
+        "candidate_score": 176.65,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 2,
+        "first_time": "100220",
+        "last_time": "100656",
+        "pct_chg": 10.04,
+        "amount": 5408662272.0,
+        "turnover_ratio": 5.42,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=100220",
+          "盘中开板2次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=100220",
+          "盘中开板2次后仍封住",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600489.SH",
+        "name": "中金黄金",
+        "industry": "贵金属",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 45.01,
+        "amount_score": 103.91,
+        "candidate_score": 60.28,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 8,
+        "first_time": "130431",
+        "last_time": "135722",
+        "pct_chg": 10.01,
+        "amount": 6715332864.0,
+        "turnover_ratio": 3.79,
+        "recognition_reasons": [
+          "首次封板=130431",
+          "盘中开板8次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=130431",
+          "盘中开板8次后仍封住",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

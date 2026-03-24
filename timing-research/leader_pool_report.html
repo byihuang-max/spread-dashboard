@@ -16,6 +16,10 @@ h1{font-size:24px;font-weight:800;margin-bottom:6px}
 h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #24365a}
 .muted{color:#8fa5c2;font-size:13px}
 .date-badge{display:inline-block;padding:5px 12px;border-radius:999px;background:#163150;color:#7cc5ff;font-size:14px;font-weight:700;margin:8px 0 12px}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.select,.btn{height:40px;border-radius:12px;border:1px solid #2a3a58;background:#0c1830;color:#dce7f5;padding:0 14px;font-size:14px}
+.btn{cursor:pointer;font-weight:700}
+.btn:hover{border-color:#60a5fa;color:#fff}
 .step-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .step-tab{padding:10px 18px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid #2a3a58;background:#0c1830;color:#cbd5e1;transition:all .2s}
 .step-tab:hover{border-color:#60a5fa;color:#fff}
@@ -60,6 +64,11 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
   <h1>🔍 龙头观察池 · 盘中发现层</h1>
   <div class="muted">角色层 → 龙头观察池 → 龙头确认 ｜ 数据源：Tushare limit_list_d 链路</div>
   <div class="date-badge" id="dateBadge">加载中...</div>
+  <div class="toolbar">
+    <select id="dateSelect" class="select"></select>
+    <button id="latestBtn" class="btn">刷新到最新</button>
+    <div class="muted" id="toolbarHint">支持按交易日回看，每天可刷最新一版</div>
+  </div>
 </div>
 
 <div class="step-tabs">
@@ -70,7 +79,6 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
 
 <div id="loading">正在加载数据...</div>
 
-<!-- Step 1: 吐池 -->
 <div id="step1" class="step-pane active">
   <div class="card">
     <h2>Step 1 · 先吐池：从涨停链 + 强势行业收缩成小候选池</h2>
@@ -87,7 +95,6 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
   </div>
 </div>
 
-<!-- Step 2: 选龙头 -->
 <div id="step2" class="step-pane">
   <div class="card">
     <h2>Step 2 · 从候选池里选出两类龙头</h2>
@@ -100,11 +107,10 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
   </div>
 </div>
 
-<!-- Step 3: 为什么选它 -->
 <div id="step3" class="step-pane">
   <div class="card">
     <h2>Step 3 · 为什么选它？每只票的入池原因</h2>
-    <div class="note" style="margin-bottom:16px">每只票可能被多个入口同时命中，命中越多说明"盘面关注度"越集中。</div>
+    <div class="note" style="margin-bottom:16px">每只票可能被多个入口同时命中，命中越多说明“盘面关注度”越集中。</div>
     <div id="reasonCards"></div>
   </div>
 </div>
@@ -118,9 +124,28 @@ const RULES = {
   theme_amount_core: {label:'theme_amount_core', color:'pill', desc:'只在强势行业内部比成交额，抓题材中军/容量核心，不从全市场金额榜直接选'},
 };
 
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function tags(arr,cls){return arr.map(t=>`<span class="${cls}">${esc(t)}</span>`).join('')}
-function fmtAmt(v){return (v/1e8).toFixed(2)}
+let historyIndex = {dates: [], latest_trade_date: null};
+let currentDate = null;
+
+function esc(s){const d=document.createElement('div');d.textContent=s ?? '';return d.innerHTML}
+function tags(arr,cls){return (arr||[]).map(t=>`<span class="${cls}">${esc(t)}</span>`).join('')}
+function fmtAmt(v){return (Number(v||0)/1e8).toFixed(2)}
+function formatDate(td){return td ? `${td.slice(0,4)}-${td.slice(4,6)}-${td.slice(6,8)}` : '--'}
+function setLoading(msg){document.getElementById('loading').style.display='block';document.getElementById('loading').textContent=msg}
+function clearTables(){document.querySelector('#poolTable tbody').innerHTML='';document.querySelector('#recTable tbody').innerHTML='';document.querySelector('#amtTable tbody').innerHTML='';document.getElementById('reasonCards').innerHTML='';document.getElementById('leaderHero').innerHTML='';document.getElementById('sourceStats').innerHTML='';document.getElementById('ruleCards').innerHTML=''}
+
+function renderDateOptions(){
+  const sel=document.getElementById('dateSelect');
+  sel.innerHTML='';
+  const dates=(historyIndex.dates||[]).slice().reverse();
+  dates.forEach(d=>{
+    const op=document.createElement('option');
+    op.value=d;
+    op.textContent=formatDate(d);
+    if(d===currentDate) op.selected=true;
+    sel.appendChild(op);
+  });
+}
 
 document.querySelectorAll('.step-tab').forEach(btn=>{
   btn.onclick=()=>{
@@ -131,17 +156,48 @@ document.querySelectorAll('.step-tab').forEach(btn=>{
   };
 });
 
-fetch('leader_pool_latest.json').then(r=>r.json()).then(render).catch(e=>{
-  document.getElementById('loading').textContent='数据加载失败: '+e.message;
-});
+document.getElementById('dateSelect').addEventListener('change', e=>loadByDate(e.target.value));
+document.getElementById('latestBtn').addEventListener('click', ()=>{ if(historyIndex.latest_trade_date) loadByDate(historyIndex.latest_trade_date); });
+
+fetch('leader_pool_history/index.json')
+  .then(r=>r.ok ? r.json() : Promise.reject(new Error('历史索引不存在')))
+  .then(idx=>{
+    historyIndex = idx;
+    currentDate = idx.latest_trade_date;
+    renderDateOptions();
+    if(currentDate) return loadByDate(currentDate);
+    return loadLatestFallback();
+  })
+  .catch(()=>loadLatestFallback());
+
+function loadLatestFallback(){
+  setLoading('正在加载最新数据...');
+  return fetch('leader_pool_latest.json').then(r=>r.json()).then(data=>{
+    currentDate = data.trade_date;
+    document.getElementById('toolbarHint').textContent='当前为最新一版；如需回看历史，再补历史导出即可';
+    render(data);
+  }).catch(e=>{document.getElementById('loading').textContent='数据加载失败: '+e.message;});
+}
+
+function loadByDate(tradeDate){
+  currentDate = tradeDate;
+  renderDateOptions();
+  clearTables();
+  setLoading(`正在加载 ${formatDate(tradeDate)} ...`);
+  fetch(`leader_pool_history/${tradeDate}.json`)
+    .then(r=>r.ok ? r.json() : Promise.reject(new Error('该日期数据不存在')))
+    .then(render)
+    .catch(e=>{document.getElementById('loading').textContent='数据加载失败: '+e.message;});
+}
 
 function render(data){
   document.getElementById('loading').style.display='none';
+  clearTables();
   const pool=data.pool, confirm=data.confirm;
   const td=data.trade_date;
-  document.getElementById('dateBadge').textContent=td.slice(0,4)+'-'+td.slice(4,6)+'-'+td.slice(6,8)+' 龙头观察池';
+  document.getElementById('dateBadge').textContent=formatDate(td)+' 龙头观察池';
+  document.getElementById('toolbarHint').textContent=`当前查看：${formatDate(td)} ｜ 最新：${formatDate(historyIndex.latest_trade_date || td)} ｜ 每天可刷最新一版`;
 
-  // Step 1
   const ss=pool.source_summary;
   const fi=pool.input_summary.focus_industries||[];
   document.getElementById('sourceStats').innerHTML=`
@@ -153,10 +209,9 @@ function render(data){
 
   const tbody=document.querySelector('#poolTable tbody');
   pool.pool.forEach((r,i)=>{
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${r.ts_code}</b><br>${esc(r.name)}<div class="small muted">涨幅 ${r.pct_chg}% / ${fmtAmt(r.amount)} 亿</div></td><td>${esc(r.industry)}</td><td>${tags(r.source_types,'tag')}</td><td class="num">${r.candidate_score}</td><td class="reason">${r.reasons.map(esc).join('<br>')}</td></tr>`;
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${r.ts_code}</b><br>${esc(r.name)}<div class="small muted">涨幅 ${r.pct_chg}% / ${fmtAmt(r.amount)} 亿</div></td><td>${esc(r.industry)}</td><td>${tags(r.source_types,'tag')}</td><td class="num">${r.candidate_score}</td><td class="reason">${(r.reasons||[]).map(esc).join('<br>')}</td></tr>`;
   });
 
-  // Step 2
   const rec=confirm.recognition_leader, amt=confirm.amount_leader;
   document.getElementById('leaderHero').innerHTML=`
     <div class="leader-card rec"><div class="leader-label">辨识度龙头</div><div class="leader-name green">${esc(rec.name)}</div><div class="leader-code">${rec.ts_code} ｜ score ${rec.recognition_score}</div><div class="leader-tags">${tags(rec.recognition_reasons,'tag2')}</div></div>
@@ -164,17 +219,16 @@ function render(data){
 
   [['recTable',confirm.top_recognition_rank,'recognition_score'],['amtTable',confirm.top_amount_rank,'amount_score']].forEach(([id,arr,scoreKey])=>{
     const tb=document.querySelector('#'+id+' tbody');
-    arr.forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.ts_code}</b> ${esc(x.name)}</td><td>${esc(x.industry)}</td><td class="num">${x[scoreKey]}</td></tr>`;});
+    (arr||[]).forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.ts_code}</b> ${esc(x.name)}</td><td>${esc(x.industry)}</td><td class="num">${x[scoreKey]}</td></tr>`;});
   });
 
-  // Step 3
   const rc=document.getElementById('reasonCards');
   pool.pool.forEach((r,i)=>{
     const isRec=rec.ts_code===r.ts_code, isAmt=amt.ts_code===r.ts_code;
     let badge='';
     if(isRec) badge+='<span class="tag2" style="font-size:13px;font-weight:700">⭐ 辨识度龙头</span> ';
     if(isAmt) badge+='<span class="tag" style="font-size:13px;font-weight:700">💰 成交额龙头</span> ';
-    rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${r.reasons.map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
+    rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${(r.reasons||[]).map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
   });
 }
 </script>
