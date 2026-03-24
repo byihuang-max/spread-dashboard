@@ -1,0 +1,872 @@
+{
+  "trade_date": "20240126",
+  "pool": {
+    "trade_date": "20240126",
+    "input_summary": {
+      "up_count": 61,
+      "zha_count": 28,
+      "focus_industries": [
+        {
+          "industry": "房地产开发",
+          "industry_score": 49.89,
+          "up_count": 10,
+          "zha_count": 3,
+          "max_height": 4,
+          "amount": 4445346873.0
+        },
+        {
+          "industry": "多元金融",
+          "industry_score": 23.52,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 2761274976.0
+        },
+        {
+          "industry": "环保行业",
+          "industry_score": 20.65,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 3,
+          "amount": 2325801502.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "000070.SZ",
+        "name": "特发信息",
+        "industry": "通信设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 109971900.0,
+        "turnover_ratio": 1.07,
+        "float_mv": 10298626275.34,
+        "total_mv": 10434995861.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 43
+      },
+      {
+        "ts_code": "300374.SZ",
+        "name": "中铁装配",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 108,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前1",
+          "首次封板时间=93454"
+        ],
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "93454",
+        "last_time": "135157",
+        "pct_chg": 20.03,
+        "amount": 1107120928.0,
+        "turnover_ratio": 34.26,
+        "float_mv": 3334801267.88,
+        "total_mv": 4332975377.94,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "300210.SZ",
+        "name": "森远股份",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.28,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=环保行业",
+          "炸板活跃票",
+          "涨幅强=11.32%",
+          "焦点池成交额前2",
+          "换手活跃=20.52%",
+          "题材内成交额第1",
+          "所属强势行业=环保行业"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "93851",
+        "last_time": "",
+        "pct_chg": 11.32,
+        "amount": 999006320.0,
+        "turnover_ratio": 20.52,
+        "float_mv": 4662562016.76,
+        "total_mv": 4667880337.28,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 20.65,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600088.SH",
+        "name": "中视传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 59782720.0,
+        "turnover_ratio": 0.76,
+        "float_mv": 7862655528.0,
+        "total_mv": 7862655528.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 53
+      },
+      {
+        "ts_code": "600119.SH",
+        "name": "长江投资",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.95,
+        "amount": 19602290.0,
+        "turnover_ratio": 0.6,
+        "float_mv": 3269169811.5,
+        "total_mv": 3269169793.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 61
+      },
+      {
+        "ts_code": "600639.SH",
+        "name": "浦东金桥",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.04,
+        "amount": 107004119.0,
+        "turnover_ratio": 0.93,
+        "float_mv": 11461190756.44,
+        "total_mv": 15130125838.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 46
+      },
+      {
+        "ts_code": "600675.SH",
+        "name": "中华企业",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.92,
+        "amount": 471372176.0,
+        "turnover_ratio": 1.84,
+        "float_mv": 25664729410.92,
+        "total_mv": 25664729057.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 14
+      },
+      {
+        "ts_code": "600679.SH",
+        "name": "上海凤凰",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 9.98,
+        "amount": 184803330.0,
+        "turnover_ratio": 4.75,
+        "float_mv": 3894139734.6,
+        "total_mv": 6415413487.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 33
+      },
+      {
+        "ts_code": "600822.SH",
+        "name": "上海物贸",
+        "industry": "贸易行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 9.97,
+        "amount": 58843671.0,
+        "turnover_ratio": 1.19,
+        "float_mv": 4936002933.68,
+        "total_mv": 6179822483.52,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 56
+      },
+      {
+        "ts_code": "600648.SH",
+        "name": "外高桥",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 90.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "涨幅强=9.97%",
+          "焦点池成交额前4",
+          "题材内成交额第1",
+          "所属强势行业=房地产开发",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 8,
+        "first_time": "93157",
+        "last_time": "100933",
+        "pct_chg": 9.97,
+        "amount": 731197824.0,
+        "turnover_ratio": 6.27,
+        "float_mv": 11759678629.92,
+        "total_mv": 14282691929.6,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 49.89,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002423.SZ",
+        "name": "中粮资本",
+        "industry": "多元金融",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 80.09,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=多元金融",
+          "涨幅强=10.01%",
+          "题材内成交额第1",
+          "所属强势行业=多元金融",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "94027",
+        "pct_chg": 10.01,
+        "amount": 578956048.0,
+        "turnover_ratio": 2.97,
+        "float_mv": 19492733164.5,
+        "total_mv": 19492733105.28,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 23.52,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000068.SZ",
+        "name": "华控赛格",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 72.52,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=环保行业",
+          "涨幅强=9.98%",
+          "焦点池成交额前3",
+          "换手活跃=17.56%"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94109",
+        "last_time": "95503",
+        "pct_chg": 9.98,
+        "amount": 933645088.0,
+        "turnover_ratio": 17.56,
+        "float_mv": 5546759766.64,
+        "total_mv": 5546759810.72,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 20.65
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20240126",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "000070.SZ",
+      "name": "特发信息",
+      "industry": "通信设备",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 193.96,
+      "amount_score": 86.5,
+      "candidate_score": 120,
+      "limit_type": "U",
+      "limit_times": 5,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 9.96,
+      "amount": 109971900.0,
+      "turnover_ratio": 1.07,
+      "recognition_reasons": [
+        "最高板=5",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=5",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "300374.SZ",
+      "name": "中铁装配",
+      "industry": "装修装饰",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 102,
+      "amount_score": 156.0,
+      "candidate_score": 108,
+      "limit_type": "U",
+      "limit_times": 3,
+      "open_times": 3,
+      "first_time": "93454",
+      "last_time": "135157",
+      "pct_chg": 20.03,
+      "amount": 1107120928.0,
+      "turnover_ratio": 34.26,
+      "recognition_reasons": [
+        "连板高度=3",
+        "首次封板=93454",
+        "盘中开板3次后仍封住"
+      ],
+      "amount_reasons": [
+        "连板高度=3",
+        "首次封板=93454",
+        "盘中开板3次后仍封住",
+        "候选池成交额前1"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "000070.SZ",
+        "name": "特发信息",
+        "industry": "通信设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 193.96,
+        "amount_score": 86.5,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 109971900.0,
+        "turnover_ratio": 1.07,
+        "recognition_reasons": [
+          "最高板=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600639.SH",
+        "name": "浦东金桥",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.04,
+        "amount_score": 74.5,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.04,
+        "amount": 107004119.0,
+        "turnover_ratio": 0.93,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600088.SH",
+        "name": "中视传媒",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.02,
+        "amount_score": 66.4,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 59782720.0,
+        "turnover_ratio": 0.76,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600679.SH",
+        "name": "上海凤凰",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.98,
+        "amount_score": 92.36,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 9.98,
+        "amount": 184803330.0,
+        "turnover_ratio": 4.75,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600822.SH",
+        "name": "上海物贸",
+        "industry": "贸易行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.97,
+        "amount_score": 58.56,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 9.97,
+        "amount": 58843671.0,
+        "turnover_ratio": 1.19,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "300374.SZ",
+        "name": "中铁装配",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 102,
+        "amount_score": 156.0,
+        "candidate_score": 108,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "93454",
+        "last_time": "135157",
+        "pct_chg": 20.03,
+        "amount": 1107120928.0,
+        "turnover_ratio": 34.26,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93454",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93454",
+          "盘中开板3次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "300210.SZ",
+        "name": "森远股份",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 22.32,
+        "amount_score": 145.32,
+        "candidate_score": 105.28,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "93851",
+        "last_time": "",
+        "pct_chg": 11.32,
+        "amount": 999006320.0,
+        "turnover_ratio": 20.52,
+        "recognition_reasons": [
+          "首次封板=93851",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93851",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600648.SH",
+        "name": "外高桥",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 107.97,
+        "amount_score": 141.1,
+        "candidate_score": 90.02,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 8,
+        "first_time": "93157",
+        "last_time": "100933",
+        "pct_chg": 9.97,
+        "amount": 731197824.0,
+        "turnover_ratio": 6.27,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93157",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93157",
+          "盘中开板8次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002423.SZ",
+        "name": "中粮资本",
+        "industry": "多元金融",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 119.01,
+        "amount_score": 131.5,
+        "candidate_score": 80.09,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "92500",
+        "last_time": "94027",
+        "pct_chg": 10.01,
+        "amount": 578956048.0,
+        "turnover_ratio": 2.97,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板1次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000068.SZ",
+        "name": "华控赛格",
+        "industry": "环保行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 110.98,
+        "amount_score": 126.76,
+        "candidate_score": 72.52,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "94109",
+        "last_time": "95503",
+        "pct_chg": 9.98,
+        "amount": 933645088.0,
+        "turnover_ratio": 17.56,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=94109",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=94109",
+          "盘中开板1次后仍封住",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

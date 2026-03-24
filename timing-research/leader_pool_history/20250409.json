@@ -1,0 +1,860 @@
+{
+  "trade_date": "20250409",
+  "pool": {
+    "trade_date": "20250409",
+    "input_summary": {
+      "up_count": 125,
+      "zha_count": 28,
+      "focus_industries": [
+        {
+          "industry": "专用设备",
+          "industry_score": 45,
+          "up_count": 10,
+          "zha_count": 3,
+          "max_height": 1,
+          "amount": 6259104075.0
+        },
+        {
+          "industry": "航运港口",
+          "industry_score": 44.32,
+          "up_count": 10,
+          "zha_count": 0,
+          "max_height": 4,
+          "amount": 3159455592.0
+        },
+        {
+          "industry": "通用设备",
+          "industry_score": 38.81,
+          "up_count": 8,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 4902964605.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001212.SZ",
+        "name": "中旗新材",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 128,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=6",
+          "首次封板时间=95048"
+        ],
+        "limit_times": 6,
+        "open_times": 6,
+        "first_time": "95048",
+        "last_time": "100351",
+        "pct_chg": 10.01,
+        "amount": 1321896304.0,
+        "turnover_ratio": 25.66,
+        "float_mv": 5343081290.82,
+        "total_mv": 6335518092.54,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 13
+      },
+      {
+        "ts_code": "002084.SZ",
+        "name": "海鸥住工",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.05,
+        "amount": 89009848.0,
+        "turnover_ratio": 3.01,
+        "float_mv": 2953072925.0,
+        "total_mv": 2971857820.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 112
+      },
+      {
+        "ts_code": "002896.SZ",
+        "name": "中大力德",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.75,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通用设备",
+          "涨幅强=10.00%",
+          "焦点池成交额前2",
+          "换手活跃=14.09%",
+          "题材内成交额第1",
+          "所属强势行业=通用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143351",
+        "last_time": "143351",
+        "pct_chg": 10.0,
+        "amount": 1467997312.0,
+        "turnover_ratio": 14.09,
+        "float_mv": 11195745367.1,
+        "total_mv": 11195745367.1,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 38.81,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600598.SH",
+        "name": "北大荒",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 102,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前2",
+          "首次封板时间=93117"
+        ],
+        "limit_times": 3,
+        "open_times": 19,
+        "first_time": "93117",
+        "last_time": "145408",
+        "pct_chg": 10.03,
+        "amount": 4837095168.0,
+        "turnover_ratio": 14.55,
+        "float_mv": 33740364672.82,
+        "total_mv": 33740364577.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002688.SZ",
+        "name": "金河生物",
+        "industry": "农药兽药",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 58817475.0,
+        "turnover_ratio": 1.0,
+        "float_mv": 5886004549.3,
+        "total_mv": 6096385760.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 118
+      },
+      {
+        "ts_code": "600540.SH",
+        "name": "新赛股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.08,
+        "amount": 51315205.0,
+        "turnover_ratio": 1.55,
+        "float_mv": 3302221132.8,
+        "total_mv": 3302221132.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 121
+      },
+      {
+        "ts_code": "601008.SH",
+        "name": "连云港",
+        "industry": "航运港口",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.1,
+        "amount": 83813016.0,
+        "turnover_ratio": 1.19,
+        "float_mv": 7034417494.02,
+        "total_mv": 7034417460.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 113
+      },
+      {
+        "ts_code": "601086.SH",
+        "name": "国芳集团",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 9.94,
+        "amount": 36465646.0,
+        "turnover_ratio": 0.79,
+        "float_mv": 4642020000.0,
+        "total_mv": 4642020000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 123
+      },
+      {
+        "ts_code": "603221.SH",
+        "name": "爱丽家居",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93140"
+        ],
+        "limit_times": 4,
+        "open_times": 6,
+        "first_time": "93140",
+        "last_time": "150000",
+        "pct_chg": 10.02,
+        "amount": 580236448.0,
+        "turnover_ratio": 18.13,
+        "float_mv": 3348000000.0,
+        "total_mv": 3411891000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 37
+      },
+      {
+        "ts_code": "000519.SZ",
+        "name": "中兵红箭",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 89.56,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=10.01%",
+          "焦点池成交额前3",
+          "题材内成交额第2",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "101033",
+        "last_time": "101033",
+        "pct_chg": 10.01,
+        "amount": 1068589984.0,
+        "turnover_ratio": 4.59,
+        "float_mv": 23882386541.3,
+        "total_mv": 23882386438.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 45,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "920571.BJ",
+        "name": "国航远洋",
+        "industry": "航运港口",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 81.5,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=航运港口",
+          "涨幅强=29.87%",
+          "换手活跃=24.27%",
+          "题材内成交额第2",
+          "所属强势行业=航运港口",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144852",
+        "last_time": "144852",
+        "pct_chg": 29.87,
+        "amount": 490120944.0,
+        "turnover_ratio": 24.27,
+        "float_mv": 2258205593.63,
+        "total_mv": 4371056678.72,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 8,
+        "industry_score": 44.32,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "603169.SH",
+        "name": "兰石重装",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 79.38,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "炸板活跃票",
+          "焦点池成交额前1",
+          "换手活跃=19.36%"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "134934",
+        "last_time": "",
+        "pct_chg": 7.76,
+        "amount": 2420886656.0,
+        "turnover_ratio": 19.36,
+        "float_mv": 12880037128.28,
+        "total_mv": 12880037069.12,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 45
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20250409",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001212.SZ",
+      "name": "中旗新材",
+      "industry": "装修装饰",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 196.01,
+      "amount_score": 128.01,
+      "candidate_score": 128,
+      "limit_type": "U",
+      "limit_times": 6,
+      "open_times": 6,
+      "first_time": "95048",
+      "last_time": "100351",
+      "pct_chg": 10.01,
+      "amount": 1321896304.0,
+      "turnover_ratio": 25.66,
+      "recognition_reasons": [
+        "最高板=6",
+        "首次封板=95048",
+        "盘中开板6次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=6",
+        "首次封板=95048",
+        "盘中开板6次后仍封住",
+        "候选池成交额前4"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600598.SH",
+      "name": "北大荒",
+      "industry": "农牧饲渔",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 97.03,
+      "amount_score": 151.31,
+      "candidate_score": 102,
+      "limit_type": "U",
+      "limit_times": 3,
+      "open_times": 19,
+      "first_time": "93117",
+      "last_time": "145408",
+      "pct_chg": 10.03,
+      "amount": 4837095168.0,
+      "turnover_ratio": 14.55,
+      "recognition_reasons": [
+        "连板高度=3",
+        "首次封板=93117",
+        "盘中开板19次后仍封住"
+      ],
+      "amount_reasons": [
+        "连板高度=3",
+        "首次封板=93117",
+        "盘中开板19次后仍封住",
+        "候选池成交额前1"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001212.SZ",
+        "name": "中旗新材",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 196.01,
+        "amount_score": 128.01,
+        "candidate_score": 128,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 6,
+        "first_time": "95048",
+        "last_time": "100351",
+        "pct_chg": 10.01,
+        "amount": 1321896304.0,
+        "turnover_ratio": 25.66,
+        "recognition_reasons": [
+          "最高板=6",
+          "首次封板=95048",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=6",
+          "首次封板=95048",
+          "盘中开板6次后仍封住",
+          "候选池成交额前4"
+        ]
+      },
+      {
+        "ts_code": "002084.SZ",
+        "name": "海鸥住工",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 162.05,
+        "amount_score": 87.55,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.05,
+        "amount": 89009848.0,
+        "turnover_ratio": 3.01,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "601008.SH",
+        "name": "连云港",
+        "industry": "航运港口",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.1,
+        "amount_score": 74.69,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.1,
+        "amount": 83813016.0,
+        "turnover_ratio": 1.19,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600540.SH",
+        "name": "新赛股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.08,
+        "amount_score": 58.85,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.08,
+        "amount": 51315205.0,
+        "turnover_ratio": 1.55,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002688.SZ",
+        "name": "金河生物",
+        "industry": "农药兽药",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.03,
+        "amount_score": 66.53,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.03,
+        "amount": 58817475.0,
+        "turnover_ratio": 1.0,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600598.SH",
+        "name": "北大荒",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 97.03,
+        "amount_score": 151.31,
+        "candidate_score": 102,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 19,
+        "first_time": "93117",
+        "last_time": "145408",
+        "pct_chg": 10.03,
+        "amount": 4837095168.0,
+        "turnover_ratio": 14.55,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93117",
+          "盘中开板19次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93117",
+          "盘中开板19次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002896.SZ",
+        "name": "中大力德",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.0,
+        "amount_score": 145.04,
+        "candidate_score": 102.75,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143351",
+        "last_time": "143351",
+        "pct_chg": 10.0,
+        "amount": 1467997312.0,
+        "turnover_ratio": 14.09,
+        "recognition_reasons": [
+          "首次封板=143351",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143351",
+          "封板稳定",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "001212.SZ",
+        "name": "中旗新材",
+        "industry": "装修装饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 196.01,
+        "amount_score": 128.01,
+        "candidate_score": 128,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 6,
+        "first_time": "95048",
+        "last_time": "100351",
+        "pct_chg": 10.01,
+        "amount": 1321896304.0,
+        "turnover_ratio": 25.66,
+        "recognition_reasons": [
+          "最高板=6",
+          "首次封板=95048",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=6",
+          "首次封板=95048",
+          "盘中开板6次后仍封住",
+          "候选池成交额前4"
+        ]
+      },
+      {
+        "ts_code": "000519.SZ",
+        "name": "中兵红箭",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 64.01,
+        "amount_score": 114.31,
+        "candidate_score": 89.56,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "101033",
+        "last_time": "101033",
+        "pct_chg": 10.01,
+        "amount": 1068589984.0,
+        "turnover_ratio": 4.59,
+        "recognition_reasons": [
+          "首次封板=101033",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101033",
+          "封板稳定",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603169.SH",
+        "name": "兰石重装",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 8.76,
+        "amount_score": 113.44,
+        "candidate_score": 79.38,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "134934",
+        "last_time": "",
+        "pct_chg": 7.76,
+        "amount": 2420886656.0,
+        "turnover_ratio": 19.36,
+        "recognition_reasons": [
+          "首次封板=134934",
+          "炸板活跃票",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=134934",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

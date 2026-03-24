@@ -1,0 +1,908 @@
+{
+  "trade_date": "20221215",
+  "pool": {
+    "trade_date": "20221215",
+    "input_summary": {
+      "up_count": 33,
+      "zha_count": 20,
+      "focus_industries": [
+        {
+          "industry": "房地产开发",
+          "industry_score": 27.44,
+          "up_count": 3,
+          "zha_count": 2,
+          "max_height": 5,
+          "amount": 3218555166.0
+        },
+        {
+          "industry": "半导体",
+          "industry_score": 26,
+          "up_count": 3,
+          "zha_count": 3,
+          "max_height": 2,
+          "amount": 5633883174.0
+        },
+        {
+          "industry": "纺织服装",
+          "industry_score": 19.22,
+          "up_count": 2,
+          "zha_count": 3,
+          "max_height": 1,
+          "amount": 4110453008.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 150.76,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "封板稳定(open_times=0)",
+          "首次封板时间=94112",
+          "强势行业=半导体",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "换手活跃=13.64%",
+          "题材内成交额第2",
+          "所属强势行业=半导体",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "94112",
+        "last_time": "94112",
+        "pct_chg": 9.99,
+        "amount": 1725968128.0,
+        "turnover_ratio": 13.64,
+        "float_mv": 13359622769.26,
+        "total_mv": 13359622746.24,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 26,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "600185.SH",
+        "name": "格力地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 50161565.0,
+        "turnover_ratio": 0.25,
+        "float_mv": 19773710789.55,
+        "total_mv": 19773710758.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 32
+      },
+      {
+        "ts_code": "000736.SZ",
+        "name": "中交地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 118.78,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=145200",
+          "强势行业=房地产开发",
+          "涨幅强=10.02%",
+          "焦点池成交额前3",
+          "换手活跃=13.14%",
+          "题材内成交额第1",
+          "所属强势行业=房地产开发",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145200",
+        "last_time": "145200",
+        "pct_chg": 10.02,
+        "amount": 1688806496.0,
+        "turnover_ratio": 13.14,
+        "float_mv": 13672226325.74,
+        "total_mv": 13672226463.36,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 27.44,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002156.SZ",
+        "name": "通富微电",
+        "industry": "半导体",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 99.83,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=半导体",
+          "炸板活跃票",
+          "涨幅强=8.75%",
+          "焦点池成交额前1",
+          "换手活跃=10.03%",
+          "题材内成交额第1",
+          "所属强势行业=半导体"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95442",
+        "last_time": "",
+        "pct_chg": 8.75,
+        "amount": 2477436384.0,
+        "turnover_ratio": 10.03,
+        "float_mv": 24942904690.76,
+        "total_mv": 28403452033.12,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 26,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000721.SZ",
+        "name": "西安饮食",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 2,
+        "first_time": "92500",
+        "last_time": "140030",
+        "pct_chg": 10.01,
+        "amount": 919539616.0,
+        "turnover_ratio": 15.02,
+        "float_mv": 6133855825.65,
+        "total_mv": 8074974257.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 7
+      },
+      {
+        "ts_code": "000679.SZ",
+        "name": "大连友谊",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 37572894.0,
+        "turnover_ratio": 1.38,
+        "float_mv": 2715768000.0,
+        "total_mv": 2715768000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 33
+      },
+      {
+        "ts_code": "600056.SH",
+        "name": "中国医药",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93200"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "93200",
+        "last_time": "93200",
+        "pct_chg": 10.02,
+        "amount": 1681894464.0,
+        "turnover_ratio": 6.13,
+        "float_mv": 27589234769.1,
+        "total_mv": 27598981276.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "003026.SZ",
+        "name": "中晶科技",
+        "industry": "半导体",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93433"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93433",
+        "last_time": "93433",
+        "pct_chg": 10.01,
+        "amount": 302128000.0,
+        "turnover_ratio": 10.43,
+        "float_mv": 2970630190.08,
+        "total_mv": 5430721228.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 22
+      },
+      {
+        "ts_code": "002269.SZ",
+        "name": "美邦服饰",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 59.17,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=纺织服装",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=19.92%"
+        ],
+        "limit_times": 0,
+        "open_times": 4,
+        "first_time": "93030",
+        "last_time": "",
+        "pct_chg": 0.0,
+        "amount": 1325330240.0,
+        "turnover_ratio": 19.92,
+        "float_mv": 6180750000.0,
+        "total_mv": 6180750000.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 19.22
+      },
+      {
+        "ts_code": "603238.SH",
+        "name": "诺邦股份",
+        "industry": "美容护理",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 56,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93801"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93801",
+        "last_time": "93801",
+        "pct_chg": 10.02,
+        "amount": 182700143.0,
+        "turnover_ratio": 7.02,
+        "float_mv": 2689261350.0,
+        "total_mv": 2711668200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 26
+      },
+      {
+        "ts_code": "002875.SZ",
+        "name": "安奈儿",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 55.22,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=纺织服装",
+          "炸板活跃票",
+          "焦点池成交额前5",
+          "换手活跃=39.40%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "93412",
+        "last_time": "",
+        "pct_chg": -7.72,
+        "amount": 970764528.0,
+        "turnover_ratio": 39.4,
+        "float_mv": 2225393825.9,
+        "total_mv": 3863818738.84,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 19.22
+      },
+      {
+        "ts_code": "000797.SZ",
+        "name": "中国武夷",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 54.77,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "炸板活跃票",
+          "换手活跃=12.90%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "145539",
+        "last_time": "",
+        "pct_chg": 7.03,
+        "amount": 770723616.0,
+        "turnover_ratio": 12.9,
+        "float_mv": 6218083131.48,
+        "total_mv": 6220186727.04,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 27.44
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20221215",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "600185.SH",
+      "name": "格力地产",
+      "industry": "房地产开发",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 193.96,
+      "amount_score": 62.09,
+      "candidate_score": 120,
+      "limit_type": "U",
+      "limit_times": 5,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 9.96,
+      "amount": 50161565.0,
+      "turnover_ratio": 0.25,
+      "recognition_reasons": [
+        "最高板=5",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=5",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002077.SZ",
+      "name": "大港股份",
+      "industry": "半导体",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 92.99,
+      "amount_score": 156.81,
+      "candidate_score": 150.76,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 0,
+      "first_time": "94112",
+      "last_time": "94112",
+      "pct_chg": 9.99,
+      "amount": 1725968128.0,
+      "turnover_ratio": 13.64,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=94112",
+        "封板稳定",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=94112",
+        "封板稳定",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "600185.SH",
+        "name": "格力地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 193.96,
+        "amount_score": 62.09,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 50161565.0,
+        "turnover_ratio": 0.25,
+        "recognition_reasons": [
+          "最高板=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000721.SZ",
+        "name": "西安饮食",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 128.01,
+        "amount_score": 97.52,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 2,
+        "first_time": "92500",
+        "last_time": "140030",
+        "pct_chg": 10.01,
+        "amount": 919539616.0,
+        "turnover_ratio": 15.02,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "000679.SZ",
+        "name": "大连友谊",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.96,
+        "amount_score": 46.65,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.96,
+        "amount": 37572894.0,
+        "turnover_ratio": 1.38,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 92.99,
+        "amount_score": 156.81,
+        "candidate_score": 150.76,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "94112",
+        "last_time": "94112",
+        "pct_chg": 9.99,
+        "amount": 1725968128.0,
+        "turnover_ratio": 13.64,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94112",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94112",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "003026.SZ",
+        "name": "中晶科技",
+        "industry": "半导体",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 87.01,
+        "amount_score": 71.22,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93433",
+        "last_time": "93433",
+        "pct_chg": 10.01,
+        "amount": 302128000.0,
+        "turnover_ratio": 10.43,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93433",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93433",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 92.99,
+        "amount_score": 156.81,
+        "candidate_score": 150.76,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "94112",
+        "last_time": "94112",
+        "pct_chg": 9.99,
+        "amount": 1725968128.0,
+        "turnover_ratio": 13.64,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94112",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94112",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002156.SZ",
+        "name": "通富微电",
+        "industry": "半导体",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 19.75,
+        "amount_score": 145.76,
+        "candidate_score": 99.83,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "95442",
+        "last_time": "",
+        "pct_chg": 8.75,
+        "amount": 2477436384.0,
+        "turnover_ratio": 10.03,
+        "recognition_reasons": [
+          "首次封板=95442",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=95442",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000736.SZ",
+        "name": "中交地产",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.02,
+        "amount_score": 144.59,
+        "candidate_score": 118.78,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145200",
+        "last_time": "145200",
+        "pct_chg": 10.02,
+        "amount": 1688806496.0,
+        "turnover_ratio": 13.14,
+        "recognition_reasons": [
+          "首次封板=145200",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=145200",
+          "封板稳定",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600056.SH",
+        "name": "中国医药",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 63.02,
+        "amount_score": 115.08,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "93200",
+        "last_time": "93200",
+        "pct_chg": 10.02,
+        "amount": 1681894464.0,
+        "turnover_ratio": 6.13,
+        "recognition_reasons": [
+          "首次封板=93200",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=93200",
+          "封板稳定",
+          "候选池成交额前4"
+        ]
+      },
+      {
+        "ts_code": "000721.SZ",
+        "name": "西安饮食",
+        "industry": "旅游酒店",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 128.01,
+        "amount_score": 97.52,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 2,
+        "first_time": "92500",
+        "last_time": "140030",
+        "pct_chg": 10.01,
+        "amount": 919539616.0,
+        "turnover_ratio": 15.02,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板2次后仍封住"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,882 @@
+{
+  "trade_date": "20191216",
+  "pool": {
+    "trade_date": "20191216",
+    "input_summary": {
+      "up_count": 61,
+      "zha_count": 12,
+      "focus_industries": [
+        {
+          "industry": "电子元件",
+          "industry_score": 73,
+          "up_count": 18,
+          "zha_count": 4,
+          "max_height": 3,
+          "amount": 20480632462.0
+        },
+        {
+          "industry": "软件服务",
+          "industry_score": 34.6,
+          "up_count": 7,
+          "zha_count": 0,
+          "max_height": 2,
+          "amount": 4800677093.0
+        },
+        {
+          "industry": "电子信息",
+          "industry_score": 27.74,
+          "up_count": 4,
+          "zha_count": 0,
+          "max_height": 7,
+          "amount": 872357611.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "600712.SH",
+        "name": "南宁百货",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 180,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=9",
+          "首次封板时间=145451"
+        ],
+        "limit_times": 9,
+        "open_times": 2,
+        "first_time": "145451",
+        "last_time": "150001",
+        "pct_chg": 10.0,
+        "amount": 1580162400.0,
+        "turnover_ratio": 33.6,
+        "float_mv": 5092126255.26,
+        "total_mv": 5152439705.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8
+      },
+      {
+        "ts_code": "300810.SZ",
+        "name": "中科海讯",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 3345641.0,
+        "turnover_ratio": 0.27,
+        "float_mv": 1236569000.0,
+        "total_mv": 4939999000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 61
+      },
+      {
+        "ts_code": "002456.SZ",
+        "name": "欧菲光",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 118.87,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=145206",
+          "强势行业=电子元件",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "换手活跃=9.85%",
+          "题材内成交额第1",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "145206",
+        "last_time": "145621",
+        "pct_chg": 10.0,
+        "amount": 4264835680.0,
+        "turnover_ratio": 9.85,
+        "float_mv": 44902947660.12,
+        "total_mv": 45657553629.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 73,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300379.SZ",
+        "name": "东方通",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 112.27,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=111548",
+          "强势行业=软件服务",
+          "涨幅强=10.00%",
+          "焦点池成交额前4",
+          "换手活跃=17.48%",
+          "题材内成交额第1",
+          "所属强势行业=软件服务",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "111548",
+        "last_time": "144512",
+        "pct_chg": 10.0,
+        "amount": 2293636112.0,
+        "turnover_ratio": 17.48,
+        "float_mv": 13596679561.19,
+        "total_mv": 16295437491.52,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 5,
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 34.6,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300461.SZ",
+        "name": "田中精机",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93003"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93003",
+        "last_time": "93003",
+        "pct_chg": 10.0,
+        "amount": 54333627.0,
+        "turnover_ratio": 3.82,
+        "float_mv": 1421987262.72,
+        "total_mv": 2768580568.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 53
+      },
+      {
+        "ts_code": "000100.SZ",
+        "name": "TCL 集团",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 70.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=9.90%",
+          "焦点池成交额前2"
+        ],
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "112257",
+        "last_time": "144545",
+        "pct_chg": 9.9,
+        "amount": 3981424400.0,
+        "turnover_ratio": 7.34,
+        "float_mv": 55354047763.17,
+        "total_mv": 58578139934.72,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 73
+      },
+      {
+        "ts_code": "300088.SZ",
+        "name": "长信科技",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.75,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=10.03%",
+          "焦点池成交额前3",
+          "换手活跃=11.20%"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "131909",
+        "last_time": "140836",
+        "pct_chg": 10.03,
+        "amount": 2535622448.0,
+        "turnover_ratio": 11.2,
+        "float_mv": 23151533640.0,
+        "total_mv": 23582137574.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 73
+      },
+      {
+        "ts_code": "600114.SH",
+        "name": "东睦股份",
+        "industry": "金属制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=102217"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "102217",
+        "last_time": "103029",
+        "pct_chg": 9.99,
+        "amount": 835139488.0,
+        "turnover_ratio": 16.9,
+        "float_mv": 5174170003.36,
+        "total_mv": 5227835471.36,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 14
+      },
+      {
+        "ts_code": "601066.SH",
+        "name": "中信建投",
+        "industry": "券商信托",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "首次封板时间=144759"
+        ],
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "144759",
+        "last_time": "145617",
+        "pct_chg": 10.02,
+        "amount": 3938875328.0,
+        "turnover_ratio": 17.52,
+        "float_mv": 23441855017.2,
+        "total_mv": 207369965322.24,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "603005.SH",
+        "name": "晶方科技",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 63.73,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=16.21%"
+        ],
+        "limit_times": 1,
+        "open_times": 10,
+        "first_time": "94949",
+        "last_time": "143728",
+        "pct_chg": 10.0,
+        "amount": 1717892416.0,
+        "turnover_ratio": 16.21,
+        "float_mv": 10838573481.45,
+        "total_mv": 10838573481.45,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 73
+      },
+      {
+        "ts_code": "002079.SZ",
+        "name": "苏州固锝",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.95,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=9.97%",
+          "换手活跃=18.30%"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "112203",
+        "last_time": "145542",
+        "pct_chg": 9.97,
+        "amount": 1426037024.0,
+        "turnover_ratio": 18.3,
+        "float_mv": 8009258108.24,
+        "total_mv": 8029525512.64,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 73
+      },
+      {
+        "ts_code": "601231.SH",
+        "name": "环旭电子",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.03,
+        "amount": 127086320.0,
+        "turnover_ratio": 0.29,
+        "float_mv": 43692545486.4,
+        "total_mv": 43692545566.72,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 48
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20191216",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "600712.SH",
+      "name": "南宁百货",
+      "industry": "商业百货",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 262.0,
+      "amount_score": 104.0,
+      "candidate_score": 180,
+      "limit_type": "U",
+      "limit_times": 9,
+      "open_times": 2,
+      "first_time": "145451",
+      "last_time": "150001",
+      "pct_chg": 10.0,
+      "amount": 1580162400.0,
+      "turnover_ratio": 33.6,
+      "recognition_reasons": [
+        "最高板=9",
+        "首次封板=145451",
+        "盘中开板2次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=9",
+        "首次封板=145451",
+        "盘中开板2次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002456.SZ",
+      "name": "欧菲光",
+      "industry": "电子元件",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 49.0,
+      "amount_score": 158.93,
+      "candidate_score": 118.87,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 2,
+      "first_time": "145206",
+      "last_time": "145621",
+      "pct_chg": 10.0,
+      "amount": 4264835680.0,
+      "turnover_ratio": 9.85,
+      "recognition_reasons": [
+        "首次封板=145206",
+        "盘中开板2次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=145206",
+        "盘中开板2次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "600712.SH",
+        "name": "南宁百货",
+        "industry": "商业百货",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 262.0,
+        "amount_score": 104.0,
+        "candidate_score": 180,
+        "limit_type": "U",
+        "limit_times": 9,
+        "open_times": 2,
+        "first_time": "145451",
+        "last_time": "150001",
+        "pct_chg": 10.0,
+        "amount": 1580162400.0,
+        "turnover_ratio": 33.6,
+        "recognition_reasons": [
+          "最高板=9",
+          "首次封板=145451",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=9",
+          "首次封板=145451",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "300810.SZ",
+        "name": "中科海讯",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.01,
+        "amount_score": 54.14,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 3345641.0,
+        "turnover_ratio": 0.27,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300461.SZ",
+        "name": "田中精机",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 111.0,
+        "amount_score": 55.91,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93003",
+        "last_time": "93003",
+        "pct_chg": 10.0,
+        "amount": 54333627.0,
+        "turnover_ratio": 3.82,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93003",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93003",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600114.SH",
+        "name": "东睦股份",
+        "industry": "金属制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 94.99,
+        "amount_score": 78.44,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "102217",
+        "last_time": "103029",
+        "pct_chg": 9.99,
+        "amount": 835139488.0,
+        "turnover_ratio": 16.9,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=102217",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=102217",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "601231.SH",
+        "name": "环旭电子",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.03,
+        "amount_score": 58.18,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.03,
+        "amount": 127086320.0,
+        "turnover_ratio": 0.29,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92502",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92502",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002456.SZ",
+        "name": "欧菲光",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 49.0,
+        "amount_score": 158.93,
+        "candidate_score": 118.87,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "145206",
+        "last_time": "145621",
+        "pct_chg": 10.0,
+        "amount": 4264835680.0,
+        "turnover_ratio": 9.85,
+        "recognition_reasons": [
+          "首次封板=145206",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=145206",
+          "盘中开板2次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300379.SZ",
+        "name": "东方通",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 69.0,
+        "amount_score": 134.74,
+        "candidate_score": 112.27,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "111548",
+        "last_time": "144512",
+        "pct_chg": 10.0,
+        "amount": 2293636112.0,
+        "turnover_ratio": 17.48,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=111548",
+          "盘中开板6次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=111548",
+          "盘中开板6次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601066.SH",
+        "name": "中信建投",
+        "industry": "券商信托",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 58.02,
+        "amount_score": 132.78,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "144759",
+        "last_time": "145617",
+        "pct_chg": 10.02,
+        "amount": 3938875328.0,
+        "turnover_ratio": 17.52,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=144759",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=144759",
+          "盘中开板6次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "000100.SZ",
+        "name": "TCL 集团",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 44.9,
+        "amount_score": 121.57,
+        "candidate_score": 70.3,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 12,
+        "first_time": "112257",
+        "last_time": "144545",
+        "pct_chg": 9.9,
+        "amount": 3981424400.0,
+        "turnover_ratio": 7.34,
+        "recognition_reasons": [
+          "首次封板=112257",
+          "盘中开板12次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=112257",
+          "盘中开板12次后仍封住",
+          "候选池成交额前2",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300088.SZ",
+        "name": "长信科技",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 53.03,
+        "amount_score": 107.63,
+        "candidate_score": 68.75,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "131909",
+        "last_time": "140836",
+        "pct_chg": 10.03,
+        "amount": 2535622448.0,
+        "turnover_ratio": 11.2,
+        "recognition_reasons": [
+          "首次封板=131909",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=131909",
+          "盘中开板1次后仍封住",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

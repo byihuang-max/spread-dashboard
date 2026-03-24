@@ -1,0 +1,892 @@
+{
+  "trade_date": "20220811",
+  "pool": {
+    "trade_date": "20220811",
+    "input_summary": {
+      "up_count": 71,
+      "zha_count": 27,
+      "focus_industries": [
+        {
+          "industry": "消费电子",
+          "industry_score": 43,
+          "up_count": 8,
+          "zha_count": 1,
+          "max_height": 4,
+          "amount": 14378484049.0
+        },
+        {
+          "industry": "电力行业",
+          "industry_score": 33.76,
+          "up_count": 3,
+          "zha_count": 0,
+          "max_height": 12,
+          "amount": 379974328.0
+        },
+        {
+          "industry": "专用设备",
+          "industry_score": 32.11,
+          "up_count": 6,
+          "zha_count": 2,
+          "max_height": 3,
+          "amount": 3055527545.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001258.SZ",
+        "name": "立新能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 288.31,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=12",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500",
+          "题材内成交额第1",
+          "所属强势行业=电力行业",
+          "已涨停"
+        ],
+        "limit_times": 12,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 171076884.0,
+        "turnover_ratio": 5.27,
+        "float_mv": 3248000009.28,
+        "total_mv": 12991999925.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 51,
+        "amount_rank_in_industry": 1,
+        "industry_score": 33.76
+      },
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 198,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=8",
+          "涨停池成交额前2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=145657"
+        ],
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "145657",
+        "last_time": "145657",
+        "pct_chg": 10.02,
+        "amount": 3216286240.0,
+        "turnover_ratio": 29.13,
+        "float_mv": 11454765964.4,
+        "total_mv": 11723039942.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.06,
+        "amount": 1883269.0,
+        "turnover_ratio": 0.47,
+        "float_mv": 397064445.32,
+        "total_mv": 3970644437.44,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 71
+      },
+      {
+        "ts_code": "002231.SZ",
+        "name": "奥维通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 118,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "首次封板时间=93024"
+        ],
+        "limit_times": 5,
+        "open_times": 6,
+        "first_time": "93024",
+        "last_time": "134630",
+        "pct_chg": 9.99,
+        "amount": 1201185712.0,
+        "turnover_ratio": 38.94,
+        "float_mv": 3148656421.56,
+        "total_mv": 3704358170.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 6
+      },
+      {
+        "ts_code": "002241.SZ",
+        "name": "歌尔股份",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 101.82,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=消费电子",
+          "涨幅强=9.99%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=消费电子",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "140109",
+        "last_time": "140109",
+        "pct_chg": 9.99,
+        "amount": 6086461440.0,
+        "turnover_ratio": 5.89,
+        "float_mv": 106194071010.65,
+        "total_mv": 120766948764.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 43,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "001229.SZ",
+        "name": "魅视科技",
+        "industry": "消费电子",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 15399819.0,
+        "turnover_ratio": 1.48,
+        "float_mv": 1040250000.0,
+        "total_mv": 4161000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 70
+      },
+      {
+        "ts_code": "300902.SZ",
+        "name": "国安达",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 89.5,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=19.99%",
+          "换手活跃=24.66%",
+          "题材内成交额第2",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "103027",
+        "last_time": "104515",
+        "pct_chg": 19.99,
+        "amount": 583960672.0,
+        "turnover_ratio": 24.66,
+        "float_mv": 2501426340.0,
+        "total_mv": 6114884400.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 32.11,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002595.SZ",
+        "name": "豪迈科技",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 84.86,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=9.98%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "102630",
+        "last_time": "104006",
+        "pct_chg": 9.98,
+        "amount": 592373040.0,
+        "turnover_ratio": 4.32,
+        "float_mv": 13926669973.86,
+        "total_mv": 20888000000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 32.11,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000040.SZ",
+        "name": "东旭蓝天",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.09,
+        "amount": 56993779.0,
+        "turnover_ratio": 1.12,
+        "float_mv": 5089635216.0,
+        "total_mv": 7136994585.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 65
+      },
+      {
+        "ts_code": "600520.SH",
+        "name": "文一科技",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93128"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93128",
+        "last_time": "93128",
+        "pct_chg": 9.99,
+        "amount": 272461600.0,
+        "turnover_ratio": 11.04,
+        "float_mv": 2493688200.0,
+        "total_mv": 2493688200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 45
+      },
+      {
+        "ts_code": "603366.SH",
+        "name": "日出东方",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 34725735.0,
+        "turnover_ratio": 0.42,
+        "float_mv": 8184000000.0,
+        "total_mv": 8418267000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 69
+      },
+      {
+        "ts_code": "300735.SZ",
+        "name": "光弘科技",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=消费电子",
+          "涨幅强=19.96%",
+          "焦点池成交额前3",
+          "换手活跃=8.89%"
+        ],
+        "limit_times": 1,
+        "open_times": 8,
+        "first_time": "131215",
+        "last_time": "134221",
+        "pct_chg": 19.96,
+        "amount": 844954896.0,
+        "turnover_ratio": 8.89,
+        "float_mv": 9944764592.0,
+        "total_mv": 10194013939.2,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 43
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220811",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001258.SZ",
+      "name": "立新能源",
+      "industry": "电力行业",
+      "source_types": [
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 362.04,
+      "amount_score": 116.67,
+      "candidate_score": 288.31,
+      "limit_type": "U",
+      "limit_times": 12,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.04,
+      "amount": 171076884.0,
+      "turnover_ratio": 5.27,
+      "recognition_reasons": [
+        "最高板=12",
+        "首次封板=92500",
+        "封板稳定",
+        "题材内成交额核心"
+      ],
+      "amount_reasons": [
+        "最高板=12",
+        "首次封板=92500",
+        "封板稳定",
+        "题材内成交额核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002241.SZ",
+      "name": "歌尔股份",
+      "industry": "消费电子",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 58.99,
+      "amount_score": 156.94,
+      "candidate_score": 101.82,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 0,
+      "first_time": "140109",
+      "last_time": "140109",
+      "pct_chg": 9.99,
+      "amount": 6086461440.0,
+      "turnover_ratio": 5.89,
+      "recognition_reasons": [
+        "首次封板=140109",
+        "封板稳定",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=140109",
+        "封板稳定",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001258.SZ",
+        "name": "立新能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 362.04,
+        "amount_score": 116.67,
+        "candidate_score": 288.31,
+        "limit_type": "U",
+        "limit_times": 12,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 171076884.0,
+        "turnover_ratio": 5.27,
+        "recognition_reasons": [
+          "最高板=12",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=12",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 216.02,
+        "amount_score": 154.02,
+        "candidate_score": 198,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "145657",
+        "last_time": "145657",
+        "pct_chg": 10.02,
+        "amount": 3216286240.0,
+        "turnover_ratio": 29.13,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=145657",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=145657",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "001236.SZ",
+        "name": "弘业期货",
+        "industry": "多元金融",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 162.06,
+        "amount_score": 54.3,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.06,
+        "amount": 1883269.0,
+        "turnover_ratio": 0.47,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002231.SZ",
+        "name": "奥维通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 144.99,
+        "amount_score": 135.99,
+        "candidate_score": 118,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 6,
+        "first_time": "93024",
+        "last_time": "134630",
+        "pct_chg": 9.99,
+        "amount": 1201185712.0,
+        "turnover_ratio": 38.94,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板6次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "001229.SZ",
+        "name": "魅视科技",
+        "industry": "消费电子",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.99,
+        "amount_score": 58.73,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 15399819.0,
+        "turnover_ratio": 1.48,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002241.SZ",
+        "name": "歌尔股份",
+        "industry": "消费电子",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.99,
+        "amount_score": 156.94,
+        "candidate_score": 101.82,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "140109",
+        "last_time": "140109",
+        "pct_chg": 9.99,
+        "amount": 6086461440.0,
+        "turnover_ratio": 5.89,
+        "recognition_reasons": [
+          "首次封板=140109",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=140109",
+          "封板稳定",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002077.SZ",
+        "name": "大港股份",
+        "industry": "半导体",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 216.02,
+        "amount_score": 154.02,
+        "candidate_score": 198,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "145657",
+        "last_time": "145657",
+        "pct_chg": 10.02,
+        "amount": 3216286240.0,
+        "turnover_ratio": 29.13,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=145657",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=145657",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "002231.SZ",
+        "name": "奥维通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 144.99,
+        "amount_score": 135.99,
+        "candidate_score": 118,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 6,
+        "first_time": "93024",
+        "last_time": "134630",
+        "pct_chg": 9.99,
+        "amount": 1201185712.0,
+        "turnover_ratio": 38.94,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93024",
+          "盘中开板6次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "002595.SZ",
+        "name": "豪迈科技",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 76.98,
+        "amount_score": 128.14,
+        "candidate_score": 84.86,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "102630",
+        "last_time": "104006",
+        "pct_chg": 9.98,
+        "amount": 592373040.0,
+        "turnover_ratio": 4.32,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=102630",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=102630",
+          "盘中开板3次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "001258.SZ",
+        "name": "立新能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 362.04,
+        "amount_score": 116.67,
+        "candidate_score": 288.31,
+        "limit_type": "U",
+        "limit_times": 12,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.04,
+        "amount": 171076884.0,
+        "turnover_ratio": 5.27,
+        "recognition_reasons": [
+          "最高板=12",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=12",
+          "首次封板=92500",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      }
+    ]
+  }
+}

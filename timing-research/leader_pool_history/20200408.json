@@ -1,0 +1,930 @@
+{
+  "trade_date": "20200408",
+  "pool": {
+    "trade_date": "20200408",
+    "input_summary": {
+      "up_count": 77,
+      "zha_count": 23,
+      "focus_industries": [
+        {
+          "industry": "机械行业",
+          "industry_score": 42.0,
+          "up_count": 9,
+          "zha_count": 0,
+          "max_height": 4,
+          "amount": 3499115628.0
+        },
+        {
+          "industry": "通讯行业",
+          "industry_score": 36.98,
+          "up_count": 8,
+          "zha_count": 0,
+          "max_height": 2,
+          "amount": 4488632755.0
+        },
+        {
+          "industry": "软件服务",
+          "industry_score": 35,
+          "up_count": 4,
+          "zha_count": 3,
+          "max_height": 5,
+          "amount": 5071361389.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "300825.SZ",
+        "name": "阿尔特",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 180,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=8",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 33629385.0,
+        "turnover_ratio": 2.56,
+        "float_mv": 1315866300.0,
+        "total_mv": 5263443433.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 69
+      },
+      {
+        "ts_code": "000903.SZ",
+        "name": "云内动力",
+        "industry": "机械行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 173.31,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=92500",
+          "强势行业=机械行业",
+          "涨幅强=10.08%",
+          "焦点池成交额前2",
+          "换手活跃=18.35%",
+          "题材内成交额第1",
+          "所属强势行业=机械行业",
+          "已涨停"
+        ],
+        "limit_times": 4,
+        "open_times": 14,
+        "first_time": "92500",
+        "last_time": "145624",
+        "pct_chg": 10.08,
+        "amount": 1840901504.0,
+        "turnover_ratio": 18.35,
+        "float_mv": 10037880191.04,
+        "total_mv": 11194148907.52,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 42.0,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000662.SZ",
+        "name": "天夏智慧",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 167.92,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "首次封板时间=93139",
+          "强势行业=软件服务",
+          "涨幅强=10.04%",
+          "焦点池成交额前5",
+          "换手活跃=21.48%",
+          "题材内成交额第2",
+          "所属强势行业=软件服务",
+          "已涨停"
+        ],
+        "limit_times": 5,
+        "open_times": 13,
+        "first_time": "93139",
+        "last_time": "144715",
+        "pct_chg": 10.04,
+        "amount": 1228509712.0,
+        "turnover_ratio": 21.48,
+        "float_mv": 5869306514.73,
+        "total_mv": 5869934799.36,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 10,
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 35,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "600728.SH",
+        "name": "佳都科技",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 100.1,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "炸板活跃票",
+          "涨幅强=8.06%",
+          "焦点池成交额前1",
+          "换手活跃=12.04%",
+          "题材内成交额第1",
+          "所属强势行业=软件服务"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "130404",
+        "last_time": "",
+        "pct_chg": 8.06,
+        "amount": 2107674848.0,
+        "turnover_ratio": 12.04,
+        "float_mv": 17813242481.37,
+        "total_mv": 18169897722.24,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 35,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002486.SZ",
+        "name": "嘉麟杰",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 235096225.0,
+        "turnover_ratio": 5.23,
+        "float_mv": 4492800000.0,
+        "total_mv": 4492800000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 29
+      },
+      {
+        "ts_code": "600260.SH",
+        "name": "凯乐科技",
+        "industry": "通讯行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.11,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通讯行业",
+          "涨幅强=9.98%",
+          "焦点池成交额前3",
+          "换手活跃=9.73%",
+          "题材内成交额第1",
+          "所属强势行业=通讯行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "140833",
+        "last_time": "143906",
+        "pct_chg": 9.98,
+        "amount": 1330313152.0,
+        "turnover_ratio": 9.73,
+        "float_mv": 14121075121.92,
+        "total_mv": 14890639557.12,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 36.98,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002838.SZ",
+        "name": "道恩股份",
+        "industry": "塑胶制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 96,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "涨停池成交额前1",
+          "首次封板时间=141657"
+        ],
+        "limit_times": 3,
+        "open_times": 5,
+        "first_time": "141657",
+        "last_time": "145015",
+        "pct_chg": 10.0,
+        "amount": 2700827088.0,
+        "turnover_ratio": 17.73,
+        "float_mv": 16151183442.5,
+        "total_mv": 19557671567.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "000908.SZ",
+        "name": "景峰医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.11,
+        "amount": 49563753.0,
+        "turnover_ratio": 1.46,
+        "float_mv": 3392576843.31,
+        "total_mv": 4214119146.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 64
+      },
+      {
+        "ts_code": "300826.SZ",
+        "name": "测绘股份",
+        "industry": "工程建设",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.01,
+        "amount": 941606.0,
+        "turnover_ratio": 0.12,
+        "float_mv": 797600000.0,
+        "total_mv": 3190400000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 77
+      },
+      {
+        "ts_code": "600540.SH",
+        "name": "新赛股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.98,
+        "amount": 27656877.0,
+        "turnover_ratio": 1.07,
+        "float_mv": 2594787454.63,
+        "total_mv": 2594787449.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 74
+      },
+      {
+        "ts_code": "300292.SZ",
+        "name": "吴通控股",
+        "industry": "通讯行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 70.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=通讯行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前4",
+          "换手活跃=21.13%"
+        ],
+        "limit_times": 2,
+        "open_times": 6,
+        "first_time": "95254",
+        "last_time": "110348",
+        "pct_chg": 10.0,
+        "amount": 1293413568.0,
+        "turnover_ratio": 21.13,
+        "float_mv": 6229182033.25,
+        "total_mv": 7712845404.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 36.98
+      },
+      {
+        "ts_code": "300465.SZ",
+        "name": "高伟达",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 54.64,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=软件服务",
+          "炸板活跃票",
+          "换手活跃=15.66%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "",
+        "pct_chg": 5.24,
+        "amount": 972473712.0,
+        "turnover_ratio": 15.66,
+        "float_mv": 6102772430.62,
+        "total_mv": 6102772416.96,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 35
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20200408",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "300825.SZ",
+      "name": "阿尔特",
+      "industry": "汽车行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 266.03,
+      "amount_score": 71.31,
+      "candidate_score": 180,
+      "limit_type": "U",
+      "limit_times": 8,
+      "open_times": 0,
+      "first_time": "92503",
+      "last_time": "92503",
+      "pct_chg": 10.03,
+      "amount": 33629385.0,
+      "turnover_ratio": 2.56,
+      "recognition_reasons": [
+        "最高板=8",
+        "首次封板=92503",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=8",
+        "首次封板=92503",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000903.SZ",
+      "name": "云内动力",
+      "industry": "机械行业",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 135.08,
+      "amount_score": 159.26,
+      "candidate_score": 173.31,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 14,
+      "first_time": "92500",
+      "last_time": "145624",
+      "pct_chg": 10.08,
+      "amount": 1840901504.0,
+      "turnover_ratio": 18.35,
+      "recognition_reasons": [
+        "连板高度=4",
+        "首次封板=92500",
+        "盘中开板14次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=4",
+        "首次封板=92500",
+        "盘中开板14次后仍封住",
+        "候选池成交额前3",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "300825.SZ",
+        "name": "阿尔特",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 266.03,
+        "amount_score": 71.31,
+        "candidate_score": 180,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 33629385.0,
+        "turnover_ratio": 2.56,
+        "recognition_reasons": [
+          "最高板=8",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=8",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000662.SZ",
+        "name": "天夏智慧",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 156.04,
+        "amount_score": 130.04,
+        "candidate_score": 167.92,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 13,
+        "first_time": "93139",
+        "last_time": "144715",
+        "pct_chg": 10.04,
+        "amount": 1228509712.0,
+        "turnover_ratio": 21.48,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93139",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93139",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002486.SZ",
+        "name": "嘉麟杰",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 137.98,
+        "amount_score": 84.59,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 235096225.0,
+        "turnover_ratio": 5.23,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000903.SZ",
+        "name": "云内动力",
+        "industry": "机械行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 135.08,
+        "amount_score": 159.26,
+        "candidate_score": 173.31,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 14,
+        "first_time": "92500",
+        "last_time": "145624",
+        "pct_chg": 10.08,
+        "amount": 1840901504.0,
+        "turnover_ratio": 18.35,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板14次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板14次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000908.SZ",
+        "name": "景峰医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.11,
+        "amount_score": 70.84,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.11,
+        "amount": 49563753.0,
+        "turnover_ratio": 1.46,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000903.SZ",
+        "name": "云内动力",
+        "industry": "机械行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 135.08,
+        "amount_score": 159.26,
+        "candidate_score": 173.31,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 14,
+        "first_time": "92500",
+        "last_time": "145624",
+        "pct_chg": 10.08,
+        "amount": 1840901504.0,
+        "turnover_ratio": 18.35,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板14次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "盘中开板14次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002838.SZ",
+        "name": "道恩股份",
+        "industry": "塑胶制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 83.0,
+        "amount_score": 152.87,
+        "candidate_score": 96,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 5,
+        "first_time": "141657",
+        "last_time": "145015",
+        "pct_chg": 10.0,
+        "amount": 2700827088.0,
+        "turnover_ratio": 17.73,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=141657",
+          "盘中开板5次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=141657",
+          "盘中开板5次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "600728.SH",
+        "name": "佳都科技",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 9.06,
+        "amount_score": 138.08,
+        "candidate_score": 100.1,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "130404",
+        "last_time": "",
+        "pct_chg": 8.06,
+        "amount": 2107674848.0,
+        "turnover_ratio": 12.04,
+        "recognition_reasons": [
+          "首次封板=130404",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=130404",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600260.SH",
+        "name": "凯乐科技",
+        "industry": "通讯行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.98,
+        "amount_score": 134.84,
+        "candidate_score": 96.11,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "140833",
+        "last_time": "143906",
+        "pct_chg": 9.98,
+        "amount": 1330313152.0,
+        "turnover_ratio": 9.73,
+        "recognition_reasons": [
+          "首次封板=140833",
+          "盘中开板5次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=140833",
+          "盘中开板5次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000662.SZ",
+        "name": "天夏智慧",
+        "industry": "软件服务",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 156.04,
+        "amount_score": 130.04,
+        "candidate_score": 167.92,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 13,
+        "first_time": "93139",
+        "last_time": "144715",
+        "pct_chg": 10.04,
+        "amount": 1228509712.0,
+        "turnover_ratio": 21.48,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93139",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93139",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

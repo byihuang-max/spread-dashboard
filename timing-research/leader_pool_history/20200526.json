@@ -1,0 +1,882 @@
+{
+  "trade_date": "20200526",
+  "pool": {
+    "trade_date": "20200526",
+    "input_summary": {
+      "up_count": 101,
+      "zha_count": 18,
+      "focus_industries": [
+        {
+          "industry": "电子元件",
+          "industry_score": 71.08,
+          "up_count": 11,
+          "zha_count": 1,
+          "max_height": 14,
+          "amount": 4537792692.0
+        },
+        {
+          "industry": "医药制造",
+          "industry_score": 56.98,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 17,
+          "amount": 3990580007.0
+        },
+        {
+          "industry": "医疗行业",
+          "industry_score": 40.31,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 11,
+          "amount": 1653212372.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "603392.SH",
+        "name": "万泰生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 360,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=17",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 17,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.01,
+        "amount": 10024431.0,
+        "turnover_ratio": 0.4,
+        "float_mv": 2526184000.0,
+        "total_mv": 25122784000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 97
+      },
+      {
+        "ts_code": "300831.SZ",
+        "name": "派瑞股份",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 300,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=14",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 18663216.0,
+        "turnover_ratio": 1.18,
+        "float_mv": 1581600000.0,
+        "total_mv": 6326400000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 95
+      },
+      {
+        "ts_code": "300832.SZ",
+        "name": "新产业",
+        "industry": "医疗行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 240,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=11",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 25108032.0,
+        "turnover_ratio": 0.52,
+        "float_mv": 4830700000.0,
+        "total_mv": 48260100000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 90
+      },
+      {
+        "ts_code": "600834.SH",
+        "name": "申通地铁",
+        "industry": "交运物流",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93022"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "93022",
+        "last_time": "93022",
+        "pct_chg": 10.03,
+        "amount": 488326704.0,
+        "turnover_ratio": 8.51,
+        "float_mv": 5867023612.45,
+        "total_mv": 5867023600.16,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 24
+      },
+      {
+        "ts_code": "300676.SZ",
+        "name": "华大基因",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 138.6,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=135142",
+          "强势行业=医药制造",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "换手活跃=8.57%",
+          "题材内成交额第1",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "135142",
+        "last_time": "145133",
+        "pct_chg": 10.0,
+        "amount": 2419544576.0,
+        "turnover_ratio": 8.57,
+        "float_mv": 29230086061.95,
+        "total_mv": 47831955000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 56.98,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300521.SZ",
+        "name": "爱司凯",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 2532928.0,
+        "turnover_ratio": 0.12,
+        "float_mv": 2188785636.0,
+        "total_mv": 2188800000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 99
+      },
+      {
+        "ts_code": "000551.SZ",
+        "name": "创元科技",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 108,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "首次封板时间=94603"
+        ],
+        "limit_times": 5,
+        "open_times": 4,
+        "first_time": "94603",
+        "last_time": "101548",
+        "pct_chg": 10.01,
+        "amount": 798777696.0,
+        "turnover_ratio": 16.94,
+        "float_mv": 4836972096.45,
+        "total_mv": 4836972036.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 11
+      },
+      {
+        "ts_code": "002273.SZ",
+        "name": "水晶光电",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 98.4,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=10.03%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=电子元件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143000",
+        "last_time": "143000",
+        "pct_chg": 10.03,
+        "amount": 1150082768.0,
+        "turnover_ratio": 6.76,
+        "float_mv": 17610171935.6,
+        "total_mv": 18167909973.12,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 71.08,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300009.SZ",
+        "name": "安科生物",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 82.19,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=10.03%",
+          "焦点池成交额前5",
+          "题材内成交额第2",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "105809",
+        "last_time": "105809",
+        "pct_chg": 10.03,
+        "amount": 832947344.0,
+        "turnover_ratio": 5.59,
+        "float_mv": 15429102101.43,
+        "total_mv": 22160246720.64,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 56.98,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300367.SZ",
+        "name": "东方网力",
+        "industry": "安防设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 21482998.0,
+        "turnover_ratio": 0.71,
+        "float_mv": 3037670817.7,
+        "total_mv": 4328696493.44,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 93
+      },
+      {
+        "ts_code": "300661.SZ",
+        "name": "圣邦股份",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 63.55,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "炸板活跃票",
+          "涨幅强=8.51%",
+          "焦点池成交额前3"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "102933",
+        "last_time": "",
+        "pct_chg": 8.51,
+        "amount": 1134136512.0,
+        "turnover_ratio": 5.07,
+        "float_mv": 22494043430.76,
+        "total_mv": 41651586596.66,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 71.08
+      },
+      {
+        "ts_code": "002138.SZ",
+        "name": "顺络电子",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 62.08,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=电子元件",
+          "涨幅强=10.02%",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "134124",
+        "last_time": "141851",
+        "pct_chg": 10.02,
+        "amount": 1078580096.0,
+        "turnover_ratio": 6.77,
+        "float_mv": 16335018109.9,
+        "total_mv": 18851723069.76,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 71.08
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20200526",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "603392.SH",
+      "name": "万泰生物",
+      "industry": "医药制造",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 482.01,
+      "amount_score": 62.21,
+      "candidate_score": 360,
+      "limit_type": "U",
+      "limit_times": 17,
+      "open_times": 0,
+      "first_time": "92501",
+      "last_time": "92501",
+      "pct_chg": 10.01,
+      "amount": 10024431.0,
+      "turnover_ratio": 0.4,
+      "recognition_reasons": [
+        "最高板=17",
+        "首次封板=92501",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=17",
+        "首次封板=92501",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "300676.SZ",
+      "name": "华大基因",
+      "industry": "医药制造",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 77.0,
+      "amount_score": 162.28,
+      "candidate_score": 138.6,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 1,
+      "first_time": "135142",
+      "last_time": "145133",
+      "pct_chg": 10.0,
+      "amount": 2419544576.0,
+      "turnover_ratio": 8.57,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=135142",
+        "盘中开板1次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=135142",
+        "盘中开板1次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "603392.SH",
+        "name": "万泰生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 482.01,
+        "amount_score": 62.21,
+        "candidate_score": 360,
+        "limit_type": "U",
+        "limit_times": 17,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.01,
+        "amount": 10024431.0,
+        "turnover_ratio": 0.4,
+        "recognition_reasons": [
+          "最高板=17",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=17",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300831.SZ",
+        "name": "派瑞股份",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 378.02,
+        "amount_score": 70.61,
+        "candidate_score": 300,
+        "limit_type": "U",
+        "limit_times": 14,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 18663216.0,
+        "turnover_ratio": 1.18,
+        "recognition_reasons": [
+          "连板高度=14",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=14",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300832.SZ",
+        "name": "新产业",
+        "industry": "医疗行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 306.0,
+        "amount_score": 86.26,
+        "candidate_score": 240,
+        "limit_type": "U",
+        "limit_times": 11,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 25108032.0,
+        "turnover_ratio": 0.52,
+        "recognition_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=11",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600834.SH",
+        "name": "申通地铁",
+        "industry": "交运物流",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 207.03,
+        "amount_score": 98.28,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "93022",
+        "last_time": "93022",
+        "pct_chg": 10.03,
+        "amount": 488326704.0,
+        "turnover_ratio": 8.51,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=93022",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=93022",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300521.SZ",
+        "name": "爱司凯",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 161.99,
+        "amount_score": 54.05,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 2532928.0,
+        "turnover_ratio": 0.12,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "300676.SZ",
+        "name": "华大基因",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 77.0,
+        "amount_score": 162.28,
+        "candidate_score": 138.6,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "135142",
+        "last_time": "145133",
+        "pct_chg": 10.0,
+        "amount": 2419544576.0,
+        "turnover_ratio": 8.57,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=135142",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=135142",
+          "盘中开板1次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002273.SZ",
+        "name": "水晶光电",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.03,
+        "amount_score": 149.41,
+        "candidate_score": 98.4,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143000",
+        "last_time": "143000",
+        "pct_chg": 10.03,
+        "amount": 1150082768.0,
+        "turnover_ratio": 6.76,
+        "recognition_reasons": [
+          "首次封板=143000",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143000",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300009.SZ",
+        "name": "安科生物",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 64.03,
+        "amount_score": 114.83,
+        "candidate_score": 82.19,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "105809",
+        "last_time": "105809",
+        "pct_chg": 10.03,
+        "amount": 832947344.0,
+        "turnover_ratio": 5.59,
+        "recognition_reasons": [
+          "首次封板=105809",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=105809",
+          "封板稳定",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000551.SZ",
+        "name": "创元科技",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 142.01,
+        "amount_score": 110.48,
+        "candidate_score": 108,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 4,
+        "first_time": "94603",
+        "last_time": "101548",
+        "pct_chg": 10.01,
+        "amount": 798777696.0,
+        "turnover_ratio": 16.94,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=94603",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=94603",
+          "盘中开板4次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002138.SZ",
+        "name": "顺络电子",
+        "industry": "电子元件",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 45.02,
+        "amount_score": 105.41,
+        "candidate_score": 62.08,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "134124",
+        "last_time": "141851",
+        "pct_chg": 10.02,
+        "amount": 1078580096.0,
+        "turnover_ratio": 6.77,
+        "recognition_reasons": [
+          "首次封板=134124",
+          "盘中开板6次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=134124",
+          "盘中开板6次后仍封住",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

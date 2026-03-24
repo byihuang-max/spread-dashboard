@@ -1,0 +1,889 @@
+{
+  "trade_date": "20230816",
+  "pool": {
+    "trade_date": "20230816",
+    "input_summary": {
+      "up_count": 23,
+      "zha_count": 12,
+      "focus_industries": [
+        {
+          "industry": "房地产开发",
+          "industry_score": 24.5,
+          "up_count": 5,
+          "zha_count": 1,
+          "max_height": 1,
+          "amount": 3251231755.0
+        },
+        {
+          "industry": "证券",
+          "industry_score": 19,
+          "up_count": 1,
+          "zha_count": 2,
+          "max_height": 2,
+          "amount": 10632334608.0
+        },
+        {
+          "industry": "软件开发",
+          "industry_score": 15.81,
+          "up_count": 1,
+          "zha_count": 2,
+          "max_height": 1,
+          "amount": 4405059184.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002945.SZ",
+        "name": "华林证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 114.4,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=95233",
+          "强势行业=证券",
+          "涨幅强=10.02%",
+          "焦点池成交额前3"
+        ],
+        "limit_times": 2,
+        "open_times": 11,
+        "first_time": "95233",
+        "last_time": "103618",
+        "pct_chg": 10.02,
+        "amount": 2514568864.0,
+        "turnover_ratio": 4.95,
+        "float_mv": 52164000000.0,
+        "total_mv": 52164000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 19
+      },
+      {
+        "ts_code": "600272.SH",
+        "name": "开开实业",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 110,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "首次封板时间=93124"
+        ],
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "93124",
+        "last_time": "143021",
+        "pct_chg": 10.02,
+        "amount": 868207216.0,
+        "turnover_ratio": 35.07,
+        "float_mv": 2512000000.0,
+        "total_mv": 3815100000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "601136.SH",
+        "name": "首创证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.72,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=证券",
+          "炸板活跃票",
+          "焦点池成交额前1",
+          "换手活跃=61.88%",
+          "题材内成交额第1",
+          "所属强势行业=证券"
+        ],
+        "limit_times": 0,
+        "open_times": 4,
+        "first_time": "110606",
+        "last_time": "",
+        "pct_chg": 7.46,
+        "amount": 4636589824.0,
+        "turnover_ratio": 61.88,
+        "float_mv": 7754479906.0,
+        "total_mv": 77544680132.96,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 19,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000006.SZ",
+        "name": "深振业Ａ",
+        "industry": "房地产开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 83.7,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=房地产开发",
+          "炸板活跃票",
+          "涨幅强=8.70%",
+          "换手活跃=16.60%",
+          "题材内成交额第1",
+          "所属强势行业=房地产开发"
+        ],
+        "limit_times": 0,
+        "open_times": 4,
+        "first_time": "111936",
+        "last_time": "",
+        "pct_chg": 8.7,
+        "amount": 1283090432.0,
+        "turnover_ratio": 16.6,
+        "float_mv": 7924470920.02,
+        "total_mv": 7924470884.8,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 24.5,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600602.SH",
+        "name": "云赛智联",
+        "industry": "软件开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 82.74,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=软件开发",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=15.40%",
+          "题材内成交额第1",
+          "所属强势行业=软件开发"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "112652",
+        "last_time": "",
+        "pct_chg": 6.78,
+        "amount": 2397524496.0,
+        "turnover_ratio": 15.4,
+        "float_mv": 15738538803.5,
+        "total_mv": 20036416130.4,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 15.81,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "001324.SZ",
+        "name": "长青科技",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93015"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93015",
+        "last_time": "93015",
+        "pct_chg": 10.02,
+        "amount": 328304512.0,
+        "turnover_ratio": 34.14,
+        "float_mv": 976614518.43,
+        "total_mv": 3986820000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15
+      },
+      {
+        "ts_code": "601059.SH",
+        "name": "信达证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 76.39,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=证券",
+          "炸板活跃票",
+          "涨幅强=9.39%",
+          "焦点池成交额前2",
+          "换手活跃=52.20%"
+        ],
+        "limit_times": 0,
+        "open_times": 12,
+        "first_time": "105140",
+        "last_time": "",
+        "pct_chg": 9.39,
+        "amount": 3481175920.0,
+        "turnover_ratio": 52.2,
+        "float_mv": 6875160000.0,
+        "total_mv": 68751600000.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 19
+      },
+      {
+        "ts_code": "300377.SZ",
+        "name": "赢时胜",
+        "industry": "软件开发",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 63.81,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=软件开发",
+          "炸板活跃票",
+          "涨幅强=13.25%",
+          "焦点池成交额前5",
+          "换手活跃=20.02%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "111118",
+        "last_time": "",
+        "pct_chg": 13.25,
+        "amount": 1328931664.0,
+        "turnover_ratio": 20.02,
+        "float_mv": 6683880070.0,
+        "total_mv": 7511650880.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 15.81
+      },
+      {
+        "ts_code": "002235.SZ",
+        "name": "安妮股份",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 58,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=141715"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141715",
+        "last_time": "141715",
+        "pct_chg": 10.0,
+        "amount": 1471307648.0,
+        "turnover_ratio": 33.65,
+        "float_mv": 4643566974.97,
+        "total_mv": 4908977279.36,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "600689.SH",
+        "name": "上海三毛",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 52,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=93022"
+        ],
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "93022",
+        "last_time": "100934",
+        "pct_chg": 9.96,
+        "amount": 275856976.0,
+        "turnover_ratio": 16.04,
+        "float_mv": 1764046017.37,
+        "total_mv": 2329489665.37,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 16
+      },
+      {
+        "ts_code": "600683.SH",
+        "name": "京投发展",
+        "industry": "房地产开发",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "candidate_score": 48.08,
+        "role_tags": [
+          "leader_pool_candidate",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "题材内成交额第2",
+          "所属强势行业=房地产开发",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "111321",
+        "last_time": "133039",
+        "pct_chg": 10.08,
+        "amount": 588515600.0,
+        "turnover_ratio": 11.37,
+        "float_mv": 5341006474.37,
+        "total_mv": 5341006496.0,
+        "limit_type": "U",
+        "amount_rank_in_industry": 2,
+        "industry_score": 24.5
+      },
+      {
+        "ts_code": "301487.SZ",
+        "name": "盟固利",
+        "industry": "电池",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 48,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前3",
+          "首次封板时间=101348"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "101348",
+        "last_time": "101936",
+        "pct_chg": 19.99,
+        "amount": 1441360672.0,
+        "turnover_ratio": 55.51,
+        "float_mv": 2771959486.1,
+        "total_mv": 23394476388.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20230816",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "600272.SH",
+      "name": "开开实业",
+      "industry": "医药商业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 153.02,
+      "amount_score": 84.02,
+      "candidate_score": 110,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 8,
+      "first_time": "93124",
+      "last_time": "143021",
+      "pct_chg": 10.02,
+      "amount": 868207216.0,
+      "turnover_ratio": 35.07,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=93124",
+        "盘中开板8次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=93124",
+        "盘中开板8次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "601136.SH",
+      "name": "首创证券",
+      "industry": "证券",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 8.46,
+      "amount_score": 149.46,
+      "candidate_score": 102.72,
+      "limit_type": "Z",
+      "limit_times": 0,
+      "open_times": 4,
+      "first_time": "110606",
+      "last_time": "",
+      "pct_chg": 7.46,
+      "amount": 4636589824.0,
+      "turnover_ratio": 61.88,
+      "recognition_reasons": [
+        "首次封板=110606",
+        "炸板活跃票",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=110606",
+        "炸板活跃票",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "600272.SH",
+        "name": "开开实业",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 153.02,
+        "amount_score": 84.02,
+        "candidate_score": 110,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "93124",
+        "last_time": "143021",
+        "pct_chg": 10.02,
+        "amount": 868207216.0,
+        "turnover_ratio": 35.07,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=93124",
+          "盘中开板8次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=93124",
+          "盘中开板8次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "001324.SZ",
+        "name": "长青科技",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 111.02,
+        "amount_score": 64.02,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93015",
+        "last_time": "93015",
+        "pct_chg": 10.02,
+        "amount": 328304512.0,
+        "turnover_ratio": 34.14,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93015",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93015",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600689.SH",
+        "name": "上海三毛",
+        "industry": "纺织服装",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 80.96,
+        "amount_score": 49.98,
+        "candidate_score": 52,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "93022",
+        "last_time": "100934",
+        "pct_chg": 9.96,
+        "amount": 275856976.0,
+        "turnover_ratio": 16.04,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93022",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93022",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002945.SZ",
+        "name": "华林证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 79.02,
+        "amount_score": 126.49,
+        "candidate_score": 114.4,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 11,
+        "first_time": "95233",
+        "last_time": "103618",
+        "pct_chg": 10.02,
+        "amount": 2514568864.0,
+        "turnover_ratio": 4.95,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=95233",
+          "盘中开板11次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=95233",
+          "盘中开板11次后仍封住",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002235.SZ",
+        "name": "安妮股份",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.0,
+        "amount_score": 114.0,
+        "candidate_score": 58,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141715",
+        "last_time": "141715",
+        "pct_chg": 10.0,
+        "amount": 1471307648.0,
+        "turnover_ratio": 33.65,
+        "recognition_reasons": [
+          "首次封板=141715",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=141715",
+          "封板稳定",
+          "候选池成交额前5"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "601136.SH",
+        "name": "首创证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 8.46,
+        "amount_score": 149.46,
+        "candidate_score": 102.72,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 4,
+        "first_time": "110606",
+        "last_time": "",
+        "pct_chg": 7.46,
+        "amount": 4636589824.0,
+        "turnover_ratio": 61.88,
+        "recognition_reasons": [
+          "首次封板=110606",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=110606",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002945.SZ",
+        "name": "华林证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 79.02,
+        "amount_score": 126.49,
+        "candidate_score": 114.4,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 11,
+        "first_time": "95233",
+        "last_time": "103618",
+        "pct_chg": 10.02,
+        "amount": 2514568864.0,
+        "turnover_ratio": 4.95,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=95233",
+          "盘中开板11次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=95233",
+          "盘中开板11次后仍封住",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600602.SH",
+        "name": "云赛智联",
+        "industry": "软件开发",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 7.78,
+        "amount_score": 122.48,
+        "candidate_score": 82.74,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "112652",
+        "last_time": "",
+        "pct_chg": 6.78,
+        "amount": 2397524496.0,
+        "turnover_ratio": 15.4,
+        "recognition_reasons": [
+          "首次封板=112652",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=112652",
+          "炸板活跃票",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601059.SH",
+        "name": "信达证券",
+        "industry": "证券",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 15.39,
+        "amount_score": 115.39,
+        "candidate_score": 76.39,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 12,
+        "first_time": "105140",
+        "last_time": "",
+        "pct_chg": 9.39,
+        "amount": 3481175920.0,
+        "turnover_ratio": 52.2,
+        "recognition_reasons": [
+          "首次封板=105140",
+          "炸板活跃票",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=105140",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002235.SZ",
+        "name": "安妮股份",
+        "industry": "文化传媒",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.0,
+        "amount_score": 114.0,
+        "candidate_score": 58,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141715",
+        "last_time": "141715",
+        "pct_chg": 10.0,
+        "amount": 1471307648.0,
+        "turnover_ratio": 33.65,
+        "recognition_reasons": [
+          "首次封板=141715",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=141715",
+          "封板稳定",
+          "候选池成交额前5"
+        ]
+      }
+    ]
+  }
+}

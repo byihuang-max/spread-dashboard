@@ -1,0 +1,868 @@
+{
+  "trade_date": "20200701",
+  "pool": {
+    "trade_date": "20200701",
+    "input_summary": {
+      "up_count": 62,
+      "zha_count": 23,
+      "focus_industries": [
+        {
+          "industry": "医药制造",
+          "industry_score": 48.26,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 10,
+          "amount": 4629758425.0
+        },
+        {
+          "industry": "房地产",
+          "industry_score": 46,
+          "up_count": 10,
+          "zha_count": 2,
+          "max_height": 2,
+          "amount": 9430967652.0
+        },
+        {
+          "industry": "酿酒行业",
+          "industry_score": 29,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 2,
+          "amount": 9347416928.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "300841.SZ",
+        "name": "康华生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 220,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=10",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 13324489.0,
+        "turnover_ratio": 0.37,
+        "float_mv": 3584100000.0,
+        "total_mv": 14336400000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 56
+      },
+      {
+        "ts_code": "300842.SZ",
+        "name": "帝科股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 180,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=8",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 2157265.0,
+        "turnover_ratio": 0.19,
+        "float_mv": 1119750000.0,
+        "total_mv": 4479000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 58
+      },
+      {
+        "ts_code": "300824.SZ",
+        "name": "北鼎股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 1400238.0,
+        "turnover_ratio": 0.17,
+        "float_mv": 819598000.0,
+        "total_mv": 3278392000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 59
+      },
+      {
+        "ts_code": "000568.SZ",
+        "name": "泸州老窖",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 100.11,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=酿酒行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=酿酒行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "102506",
+        "last_time": "142557",
+        "pct_chg": 10.0,
+        "amount": 4325700608.0,
+        "turnover_ratio": 3.02,
+        "float_mv": 146346353717.85,
+        "total_mv": 146812141070.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 29,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300464.SZ",
+        "name": "星徽精密",
+        "industry": "金属制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 33573387.0,
+        "turnover_ratio": 0.9,
+        "float_mv": 3735449115.3,
+        "total_mv": 5116740330.24,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 55
+      },
+      {
+        "ts_code": "000799.SZ",
+        "name": "酒鬼酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 92.19,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=酿酒行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前3",
+          "换手活跃=8.99%",
+          "题材内成交额第2",
+          "所属强势行业=酿酒行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144812",
+        "last_time": "144812",
+        "pct_chg": 10.0,
+        "amount": 2356566400.0,
+        "turnover_ratio": 8.99,
+        "float_mv": 27346022956.8,
+        "total_mv": 27346022620.16,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 29,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002740.SZ",
+        "name": "爱迪尔",
+        "industry": "珠宝首饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93009"
+        ],
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93009",
+        "last_time": "135554",
+        "pct_chg": 10.02,
+        "amount": 565607520.0,
+        "turnover_ratio": 33.57,
+        "float_mv": 1725588067.14,
+        "total_mv": 3241996054.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 20
+      },
+      {
+        "ts_code": "600535.SH",
+        "name": "天士力",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 86.33,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医药制造",
+          "涨幅强=9.99%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=医药制造",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "143938",
+        "last_time": "145144",
+        "pct_chg": 9.99,
+        "amount": 1761513408.0,
+        "turnover_ratio": 6.73,
+        "float_mv": 26985965525.36,
+        "total_mv": 26985965436.16,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 48.26,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002613.SZ",
+        "name": "北玻股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93106"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93106",
+        "last_time": "93106",
+        "pct_chg": 10.04,
+        "amount": 153422810.0,
+        "turnover_ratio": 5.69,
+        "float_mv": 2718751827.87,
+        "total_mv": 4620248100.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 39
+      },
+      {
+        "ts_code": "002640.SZ",
+        "name": "跨境通",
+        "industry": "国际贸易",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=94006"
+        ],
+        "limit_times": 3,
+        "open_times": 11,
+        "first_time": "94006",
+        "last_time": "134051",
+        "pct_chg": 10.02,
+        "amount": 1982316048.0,
+        "turnover_ratio": 22.82,
+        "float_mv": 8807672913.9,
+        "total_mv": 11124415081.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 5
+      },
+      {
+        "ts_code": "600956.SH",
+        "name": "新天绿能",
+        "industry": "公用事业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.92,
+        "amount": 970569.0,
+        "turnover_ratio": 0.13,
+        "float_mv": 746515000.0,
+        "total_mv": 21328503616.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 60
+      },
+      {
+        "ts_code": "600559.SH",
+        "name": "老白干酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 66.88,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=酿酒行业",
+          "涨幅强=10.04%",
+          "焦点池成交额前4",
+          "换手活跃=14.74%"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "145035",
+        "last_time": "145035",
+        "pct_chg": 10.04,
+        "amount": 1781631616.0,
+        "turnover_ratio": 14.74,
+        "float_mv": 12493309376.25,
+        "total_mv": 12786346020.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 29
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20200701",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "300841.SZ",
+      "name": "康华生物",
+      "industry": "医药制造",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 314.0,
+      "amount_score": 78.19,
+      "candidate_score": 220,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 0,
+      "first_time": "92503",
+      "last_time": "92503",
+      "pct_chg": 10.0,
+      "amount": 13324489.0,
+      "turnover_ratio": 0.37,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=92503",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=92503",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000568.SZ",
+      "name": "泸州老窖",
+      "industry": "酿酒行业",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 50.0,
+      "amount_score": 155.51,
+      "candidate_score": 100.11,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 6,
+      "first_time": "102506",
+      "last_time": "142557",
+      "pct_chg": 10.0,
+      "amount": 4325700608.0,
+      "turnover_ratio": 3.02,
+      "recognition_reasons": [
+        "首次封板=102506",
+        "盘中开板6次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=102506",
+        "盘中开板6次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "300841.SZ",
+        "name": "康华生物",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 314.0,
+        "amount_score": 78.19,
+        "candidate_score": 220,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 13324489.0,
+        "turnover_ratio": 0.37,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300842.SZ",
+        "name": "帝科股份",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 234.0,
+        "amount_score": 70.09,
+        "candidate_score": 180,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.0,
+        "amount": 2157265.0,
+        "turnover_ratio": 0.19,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300824.SZ",
+        "name": "北鼎股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 209.99,
+        "amount_score": 62.08,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 1400238.0,
+        "turnover_ratio": 0.17,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300464.SZ",
+        "name": "星徽精密",
+        "industry": "金属制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.02,
+        "amount_score": 82.47,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.02,
+        "amount": 33573387.0,
+        "turnover_ratio": 0.9,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002740.SZ",
+        "name": "爱迪尔",
+        "industry": "珠宝首饰",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 123.02,
+        "amount_score": 108.02,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93009",
+        "last_time": "135554",
+        "pct_chg": 10.02,
+        "amount": 565607520.0,
+        "turnover_ratio": 33.57,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93009",
+          "盘中开板4次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93009",
+          "盘中开板4次后仍封住"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000568.SZ",
+        "name": "泸州老窖",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.0,
+        "amount_score": 155.51,
+        "candidate_score": 100.11,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "102506",
+        "last_time": "142557",
+        "pct_chg": 10.0,
+        "amount": 4325700608.0,
+        "turnover_ratio": 3.02,
+        "recognition_reasons": [
+          "首次封板=102506",
+          "盘中开板6次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=102506",
+          "盘中开板6次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000799.SZ",
+        "name": "酒鬼酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.0,
+        "amount_score": 140.5,
+        "candidate_score": 92.19,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144812",
+        "last_time": "144812",
+        "pct_chg": 10.0,
+        "amount": 2356566400.0,
+        "turnover_ratio": 8.99,
+        "recognition_reasons": [
+          "首次封板=144812",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=144812",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002640.SZ",
+        "name": "跨境通",
+        "industry": "国际贸易",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 92.02,
+        "amount_score": 128.02,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 11,
+        "first_time": "94006",
+        "last_time": "134051",
+        "pct_chg": 10.02,
+        "amount": 1982316048.0,
+        "turnover_ratio": 22.82,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=94006",
+          "盘中开板11次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=94006",
+          "盘中开板11次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "600535.SH",
+        "name": "天士力",
+        "industry": "医药制造",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 52.99,
+        "amount_score": 125.35,
+        "candidate_score": 86.33,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "143938",
+        "last_time": "145144",
+        "pct_chg": 9.99,
+        "amount": 1761513408.0,
+        "turnover_ratio": 6.73,
+        "recognition_reasons": [
+          "首次封板=143938",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143938",
+          "盘中开板1次后仍封住",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600559.SH",
+        "name": "老白干酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 83.04,
+        "amount_score": 113.41,
+        "candidate_score": 66.88,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "145035",
+        "last_time": "145035",
+        "pct_chg": 10.04,
+        "amount": 1781631616.0,
+        "turnover_ratio": 14.74,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=145035",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=145035",
+          "封板稳定",
+          "候选池成交额前4",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

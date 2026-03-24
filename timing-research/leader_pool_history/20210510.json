@@ -1,0 +1,872 @@
+{
+  "trade_date": "20210510",
+  "pool": {
+    "trade_date": "20210510",
+    "input_summary": {
+      "up_count": 89,
+      "zha_count": 17,
+      "focus_industries": [
+        {
+          "industry": "有色金属",
+          "industry_score": 52,
+          "up_count": 11,
+          "zha_count": 3,
+          "max_height": 3,
+          "amount": 19303149011.0
+        },
+        {
+          "industry": "汽车行业",
+          "industry_score": 50,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 15,
+          "amount": 8442168468.0
+        },
+        {
+          "industry": "钢铁行业",
+          "industry_score": 47,
+          "up_count": 10,
+          "zha_count": 1,
+          "max_height": 3,
+          "amount": 11804307035.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "601279.SH",
+        "name": "英利汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 312,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=15",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 15,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "93331",
+        "pct_chg": 10.0,
+        "amount": 539084576.0,
+        "turnover_ratio": 31.85,
+        "float_mv": 1692988830.28,
+        "total_mv": 16929888212.16,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 39
+      },
+      {
+        "ts_code": "605089.SH",
+        "name": "味知香",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.0,
+        "amount": 21275716.0,
+        "turnover_ratio": 1.17,
+        "float_mv": 1819750000.0,
+        "total_mv": 7279000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 86
+      },
+      {
+        "ts_code": "001202.SZ",
+        "name": "炬申股份",
+        "industry": "交运物流",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 120,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 5936922.0,
+        "turnover_ratio": 0.58,
+        "float_mv": 1025618020.0,
+        "total_mv": 4097128000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 89
+      },
+      {
+        "ts_code": "000625.SZ",
+        "name": "长安汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 102.06,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "涨幅强=9.99%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=汽车行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "130709",
+        "last_time": "135642",
+        "pct_chg": 9.99,
+        "amount": 4650501376.0,
+        "turnover_ratio": 6.28,
+        "float_mv": 76796286721.32,
+        "total_mv": 99979695078.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 50,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "603020.SH",
+        "name": "爱普股份",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92502"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.01,
+        "amount": 38036514.0,
+        "turnover_ratio": 0.82,
+        "float_mv": 4643200000.0,
+        "total_mv": 4643200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 80
+      },
+      {
+        "ts_code": "605180.SH",
+        "name": "华生科技",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92505"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 20988010.0,
+        "turnover_ratio": 1.96,
+        "float_mv": 1072500000.0,
+        "total_mv": 4290000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 87
+      },
+      {
+        "ts_code": "605300.SH",
+        "name": "佳禾食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 62860875.0,
+        "turnover_ratio": 7.29,
+        "float_mv": 862615600.0,
+        "total_mv": 8624215600.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 72
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 99.16,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=钢铁行业",
+          "涨幅强=10.12%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=钢铁行业",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "140035",
+        "last_time": "140650",
+        "pct_chg": 10.12,
+        "amount": 4473797120.0,
+        "turnover_ratio": 7.84,
+        "float_mv": 58602841435.95,
+        "total_mv": 84332310502.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 47,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "003040.SZ",
+        "name": "楚天龙",
+        "industry": "电子元件",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93239"
+        ],
+        "limit_times": 4,
+        "open_times": 1,
+        "first_time": "93239",
+        "last_time": "93421",
+        "pct_chg": 10.01,
+        "amount": 445941600.0,
+        "turnover_ratio": 13.63,
+        "float_mv": 3307405521.85,
+        "total_mv": 19455326489.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 42
+      },
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 88.75,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=10.10%",
+          "焦点池成交额前4",
+          "题材内成交额第1",
+          "所属强势行业=有色金属",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143059",
+        "last_time": "143059",
+        "pct_chg": 10.1,
+        "amount": 2786087056.0,
+        "turnover_ratio": 3.86,
+        "float_mv": 75594926361.74,
+        "total_mv": 98391049338.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 52,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000655.SZ",
+        "name": "金岭矿业",
+        "industry": "钢铁行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 34524042.0,
+        "turnover_ratio": 0.57,
+        "float_mv": 6030796529.9,
+        "total_mv": 6030796469.12,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 82
+      },
+      {
+        "ts_code": "601127.SH",
+        "name": "小康股份",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 65.17,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前3"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "111447",
+        "last_time": "112947",
+        "pct_chg": 10.0,
+        "amount": 3001645536.0,
+        "turnover_ratio": 5.28,
+        "float_mv": 59042224497.06,
+        "total_mv": 79097581922.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 50
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210510",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "601279.SH",
+      "name": "英利汽车",
+      "industry": "汽车行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 428.0,
+      "amount_score": 120.0,
+      "candidate_score": 312,
+      "limit_type": "U",
+      "limit_times": 15,
+      "open_times": 1,
+      "first_time": "92503",
+      "last_time": "93331",
+      "pct_chg": 10.0,
+      "amount": 539084576.0,
+      "turnover_ratio": 31.85,
+      "recognition_reasons": [
+        "最高板=15",
+        "首次封板=92503",
+        "盘中开板1次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=15",
+        "首次封板=92503",
+        "盘中开板1次后仍封住",
+        "候选池成交额前5"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000625.SZ",
+      "name": "长安汽车",
+      "industry": "汽车行业",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 45.99,
+      "amount_score": 157.13,
+      "candidate_score": 102.06,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 5,
+      "first_time": "130709",
+      "last_time": "135642",
+      "pct_chg": 9.99,
+      "amount": 4650501376.0,
+      "turnover_ratio": 6.28,
+      "recognition_reasons": [
+        "首次封板=130709",
+        "盘中开板5次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=130709",
+        "盘中开板5次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "601279.SH",
+        "name": "英利汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 428.0,
+        "amount_score": 120.0,
+        "candidate_score": 312,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "93331",
+        "pct_chg": 10.0,
+        "amount": 539084576.0,
+        "turnover_ratio": 31.85,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=92503",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=92503",
+          "盘中开板1次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "605089.SH",
+        "name": "味知香",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.0,
+        "amount_score": 70.59,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.0,
+        "amount": 21275716.0,
+        "turnover_ratio": 1.17,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92502",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92502",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001202.SZ",
+        "name": "炬申股份",
+        "industry": "交运物流",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 161.99,
+        "amount_score": 54.28,
+        "candidate_score": 120,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 5936922.0,
+        "turnover_ratio": 0.58,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603020.SH",
+        "name": "爱普股份",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.01,
+        "amount_score": 82.42,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92502",
+        "last_time": "92502",
+        "pct_chg": 10.01,
+        "amount": 38036514.0,
+        "turnover_ratio": 0.82,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92502",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "605180.SH",
+        "name": "华生科技",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.0,
+        "amount_score": 58.98,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92505",
+        "last_time": "92505",
+        "pct_chg": 10.0,
+        "amount": 20988010.0,
+        "turnover_ratio": 1.96,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92505",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92505",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000625.SZ",
+        "name": "长安汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 45.99,
+        "amount_score": 157.13,
+        "candidate_score": 102.06,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 5,
+        "first_time": "130709",
+        "last_time": "135642",
+        "pct_chg": 9.99,
+        "amount": 4650501376.0,
+        "turnover_ratio": 6.28,
+        "recognition_reasons": [
+          "首次封板=130709",
+          "盘中开板5次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=130709",
+          "盘中开板5次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 72.12,
+        "amount_score": 154.04,
+        "candidate_score": 99.16,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "140035",
+        "last_time": "140650",
+        "pct_chg": 10.12,
+        "amount": 4473797120.0,
+        "turnover_ratio": 7.84,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=140035",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=140035",
+          "盘中开板3次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601600.SH",
+        "name": "中国铝业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.1,
+        "amount_score": 132.03,
+        "candidate_score": 88.75,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143059",
+        "last_time": "143059",
+        "pct_chg": 10.1,
+        "amount": 2786087056.0,
+        "turnover_ratio": 3.86,
+        "recognition_reasons": [
+          "首次封板=143059",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143059",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601279.SH",
+        "name": "英利汽车",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 428.0,
+        "amount_score": 120.0,
+        "candidate_score": 312,
+        "limit_type": "U",
+        "limit_times": 15,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "93331",
+        "pct_chg": 10.0,
+        "amount": 539084576.0,
+        "turnover_ratio": 31.85,
+        "recognition_reasons": [
+          "最高板=15",
+          "首次封板=92503",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=15",
+          "首次封板=92503",
+          "盘中开板1次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "601127.SH",
+        "name": "小康股份",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 53.0,
+        "amount_score": 112.64,
+        "candidate_score": 65.17,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "111447",
+        "last_time": "112947",
+        "pct_chg": 10.0,
+        "amount": 3001645536.0,
+        "turnover_ratio": 5.28,
+        "recognition_reasons": [
+          "首次封板=111447",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=111447",
+          "盘中开板1次后仍封住",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

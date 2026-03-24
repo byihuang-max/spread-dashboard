@@ -1,0 +1,889 @@
+{
+  "trade_date": "20211124",
+  "pool": {
+    "trade_date": "20211124",
+    "input_summary": {
+      "up_count": 77,
+      "zha_count": 16,
+      "focus_industries": [
+        {
+          "industry": "医疗行业",
+          "industry_score": 34.58,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 8,
+          "amount": 1789457771.0
+        },
+        {
+          "industry": "汽车行业",
+          "industry_score": 34.43,
+          "up_count": 8,
+          "zha_count": 2,
+          "max_height": 1,
+          "amount": 3214817717.0
+        },
+        {
+          "industry": "纺织服装",
+          "industry_score": 32.2,
+          "up_count": 9,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 1599395700.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "603213.SH",
+        "name": "镇洋发展",
+        "industry": "化学原料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 212,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=10",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 10,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "93014",
+        "pct_chg": 10.01,
+        "amount": 114259521.0,
+        "turnover_ratio": 8.61,
+        "float_mv": 1327388400.0,
+        "total_mv": 8843832000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 64
+      },
+      {
+        "ts_code": "002432.SZ",
+        "name": "九安医疗",
+        "industry": "医疗行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 180,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=8",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.02,
+        "amount": 41507902.0,
+        "turnover_ratio": 0.61,
+        "float_mv": 6814249123.2,
+        "total_mv": 6987604150.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 75
+      },
+      {
+        "ts_code": "301072.SZ",
+        "name": "中捷精工",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 113.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "涨幅强=20.00%",
+          "焦点池成交额前1",
+          "换手活跃=56.81%",
+          "题材内成交额第1",
+          "所属强势行业=汽车行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "112451",
+        "last_time": "112451",
+        "pct_chg": 20.0,
+        "amount": 756020816.0,
+        "turnover_ratio": 56.81,
+        "float_mv": 1419395447.56,
+        "total_mv": 5987073052.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 34.43,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300591.SZ",
+        "name": "万里马",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 109.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=纺织服装",
+          "涨幅强=20.00%",
+          "焦点池成交额前2",
+          "换手活跃=35.36%",
+          "题材内成交额第1",
+          "所属强势行业=纺织服装",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "143030",
+        "last_time": "150003",
+        "pct_chg": 20.0,
+        "amount": 623045248.0,
+        "turnover_ratio": 35.36,
+        "float_mv": 1889414394.0,
+        "total_mv": 2769685094.4,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 32.2,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "301017.SZ",
+        "name": "漱玉平民",
+        "industry": "医疗行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医疗行业",
+          "涨幅强=19.99%",
+          "焦点池成交额前3",
+          "换手活跃=54.38%",
+          "题材内成交额第1",
+          "所属强势行业=医疗行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104018",
+        "last_time": "104018",
+        "pct_chg": 19.99,
+        "amount": 593972784.0,
+        "turnover_ratio": 54.38,
+        "float_mv": 1194821131.84,
+        "total_mv": 14138259200.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 34.58,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "603895.SH",
+        "name": "天永智能",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93010"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93010",
+        "last_time": "93010",
+        "pct_chg": 10.0,
+        "amount": 72924597.0,
+        "turnover_ratio": 2.45,
+        "float_mv": 2985169600.0,
+        "total_mv": 2985169600.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 72
+      },
+      {
+        "ts_code": "301060.SZ",
+        "name": "兰卫医学",
+        "industry": "医疗行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.5,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=医疗行业",
+          "涨幅强=20.00%",
+          "焦点池成交额前4",
+          "换手活跃=53.23%",
+          "题材内成交额第2",
+          "所属强势行业=医疗行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141648",
+        "last_time": "141648",
+        "pct_chg": 20.0,
+        "amount": 562281552.0,
+        "turnover_ratio": 53.23,
+        "float_mv": 1172001916.02,
+        "total_mv": 11558920850.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 34.58,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300224.SZ",
+        "name": "正海磁材",
+        "industry": "小金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 84,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=95533"
+        ],
+        "limit_times": 2,
+        "open_times": 2,
+        "first_time": "95533",
+        "last_time": "104012",
+        "pct_chg": 20.0,
+        "amount": 2329918848.0,
+        "turnover_ratio": 15.39,
+        "float_mv": 16419330229.92,
+        "total_mv": 16584778843.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "603219.SH",
+        "name": "富佳股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 3595902.0,
+        "turnover_ratio": 0.53,
+        "float_mv": 683470000.0,
+        "total_mv": 6684670000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 77
+      },
+      {
+        "ts_code": "300928.SZ",
+        "name": "华安鑫创",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 68.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "炸板活跃票",
+          "涨幅强=19.66%",
+          "焦点池成交额前5",
+          "换手活跃=41.57%"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "145039",
+        "last_time": "",
+        "pct_chg": 19.66,
+        "amount": 517005760.0,
+        "turnover_ratio": 41.57,
+        "float_mv": 1340000000.0,
+        "total_mv": 5360000000.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 34.43
+      },
+      {
+        "ts_code": "603529.SH",
+        "name": "爱玛科技",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93250"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93250",
+        "last_time": "93250",
+        "pct_chg": 9.99,
+        "amount": 438272512.0,
+        "turnover_ratio": 12.93,
+        "float_mv": 3398200000.0,
+        "total_mv": 21103344800.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 30
+      },
+      {
+        "ts_code": "605333.SH",
+        "name": "沪光股份",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 58.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "涨幅强=10.02%",
+          "换手活跃=27.73%"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "93101",
+        "last_time": "94540",
+        "pct_chg": 10.02,
+        "amount": 473437856.0,
+        "turnover_ratio": 27.73,
+        "float_mv": 1731311900.0,
+        "total_mv": 11095670000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 34.43
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20211124",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "603213.SH",
+      "name": "镇洋发展",
+      "industry": "化学原料",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 308.01,
+      "amount_score": 82.31,
+      "candidate_score": 212,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 1,
+      "first_time": "92503",
+      "last_time": "93014",
+      "pct_chg": 10.01,
+      "amount": 114259521.0,
+      "turnover_ratio": 8.61,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=92503",
+        "盘中开板1次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=92503",
+        "盘中开板1次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "301072.SZ",
+      "name": "中捷精工",
+      "industry": "汽车行业",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 61,
+      "amount_score": 158.0,
+      "candidate_score": 113.0,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 0,
+      "first_time": "112451",
+      "last_time": "112451",
+      "pct_chg": 20.0,
+      "amount": 756020816.0,
+      "turnover_ratio": 56.81,
+      "recognition_reasons": [
+        "首次封板=112451",
+        "封板稳定",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=112451",
+        "封板稳定",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "603213.SH",
+        "name": "镇洋发展",
+        "industry": "化学原料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 308.01,
+        "amount_score": 82.31,
+        "candidate_score": 212,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 1,
+        "first_time": "92503",
+        "last_time": "93014",
+        "pct_chg": 10.01,
+        "amount": 114259521.0,
+        "turnover_ratio": 8.61,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=92503",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=92503",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002432.SZ",
+        "name": "九安医疗",
+        "industry": "医疗行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 234.02,
+        "amount_score": 62.32,
+        "candidate_score": 180,
+        "limit_type": "U",
+        "limit_times": 8,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.02,
+        "amount": 41507902.0,
+        "turnover_ratio": 0.61,
+        "recognition_reasons": [
+          "连板高度=8",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=8",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603895.SH",
+        "name": "天永智能",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 135.0,
+        "amount_score": 67.22,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93010",
+        "last_time": "93010",
+        "pct_chg": 10.0,
+        "amount": 72924597.0,
+        "turnover_ratio": 2.45,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93010",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93010",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603219.SH",
+        "name": "富佳股份",
+        "industry": "家电行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.03,
+        "amount_score": 46.3,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 3595902.0,
+        "turnover_ratio": 0.53,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603529.SH",
+        "name": "爱玛科技",
+        "industry": "交运设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 86.99,
+        "amount_score": 80.45,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93250",
+        "last_time": "93250",
+        "pct_chg": 9.99,
+        "amount": 438272512.0,
+        "turnover_ratio": 12.93,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93250",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93250",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "301072.SZ",
+        "name": "中捷精工",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 61,
+        "amount_score": 158.0,
+        "candidate_score": 113.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "112451",
+        "last_time": "112451",
+        "pct_chg": 20.0,
+        "amount": 756020816.0,
+        "turnover_ratio": 56.81,
+        "recognition_reasons": [
+          "首次封板=112451",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=112451",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300591.SZ",
+        "name": "万里马",
+        "industry": "纺织服装",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 49,
+        "amount_score": 150.0,
+        "candidate_score": 109.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "143030",
+        "last_time": "150003",
+        "pct_chg": 20.0,
+        "amount": 623045248.0,
+        "turnover_ratio": 35.36,
+        "recognition_reasons": [
+          "首次封板=143030",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143030",
+          "盘中开板4次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300224.SZ",
+        "name": "正海磁材",
+        "industry": "小金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 74,
+        "amount_score": 149.69,
+        "candidate_score": 84,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 2,
+        "first_time": "95533",
+        "last_time": "104012",
+        "pct_chg": 20.0,
+        "amount": 2329918848.0,
+        "turnover_ratio": 15.39,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=95533",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=95533",
+          "盘中开板2次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "301017.SZ",
+        "name": "漱玉平民",
+        "industry": "医疗行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 66,
+        "amount_score": 142.0,
+        "candidate_score": 105.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104018",
+        "last_time": "104018",
+        "pct_chg": 19.99,
+        "amount": 593972784.0,
+        "turnover_ratio": 54.38,
+        "recognition_reasons": [
+          "首次封板=104018",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104018",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "301060.SZ",
+        "name": "兰卫医学",
+        "industry": "医疗行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 61,
+        "amount_score": 124.0,
+        "candidate_score": 97.5,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "141648",
+        "last_time": "141648",
+        "pct_chg": 20.0,
+        "amount": 562281552.0,
+        "turnover_ratio": 53.23,
+        "recognition_reasons": [
+          "首次封板=141648",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=141648",
+          "封板稳定",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

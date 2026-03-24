@@ -1,0 +1,879 @@
+{
+  "trade_date": "20210824",
+  "pool": {
+    "trade_date": "20210824",
+    "input_summary": {
+      "up_count": 69,
+      "zha_count": 32,
+      "focus_industries": [
+        {
+          "industry": "机械行业",
+          "industry_score": 48.02,
+          "up_count": 10,
+          "zha_count": 4,
+          "max_height": 3,
+          "amount": 4512175783.0
+        },
+        {
+          "industry": "有色金属",
+          "industry_score": 47,
+          "up_count": 10,
+          "zha_count": 4,
+          "max_height": 2,
+          "amount": 22068292402.0
+        },
+        {
+          "industry": "专用设备",
+          "industry_score": 33,
+          "up_count": 6,
+          "zha_count": 3,
+          "max_height": 1,
+          "amount": 6761059743.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "605580.SH",
+        "name": "恒盛能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.99,
+        "amount": 3235245.0,
+        "turnover_ratio": 0.4,
+        "float_mv": 803500000.0,
+        "total_mv": 3214000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 69
+      },
+      {
+        "ts_code": "300809.SZ",
+        "name": "华辰装备",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.5,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=92503",
+          "题材内成交额第2",
+          "所属强势行业=机械行业",
+          "已涨停"
+        ],
+        "limit_times": 3,
+        "open_times": 8,
+        "first_time": "92503",
+        "last_time": "145218",
+        "pct_chg": 19.99,
+        "amount": 866102528.0,
+        "turnover_ratio": 43.62,
+        "float_mv": 1990406250.0,
+        "total_mv": 6865250000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 17,
+        "amount_rank_in_industry": 2,
+        "industry_score": 48.02
+      },
+      {
+        "ts_code": "603799.SH",
+        "name": "华友钴业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "炸板活跃票",
+          "涨幅强=8.67%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=有色金属"
+        ],
+        "limit_times": 0,
+        "open_times": 17,
+        "first_time": "101301",
+        "last_time": "",
+        "pct_chg": 8.67,
+        "amount": 9559474688.0,
+        "turnover_ratio": 6.0,
+        "float_mv": 160123211813.5,
+        "total_mv": 161309859588.0,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 47,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000519.SZ",
+        "name": "中兵红箭",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.89,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=9.98%",
+          "焦点池成交额前3",
+          "换手活跃=11.04%",
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "140512",
+        "last_time": "140512",
+        "pct_chg": 9.98,
+        "amount": 2440423456.0,
+        "turnover_ratio": 11.04,
+        "float_mv": 24072819696.4,
+        "total_mv": 24091270284.8,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 33,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300161.SZ",
+        "name": "华中数控",
+        "industry": "机械行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 83.07,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=机械行业",
+          "炸板活跃票",
+          "涨幅强=9.68%",
+          "换手活跃=24.18%",
+          "题材内成交额第1",
+          "所属强势行业=机械行业"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "101348",
+        "last_time": "",
+        "pct_chg": 9.68,
+        "amount": 1367167856.0,
+        "turnover_ratio": 24.18,
+        "float_mv": 5465202357.23,
+        "total_mv": 6463610352.18,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 48.02,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002248.SZ",
+        "name": "华东数控",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 45941692.0,
+        "turnover_ratio": 1.73,
+        "float_mv": 2655340994.56,
+        "total_mv": 2742860752.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 63
+      },
+      {
+        "ts_code": "601882.SH",
+        "name": "海天精工",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 38018560.0,
+        "turnover_ratio": 0.24,
+        "float_mv": 15633900000.0,
+        "total_mv": 15633900000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 65
+      },
+      {
+        "ts_code": "600549.SH",
+        "name": "厦门钨业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 70.68,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=10.00%",
+          "焦点池成交额前2"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "94201",
+        "last_time": "144612",
+        "pct_chg": 10.0,
+        "amount": 3268810432.0,
+        "turnover_ratio": 7.8,
+        "float_mv": 42392292930.0,
+        "total_mv": 42766544880.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 47
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "封板稳定(open_times=0)",
+          "首次封板时间=144606"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144606",
+        "last_time": "144606",
+        "pct_chg": 9.93,
+        "amount": 7963098368.0,
+        "turnover_ratio": 8.66,
+        "float_mv": 94714862645.13,
+        "total_mv": 136299247784.96,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "000837.SZ",
+        "name": "秦川机床",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 80398980.0,
+        "turnover_ratio": 1.03,
+        "float_mv": 7832018971.2,
+        "total_mv": 7835091305.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 58
+      },
+      {
+        "ts_code": "600961.SH",
+        "name": "株冶集团",
+        "industry": "有色金属",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 10.0,
+        "amount": 22695167.0,
+        "turnover_ratio": 0.39,
+        "float_mv": 5802037054.0,
+        "total_mv": 5802037120.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 67
+      },
+      {
+        "ts_code": "000878.SZ",
+        "name": "云南铜业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 59.31,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=有色金属",
+          "涨幅强=10.04%",
+          "焦点池成交额前5",
+          "换手活跃=8.79%"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "130006",
+        "last_time": "145421",
+        "pct_chg": 10.04,
+        "amount": 2110238064.0,
+        "turnover_ratio": 8.79,
+        "float_mv": 24480463676.55,
+        "total_mv": 25342207329.6,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 47
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210824",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "605580.SH",
+      "name": "恒盛能源",
+      "industry": "电力行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 169.99,
+      "amount_score": 50.19,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92504",
+      "last_time": "92504",
+      "pct_chg": 9.99,
+      "amount": 3235245.0,
+      "turnover_ratio": 0.4,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92504",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92504",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "603799.SH",
+      "name": "华友钴业",
+      "industry": "有色金属",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 14.67,
+      "amount_score": 143.67,
+      "candidate_score": 97.3,
+      "limit_type": "Z",
+      "limit_times": 0,
+      "open_times": 17,
+      "first_time": "101301",
+      "last_time": "",
+      "pct_chg": 8.67,
+      "amount": 9559474688.0,
+      "turnover_ratio": 6.0,
+      "recognition_reasons": [
+        "首次封板=101301",
+        "炸板活跃票",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=101301",
+        "炸板活跃票",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "605580.SH",
+        "name": "恒盛能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 169.99,
+        "amount_score": 50.19,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.99,
+        "amount": 3235245.0,
+        "turnover_ratio": 0.4,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92504",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92504",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002248.SZ",
+        "name": "华东数控",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 70.86,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 9.99,
+        "amount": 45941692.0,
+        "turnover_ratio": 1.73,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "601882.SH",
+        "name": "海天精工",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 62.11,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 38018560.0,
+        "turnover_ratio": 0.24,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300809.SZ",
+        "name": "华辰装备",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "recognition_score": 102,
+        "amount_score": 116.0,
+        "candidate_score": 97.5,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 8,
+        "first_time": "92503",
+        "last_time": "145218",
+        "pct_chg": 19.99,
+        "amount": 866102528.0,
+        "turnover_ratio": 43.62,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "000837.SZ",
+        "name": "秦川机床",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.03,
+        "amount_score": 74.55,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.03,
+        "amount": 80398980.0,
+        "turnover_ratio": 1.03,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "603799.SH",
+        "name": "华友钴业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 14.67,
+        "amount_score": 143.67,
+        "candidate_score": 97.3,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 17,
+        "first_time": "101301",
+        "last_time": "",
+        "pct_chg": 8.67,
+        "amount": 9559474688.0,
+        "turnover_ratio": 6.0,
+        "recognition_reasons": [
+          "首次封板=101301",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101301",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000519.SZ",
+        "name": "中兵红箭",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.98,
+        "amount_score": 135.5,
+        "candidate_score": 96.89,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "140512",
+        "last_time": "140512",
+        "pct_chg": 9.98,
+        "amount": 2440423456.0,
+        "turnover_ratio": 11.04,
+        "recognition_reasons": [
+          "首次封板=140512",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=140512",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600010.SH",
+        "name": "包钢股份",
+        "industry": "钢铁行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 47.93,
+        "amount_score": 132.26,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "144606",
+        "last_time": "144606",
+        "pct_chg": 9.93,
+        "amount": 7963098368.0,
+        "turnover_ratio": 8.66,
+        "recognition_reasons": [
+          "首次封板=144606",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=144606",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "300809.SZ",
+        "name": "华辰装备",
+        "industry": "机械行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "recognition_score": 102,
+        "amount_score": 116.0,
+        "candidate_score": 97.5,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 8,
+        "first_time": "92503",
+        "last_time": "145218",
+        "pct_chg": 19.99,
+        "amount": 866102528.0,
+        "turnover_ratio": 43.62,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "盘中开板8次后仍封住",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "600549.SH",
+        "name": "厦门钨业",
+        "industry": "有色金属",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 57.0,
+        "amount_score": 113.9,
+        "candidate_score": 70.68,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "94201",
+        "last_time": "144612",
+        "pct_chg": 10.0,
+        "amount": 3268810432.0,
+        "turnover_ratio": 7.8,
+        "recognition_reasons": [
+          "首次封板=94201",
+          "盘中开板4次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94201",
+          "盘中开板4次后仍封住",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

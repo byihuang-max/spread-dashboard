@@ -1,0 +1,863 @@
+{
+  "trade_date": "20220926",
+  "pool": {
+    "trade_date": "20220926",
+    "input_summary": {
+      "up_count": 38,
+      "zha_count": 13,
+      "focus_industries": [
+        {
+          "industry": "家电行业",
+          "industry_score": 23.96,
+          "up_count": 5,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 3478249504.0
+        },
+        {
+          "industry": "装修建材",
+          "industry_score": 22.97,
+          "up_count": 3,
+          "zha_count": 0,
+          "max_height": 6,
+          "amount": 985257946.0
+        },
+        {
+          "industry": "汽车零部件",
+          "industry_score": 15.55,
+          "up_count": 2,
+          "zha_count": 3,
+          "max_height": 1,
+          "amount": 2274779226.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 10
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001238.SZ",
+        "name": "浙江正特",
+        "industry": "装修建材",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 166.9,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500",
+          "强势行业=装修建材",
+          "涨幅强=9.99%",
+          "换手活跃=33.46%"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 342511088.0,
+        "turnover_ratio": 33.46,
+        "float_mv": 1023550000.0,
+        "total_mv": 4094200000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 16,
+        "amount_rank_in_focus_pool": 8,
+        "industry_score": 22.97
+      },
+      {
+        "ts_code": "605117.SH",
+        "name": "德业股份",
+        "industry": "家电行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 121.57,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=104732",
+          "强势行业=家电行业",
+          "涨幅强=10.00%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=家电行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 15,
+        "first_time": "104732",
+        "last_time": "144910",
+        "pct_chg": 10.0,
+        "amount": 1311128768.0,
+        "turnover_ratio": 3.66,
+        "float_mv": 36816970960.0,
+        "total_mv": 108284798160.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 23.96,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002703.SZ",
+        "name": "浙江世宝",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 114.48,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "首次封板时间=102957",
+          "强势行业=汽车零部件",
+          "涨幅强=10.00%",
+          "焦点池成交额前2",
+          "换手活跃=19.98%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "102957",
+        "last_time": "145033",
+        "pct_chg": 10.0,
+        "amount": 1145414048.0,
+        "turnover_ratio": 19.98,
+        "float_mv": 5901213707.84,
+        "total_mv": 8425508308.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 15.55,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002543.SZ",
+        "name": "万和电气",
+        "industry": "家电行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 106.83,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "封板稳定(open_times=0)",
+          "首次封板时间=104942",
+          "强势行业=家电行业",
+          "涨幅强=10.01%",
+          "焦点池成交额前3",
+          "换手活跃=11.10%",
+          "题材内成交额第2",
+          "所属强势行业=家电行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104942",
+        "last_time": "104942",
+        "pct_chg": 10.01,
+        "amount": 862934384.0,
+        "turnover_ratio": 11.1,
+        "float_mv": 8181987005.03,
+        "total_mv": 9644492000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4,
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 23.96,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002791.SZ",
+        "name": "坚朗五金",
+        "industry": "装修建材",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 84.41,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=装修建材",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "题材内成交额第1",
+          "所属强势行业=装修建材",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "101303",
+        "last_time": "145236",
+        "pct_chg": 10.0,
+        "amount": 508401120.0,
+        "turnover_ratio": 3.52,
+        "float_mv": 14750043027.81,
+        "total_mv": 29379109800.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 22.97,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002641.SZ",
+        "name": "公元股份",
+        "industry": "装修建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93027"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93027",
+        "last_time": "93027",
+        "pct_chg": 10.0,
+        "amount": 134345738.0,
+        "turnover_ratio": 2.24,
+        "float_mv": 6114285826.11,
+        "total_mv": 6657479370.08,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 31
+      },
+      {
+        "ts_code": "002126.SZ",
+        "name": "银轮股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 55.7,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "炸板活跃票",
+          "涨幅强=8.38%",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 0,
+        "open_times": 7,
+        "first_time": "101533",
+        "last_time": "",
+        "pct_chg": 8.38,
+        "amount": 600979584.0,
+        "turnover_ratio": 6.29,
+        "float_mv": 9639834574.08,
+        "total_mv": 10250196775.68,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 15.55
+      },
+      {
+        "ts_code": "603069.SH",
+        "name": "海汽集团",
+        "industry": "铁路公路",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 48,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前3",
+          "首次封板时间=104921"
+        ],
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "104921",
+        "last_time": "145535",
+        "pct_chg": 9.99,
+        "amount": 876537568.0,
+        "turnover_ratio": 9.9,
+        "float_mv": 9043920000.0,
+        "total_mv": 9043920000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "000929.SZ",
+        "name": "兰州黄河",
+        "industry": "酿酒行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 40,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "封板稳定(open_times=0)",
+          "首次封板时间=93115"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "93115",
+        "last_time": "93115",
+        "pct_chg": 10.03,
+        "amount": 137726622.0,
+        "turnover_ratio": 6.89,
+        "float_mv": 2037723826.31,
+        "total_mv": 2037853020.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 28
+      },
+      {
+        "ts_code": "002693.SZ",
+        "name": "双成药业",
+        "industry": "生物制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 40,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.95,
+        "amount": 44864633.0,
+        "turnover_ratio": 2.26,
+        "float_mv": 1983578970.06,
+        "total_mv": 2015621858.88,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 37
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220926",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 10,
+    "recognition_leader": {
+      "ts_code": "001238.SZ",
+      "name": "浙江正特",
+      "industry": "装修建材",
+      "source_types": [
+        "active_core",
+        "limit_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 222.99,
+      "amount_score": 103.99,
+      "candidate_score": 166.9,
+      "limit_type": "U",
+      "limit_times": 6,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 9.99,
+      "amount": 342511088.0,
+      "turnover_ratio": 33.46,
+      "recognition_reasons": [
+        "最高板=6",
+        "首次封板=92500",
+        "封板稳定",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=6",
+        "首次封板=92500",
+        "封板稳定",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002703.SZ",
+      "name": "浙江世宝",
+      "industry": "汽车零部件",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 58.0,
+      "amount_score": 155.99,
+      "candidate_score": 114.48,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 1,
+      "first_time": "102957",
+      "last_time": "145033",
+      "pct_chg": 10.0,
+      "amount": 1145414048.0,
+      "turnover_ratio": 19.98,
+      "recognition_reasons": [
+        "首次封板=102957",
+        "盘中开板1次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=102957",
+        "盘中开板1次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001238.SZ",
+        "name": "浙江正特",
+        "industry": "装修建材",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 222.99,
+        "amount_score": 103.99,
+        "candidate_score": 166.9,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 342511088.0,
+        "turnover_ratio": 33.46,
+        "recognition_reasons": [
+          "最高板=6",
+          "首次封板=92500",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=6",
+          "首次封板=92500",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002641.SZ",
+        "name": "公元股份",
+        "industry": "装修建材",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 87.0,
+        "amount_score": 67.12,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93027",
+        "last_time": "93027",
+        "pct_chg": 10.0,
+        "amount": 134345738.0,
+        "turnover_ratio": 2.24,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93027",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93027",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002693.SZ",
+        "name": "双成药业",
+        "industry": "生物制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 65.95,
+        "amount_score": 55.08,
+        "candidate_score": 40,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.95,
+        "amount": 44864633.0,
+        "turnover_ratio": 2.26,
+        "recognition_reasons": [
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002543.SZ",
+        "name": "万和电气",
+        "industry": "家电行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 64.01,
+        "amount_score": 125.56,
+        "candidate_score": 106.83,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104942",
+        "last_time": "104942",
+        "pct_chg": 10.01,
+        "amount": 862934384.0,
+        "turnover_ratio": 11.1,
+        "recognition_reasons": [
+          "首次封板=104942",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104942",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000929.SZ",
+        "name": "兰州黄河",
+        "industry": "酿酒行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 63.03,
+        "amount_score": 73.47,
+        "candidate_score": 40,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "93115",
+        "last_time": "93115",
+        "pct_chg": 10.03,
+        "amount": 137726622.0,
+        "turnover_ratio": 6.89,
+        "recognition_reasons": [
+          "首次封板=93115",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=93115",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002703.SZ",
+        "name": "浙江世宝",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 58.0,
+        "amount_score": 155.99,
+        "candidate_score": 114.48,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "102957",
+        "last_time": "145033",
+        "pct_chg": 10.0,
+        "amount": 1145414048.0,
+        "turnover_ratio": 19.98,
+        "recognition_reasons": [
+          "首次封板=102957",
+          "盘中开板1次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=102957",
+          "盘中开板1次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605117.SH",
+        "name": "德业股份",
+        "industry": "家电行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.0,
+        "amount_score": 155.83,
+        "candidate_score": 121.57,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 15,
+        "first_time": "104732",
+        "last_time": "144910",
+        "pct_chg": 10.0,
+        "amount": 1311128768.0,
+        "turnover_ratio": 3.66,
+        "recognition_reasons": [
+          "首次封板=104732",
+          "盘中开板15次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104732",
+          "盘中开板15次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002543.SZ",
+        "name": "万和电气",
+        "industry": "家电行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 64.01,
+        "amount_score": 125.56,
+        "candidate_score": 106.83,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "104942",
+        "last_time": "104942",
+        "pct_chg": 10.01,
+        "amount": 862934384.0,
+        "turnover_ratio": 11.1,
+        "recognition_reasons": [
+          "首次封板=104942",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104942",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "603069.SH",
+        "name": "海汽集团",
+        "industry": "铁路公路",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 38.99,
+        "amount_score": 124.94,
+        "candidate_score": 48,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "104921",
+        "last_time": "145535",
+        "pct_chg": 9.99,
+        "amount": 876537568.0,
+        "turnover_ratio": 9.9,
+        "recognition_reasons": [
+          "首次封板=104921",
+          "盘中开板6次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=104921",
+          "盘中开板6次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "002791.SZ",
+        "name": "坚朗五金",
+        "industry": "装修建材",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 54.0,
+        "amount_score": 115.76,
+        "candidate_score": 84.41,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "101303",
+        "last_time": "145236",
+        "pct_chg": 10.0,
+        "amount": 508401120.0,
+        "turnover_ratio": 3.52,
+        "recognition_reasons": [
+          "首次封板=101303",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101303",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

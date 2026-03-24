@@ -1,0 +1,874 @@
+{
+  "trade_date": "20220314",
+  "pool": {
+    "trade_date": "20220314",
+    "input_summary": {
+      "up_count": 42,
+      "zha_count": 25,
+      "focus_industries": [
+        {
+          "industry": "化学制药",
+          "industry_score": 36,
+          "up_count": 5,
+          "zha_count": 5,
+          "max_height": 4,
+          "amount": 16245605191.0
+        },
+        {
+          "industry": "医药商业",
+          "industry_score": 19.1,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 3,
+          "amount": 1552051565.0
+        },
+        {
+          "industry": "中药",
+          "industry_score": 18,
+          "up_count": 1,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 5581452672.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 144.07,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=93727",
+          "强势行业=中药",
+          "涨幅强=9.99%",
+          "焦点池成交额前2",
+          "换手活跃=9.87%",
+          "题材内成交额第1",
+          "所属强势行业=中药",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 13,
+        "first_time": "93727",
+        "last_time": "145606",
+        "pct_chg": 9.99,
+        "amount": 3968035696.0,
+        "turnover_ratio": 9.87,
+        "float_mv": 40619490332.4,
+        "total_mv": 49319222699.52,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 18,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000788.SZ",
+        "name": "北大医药",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 99987367.0,
+        "turnover_ratio": 1.54,
+        "float_mv": 6502222806.75,
+        "total_mv": 6502222795.84,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 36
+      },
+      {
+        "ts_code": "600196.SH",
+        "name": "复星医药",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.65,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "炸板活跃票",
+          "涨幅强=9.14%",
+          "焦点池成交额前1",
+          "题材内成交额第1",
+          "所属强势行业=化学制药"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "94733",
+        "last_time": "",
+        "pct_chg": 9.14,
+        "amount": 5135287296.0,
+        "turnover_ratio": 5.52,
+        "float_mv": 93911740701.5,
+        "total_mv": 119687362004.8,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 36,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600056.SH",
+        "name": "中国医药",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 126693517.0,
+        "turnover_ratio": 0.52,
+        "float_mv": 24587850717.96,
+        "total_mv": 24596537038.72,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 32
+      },
+      {
+        "ts_code": "603070.SH",
+        "name": "万控智造",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 7902170.0,
+        "turnover_ratio": 0.8,
+        "float_mv": 984600000.0,
+        "total_mv": 6580410000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 42
+      },
+      {
+        "ts_code": "601696.SH",
+        "name": "中银证券",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 78,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前2",
+          "首次封板时间=95818"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "95818",
+        "last_time": "145444",
+        "pct_chg": 10.04,
+        "amount": 2072069888.0,
+        "turnover_ratio": 11.14,
+        "float_mv": 18929962085.36,
+        "total_mv": 36225120000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002246.SZ",
+        "name": "北化股份",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 70,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 5,
+        "first_time": "92500",
+        "last_time": "100942",
+        "pct_chg": 10.0,
+        "amount": 1065260656.0,
+        "turnover_ratio": 15.62,
+        "float_mv": 6824502489.42,
+        "total_mv": 6824502564.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "600521.SH",
+        "name": "华海药业",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 64.9,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "炸板活跃票",
+          "焦点池成交额前3",
+          "换手活跃=8.55%"
+        ],
+        "limit_times": 0,
+        "open_times": 8,
+        "first_time": "95104",
+        "last_time": "",
+        "pct_chg": 7.77,
+        "amount": 3351182848.0,
+        "turnover_ratio": 8.55,
+        "float_mv": 39129032618.2,
+        "total_mv": 40128232956.8,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 36
+      },
+      {
+        "ts_code": "002435.SZ",
+        "name": "长江健康",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 61.45,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "换手活跃=23.95%"
+        ],
+        "limit_times": 0,
+        "open_times": 9,
+        "first_time": "92500",
+        "last_time": "",
+        "pct_chg": 1.45,
+        "amount": 2780607104.0,
+        "turnover_ratio": 23.95,
+        "float_mv": 10940302277.76,
+        "total_mv": 11272165178.88,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 36
+      },
+      {
+        "ts_code": "002550.SZ",
+        "name": "千红制药",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.97,
+        "amount": 38557440.0,
+        "turnover_ratio": 0.65,
+        "float_mv": 5939987417.6,
+        "total_mv": 8190720000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 39
+      },
+      {
+        "ts_code": "603636.SH",
+        "name": "南威软件",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93000"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93000",
+        "last_time": "93000",
+        "pct_chg": 9.96,
+        "amount": 259802128.0,
+        "turnover_ratio": 3.59,
+        "float_mv": 7237221330.5,
+        "total_mv": 7237221404.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 22
+      },
+      {
+        "ts_code": "300942.SZ",
+        "name": "易瑞生物",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化学制药",
+          "涨幅强=20.01%",
+          "换手活跃=23.17%"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "94539",
+        "last_time": "145348",
+        "pct_chg": 20.01,
+        "amount": 936812576.0,
+        "turnover_ratio": 23.17,
+        "float_mv": 4232352223.12,
+        "total_mv": 15817935600.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 36
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220314",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "000788.SZ",
+      "name": "北大医药",
+      "industry": "化学制药",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 169.98,
+      "amount_score": 66.75,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 9.98,
+      "amount": 99987367.0,
+      "turnover_ratio": 1.54,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002603.SZ",
+      "name": "以岭药业",
+      "industry": "中药",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 78.99,
+      "amount_score": 154.93,
+      "candidate_score": 144.07,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 13,
+      "first_time": "93727",
+      "last_time": "145606",
+      "pct_chg": 9.99,
+      "amount": 3968035696.0,
+      "turnover_ratio": 9.87,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=93727",
+        "盘中开板13次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=93727",
+        "盘中开板13次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "000788.SZ",
+        "name": "北大医药",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 169.98,
+        "amount_score": 66.75,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.98,
+        "amount": 99987367.0,
+        "turnover_ratio": 1.54,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600056.SH",
+        "name": "中国医药",
+        "industry": "医药商业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 70.25,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.99,
+        "amount": 126693517.0,
+        "turnover_ratio": 0.52,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603070.SH",
+        "name": "万控智造",
+        "industry": "电网设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 113.99,
+        "amount_score": 46.39,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "92501",
+        "pct_chg": 9.99,
+        "amount": 7902170.0,
+        "turnover_ratio": 0.8,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002550.SZ",
+        "name": "千红制药",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 89.97,
+        "amount_score": 50.3,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 9.97,
+        "amount": 38557440.0,
+        "turnover_ratio": 0.65,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "603636.SH",
+        "name": "南威软件",
+        "industry": "互联网服",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 89.96,
+        "amount_score": 75.76,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93000",
+        "last_time": "93000",
+        "pct_chg": 9.96,
+        "amount": 259802128.0,
+        "turnover_ratio": 3.59,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93000",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93000",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002603.SZ",
+        "name": "以岭药业",
+        "industry": "中药",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 78.99,
+        "amount_score": 154.93,
+        "candidate_score": 144.07,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 13,
+        "first_time": "93727",
+        "last_time": "145606",
+        "pct_chg": 9.99,
+        "amount": 3968035696.0,
+        "turnover_ratio": 9.87,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93727",
+          "盘中开板13次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93727",
+          "盘中开板13次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600196.SH",
+        "name": "复星医药",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 20.14,
+        "amount_score": 143.9,
+        "candidate_score": 97.65,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "94733",
+        "last_time": "",
+        "pct_chg": 9.14,
+        "amount": 5135287296.0,
+        "turnover_ratio": 5.52,
+        "recognition_reasons": [
+          "首次封板=94733",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94733",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601696.SH",
+        "name": "中银证券",
+        "industry": "证券",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 71.04,
+        "amount_score": 113.61,
+        "candidate_score": 78,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "95818",
+        "last_time": "145444",
+        "pct_chg": 10.04,
+        "amount": 2072069888.0,
+        "turnover_ratio": 11.14,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=95818",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=95818",
+          "盘中开板3次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "600521.SH",
+        "name": "华海药业",
+        "industry": "化学制药",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 18.77,
+        "amount_score": 100.05,
+        "candidate_score": 64.9,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 8,
+        "first_time": "95104",
+        "last_time": "",
+        "pct_chg": 7.77,
+        "amount": 3351182848.0,
+        "turnover_ratio": 8.55,
+        "recognition_reasons": [
+          "首次封板=95104",
+          "炸板活跃票",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=95104",
+          "炸板活跃票",
+          "候选池成交额前3",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002246.SZ",
+        "name": "北化股份",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 77.0,
+        "amount_score": 97.81,
+        "candidate_score": 70,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 5,
+        "first_time": "92500",
+        "last_time": "100942",
+        "pct_chg": 10.0,
+        "amount": 1065260656.0,
+        "turnover_ratio": 15.62,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "盘中开板5次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "盘中开板5次后仍封住"
+        ]
+      }
+    ]
+  }
+}

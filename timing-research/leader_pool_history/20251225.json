@@ -1,0 +1,882 @@
+{
+  "trade_date": "20251225",
+  "pool": {
+    "trade_date": "20251225",
+    "input_summary": {
+      "up_count": 79,
+      "zha_count": 24,
+      "focus_industries": [
+        {
+          "industry": "通用设备",
+          "industry_score": 42,
+          "up_count": 9,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 8253919083.0
+        },
+        {
+          "industry": "汽车零部件",
+          "industry_score": 37,
+          "up_count": 7,
+          "zha_count": 2,
+          "max_height": 2,
+          "amount": 15486459685.0
+        },
+        {
+          "industry": "物流行业",
+          "industry_score": 35.8,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 10,
+          "amount": 2901592366.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001331.SZ",
+        "name": "胜通能源",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 220,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=10",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 105550076.0,
+        "turnover_ratio": 1.64,
+        "float_mv": 6424602235.33,
+        "total_mv": 10801324800.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 72
+      },
+      {
+        "ts_code": "002969.SZ",
+        "name": "嘉美包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 18365693.0,
+        "turnover_ratio": 0.22,
+        "float_mv": 8448949762.2,
+        "total_mv": 8503522372.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 78
+      },
+      {
+        "ts_code": "002361.SZ",
+        "name": "神剑股份",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93045"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "93045",
+        "last_time": "93045",
+        "pct_chg": 10.02,
+        "amount": 934260608.0,
+        "turnover_ratio": 9.67,
+        "float_mv": 9685202118.48,
+        "total_mv": 11383888662.72,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 30
+      },
+      {
+        "ts_code": "600179.SH",
+        "name": "安通控股",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 124.79,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93409",
+          "题材内成交额第2",
+          "所属强势行业=物流行业",
+          "已涨停"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93409",
+        "last_time": "93409",
+        "pct_chg": 9.98,
+        "amount": 968402960.0,
+        "turnover_ratio": 4.3,
+        "float_mv": 22980557045.25,
+        "total_mv": 25177585507.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 28,
+        "amount_rank_in_industry": 2,
+        "industry_score": 35.8
+      },
+      {
+        "ts_code": "301005.SZ",
+        "name": "超捷股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.5,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "涨幅强=20.00%",
+          "焦点池成交额前2",
+          "换手活跃=22.26%",
+          "题材内成交额第2",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 4,
+        "first_time": "131454",
+        "last_time": "140200",
+        "pct_chg": 20.0,
+        "amount": 3742217936.0,
+        "turnover_ratio": 22.26,
+        "float_mv": 17860925084.98,
+        "total_mv": 18116680177.43,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 37,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "300503.SZ",
+        "name": "昊志机电",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通用设备",
+          "涨幅强=20.01%",
+          "焦点池成交额前3",
+          "换手活跃=21.76%",
+          "题材内成交额第1",
+          "所属强势行业=通用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "130300",
+        "last_time": "130300",
+        "pct_chg": 20.01,
+        "amount": 2128048304.0,
+        "turnover_ratio": 21.76,
+        "float_mv": 10463138798.58,
+        "total_mv": 13383206961.28,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 42,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002228.SZ",
+        "name": "合兴包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.08,
+        "amount": 90621667.0,
+        "turnover_ratio": 1.14,
+        "float_mv": 7921057193.95,
+        "total_mv": 7947675889.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 73
+      },
+      {
+        "ts_code": "000551.SZ",
+        "name": "创元科技",
+        "industry": "环保行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93236"
+        ],
+        "limit_times": 4,
+        "open_times": 26,
+        "first_time": "93236",
+        "last_time": "132751",
+        "pct_chg": 10.03,
+        "amount": 2166040576.0,
+        "turnover_ratio": 27.38,
+        "float_mv": 8056145681.4,
+        "total_mv": 8085347107.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 10
+      },
+      {
+        "ts_code": "002682.SZ",
+        "name": "龙洲股份",
+        "industry": "物流行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 91.39,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=物流行业",
+          "炸板活跃票",
+          "涨幅强=9.92%",
+          "焦点池成交额前5",
+          "换手活跃=33.59%",
+          "题材内成交额第1",
+          "所属强势行业=物流行业"
+        ],
+        "limit_times": 0,
+        "open_times": 5,
+        "first_time": "145215",
+        "last_time": "",
+        "pct_chg": 9.92,
+        "amount": 1643769584.0,
+        "turnover_ratio": 33.59,
+        "float_mv": 5111854163.46,
+        "total_mv": 5111930501.28,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 35.8,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002201.SZ",
+        "name": "九鼎新材",
+        "industry": "玻璃玻纤",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 73800038.0,
+        "turnover_ratio": 1.08,
+        "float_mv": 6814905114.4,
+        "total_mv": 7376522236.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 75
+      },
+      {
+        "ts_code": "603163.SH",
+        "name": "圣晖集成",
+        "industry": "工程建设",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=111202"
+        ],
+        "limit_times": 4,
+        "open_times": 7,
+        "first_time": "111202",
+        "last_time": "145529",
+        "pct_chg": 10.0,
+        "amount": 586472848.0,
+        "turnover_ratio": 7.23,
+        "float_mv": 8592000000.0,
+        "total_mv": 8592000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 40
+      },
+      {
+        "ts_code": "002536.SZ",
+        "name": "飞龙股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 79.84,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车零部件",
+          "炸板活跃票",
+          "焦点池成交额前1",
+          "换手活跃=28.38%"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "111036",
+        "last_time": "",
+        "pct_chg": 7.84,
+        "amount": 5143475200.0,
+        "turnover_ratio": 28.38,
+        "float_mv": 18265197060.0,
+        "total_mv": 19284066542.4,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 37
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20251225",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001331.SZ",
+      "name": "胜通能源",
+      "industry": "物流行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 314.0,
+      "amount_score": 78.82,
+      "candidate_score": 220,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.0,
+      "amount": 105550076.0,
+      "turnover_ratio": 1.64,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "301005.SZ",
+      "name": "超捷股份",
+      "industry": "汽车零部件",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 73,
+      "amount_score": 152.0,
+      "candidate_score": 105.5,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 4,
+      "first_time": "131454",
+      "last_time": "140200",
+      "pct_chg": 20.0,
+      "amount": 3742217936.0,
+      "turnover_ratio": 22.26,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=131454",
+        "盘中开板4次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=131454",
+        "盘中开板4次后仍封住",
+        "候选池成交额前2",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001331.SZ",
+        "name": "胜通能源",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 314.0,
+        "amount_score": 78.82,
+        "candidate_score": 220,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 105550076.0,
+        "turnover_ratio": 1.64,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002969.SZ",
+        "name": "嘉美包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 210.01,
+        "amount_score": 54.12,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 18365693.0,
+        "turnover_ratio": 0.22,
+        "recognition_reasons": [
+          "连板高度=7",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=7",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002361.SZ",
+        "name": "神剑股份",
+        "industry": "塑料制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 183.02,
+        "amount_score": 98.85,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "93045",
+        "last_time": "93045",
+        "pct_chg": 10.02,
+        "amount": 934260608.0,
+        "turnover_ratio": 9.67,
+        "recognition_reasons": [
+          "连板高度=6",
+          "首次封板=93045",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=6",
+          "首次封板=93045",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002228.SZ",
+        "name": "合兴包装",
+        "industry": "包装材料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 138.08,
+        "amount_score": 66.65,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.08,
+        "amount": 90621667.0,
+        "turnover_ratio": 1.14,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "600179.SH",
+        "name": "安通控股",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "recognition_score": 134.98,
+        "amount_score": 118.13,
+        "candidate_score": 124.79,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93409",
+        "last_time": "93409",
+        "pct_chg": 9.98,
+        "amount": 968402960.0,
+        "turnover_ratio": 4.3,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93409",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93409",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "301005.SZ",
+        "name": "超捷股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 73,
+        "amount_score": 152.0,
+        "candidate_score": 105.5,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 4,
+        "first_time": "131454",
+        "last_time": "140200",
+        "pct_chg": 20.0,
+        "amount": 3742217936.0,
+        "turnover_ratio": 22.26,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=131454",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=131454",
+          "盘中开板4次后仍封住",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300503.SZ",
+        "name": "昊志机电",
+        "industry": "通用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 61,
+        "amount_score": 142.0,
+        "candidate_score": 105.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "130300",
+        "last_time": "130300",
+        "pct_chg": 20.01,
+        "amount": 2128048304.0,
+        "turnover_ratio": 21.76,
+        "recognition_reasons": [
+          "首次封板=130300",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=130300",
+          "封板稳定",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000551.SZ",
+        "name": "创元科技",
+        "industry": "环保行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 121.03,
+        "amount_score": 132.03,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 26,
+        "first_time": "93236",
+        "last_time": "132751",
+        "pct_chg": 10.03,
+        "amount": 2166040576.0,
+        "turnover_ratio": 27.38,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93236",
+          "盘中开板26次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93236",
+          "盘中开板26次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "002536.SZ",
+        "name": "飞龙股份",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 8.84,
+        "amount_score": 121.84,
+        "candidate_score": 79.84,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "111036",
+        "last_time": "",
+        "pct_chg": 7.84,
+        "amount": 5143475200.0,
+        "turnover_ratio": 28.38,
+        "recognition_reasons": [
+          "首次封板=111036",
+          "炸板活跃票",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=111036",
+          "炸板活跃票",
+          "候选池成交额前1",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002682.SZ",
+        "name": "龙洲股份",
+        "industry": "物流行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 10.92,
+        "amount_score": 119.92,
+        "candidate_score": 91.39,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 5,
+        "first_time": "145215",
+        "last_time": "",
+        "pct_chg": 9.92,
+        "amount": 1643769584.0,
+        "turnover_ratio": 33.59,
+        "recognition_reasons": [
+          "首次封板=145215",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=145215",
+          "炸板活跃票",
+          "候选池成交额前5",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

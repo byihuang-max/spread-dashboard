@@ -1,0 +1,906 @@
+{
+  "trade_date": "20210526",
+  "pool": {
+    "trade_date": "20210526",
+    "input_summary": {
+      "up_count": 61,
+      "zha_count": 26,
+      "focus_industries": [
+        {
+          "industry": "化工行业",
+          "industry_score": 37.39,
+          "up_count": 7,
+          "zha_count": 2,
+          "max_height": 3,
+          "amount": 4193639194.0
+        },
+        {
+          "industry": "造纸印刷",
+          "industry_score": 33.14,
+          "up_count": 4,
+          "zha_count": 1,
+          "max_height": 7,
+          "amount": 3068389100.0
+        },
+        {
+          "industry": "食品饮料",
+          "industry_score": 29.34,
+          "up_count": 4,
+          "zha_count": 0,
+          "max_height": 7,
+          "amount": 1672031993.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "001206.SZ",
+        "name": "依依股份",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 189.7,
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93027",
+          "强势行业=造纸印刷",
+          "涨幅强=10.00%",
+          "换手活跃=24.91%"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "93027",
+        "last_time": "93027",
+        "pct_chg": 10.0,
+        "amount": 657008368.0,
+        "turnover_ratio": 24.91,
+        "float_mv": 2682847584.0,
+        "total_mv": 10731387605.76,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15,
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 33.14
+      },
+      {
+        "ts_code": "605339.SH",
+        "name": "南侨食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 160,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=7",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504"
+        ],
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.0,
+        "amount": 21864665.0,
+        "turnover_ratio": 0.79,
+        "float_mv": 2752729421.96,
+        "total_mv": 18351529248.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 58
+      },
+      {
+        "ts_code": "600963.SH",
+        "name": "岳阳林纸",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 153.01,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93316",
+          "强势行业=造纸印刷",
+          "涨幅强=10.01%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=造纸印刷",
+          "已涨停"
+        ],
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93316",
+        "last_time": "94310",
+        "pct_chg": 10.01,
+        "amount": 1149281088.0,
+        "turnover_ratio": 7.64,
+        "float_mv": 15469305144.13,
+        "total_mv": 15469305101.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8,
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 33.14,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002679.SZ",
+        "name": "福建金森",
+        "industry": "木业家具",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 112,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=5",
+          "首次封板时间=93339"
+        ],
+        "limit_times": 5,
+        "open_times": 1,
+        "first_time": "93339",
+        "last_time": "93442",
+        "pct_chg": 9.98,
+        "amount": 424983440.0,
+        "turnover_ratio": 9.89,
+        "float_mv": 4415709880.0,
+        "total_mv": 4415709880.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 23
+      },
+      {
+        "ts_code": "002002.SZ",
+        "name": "鸿达兴业",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 105.29,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "炸板活跃票",
+          "涨幅强=9.67%",
+          "焦点池成交额前1",
+          "换手活跃=17.06%",
+          "题材内成交额第1",
+          "所属强势行业=化工行业"
+        ],
+        "limit_times": 0,
+        "open_times": 13,
+        "first_time": "104145",
+        "last_time": "",
+        "pct_chg": 9.67,
+        "amount": 2098853296.0,
+        "turnover_ratio": 17.06,
+        "float_mv": 12512936143.64,
+        "total_mv": 12529539418.72,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 37.39,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000848.SZ",
+        "name": "承德露露",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 91.48,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=食品饮料",
+          "涨幅强=10.02%",
+          "焦点池成交额前4",
+          "换手活跃=8.58%",
+          "题材内成交额第1",
+          "所属强势行业=食品饮料",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "94109",
+        "last_time": "132724",
+        "pct_chg": 10.02,
+        "amount": 824042176.0,
+        "turnover_ratio": 8.58,
+        "float_mv": 9687532464.0,
+        "total_mv": 9687771072.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 29.34,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000650.SZ",
+        "name": "仁和药业",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 82,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前2",
+          "首次封板时间=93254"
+        ],
+        "limit_times": 2,
+        "open_times": 30,
+        "first_time": "93254",
+        "last_time": "145300",
+        "pct_chg": 10.0,
+        "amount": 2533212112.0,
+        "turnover_ratio": 15.75,
+        "float_mv": 16238094766.3,
+        "total_mv": 16939252704.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002316.SZ",
+        "name": "亚联发展",
+        "industry": "电子信息",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93233"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93233",
+        "last_time": "93233",
+        "pct_chg": 10.02,
+        "amount": 174503867.0,
+        "turnover_ratio": 9.45,
+        "float_mv": 1901320406.64,
+        "total_mv": 2547417600.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 40
+      },
+      {
+        "ts_code": "002386.SZ",
+        "name": "天原股份",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 78189805.0,
+        "turnover_ratio": 1.07,
+        "float_mv": 7298336054.35,
+        "total_mv": 7301013174.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 50
+      },
+      {
+        "ts_code": "600103.SH",
+        "name": "青山纸业",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.4,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=造纸印刷",
+          "涨幅强=9.89%",
+          "焦点池成交额前3",
+          "换手活跃=12.51%"
+        ],
+        "limit_times": 1,
+        "open_times": 1,
+        "first_time": "95045",
+        "last_time": "101427",
+        "pct_chg": 9.89,
+        "amount": 835311296.0,
+        "turnover_ratio": 12.51,
+        "float_mv": 6917453421.0,
+        "total_mv": 6917453424.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 33.14
+      },
+      {
+        "ts_code": "002581.SZ",
+        "name": "未名医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 66,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=134045"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "134045",
+        "last_time": "134045",
+        "pct_chg": 9.99,
+        "amount": 1972534816.0,
+        "turnover_ratio": 23.14,
+        "float_mv": 8917603332.25,
+        "total_mv": 14679116744.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "605337.SH",
+        "name": "李子园",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 56.96,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=食品饮料",
+          "涨幅强=10.00%",
+          "换手活跃=18.26%"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "95804",
+        "last_time": "133117",
+        "pct_chg": 10.0,
+        "amount": 505190784.0,
+        "turnover_ratio": 18.26,
+        "float_mv": 2809620000.0,
+        "total_mv": 11238480000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 29.34
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210526",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "001206.SZ",
+      "name": "依依股份",
+      "industry": "造纸印刷",
+      "source_types": [
+        "active_core",
+        "limit_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 244.0,
+      "amount_score": 104.0,
+      "candidate_score": 189.7,
+      "limit_type": "U",
+      "limit_times": 7,
+      "open_times": 0,
+      "first_time": "93027",
+      "last_time": "93027",
+      "pct_chg": 10.0,
+      "amount": 657008368.0,
+      "turnover_ratio": 24.91,
+      "recognition_reasons": [
+        "最高板=7",
+        "首次封板=93027",
+        "封板稳定",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "最高板=7",
+        "首次封板=93027",
+        "封板稳定",
+        "强势行业活跃核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "000650.SZ",
+      "name": "仁和药业",
+      "industry": "医药制造",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader"
+      ],
+      "recognition_score": 73.0,
+      "amount_score": 147.88,
+      "candidate_score": 82,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 30,
+      "first_time": "93254",
+      "last_time": "145300",
+      "pct_chg": 10.0,
+      "amount": 2533212112.0,
+      "turnover_ratio": 15.75,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=93254",
+        "盘中开板30次后仍封住"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=93254",
+        "盘中开板30次后仍封住",
+        "候选池成交额前1"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "001206.SZ",
+        "name": "依依股份",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 244.0,
+        "amount_score": 104.0,
+        "candidate_score": 189.7,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "93027",
+        "last_time": "93027",
+        "pct_chg": 10.0,
+        "amount": 657008368.0,
+        "turnover_ratio": 24.91,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=93027",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=93027",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605339.SH",
+        "name": "南侨食品",
+        "industry": "食品饮料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 242.0,
+        "amount_score": 54.4,
+        "candidate_score": 160,
+        "limit_type": "U",
+        "limit_times": 7,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 10.0,
+        "amount": 21864665.0,
+        "turnover_ratio": 0.79,
+        "recognition_reasons": [
+          "最高板=7",
+          "首次封板=92504",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=7",
+          "首次封板=92504",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002679.SZ",
+        "name": "福建金森",
+        "industry": "木业家具",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 152.98,
+        "amount_score": 82.93,
+        "candidate_score": 112,
+        "limit_type": "U",
+        "limit_times": 5,
+        "open_times": 1,
+        "first_time": "93339",
+        "last_time": "93442",
+        "pct_chg": 9.98,
+        "amount": 424983440.0,
+        "turnover_ratio": 9.89,
+        "recognition_reasons": [
+          "连板高度=5",
+          "首次封板=93339",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=5",
+          "首次封板=93339",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "600963.SH",
+        "name": "岳阳林纸",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 134.01,
+        "amount_score": 145.83,
+        "candidate_score": 153.01,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93316",
+        "last_time": "94310",
+        "pct_chg": 10.01,
+        "amount": 1149281088.0,
+        "turnover_ratio": 7.64,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93316",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93316",
+          "盘中开板4次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002386.SZ",
+        "name": "天原股份",
+        "industry": "化工行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 54.53,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 78189805.0,
+        "turnover_ratio": 1.07,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "000650.SZ",
+        "name": "仁和药业",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 73.0,
+        "amount_score": 147.88,
+        "candidate_score": 82,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 30,
+        "first_time": "93254",
+        "last_time": "145300",
+        "pct_chg": 10.0,
+        "amount": 2533212112.0,
+        "turnover_ratio": 15.75,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93254",
+          "盘中开板30次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93254",
+          "盘中开板30次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "600963.SH",
+        "name": "岳阳林纸",
+        "industry": "造纸印刷",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 134.01,
+        "amount_score": 145.83,
+        "candidate_score": 153.01,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 4,
+        "first_time": "93316",
+        "last_time": "94310",
+        "pct_chg": 10.01,
+        "amount": 1149281088.0,
+        "turnover_ratio": 7.64,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93316",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93316",
+          "盘中开板4次后仍封住",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002002.SZ",
+        "name": "鸿达兴业",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 15.67,
+        "amount_score": 142.2,
+        "candidate_score": 105.29,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 13,
+        "first_time": "104145",
+        "last_time": "",
+        "pct_chg": 9.67,
+        "amount": 2098853296.0,
+        "turnover_ratio": 17.06,
+        "recognition_reasons": [
+          "首次封板=104145",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=104145",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002581.SZ",
+        "name": "未名医药",
+        "industry": "医药制造",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 71.99,
+        "amount_score": 123.99,
+        "candidate_score": 66,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "134045",
+        "last_time": "134045",
+        "pct_chg": 9.99,
+        "amount": 1972534816.0,
+        "turnover_ratio": 23.14,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=134045",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=134045",
+          "封板稳定",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "000848.SZ",
+        "name": "承德露露",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.02,
+        "amount_score": 118.31,
+        "candidate_score": 91.48,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "94109",
+        "last_time": "132724",
+        "pct_chg": 10.02,
+        "amount": 824042176.0,
+        "turnover_ratio": 8.58,
+        "recognition_reasons": [
+          "首次封板=94109",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=94109",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

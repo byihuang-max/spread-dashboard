@@ -1,0 +1,906 @@
+{
+  "trade_date": "20201120",
+  "pool": {
+    "trade_date": "20201120",
+    "input_summary": {
+      "up_count": 46,
+      "zha_count": 12,
+      "focus_industries": [
+        {
+          "industry": "汽车行业",
+          "industry_score": 53,
+          "up_count": 11,
+          "zha_count": 2,
+          "max_height": 4,
+          "amount": 6617388454.0
+        },
+        {
+          "industry": "酿酒行业",
+          "industry_score": 35,
+          "up_count": 7,
+          "zha_count": 0,
+          "max_height": 2,
+          "amount": 6361821208.0
+        },
+        {
+          "industry": "专用设备",
+          "industry_score": 20.33,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 3162924336.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "600559.SH",
+        "name": "老白干酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 125.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=101313",
+          "强势行业=酿酒行业",
+          "涨幅强=10.02%",
+          "焦点池成交额前1",
+          "换手活跃=20.16%",
+          "题材内成交额第1",
+          "所属强势行业=酿酒行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "101313",
+        "last_time": "145639",
+        "pct_chg": 10.02,
+        "amount": 3456469856.0,
+        "turnover_ratio": 20.16,
+        "float_mv": 17613374411.85,
+        "total_mv": 18026504669.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 35,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600178.SH",
+        "name": "东安动力",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 95.84,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93943",
+          "强势行业=汽车行业",
+          "涨幅强=10.00%",
+          "换手活跃=17.82%"
+        ],
+        "limit_times": 3,
+        "open_times": 7,
+        "first_time": "93943",
+        "last_time": "145330",
+        "pct_chg": 10.0,
+        "amount": 792076048.0,
+        "turnover_ratio": 17.82,
+        "float_mv": 4523763200.0,
+        "total_mv": 4523763200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 8,
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 53
+      },
+      {
+        "ts_code": "601615.SH",
+        "name": "明阳智能",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 94.76,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "炸板活跃票",
+          "涨幅强=8.73%",
+          "焦点池成交额前2",
+          "换手活跃=8.29%",
+          "题材内成交额第1",
+          "所属强势行业=专用设备"
+        ],
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "134556",
+        "last_time": "",
+        "pct_chg": 8.73,
+        "amount": 1354170272.0,
+        "turnover_ratio": 8.29,
+        "float_mv": 16642400925.92,
+        "total_mv": 31756898687.36,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 20.33,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002553.SZ",
+        "name": "南方轴承",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "首次封板时间=93300"
+        ],
+        "limit_times": 4,
+        "open_times": 2,
+        "first_time": "93300",
+        "last_time": "93518",
+        "pct_chg": 9.97,
+        "amount": 324401712.0,
+        "turnover_ratio": 13.64,
+        "float_mv": 2403858502.26,
+        "total_mv": 3570480000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 27
+      },
+      {
+        "ts_code": "003019.SZ",
+        "name": "宸展光电",
+        "industry": "仪器仪表",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 92,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "92500",
+        "last_time": "130815",
+        "pct_chg": 10.0,
+        "amount": 549331824.0,
+        "turnover_ratio": 38.13,
+        "float_mv": 1446720000.0,
+        "total_mv": 5786880000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 12
+      },
+      {
+        "ts_code": "601238.SH",
+        "name": "广汽集团",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 91.1,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "涨幅强=10.01%",
+          "焦点池成交额前3",
+          "题材内成交额第1",
+          "所属强势行业=汽车行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "95434",
+        "last_time": "134248",
+        "pct_chg": 10.01,
+        "amount": 1329065456.0,
+        "turnover_ratio": 1.32,
+        "float_mv": 102020731240.26,
+        "total_mv": 146300015813.12,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 53,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600059.SH",
+        "name": "古越龙山",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 85.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=100739",
+          "强势行业=酿酒行业",
+          "涨幅强=10.04%",
+          "焦点池成交额前5",
+          "换手活跃=10.01%"
+        ],
+        "limit_times": 2,
+        "open_times": 11,
+        "first_time": "100739",
+        "last_time": "112824",
+        "pct_chg": 10.04,
+        "amount": 952198624.0,
+        "turnover_ratio": 10.01,
+        "float_mv": 9839739088.05,
+        "total_mv": 9839739027.2,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 5,
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 35
+      },
+      {
+        "ts_code": "002379.SZ",
+        "name": "宏创控股",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93009"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "93009",
+        "last_time": "93130",
+        "pct_chg": 9.92,
+        "amount": 229117194.0,
+        "turnover_ratio": 6.48,
+        "float_mv": 3594432000.0,
+        "total_mv": 3594432000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 33
+      },
+      {
+        "ts_code": "600616.SH",
+        "name": "金枫酒业",
+        "industry": "酿酒行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93255"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93255",
+        "last_time": "93255",
+        "pct_chg": 10.02,
+        "amount": 312614720.0,
+        "turnover_ratio": 6.94,
+        "float_mv": 4555923709.5,
+        "total_mv": 4555923668.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 29
+      },
+      {
+        "ts_code": "002085.SZ",
+        "name": "万丰奥威",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 58.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=汽车行业",
+          "炸板活跃票",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "102806",
+        "last_time": "",
+        "pct_chg": 6.81,
+        "amount": 958670880.0,
+        "turnover_ratio": 5.81,
+        "float_mv": 16571686382.72,
+        "total_mv": 17145136691.2,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 53
+      },
+      {
+        "ts_code": "601579.SH",
+        "name": "会稽山",
+        "industry": "酿酒行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 56,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=95807"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "95807",
+        "last_time": "95807",
+        "pct_chg": 9.97,
+        "amount": 457432976.0,
+        "turnover_ratio": 8.41,
+        "float_mv": 5704719200.0,
+        "total_mv": 5704719200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 19
+      },
+      {
+        "ts_code": "300807.SZ",
+        "name": "天迈科技",
+        "industry": "专用设备",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "candidate_score": 50,
+        "role_tags": [
+          "leader_pool_candidate",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "题材内成交额第2",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "145227",
+        "last_time": "150003",
+        "pct_chg": 20.0,
+        "amount": 779965328.0,
+        "turnover_ratio": 73.26,
+        "float_mv": 1199350000.0,
+        "total_mv": 4786888050.0,
+        "limit_type": "U",
+        "amount_rank_in_industry": 2,
+        "industry_score": 20.33
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20201120",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "002553.SZ",
+      "name": "南方轴承",
+      "industry": "汽车行业",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 156.97,
+      "amount_score": 72.79,
+      "candidate_score": 92,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 2,
+      "first_time": "93300",
+      "last_time": "93518",
+      "pct_chg": 9.97,
+      "amount": 324401712.0,
+      "turnover_ratio": 13.64,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=93300",
+        "盘中开板2次后仍封住"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=93300",
+        "盘中开板2次后仍封住"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "600559.SH",
+      "name": "老白干酒",
+      "industry": "酿酒行业",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 50.02,
+      "amount_score": 164.02,
+      "candidate_score": 125.02,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 6,
+      "first_time": "101313",
+      "last_time": "145639",
+      "pct_chg": 10.02,
+      "amount": 3456469856.0,
+      "turnover_ratio": 20.16,
+      "recognition_reasons": [
+        "首次封板=101313",
+        "盘中开板6次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=101313",
+        "盘中开板6次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "002553.SZ",
+        "name": "南方轴承",
+        "industry": "汽车行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 156.97,
+        "amount_score": 72.79,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 2,
+        "first_time": "93300",
+        "last_time": "93518",
+        "pct_chg": 9.97,
+        "amount": 324401712.0,
+        "turnover_ratio": 13.64,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=93300",
+          "盘中开板2次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=93300",
+          "盘中开板2次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "003019.SZ",
+        "name": "宸展光电",
+        "industry": "仪器仪表",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 156.0,
+        "amount_score": 92.0,
+        "candidate_score": 92,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 8,
+        "first_time": "92500",
+        "last_time": "130815",
+        "pct_chg": 10.0,
+        "amount": 549331824.0,
+        "turnover_ratio": 38.13,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "盘中开板8次后仍封住"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "盘中开板8次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002379.SZ",
+        "name": "宏创控股",
+        "industry": "材料行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 104.92,
+        "amount_score": 49.16,
+        "candidate_score": 72,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "93009",
+        "last_time": "93130",
+        "pct_chg": 9.92,
+        "amount": 229117194.0,
+        "turnover_ratio": 6.48,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93009",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93009",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "600178.SH",
+        "name": "东安动力",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 103.0,
+        "amount_score": 102.91,
+        "candidate_score": 95.84,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 7,
+        "first_time": "93943",
+        "last_time": "145330",
+        "pct_chg": 10.0,
+        "amount": 792076048.0,
+        "turnover_ratio": 17.82,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93943",
+          "盘中开板7次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93943",
+          "盘中开板7次后仍封住",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600616.SH",
+        "name": "金枫酒业",
+        "industry": "酿酒行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 87.02,
+        "amount_score": 53.49,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93255",
+        "last_time": "93255",
+        "pct_chg": 10.02,
+        "amount": 312614720.0,
+        "turnover_ratio": 6.94,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93255",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93255",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "600559.SH",
+        "name": "老白干酒",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 50.02,
+        "amount_score": 164.02,
+        "candidate_score": 125.02,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 6,
+        "first_time": "101313",
+        "last_time": "145639",
+        "pct_chg": 10.02,
+        "amount": 3456469856.0,
+        "turnover_ratio": 20.16,
+        "recognition_reasons": [
+          "首次封板=101313",
+          "盘中开板6次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101313",
+          "盘中开板6次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601238.SH",
+        "name": "广汽集团",
+        "industry": "汽车行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 55.01,
+        "amount_score": 138.67,
+        "candidate_score": 91.1,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 7,
+        "first_time": "95434",
+        "last_time": "134248",
+        "pct_chg": 10.01,
+        "amount": 1329065456.0,
+        "turnover_ratio": 1.32,
+        "recognition_reasons": [
+          "首次封板=95434",
+          "盘中开板7次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=95434",
+          "盘中开板7次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "601615.SH",
+        "name": "明阳智能",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 9.73,
+        "amount_score": 136.88,
+        "candidate_score": 94.76,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 2,
+        "first_time": "134556",
+        "last_time": "",
+        "pct_chg": 8.73,
+        "amount": 1354170272.0,
+        "turnover_ratio": 8.29,
+        "recognition_reasons": [
+          "首次封板=134556",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=134556",
+          "炸板活跃票",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300807.SZ",
+        "name": "天迈科技",
+        "industry": "专用设备",
+        "source_types": [
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "theme_amount_core"
+        ],
+        "recognition_score": 63,
+        "amount_score": 112.0,
+        "candidate_score": 50,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "145227",
+        "last_time": "150003",
+        "pct_chg": 20.0,
+        "amount": 779965328.0,
+        "turnover_ratio": 73.26,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=145227",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=145227",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "600059.SH",
+        "name": "古越龙山",
+        "industry": "酿酒行业",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 74.04,
+        "amount_score": 103.04,
+        "candidate_score": 85.02,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 11,
+        "first_time": "100739",
+        "last_time": "112824",
+        "pct_chg": 10.04,
+        "amount": 952198624.0,
+        "turnover_ratio": 10.01,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=100739",
+          "盘中开板11次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=100739",
+          "盘中开板11次后仍封住",
+          "候选池成交额前5",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

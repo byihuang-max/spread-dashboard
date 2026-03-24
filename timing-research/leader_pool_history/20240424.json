@@ -1,0 +1,902 @@
+{
+  "trade_date": "20240424",
+  "pool": {
+    "trade_date": "20240424",
+    "input_summary": {
+      "up_count": 51,
+      "zha_count": 22,
+      "focus_industries": [
+        {
+          "industry": "汽车零部件",
+          "industry_score": 30,
+          "up_count": 5,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 5149693442.0
+        },
+        {
+          "industry": "专用设备",
+          "industry_score": 26.24,
+          "up_count": 6,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 1621529058.0
+        },
+        {
+          "industry": "通信设备",
+          "industry_score": 21.71,
+          "up_count": 4,
+          "zha_count": 1,
+          "max_height": 1,
+          "amount": 3356444311.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "603017.SH",
+        "name": "中衡设计",
+        "industry": "工程咨询",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 140,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=6",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92501"
+        ],
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "93504",
+        "pct_chg": 10.01,
+        "amount": 440225616.0,
+        "turnover_ratio": 13.91,
+        "float_mv": 3426749762.76,
+        "total_mv": 3426749737.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 15
+      },
+      {
+        "ts_code": "002085.SZ",
+        "name": "万丰奥威",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 127.27,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=93957",
+          "强势行业=汽车零部件",
+          "涨幅强=9.99%",
+          "焦点池成交额前1",
+          "换手活跃=11.78%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "93957",
+        "last_time": "94857",
+        "pct_chg": 9.99,
+        "amount": 3729867056.0,
+        "turnover_ratio": 11.78,
+        "float_mv": 32252889328.8,
+        "total_mv": 32252889328.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 30,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300711.SZ",
+        "name": "广哈通信",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 106.2,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=通信设备",
+          "炸板活跃票",
+          "涨幅强=15.32%",
+          "焦点池成交额前2",
+          "换手活跃=23.49%",
+          "题材内成交额第1",
+          "所属强势行业=通信设备"
+        ],
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "101636",
+        "last_time": "",
+        "pct_chg": 15.32,
+        "amount": 1366749648.0,
+        "turnover_ratio": 23.49,
+        "float_mv": 5987577825.28,
+        "total_mv": 6019961840.96,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 21.71,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "300484.SZ",
+        "name": "蓝海华腾",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 101.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=20.00%",
+          "焦点池成交额前4",
+          "换手活跃=30.93%",
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "100636",
+        "last_time": "100636",
+        "pct_chg": 20.0,
+        "amount": 857662608.0,
+        "turnover_ratio": 30.93,
+        "float_mv": 2958439554.0,
+        "total_mv": 3754294200.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 26.24,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002590.SZ",
+        "name": "万安科技",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "candidate_score": 81.21,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "首次封板时间=93421",
+          "强势行业=汽车零部件",
+          "涨幅强=10.00%",
+          "焦点池成交额前5",
+          "换手活跃=11.00%"
+        ],
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "93421",
+        "last_time": "93500",
+        "pct_chg": 10.0,
+        "amount": 810421456.0,
+        "turnover_ratio": 11.0,
+        "float_mv": 7717078644.66,
+        "total_mv": 8125218960.32,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 9,
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 30
+      },
+      {
+        "ts_code": "002231.SZ",
+        "name": "奥维通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.02,
+        "amount": 20918110.0,
+        "turnover_ratio": 1.4,
+        "float_mv": 1488834773.35,
+        "total_mv": 1751592580.8,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 51
+      },
+      {
+        "ts_code": "002296.SZ",
+        "name": "辉煌科技",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 73.98,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=通信设备",
+          "涨幅强=9.98%",
+          "焦点池成交额前3",
+          "换手活跃=38.18%"
+        ],
+        "limit_times": 1,
+        "open_times": 3,
+        "first_time": "92500",
+        "last_time": "112857",
+        "pct_chg": 9.98,
+        "amount": 1322732672.0,
+        "turnover_ratio": 38.18,
+        "float_mv": 3522792602.16,
+        "total_mv": 3950345418.24,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 21.71
+      },
+      {
+        "ts_code": "000691.SZ",
+        "name": "亚太实业",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "92500",
+        "last_time": "95254",
+        "pct_chg": 10.1,
+        "amount": 149516827.0,
+        "turnover_ratio": 10.64,
+        "float_mv": 1409457200.0,
+        "total_mv": 1409457200.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 31
+      },
+      {
+        "ts_code": "600234.SH",
+        "name": "科新发展",
+        "industry": "房地产开发",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93236"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "93236",
+        "last_time": "93236",
+        "pct_chg": 9.9,
+        "amount": 22536397.0,
+        "turnover_ratio": 2.71,
+        "float_mv": 854321613.6,
+        "total_mv": 1107838506.06,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 50
+      },
+      {
+        "ts_code": "002130.SZ",
+        "name": "沃尔核材",
+        "industry": "非金属材",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 58,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "首次封板时间=95518"
+        ],
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "95518",
+        "last_time": "132936",
+        "pct_chg": 9.97,
+        "amount": 2920287648.0,
+        "turnover_ratio": 18.4,
+        "float_mv": 16126515255.39,
+        "total_mv": 16265290409.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      },
+      {
+        "ts_code": "002902.SZ",
+        "name": "铭普光磁",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 56.55,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=通信设备",
+          "涨幅强=10.00%",
+          "换手活跃=10.91%"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "133703",
+        "last_time": "133703",
+        "pct_chg": 10.0,
+        "amount": 383389984.0,
+        "turnover_ratio": 10.91,
+        "float_mv": 3657757886.64,
+        "total_mv": 5611590753.12,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 6,
+        "industry_score": 21.71
+      },
+      {
+        "ts_code": "000628.SZ",
+        "name": "高新发展",
+        "industry": "工程建设",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 52,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=130003"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "130003",
+        "last_time": "130003",
+        "pct_chg": 10.0,
+        "amount": 2344755776.0,
+        "turnover_ratio": 29.1,
+        "float_mv": 8451257760.0,
+        "total_mv": 15500320000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20240424",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "603017.SH",
+      "name": "中衡设计",
+      "industry": "工程咨询",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 218.01,
+      "amount_score": 92.97,
+      "candidate_score": 140,
+      "limit_type": "U",
+      "limit_times": 6,
+      "open_times": 0,
+      "first_time": "92501",
+      "last_time": "93504",
+      "pct_chg": 10.01,
+      "amount": 440225616.0,
+      "turnover_ratio": 13.91,
+      "recognition_reasons": [
+        "最高板=6",
+        "首次封板=92501",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=6",
+        "首次封板=92501",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002085.SZ",
+      "name": "万丰奥威",
+      "industry": "汽车零部件",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 56.99,
+      "amount_score": 159.88,
+      "candidate_score": 127.27,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 4,
+      "first_time": "93957",
+      "last_time": "94857",
+      "pct_chg": 9.99,
+      "amount": 3729867056.0,
+      "turnover_ratio": 11.78,
+      "recognition_reasons": [
+        "首次封板=93957",
+        "盘中开板4次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=93957",
+        "盘中开板4次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "603017.SH",
+        "name": "中衡设计",
+        "industry": "工程咨询",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 218.01,
+        "amount_score": 92.97,
+        "candidate_score": 140,
+        "limit_type": "U",
+        "limit_times": 6,
+        "open_times": 0,
+        "first_time": "92501",
+        "last_time": "93504",
+        "pct_chg": 10.01,
+        "amount": 440225616.0,
+        "turnover_ratio": 13.91,
+        "recognition_reasons": [
+          "最高板=6",
+          "首次封板=92501",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=6",
+          "首次封板=92501",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002231.SZ",
+        "name": "奥维通信",
+        "industry": "通信服务",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.02,
+        "amount_score": 46.72,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.02,
+        "amount": 20918110.0,
+        "turnover_ratio": 1.4,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "000691.SZ",
+        "name": "亚太实业",
+        "industry": "化学制品",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 103.1,
+        "amount_score": 67.42,
+        "candidate_score": 72,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 3,
+        "first_time": "92500",
+        "last_time": "95254",
+        "pct_chg": 10.1,
+        "amount": 149516827.0,
+        "turnover_ratio": 10.64,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板3次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "盘中开板3次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002590.SZ",
+        "name": "万安科技",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 92.0,
+        "amount_score": 87.5,
+        "candidate_score": 81.21,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "93421",
+        "last_time": "93500",
+        "pct_chg": 10.0,
+        "amount": 810421456.0,
+        "turnover_ratio": 11.0,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=93421",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=93421",
+          "盘中开板1次后仍封住",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300484.SZ",
+        "name": "蓝海华腾",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 90,
+        "amount_score": 130.0,
+        "candidate_score": 101.0,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "100636",
+        "last_time": "100636",
+        "pct_chg": 20.0,
+        "amount": 857662608.0,
+        "turnover_ratio": 30.93,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=100636",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=100636",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002085.SZ",
+        "name": "万丰奥威",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 56.99,
+        "amount_score": 159.88,
+        "candidate_score": 127.27,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 4,
+        "first_time": "93957",
+        "last_time": "94857",
+        "pct_chg": 9.99,
+        "amount": 3729867056.0,
+        "turnover_ratio": 11.78,
+        "recognition_reasons": [
+          "首次封板=93957",
+          "盘中开板4次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=93957",
+          "盘中开板4次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "002130.SZ",
+        "name": "沃尔核材",
+        "industry": "非金属材",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 43.97,
+        "amount_score": 137.17,
+        "candidate_score": 58,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 9,
+        "first_time": "95518",
+        "last_time": "132936",
+        "pct_chg": 9.97,
+        "amount": 2920287648.0,
+        "turnover_ratio": 18.4,
+        "recognition_reasons": [
+          "首次封板=95518",
+          "盘中开板9次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=95518",
+          "盘中开板9次后仍封住",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "300711.SZ",
+        "name": "广哈通信",
+        "industry": "通信设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 18,
+        "amount_score": 130.0,
+        "candidate_score": 106.2,
+        "limit_type": "Z",
+        "limit_times": 0,
+        "open_times": 1,
+        "first_time": "101636",
+        "last_time": "",
+        "pct_chg": 15.32,
+        "amount": 1366749648.0,
+        "turnover_ratio": 23.49,
+        "recognition_reasons": [
+          "首次封板=101636",
+          "炸板活跃票",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=101636",
+          "炸板活跃票",
+          "候选池成交额前4",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "300484.SZ",
+        "name": "蓝海华腾",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 90,
+        "amount_score": 130.0,
+        "candidate_score": 101.0,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "100636",
+        "last_time": "100636",
+        "pct_chg": 20.0,
+        "amount": 857662608.0,
+        "turnover_ratio": 30.93,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=100636",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=100636",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000628.SZ",
+        "name": "高新发展",
+        "industry": "工程建设",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.0,
+        "amount_score": 130.0,
+        "candidate_score": 52,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "130003",
+        "last_time": "130003",
+        "pct_chg": 10.0,
+        "amount": 2344755776.0,
+        "turnover_ratio": 29.1,
+        "recognition_reasons": [
+          "首次封板=130003",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=130003",
+          "封板稳定",
+          "候选池成交额前3"
+        ]
+      }
+    ]
+  }
+}

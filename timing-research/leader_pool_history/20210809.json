@@ -1,0 +1,869 @@
+{
+  "trade_date": "20210809",
+  "pool": {
+    "trade_date": "20210809",
+    "input_summary": {
+      "up_count": 79,
+      "zha_count": 24,
+      "focus_industries": [
+        {
+          "industry": "化工行业",
+          "industry_score": 42,
+          "up_count": 9,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 5414846976.0
+        },
+        {
+          "industry": "食品饮料",
+          "industry_score": 39.21,
+          "up_count": 10,
+          "zha_count": 1,
+          "max_height": 1,
+          "amount": 3104953525.0
+        },
+        {
+          "industry": "专用设备",
+          "industry_score": 30.95,
+          "up_count": 6,
+          "zha_count": 3,
+          "max_height": 2,
+          "amount": 2974459859.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "002455.SZ",
+        "name": "百川股份",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 110.29,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "涨幅强=9.99%",
+          "焦点池成交额前1",
+          "换手活跃=22.23%",
+          "题材内成交额第1",
+          "所属强势行业=化工行业",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "103345",
+        "last_time": "104957",
+        "pct_chg": 9.99,
+        "amount": 1970032784.0,
+        "turnover_ratio": 22.23,
+        "float_mv": 9268183638.83,
+        "total_mv": 11641901274.08,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 42,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "002256.SZ",
+        "name": "兆新股份",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "最高板=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.13,
+        "amount": 11368116.0,
+        "turnover_ratio": 0.23,
+        "float_mv": 4841346061.56,
+        "total_mv": 6550793314.56,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 77
+      },
+      {
+        "ts_code": "301018.SZ",
+        "name": "申菱环境",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 97.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=20.00%",
+          "焦点池成交额前5",
+          "换手活跃=48.77%",
+          "题材内成交额第1",
+          "所属强势行业=专用设备",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "142936",
+        "last_time": "142936",
+        "pct_chg": 20.0,
+        "amount": 649089728.0,
+        "turnover_ratio": 48.77,
+        "float_mv": 1487256679.92,
+        "total_mv": 6969890400.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 30.95,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "000848.SZ",
+        "name": "承德露露",
+        "industry": "食品饮料",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 84.03,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=食品饮料",
+          "炸板活跃票",
+          "焦点池成交额前4",
+          "题材内成交额第1",
+          "所属强势行业=食品饮料"
+        ],
+        "limit_times": 0,
+        "open_times": 3,
+        "first_time": "140639",
+        "last_time": "",
+        "pct_chg": 7.34,
+        "amount": 727197216.0,
+        "turnover_ratio": 6.87,
+        "float_mv": 10699341410.24,
+        "total_mv": 10699604939.52,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 39.21,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "001211.SZ",
+        "name": "双枪科技",
+        "industry": "木业家具",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 6908464.0,
+        "turnover_ratio": 0.83,
+        "float_mv": 828000000.0,
+        "total_mv": 3312000000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 78
+      },
+      {
+        "ts_code": "605020.SH",
+        "name": "永和股份",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 73.99,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "涨幅强=9.99%",
+          "焦点池成交额前3",
+          "换手活跃=32.41%"
+        ],
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "112955",
+        "last_time": "135856",
+        "pct_chg": 9.99,
+        "amount": 738485312.0,
+        "turnover_ratio": 32.41,
+        "float_mv": 2393453000.0,
+        "total_mv": 9573453000.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 42
+      },
+      {
+        "ts_code": "001208.SZ",
+        "name": "华菱线缆",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 72,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "首次封板时间=93236"
+        ],
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "93236",
+        "last_time": "103430",
+        "pct_chg": 9.99,
+        "amount": 540340368.0,
+        "turnover_ratio": 32.52,
+        "float_mv": 1691451960.0,
+        "total_mv": 6765807840.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 20
+      },
+      {
+        "ts_code": "603938.SH",
+        "name": "三孚股份",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 69.3,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=化工行业",
+          "炸板活跃票",
+          "涨幅强=8.86%",
+          "焦点池成交额前2"
+        ],
+        "limit_times": 0,
+        "open_times": 10,
+        "first_time": "93313",
+        "last_time": "",
+        "pct_chg": 8.86,
+        "amount": 862448224.0,
+        "turnover_ratio": 7.4,
+        "float_mv": 11777416271.4,
+        "total_mv": 11777416271.4,
+        "limit_type": "Z",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 42
+      },
+      {
+        "ts_code": "600958.SH",
+        "name": "东方证券",
+        "industry": "券商信托",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前1",
+          "首次封板时间=94303"
+        ],
+        "limit_times": 1,
+        "open_times": 11,
+        "first_time": "94303",
+        "last_time": "150000",
+        "pct_chg": 9.98,
+        "amount": 4409739264.0,
+        "turnover_ratio": 5.73,
+        "float_mv": 77730602130.65,
+        "total_mv": 94764036198.4,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1
+      },
+      {
+        "ts_code": "002667.SZ",
+        "name": "鞍重股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 60,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92500"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 79239476.0,
+        "turnover_ratio": 1.3,
+        "float_mv": 6092092991.25,
+        "total_mv": 6094950840.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 70
+      },
+      {
+        "ts_code": "300619.SZ",
+        "name": "金银河",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.0,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=专用设备",
+          "涨幅强=20.00%",
+          "换手活跃=23.75%"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "133430",
+        "last_time": "133430",
+        "pct_chg": 20.0,
+        "amount": 582029120.0,
+        "turnover_ratio": 23.75,
+        "float_mv": 2711006968.32,
+        "total_mv": 3575950645.68,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 7,
+        "industry_score": 30.95
+      },
+      {
+        "ts_code": "002714.SZ",
+        "name": "牧原股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 58,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "涨停池成交额前2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=131039"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "131039",
+        "last_time": "131039",
+        "pct_chg": 10.0,
+        "amount": 4033856128.0,
+        "turnover_ratio": 2.51,
+        "float_mv": 165115519359.2,
+        "total_mv": 244785038177.28,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 2
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20210809",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "002256.SZ",
+      "name": "兆新股份",
+      "industry": "输配电气",
+      "source_types": [
+        "limit_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_recognition_leader"
+      ],
+      "recognition_score": 170.13,
+      "amount_score": 58.25,
+      "candidate_score": 100,
+      "limit_type": "U",
+      "limit_times": 4,
+      "open_times": 0,
+      "first_time": "92500",
+      "last_time": "92500",
+      "pct_chg": 10.13,
+      "amount": 11368116.0,
+      "turnover_ratio": 0.23,
+      "recognition_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ],
+      "amount_reasons": [
+        "最高板=4",
+        "首次封板=92500",
+        "封板稳定"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002455.SZ",
+      "name": "百川股份",
+      "industry": "化工行业",
+      "source_types": [
+        "active_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 53.99,
+      "amount_score": 147.99,
+      "candidate_score": 110.29,
+      "limit_type": "U",
+      "limit_times": 1,
+      "open_times": 2,
+      "first_time": "103345",
+      "last_time": "104957",
+      "pct_chg": 9.99,
+      "amount": 1970032784.0,
+      "turnover_ratio": 22.23,
+      "recognition_reasons": [
+        "首次封板=103345",
+        "盘中开板2次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "首次封板=103345",
+        "盘中开板2次后仍封住",
+        "候选池成交额前3",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "002256.SZ",
+        "name": "兆新股份",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 170.13,
+        "amount_score": 58.25,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.13,
+        "amount": 11368116.0,
+        "turnover_ratio": 0.23,
+        "recognition_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "最高板=4",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001211.SZ",
+        "name": "双枪科技",
+        "industry": "木业家具",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.0,
+        "amount_score": 46.41,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.0,
+        "amount": 6908464.0,
+        "turnover_ratio": 0.83,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "001208.SZ",
+        "name": "华菱线缆",
+        "industry": "输配电气",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 104.99,
+        "amount_score": 79.99,
+        "candidate_score": 72,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 1,
+        "first_time": "93236",
+        "last_time": "103430",
+        "pct_chg": 9.99,
+        "amount": 540340368.0,
+        "turnover_ratio": 32.52,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93236",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93236",
+          "盘中开板1次后仍封住"
+        ]
+      },
+      {
+        "ts_code": "002667.SZ",
+        "name": "鞍重股份",
+        "industry": "专用设备",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 90.01,
+        "amount_score": 58.66,
+        "candidate_score": 60,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "92500",
+        "last_time": "92500",
+        "pct_chg": 10.01,
+        "amount": 79239476.0,
+        "turnover_ratio": 1.3,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=92500",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "300619.SZ",
+        "name": "金银河",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 85,
+        "amount_score": 86.0,
+        "candidate_score": 60.0,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "133430",
+        "last_time": "133430",
+        "pct_chg": 20.0,
+        "amount": 582029120.0,
+        "turnover_ratio": 23.75,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=133430",
+          "封板稳定",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=133430",
+          "封板稳定",
+          "强势行业活跃核心"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002455.SZ",
+        "name": "百川股份",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 53.99,
+        "amount_score": 147.99,
+        "candidate_score": 110.29,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "103345",
+        "last_time": "104957",
+        "pct_chg": 9.99,
+        "amount": 1970032784.0,
+        "turnover_ratio": 22.23,
+        "recognition_reasons": [
+          "首次封板=103345",
+          "盘中开板2次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=103345",
+          "盘中开板2次后仍封住",
+          "候选池成交额前3",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "600958.SH",
+        "name": "东方证券",
+        "industry": "券商信托",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 43.98,
+        "amount_score": 138.84,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 11,
+        "first_time": "94303",
+        "last_time": "150000",
+        "pct_chg": 9.98,
+        "amount": 4409739264.0,
+        "turnover_ratio": 5.73,
+        "recognition_reasons": [
+          "首次封板=94303",
+          "盘中开板11次后仍封住"
+        ],
+        "amount_reasons": [
+          "首次封板=94303",
+          "盘中开板11次后仍封住",
+          "候选池成交额前1"
+        ]
+      },
+      {
+        "ts_code": "002714.SZ",
+        "name": "牧原股份",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 48.0,
+        "amount_score": 129.25,
+        "candidate_score": 58,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "131039",
+        "last_time": "131039",
+        "pct_chg": 10.0,
+        "amount": 4033856128.0,
+        "turnover_ratio": 2.51,
+        "recognition_reasons": [
+          "首次封板=131039",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "首次封板=131039",
+          "封板稳定",
+          "候选池成交额前2"
+        ]
+      },
+      {
+        "ts_code": "301018.SZ",
+        "name": "申菱环境",
+        "industry": "专用设备",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 61,
+        "amount_score": 118.0,
+        "candidate_score": 97.0,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "142936",
+        "last_time": "142936",
+        "pct_chg": 20.0,
+        "amount": 649089728.0,
+        "turnover_ratio": 48.77,
+        "recognition_reasons": [
+          "首次封板=142936",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=142936",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "605020.SH",
+        "name": "永和股份",
+        "industry": "化工行业",
+        "source_types": [
+          "active_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "recognition_score": 48.99,
+        "amount_score": 103.99,
+        "candidate_score": 73.99,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 2,
+        "first_time": "112955",
+        "last_time": "135856",
+        "pct_chg": 9.99,
+        "amount": 738485312.0,
+        "turnover_ratio": 32.41,
+        "recognition_reasons": [
+          "首次封板=112955",
+          "盘中开板2次后仍封住",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=112955",
+          "盘中开板2次后仍封住",
+          "候选池成交额前5",
+          "强势行业活跃核心"
+        ]
+      }
+    ]
+  }
+}

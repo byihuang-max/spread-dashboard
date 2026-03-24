@@ -1,0 +1,898 @@
+{
+  "trade_date": "20220301",
+  "pool": {
+    "trade_date": "20220301",
+    "input_summary": {
+      "up_count": 53,
+      "zha_count": 16,
+      "focus_industries": [
+        {
+          "industry": "农牧饲渔",
+          "industry_score": 27.35,
+          "up_count": 6,
+          "zha_count": 0,
+          "max_height": 1,
+          "amount": 3673328693.0
+        },
+        {
+          "industry": "医疗器械",
+          "industry_score": 23.16,
+          "up_count": 1,
+          "zha_count": 0,
+          "max_height": 10,
+          "amount": 80715342.0
+        },
+        {
+          "industry": "汽车零部件",
+          "industry_score": 19.23,
+          "up_count": 3,
+          "zha_count": 1,
+          "max_height": 2,
+          "amount": 2613010346.0
+        }
+      ]
+    },
+    "source_summary": {
+      "limit_core": 8,
+      "active_core": 6,
+      "theme_amount_core": 4,
+      "final_pool_size": 12
+    },
+    "selection_logic": {
+      "limit_core": "只从涨停池选，优先最高板、连板、高额成交、封板稳定",
+      "active_core": "只在强势行业里选活跃票，不做全市场扫描，优先炸板活跃、强涨幅、高换手、高成交额",
+      "theme_amount_core": "只在强势行业内部比较成交额，抓题材中军/容量核心，不从全市场金额榜直接选"
+    },
+    "pool": [
+      {
+        "ts_code": "603122.SH",
+        "name": "合富中国",
+        "industry": "医疗器械",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 248.3,
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "最高板=10",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92504",
+          "题材内成交额第1",
+          "所属强势行业=医疗器械",
+          "已涨停"
+        ],
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.99,
+        "amount": 80715342.0,
+        "turnover_ratio": 5.71,
+        "float_mv": 1413087440.0,
+        "total_mv": 5652347488.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 47,
+        "amount_rank_in_industry": 1,
+        "industry_score": 23.16
+      },
+      {
+        "ts_code": "002537.SZ",
+        "name": "海联金汇",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 148.08,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前1",
+          "首次封板时间=94051",
+          "强势行业=汽车零部件",
+          "涨幅强=9.95%",
+          "焦点池成交额前1",
+          "换手活跃=18.36%",
+          "题材内成交额第1",
+          "所属强势行业=汽车零部件",
+          "已涨停"
+        ],
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "94051",
+        "last_time": "101130",
+        "pct_chg": 9.95,
+        "amount": 2012761440.0,
+        "turnover_ratio": 18.36,
+        "float_mv": 11152545615.0,
+        "total_mv": 11153159144.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 1,
+        "amount_rank_in_focus_pool": 1,
+        "industry_score": 19.23,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "600982.SH",
+        "name": "宁波能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 100,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93013"
+        ],
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93013",
+        "last_time": "93013",
+        "pct_chg": 10.0,
+        "amount": 398075696.0,
+        "turnover_ratio": 8.27,
+        "float_mv": 4847575700.0,
+        "total_mv": 7254315669.92,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 19
+      },
+      {
+        "ts_code": "002207.SZ",
+        "name": "准油股份",
+        "industry": "采掘行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 98,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=4",
+          "首次封板时间=93239"
+        ],
+        "limit_times": 4,
+        "open_times": 7,
+        "first_time": "93239",
+        "last_time": "130000",
+        "pct_chg": 10.05,
+        "amount": 835835216.0,
+        "turnover_ratio": 38.91,
+        "float_mv": 2186516620.0,
+        "total_mv": 2410909477.6,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 6
+      },
+      {
+        "ts_code": "000876.SZ",
+        "name": "新 希 望",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 96.02,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=农牧饲渔",
+          "涨幅强=10.02%",
+          "焦点池成交额前2",
+          "题材内成交额第1",
+          "所属强势行业=农牧饲渔",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143009",
+        "last_time": "143009",
+        "pct_chg": 10.02,
+        "amount": 1985633120.0,
+        "turnover_ratio": 2.82,
+        "float_mv": 73142895979.99,
+        "total_mv": 76183124638.72,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 2,
+        "industry_score": 27.35,
+        "amount_rank_in_industry": 1
+      },
+      {
+        "ts_code": "603363.SH",
+        "name": "傲农生物",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "candidate_score": 89.38,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "reasons": [
+          "强势行业=农牧饲渔",
+          "涨幅强=10.00%",
+          "焦点池成交额前3",
+          "题材内成交额第2",
+          "所属强势行业=农牧饲渔",
+          "已涨停"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "145536",
+        "last_time": "145536",
+        "pct_chg": 10.0,
+        "amount": 513767440.0,
+        "turnover_ratio": 4.3,
+        "float_mv": 12563283603.42,
+        "total_mv": 13099718258.88,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 3,
+        "industry_score": 27.35,
+        "amount_rank_in_industry": 2
+      },
+      {
+        "ts_code": "002800.SZ",
+        "name": "天顺股份",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=93006"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93006",
+        "last_time": "93006",
+        "pct_chg": 9.99,
+        "amount": 166754765.0,
+        "turnover_ratio": 8.81,
+        "float_mv": 1909027759.52,
+        "total_mv": 2070641716.64,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 37
+      },
+      {
+        "ts_code": "600190.SH",
+        "name": "锦州港",
+        "industry": "航运港口",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 80,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=3",
+          "封板稳定(open_times=0)",
+          "首次封板时间=92503"
+        ],
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.06,
+        "amount": 218435996.0,
+        "turnover_ratio": 3.21,
+        "float_mv": 6815425749.9,
+        "total_mv": 7668776460.32,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 32
+      },
+      {
+        "ts_code": "600367.SH",
+        "name": "红星发展",
+        "industry": "化学原料",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 66,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "封板稳定(open_times=0)",
+          "首次封板时间=143957"
+        ],
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "143957",
+        "last_time": "143957",
+        "pct_chg": 10.0,
+        "amount": 1318929072.0,
+        "turnover_ratio": 17.88,
+        "float_mv": 7716800000.0,
+        "total_mv": 7770770112.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 4
+      },
+      {
+        "ts_code": "301089.SZ",
+        "name": "拓新药业",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "candidate_score": 64,
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "reasons": [
+          "连板高度=2",
+          "涨停池成交额前3",
+          "首次封板时间=132439"
+        ],
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "132439",
+        "last_time": "141433",
+        "pct_chg": 20.0,
+        "amount": 1924679984.0,
+        "turnover_ratio": 47.89,
+        "float_mv": 4484098544.64,
+        "total_mv": 20540520000.0,
+        "limit_type": "U",
+        "amount_rank_in_up_pool": 3
+      },
+      {
+        "ts_code": "603477.SH",
+        "name": "巨星农牧",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 60.36,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=农牧饲渔",
+          "涨幅强=10.00%",
+          "焦点池成交额前4"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143421",
+        "last_time": "143421",
+        "pct_chg": 10.0,
+        "amount": 436478192.0,
+        "turnover_ratio": 3.94,
+        "float_mv": 11706022476.0,
+        "total_mv": 12298070592.0,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 4,
+        "industry_score": 27.35
+      },
+      {
+        "ts_code": "002548.SZ",
+        "name": "金新农",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "active_core"
+        ],
+        "candidate_score": 59.52,
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_recognition_leader"
+        ],
+        "reasons": [
+          "强势行业=农牧饲渔",
+          "涨幅强=10.08%",
+          "焦点池成交额前5",
+          "换手活跃=9.06%"
+        ],
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "130354",
+        "last_time": "130354",
+        "pct_chg": 10.08,
+        "amount": 334141104.0,
+        "turnover_ratio": 9.06,
+        "float_mv": 3843816360.6,
+        "total_mv": 4904273993.6,
+        "limit_type": "U",
+        "amount_rank_in_focus_pool": 5,
+        "industry_score": 27.35
+      }
+    ]
+  },
+  "confirm": {
+    "trade_date": "20220301",
+    "data_source": "GAMT momentum cache built from Tushare limit_list_d chain",
+    "leader_pool_size": 12,
+    "recognition_leader": {
+      "ts_code": "603122.SH",
+      "name": "合富中国",
+      "industry": "医疗器械",
+      "source_types": [
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "high_level_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 313.99,
+      "amount_score": 84.84,
+      "candidate_score": 248.3,
+      "limit_type": "U",
+      "limit_times": 10,
+      "open_times": 0,
+      "first_time": "92504",
+      "last_time": "92504",
+      "pct_chg": 9.99,
+      "amount": 80715342.0,
+      "turnover_ratio": 5.71,
+      "recognition_reasons": [
+        "最高板=10",
+        "首次封板=92504",
+        "封板稳定",
+        "题材内成交额核心"
+      ],
+      "amount_reasons": [
+        "最高板=10",
+        "首次封板=92504",
+        "封板稳定",
+        "题材内成交额核心"
+      ]
+    },
+    "amount_leader": {
+      "ts_code": "002537.SZ",
+      "name": "海联金汇",
+      "industry": "汽车零部件",
+      "source_types": [
+        "active_core",
+        "limit_core",
+        "theme_amount_core"
+      ],
+      "role_tags": [
+        "active_core",
+        "leader_pool_candidate",
+        "limit_core",
+        "potential_amount_leader",
+        "potential_recognition_leader",
+        "theme_amount_core"
+      ],
+      "recognition_score": 81.95,
+      "amount_score": 167.13,
+      "candidate_score": 148.08,
+      "limit_type": "U",
+      "limit_times": 2,
+      "open_times": 3,
+      "first_time": "94051",
+      "last_time": "101130",
+      "pct_chg": 9.95,
+      "amount": 2012761440.0,
+      "turnover_ratio": 18.36,
+      "recognition_reasons": [
+        "连板高度=2",
+        "首次封板=94051",
+        "盘中开板3次后仍封住",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ],
+      "amount_reasons": [
+        "连板高度=2",
+        "首次封板=94051",
+        "盘中开板3次后仍封住",
+        "候选池成交额前1",
+        "题材内成交额核心",
+        "强势行业活跃核心"
+      ]
+    },
+    "top_recognition_rank": [
+      {
+        "ts_code": "603122.SH",
+        "name": "合富中国",
+        "industry": "医疗器械",
+        "source_types": [
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "high_level_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 313.99,
+        "amount_score": 84.84,
+        "candidate_score": 248.3,
+        "limit_type": "U",
+        "limit_times": 10,
+        "open_times": 0,
+        "first_time": "92504",
+        "last_time": "92504",
+        "pct_chg": 9.99,
+        "amount": 80715342.0,
+        "turnover_ratio": 5.71,
+        "recognition_reasons": [
+          "最高板=10",
+          "首次封板=92504",
+          "封板稳定",
+          "题材内成交额核心"
+        ],
+        "amount_reasons": [
+          "最高板=10",
+          "首次封板=92504",
+          "封板稳定",
+          "题材内成交额核心"
+        ]
+      },
+      {
+        "ts_code": "600982.SH",
+        "name": "宁波能源",
+        "industry": "电力行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 135.0,
+        "amount_score": 86.14,
+        "candidate_score": 100,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 0,
+        "first_time": "93013",
+        "last_time": "93013",
+        "pct_chg": 10.0,
+        "amount": 398075696.0,
+        "turnover_ratio": 8.27,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93013",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93013",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002207.SZ",
+        "name": "准油股份",
+        "industry": "采掘行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 121.05,
+        "amount_score": 116.05,
+        "candidate_score": 98,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 7,
+        "first_time": "93239",
+        "last_time": "130000",
+        "pct_chg": 10.05,
+        "amount": 835835216.0,
+        "turnover_ratio": 38.91,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93239",
+          "盘中开板7次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93239",
+          "盘中开板7次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "600190.SH",
+        "name": "锦州港",
+        "industry": "航运港口",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 114.06,
+        "amount_score": 63.66,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "92503",
+        "last_time": "92503",
+        "pct_chg": 10.06,
+        "amount": 218435996.0,
+        "turnover_ratio": 3.21,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=92503",
+          "封板稳定"
+        ]
+      },
+      {
+        "ts_code": "002800.SZ",
+        "name": "天顺股份",
+        "industry": "物流行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 110.99,
+        "amount_score": 58.4,
+        "candidate_score": 80,
+        "limit_type": "U",
+        "limit_times": 3,
+        "open_times": 0,
+        "first_time": "93006",
+        "last_time": "93006",
+        "pct_chg": 9.99,
+        "amount": 166754765.0,
+        "turnover_ratio": 8.81,
+        "recognition_reasons": [
+          "连板高度=3",
+          "首次封板=93006",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=3",
+          "首次封板=93006",
+          "封板稳定"
+        ]
+      }
+    ],
+    "top_amount_rank": [
+      {
+        "ts_code": "002537.SZ",
+        "name": "海联金汇",
+        "industry": "汽车零部件",
+        "source_types": [
+          "active_core",
+          "limit_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 81.95,
+        "amount_score": 167.13,
+        "candidate_score": 148.08,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 3,
+        "first_time": "94051",
+        "last_time": "101130",
+        "pct_chg": 9.95,
+        "amount": 2012761440.0,
+        "turnover_ratio": 18.36,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=94051",
+          "盘中开板3次后仍封住",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=94051",
+          "盘中开板3次后仍封住",
+          "候选池成交额前1",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "000876.SZ",
+        "name": "新 希 望",
+        "industry": "农牧饲渔",
+        "source_types": [
+          "active_core",
+          "theme_amount_core"
+        ],
+        "role_tags": [
+          "active_core",
+          "leader_pool_candidate",
+          "potential_amount_leader",
+          "potential_recognition_leader",
+          "theme_amount_core"
+        ],
+        "recognition_score": 59.02,
+        "amount_score": 147.43,
+        "candidate_score": 96.02,
+        "limit_type": "U",
+        "limit_times": 1,
+        "open_times": 0,
+        "first_time": "143009",
+        "last_time": "143009",
+        "pct_chg": 10.02,
+        "amount": 1985633120.0,
+        "turnover_ratio": 2.82,
+        "recognition_reasons": [
+          "首次封板=143009",
+          "封板稳定",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ],
+        "amount_reasons": [
+          "首次封板=143009",
+          "封板稳定",
+          "候选池成交额前2",
+          "题材内成交额核心",
+          "强势行业活跃核心"
+        ]
+      },
+      {
+        "ts_code": "301089.SZ",
+        "name": "拓新药业",
+        "industry": "化学制药",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core",
+          "potential_amount_leader"
+        ],
+        "recognition_score": 68,
+        "amount_score": 136.0,
+        "candidate_score": 64,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 1,
+        "first_time": "132439",
+        "last_time": "141433",
+        "pct_chg": 20.0,
+        "amount": 1924679984.0,
+        "turnover_ratio": 47.89,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=132439",
+          "盘中开板1次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=132439",
+          "盘中开板1次后仍封住",
+          "候选池成交额前3"
+        ]
+      },
+      {
+        "ts_code": "002207.SZ",
+        "name": "准油股份",
+        "industry": "采掘行业",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 121.05,
+        "amount_score": 116.05,
+        "candidate_score": 98,
+        "limit_type": "U",
+        "limit_times": 4,
+        "open_times": 7,
+        "first_time": "93239",
+        "last_time": "130000",
+        "pct_chg": 10.05,
+        "amount": 835835216.0,
+        "turnover_ratio": 38.91,
+        "recognition_reasons": [
+          "连板高度=4",
+          "首次封板=93239",
+          "盘中开板7次后仍封住"
+        ],
+        "amount_reasons": [
+          "连板高度=4",
+          "首次封板=93239",
+          "盘中开板7次后仍封住",
+          "候选池成交额前5"
+        ]
+      },
+      {
+        "ts_code": "600367.SH",
+        "name": "红星发展",
+        "industry": "化学原料",
+        "source_types": [
+          "limit_core"
+        ],
+        "role_tags": [
+          "leader_pool_candidate",
+          "limit_core"
+        ],
+        "recognition_score": 72.0,
+        "amount_score": 114.94,
+        "candidate_score": 66,
+        "limit_type": "U",
+        "limit_times": 2,
+        "open_times": 0,
+        "first_time": "143957",
+        "last_time": "143957",
+        "pct_chg": 10.0,
+        "amount": 1318929072.0,
+        "turnover_ratio": 17.88,
+        "recognition_reasons": [
+          "连板高度=2",
+          "首次封板=143957",
+          "封板稳定"
+        ],
+        "amount_reasons": [
+          "连板高度=2",
+          "首次封板=143957",
+          "封板稳定",
+          "候选池成交额前4"
+        ]
+      }
+    ]
+  }
+}
