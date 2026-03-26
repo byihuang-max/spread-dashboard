@@ -46,6 +46,7 @@ MODULE_REGISTRY = {
         'scripts': [
             ('size_spread/fund_nav', 'fund_nav_data.py'),
             ('env_fit/quant_stock', 'quant_stock_data.py'),
+            ('env_fit/quant_stock', 'excess_attribution.py'),
             ('env_fit/quant_stock', 'inject_quant_stock.py'),
         ],
         'inject_script': ('env_fit/quant_stock', 'inject_quant_stock.py'),
