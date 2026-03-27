@@ -97,6 +97,14 @@ h1 {
 .badge-warn { background: #fef3c7; color: #b45309; }
 .badge-danger { background: #fee2e2; color: #dc2626; }
 
+.state-card {
+    background:#fafbfc;border:1px solid #e8ecf1;border-radius:8px;padding:10px 12px;
+}
+.state-card .k { font-size:11px;color:#64748b;margin-bottom:5px; }
+.state-card .v { font-size:16px;font-weight:800;color:#0f172a; }
+.state-card .s { font-size:11px;color:#64748b;margin-top:4px;line-height:1.5; }
+@media (max-width: 1100px) { #patientStateBoard { grid-template-columns: repeat(2,1fr) !important; } }
+
 .up { color: #dc2626; }
 .down { color: #16a34a; }
 .flat { color: #9ca3af; }
@@ -134,8 +142,7 @@ h1 {
 }
 .range-btns button:hover { border-color: #6366f1; color: #6366f1; }
 .range-btns button.active { background: #6366f1; color: #fff; border-color: #6366f1; }
-.chart-container { position: relative; height: 320px; margin-bottom: 16px; }
-.bar-container { position: relative; height: 180px; }
+.chart-container { position: relative; height: 520px; margin-bottom: 16px; }
 .no-data {
     text-align: center;
     color: #9ca3af;
@@ -211,6 +218,8 @@ h1 {
 
 <!-- 信号摘要栏 -->
 <div id="patientSignalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:12px 16px;color:#e2e6ed;margin:10px 0 14px;font-size:12px;line-height:1.8"></div>
+<div id="patientStateBoard" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 16px 0"></div>
+<div id="patientExplain" style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin:0 0 16px 0;font-size:12px;line-height:1.8;color:#475569"></div>
 
 <div class="cards" id="cards"></div>
 
@@ -224,8 +233,7 @@ h1 {
             <button data-range="0" class="active">ALL</button>
         </div>
     </div>
-    <div class="chart-container"><canvas id="mainChart"></canvas></div>
-    <div class="bar-container"><canvas id="barChart"></canvas></div>
+    <div class="chart-container" style="height: 520px;"><canvas id="mainChart"></canvas></div>
 </div>
 
 <!-- ═══ 方法论说明 ═══ -->
@@ -280,6 +288,7 @@ async function loadData() {
         DATA = await resp.json();
         document.getElementById('updated').textContent = '更新: ' + DATA.updated;
         renderSignalBar();
+        renderStateBoard();
         renderCards();
         renderIndicesList();
         const first = Object.keys(DATA.indices)[0];
@@ -331,6 +340,30 @@ function renderSignalBar() {
     bar.innerHTML = summary + '<br>' + sigs.join(' · ');
 }
 
+function renderStateBoard() {
+    const state = DATA.state_summary || {};
+    const board = document.getElementById('patientStateBoard');
+    const conc = state.concentration || { top: [], total_cum: 0 };
+    const top2 = (conc.top || []).slice(0, 2).map(x => `${x.name}${x.share_pct}%`).join(' / ') || '暂无';
+    board.innerHTML = `
+        <div class="state-card"><div class="k">买入节奏/意图</div><div class="v">${state.intent || '暂无'}</div><div class="s">看连续净买、单日脉冲与节奏形态</div></div>
+        <div class="state-card"><div class="k">跨品种广度</div><div class="v">${state.breadth || '暂无'}</div><div class="s">看是全面托底、权重维稳还是成长定向</div></div>
+        <div class="state-card"><div class="k">相对市场力度</div><div class="v">${state.market_strength?.label || '暂无'}</div><div class="s">平均净额/成交代理比 ${state.market_strength?.avg_ratio ?? 0}%</div></div>
+        <div class="state-card"><div class="k">持仓集中度</div><div class="v">${conc.total_cum || 0} 亿</div><div class="s">前两大集中在：${top2}</div></div>
+        <div class="state-card"><div class="k">国家队风格重心</div><div class="v">${conc.top?.[0]?.bucket || '暂无'}</div><div class="s">最大仓位指数：${conc.top?.[0]?.name || '暂无'}</div></div>
+    `;
+
+    const explain = document.getElementById('patientExplain');
+    const lines = [];
+    lines.push(`1）当前国家队更像在做 <b>${state.intent || '暂无'}</b>。`);
+    lines.push(`2）操作广度上属于 <b>${state.breadth || '暂无'}</b>。`);
+    lines.push(`3）相对市场力度为 <b>${state.market_strength?.label || '暂无'}</b>（平均强度 ${state.market_strength?.avg_ratio ?? 0}%）。`);
+    if (conc.top?.length) {
+        lines.push(`4）持仓结构上，当前最重的是 <b>${conc.top[0].name}</b>（${conc.top[0].share_pct}%），风格偏向 <b>${conc.top[0].bucket}</b>。`);
+    }
+    explain.innerHTML = '<b>🧭 国家队状态解读：</b><br>' + lines.join('<br>');
+}
+
 function renderCards() {
     const el = document.getElementById('cards');
     el.innerHTML = '';
@@ -358,6 +391,8 @@ function renderCards() {
                 <span class="${pnlClass}" style="font-weight:700">${pnlSign}${L.pnl.toFixed(1)}%</span>
             </div>
             ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span>📍 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
+            <div class="meta" style="margin-top:2px"><span>状态 <b>${L.intent || '暂无'}</b></span><span>${L.pnl_behavior || ''}</span></div>
+            <div class="meta"><span>力度 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>Z分数 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
         `;
         card.onclick = () => selectIndex(name);
         el.appendChild(card);
@@ -397,6 +432,7 @@ function renderCharts() {
     const cumPositions = daily.map(d => d.cum);
     const idxCloses = daily.map(d => d.idx_close || null);
     const costIdxes = daily.map(d => d.cost_idx || null);
+    const netAmts = daily.map(d => d.net);
     const hasIdx = idxCloses.some(v => v !== null);
 
     const chartColors = {
@@ -463,6 +499,40 @@ function renderCharts() {
         fill: true,
         tension: 0.1,
         yAxisID: 'y1',
+        order: 3,
+    });
+
+    // 计算 y2 范围：让柱状图只占底部30%
+    const maxAbsNet = Math.max(...netAmts.map(v => Math.abs(v)), 1);
+    const y2Max = maxAbsNet * (100 / 30);  // 放大使柱子只占30%高度
+    const y2Min = -maxAbsNet * (100 / 30) * 0.15; // 给负值留一点空间
+
+    // 标注放量日：超过均值+1.5倍标准差
+    const absNets = netAmts.map(v => Math.abs(v));
+    const meanNet = absNets.reduce((a, b) => a + b, 0) / absNets.length;
+    const stdNet = Math.sqrt(absNets.reduce((a, v) => a + (v - meanNet) ** 2, 0) / absNets.length);
+    const heavyThreshold = meanNet + 1.5 * stdNet;
+
+    const barColors = netAmts.map((v, i) => {
+        const isHeavy = Math.abs(v) > heavyThreshold;
+        if (v >= 0) return isHeavy ? 'rgba(220,38,38,0.95)' : 'rgba(220,38,38,0.5)';
+        return isHeavy ? 'rgba(22,163,74,0.95)' : 'rgba(22,163,74,0.5)';
+    });
+    const barBorders = netAmts.map((v, i) => {
+        return Math.abs(v) > heavyThreshold ? (v >= 0 ? '#dc2626' : '#16a34a') : 'transparent';
+    });
+
+    datasets.push({
+        type: 'bar',
+        label: '每日净额(亿)',
+        data: netAmts,
+        backgroundColor: barColors,
+        borderColor: barBorders,
+        borderWidth: netAmts.map(v => Math.abs(v) > heavyThreshold ? 2 : 0),
+        yAxisID: 'y2',
+        order: 1,
+        barPercentage: 0.9,
+        categoryPercentage: 0.9,
     });
 
     mainChart = new Chart(document.getElementById('mainChart'), {
@@ -474,66 +544,61 @@ function renderCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: { padding: { left: 8, right: 8 } },
             interaction: { mode: 'index', intersect: false },
             plugins: {
                 legend: { labels: { color: chartColors.text, font: { size: 11 }, usePointStyle: true, pointStyle: 'line' } },
+                tooltip: {
+                    callbacks: {
+                        afterBody(items) {
+                            const idx = items[0]?.dataIndex;
+                            if (idx == null) return '';
+                            const net = netAmts[idx];
+                            const isHeavy = Math.abs(net) > heavyThreshold;
+                            if (!isHeavy) return '';
+                            return net > 0 ? '⚠️ 大幅净买入' : '⚠️ 大幅净卖出';
+                        }
+                    }
+                },
+                annotation: undefined,
             },
             scales: {
                 x: {
+                    offset: true,
                     ticks: { color: chartColors.text, maxTicksLimit: 12, font: { size: 10 } },
                     grid: { color: chartColors.grid },
+                    min: labels[0],
+                    max: labels[labels.length - 1],
                 },
                 y: {
                     position: 'left',
+                    weight: 2,
+                    afterFit(scale) { scale.width = 56; },
                     ticks: { color: chartColors.price, font: { size: 10 } },
                     grid: { color: chartColors.grid },
                     title: { display: true, text: hasIdx ? '指数点位' : '价格', color: chartColors.price, font: { size: 10 } },
                 },
                 y1: {
                     position: 'right',
+                    weight: 2,
+                    afterFit(scale) { scale.width = 56; },
                     ticks: { color: '#6366f1', font: { size: 10 } },
                     grid: { display: false },
                     title: { display: true, text: '持仓(亿)', color: '#6366f1', font: { size: 10 } },
                 },
-            }
-        }
-    });
-
-    // ═══ 副图：每日净买卖柱状图 ═══
-    const netAmts = daily.map(d => d.net);
-    const barColors = netAmts.map(v => v >= 0 ? 'rgba(220,38,38,0.6)' : 'rgba(22,163,74,0.6)');
-
-    if (barChart) barChart.destroy();
-    barChart = new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: '每日净额(亿)',
-                data: netAmts,
-                backgroundColor: barColors,
-                borderWidth: 0,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { labels: { color: chartColors.text, font: { size: 11 }, usePointStyle: true } },
-            },
-            scales: {
-                x: {
-                    ticks: { color: chartColors.text, maxTicksLimit: 12, font: { size: 10 } },
-                    grid: { color: chartColors.grid },
-                },
-                y: {
-                    ticks: { color: chartColors.text, font: { size: 10 } },
-                    grid: { color: chartColors.grid },
-                    title: { display: true, text: '亿元', color: chartColors.text, font: { size: 10 } },
+                y2: {
+                    position: 'left',
+                    weight: 1,
+                    offset: false,
+                    display: false,
+                    min: y2Min,
+                    max: y2Max,
+                    grid: { drawOnChartArea: false },
                 },
             }
         }
     });
+
 }
 
 // 时间范围按钮
