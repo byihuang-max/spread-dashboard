@@ -213,7 +213,9 @@ def classify_breadth(latest_snapshot):
 
 
 def build_market_strength(latest_snapshot):
-    ratios = [v['latest'].get('net_to_turnover_pct', 0) for v in latest_snapshot['indices'].values() if v.get('latest')]
+    # global_daily 的 indices 结构是 {name: result_dict}，没有 'latest' 这一层
+    ratios = [v.get('net_to_turnover_pct', 0) for v in latest_snapshot['indices'].values()]
+    ratios = [r for r in ratios if r > 0]
     if not ratios:
         return {'avg_ratio': 0, 'label': '无数据'}
     avg_ratio = sum(ratios) / len(ratios)
@@ -232,8 +234,8 @@ def build_concentration(latest_snapshot):
     items = []
     total = 0
     for name, info in latest_snapshot['indices'].items():
-        latest = info.get('latest') or {}
-        cum = latest.get('cum', 0) or 0
+        # global_daily 的 indices 结构是 {name: result_dict}，直接取 cum
+        cum = info.get('cum', 0) or 0
         total += max(cum, 0)
         items.append((name, max(cum, 0), STYLE_BUCKET.get(name, '其他')))
     items.sort(key=lambda x: x[1], reverse=True)
