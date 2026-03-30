@@ -67,6 +67,16 @@ h1 {
 }
 .card .meta span { margin-right: 8px; }
 
+/* 算法说明 */
+.state-card .algo {
+    font-size: 10px;
+    color: #9ca3af;
+    line-height: 1.5;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #e5e7eb;
+}
+
 /* 异常高亮：浮盈>50% 或 累计>800亿 */
 .card.highlight-warn {
     border-color: #f59e0b;
@@ -346,11 +356,36 @@ function renderStateBoard() {
     const conc = state.concentration || { top: [], total_cum: 0 };
     const top2 = (conc.top || []).slice(0, 2).map(x => `${x.name}${x.share_pct}%`).join(' / ') || '暂无';
     board.innerHTML = `
-        <div class="state-card"><div class="k">买入节奏/意图</div><div class="v">${state.intent || '暂无'}</div><div class="s">看连续净买、单日脉冲与节奏形态</div></div>
-        <div class="state-card"><div class="k">跨品种广度</div><div class="v">${state.breadth || '暂无'}</div><div class="s">看是全面托底、权重维稳还是成长定向</div></div>
-        <div class="state-card"><div class="k">相对市场力度</div><div class="v">${state.market_strength?.label || '暂无'}</div><div class="s">平均净额/成交代理比 ${state.market_strength?.avg_ratio ?? 0}%</div></div>
-        <div class="state-card"><div class="k">持仓集中度</div><div class="v">${conc.total_cum || 0} 亿</div><div class="s">前两大集中在：${top2}</div></div>
-        <div class="state-card"><div class="k">国家队风格重心</div><div class="v">${conc.top?.[0]?.bucket || '暂无'}</div><div class="s">最大仓位指数：${conc.top?.[0]?.name || '暂无'}</div></div>
+        <div class="state-card">
+            <div class="k">买入节奏/意图</div>
+            <div class="v">${state.intent || '暂无'}</div>
+            <div class="s">看连续净买、单日脉冲与节奏形态</div>
+            <div class="algo">算法：连续净买≥3天且5日净额>0→连续建仓（浮盈>10%则为高位承接）；单日Z≥1.5且非连续→脉冲托底；连续净卖≥3天且浮盈>8%→有序退出；|净额|<0.5亿→观望；其余→中性换手</div>
+        </div>
+        <div class="state-card">
+            <div class="k">跨品种广度</div>
+            <div class="v">${state.breadth || '暂无'}</div>
+            <div class="s">看是全面托底、权重维稳还是成长定向</div>
+            <div class="algo">算法：统计8个指数中净买入个数及风格分布。≥5个净买→全面托底；大盘权重≥2且无小盘→权重维稳；成长≥2→成长定向支持；中小盘≥1→小盘扩散；有买有卖→分化操作；其余→低活跃</div>
+        </div>
+        <div class="state-card">
+            <div class="k">相对市场力度</div>
+            <div class="v">${state.market_strength?.label || '暂无'}</div>
+            <div class="s">平均净额/成交代理比 ${state.market_strength?.avg_ratio ?? 0}%</div>
+            <div class="algo">算法：各指数 |净额|÷(买+卖)×100% 取均值。≥12%→重手干预；6-12%→中等强度；2-6%→轻度参与；<2%→低强度</div>
+        </div>
+        <div class="state-card">
+            <div class="k">持仓集中度</div>
+            <div class="v">${conc.total_cum || 0} 亿</div>
+            <div class="s">前两大集中在：${top2}</div>
+            <div class="algo">算法：各指数累计净持仓(异常大单买入-卖出)×最新价加总。按占比排序，展示前两大仓位指数及其占比</div>
+        </div>
+        <div class="state-card">
+            <div class="k">国家队风格重心</div>
+            <div class="v">${conc.top?.[0]?.bucket || '暂无'}</div>
+            <div class="s">最大仓位指数：${conc.top?.[0]?.name || '暂无'}</div>
+            <div class="algo">算法：取累计持仓最大的指数，映射到风格桶（大盘权重/成长/中枢宽基/中盘扩散/小盘扩散）</div>
+        </div>
     `;
 
     const explain = document.getElementById('patientExplain');
