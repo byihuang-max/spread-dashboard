@@ -52,6 +52,9 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
         
         # 数据区间
         date_range = f"{df_daily.iloc[0]['trade_date'].strftime('%Y-%m-%d')} ~ {df_daily.iloc[-1]['trade_date'].strftime('%Y-%m-%d')}"
+
+        # iFind 基本面增强
+        fundamentals = get_fundamentals(ts_code, stock_name)
         
         def _f(v):
             """安全转 float"""
@@ -81,6 +84,7 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
             },
             'moneyflow': moneyflow,
             'basics': basics,
+            'fundamentals': fundamentals,
         }
     except Exception as e:
         return {'success': False, 'error': str(e)}
