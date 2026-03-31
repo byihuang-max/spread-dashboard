@@ -80,6 +80,26 @@ def main():
     if arb_opps > 0:
         signals.append(f'套利: {arb_opps}个机会信号')
 
+    # 6. 商品期权双卖
+    ovp = os.path.join(BASE, 'option_vol', 'option_vol.json')
+    if os.path.exists(ovp):
+        d = json.load(open(ovp))
+        comp = d.get('mod9_composite_score', {}) if isinstance(d, dict) else {}
+        regime = comp.get('regime', {}) if isinstance(comp, dict) else {}
+        label = regime.get('label')
+        avg_score = regime.get('avg_composite_score')
+        n_sellable = regime.get('n_sellable')
+        top3 = regime.get('top3', [])
+        top_symbols = '/'.join(x.get('symbol') for x in top3[:3] if x.get('symbol'))
+        if label == 'STRONG_SELL_VOL':
+            signals.append(f'期权双卖: 系统性窗口 avg={avg_score} 可卖={n_sellable}个 {top_symbols} 🟢')
+        elif label == 'SELECTIVE_SELL':
+            signals.append(f'期权双卖: 精选窗口 avg={avg_score} 可卖={n_sellable}个 {top_symbols} 🟡')
+        elif label == 'NEUTRAL':
+            signals.append(f'期权双卖: 中性观察 avg={avg_score} {top_symbols}')
+        elif label == 'AVOID_SELLING':
+            signals.append(f'期权双卖: 不宜开仓 avg={avg_score} 🔴')
+
     if not signals:
         signals = ['策略环境无极端信号 ✅']
 
