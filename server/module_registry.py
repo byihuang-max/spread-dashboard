@@ -74,6 +74,7 @@ MODULE_REGISTRY = {
             ('timing-research', 'push_limit_replay_feishu.py'),
         ],
         'aliases': ['momentum-stock'],
+        'late_data': True,  # 涨跌停数据约17:30-18:00才出全
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
@@ -157,6 +158,7 @@ MODULE_REGISTRY = {
             ('micro_flow/patient_capital', 'patient_calc.py'),
         ],
         'aliases': ['patient-capital'],
+        'late_data': True,  # 15min成交明细晚到，T+1才出全
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
