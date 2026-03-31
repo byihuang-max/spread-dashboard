@@ -135,6 +135,35 @@ def main():
             composite = round(rv_score * 0.75 + liq_score * 0.15 + exp_score * 0.10)
 
         signal, label = signal_label(composite)
+        reason_parts = []
+        if iv_score is not None and (iv.get('iv_rv_spread') is not None):
+            spread = iv.get('iv_rv_spread')
+            if spread >= 0.08:
+                reason_parts.append('IV显著高于RV，保险费偏贵')
+            elif spread >= 0.03:
+                reason_parts.append('IV高于RV，赔率尚可')
+            elif spread < 0:
+                reason_parts.append('IV低于RV，保险费不算贵')
+        if skew_score is not None:
+            if skew_score >= 60:
+                reason_parts.append('尾部保险费有一定溢价')
+            elif skew_score <= 40:
+                reason_parts.append('尾部保险费不够肥')
+        if term_score is not None:
+            if term_score >= 60:
+                reason_parts.append('近月比远月更贵，偏短期恐慌')
+            elif term_score <= 40:
+                reason_parts.append('期限结构偏平/偏弱，近月溢价一般')
+        if liq_score >= 80:
+            reason_parts.append('流动性较好')
+        elif liq_score <= 40:
+            reason_parts.append('流动性一般，执行要谨慎')
+        if exp_score >= 90:
+            reason_parts.append('到期结构合适')
+        elif exp_score <= 45:
+            reason_parts.append('离到期偏近，Gamma风险更高')
+        reason_text = '；'.join(reason_parts) if reason_parts else '当前主要由RV环境分驱动，期权侧信息仍需继续补强'
+
         rows.append({
             'symbol': symbol,
             'sector': rv.get('sector', '其他'),
@@ -160,6 +189,7 @@ def main():
             'term_slope': skew.get('term_slope') if skew else None,
             'skew_score': skew_score,
             'term_score': term_score,
+            'reason_text': reason_text,
         })
 
     rows.sort(key=lambda x: x['composite_score'], reverse=True)
