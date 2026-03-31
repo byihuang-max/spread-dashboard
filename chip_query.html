@@ -61,6 +61,10 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <button id="searchBtn" onclick="doSearch()">查询</button>
 </div>
 <div class="container">
+  <div class="card section" style="margin-bottom:16px" id="historyCard">
+    <div class="title">最近查询</div>
+    <div id="historyList" class="fundamentals-text">暂无查询记录</div>
+  </div>
   <div class="loading" id="loading">
     <div class="spinner">⏳</div>
     <div class="text">正在查询个股筹码…</div>
@@ -71,6 +75,31 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 </div>
 <script>
 document.getElementById('codeInput').addEventListener('keypress',function(e){if(e.key==='Enter')doSearch()});
+const CHIP_HISTORY_KEY = 'gamt_chip_query_history';
+function loadHistory(){
+  try{
+    var arr = JSON.parse(localStorage.getItem(CHIP_HISTORY_KEY) || '[]');
+    var box = document.getElementById('historyList');
+    if(!arr.length){ box.innerHTML='暂无查询记录'; return; }
+    box.innerHTML = arr.map(function(x){
+      return '<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span><a href="javascript:void(0)" onclick="quickSearch(\''+x.code+'\')" style="color:#5daeff;text-decoration:none">'+x.code+'</a>'+(x.name?(' <span style=\"color:#94a3b8\">'+x.name+'</span>'):'')+'</span><span style="color:#64748b;font-size:12px">'+x.time+'</span></div>';
+    }).join('');
+  }catch(e){ document.getElementById('historyList').innerHTML='暂无查询记录'; }
+}
+function saveHistory(code,name){
+  try{
+    var arr = JSON.parse(localStorage.getItem(CHIP_HISTORY_KEY) || '[]');
+    var now = new Date();
+    var time = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    arr = arr.filter(function(x){ return x.code !== code; });
+    arr.unshift({code:code,name:name||'',time:time});
+    arr = arr.slice(0,10);
+    localStorage.setItem(CHIP_HISTORY_KEY, JSON.stringify(arr));
+    loadHistory();
+  }catch(e){}
+}
+function quickSearch(code){ document.getElementById('codeInput').value=code; doSearch(); }
+loadHistory();
 </script>
 </body>
 </html>
@@ -123,7 +152,8 @@ function row(k,v,color){
 function showResult(d){
   var c=d.chip,mf=d.moneyflow||{},b=d.basics||{},f=d.fundamentals||{};
   var h='';
-  h+='<div class="stock-header"><span class="name">'+d.stock_name+'</span><span class="code">'+d.ts_code+'</span><span class="date">数据区间：'+d.date_range+'</span></div>';
+  h+='<div class="stock-header"><span class="name">'+d.stock_name+'</span><span class="code">'+d.ts_code+'</span><span class="date">数据截止：'+d.end_date+'（最近交易日）｜向前回看 '+d.lookback_days+' 个交易日，实际使用 '+d.actual_trade_days+' 个交易日｜区间：'+d.date_range+'</span></div>';
+  saveHistory(d.ts_code, d.stock_name);
   h+='<div class="cards">';
   h+='<div class="card metric-card"><div class="label">当前价</div><div class="value" style="color:#5daeff">'+c.current_price+'</div></div>';
   h+='<div class="card metric-card"><div class="label">平均成本</div><div class="value" style="color:#59e0c5">'+c.avg_cost+'</div></div>';
