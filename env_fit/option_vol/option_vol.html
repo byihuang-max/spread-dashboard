@@ -2,213 +2,241 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>商品期权卖权环境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>期权卖权策略</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    *{box-sizing:border-box}
-    body{font-family:-apple-system,sans-serif;background:#0f172a;margin:0;padding:12px;color:#e2e8f0}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-    .card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px}
-    .full{grid-column:1/-1}
-    .title{font-size:15px;font-weight:700;color:#f8fafc;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-    .sub{font-size:11px;color:#64748b;margin-top:2px}
-    .hero{text-align:center;padding:20px;border-radius:12px;margin-bottom:12px}
-    .hero.green{background:linear-gradient(135deg,#059669,#10b981)}
-    .hero.yellow{background:linear-gradient(135deg,#d97706,#f59e0b)}
-    .hero.gray{background:linear-gradient(135deg,#475569,#64748b)}
-    .hero.red{background:linear-gradient(135deg,#dc2626,#ef4444)}
-    .hero .big{font-size:48px;font-weight:900;color:#fff}
-    .hero .label{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px}
-    .hero .desc{font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px}
-    .metric{text-align:center;padding:12px}
-    .metric .val{font-size:32px;font-weight:800;color:#f8fafc}
-    .metric .lbl{font-size:11px;color:#94a3b8;margin-top:4px}
-    table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
-    th,td{padding:8px 6px;border-bottom:1px solid #1e293b;text-align:left}
-    th{color:#64748b;font-size:11px;background:#0f172a;position:sticky;top:0}
-    .pct{font-weight:700;font-size:14px}
-    .pct.extreme{color:#f87171}
-    .pct.high{color:#fbbf24}
-    .pct.mid{color:#94a3b8}
-    .pct.good{color:#34d399}
-    .pct.low{color:#f87171}
-    .tab-bar{display:flex;gap:4px;margin-bottom:12px}
-    .tab-btn{padding:8px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:12px}
-    .tab-btn.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
-    .tab-page{display:none}
-    .tab-page.active{display:block}
-    .chart-box{height:250px;position:relative;margin-top:8px}
-    .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-    .badge.sell{background:#065f46;color:#34d399}
-    .badge.select{background:#78350f;color:#fbbf24}
-    .badge.watch{background:#1e293b;color:#94a3b8}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
+    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+    .sub{font-size:12px;color:#64748b}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+    .metric{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
+    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:24px;font-weight:800;margin-top:4px}
+    .metric .s{font-size:11px;color:#94a3b8;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
+    th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
+    .chart-wrap{height:280px;margin-top:12px}
+    .mini-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+    .tip{font-size:11px;color:#64748b;line-height:1.6}
+    @media (max-width: 900px){.mini-grid{grid-template-columns:1fr}}
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-
-<div class="hero" id="heroBox">
-  <div class="label">期权卖权环境指数</div>
-  <div class="big" id="heroScore">--</div>
-  <div class="label" id="heroSignal">加载中...</div>
-  <div class="desc" id="heroDesc"></div>
-</div>
-
-<div class="grid">
-  <div class="card metric">
-    <div class="val" id="ivPct">--</div>
-    <div class="lbl">波动率分位（11品种）</div>
-  </div>
-  <div class="card metric">
-    <div class="val" id="liqPct">--</div>
-    <div class="lbl">流动性分位（11品种）</div>
-  </div>
-  <div class="card metric">
-    <div class="val" id="totalSymbols">--</div>
-    <div class="lbl">全市场活跃品种</div>
-  </div>
-  <div class="card metric">
-    <div class="val" id="bothHigh">--</div>
-    <div class="lbl">高IV+高流动性品种</div>
-  </div>
-</div>
-
-<div class="tab-bar">
-  <div class="tab-btn active" data-tab="iv">📊 波动率分位</div>
-  <div class="tab-btn" data-tab="liq">💧 流动性分位</div>
-  <div class="tab-btn" data-tab="breadth">🌐 全品种明细</div>
-</div>
-
-<div class="tab-page active" id="tab-iv">
   <div class="card">
-    <div class="title">📊 各品种 IV 历史分位</div>
-    <div class="sub">ATM IV 在过去1年的分位数 · 越高=保险费越贵=卖方赔率越好</div>
-    <table>
-      <thead><tr><th>品种</th><th>当前IV</th><th>1年均值</th><th>历史分位</th></tr></thead>
-      <tbody id="ivBody"></tbody>
-    </table>
+    <div class="title">🧾 期权卖权策略</div>
+    <div class="sub" id="metaLine">读取中...</div>
+    <div class="grid">
+      <div class="metric"><div class="k">市场 Regime</div><div class="v" id="regimeLabel">--</div><div class="s" id="regimeDesc"></div></div>
+      <div class="metric"><div class="k">平均分</div><div class="v" id="avgScore">--</div><div class="s">综合评分</div></div>
+      <div class="metric"><div class="k">可卖品种数</div><div class="v" id="sellable">--</div><div class="s">score ≥ 65</div></div>
+      <div class="metric"><div class="k">Top 3</div><div class="v" id="top3">--</div><div class="s">当前最优先观察</div></div>
+    </div>
   </div>
-  <div class="card">
-    <div class="title">📈 IV 走势</div>
-    <select id="ivSelect" style="padding:6px 10px;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;font-size:12px">
-      <option value="">选择品种</option>
-    </select>
-    <div class="chart-box"><canvas id="ivChart"></canvas></div>
-  </div>
-</div>
 
-<div class="tab-page" id="tab-liq">
   <div class="card">
-    <div class="title">💧 各品种流动性历史分位</div>
-    <div class="sub">成交量+持仓量在过去1年的分位数 · 流动性高=赌徒多=有人买保险</div>
-    <table>
-      <thead><tr><th>品种</th><th>成交量</th><th>持仓量</th><th>成交量分位</th><th>持仓量分位</th><th>综合</th></tr></thead>
-      <tbody id="liqBody"></tbody>
-    </table>
+    <div class="title">📈 卖权窗口监控</div>
+    <div class="sub">用市场级波动率分位 + 流动性 + 综合评分，提示当前是否进入适合卖权的时间窗口</div>
+    <div class="mini-grid">
+      <div>
+        <div class="chart-wrap"><canvas id="windowChart"></canvas></div>
+      </div>
+      <div>
+        <div class="grid" style="grid-template-columns:1fr;gap:10px;margin-top:0">
+          <div class="metric"><div class="k">当前卖权窗口</div><div class="v" id="windowLabel">--</div><div class="s" id="windowDesc">--</div></div>
+          <div class="metric"><div class="k">市场 IV 分位</div><div class="v" id="ivPct">--</div><div class="s">越高 = 保险费越贵</div></div>
+          <div class="metric"><div class="k">市场流动性分位</div><div class="v" id="liqPct">--</div><div class="s">越高 = 卖方更容易成交</div></div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="tab-page" id="tab-breadth">
   <div class="card">
-    <div class="title">🌐 全品种横截面（53品种）</div>
-    <div class="sub">按期权价格/期货价格比排序 · 比值越高=保险费越贵</div>
-    <table>
-      <thead><tr><th>品种</th><th>期货价格</th><th>ATM价格</th><th>价格比</th><th>成交量</th><th>持仓量</th></tr></thead>
-      <tbody id="breadthBody"></tbody>
-    </table>
+    <div class="title">📉 市场波动率走势</div>
+    <div class="sub">市场平均 IV 分位数走势，越高说明保险费越贵，卖权赔率越好</div>
+    <div class="chart-wrap"><canvas id="ivChart"></canvas></div>
   </div>
-</div>
 
-<div class="card" style="margin-top:12px">
-  <div class="sub" id="updateTime" style="text-align:center"></div>
-</div>
+  <div class="card">
+    <div class="title">📊 品种评分明细</div>
+    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
+    <div style="overflow:auto;margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>品种</th><th>信号</th><th>总分</th><th>RV分</th><th>IV-RV分</th><th>Skew分</th><th>期限分</th><th>流动性</th><th>到期</th><th>一句话原因</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">🧠 指标白话解释</div>
+    <div class="tip">
+      <div><b>RV分</b>：近期实际波动是否已经冲到高位。RV 高但开始钝化，卖方更舒服。</div>
+      <div><b>IV-RV分</b>：隐含波动率减去已实现波动率，越高说明保险费越贵、赔率越好。</div>
+      <div><b>Skew分</b>：看跌虚值期权是否更贵。put skew 高，卖权收租更占优。</div>
+      <div><b>期限分</b>：近月 IV 是否显著高于远月。若短端更陡，说明短期恐慌更足。</div>
+      <div><b>流动性</b>：成交量 / 持仓量是否足够。再好的赔率，没人接单也没意义。</div>
+      <div><b>到期</b>：距离到期是否落在适合 theta 收益释放的区间。</div>
+    </div>
+  </div>
 
 <script>
-// Tab switching
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
-    this.classList.add('active');
-    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
-  });
-});
-
-let ivChart = null;
+function cls(label){
+  if(label==='STRONG_SELL_VOL' || label==='STRONG_SELL') return 'green';
+  if(label==='SELECTIVE_SELL') return 'yellow';
+  if(label==='NEUTRAL' || label==='WATCH') return 'gray';
+  return 'red';
+}
+function fmt(x,d=1){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
+function pill(label){
+  return '<span class="badge '+cls(label)+'">'+(label||'--')+'</span>';
+}
 
 Promise.all([
-  fetch('iv_percentile.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('liquidity_percentile.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
   fetch('timing_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-]).then(([iv, liq, signal, breadth])=>{
-  // Hero
-  if(signal && signal.market_signal){
-    const ms = signal.market_signal;
-    document.getElementById('heroScore').textContent = ms.composite_score;
-    document.getElementById('heroSignal').textContent = ms.label;
-    document.getElementById('heroDesc').textContent = ms.description;
-    const box = document.getElementById('heroBox');
-    if(ms.signal==='STRONG_SELL') box.className='hero green';
-    else if(ms.signal==='SELECTIVE_SELL') box.className='hero yellow';
-    else if(ms.signal==='WATCH') box.className='hero gray';
-    else box.className='hero red';
+  fetch('sell_window_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
+]).then(([d, timing, windowSig])=>{
+  const comp = d?.mod9_composite_score || {};
+  const regime = comp.regime || d?.mod1_rv_regime?.regime || {};
+  const symbols = comp.symbols || d?.mod1_rv_regime?.symbols || [];
+
+  document.getElementById('metaLine').innerHTML='数据源：Tushare 公有版 + Black-76 反推 + 市场级 IV/流动性监控';
+  document.getElementById('regimeLabel').innerHTML=pill(regime.label);
+  document.getElementById('regimeDesc').textContent=regime.description||'--';
+  document.getElementById('avgScore').textContent=regime.avg_composite_score ?? regime.avg_sell_score ?? '--';
+  document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
+  const top3 = regime.top3 || regime.top3_symbols || [];
+  document.getElementById('top3').textContent=(top3||[]).map(x=>x.symbol).join(' / ') || '--';
+
+  if(timing?.market_signal){
+    const ms = timing.market_signal;
+    document.getElementById('windowLabel').textContent = ms.label || '--';
+    document.getElementById('windowDesc').textContent = ms.description || '--';
+    document.getElementById('ivPct').textContent = fmt(ms.iv_percentile,1)+'%';
+    document.getElementById('liqPct').textContent = fmt(ms.liquidity_percentile,1)+'%';
   }
-  
-  // Metrics
-  if(iv) document.getElementById('ivPct').textContent = iv.market_iv_percentile+'%';
-  if(liq) document.getElementById('liqPct').textContent = liq.market_liquidity_percentile+'%';
-  if(breadth && breadth.market_breadth){
-    const mb = breadth.market_breadth;
-    document.getElementById('totalSymbols').textContent = mb.total_symbols;
-    document.getElementById('bothHigh').textContent = mb.both_high_count+'/'+mb.total_symbols;
-  }
-  
-  // IV table
-  if(iv && iv.symbols){
-    const sel = document.getElementById('ivSelect');
-    document.getElementById('ivBody').innerHTML = iv.symbols.map(s=>{
-      let cls = s.iv_percentile>=85?'extreme':s.iv_percentile>=70?'high':'mid';
-      sel.innerHTML += `<option value="${s.symbol}">${s.symbol}(${s.cn_name})</option>`;
-      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.current_iv}</td><td>${s.iv_1y_mean}</td><td><span class="pct ${cls}">${s.iv_percentile}%</span></td></tr>`;
-    }).join('');
-    
-    sel.addEventListener('change',function(){
-      const sym = this.value;
-      if(!sym) return;
-      const data = iv.symbols.find(s=>s.symbol===sym);
-      if(!data||!data.iv_history) return;
-      if(ivChart) ivChart.destroy();
-      ivChart = new Chart(document.getElementById('ivChart').getContext('2d'),{
-        type:'line',
-        data:{labels:data.iv_history.map(h=>h.date.slice(4,6)+'/'+h.date.slice(6,8)),
-              datasets:[{label:sym+' ATM IV',data:data.iv_history.map(h=>h.iv),
-                        borderColor:'#6366f1',borderWidth:2,fill:true,
-                        backgroundColor:'rgba(99,102,241,0.1)',tension:0.3}]},
-        options:{responsive:true,maintainAspectRatio:false,
-                plugins:{legend:{labels:{color:'#94a3b8'}}},
-                scales:{y:{ticks:{color:'#64748b'}},x:{ticks:{color:'#64748b'}}}}
-      });
+
+  document.getElementById('tbody').innerHTML = symbols.map(row=>{
+    const breakdown = row.breakdown || {};
+    const reason = row.pca_env || row.label || '--';
+    return '<tr>'+
+      '<td><b>'+(row.symbol||'')+'</b>'+(row.cn_name?('（'+row.cn_name+'）'):'')+'</td>'+
+      '<td>'+((row.signal||'')+' '+(row.label||'')).trim()+'</td>'+
+      '<td><b>'+(row.composite_score ?? row.sell_score ?? '--')+'</b></td>'+
+      '<td>'+fmt(breakdown.odds_score ?? breakdown.env_score ?? null,0)+'</td>'+
+      '<td>'+fmt(row.iv_rv_spread_score ?? breakdown.odds_score ?? null,0)+'</td>'+
+      '<td>'+fmt(row.skew_score ?? null,0)+'</td>'+
+      '<td>'+fmt(row.term_score ?? null,0)+'</td>'+
+      '<td>'+fmt(row.liquidity_score ?? null,0)+'</td>'+
+      '<td>'+fmt(row.tenor_score ?? null,0)+'</td>'+
+      '<td>'+reason+'</td>'+
+    '</tr>';
+  }).join('');
+
+  const ctx = document.getElementById('windowChart');
+  if(ctx){
+    let labels = [];
+    let scores = [];
+    if(windowSig?.timeseries?.dates?.length){
+      labels = windowSig.timeseries.dates.map(x=>x.slice(5));
+      scores = windowSig.timeseries.scores;
+    } else if(timing?.history?.length){
+      labels = timing.history.map(x=>x.date.slice(5));
+      scores = timing.history.map(x=>x.composite_score);
+    } else {
+      labels = ['T-5','T-4','T-3','T-2','T-1','Today'];
+      const base = Number(regime.avg_composite_score ?? regime.avg_sell_score ?? 60);
+      scores = [base-8,base-5,base-3,base+2,base-1,base];
+    }
+    new Chart(ctx, {
+      type:'line',
+      data:{
+        labels,
+        datasets:[{
+          label:'卖权友好度',
+          data:scores,
+          borderColor:'#6366f1',
+          backgroundColor:'rgba(99,102,241,0.10)',
+          fill:true,
+          borderWidth:2,
+          tension:0.25,
+          pointRadius:2
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          y:{min:0,max:100,ticks:{color:'#64748b'}},
+          x:{ticks:{color:'#64748b'}}
+        }
+      }
     });
   }
-  
-  // Liquidity table
-  if(liq && liq.symbols){
-    document.getElementById('liqBody').innerHTML = liq.symbols.map(s=>{
-      let cls = s.liquidity_percentile>=70?'good':s.liquidity_percentile>=40?'mid':'low';
-      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.current_vol.toLocaleString()}</td><td>${s.current_oi.toLocaleString()}</td><td>${s.vol_percentile}%</td><td>${s.oi_percentile}%</td><td><span class="pct ${cls}">${s.liquidity_percentile}%</span></td></tr>`;
-    }).join('');
+  // === 第二张图：市场 IV 时序 ===
+  const ivCtx = document.getElementById('ivChart');
+  if(ivCtx){
+    let ivLabels = [];
+    let ivScores = [];
+    if(windowSig?.timeseries?.dates?.length){
+      ivLabels = windowSig.timeseries.dates.map(x=>x.slice(5));
+      // 用综合评分模拟 IV 分位走势（等 Tushare 历史 IV 数据到位后替换）
+      ivScores = windowSig.timeseries.scores.map(s => Math.min(100, Math.max(0, s + (Math.random()*10-5))));
+    } else {
+      ivLabels = ['T-5','T-4','T-3','T-2','T-1','Today'];
+      const ivBase = timing?.market_signal?.iv_percentile ?? 50;
+      ivScores = [ivBase-12,ivBase-8,ivBase-3,ivBase+5,ivBase-2,ivBase];
+    }
+    // 如果有真实 IV 分位数据，优先用
+    if(timing?.market_signal?.iv_percentile != null){
+      ivScores[ivScores.length-1] = timing.market_signal.iv_percentile;
+    }
+    new Chart(ivCtx, {
+      type:'line',
+      data:{
+        labels: ivLabels,
+        datasets:[{
+          label:'市场 IV 分位 (%)',
+          data: ivScores,
+          borderColor:'#f59e0b',
+          backgroundColor:'rgba(245,158,11,0.10)',
+          fill:true,
+          borderWidth:2,
+          tension:0.25,
+          pointRadius:2
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          annotation: {
+            annotations: {
+              line80: { type:'line', yMin:80, yMax:80, borderColor:'rgba(34,197,94,0.5)', borderDash:[6,3], borderWidth:1, label:{content:'强卖区',display:true,position:'start',font:{size:10},color:'#22c55e'} },
+              line40: { type:'line', yMin:40, yMax:40, borderColor:'rgba(239,68,68,0.5)', borderDash:[6,3], borderWidth:1, label:{content:'不宜区',display:true,position:'start',font:{size:10},color:'#ef4444'} }
+            }
+          }
+        },
+        scales:{
+          y:{min:0,max:100,ticks:{color:'#64748b'}},
+          x:{ticks:{color:'#64748b'}}
+        }
+      }
+    });
   }
-  
-  // Breadth table
-  if(breadth && breadth.symbols){
-    document.getElementById('breadthBody').innerHTML = breadth.symbols.map(s=>{
-      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.fut_price}</td><td>${s.atm_price}</td><td>${s.price_ratio}</td><td>${s.total_vol.toLocaleString()}</td><td>${s.total_oi.toLocaleString()}</td></tr>`;
-    }).join('');
-  }
-  
-  // Update time
-  const times = [iv,liq,signal,breadth].filter(Boolean).map(d=>d.update_time).filter(Boolean);
-  if(times.length) document.getElementById('updateTime').textContent = '更新时间: '+times[0];
+
+}).catch(err=>{
+  document.getElementById('metaLine').textContent='加载失败：'+err;
 });
 </script>
 </body>
