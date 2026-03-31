@@ -246,6 +246,15 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
+    'option_vol': {
+        'name': '期权卖权',
+        'scripts': [
+            ('env_fit/option_vol', 'option_vol_main.py'),
+        ],
+        'aliases': ['option-vol'],
+        'include_in_update_all': True,
+        'include_in_refresh_server': True,
+    },
     'arbitrage': {
         'name': '套利',
         'scripts': [

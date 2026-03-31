@@ -268,9 +268,8 @@ def analyze_chains(sector_data, chain_map):
             if strong:
                 active_positions.append(pos_name)
 
-        # 判断共振：所有非空位置都活跃
-        non_empty = [pos for pos, inds in positions.items() if inds]
-        resonance = len(active_positions) >= len(non_empty) and len(non_empty) >= 2
+        # 判断共振：至少2个位置活跃即可
+        resonance = len(active_positions) >= 2
 
         results.append({
             'chain': chain_name,

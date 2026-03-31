@@ -79,9 +79,9 @@ def print_summary(merged):
 
 
 def main():
-    mode = 'merge-only'
-    if '--run' in sys.argv:
-        mode = 'full'
+    mode = 'full'  # 默认完整运行
+    if '--merge-only' in sys.argv:
+        mode = 'merge-only'
 
     if mode == 'full':
         print('🚀 完整运行：执行模块 + 合并')
@@ -90,7 +90,7 @@ def main():
             if not ok:
                 print(f'⚠️ {label} 失败，继续下一个...')
     else:
-        print('📦 合并模式：直接合并已有 JSON（加 --run 可完整运行）')
+        print('📦 合并模式：直接合并已有 JSON（加 --merge-only 可跳过运行）')
 
     merged = merge()
     print_summary(merged)

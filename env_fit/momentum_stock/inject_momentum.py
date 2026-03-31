@@ -445,7 +445,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
         # Chain analysis
         chain_html = ''
-        active_chains = [c for c in chains if c.get('resonance') or c.get('positions_active')]
+        active_chains = [c for c in chains if c.get('positions_active')]
         if active_chains:
             chain_items = ''
             for c in active_chains:
