@@ -218,6 +218,30 @@ function renderOverviewCard(d){
   if(w30.latest_is_big)h+=' 最近一个交易日的大单成交占比高于近30日历史80%分位，属于异常大单日。';
   else h+=' 最近一个交易日没有触发异常大单日。';
   h+=' 近5日主力净流入'+fmtMoney(mf.main_net_5d)+'，近10日主力净流入'+fmtMoney(mf.main_net_10d)+'。</div>';
+  // 一句话投资者视角结论
+  var signals=[];
+  if(c.peak_distance!=null){
+    if(c.peak_distance>8)signals.push({t:'筹码峰已被突破',c:'#59e0c5'});
+    else if(c.peak_distance<-8)signals.push({t:'跌破筹码峰',c:'#f87171'});
+    else signals.push({t:'筹码峰附近震荡',c:'#fbbf24'});
+  }
+  if(w30.latest_is_big||w60.big_days>3)signals.push({t:'近期有异常大单',c:'#5daeff'});
+  else signals.push({t:'大单平淡',c:'#64748b'});
+  if(ls.limit_up_count>0)signals.push({t:'近60日有涨停',c:'#59e0c5'});
+  if(ic.stock_return_20d!=null){
+    if(ic.stock_return_20d>5)signals.push({t:'近20日走强',c:'#59e0c5'});
+    else if(ic.stock_return_20d<-5)signals.push({t:'近20日走弱',c:'#f87171'});
+    else signals.push({t:'近20日震荡',c:'#fbbf24'});
+  }
+  if(mf.main_net_5d!=null){
+    if(mf.main_net_5d>0)signals.push({t:'近5日主力净流入',c:'#59e0c5'});
+    else signals.push({t:'近5日主力净流出',c:'#f87171'});
+  }
+  if(signals.length){
+    h+='<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-size:12px;color:#64748b;margin-right:4px">投资者视角：</span>';
+    signals.forEach(function(s){h+='<span style="padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid '+s.c+'33;color:'+s.c+'">'+esc(s.t)+'</span>'});
+    h+='</div>';
+  }
   h+='</div>';
   h+='<div class="fancy-stack">';
   h+='<div class="bullet-card"><div class="t">行业属性</div><div class="clean-list">';
@@ -252,10 +276,10 @@ function renderFundamentalsCard(f, basics, stockName, code){
   var completeness=[summary,financials,info].filter(Boolean).length;
   var h='';
   h+='<div class="card section"><div class="title">iFind 基本面增强</div>';
-  h+='<div class="info-banner">这块不再是把接口原文直接糊上来，而是把 <b>公司是谁、靠什么赚钱、估值贵不贵、最近财务表现怎样</b> 四件事压成一屏，方便用户一眼扫完。</div>';
+  h+='<div class="info-banner">公司是谁、靠什么赚钱、估值贵不贵、最近财务表现怎样 — 四件事压成一屏。</div>';
   h+='<div class="fancy-fund-grid">';
   h+='<div class="hero-card">';
-  h+='<div class="hero-head"><div><div class="hero-title">'+esc(stockName)+'</div><div class="hero-sub">'+esc(code)+' · iFind 基本面速览</div></div><div class="hero-tag">给用户看的版本</div></div>';
+  h+='<div class="hero-head"><div><div class="hero-title">'+esc(stockName)+'</div><div class="hero-sub">'+esc(code)+' · iFind 基本面速览</div></div><div class="hero-tag">基本面</div></div>';
   if(industryTags.length)h+='<div class="chips">'+industryTags.map(function(x){return '<span class="chip">'+esc(x)+'</span>'}).join('')+'</div>';
   h+='<div class="snapshot-grid">';
   h+='<div class="snapshot-item"><div class="k">市盈率 TTM</div><div class="v">'+(topPE!=null?esc(topPE):'N/A')+'</div></div>';
