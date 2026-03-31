@@ -255,7 +255,7 @@ h1 {
     </div>
     <div class="step">
         <div class="step-num">2</div>
-        <div class="step-text"><b>基线分离</b> — 用过去 <b>20个交易日同一时段</b>（如每天14:00-14:15）的成交额中位数作为"正常水平"基线。超出基线 <b>1.5倍</b> 的部分视为异常增量资金。</div>
+        <div class="step-text"><b>双基线分离</b> — 对每个15分钟切片同时看两把尺子：<b>20日同一时段成交额中位数×1.5</b>，用于识别“绝对底部/绝对买入”级别的大单；<b>5日同一时段成交额中位数×1.3</b>，用于识别近期相对放量的“托盘/徐徐买入”。只要任一条件满足，就把超出阈值的部分视为异常增量资金。</div>
     </div>
     <div class="step">
         <div class="step-num">3</div>
@@ -277,7 +277,7 @@ h1 {
         <div class="indices-list" id="indicesList"></div>
     </div>
     <div style="margin-top:8px;font-size:11px;color:#9ca3af">
-        数据起算：2023-07-03 | 数据源：Tushare 15min K线 | 基线窗口：20日同时段中位数 | 异常阈值：1.5x
+        数据起算：2023-07-03 | 数据源：Tushare 15min K线 | 双基线：20日中位数×1.5（绝对大单） + 5日中位数×1.3（近期托盘/徐徐买入）
     </div>
 </div>
 
