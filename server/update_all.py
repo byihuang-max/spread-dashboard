@@ -4,10 +4,15 @@ GAMT 投研看板 — 一键更新脚本
 跑一次完成：数据拉取(CSV+JSON) → 指标计算 → 注入HTML → git push
 
 用法：
-  cd ~/Desktop/gamt-dashboard
-  python3 update_all.py          # 更新所有模块
-  python3 update_all.py --no-push  # 只更新数据，不推送
-  python3 update_all.py --module quant_stock  # 只更新某个模块
+  python3 update_all.py              # 主更新（自动跳过晚到数据模块）
+  python3 update_all.py --late-only  # 只跑晚到数据（强势股+耐心资本）
+  python3 update_all.py --module quant_stock  # 只更新某个模块（不受分层影响）
+  python3 update_all.py --no-push    # 只更新数据，不推送
+
+分层逻辑：
+  - 默认模式：跳过 late_data=True 的模块（涨跌停/15min等晚到数据）
+  - --late-only：只跑 late_data=True 的模块
+  - --module：指定模块，不受分层影响
 """
 
 import subprocess, sys, os, time, argparse, json
@@ -145,6 +150,7 @@ def main():
     parser = argparse.ArgumentParser(description='GAMT 投研看板一键更新')
     parser.add_argument('--no-push', action='store_true', help='只更新数据，不推送')
     parser.add_argument('--module', '-m', type=str, help='只更新指定模块')
+    parser.add_argument('--late-only', action='store_true', help='只更新晚到数据模块（momentum_stock + patient_capital）')
     parser.add_argument('--list', action='store_true', help='列出所有模块')
     args = parser.parse_args()
 
@@ -156,7 +162,20 @@ def main():
     log("GAMT 投研看板 — 一键更新开始")
     t0 = time.time()
 
-    modules_to_run = [args.module] if args.module else list(MODULES.keys())
+    # 决定要跑哪些模块
+    if args.module:
+        modules_to_run = [args.module]
+    elif args.late_only:
+        # 只跑标记了 late_data=True 的模块
+        from module_registry import MODULE_REGISTRY
+        modules_to_run = [k for k, v in MODULE_REGISTRY.items() if v.get('late_data') and v.get('include_in_update_all')]
+        log(f"晚到数据模式：只更新 {', '.join(modules_to_run)}")
+    else:
+        # 默认跑所有模块，但跳过 late_data=True 的
+        from module_registry import MODULE_REGISTRY
+        modules_to_run = [k for k in MODULES.keys() if not MODULE_REGISTRY.get(k, {}).get('late_data')]
+        log(f"主更新模式：跳过晚到数据模块")
+    
     results = {}
 
     for mod_key in modules_to_run:
