@@ -78,10 +78,26 @@
     <div id="top3Container" style="margin-top:12px"></div>
   </div>
 
-  <!-- 第五屏：品种明细表 -->
+  <!-- 第五屏：品种综合评分明细（旧版完整保留） -->
   <div class="card">
-    <div class="title">📋 全品种明细</div>
-    <div class="sub">当前环境下的全市场品种（按卖方环境分排序）</div>
+    <div class="title">📊 品种评分明细</div>
+    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
+    <div style="overflow:auto;margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>品种</th><th>信号</th><th>总分</th><th>RV分</th><th>IV-RV分</th><th>Skew分</th><th>期限分</th><th>流动性</th><th>到期</th><th>一句话原因</th>
+          </tr>
+        </thead>
+        <tbody id="compTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 第六屏：全品种环境明细 -->
+  <div class="card">
+    <div class="title">📋 全品种环境明细</div>
+    <div class="sub">全市场 59 品种的 IV / 成交额 / 流动性分位（基于 2 年历史）</div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
@@ -253,7 +269,26 @@ Promise.all([
     }
   }
 
-  // 第五屏：品种明细表
+  // 第五屏：品种综合评分明细（旧版完整保留）
+  if(compSymbols.length){
+    document.getElementById('compTbody').innerHTML = compSymbols.map(row=>{
+      const bd = row.breakdown || {};
+      return '<tr>'+
+        '<td><b>'+(row.symbol||'')+'</b>'+(row.cn_name?('（'+row.cn_name+'）'):'')+'</td>'+
+        '<td>'+(row.signal||'')+' '+(row.label||'')+'</td>'+
+        '<td><b>'+fmt(row.composite_score ?? row.sell_score,0)+'</b></td>'+
+        '<td>'+fmt(row.rv_score,0)+'</td>'+
+        '<td>'+fmt(row.iv_score ?? row.iv_rv_spread_score,0)+'</td>'+
+        '<td>'+fmt(row.skew_score,0)+'</td>'+
+        '<td>'+fmt(row.term_score,0)+'</td>'+
+        '<td>'+fmt(row.liquidity_score,0)+'</td>'+
+        '<td>'+fmt(row.expiry_score ?? row.tenor_score,0)+'</td>'+
+        '<td style="font-size:11px;color:#64748b;max-width:260px">'+(row.reason_text || row.pca_env || '--')+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  // 第六屏：全品种环境明细
   if(breadth?.symbols){
     const symbols = breadth.symbols.slice(0, 30); // 只显示前30个
     document.getElementById('tbody').innerHTML = symbols.map(row=>{
