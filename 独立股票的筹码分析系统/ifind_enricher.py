@@ -187,7 +187,7 @@ def get_fundamentals(ts_code: str, stock_name: str = None) -> dict:
     financials = _run_ifind('get_stock_financials', f'{name}最新一期ROE、营收同比增长率、净利润同比增长率')
     info = _run_ifind('get_stock_info', f'{name}总市值、市净率、市盈率TTM、所属申万行业')
     return {
-        'summary_text': _extract_text(summary),
+        'summary_text': _extract_summary_fields(_extract_text(summary)),
         'financials_text': _parse_pipe_table(_extract_text(financials)),
         'info_text': _parse_pipe_table(_extract_text(info)),
         'raw_ok': {
@@ -196,3 +196,56 @@ def get_fundamentals(ts_code: str, stock_name: str = None) -> dict:
             'info': bool(_extract_text(info)),
         }
     }
+
+
+def _extract_summary_fields(text: str) -> str:
+    """从 iFind summary 的复杂表格中提取关键字段"""
+    if not text:
+        return ''
+    
+    # 尝试从竖线表格中提取
+    lines = text.split('\n')
+    pipe_lines = [l.strip() for l in lines if '|' in l and not l.strip().startswith('#')]
+    
+    if len(pipe_lines) < 2:
+        return text
+    
+    # 找表头
+    header_line = None
+    for line in pipe_lines:
+        if not all(c in '-| :' for c in line):
+            header_line = line
+            break
+    if not header_line:
+        return text
+    
+    headers = [h.strip() for h in header_line.split('|')]
+    
+    # 找数据行（跳过分隔符）
+    data_line = None
+    found_header = False
+    for line in pipe_lines:
+        if line == header_line:
+            found_header = True
+            continue
+        if found_header and not all(c in '-| :' for c in line):
+            data_line = line
+            break
+    
+    if not data_line:
+        return text
+    
+    values = [v.strip() for v in data_line.split('|')]
+    
+    skip = {'证券代码', '证券简称', '日期', '代码', '简称'}
+    want = {'所属申万行业', '主营业务', '主营产品名称', '竞争公司', '可比公司', '所属同花顺行业'}
+    
+    result = []
+    min_len = min(len(headers), len(values))
+    for i in range(min_len):
+        h = headers[i].strip()
+        v = values[i].strip()
+        if h in want and v and v != '--' and not all(c in '-: ' for c in v):
+            result.append(f'{h}：{v}')
+    
+    return '\n'.join(result) if result else text
