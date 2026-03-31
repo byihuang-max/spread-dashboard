@@ -47,7 +47,7 @@ def _env_fit_signal():
     d = read_json(f'{BASE}/env_fit/env_fit_signals.json')
     if not d:
         return [], '-', False
-    sigs = d.get('signals', [])[:3]
+    sigs = d.get('signals', [])[:5]
     updated = d.get('update_time', get_mtime(f'{BASE}/env_fit/env_fit_signals.json'))
     return sigs, updated, True
 
@@ -250,8 +250,8 @@ def main():
         },
         {
             'name': '🎯 策略环境适配度',
-            'subs': ['宽基量化', '强势股', 'CTA', '转债', '套利'],
-            'new_subs': [],
+            'subs': ['宽基量化', '强势股', 'CTA', '转债', '套利', '期权卖权'],
+            'new_subs': ['期权卖权'],
             'signal_fn': _env_fit_signal,
         },
         {

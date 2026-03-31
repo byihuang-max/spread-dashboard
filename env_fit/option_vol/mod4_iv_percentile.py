@@ -1,30 +1,43 @@
 """
-mod4_iv_percentile.py - 轻量版
-用 opt_daily 的 settle 价格批量拉历史，反推 IV，计算分位数
+mod4_iv_percentile.py
+计算各品种 ATM IV 的历史分位数（过去1年，每10个交易日采样）
+输出：iv_percentile.json
 """
-import json, datetime, requests
+import re, json, datetime, requests, time
 import numpy as np
-import pandas as pd
 from pathlib import Path
 from scipy.stats import norm
 from scipy.optimize import brentq
 
 BASE = Path(__file__).parent
-CACHE = BASE / "_cache"
-CACHE.mkdir(exist_ok=True)
-
 TS_URL = "https://api.tushare.pro"
 TS_TOKEN = "8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae"
 
+# 交易所 → 期货/期权后缀
+SUFFIX = {"SHFE": "SHF", "DCE": "DCE", "CZCE": "ZCE", "INE": "INE", "CFFEX": "CFX"}
+
 def ts_api(api_name, **kwargs):
-    r = requests.post(TS_URL, json={"api_name": api_name, "token": TS_TOKEN, 
-                                    "params": kwargs, "fields": ""}, timeout=20)
-    d = r.json()
-    if d.get("code") != 0:
-        return None, d.get("msg")
-    cols = d["data"]["fields"]
-    items = d["data"]["items"]
-    return [dict(zip(cols, row)) for row in items], None
+    for attempt in range(3):
+        try:
+            r = requests.post(TS_URL, json={"api_name": api_name, "token": TS_TOKEN,
+                                            "params": kwargs, "fields": ""}, timeout=20)
+            d = r.json()
+            if d.get("code") != 0:
+                return None, d.get("msg")
+            return [dict(zip(d["data"]["fields"], row)) for row in d["data"]["items"]], None
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(1)
+            else:
+                return None, str(e)
+
+def parse_opt_code(ts_code):
+    """AU2605C1000.SHF → (AU, 20260515, C, 1000)"""
+    m = re.match(r'([A-Z]+\d?)(\d{4})([CP])(\d+)\.(\w+)', ts_code)
+    if not m:
+        return None
+    sym, yymm, cp, strike, _ = m.groups()
+    return sym, f"20{yymm[:2]}{yymm[2:]}15", cp, int(strike)
 
 def black76_iv(opt_price, F, K, T, opt_type='C'):
     if T <= 0 or opt_price <= 0 or F <= 0 or K <= 0:
@@ -34,97 +47,137 @@ def black76_iv(opt_price, F, K, T, opt_type='C'):
         d2 = d1 - sigma*np.sqrt(T)
         if opt_type == 'C':
             return np.exp(-0.02*T) * (F*norm.cdf(d1) - K*norm.cdf(d2))
-        else:
-            return np.exp(-0.02*T) * (K*norm.cdf(-d2) - F*norm.cdf(-d1))
+        return np.exp(-0.02*T) * (K*norm.cdf(-d2) - F*norm.cdf(-d1))
     try:
         return brentq(lambda s: price(s) - opt_price, 0.001, 3.0)
     except:
         return None
 
-# 核心品种
+# 品种配置：(交易所API名, 品种前缀, 中文名, 期货主力代码)
 SYMBOLS = [
     ("SHFE", "AU", "黄金"),
     ("SHFE", "CU", "铜"),
     ("SHFE", "AG", "白银"),
-    ("INE", "SC", "原油"),
-    ("CFFEX", "IO", "沪深300"),
-    ("CFFEX", "MO", "中证1000"),
+    ("SHFE", "AL", "铝"),
+    ("SHFE", "RU", "橡胶"),
+    ("INE",  "SC", "原油"),
+    ("DCE",  "I",  "铁矿"),
+    ("DCE",  "M",  "豆粕"),
+    ("CZCE", "SR", "白糖"),
+    ("CZCE", "CF", "棉花"),
+    ("CFFEX","IO", "沪深300"),
+    ("CFFEX","MO", "中证1000"),
+    ("CFFEX","HO", "上证50"),
 ]
 
 end_date = datetime.date.today()
 start_date = end_date - datetime.timedelta(days=365)
 
+# 拉交易日历（用 SSE，通用）
+cal, _ = ts_api("trade_cal", exchange="SSE",
+                start_date=start_date.strftime("%Y%m%d"),
+                end_date=end_date.strftime("%Y%m%d"), is_open="1")
+trade_days = sorted([c["cal_date"] for c in cal]) if cal else []
+sample_days = trade_days[::10]
+print(f"交易日: {len(trade_days)}, 采样: {len(sample_days)}")
+
 results = []
 
 for exchange, prefix, cn_name in SYMBOLS:
-    print(f"\n{prefix}({cn_name})...")
+    sfx = SUFFIX[exchange]
+    fut_code = f"{prefix}.{sfx}"
+    print(f"\n{prefix}({cn_name})...", flush=True)
     
-    # 拉最近1年的 opt_daily（分批）
-    all_opts = []
-    for offset in range(0, 365, 30):
-        td = (end_date - datetime.timedelta(days=offset)).strftime("%Y%m%d")
-        data, err = ts_api("opt_daily", exchange=exchange, trade_date=td,
-                          fields="ts_code,trade_date,close,exercise_price")
-        if data:
-            all_opts.extend([d for d in data if d["ts_code"].startswith(prefix)])
+    iv_series = []
+    iv_dates = []
     
-    if len(all_opts) < 10:
-        print(f"  数据不足: {len(all_opts)}")
-        continue
-    
-    # 按日期分组，每天算一个 ATM IV
-    df = pd.DataFrame(all_opts)
-    df["trade_date"] = pd.to_datetime(df["trade_date"])
-    df["close"] = pd.to_numeric(df["close"], errors="coerce")
-    df["exercise_price"] = pd.to_numeric(df["exercise_price"], errors="coerce")
-    df = df.dropna(subset=["close", "exercise_price"])
-    
-    daily_iv = []
-    for td, grp in df.groupby("trade_date"):
-        # 拉期货价格
-        td_str = td.strftime("%Y%m%d")
-        fut_data, _ = ts_api("fut_daily", ts_code=f"{prefix}888.{exchange}",
-                            trade_date=td_str, fields="close")
-        if not fut_data or not fut_data[0].get("close"):
+    for td in sample_days:
+        # 拉期权行情
+        daily, err = ts_api("opt_daily", exchange=exchange, trade_date=td,
+                           fields="ts_code,close,vol")
+        if err or not daily:
             continue
-        F = float(fut_data[0]["close"])
         
-        # 找 ATM
-        atm = grp.iloc[(grp["exercise_price"] - F).abs().argmin()]
-        opt_price = atm["close"]
-        K = atm["exercise_price"]
-        T = 30 / 365.0  # 简化：假设30天到期
+        # 过滤该品种的 call
+        calls = []
+        for d in daily:
+            parsed = parse_opt_code(d["ts_code"])
+            if not parsed:
+                continue
+            sym = parsed[0]
+            # 匹配前缀（注意 I 和 I2 的区别：DCE 铁矿期权是 I2xxx）
+            if sym == prefix or (prefix == "I" and sym == "I2") or (prefix == "M" and sym == "M2"):
+                if parsed[2] == 'C':
+                    calls.append({**d, "strike": parsed[3], "expire": parsed[1]})
+        
+        if not calls:
+            continue
+        
+        # 拉期货价格
+        fut, _ = ts_api("fut_daily", ts_code=fut_code, trade_date=td, fields="close")
+        if not fut or not fut[0].get("close"):
+            # 试 prefix + 888
+            continue
+        
+        F = float(fut[0]["close"])
+        
+        # 找 ATM call（行权价最接近期货价格，且有成交）
+        valid = [c for c in calls if c.get("close") and float(c["close"]) > 0]
+        if not valid:
+            continue
+        
+        best = min(valid, key=lambda x: abs(x["strike"] - F))
+        K = best["strike"]
+        opt_price = float(best["close"])
+        
+        expire_date = datetime.datetime.strptime(best["expire"], "%Y%m%d").date()
+        trade_date_d = datetime.datetime.strptime(td, "%Y%m%d").date()
+        T_days = (expire_date - trade_date_d).days
+        T = T_days / 365.0
+        
+        if T <= 0.01:
+            continue
         
         iv = black76_iv(opt_price, F, K, T, opt_type='C')
-        if iv:
-            daily_iv.append(iv)
+        if iv and 0.01 < iv < 2.0:
+            iv_series.append(iv)
+            iv_dates.append(td)
     
-    if len(daily_iv) < 10:
-        print(f"  IV样本不足: {len(daily_iv)}")
+    if len(iv_series) < 5:
+        print(f"  样本不足: {len(iv_series)}")
         continue
     
-    # 当前 IV（最后一个）
-    current_iv = daily_iv[-1]
-    pct = (np.array(daily_iv) <= current_iv).mean() * 100
+    current_iv = iv_series[-1]
+    pct = (np.array(iv_series) <= current_iv).mean() * 100
     
     results.append({
         "symbol": prefix,
         "cn_name": cn_name,
         "exchange": exchange,
         "current_iv": round(current_iv, 4),
-        "iv_1y_mean": round(np.mean(daily_iv), 4),
+        "iv_1y_mean": round(float(np.mean(iv_series)), 4),
+        "iv_1y_max": round(float(max(iv_series)), 4),
+        "iv_1y_min": round(float(min(iv_series)), 4),
         "iv_percentile": round(pct, 1),
-        "samples": len(daily_iv),
+        "samples": len(iv_series),
+        "iv_history": [{"date": d, "iv": round(v, 4)} for d, v in zip(iv_dates, iv_series)],
     })
     
-    print(f"  ✅ IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(daily_iv)}")
+    print(f"  ✅ IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(iv_series)}")
+
+# 加权汇总
+if results:
+    weighted_pct = np.mean([r["iv_percentile"] for r in results])
+else:
+    weighted_pct = 0
 
 output = {
     "update_time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "market_iv_percentile": round(weighted_pct, 1),
     "symbols": results,
 }
 
 with open(BASE / "iv_percentile.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {len(results)} 品种")
+print(f"\n✅ 完成: {len(results)} 品种, 全市场IV分位={weighted_pct:.1f}%")
