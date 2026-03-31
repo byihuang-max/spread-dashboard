@@ -6,28 +6,31 @@
   <title>期权卖权环境指数</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
-    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
-    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
-    .sub{font-size:12px;color:#64748b;margin-top:4px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px}
+    .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
+    .card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:7px;color:#2d3142}
+    .card-title .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+    .sub{font-size:11px;color:#64748b;margin-top:4px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
-    .metric{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
-    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:28px;font-weight:800;margin-top:4px}
-    .metric .s{font-size:11px;color:#94a3b8;margin-top:4px}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
-    th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
-    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
-    .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
-    .chart-wrap{height:320px;margin-top:12px}
-    .tip{font-size:11px;color:#64748b;line-height:1.6;margin-top:8px}
+    .metric{border-left:3px solid #6366f1;background:#f8fafc;border-radius:10px;padding:14px}
+    .metric .k{font-size:11px;color:#64748b;font-weight:600}.metric .v{font-size:22px;font-weight:900;margin-top:4px;font-variant-numeric:tabular-nums}
+    .metric .s{font-size:10px;color:#94a3b8;margin-top:3px}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{padding:8px 10px;border-bottom:1px solid #f3f4f6;text-align:left}
+    th{font-size:11px;color:#64748b;background:#f8f9fb;font-weight:600}
+    tr:hover td{background:#fafbfc}
+    .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700}
+    .green{background:#dcfce7;color:#15803d}.yellow{background:#fef3c7;color:#b45309}.gray{background:#f1f5f9;color:#64748b}.red{background:#fee2e2;color:#dc2626}
+    .chart-wrap{position:relative;height:280px;margin-top:12px}
+    .tip{font-size:11px;color:#64748b;line-height:1.6;margin-top:8px;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e8eaef}
     @media (max-width: 900px){.grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
   <!-- 第一屏：顶部环境指标 -->
   <div class="card">
-    <div class="title">🎯 期权卖权环境指数</div>
+    <div class="card-title"><span class="dot" style="background:#6366f1"></span> 期权卖权环境指数</div>
     <div class="sub" id="metaLine">基于 2 年历史数据（483 天）计算</div>
     <div class="grid">
       <div class="metric">
@@ -59,28 +62,28 @@
 
   <!-- 第二屏：卖权环境总信号图 -->
   <div class="card">
-    <div class="title">📈 卖权环境信号走势</div>
+    <div class="card-title"><span class="dot" style="background:#6366f1"></span> 卖权环境信号走势</div>
     <div class="sub">全市场卖权环境信号（0~1），越高说明当前越适合系统性做卖权策略</div>
     <div class="chart-wrap"><canvas id="signalChart"></canvas></div>
   </div>
 
   <!-- 第三屏：结构拆解图 -->
   <div class="card">
-    <div class="title">📊 环境结构拆解</div>
+    <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 环境结构拆解</div>
     <div class="sub">高 IV 品种占比 vs 高成交额品种占比，拆解"保险费贵"和"赌徒多"两个维度</div>
     <div class="chart-wrap"><canvas id="structureChart"></canvas></div>
   </div>
 
   <!-- 第四屏：Top 3 建议品种 -->
   <div class="card">
-    <div class="title">🎯 当前建议观察品种（Top 3）</div>
+    <div class="card-title"><span class="dot" style="background:#10b981"></span> 当前建议观察品种（Top 3）</div>
     <div class="sub">基于综合评分模型筛选的重点品种</div>
     <div id="top3Container" style="margin-top:12px"></div>
   </div>
 
   <!-- 第五屏：品种综合评分明细（旧版完整保留） -->
   <div class="card">
-    <div class="title">📊 品种评分明细</div>
+    <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 品种综合评分明细</div>
     <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
     <div style="overflow:auto;margin-top:12px">
       <table>
@@ -96,7 +99,7 @@
 
   <!-- 第六屏：全品种环境明细 -->
   <div class="card">
-    <div class="title">📋 全品种环境明细</div>
+    <div class="card-title"><span class="dot" style="background:#64748b"></span> 全品种环境明细</div>
     <div class="sub">全市场 59 品种的 IV / 成交额 / 流动性分位（基于 2 年历史）</div>
     <div style="overflow:auto;margin-top:12px">
       <table>
@@ -114,6 +117,22 @@
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- 注释说明 -->
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
+    <div class="tip" style="margin-top:0">
+      <b>卖权环境信号（0~1）</b>：综合全市场 IV 中位数历史分位（40%）+ 高 IV 品种占比历史分位（30%）+ 高成交额品种占比历史分位（30%）。越接近 1 说明当前全市场越适合系统性做卖权策略。<br>
+      <b>高 IV 品种占比</b>：IV 分位 ≥ 70% 的品种数 / 全部活跃品种数。反映"保险费贵不贵"的广度。<br>
+      <b>高成交额品种占比</b>：成交额分位 ≥ 50% 的品种数 / 全部活跃品种数。反映"赌徒多不多"的广度。<br>
+      <b>IV 代理</b>：ATM 期权价格 / 标的期货价格，近似隐含波动率水平（非 Black-Scholes 精确 IV）。<br>
+      <b>历史分位</b>：当前值在过去 2 年（483 个交易日）中的百分位排名。<br>
+      <b>环境判断</b>：≥0.7 强卖方窗口 | 0.5~0.7 精选窗口 | 0.3~0.5 观察期 | &lt;0.3 不适合卖权。<br>
+      <b>品种综合评分</b>：基于 RV 环境（波动率状态）、IV-RV 赔率（保险费溢价）、Skew（尾部定价）、期限结构、流动性、到期结构六维打分，满分 100。<br>
+      <b>数据来源</b>：Tushare Pro（opt_daily / opt_basic / fut_daily），覆盖全部商品 + 股指期权，约 59 个活跃品种。<br>
+      <b>更新频率</b>：每日盘后更新。
     </div>
   </div>
 
@@ -167,19 +186,13 @@ Promise.all([
       options:{
         responsive:true,
         maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
         plugins:{
-          legend:{display:false},
-          annotation: {
-            annotations: {
-              line70: { type:'line', yMin:0.7, yMax:0.7, borderColor:'rgba(34,197,94,0.6)', borderDash:[6,3], borderWidth:1.5 },
-              line50: { type:'line', yMin:0.5, yMax:0.5, borderColor:'rgba(251,191,36,0.6)', borderDash:[6,3], borderWidth:1.5 },
-              line30: { type:'line', yMin:0.3, yMax:0.3, borderColor:'rgba(239,68,68,0.6)', borderDash:[6,3], borderWidth:1.5 }
-            }
-          }
+          legend:{display:false}
         },
         scales:{
-          y:{min:0,max:1,ticks:{color:'#64748b',callback:v=>v.toFixed(1)}},
-          x:{ticks:{color:'#64748b',maxRotation:0}}
+          y:{min:0,max:1,ticks:{color:'#64748b',font:{size:10},callback:v=>v.toFixed(1)}},
+          x:{ticks:{color:'#64748b',font:{size:10},maxRotation:0},grid:{display:false}}
         }
       }
     });
@@ -219,12 +232,13 @@ Promise.all([
       options:{
         responsive:true,
         maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
         plugins:{
-          legend:{display:true,position:'top',labels:{boxWidth:12,font:{size:11},color:'#64748b'}}
+          legend:{position:'bottom',labels:{boxWidth:12,font:{size:11},color:'#64748b'}}
         },
         scales:{
-          y:{min:0,max:100,ticks:{color:'#64748b',callback:v=>v+'%'}},
-          x:{ticks:{color:'#64748b',maxRotation:0}}
+          y:{min:0,max:100,ticks:{color:'#64748b',font:{size:10},callback:v=>v+'%'}},
+          x:{ticks:{color:'#64748b',font:{size:10},maxRotation:0},grid:{display:false}}
         }
       }
     });
