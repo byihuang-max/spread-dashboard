@@ -328,32 +328,45 @@ function renderFundamentalsCard(f, basics, stockName, code){
   var roe=toNum(metricVal(finMetrics,['ROE']));
   var rev=toNum(metricVal(finMetrics,['营收同比','营业收入同比']));
   var profit=toNum(metricVal(finMetrics,['净利润同比']));
-  var clientSummary=buildClientSummary(stockName, summary, topPE, topPB, topMV!=='N/A'?topMV:null, roe, rev, profit, industry);
+  
   var h='';
-  h+='<div class="card section" style="margin-top:18px"><div class="title">公司与基本面画像</div>';
-  h+='<div class="info-banner">这一块只保留客户能直接看懂的表达，不再展示接口原始字段堆砌。</div>';
+  h+='<div class="card section" style="margin-top:18px"><div class="title">公司基本面</div>';
+  h+='<div class="info-banner">估值、财务、行业定位 — 表格化展示，一目了然。</div>';
+  
+  // 公司画像
+  if(summary){
+    var summaryLines=summary.split('\n').filter(Boolean);
+    if(summaryLines.length>0){
+      h+='<div style="margin-bottom:16px;padding:14px;background:rgba(93,174,255,.06);border-radius:10px;border:1px solid rgba(93,174,255,.12)">';
+      h+='<div style="font-size:13px;font-weight:600;color:#5daeff;margin-bottom:8px">公司定位</div>';
+      h+='<div style="font-size:13px;color:#cbd5e1;line-height:1.7">'+esc(summaryLines[0])+'</div>';
+      h+='</div>';
+    }
+  }
+  
   h+='<div class="fancy-fund-grid">';
-  h+='<div class="hero-card">';
-  h+='<div class="hero-head"><div><div class="hero-title">'+esc(stockName)+'</div><div class="hero-sub">'+esc(code)+' · 公司画像</div></div><div class="hero-tag">客户版</div></div>';
-  h+='<div class="narrative" style="font-size:14px;color:#e2e8f0">'+esc(clientSummary)+'</div>';
-  h+='<div class="snapshot-grid" style="margin-top:16px">';
-  h+='<div class="snapshot-item"><div class="k">公司定位</div><div class="v">'+esc(industry||'待补')+'</div></div>';
-  h+='<div class="snapshot-item"><div class="k">总市值</div><div class="v">'+esc(topMV)+'</div></div>';
-  h+='<div class="snapshot-item"><div class="k">估值判断</div><div class="v">'+esc(valuationLabel(topPE,topPB))+'</div></div>';
-  h+='<div class="snapshot-item"><div class="k">增长判断</div><div class="v">'+esc(growthLabel(rev,profit))+'</div></div>';
+  
+  // 估值指标表格
+  h+='<div class="bullet-card">';
+  h+='<div class="t">估值指标</div>';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:13px">';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">市盈率 PE(TTM)</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPE!=null?esc(topPE):'—')+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">市净率 PB</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPB!=null?esc(topPB):'—')+'</td></tr>';
+  h+='<tr><td style="padding:10px 0;color:#94a3b8">总市值</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+esc(topMV)+'</td></tr>';
+  h+='</table>';
+  h+='</div>';
+  
+  // 财务表现表格
+  h+='<div class="bullet-card">';
+  h+='<div class="t">财务表现</div>';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:13px">';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">ROE(TTM)</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(roe!=null?esc(roe)+'%':'—')+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">营收增速</td><td style="padding:10px 0;text-align:right;color:'+(rev!=null&&rev>0?'#59e0c5':rev!=null&&rev<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(rev!=null?esc(rev)+'%':'—')+'</td></tr>';
+  h+='<tr><td style="padding:10px 0;color:#94a3b8">利润增速</td><td style="padding:10px 0;text-align:right;color:'+(profit!=null&&profit>0?'#59e0c5':profit!=null&&profit<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(profit!=null?esc(profit)+'%':'—')+'</td></tr>';
+  h+='</table>';
+  h+='</div>';
+  
   h+='</div></div>';
-  h+='<div class="fancy-stack">';
-  h+='<div class="bullet-card"><div class="t">估值与体量</div><div class="clean-list">';
-  h+='<div class="clean-item"><div class="k">市盈率 PE(TTM)</div><div class="v">'+(topPE!=null?esc(topPE):'待补')+'</div></div>';
-  h+='<div class="clean-item"><div class="k">市净率 PB</div><div class="v">'+(topPB!=null?esc(topPB):'待补')+'</div></div>';
-  h+='<div class="clean-item"><div class="k">体量判断</div><div class="v">'+esc(topMV!=='N/A'?'当前总市值约'+topMV:'市值待补')+'</div></div>';
-  h+='</div></div>';
-  h+='<div class="bullet-card"><div class="t">财务表现翻译</div><div class="clean-list">';
-  h+='<div class="clean-item"><div class="k">ROE</div><div class="v">'+(roe!=null?esc(roe)+'% · '+esc(roeLabel(roe)):'待补')+'</div></div>';
-  h+='<div class="clean-item"><div class="k">营收增速</div><div class="v">'+(rev!=null?esc(rev)+'%':'待补')+'</div></div>';
-  h+='<div class="clean-item"><div class="k">利润增速</div><div class="v">'+(profit!=null?esc(profit)+'%':'待补')+'</div></div>';
-  h+='</div></div>';
-  h+='</div></div></div>';
   return h;
 }
 function showResult(d){
