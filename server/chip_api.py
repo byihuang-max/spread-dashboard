@@ -51,7 +51,10 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
         }
         
         # 数据区间
-        date_range = f"{df_daily.iloc[0]['trade_date'].strftime('%Y-%m-%d')} ~ {df_daily.iloc[-1]['trade_date'].strftime('%Y-%m-%d')}"
+        start_date = df_daily.iloc[0]['trade_date'].strftime('%Y-%m-%d')
+        end_date = df_daily.iloc[-1]['trade_date'].strftime('%Y-%m-%d')
+        date_range = f"{start_date} ~ {end_date}"
+        actual_trade_days = int(len(df_daily))
 
         # iFind 基本面增强
         fundamentals = get_fundamentals(ts_code, stock_name)
@@ -71,6 +74,10 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
             'ts_code': ts_code,
             'stock_name': stock_name,
             'date_range': date_range,
+            'start_date': start_date,
+            'end_date': end_date,
+            'lookback_days': days,
+            'actual_trade_days': actual_trade_days,
             'chip': {
                 'current_price': _f(chip.get('current_price')),
                 'avg_cost': _f(chip.get('avg_cost')),
