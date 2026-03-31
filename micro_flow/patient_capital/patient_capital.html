@@ -435,7 +435,7 @@ function renderCards() {
             </div>
             ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span>📍 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
             <div class="meta" style="margin-top:2px"><span>状态 <b>${L.intent || '暂无'}</b></span><span>${L.pnl_behavior || ''}</span></div>
-            <div class="meta"><span>力度 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>Z分数 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
+            <div class="meta"><span>成交占比 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>偏离20日均值 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
         `;
         card.onclick = () => selectIndex(name);
         el.appendChild(card);
