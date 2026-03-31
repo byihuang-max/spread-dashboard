@@ -32,12 +32,37 @@ def ts_api(api_name, **kwargs):
                 return None, str(e)
 
 def parse_opt_code(ts_code):
-    """AU2605C1000.SHF → (AU, 20260515, C, 1000)"""
-    m = re.match(r'([A-Z]+\d?)(\d{4})([CP])(\d+)\.(\w+)', ts_code)
-    if not m:
-        return None
-    sym, yymm, cp, strike, _ = m.groups()
-    return sym, f"20{yymm[:2]}{yymm[2:]}15", cp, int(strike)
+    """
+    解析不同交易所的期权代码格式：
+    SHFE/INE: AU2605C1000.SHF
+    DCE:      I2605-C-540.DCE
+    CZCE:     SR605C4600.ZCE (年份1位)
+    CFFEX:    IO2604-C-3950.CFX
+    """
+    code = ts_code.split(".")[0]
+    
+    # 格式1: XXX2605-C-1000 (DCE/CFFEX)
+    m = re.match(r'([A-Z]+\d?)(\d{4})-([CP])-(\d+)', code)
+    if m:
+        sym, yymm, cp, strike = m.groups()
+        return sym, f"20{yymm[:2]}{yymm[2:]}15", cp, int(strike)
+    
+    # 格式2: XXX2605C1000 (SHFE/INE)
+    m = re.match(r'([A-Z]+\d?)(\d{4})([CP])(\d+)', code)
+    if m:
+        sym, yymm, cp, strike = m.groups()
+        return sym, f"20{yymm[:2]}{yymm[2:]}15", cp, int(strike)
+    
+    # 格式3: SR605C4600 (CZCE, 年份1位)
+    m = re.match(r'([A-Z]+)(\d{3})([CP])(\d+)', code)
+    if m:
+        sym, ymm, cp, strike = m.groups()
+        y = int(ymm[0])
+        yy = f"2{y}" if y >= 0 else f"1{y}"  # 20x0-20x9
+        mm = ymm[1:]
+        return sym, f"20{yy}{mm}15", cp, int(strike)
+    
+    return None
 
 def black76_iv(opt_price, F, K, T, opt_type='C'):
     if T <= 0 or opt_price <= 0 or F <= 0 or K <= 0:
@@ -53,21 +78,22 @@ def black76_iv(opt_price, F, K, T, opt_type='C'):
     except:
         return None
 
-# 品种配置：(交易所API名, 品种前缀, 中文名, 期货主力代码)
+# 品种配置：(交易所API名, 期权前缀, 中文名, 期货主力代码前缀)
+# 期权前缀和期货前缀可能不同：IO→IF, MO→IM, HO→IH, I2→I, M2→M
 SYMBOLS = [
-    ("SHFE", "AU", "黄金"),
-    ("SHFE", "CU", "铜"),
-    ("SHFE", "AG", "白银"),
-    ("SHFE", "AL", "铝"),
-    ("SHFE", "RU", "橡胶"),
-    ("INE",  "SC", "原油"),
-    ("DCE",  "I",  "铁矿"),
-    ("DCE",  "M",  "豆粕"),
-    ("CZCE", "SR", "白糖"),
-    ("CZCE", "CF", "棉花"),
-    ("CFFEX","IO", "沪深300"),
-    ("CFFEX","MO", "中证1000"),
-    ("CFFEX","HO", "上证50"),
+    ("SHFE", "AU", "黄金",   "AU"),
+    ("SHFE", "CU", "铜",     "CU"),
+    ("SHFE", "AG", "白银",   "AG"),
+    ("SHFE", "AL", "铝",     "AL"),
+    ("SHFE", "RU", "橡胶",   "RU"),
+    ("INE",  "SC", "原油",   "SC"),
+    ("DCE",  "I2", "铁矿",   "I"),
+    ("DCE",  "M2", "豆粕",   "M"),
+    ("CZCE", "SR", "白糖",   "SR"),
+    ("CZCE", "CF", "棉花",   "CF"),
+    ("CFFEX","IO", "沪深300", "IF"),
+    ("CFFEX","MO", "中证1000","IM"),
+    ("CFFEX","HO", "上证50",  "IH"),
 ]
 
 end_date = datetime.date.today()
@@ -83,10 +109,10 @@ print(f"交易日: {len(trade_days)}, 采样: {len(sample_days)}")
 
 results = []
 
-for exchange, prefix, cn_name in SYMBOLS:
+for exchange, opt_prefix, cn_name, fut_prefix in SYMBOLS:
     sfx = SUFFIX[exchange]
-    fut_code = f"{prefix}.{sfx}"
-    print(f"\n{prefix}({cn_name})...", flush=True)
+    fut_code = f"{fut_prefix}.{sfx}"
+    print(f"\n{opt_prefix}({cn_name})...", flush=True)
     
     iv_series = []
     iv_dates = []
@@ -105,8 +131,8 @@ for exchange, prefix, cn_name in SYMBOLS:
             if not parsed:
                 continue
             sym = parsed[0]
-            # 匹配前缀（注意 I 和 I2 的区别：DCE 铁矿期权是 I2xxx）
-            if sym == prefix or (prefix == "I" and sym == "I2") or (prefix == "M" and sym == "M2"):
+            # 匹配期权前缀
+            if sym == opt_prefix:
                 if parsed[2] == 'C':
                     calls.append({**d, "strike": parsed[3], "expire": parsed[1]})
         
@@ -151,7 +177,7 @@ for exchange, prefix, cn_name in SYMBOLS:
     pct = (np.array(iv_series) <= current_iv).mean() * 100
     
     results.append({
-        "symbol": prefix,
+        "symbol": opt_prefix,
         "cn_name": cn_name,
         "exchange": exchange,
         "current_iv": round(current_iv, 4),
