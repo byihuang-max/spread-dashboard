@@ -44,10 +44,33 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .note{margin-top:20px;padding:16px;font-size:13px;color:#64748b;line-height:1.8}
 .fundamentals-text{margin-top:12px;font-size:13px;color:#94a3b8;line-height:1.8;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+.info-banner{background:linear-gradient(135deg,rgba(93,174,255,.12),rgba(89,224,197,.08));border:1px solid rgba(93,174,255,.18);border-radius:12px;padding:14px 16px;margin-bottom:16px;color:#cbd5e1;line-height:1.7;font-size:13px}
+.fancy-fund-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:8px}
+.fancy-stack{display:grid;gap:16px}
+.hero-card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px}
+.hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.hero-title{font-size:18px;font-weight:700;color:#f8fafc}
+.hero-sub{font-size:12px;color:#94a3b8;margin-top:4px}
+.hero-tag{padding:6px 10px;border-radius:999px;background:rgba(93,174,255,.12);color:#8ec5ff;font-size:12px;border:1px solid rgba(93,174,255,.2);white-space:nowrap}
+.snapshot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.snapshot-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px}
+.snapshot-item .k{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.snapshot-item .v{font-size:16px;font-weight:700;color:#e2e8f0}
+.narrative{font-size:13px;color:#cbd5e1;line-height:1.85;white-space:pre-wrap}
+.bullet-card{background:#16202d;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px}
+.bullet-card .t{font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:12px}
+.clean-list{display:grid;gap:10px}
+.clean-item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
+.clean-item .k{font-size:12px;color:#94a3b8;margin-bottom:4px}
+.clean-item .v{font-size:13px;color:#e2e8f0;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{padding:6px 10px;border-radius:999px;background:rgba(159,139,255,.12);border:1px solid rgba(159,139,255,.18);color:#cbbcff;font-size:12px}
+@media(max-width:900px){.fancy-fund-grid{grid-template-columns:1fr}.snapshot-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){
   .cards{grid-template-columns:repeat(2,1fr)}
   .grid2{grid-template-columns:1fr}
   .search-bar{flex-direction:column}
+  .snapshot-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -149,6 +172,54 @@ function fmtMoney(v){
 function row(k,v,color){
   return '<div class="row"><span class="k">'+k+'</span><span class="v" style="color:'+(color||'#e2e8f0')+'">'+v+'</span></div>';
 }
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
+function extractMetrics(text){
+  if(!text)return [];
+  var lines=String(text).split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+  return lines.slice(0,6).map(function(line){
+    var m=line.match(/^([^：:]{2,20})[：: ]+(.+)$/);
+    if(m)return {k:m[1].trim(),v:m[2].trim()};
+    return {k:'要点',v:line};
+  });
+}
+function splitIndustryTags(text){
+  if(!text)return [];
+  return String(text).split(/[、,，/｜|]/).map(function(x){return x.trim()}).filter(Boolean).slice(0,6);
+}
+function renderFundamentalsCard(f, basics, stockName, code){
+  var summary=f.summary_text||'';
+  var financials=f.financials_text||'';
+  var info=f.info_text||'';
+  var infoMetrics=extractMetrics(info);
+  var finMetrics=extractMetrics(financials);
+  var industryTags=[];
+  infoMetrics.forEach(function(x){if(/行业/.test(x.k))industryTags=splitIndustryTags(x.v)});
+  var topPE=basics&&basics.pe_ttm!=null?basics.pe_ttm:null;
+  var topPB=basics&&basics.pb!=null?basics.pb:null;
+  var topMV=basics&&basics.total_mv!=null?fmtMoney(basics.total_mv*10000):'N/A';
+  var completeness=[summary,financials,info].filter(Boolean).length;
+  var h='';
+  h+='<div class="card section"><div class="title">iFind 基本面增强</div>';
+  h+='<div class="info-banner">这块不再是把接口原文直接糊上来，而是把 <b>公司是谁、靠什么赚钱、估值贵不贵、最近财务表现怎样</b> 四件事压成一屏，方便用户一眼扫完。</div>';
+  h+='<div class="fancy-fund-grid">';
+  h+='<div class="hero-card">';
+  h+='<div class="hero-head"><div><div class="hero-title">'+esc(stockName)+'</div><div class="hero-sub">'+esc(code)+' · iFind 基本面速览</div></div><div class="hero-tag">给用户看的版本</div></div>';
+  if(industryTags.length)h+='<div class="chips">'+industryTags.map(function(x){return '<span class="chip">'+esc(x)+'</span>'}).join('')+'</div>';
+  h+='<div class="snapshot-grid">';
+  h+='<div class="snapshot-item"><div class="k">市盈率 TTM</div><div class="v">'+(topPE!=null?esc(topPE):'N/A')+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">市净率 PB</div><div class="v">'+(topPB!=null?esc(topPB):'N/A')+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">总市值</div><div class="v">'+esc(topMV)+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">信息完整度</div><div class="v">'+completeness+'/3</div></div>';
+  h+='</div>';
+  if(summary)h+='<div style="margin-top:16px"><div class="hero-sub" style="margin-bottom:8px">公司画像</div><div class="narrative">'+esc(summary.slice(0,700))+'</div></div>';
+  h+='</div>';
+  h+='<div class="fancy-stack">';
+  if(infoMetrics.length)h+='<div class="bullet-card"><div class="t">关键信息</div><div class="clean-list">'+infoMetrics.map(function(x){return '<div class="clean-item"><div class="k">'+esc(x.k)+'</div><div class="v">'+esc(x.v)+'</div></div>'}).join('')+'</div></div>';
+  if(finMetrics.length)h+='<div class="bullet-card"><div class="t">财务表现</div><div class="clean-list">'+finMetrics.map(function(x){return '<div class="clean-item"><div class="k">'+esc(x.k)+'</div><div class="v">'+esc(x.v)+'</div></div>'}).join('')+'</div></div>';
+  if(!infoMetrics.length&&!finMetrics.length&&(financials||info))h+='<div class="bullet-card"><div class="t">原始补充</div><div class="narrative">'+esc((info+'\n'+financials).trim().slice(0,900))+'</div></div>';
+  h+='</div></div></div>';
+  return h;
+}
 function showResult(d){
   var c=d.chip,mf=d.moneyflow||{},b=d.basics||{},f=d.fundamentals||{};
   var h='';
@@ -180,11 +251,7 @@ function showResult(d){
   h+='</div>';
   h+='</div></div>';
   if(f.summary_text||f.financials_text||f.info_text){
-    h+='<div class="card section"><div class="title">iFind 基本面增强</div>';
-    if(f.info_text)h+='<div class="fundamentals-text">'+f.info_text.slice(0,500)+'</div>';
-    if(f.summary_text)h+='<div class="fundamentals-text">'+f.summary_text.slice(0,500)+'</div>';
-    if(f.financials_text)h+='<div class="fundamentals-text">'+f.financials_text.slice(0,500)+'</div>';
-    h+='</div>';
+    h += renderFundamentalsCard(f, b, d.stock_name, d.ts_code);
   }
   var explain='';
   explain += '<div class="card section" style="margin-top:20px"><div class="title">这页到底在看什么？</div>';
