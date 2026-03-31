@@ -156,7 +156,34 @@ function showResult(d){
     if(f.financials_text)h+='<div class="fundamentals-text">'+f.financials_text.slice(0,500)+'</div>';
     h+='</div>';
   }
-  h+='<div class="card note"><b>口径说明：</b>近3个月日线数据，按每日换手率对历史筹码做衰减，新增成交按当日价格区间分布。输出为筹码迁移近似结果，非交易所级逐笔持仓重建。主力净流入为超大单+大单净额口径。</div>';
+  var explain='';
+  explain += '<div class="card section" style="margin-top:20px"><div class="title">这页到底在看什么？</div>';
+  explain += '<div class="fundamentals-text">这页不是在猜明天涨跌，而是在回答一个更基础的问题：<b>近3个月买这只股票的人，大概都买在什么成本上？</b> 我们把这些历史买入成本重新堆成一座“筹码山”，再看当前股价落在山的什么位置。</div>';
+  explain += '</div>';
+  explain += '<div class="card section" style="margin-top:20px"><div class="title">为什么用这个算法？</div>';
+  explain += '<div class="fundamentals-text">因为市场上拿不到“每个投资者真实持仓成本”的逐笔数据，所以只能用一个<b>近似重建</b>的方法。最常见、也最容易讲清楚的思路就是：<br>1）旧筹码不会一天全消失，而是随着每天换手率逐步衰减；<br>2）当天新成交的筹码，会沉淀在当天价格区间里；<br>3）连续递推60个交易日，就能得到一张近3个月的筹码分布图。<br><br>所以它不是神秘黑箱，而是一个很朴素的问题：<b>昨天留下多少，今天又新进来多少。</b></div>';
+  explain += '</div>';
+  explain += '<div class="card section" style="margin-top:20px"><div class="title">核心计算逻辑</div>';
+  explain += '<div class="fundamentals-text">每天都做一次更新：<br><b>新筹码分布 = 旧筹码分布 × (1 - 当日换手率) + 当日新增筹码分布 × 当日换手率</b><br><br>其中：<br>- 当日换手率越高，说明老筹码被换掉得越多；<br>- 当天新增筹码按当日最低价到最高价之间分布；<br>- 我们默认成交更容易集中在当日的中间区域，所以用的是一个简化的“三角分布”去近似，而不是均匀撒开。<br><br>为什么这么做？因为只有日线，没有逐笔成交。用这个方法，既保留了解释性，也保留了足够实用的近似精度。</div>';
+  explain += '</div>';
+  explain += '<div class="card section" style="margin-top:20px"><div class="title">每个指标是什么意思？</div>';
+  explain += '<div class="fundamentals-text"><b>1. 平均成本</b>：把所有价格按筹码权重加权平均，得到近3个月筹码的整体成本中枢。<br><b>2. 50%成本位</b>：累计筹码达到50%时对应的价格，也就是“中位成本”。<br><b>3. 主筹码峰</b>：筹码最密集、权重最高的那个价格。<br><b>4. 70%筹码区间</b>：把最中间的70%筹码圈出来，对应15%到85%的累计分布区间。<br><b>5. 90%筹码区间</b>：把最中间的90%筹码圈出来，对应5%到95%的累计分布区间。<br><b>6. 获利盘比例</b>：所有成本价低于当前价的筹码，占全部筹码的比例。也就是“如果今天卖，大概有多少近3个月筹码是赚钱的”。<br><b>7. 套牢盘比例</b>：所有成本价高于当前价的筹码，占全部筹码的比例。<br><b>8. 偏离主峰</b>：当前价相对主筹码峰高了多少或低了多少，计算公式是：当前价 ÷ 主筹码峰 - 1。</div>';
+  explain += '</div>';
+  var reason='';
+  if(c.profit_ratio!==null){
+    reason = '当前价 '+c.current_price+'，而90%筹码区间是 '+(c.range_90?c.range_90[0]+' ~ '+c.range_90[1]:'N/A')+'。';
+    if(c.range_90 && c.current_price < c.range_90[0]){
+      reason += ' 当前价已经低于近3个月90%筹码区间下沿，说明绝大多数近3个月筹码成本都在现价上方，所以获利盘会很低。';
+    } else if(c.range_90 && c.current_price > c.range_90[1]){
+      reason += ' 当前价已经高于近3个月90%筹码区间上沿，说明大部分近3个月筹码都已处于盈利状态。';
+    } else {
+      reason += ' 当前价仍落在近3个月主要筹码区间内部，所以获利盘和套牢盘会同时存在。';
+    }
+    reason += ' 目前系统算出的获利盘约为 '+fmtPct(c.profit_ratio)+'，意思是近3个月里大约只有这么多筹码的成本低于现价。';
+  }
+  explain += '<div class="card section" style="margin-top:20px"><div class="title">为什么这只票会是这个结果？</div><div class="fundamentals-text">'+reason+'</div></div>';
+  h+= explain;
+  h+='<div class="card note"><b>一句话总结：</b>这套模型不是为了装高深，而是为了把“最近3个月市场大部分人买在什么位置”这件事讲清楚。它的价值在于可解释、可复核、能快速辅助判断当前价是在筹码山上方、中心还是下方。</div>';
   document.getElementById('result').innerHTML=h;
   document.getElementById('result').style.display='block';
 }
