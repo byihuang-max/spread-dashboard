@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品期权双卖环境</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
+    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+    .sub{font-size:12px;color:#64748b}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+    .metric{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
+    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:24px;font-weight:800;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
+    th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">🧾 商品期权双卖环境</div>
+    <div class="sub" id="metaLine">读取中...</div>
+    <div class="grid">
+      <div class="metric"><div class="k">市场 Regime</div><div class="v" id="regimeLabel">--</div><div class="sub" id="regimeDesc"></div></div>
+      <div class="metric"><div class="k">平均分</div><div class="v" id="avgScore">--</div><div class="sub">综合评分</div></div>
+      <div class="metric"><div class="k">可卖品种数</div><div class="v" id="sellable">--</div><div class="sub">score ≥ 65</div></div>
+      <div class="metric"><div class="k">Top 3</div><div class="v" id="top3">--</div><div class="sub">当前最优先观察</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">📊 品种评分明细</div>
+    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
+    <div style="overflow:auto;margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>品种</th><th>信号</th><th>总分</th><th>IV-RV</th><th>Put Skew</th><th>Term</th><th>ATM IV</th><th>RV20</th><th>备注</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+function cls(label){
+  if(label==='STRONG_SELL_VOL') return 'green';
+  if(label==='SELECTIVE_SELL') return 'yellow';
+  if(label==='NEUTRAL') return 'gray';
+  return 'red';
+}
+function fmt(x,d=4){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
+fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).then(d=>{
+  const comp=d.mod9_composite_score||{};
+  const regime=comp.regime||{};
+  const symbols=comp.symbols||[];
+  document.getElementById('metaLine').innerHTML='数据源：Tushare 公有版 + Black-76 反推';
+  document.getElementById('regimeLabel').innerHTML='<span class="badge '+cls(regime.label)+'">'+(regime.label||'--')+'</span>';
+  document.getElementById('regimeDesc').textContent=regime.description||'--';
+  document.getElementById('avgScore').textContent=regime.avg_composite_score ?? '--';
+  document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
+  document.getElementById('top3').textContent=(regime.top3||[]).map(x=>x.symbol).join(' / ') || '--';
+  document.getElementById('tbody').innerHTML=symbols.map(row=>'<tr>'+
+    '<td><b>'+row.symbol+'</b></td>'+
+    '<td>'+ (row.signal||'') +' '+ (row.label||'') +'</td>'+
+    '<td><b>'+ (row.composite_score ?? '--') +'</b></td>'+
+    '<td>'+fmt(row.iv_rv_spread)+'</td>'+
+    '<td>'+fmt(row.put_skew)+'</td>'+
+    '<td>'+fmt(row.term_slope)+'</td>'+
+    '<td>'+fmt(row.atm_iv)+'</td>'+
+    '<td>'+fmt(row.rv_20d)+'</td>'+
+    '<td>'+(row.pca_env||'--')+'</td>'+
+  '</tr>').join('');
+}).catch(err=>{
+  document.getElementById('metaLine').textContent='加载失败：'+err;
+});
+</script>
+</body>
+</html>
