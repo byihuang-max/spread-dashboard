@@ -71,10 +71,17 @@
     <div class="chart-wrap"><canvas id="structureChart"></canvas></div>
   </div>
 
-  <!-- 第四屏：品种明细表 -->
+  <!-- 第四屏：Top 3 建议品种 -->
   <div class="card">
-    <div class="title">📋 重点品种明细</div>
-    <div class="sub">当前环境下的重点观察品种（按卖方环境分排序）</div>
+    <div class="title">🎯 当前建议观察品种（Top 3）</div>
+    <div class="sub">基于综合评分模型筛选的重点品种</div>
+    <div id="top3Container" style="margin-top:12px"></div>
+  </div>
+
+  <!-- 第五屏：品种明细表 -->
+  <div class="card">
+    <div class="title">📋 全品种明细</div>
+    <div class="sub">当前环境下的全市场品种（按卖方环境分排序）</div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
@@ -99,8 +106,9 @@ function fmt(x,d=1){ return (x===null||x===undefined||x==='') ? '--' : Number(x)
 
 Promise.all([
   fetch('sell_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
-]).then(([signal, breadth])=>{
+  fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
+]).then(([signal, breadth, composite])=>{
   
   // 第一屏：顶部指标
   if(signal?.current){
@@ -206,7 +214,46 @@ Promise.all([
     });
   }
 
-  // 第四屏：品种明细表
+  // 第四屏：Top 3 建议品种
+  const comp = composite?.mod9_composite_score || composite || {};
+  const regime = comp.regime || {};
+  const compSymbols = comp.symbols || [];
+  const top3 = (regime.top3 || []).map(t => {
+    const full = compSymbols.find(s => s.symbol === t.symbol) || t;
+    return { ...t, ...full };
+  });
+  
+  const container = document.getElementById('top3Container');
+  if(container && top3.length){
+    container.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">' +
+      top3.map((t,i) => {
+        const sig = t.signal || '🟡';
+        const label = t.label || '观察';
+        const reason = t.reason_text || t.pca_env || '--';
+        const score = t.composite_score ?? t.score ?? '--';
+        return '<div style="border:1px solid #e2e8f0;border-radius:12px;padding:14px;background:#f8fafc">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
+            '<span style="font-size:20px">' + sig + '</span>' +
+            '<span style="font-size:16px;font-weight:800">' + (t.symbol||'') + '</span>' +
+            '<span style="font-size:12px;color:#64748b">' + (t.cn_name||'') + '</span>' +
+            '<span style="margin-left:auto;font-size:18px;font-weight:800;color:#6366f1">' + score + '</span>' +
+          '</div>' +
+          '<div style="font-size:12px;color:#64748b;margin-bottom:6px">' + label + '</div>' +
+          '<div style="font-size:11px;color:#94a3b8;line-height:1.5">' + reason + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+    
+    if(regime.description){
+      container.innerHTML += '<div style="margin-top:10px;font-size:12px;color:#64748b;padding:8px 12px;background:#f1f5f9;border-radius:8px">' +
+        '<b>市场 Regime：</b>' + (regime.label||'') + ' — ' + regime.description +
+        ' | 可卖品种数：' + (regime.n_sellable ?? '--') +
+        ' | 平均分：' + (regime.avg_composite_score ?? '--') +
+      '</div>';
+    }
+  }
+
+  // 第五屏：品种明细表
   if(breadth?.symbols){
     const symbols = breadth.symbols.slice(0, 30); // 只显示前30个
     document.getElementById('tbody').innerHTML = symbols.map(row=>{
