@@ -4,20 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>商品期权双卖环境</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
     .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
-    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
-    .sub{font-size:12px;color:#64748b}
+    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}.sub{font-size:12px;color:#64748b}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
-    .metric{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
-    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:24px;font-weight:800;margin-top:4px}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
-    th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
+    .metric,.scorebox,.term{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
+    .metric .k,.scorebox .k{font-size:12px;color:#64748b}.metric .v,.scorebox .v{font-size:24px;font-weight:800;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px}.table-wrap{overflow:auto;margin-top:12px}
+    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top} th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
     .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
     .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
+    .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+    .scorebox .v{font-size:20px}.note{font-size:12px;line-height:1.8;color:#475569}.explain{font-size:12px;line-height:1.7;color:#334155;background:#f8fafc;border-radius:12px;padding:10px 12px;margin-top:10px}
   </style>
 </head>
 <body>
@@ -33,13 +32,19 @@
   </div>
 
   <div class="card">
+    <div class="title">🔍 当前第一名：为什么是它？</div>
+    <div class="sub">把总分拆开，不看黑箱</div>
+    <div id="topExplain"></div>
+  </div>
+
+  <div class="card">
     <div class="title">📊 品种评分明细</div>
     <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
-    <div style="overflow:auto;margin-top:12px">
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>品种</th><th>信号</th><th>总分</th><th>IV-RV</th><th>Put Skew</th><th>Term</th><th>ATM IV</th><th>RV20</th><th>备注</th>
+            <th>品种</th><th>信号</th><th>总分</th><th>RV分</th><th>IV-RV分</th><th>Skew分</th><th>期限分</th><th>流动性</th><th>到期</th><th>一句话原因</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -47,38 +52,68 @@
     </div>
   </div>
 
+  <div class="card">
+    <div class="title">📝 术语白话注释</div>
+    <div class="note">
+      <b>双卖最怕的不是没波动，而是突然单边大波动。</b><br>
+      • <b>IV（隐含波动率）</b>：市场愿意为波动付多少钱。IV 越高，保险越贵。<br>
+      • <b>RV（真实波动率）</b>：标的真实走出来的波动，是已经发生的波动。<br>
+      • <b>IV-RV spread</b>：保险费相对真实波动贵不贵。正得越多，卖方赔率通常越好。<br>
+      • <b>ATM</b>：平值期权，行权价最接近当前价格。<br>
+      • <b>OTM</b>：虚值期权，通常也是双卖最常卖的那类“保险”。<br>
+      • <b>Skew</b>：虚值 put / call 相对 ATM 的贵贱程度。高 skew 说明尾部保险费更肥。<br>
+      • <b>Term Structure（期限结构）</b>：近月和远月 IV 的关系。看这波高波动是短期恐慌还是长期真风险。<br>
+      • <b>Theta</b>：时间价值衰减。站在卖方角度，就是“时间每天在帮你赚钱”。<br>
+      • <b>Gamma</b>：标的价格一旦剧烈移动，仓位风险会突然变快。离到期越近，Gamma 风险越高。<br>
+      • <b>Delta</b>：期权价格对标的涨跌的敏感度。双卖一般希望 Delta 不要太偏。<br>
+    </div>
+  </div>
+
 <script>
-function cls(label){
-  if(label==='STRONG_SELL_VOL') return 'green';
-  if(label==='SELECTIVE_SELL') return 'yellow';
-  if(label==='NEUTRAL') return 'gray';
-  return 'red';
-}
+function cls(label){ if(label==='STRONG_SELL_VOL') return 'green'; if(label==='SELECTIVE_SELL') return 'yellow'; if(label==='NEUTRAL') return 'gray'; return 'red'; }
 function fmt(x,d=4){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
+function num(x){ return (x===null||x===undefined||x==='') ? '--' : x; }
 fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   const comp=d.mod9_composite_score||{};
   const regime=comp.regime||{};
   const symbols=comp.symbols||[];
-  document.getElementById('metaLine').innerHTML='数据源：Tushare 公有版 + Black-76 反推';
+  document.getElementById('metaLine').innerHTML='数据源：Tushare 公有版 + Black-76 反推；展示口径偏 PM 解释，不偏期权教材';
   document.getElementById('regimeLabel').innerHTML='<span class="badge '+cls(regime.label)+'">'+(regime.label||'--')+'</span>';
   document.getElementById('regimeDesc').textContent=regime.description||'--';
   document.getElementById('avgScore').textContent=regime.avg_composite_score ?? '--';
   document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
   document.getElementById('top3').textContent=(regime.top3||[]).map(x=>x.symbol).join(' / ') || '--';
+
+  const top=symbols[0];
+  if(top){
+    document.getElementById('topExplain').innerHTML = `
+      <div style="font-size:20px;font-weight:800;margin-top:6px">${top.symbol} ${top.signal||''} ${top.composite_score}分</div>
+      <div class="mini-grid">
+        <div class="scorebox"><div class="k">RV环境分</div><div class="v">${num(top.rv_score)}</div></div>
+        <div class="scorebox"><div class="k">IV-RV赔率分</div><div class="v">${num(top.iv_score)}</div></div>
+        <div class="scorebox"><div class="k">Skew分</div><div class="v">${num(top.skew_score)}</div></div>
+        <div class="scorebox"><div class="k">期限结构分</div><div class="v">${num(top.term_score)}</div></div>
+        <div class="scorebox"><div class="k">流动性分</div><div class="v">${num(top.liquidity_score)}</div></div>
+        <div class="scorebox"><div class="k">到期结构分</div><div class="v">${num(top.expiry_score)}</div></div>
+      </div>
+      <div class="explain"><b>一句话解释：</b>${top.reason_text||'--'}</div>
+      <div class="explain"><b>当前原始指标：</b> IV-RV=${fmt(top.iv_rv_spread)}；Put Skew=${fmt(top.put_skew)}；Term=${fmt(top.term_slope)}；ATM IV=${fmt(top.atm_iv)}；RV20=${fmt(top.rv_20d)}</div>
+    `;
+  }
+
   document.getElementById('tbody').innerHTML=symbols.map(row=>'<tr>'+
     '<td><b>'+row.symbol+'</b></td>'+
     '<td>'+ (row.signal||'') +' '+ (row.label||'') +'</td>'+
-    '<td><b>'+ (row.composite_score ?? '--') +'</b></td>'+
-    '<td>'+fmt(row.iv_rv_spread)+'</td>'+
-    '<td>'+fmt(row.put_skew)+'</td>'+
-    '<td>'+fmt(row.term_slope)+'</td>'+
-    '<td>'+fmt(row.atm_iv)+'</td>'+
-    '<td>'+fmt(row.rv_20d)+'</td>'+
-    '<td>'+(row.pca_env||'--')+'</td>'+
+    '<td><b>'+ num(row.composite_score) +'</b></td>'+
+    '<td>'+num(row.rv_score)+'</td>'+
+    '<td>'+num(row.iv_score)+'</td>'+
+    '<td>'+num(row.skew_score)+'</td>'+
+    '<td>'+num(row.term_score)+'</td>'+
+    '<td>'+num(row.liquidity_score)+'</td>'+
+    '<td>'+num(row.expiry_score)+'</td>'+
+    '<td style="max-width:320px;line-height:1.6">'+(row.reason_text||'--')+'</td>'+
   '</tr>').join('');
-}).catch(err=>{
-  document.getElementById('metaLine').textContent='加载失败：'+err;
-});
+}).catch(err=>{ document.getElementById('metaLine').textContent='加载失败：'+err; });
 </script>
 </body>
 </html>
