@@ -319,6 +319,7 @@ function renderFundamentalsCard(f, basics, stockName, code){
   var summary=f.summary_text||'';
   var financials=f.financials_text||'';
   var info=f.info_text||'';
+  var peers=f.peers||[];
   var infoMetrics=extractMetrics(info);
   var finMetrics=extractMetrics(financials);
   var topPE=basics&&basics.pe_ttm!=null?basics.pe_ttm:null;
@@ -338,35 +339,72 @@ function renderFundamentalsCard(f, basics, stockName, code){
     var summaryLines=summary.split('\n').filter(Boolean);
     if(summaryLines.length>0){
       h+='<div style="margin-bottom:16px;padding:14px;background:rgba(93,174,255,.06);border-radius:10px;border:1px solid rgba(93,174,255,.12)">';
-      h+='<div style="font-size:13px;font-weight:600;color:#5daeff;margin-bottom:8px">公司定位</div>';
+      h+='<div style="font-size:13px;font-weight:600;color:#5daeff;margin-bottom:8px">'+esc(stockName)+' · 公司定位</div>';
       h+='<div style="font-size:13px;color:#cbd5e1;line-height:1.7">'+esc(summaryLines[0])+'</div>';
       h+='</div>';
     }
   }
   
-  h+='<div class="fancy-fund-grid">';
+  // 3列紧凑布局
+  h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">';
   
-  // 估值指标表格
+  // 估值指标
   h+='<div class="bullet-card">';
   h+='<div class="t">估值指标</div>';
   h+='<table style="width:100%;border-collapse:collapse;font-size:13px">';
-  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">市盈率 PE(TTM)</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPE!=null?esc(topPE):'—')+'</td></tr>';
-  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">市净率 PB</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPB!=null?esc(topPB):'—')+'</td></tr>';
-  h+='<tr><td style="padding:10px 0;color:#94a3b8">总市值</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+esc(topMV)+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 0;color:#94a3b8">PE(TTM)</td><td style="padding:8px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPE!=null?esc(topPE):'—')+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 0;color:#94a3b8">PB</td><td style="padding:8px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(topPB!=null?esc(topPB):'—')+'</td></tr>';
+  h+='<tr><td style="padding:8px 0;color:#94a3b8">总市值</td><td style="padding:8px 0;text-align:right;color:#e2e8f0;font-weight:600">'+esc(topMV)+'</td></tr>';
   h+='</table>';
   h+='</div>';
   
-  // 财务表现表格
+  // 财务表现
   h+='<div class="bullet-card">';
   h+='<div class="t">财务表现</div>';
   h+='<table style="width:100%;border-collapse:collapse;font-size:13px">';
-  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">ROE(TTM)</td><td style="padding:10px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(roe!=null?esc(roe)+'%':'—')+'</td></tr>';
-  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px 0;color:#94a3b8">营收增速</td><td style="padding:10px 0;text-align:right;color:'+(rev!=null&&rev>0?'#59e0c5':rev!=null&&rev<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(rev!=null?esc(rev)+'%':'—')+'</td></tr>';
-  h+='<tr><td style="padding:10px 0;color:#94a3b8">利润增速</td><td style="padding:10px 0;text-align:right;color:'+(profit!=null&&profit>0?'#59e0c5':profit!=null&&profit<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(profit!=null?esc(profit)+'%':'—')+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 0;color:#94a3b8">ROE</td><td style="padding:8px 0;text-align:right;color:#e2e8f0;font-weight:600">'+(roe!=null?esc(roe)+'%':'—')+'</td></tr>';
+  h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 0;color:#94a3b8">营收增速</td><td style="padding:8px 0;text-align:right;color:'+(rev!=null&&rev>0?'#59e0c5':rev!=null&&rev<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(rev!=null?esc(rev)+'%':'—')+'</td></tr>';
+  h+='<tr><td style="padding:8px 0;color:#94a3b8">利润增速</td><td style="padding:8px 0;text-align:right;color:'+(profit!=null&&profit>0?'#59e0c5':profit!=null&&profit<0?'#f87171':'#e2e8f0')+';font-weight:600">'+(profit!=null?esc(profit)+'%':'—')+'</td></tr>';
   h+='</table>';
   h+='</div>';
   
-  h+='</div></div>';
+  // 行业定位
+  h+='<div class="bullet-card">';
+  h+='<div class="t">行业定位</div>';
+  h+='<div style="padding:8px 0;font-size:13px;color:#cbd5e1;line-height:1.6">'+esc(industry||'待补')+'</div>';
+  if(peers.length>0){
+    h+='<div style="margin-top:8px;font-size:12px;color:#64748b">可比公司</div>';
+    h+='<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:6px">';
+    peers.forEach(function(p){h+='<span style="padding:4px 8px;border-radius:6px;background:rgba(159,139,255,.1);border:1px solid rgba(159,139,255,.2);color:#cbbcff;font-size:11px">'+esc(p)+'</span>'});
+    h+='</div>';
+  }
+  h+='</div>';
+  
+  h+='</div>';
+  
+  // 可比公司对比（如果有）
+  if(peers.length>0){
+    var peerData=f.peer_data||[];
+    h+='<div class="bullet-card" style="margin-top:12px">';
+    h+='<div class="t">可比公司对比</div>';
+    h+='<div style="font-size:12px;color:#94a3b8;margin-bottom:8px">与同行业公司估值对比</div>';
+    h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    h+='<tr style="border-bottom:1px solid rgba(255,255,255,.06);color:#64748b"><th style="padding:8px 0;text-align:left">公司</th><th style="padding:8px;text-align:right">PE</th><th style="padding:8px;text-align:right">PB</th><th style="padding:8px;text-align:right">ROE</th><th style="padding:8px;text-align:left">估值判断</th></tr>';
+    h+='<tr style="background:rgba(93,174,255,.06)"><td style="padding:8px 0;font-weight:600;color:#5daeff">'+esc(stockName)+'</td><td style="padding:8px;text-align:right;color:#e2e8f0">'+(topPE!=null?esc(topPE):'—')+'</td><td style="padding:8px;text-align:right;color:#e2e8f0">'+(topPB!=null?esc(topPB):'—')+'</td><td style="padding:8px;text-align:right;color:#e2e8f0">'+(roe!=null?esc(roe)+'%':'—')+'</td><td style="padding:8px;color:#64748b">当前公司</td></tr>';
+    peerData.forEach(function(p){
+      var valuation='—';
+      if(topPE!=null&&p.pe!=null){
+        if(topPE>p.pe*1.2)valuation='相对偏贵';
+        else if(topPE<p.pe*0.8)valuation='相对便宜';
+        else valuation='估值接近';
+      }
+      h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 0;color:#cbd5e1">'+esc(p.name)+'</td><td style="padding:8px;text-align:right;color:#94a3b8">'+(p.pe!=null?esc(p.pe):'—')+'</td><td style="padding:8px;text-align:right;color:#94a3b8">'+(p.pb!=null?esc(p.pb):'—')+'</td><td style="padding:8px;text-align:right;color:#94a3b8">'+(p.roe!=null?esc(p.roe)+'%':'—')+'</td><td style="padding:8px;color:#64748b">'+esc(valuation)+'</td></tr>';
+    });
+    h+='</table>';
+    h+='</div>';
+  }
+  
+  h+='</div>';
   return h;
 }
 function showResult(d){

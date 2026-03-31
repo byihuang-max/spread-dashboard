@@ -186,16 +186,76 @@ def get_fundamentals(ts_code: str, stock_name: str = None) -> dict:
     summary = _run_ifind('get_stock_summary', f'{name}公司简介、所属行业、主营业务')
     financials = _run_ifind('get_stock_financials', f'{name}最新一期ROE、营收同比增长率、净利润同比增长率')
     info = _run_ifind('get_stock_info', f'{name}总市值、市净率、市盈率TTM、所属申万行业')
+    
+    summary_text = _extract_summary_fields(_extract_text(summary))
+    peers = _extract_peers(summary_text)
+    peer_data = get_peer_comparison(peers)
+    
     return {
-        'summary_text': _extract_summary_fields(_extract_text(summary)),
+        'summary_text': summary_text,
         'financials_text': _parse_pipe_table(_extract_text(financials)),
         'info_text': _parse_pipe_table(_extract_text(info)),
+        'peers': peers[:3] if peers else [],
+        'peer_data': peer_data,
         'raw_ok': {
             'summary': bool(_extract_text(summary)),
             'financials': bool(_extract_text(financials)),
             'info': bool(_extract_text(info)),
         }
     }
+
+
+def _extract_peers(summary_text: str) -> list:
+    """从 summary 中提取可比公司列表"""
+    if not summary_text:
+        return []
+    for line in summary_text.split('\n'):
+        if '可比公司' in line or '竞争公司' in line:
+            companies = line.split('：')[-1].strip()
+            return [c.strip() for c in companies.split(',') if c.strip()]
+    return []
+
+
+def get_peer_comparison(peers: list) -> list:
+    """批量查询可比公司的 PE/PB/ROE"""
+    if not peers:
+        return []
+    results = []
+    for name in peers[:3]:
+        short = name.replace('股份有限公司', '').replace('有限公司', '').replace('集团', '')
+        info = _run_ifind('get_stock_info', f'{short}市盈率TTM、市净率、总市值')
+        fin = _run_ifind('get_stock_financials', f'{short}最新一期ROE')
+        info_text = _parse_pipe_table(_extract_text(info))
+        fin_text = _parse_pipe_table(_extract_text(fin))
+        
+        pe = None
+        pb = None
+        roe = None
+        mv = None
+        
+        for line in (info_text or '').split('\n'):
+            if 'PE' in line or '市盈率' in line:
+                try: pe = float(line.split('：')[-1].strip().replace('亿', ''))
+                except: pass
+            if 'PB' in line or '市净率' in line:
+                try: pb = float(line.split('：')[-1].strip())
+                except: pass
+            if '总市值' in line:
+                mv = line.split('：')[-1].strip()
+        
+        for line in (fin_text or '').split('\n'):
+            if 'ROE' in line:
+                try: roe = float(line.split('：')[-1].strip())
+                except: pass
+        
+        results.append({
+            'name': short,
+            'pe': pe,
+            'pb': pb,
+            'roe': roe,
+            'mv': mv,
+        })
+    return results
 
 
 def _extract_summary_fields(text: str) -> str:
