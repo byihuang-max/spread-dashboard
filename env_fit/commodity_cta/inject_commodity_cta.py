@@ -65,6 +65,22 @@ def env_type_emoji(t):
     if t == '双阵营对抗': return '🟡'
     return '🔴'
 
+CN_NAME = {
+    'AU': '黄金', 'AG': '白银', 'CU': '铜', 'AL': '铝', 'ZN': '锌',
+    'NI': '镍', 'SN': '锡', 'AO': '氧化铝', 'BC': '国际铜', 'SI': '工业硅',
+    'RB': '螺纹钢', 'I': '铁矿石', 'JM': '焦煤', 'J': '焦炭', 'HC': '热卷',
+    'SC': '原油', 'RU': '橡胶', 'FG': '玻璃', 'SA': '纯碱', 'TA': 'PTA',
+    'MA': '甲醇', 'PP': '聚丙烯', 'PG': '液化气', 'LU': '低硫燃油', 'BR': '丁二烯橡胶',
+    'P': '棕榈油', 'CF': '棉花', 'SR': '白糖', 'RM': '菜粕', 'OI': '菜油',
+    'PK': '花生', 'LC': '碳酸锂', 'EC': '集运指数', 'PX': '对二甲苯',
+    'V': 'PVC', 'L': '塑料', 'EB': '苯乙烯', 'EG': '乙二醇', 'UR': '尿素',
+    'SP': '纸浆', 'SS': '不锈钢', 'WR': '线材', 'SF': '硅铁', 'SM': '锰硅',
+    'AP': '苹果', 'CJ': '红枣', 'LH': '生猪', 'C': '玉米', 'CS': '玉米淀粉',
+    'A': '豆一', 'B': '豆二', 'M': '豆粕', 'Y': '豆油', 'JD': '鸡蛋',
+    'PF': '短纤', 'FU': '燃油', 'BU': '沥青', 'NR': '20号胶', 'SH': '烧碱',
+}
+
+
 def role_color(r):
     if r in ('核心驱动', '领涨/领跌核心'): return '#10b981'
     if r in ('显著参与', '趋势跟随主力'): return '#3b82f6'
@@ -669,10 +685,11 @@ def build_html(data):
             # PC1 bar width (visual)
             bar_w = min(abs(pc1) / 0.20 * 100, 100)
 
+            sym_label = f"{sym}（{CN_NAME.get(sym, sym)}）"
             html += f'''
             <tr style="border-bottom:1px solid #f1f5f9">
               <td style="padding:6px 4px;color:#94a3b8">{i+1}</td>
-              <td style="padding:6px 4px;font-weight:700">{sym}</td>
+              <td style="padding:6px 4px;font-weight:700">{sym_label}</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">{sec}</td>
               <td style="padding:6px 4px">
                 <div style="display:flex;align-items:center;gap:4px">
