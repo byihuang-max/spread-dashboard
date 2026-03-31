@@ -72,6 +72,30 @@ def _extract_text(resp: dict) -> str:
     return ''
 
 
+def _parse_pipe_table(text: str) -> str:
+    """把 iFind 返回的竖线分隔表格转成 key: value 格式"""
+    if not text or '|' not in text:
+        return text
+    lines = [l.strip() for l in text.strip().split('\n') if l.strip()]
+    if len(lines) < 2:
+        return text
+    headers = [h.strip() for h in lines[0].split('|') if h.strip()]
+    # 跳过分隔行 (---|---|---)
+    data_lines = [l for l in lines[1:] if not all(c in '-| ' for c in l)]
+    if not data_lines:
+        return text
+    values = [v.strip() for v in data_lines[-1].split('|') if v.strip()]
+    if len(headers) != len(values):
+        return text
+    # 过滤掉证券代码、证券简称、日期等冗余字段
+    skip = {'证券代码', '证券简称', '日期', '代码', '简称'}
+    result = []
+    for h, v in zip(headers, values):
+        if h not in skip and v and v != '--':
+            result.append(f'{h}：{v}')
+    return '\n'.join(result) if result else text
+
+
 def get_fundamentals(ts_code: str, stock_name: str = None) -> dict:
     name = stock_name or ts_code
     summary = _run_ifind('get_stock_summary', f'{name}公司简介、所属行业、主营业务')
@@ -79,8 +103,8 @@ def get_fundamentals(ts_code: str, stock_name: str = None) -> dict:
     info = _run_ifind('get_stock_info', f'{name}总市值、市净率、市盈率TTM、所属申万行业')
     return {
         'summary_text': _extract_text(summary),
-        'financials_text': _extract_text(financials),
-        'info_text': _extract_text(info),
+        'financials_text': _parse_pipe_table(_extract_text(financials)),
+        'info_text': _parse_pipe_table(_extract_text(info)),
         'raw_ok': {
             'summary': bool(_extract_text(summary)),
             'financials': bool(_extract_text(financials)),
