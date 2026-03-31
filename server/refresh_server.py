@@ -343,6 +343,22 @@ class Handler(BaseHTTPRequestHandler):
             self._json(500, {"error": str(e)})
         return user
 
+    def _serve_chip_query(self):
+        """个股筹码分析 API"""
+        from urllib.parse import urlparse, parse_qs
+        parsed = urlparse(self.path)
+        params = parse_qs(parsed.query)
+        code = params.get('code', [''])[0].strip().upper()
+        if not code:
+            self._json(400, {'success': False, 'error': '缺少 code 参数'})
+            return
+        try:
+            from chip_api import analyze_stock
+            result = analyze_stock(code)
+            self._json(200, result)
+        except Exception as e:
+            self._json(500, {'success': False, 'error': str(e)})
+
     def _client_ip(self):
         return self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
 
@@ -435,6 +451,8 @@ class Handler(BaseHTTPRequestHandler):
             admin = self._require_admin()
             if admin:
                 self._json(200, {'logs': auth.list_login_log(200)})
+        elif self.path.startswith('/api/chip_query'):
+            self._serve_chip_query()
         elif self.path == '/api/update-log':
             # 更新日志（需要登录）
             user = self._get_user()
