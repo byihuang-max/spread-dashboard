@@ -756,7 +756,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
           <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
           <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
-          <div class="strat-tab" data-strat="option-vol">🧾 商品期权双卖</div>
+          <div class="strat-tab" data-strat="option-vol">🧾 期权卖权</div>
           <div class="strat-tab" data-strat="convertible">🔄 转债</div>
           <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
         </div>
@@ -2846,6 +2846,10 @@ function initCbCharts() {
 
 
       </div>
+      <div class="strat-page" id="strat-option-vol">
+        <iframe src="env_fit/option_vol/option_vol.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+
     </div><!-- /page-env-fit -->
 
     <!-- ══ 资金流与微观结构 ══ -->
