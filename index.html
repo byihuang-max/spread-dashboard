@@ -132,6 +132,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .ms-strat-card:nth-child(3){animation-delay:.15s}
 .ms-strat-card:nth-child(4){animation-delay:.2s}
 .ms-strat-card:nth-child(5){animation-delay:.25s}
+.ms-strat-card:nth-child(6){animation-delay:.3s}
 .ms-strat-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
 
 .ms-bottom-card{
@@ -592,8 +593,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           }
 
           // ── Strategy cards ──
-          var stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage'];
-          var stratIcons={quant_stock:'📊',momentum_stock:'🚀',commodity_cta:'🛢️',cb_env:'🔄',arbitrage:'⚖️'};
+          var stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
+          var stratIcons={quant_stock:'📊',momentum_stock:'🚀',commodity_cta:'🛢️',cb_env:'🔄',arbitrage:'⚖️',option_vol:'🧾'};
           var grid=document.getElementById('ms-strat-grid');
           grid.innerHTML=stratOrder.map(function(k){
             var st=S.strategies[k]||{};
@@ -636,8 +637,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           // ── Allocation bars ──
           var allocEl=document.getElementById('ms-alloc');
           var alloc=S.allocation||{};
-          var allocOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','cash'];
-          var allocColors={quant_stock:'#2563eb',momentum_stock:'#7c3aed',commodity_cta:'#ea580c',cb_env:'#0891b2',arbitrage:'#4f46e5',cash:'#94a3b8'};
+          var allocOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol','cash'];
+          var allocColors={quant_stock:'#2563eb',momentum_stock:'#7c3aed',commodity_cta:'#ea580c',cb_env:'#0891b2',arbitrage:'#4f46e5',option_vol:'#8b5cf6',cash:'#94a3b8'};
           // Stacked bar
           var barHtml='<div style="display:flex;height:32px;border-radius:10px;overflow:hidden;margin-bottom:16px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)">';
           allocOrder.forEach(function(k){

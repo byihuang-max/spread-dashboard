@@ -3,71 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>期权卖权策略</title>
+  <title>期权卖权环境指数</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
     .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
     .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
-    .sub{font-size:12px;color:#64748b}
+    .sub{font-size:12px;color:#64748b;margin-top:4px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
     .metric{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
-    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:24px;font-weight:800;margin-top:4px}
+    .metric .k{font-size:12px;color:#64748b}.metric .v{font-size:28px;font-weight:800;margin-top:4px}
     .metric .s{font-size:11px;color:#94a3b8;margin-top:4px}
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left}
     th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
     .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
     .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
-    .chart-wrap{height:280px;margin-top:12px}
-    .mini-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
-    .tip{font-size:11px;color:#64748b;line-height:1.6}
-    @media (max-width: 900px){.mini-grid{grid-template-columns:1fr}}
+    .chart-wrap{height:320px;margin-top:12px}
+    .tip{font-size:11px;color:#64748b;line-height:1.6;margin-top:8px}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
+  <!-- 第一屏：顶部环境指标 -->
   <div class="card">
-    <div class="title">🧾 期权卖权策略</div>
-    <div class="sub" id="metaLine">读取中...</div>
+    <div class="title">🎯 期权卖权环境指数</div>
+    <div class="sub" id="metaLine">基于 2 年历史数据（483 天）计算</div>
     <div class="grid">
-      <div class="metric"><div class="k">市场 Regime</div><div class="v" id="regimeLabel">--</div><div class="s" id="regimeDesc"></div></div>
-      <div class="metric"><div class="k">平均分</div><div class="v" id="avgScore">--</div><div class="s">综合评分</div></div>
-      <div class="metric"><div class="k">可卖品种数</div><div class="v" id="sellable">--</div><div class="s">score ≥ 65</div></div>
-      <div class="metric"><div class="k">Top 3</div><div class="v" id="top3">--</div><div class="s">当前最优先观察</div></div>
+      <div class="metric">
+        <div class="k">卖权环境信号</div>
+        <div class="v" id="signalValue">--</div>
+        <div class="s" id="signalLabel">--</div>
+      </div>
+      <div class="metric">
+        <div class="k">历史分位</div>
+        <div class="v" id="signalPct">--</div>
+        <div class="s">越高 = 越适合卖权</div>
+      </div>
+      <div class="metric">
+        <div class="k">高 IV 品种占比</div>
+        <div class="v" id="highIVRatio">--</div>
+        <div class="s" id="highIVPct">--</div>
+      </div>
+      <div class="metric">
+        <div class="k">高成交额品种占比</div>
+        <div class="v" id="highAmtRatio">--</div>
+        <div class="s" id="highAmtPct">--</div>
+      </div>
+    </div>
+    <div class="tip">
+      <b>信号含义：</b>0~1 区间，基于全市场 IV 中位数、高 IV 占比、高成交额占比的历史分位综合计算。
+      &gt;0.7 强卖方窗口 | 0.5~0.7 精选窗口 | 0.3~0.5 观察期 | &lt;0.3 不适合卖权
     </div>
   </div>
 
+  <!-- 第二屏：卖权环境总信号图 -->
   <div class="card">
-    <div class="title">📈 卖权窗口监控</div>
-    <div class="sub">用市场级波动率分位 + 流动性 + 综合评分，提示当前是否进入适合卖权的时间窗口</div>
-    <div class="mini-grid">
-      <div>
-        <div class="chart-wrap"><canvas id="windowChart"></canvas></div>
-      </div>
-      <div>
-        <div class="grid" style="grid-template-columns:1fr;gap:10px;margin-top:0">
-          <div class="metric"><div class="k">当前卖权窗口</div><div class="v" id="windowLabel">--</div><div class="s" id="windowDesc">--</div></div>
-          <div class="metric"><div class="k">市场 IV 分位</div><div class="v" id="ivPct">--</div><div class="s">越高 = 保险费越贵</div></div>
-          <div class="metric"><div class="k">市场流动性分位</div><div class="v" id="liqPct">--</div><div class="s">越高 = 卖方更容易成交</div></div>
-        </div>
-      </div>
-    </div>
+    <div class="title">📈 卖权环境信号走势</div>
+    <div class="sub">全市场卖权环境信号（0~1），越高说明当前越适合系统性做卖权策略</div>
+    <div class="chart-wrap"><canvas id="signalChart"></canvas></div>
   </div>
 
+  <!-- 第三屏：结构拆解图 -->
   <div class="card">
-    <div class="title">📉 市场波动率走势</div>
-    <div class="sub">市场平均 IV 分位数走势，越高说明保险费越贵，卖权赔率越好</div>
-    <div class="chart-wrap"><canvas id="ivChart"></canvas></div>
+    <div class="title">📊 环境结构拆解</div>
+    <div class="sub">高 IV 品种占比 vs 高成交额品种占比，拆解"保险费贵"和"赌徒多"两个维度</div>
+    <div class="chart-wrap"><canvas id="structureChart"></canvas></div>
   </div>
 
+  <!-- 第四屏：品种明细表 -->
   <div class="card">
-    <div class="title">📊 品种评分明细</div>
-    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
+    <div class="title">📋 重点品种明细</div>
+    <div class="sub">当前环境下的重点观察品种（按卖方环境分排序）</div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
           <tr>
-            <th>品种</th><th>信号</th><th>总分</th><th>RV分</th><th>IV-RV分</th><th>Skew分</th><th>期限分</th><th>流动性</th><th>到期</th><th>一句话原因</th>
+            <th>品种</th>
+            <th>IV分位</th>
+            <th>成交额分位</th>
+            <th>流动性分位</th>
+            <th>卖方环境分</th>
+            <th>成交量</th>
+            <th>成交额</th>
+            <th>持仓量</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -75,144 +94,50 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="title">🧠 指标白话解释</div>
-    <div class="tip">
-      <div><b>RV分</b>：近期实际波动是否已经冲到高位。RV 高但开始钝化，卖方更舒服。</div>
-      <div><b>IV-RV分</b>：隐含波动率减去已实现波动率，越高说明保险费越贵、赔率越好。</div>
-      <div><b>Skew分</b>：看跌虚值期权是否更贵。put skew 高，卖权收租更占优。</div>
-      <div><b>期限分</b>：近月 IV 是否显著高于远月。若短端更陡，说明短期恐慌更足。</div>
-      <div><b>流动性</b>：成交量 / 持仓量是否足够。再好的赔率，没人接单也没意义。</div>
-      <div><b>到期</b>：距离到期是否落在适合 theta 收益释放的区间。</div>
-    </div>
-  </div>
-
 <script>
-function cls(label){
-  if(label==='STRONG_SELL_VOL' || label==='STRONG_SELL') return 'green';
-  if(label==='SELECTIVE_SELL') return 'yellow';
-  if(label==='NEUTRAL' || label==='WATCH') return 'gray';
-  return 'red';
-}
 function fmt(x,d=1){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
-function pill(label){
-  return '<span class="badge '+cls(label)+'">'+(label||'--')+'</span>';
-}
 
 Promise.all([
-  fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('timing_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('sell_window_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
-]).then(([d, timing, windowSig])=>{
-  const comp = d?.mod9_composite_score || {};
-  const regime = comp.regime || d?.mod1_rv_regime?.regime || {};
-  const symbols = comp.symbols || d?.mod1_rv_regime?.symbols || [];
-
-  document.getElementById('metaLine').innerHTML='数据源：Tushare 公有版 + Black-76 反推 + 市场级 IV/流动性监控';
-  document.getElementById('regimeLabel').innerHTML=pill(regime.label);
-  document.getElementById('regimeDesc').textContent=regime.description||'--';
-  document.getElementById('avgScore').textContent=regime.avg_composite_score ?? regime.avg_sell_score ?? '--';
-  document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
-  const top3 = regime.top3 || regime.top3_symbols || [];
-  document.getElementById('top3').textContent=(top3||[]).map(x=>x.symbol).join(' / ') || '--';
-
-  if(timing?.market_signal){
-    const ms = timing.market_signal;
-    document.getElementById('windowLabel').textContent = ms.label || '--';
-    document.getElementById('windowDesc').textContent = ms.description || '--';
-    document.getElementById('ivPct').textContent = fmt(ms.iv_percentile,1)+'%';
-    document.getElementById('liqPct').textContent = fmt(ms.liquidity_percentile,1)+'%';
+  fetch('sell_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
+]).then(([signal, breadth])=>{
+  
+  // 第一屏：顶部指标
+  if(signal?.current){
+    const cur = signal.current;
+    document.getElementById('signalValue').textContent = fmt(cur.sell_signal, 3);
+    document.getElementById('signalPct').textContent = '计算中...';
+    document.getElementById('highIVRatio').textContent = fmt(cur.high_iv_ratio, 1) + '%';
+    document.getElementById('highIVPct').textContent = '分位 ' + fmt(cur.high_iv_ratio_pct, 1) + '%';
+    document.getElementById('highAmtRatio').textContent = fmt(cur.high_amt_ratio, 1) + '%';
+    document.getElementById('highAmtPct').textContent = '分位 ' + fmt(cur.high_amt_ratio_pct, 1) + '%';
+    
+    const sig = cur.sell_signal;
+    let label = '';
+    if(sig >= 0.7) label = '🟢 强卖方窗口';
+    else if(sig >= 0.5) label = '🟡 精选窗口';
+    else if(sig >= 0.3) label = '⚪ 观察期';
+    else label = '🔴 不适合卖权';
+    document.getElementById('signalLabel').textContent = label;
   }
 
-  document.getElementById('tbody').innerHTML = symbols.map(row=>{
-    const breakdown = row.breakdown || {};
-    const reason = row.pca_env || row.label || '--';
-    return '<tr>'+
-      '<td><b>'+(row.symbol||'')+'</b>'+(row.cn_name?('（'+row.cn_name+'）'):'')+'</td>'+
-      '<td>'+((row.signal||'')+' '+(row.label||'')).trim()+'</td>'+
-      '<td><b>'+(row.composite_score ?? row.sell_score ?? '--')+'</b></td>'+
-      '<td>'+fmt(breakdown.odds_score ?? breakdown.env_score ?? null,0)+'</td>'+
-      '<td>'+fmt(row.iv_rv_spread_score ?? breakdown.odds_score ?? null,0)+'</td>'+
-      '<td>'+fmt(row.skew_score ?? null,0)+'</td>'+
-      '<td>'+fmt(row.term_score ?? null,0)+'</td>'+
-      '<td>'+fmt(row.liquidity_score ?? null,0)+'</td>'+
-      '<td>'+fmt(row.tenor_score ?? null,0)+'</td>'+
-      '<td>'+reason+'</td>'+
-    '</tr>';
-  }).join('');
-
-  const ctx = document.getElementById('windowChart');
-  if(ctx){
-    let labels = [];
-    let scores = [];
-    if(windowSig?.timeseries?.dates?.length){
-      labels = windowSig.timeseries.dates.map(x=>x.slice(5));
-      scores = windowSig.timeseries.scores;
-    } else if(timing?.history?.length){
-      labels = timing.history.map(x=>x.date.slice(5));
-      scores = timing.history.map(x=>x.composite_score);
-    } else {
-      labels = ['T-5','T-4','T-3','T-2','T-1','Today'];
-      const base = Number(regime.avg_composite_score ?? regime.avg_sell_score ?? 60);
-      scores = [base-8,base-5,base-3,base+2,base-1,base];
-    }
-    new Chart(ctx, {
+  // 第二屏：卖权环境信号图
+  const ctx1 = document.getElementById('signalChart');
+  if(ctx1 && signal?.history){
+    const hist = signal.history;
+    new Chart(ctx1, {
       type:'line',
       data:{
-        labels,
+        labels: hist.map(x=>x.date.slice(5)),
         datasets:[{
-          label:'卖权友好度',
-          data:scores,
+          label:'卖权环境信号',
+          data: hist.map(x=>x.sell_signal),
           borderColor:'#6366f1',
           backgroundColor:'rgba(99,102,241,0.10)',
           fill:true,
-          borderWidth:2,
-          tension:0.25,
-          pointRadius:2
-        }]
-      },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins:{legend:{display:false}},
-        scales:{
-          y:{min:0,max:100,ticks:{color:'#64748b'}},
-          x:{ticks:{color:'#64748b'}}
-        }
-      }
-    });
-  }
-  // === 第二张图：市场 IV 时序 ===
-  const ivCtx = document.getElementById('ivChart');
-  if(ivCtx){
-    let ivLabels = [];
-    let ivScores = [];
-    if(windowSig?.timeseries?.dates?.length){
-      ivLabels = windowSig.timeseries.dates.map(x=>x.slice(5));
-      // 用综合评分模拟 IV 分位走势（等 Tushare 历史 IV 数据到位后替换）
-      ivScores = windowSig.timeseries.scores.map(s => Math.min(100, Math.max(0, s + (Math.random()*10-5))));
-    } else {
-      ivLabels = ['T-5','T-4','T-3','T-2','T-1','Today'];
-      const ivBase = timing?.market_signal?.iv_percentile ?? 50;
-      ivScores = [ivBase-12,ivBase-8,ivBase-3,ivBase+5,ivBase-2,ivBase];
-    }
-    // 如果有真实 IV 分位数据，优先用
-    if(timing?.market_signal?.iv_percentile != null){
-      ivScores[ivScores.length-1] = timing.market_signal.iv_percentile;
-    }
-    new Chart(ivCtx, {
-      type:'line',
-      data:{
-        labels: ivLabels,
-        datasets:[{
-          label:'市场 IV 分位 (%)',
-          data: ivScores,
-          borderColor:'#f59e0b',
-          backgroundColor:'rgba(245,158,11,0.10)',
-          fill:true,
-          borderWidth:2,
-          tension:0.25,
-          pointRadius:2
+          borderWidth:2.5,
+          tension:0.3,
+          pointRadius:0
         }]
       },
       options:{
@@ -222,17 +147,80 @@ Promise.all([
           legend:{display:false},
           annotation: {
             annotations: {
-              line80: { type:'line', yMin:80, yMax:80, borderColor:'rgba(34,197,94,0.5)', borderDash:[6,3], borderWidth:1, label:{content:'强卖区',display:true,position:'start',font:{size:10},color:'#22c55e'} },
-              line40: { type:'line', yMin:40, yMax:40, borderColor:'rgba(239,68,68,0.5)', borderDash:[6,3], borderWidth:1, label:{content:'不宜区',display:true,position:'start',font:{size:10},color:'#ef4444'} }
+              line70: { type:'line', yMin:0.7, yMax:0.7, borderColor:'rgba(34,197,94,0.6)', borderDash:[6,3], borderWidth:1.5 },
+              line50: { type:'line', yMin:0.5, yMax:0.5, borderColor:'rgba(251,191,36,0.6)', borderDash:[6,3], borderWidth:1.5 },
+              line30: { type:'line', yMin:0.3, yMax:0.3, borderColor:'rgba(239,68,68,0.6)', borderDash:[6,3], borderWidth:1.5 }
             }
           }
         },
         scales:{
-          y:{min:0,max:100,ticks:{color:'#64748b'}},
-          x:{ticks:{color:'#64748b'}}
+          y:{min:0,max:1,ticks:{color:'#64748b',callback:v=>v.toFixed(1)}},
+          x:{ticks:{color:'#64748b',maxRotation:0}}
         }
       }
     });
+  }
+
+  // 第三屏：结构拆解图
+  const ctx2 = document.getElementById('structureChart');
+  if(ctx2 && signal?.history){
+    const hist = signal.history;
+    new Chart(ctx2, {
+      type:'line',
+      data:{
+        labels: hist.map(x=>x.date.slice(5)),
+        datasets:[
+          {
+            label:'高 IV 占比 (%)',
+            data: hist.map(x=>x.high_iv_ratio),
+            borderColor:'#f59e0b',
+            backgroundColor:'rgba(245,158,11,0.08)',
+            fill:false,
+            borderWidth:2,
+            tension:0.3,
+            pointRadius:0
+          },
+          {
+            label:'高成交额占比 (%)',
+            data: hist.map(x=>x.high_amt_ratio),
+            borderColor:'#10b981',
+            backgroundColor:'rgba(16,185,129,0.08)',
+            fill:false,
+            borderWidth:2,
+            tension:0.3,
+            pointRadius:0
+          }
+        ]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,position:'top',labels:{boxWidth:12,font:{size:11},color:'#64748b'}}
+        },
+        scales:{
+          y:{min:0,max:100,ticks:{color:'#64748b',callback:v=>v+'%'}},
+          x:{ticks:{color:'#64748b',maxRotation:0}}
+        }
+      }
+    });
+  }
+
+  // 第四屏：品种明细表
+  if(breadth?.symbols){
+    const symbols = breadth.symbols.slice(0, 30); // 只显示前30个
+    document.getElementById('tbody').innerHTML = symbols.map(row=>{
+      return '<tr>'+
+        '<td><b>'+(row.symbol||'')+'</b> '+(row.cn_name||'')+'</td>'+
+        '<td>'+fmt(row.iv_percentile,1)+'%</td>'+
+        '<td>'+fmt(row.amount_percentile,1)+'%</td>'+
+        '<td>'+fmt(row.liquidity_percentile,1)+'%</td>'+
+        '<td><b>'+fmt(row.sell_env_score,1)+'</b></td>'+
+        '<td>'+fmt(row.total_vol,0)+'</td>'+
+        '<td>'+fmt(row.total_amount,0)+'</td>'+
+        '<td>'+fmt(row.total_oi,0)+'</td>'+
+      '</tr>';
+    }).join('');
   }
 
 }).catch(err=>{

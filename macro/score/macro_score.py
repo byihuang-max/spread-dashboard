@@ -506,6 +506,41 @@ def fit_cb_env(config):
     return {"score": clamp(score), "signals": signals}
 
 
+def fit_option_vol(config):
+    """期权卖权策略适配度 — 读取 option_vol.json 综合评分"""
+    score = 50
+    signals = []
+
+    ov = load("env_fit/option_vol/option_vol.json")
+    if ov:
+        comp = ov.get("mod9_composite_score", {})
+        regime = comp.get("regime", {})
+        avg = regime.get("avg_composite_score", 50)
+        n_sell = regime.get("n_sellable", 0)
+        label = regime.get("label", "NEUTRAL")
+        top3 = regime.get("top3", [])
+
+        score = int(avg)
+
+        # regime 信号
+        regime_map = {
+            "FULL_SELL": "全面卖权窗口 🟢",
+            "SELECTIVE_SELL": "精选卖权窗口 🟡",
+            "NEUTRAL": "中性观察 🟡",
+            "CAUTION": "谨慎 🔴",
+            "NO_SELL": "不宜卖权 🔴",
+        }
+        signals.append(regime_map.get(label, label))
+
+        if n_sell > 0:
+            top_names = "/".join(
+                t.get("cn_name") or t.get("symbol", "?") for t in top3[:3]
+            )
+            signals.append(f"可卖品种{n_sell}个 {top_names}")
+
+    return {"score": clamp(score), "signals": signals}
+
+
 def fit_arbitrage(config):
     """套利策略适配度"""
     score = 50
@@ -587,7 +622,7 @@ def calc_allocation(macro_result, strategy_results, config):
     
     # 1. 策略分类
     offense = ["quant_stock", "momentum_stock"]  # 进攻型
-    defense = ["commodity_cta", "cb_env", "arbitrage"]  # 防御型
+    defense = ["commodity_cta", "cb_env", "arbitrage", "option_vol"]  # 防御型
     
     # 2. 计算每个策略的综合得分（宏观×策略适配度）
     scores = {}
@@ -634,7 +669,7 @@ def calc_allocation(macro_result, strategy_results, config):
     changes = {}
     labels = {"quant_stock": "量化股票", "momentum_stock": "强势股",
               "commodity_cta": "商品CTA", "cb_env": "转债", 
-              "arbitrage": "套利", "cash": "现金"}
+              "arbitrage": "套利", "option_vol": "期权卖权", "cash": "现金"}
     
     for k, v in allocation.items():
         prev = prev_alloc.get(k, default.get(k, 0))
@@ -716,10 +751,12 @@ def main():
         "commodity_cta":  fit_commodity_cta(config),
         "cb_env":         fit_cb_env(config),
         "arbitrage":      fit_arbitrage(config),
+        "option_vol":     fit_option_vol(config),
     }
     
     strat_names = {"quant_stock":"量化股票","momentum_stock":"强势股/动量",
-                   "commodity_cta":"商品CTA","cb_env":"转债","arbitrage":"套利"}
+                   "commodity_cta":"商品CTA","cb_env":"转债","arbitrage":"套利",
+                   "option_vol":"期权卖权"}
     
     print(f"\n🎯 策略适配度:")
     t = config["thresholds"]["strategy"]
