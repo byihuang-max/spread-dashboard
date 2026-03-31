@@ -756,6 +756,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
           <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
           <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
+          <div class="strat-tab" data-strat="option-vol">🧾 商品期权双卖</div>
           <div class="strat-tab" data-strat="convertible">🔄 转债</div>
           <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
         </div>
@@ -2442,6 +2443,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       });
       </script>
       </div>
+      <div class="strat-page" id="strat-option-vol">
+        <iframe src="env_fit/option_vol/option_vol.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
       <div class="strat-page" id="strat-convertible">
 <!-- 转债指增策略环境 — 自动注入 -->
 <div style="padding:0 4px">
@@ -2949,7 +2953,7 @@ function initCbCharts() {
             <button id="chipSearchBtn" onclick="chipSearch()" style="background:linear-gradient(135deg,#245cff,#4f7dff);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">查询</button>
           </div>
         </div>
-        <div id="chipLoading" style="display:none;text-align:center;padding:40px;color:#8b92a5">⏳ 正在查询，约需10-30秒...</div>
+        <div id="chipLoading" style="display:none;text-align:center;padding:40px;color:#8b92a5"><div style="font-size:28px;margin-bottom:10px;animation:chipPulse 1.2s infinite ease-in-out">⏳</div><div style="font-size:16px;color:#e2e8f0;margin-bottom:6px">正在查询个股筹码…</div><div style="font-size:13px;color:#8b92a5">预计 10–30 秒，请稍等</div></div>
         <div id="chipError" style="display:none;background:#7f1d1d;border:1px solid #991b1b;color:#fecaca;padding:16px;border-radius:12px;text-align:center;margin-bottom:20px"></div>
         <div id="chipResult" style="display:none"></div>
       </div>
@@ -7031,7 +7035,7 @@ function chipSearch(){
   document.getElementById('chipLoading').style.display='block';
   document.getElementById('chipError').style.display='none';
   document.getElementById('chipResult').style.display='none';
-  document.getElementById('chipSearchBtn').disabled=true;
+  document.getElementById('chipSearchBtn').disabled=true;document.getElementById('chipSearchBtn').textContent='查询中…';
   var url='/api/chip_query?code='+encodeURIComponent(code);
   console.log('[chipSearch] 请求 URL:', url);
   fetch(url,{headers:typeof getAuthHeaders==='function'?getAuthHeaders():{}})
@@ -7039,14 +7043,14 @@ function chipSearch(){
     .then(function(d){
       console.log('[chipSearch] 解析数据:', d);
       document.getElementById('chipLoading').style.display='none';
-      document.getElementById('chipSearchBtn').disabled=false;
+      document.getElementById('chipSearchBtn').disabled=false;document.getElementById('chipSearchBtn').textContent='查询';
       if(!d.success){chipShowErr(d.error||'查询失败');return}
       chipShowRes(d);
     })
     .catch(function(e){
       console.error('[chipSearch] 错误:', e);
       document.getElementById('chipLoading').style.display='none';
-      document.getElementById('chipSearchBtn').disabled=false;
+      document.getElementById('chipSearchBtn').disabled=false;document.getElementById('chipSearchBtn').textContent='查询';
       chipShowErr('网络错误: '+e.message);
     });
 }
