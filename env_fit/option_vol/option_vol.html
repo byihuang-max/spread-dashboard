@@ -149,7 +149,7 @@ Promise.all([
   if(signal?.current){
     const cur = signal.current;
     document.getElementById('signalValue').textContent = fmt(cur.sell_signal, 3);
-    document.getElementById('signalPct').textContent = '计算中...';
+    document.getElementById('signalPct').textContent = fmt(cur.iv_median_pct, 1) + '%';
     document.getElementById('highIVRatio').textContent = fmt(cur.high_iv_ratio, 1) + '%';
     document.getElementById('highIVPct').textContent = '分位 ' + fmt(cur.high_iv_ratio_pct, 1) + '%';
     document.getElementById('highAmtRatio').textContent = fmt(cur.high_amt_ratio, 1) + '%';
