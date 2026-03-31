@@ -9,6 +9,7 @@ LOCAL_PATH="$(dirname "$0")/../"
 
 # 只同步代码/模板，不覆盖云端运行生成的产物。
 # 云端是数据生产源：JSON/CSV/HTML 注入结果应由腾讯云定时任务自己生成。
+# 但前端静态页面（index.html等）需要同步，否则前端改动不会生效。
 RSYNC_EXCLUDE="\
 --exclude=.git \
 --exclude=__pycache__ \
@@ -17,10 +18,6 @@ RSYNC_EXCLUDE="\
 --exclude=_cache/ \
 --exclude=*.db \
 --exclude=server/update_log.json \
---exclude=index.html \
---exclude=*.json \
---exclude=*.csv \
---exclude=*.html \
 --exclude=timing-research/leader_pool_history/\
 "
 
