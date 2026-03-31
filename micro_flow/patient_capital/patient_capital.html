@@ -416,18 +416,17 @@ function renderCards() {
         if (alert === 'danger') badgeHtml = '<span class="badge-alert badge-danger">⚠ 规模预警</span>';
         else if (alert === 'warn') badgeHtml = '<span class="badge-alert badge-warn">⚠ 高浮盈</span>';
 
-        // 信号文案映射：把内部标签翻译成投研语言
-        // - "绝对大单"：超过20日同时段中位数×1.5，中期级别异常放量
-        // - "近期托盘"：超过5日同时段中位数×1.3，近期资金徐徐买入
-        // - "绝对大单+托盘"：两条基线同时触发，信号最强
+        // 信号标签：前置到卡片顶部，让客户第一眼看到
         const signalType = L.signal_type || '无异常';
-        const signalMap = {'双重异常':'绝对大单+托盘', '20日异常':'绝对大单', '5日异常':'近期托盘', '无异常':'无异常'};
+        const signalMap = {'双重异常':'绝对大单+托盘', '20日异常':'绝对大单', '5日异常':'近期托盘', '无异常':'无明显信号'};
         const signalText = signalMap[signalType] || signalType;
-        const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '#6b7280';
+        const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '#9ca3af';
+        const signalBadge = signalType !== '无异常' ? `<div style="font-size:11px;color:${signalColor};font-weight:600;margin-top:2px;">📌 ${signalText}</div>` : '';
 
         card.innerHTML = `
             ${badgeHtml}
             <div class="idx-name">${name}</div>
+            ${signalBadge}
             <div class="cum ${pnlClass}">${L.cum.toFixed(1)} <span style="font-size:13px;font-weight:400">亿</span></div>
             <div class="meta">
                 <span>成本 <b>${L.cost.toFixed(3)}</b></span>
@@ -436,7 +435,6 @@ function renderCards() {
             </div>
             ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span>📍 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
             <div class="meta" style="margin-top:2px"><span>状态 <b>${L.intent || '暂无'}</b></span><span>${L.pnl_behavior || ''}</span></div>
-            <div class="meta" style="margin-top:2px"><span>信号 <b style="color:${signalColor}">${signalText}</b></span></div>
             <div class="meta"><span>力度 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>Z分数 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
         `;
         card.onclick = () => selectIndex(name);
@@ -449,7 +447,18 @@ function selectIndex(name) {
     document.querySelectorAll('.card').forEach(c => {
         c.classList.toggle('active', c.dataset.index === name);
     });
-    document.getElementById('chartTitle').textContent = name + ' — 耐心资本持仓估算';
+    // 图标题：指数名 + 当前信号
+    const L = DATA.indices[name]?.latest;
+    const signalType = L?.signal_type || '无异常';
+    const signalMap = {'双重异常':'绝对大单+托盘', '20日异常':'绝对大单', '5日异常':'近期托盘'};
+    const signalText = signalMap[signalType] || '';
+    const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '';
+    const titleEl = document.getElementById('chartTitle');
+    if (signalText) {
+        titleEl.innerHTML = `${name} — 耐心资本持仓估算 <span style="font-size:13px;color:${signalColor};font-weight:600;margin-left:8px;">📌 ${signalText}</span>`;
+    } else {
+        titleEl.textContent = name + ' — 耐心资本持仓估算';
+    }
     renderCharts();
 }
 
