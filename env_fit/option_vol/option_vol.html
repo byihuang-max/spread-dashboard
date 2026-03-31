@@ -82,12 +82,12 @@ fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   document.getElementById('regimeDesc').textContent=regime.description||'--';
   document.getElementById('avgScore').textContent=regime.avg_composite_score ?? '--';
   document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
-  document.getElementById('top3').textContent=(regime.top3||[]).map(x=>x.symbol).join(' / ') || '--';
+  document.getElementById('top3').textContent=(regime.top3||[]).map(x=>x.symbol+'('+x.cn_name+')').join(' / ') || '--';
 
   const top=symbols[0];
   if(top){
     document.getElementById('topExplain').innerHTML = `
-      <div style="font-size:20px;font-weight:800;margin-top:6px">${top.symbol} ${top.signal||''} ${top.composite_score}分</div>
+      <div style="font-size:20px;font-weight:800;margin-top:6px">${top.symbol}（${top.cn_name||top.symbol}）${top.signal||''} ${top.composite_score}分</div>
       <div class="mini-grid">
         <div class="scorebox"><div class="k">RV环境分</div><div class="v">${num(top.rv_score)}</div></div>
         <div class="scorebox"><div class="k">IV-RV赔率分</div><div class="v">${num(top.iv_score)}</div></div>
@@ -102,7 +102,7 @@ fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   }
 
   document.getElementById('tbody').innerHTML=symbols.map(row=>'<tr>'+
-    '<td><b>'+row.symbol+'</b></td>'+
+    '<td><b>'+row.symbol+'</b>（'+(row.cn_name||row.symbol)+'）</td>'+
     '<td>'+ (row.signal||'') +' '+ (row.label||'') +'</td>'+
     '<td><b>'+ num(row.composite_score) +'</b></td>'+
     '<td>'+num(row.rv_score)+'</td>'+

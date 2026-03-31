@@ -35,6 +35,10 @@ EXCHANGE_MAP = {
     'AU': 'SHFE', 'AG': 'SHFE', 'CU': 'SHFE', 'SC': 'INE', 'SA': 'ZCE',
     'RU': 'SHFE', 'NI': 'SHFE', 'FG': 'ZCE', 'RB': 'SHFE'
 }
+CN_NAME = {
+    'AU': '黄金', 'AG': '白银', 'CU': '铜', 'SC': '原油', 'SA': '纯碱',
+    'RU': '橡胶', 'NI': '镍', 'FG': '玻璃', 'RB': '螺纹钢'
+}
 
 
 def tushare_call(api_name, params, fields):
@@ -231,6 +235,7 @@ def main():
             skew_score, term_score = score_skew_term(put_skew, call_skew, term_slope)
             rows_out.append({
                 'symbol': symbol,
+                'cn_name': CN_NAME.get(symbol, symbol),
                 'trade_date': trade_date,
                 'fut_code_near': fut_code,
                 'fut_price_near': round(F, 4),
@@ -247,7 +252,7 @@ def main():
                 'near_otm_call': near_otm_call['ts_code'] if near_otm_call else None,
             })
         except Exception as e:
-            rows_out.append({'symbol': symbol, 'error': str(e)})
+            rows_out.append({'symbol': symbol, 'cn_name': CN_NAME.get(symbol, symbol), 'error': str(e)})
 
     rows_out.sort(key=lambda x: x.get('skew_score', -1), reverse=True)
     out = {

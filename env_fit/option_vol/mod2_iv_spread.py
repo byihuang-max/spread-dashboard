@@ -36,6 +36,10 @@ EXCHANGE_MAP = {
     'AU': 'SHFE', 'AG': 'SHFE', 'CU': 'SHFE', 'SC': 'INE', 'SA': 'ZCE',
     'RU': 'SHFE', 'NI': 'SHFE', 'FG': 'ZCE', 'RB': 'SHFE'
 }
+CN_NAME = {
+    'AU': '黄金', 'AG': '白银', 'CU': '铜', 'SC': '原油', 'SA': '纯碱',
+    'RU': '橡胶', 'NI': '镍', 'FG': '玻璃', 'RB': '螺纹钢'
+}
 
 
 def tushare_call(api_name, params, fields):
@@ -217,6 +221,7 @@ def main():
 
             output_rows.append({
                 'symbol': symbol,
+                'cn_name': CN_NAME.get(symbol, symbol),
                 'trade_date': trade_date,
                 'fut_code': picked['fut_code'],
                 'fut_price': round(F, 4),
@@ -241,6 +246,7 @@ def main():
         except Exception as e:
             output_rows.append({
                 'symbol': symbol,
+                'cn_name': CN_NAME.get(symbol, symbol),
                 'error': str(e),
             })
 
