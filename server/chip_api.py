@@ -12,7 +12,7 @@ chip_dir = Path(__file__).parent.parent / '独立股票的筹码分析系统'
 sys.path.insert(0, str(chip_dir))
 
 from chip_analyzer import ChipAnalyzer
-from data_source import get_daily, get_moneyflow, get_stock_name
+from data_source import get_daily, get_moneyflow, get_stock_name, get_stock_profile, get_limit_stats, calc_big_order_stats, estimate_industry_comparison
 from ifind_enricher import get_fundamentals
 
 
@@ -23,6 +23,7 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
     """
     try:
         stock_name = get_stock_name(ts_code)
+        profile = get_stock_profile(ts_code)
         df_daily = get_daily(ts_code, days=days)
         
         if df_daily is None or len(df_daily) == 0:
@@ -31,7 +32,10 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
         analyzer = ChipAnalyzer(price_step=0.1)
         chip = analyzer.analyze(df_daily)
         
-        df_money = get_moneyflow(ts_code, days=20)
+        df_money = get_moneyflow(ts_code, days=max(60, days))
+        limit_stats = get_limit_stats(ts_code, days=max(60, days))
+        big_order_stats = calc_big_order_stats(df_daily, df_money, windows=(30, 60))
+        industry_compare = estimate_industry_comparison(df_daily, profile)
         
         # 资金流
         moneyflow = {
@@ -91,6 +95,10 @@ def analyze_stock(ts_code: str, days: int = 60) -> dict:
             },
             'moneyflow': moneyflow,
             'basics': basics,
+            'profile': profile,
+            'limit_stats': limit_stats,
+            'big_order_stats': big_order_stats,
+            'industry_compare': industry_compare,
             'fundamentals': fundamentals,
         }
     except Exception as e:

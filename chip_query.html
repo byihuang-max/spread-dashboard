@@ -91,7 +91,7 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <div class="loading" id="loading">
     <div class="spinner">⏳</div>
     <div class="text">正在查询个股筹码…</div>
-    <div class="sub">预计 10–30 秒，请稍等</div>
+    <div class="sub">预计 10-30 秒，请稍等</div>
   </div>
   <div class="error" id="error"></div>
   <div class="result" id="result"></div>
@@ -186,6 +186,58 @@ function splitIndustryTags(text){
   if(!text)return [];
   return String(text).split(/[、,，/｜|]/).map(function(x){return x.trim()}).filter(Boolean).slice(0,6);
 }
+function trendText(v){
+  if(v==null)return 'N/A';
+  if(v>5)return '明显跑赢';
+  if(v>0)return '小幅走强';
+  if(v>-5)return '偏弱震荡';
+  return '明显走弱';
+}
+function renderOverviewCard(d){
+  var c=d.chip||{}, mf=d.moneyflow||{}, p=d.profile||{}, ls=d.limit_stats||{}, bo=d.big_order_stats||{}, ic=d.industry_compare||{};
+  var w30=(bo.by_window||{})['30']||{}, w60=(bo.by_window||{})['60']||{};
+  var peakState='当前价在主筹码峰附近';
+  if(c.peak_distance!=null){
+    if(c.peak_distance>8)peakState='当前价明显高于主筹码峰';
+    else if(c.peak_distance<-8)peakState='当前价明显低于主筹码峰';
+  }
+  var h='';
+  h+='<div class="card section" style="margin-bottom:16px">';
+  h+='<div class="title">先看结论：筹码峰 + 大单 + 行业</div>';
+  h+='<div class="info-banner">看一只股票，先看 <b>筹码峰有没有被突破、近30/60日有没有异常大单、公司属于什么行业、最近是否出现涨停等特殊表现</b>。这一屏先把最关键的观察顺序排好。</div>';
+  h+='<div class="fancy-fund-grid">';
+  h+='<div class="hero-card">';
+  h+='<div class="hero-head"><div><div class="hero-title">筹码峰观察</div><div class="hero-sub">最近60日筹码重建结果</div></div><div class="hero-tag">最先看</div></div>';
+  h+='<div class="snapshot-grid">';
+  h+='<div class="snapshot-item"><div class="k">主筹码峰</div><div class="v">'+(c.peak_price!=null?esc(c.peak_price):'N/A')+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">偏离主峰</div><div class="v">'+(c.peak_distance!=null?esc(c.peak_distance)+'%':'N/A')+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">近30日大单日</div><div class="v">'+(w30.big_days!=null?esc(w30.big_days)+' 天':'N/A')+'</div></div>';
+  h+='<div class="snapshot-item"><div class="k">近60日大单日</div><div class="v">'+(w60.big_days!=null?esc(w60.big_days)+' 天':'N/A')+'</div></div>';
+  h+='</div>';
+  h+='<div style="margin-top:16px" class="narrative">'+peakState+'。';
+  if(w30.latest_is_big)h+=' 最近一个交易日的大单成交占比高于近30日历史80%分位，属于异常大单日。';
+  else h+=' 最近一个交易日没有触发异常大单日。';
+  h+=' 近5日主力净流入'+fmtMoney(mf.main_net_5d)+'，近10日主力净流入'+fmtMoney(mf.main_net_10d)+'。</div>';
+  h+='</div>';
+  h+='<div class="fancy-stack">';
+  h+='<div class="bullet-card"><div class="t">行业属性</div><div class="clean-list">';
+  h+='<div class="clean-item"><div class="k">所属行业</div><div class="v">'+esc(p.industry||'N/A')+'</div></div>';
+  h+='<div class="clean-item"><div class="k">市场 / 地域</div><div class="v">'+esc((p.market||'N/A')+' / '+(p.area||'N/A'))+'</div></div>';
+  h+='<div class="clean-item"><div class="k">上市日期</div><div class="v">'+esc(p.list_date||'N/A')+'</div></div>';
+  h+='</div></div>';
+  h+='<div class="bullet-card"><div class="t">特殊表现</div><div class="clean-list">';
+  h+='<div class="clean-item"><div class="k">近60日涨停/特殊日</div><div class="v">'+esc(ls.limit_up_count!=null?ls.limit_up_count:'0')+' 次</div></div>';
+  h+='<div class="clean-item"><div class="k">最近一次特殊日</div><div class="v">'+esc(ls.latest_limit_date||'暂无')+(ls.latest_limit_type?(' · '+esc(ls.latest_limit_type)):'')+'</div></div>';
+  h+='<div class="clean-item"><div class="k">大单定义</div><div class="v">'+esc(bo.definition||'N/A')+'</div></div>';
+  h+='</div></div>';
+  h+='<div class="bullet-card"><div class="t">行业对比</div><div class="clean-list">';
+  h+='<div class="clean-item"><div class="k">公司所属行业</div><div class="v">'+esc(ic.industry||p.industry||'N/A')+'</div></div>';
+  h+='<div class="clean-item"><div class="k">个股近20日涨幅</div><div class="v">'+(ic.stock_return_20d!=null?esc(ic.stock_return_20d)+'% · '+trendText(ic.stock_return_20d):'N/A')+'</div></div>';
+  h+='<div class="clean-item"><div class="k">行业平均涨幅</div><div class="v">'+(ic.industry_avg_20d!=null?esc(ic.industry_avg_20d)+'%':'待补')+'</div></div>';
+  h+='</div></div>';
+  h+='</div></div></div>';
+  return h;
+}
 function renderFundamentalsCard(f, basics, stockName, code){
   var summary=f.summary_text||'';
   var financials=f.financials_text||'';
@@ -225,6 +277,7 @@ function showResult(d){
   var h='';
   h+='<div class="stock-header"><span class="name">'+d.stock_name+'</span><span class="code">'+d.ts_code+'</span><span class="date">数据截止：'+d.end_date+'（最近交易日）｜向前回看 '+d.lookback_days+' 个交易日，实际使用 '+d.actual_trade_days+' 个交易日｜区间：'+d.date_range+'</span></div>';
   saveHistory(d.ts_code, d.stock_name);
+  h += renderOverviewCard(d);
   h+='<div class="cards">';
   h+='<div class="card metric-card"><div class="label">当前价</div><div class="value" style="color:#5daeff">'+c.current_price+'</div></div>';
   h+='<div class="card metric-card"><div class="label">平均成本</div><div class="value" style="color:#59e0c5">'+c.avg_cost+'</div></div>';
@@ -255,16 +308,16 @@ function showResult(d){
   }
   var explain='';
   explain += '<div class="card section" style="margin-top:20px"><div class="title">这页到底在看什么？</div>';
-  explain += '<div class="fundamentals-text">这页不是在猜明天涨跌，而是在回答一个更基础的问题：<b>近3个月买这只股票的人，大概都买在什么成本上？</b> 我们把这些历史买入成本重新堆成一座“筹码山”，再看当前股价落在山的什么位置。</div>';
+  explain += '<div class="fundamentals-text">这页不是在猜明天涨跌，而是在回答一个更基础的问题：<b>近3个月买这只股票的人，大概都买在什么成本上？</b> 我们把这些历史买入成本重新堆成一座"筹码山"，再看当前股价落在山的什么位置。</div>';
   explain += '</div>';
   explain += '<div class="card section" style="margin-top:20px"><div class="title">为什么用这个算法？</div>';
-  explain += '<div class="fundamentals-text">因为市场上拿不到“每个投资者真实持仓成本”的逐笔数据，所以只能用一个<b>近似重建</b>的方法。最常见、也最容易讲清楚的思路就是：<br>1）旧筹码不会一天全消失，而是随着每天换手率逐步衰减；<br>2）当天新成交的筹码，会沉淀在当天价格区间里；<br>3）连续递推60个交易日，就能得到一张近3个月的筹码分布图。<br><br>所以它不是神秘黑箱，而是一个很朴素的问题：<b>昨天留下多少，今天又新进来多少。</b></div>';
+  explain += '<div class="fundamentals-text">因为市场上拿不到"每个投资者真实持仓成本"的逐笔数据，所以只能用一个<b>近似重建</b>的方法。最常见、也最容易讲清楚的思路就是：<br>1）旧筹码不会一天全消失，而是随着每天换手率逐步衰减；<br>2）当天新成交的筹码，会沉淀在当天价格区间里；<br>3）连续递推60个交易日，就能得到一张近3个月的筹码分布图。<br><br>所以它不是神秘黑箱，而是一个很朴素的问题：<b>昨天留下多少，今天又新进来多少。</b></div>';
   explain += '</div>';
   explain += '<div class="card section" style="margin-top:20px"><div class="title">核心计算逻辑</div>';
-  explain += '<div class="fundamentals-text">每天都做一次更新：<br><b>新筹码分布 = 旧筹码分布 × (1 - 当日换手率) + 当日新增筹码分布 × 当日换手率</b><br><br>其中：<br>- 当日换手率越高，说明老筹码被换掉得越多；<br>- 当天新增筹码按当日最低价到最高价之间分布；<br>- 我们默认成交更容易集中在当日的中间区域，所以用的是一个简化的“三角分布”去近似，而不是均匀撒开。<br><br>为什么这么做？因为只有日线，没有逐笔成交。用这个方法，既保留了解释性，也保留了足够实用的近似精度。</div>';
+  explain += '<div class="fundamentals-text">每天都做一次更新：<br><b>新筹码分布 = 旧筹码分布 × (1 - 当日换手率) + 当日新增筹码分布 × 当日换手率</b><br><br>其中：<br>- 当日换手率越高，说明老筹码被换掉得越多；<br>- 当天新增筹码按当日最低价到最高价之间分布；<br>- 我们默认成交更容易集中在当日的中间区域，所以用的是一个简化的"三角分布"去近似，而不是均匀撒开。<br><br>为什么这么做？因为只有日线，没有逐笔成交。用这个方法，既保留了解释性，也保留了足够实用的近似精度。</div>';
   explain += '</div>';
   explain += '<div class="card section" style="margin-top:20px"><div class="title">每个指标是什么意思？</div>';
-  explain += '<div class="fundamentals-text"><b>1. 平均成本</b>：把所有价格按筹码权重加权平均，得到近3个月筹码的整体成本中枢。<br><b>2. 50%成本位</b>：累计筹码达到50%时对应的价格，也就是“中位成本”。<br><b>3. 主筹码峰</b>：筹码最密集、权重最高的那个价格。<br><b>4. 70%筹码区间</b>：把最中间的70%筹码圈出来，对应15%到85%的累计分布区间。<br><b>5. 90%筹码区间</b>：把最中间的90%筹码圈出来，对应5%到95%的累计分布区间。<br><b>6. 获利盘比例</b>：所有成本价低于当前价的筹码，占全部筹码的比例。也就是“如果今天卖，大概有多少近3个月筹码是赚钱的”。<br><b>7. 套牢盘比例</b>：所有成本价高于当前价的筹码，占全部筹码的比例。<br><b>8. 偏离主峰</b>：当前价相对主筹码峰高了多少或低了多少，计算公式是：当前价 ÷ 主筹码峰 - 1。</div>';
+  explain += '<div class="fundamentals-text"><b>1. 平均成本</b>：把所有价格按筹码权重加权平均，得到近3个月筹码的整体成本中枢。<br><b>2. 50%成本位</b>：累计筹码达到50%时对应的价格，也就是"中位成本"。<br><b>3. 主筹码峰</b>：筹码最密集、权重最高的那个价格。<br><b>4. 70%筹码区间</b>：把最中间的70%筹码圈出来，对应15%到85%的累计分布区间。<br><b>5. 90%筹码区间</b>：把最中间的90%筹码圈出来，对应5%到95%的累计分布区间。<br><b>6. 获利盘比例</b>：所有成本价低于当前价的筹码，占全部筹码的比例。也就是"如果今天卖，大概有多少近3个月筹码是赚钱的"。<br><b>7. 套牢盘比例</b>：所有成本价高于当前价的筹码，占全部筹码的比例。<br><b>8. 偏离主峰</b>：当前价相对主筹码峰高了多少或低了多少，计算公式是：当前价 ÷ 主筹码峰 - 1。</div>';
   explain += '</div>';
   var reason='';
   if(c.profit_ratio!==null){
@@ -280,7 +333,7 @@ function showResult(d){
   }
   explain += '<div class="card section" style="margin-top:20px"><div class="title">为什么这只票会是这个结果？</div><div class="fundamentals-text">'+reason+'</div></div>';
   h+= explain;
-  h+='<div class="card note"><b>一句话总结：</b>这套模型不是为了装高深，而是为了把“最近3个月市场大部分人买在什么位置”这件事讲清楚。它的价值在于可解释、可复核、能快速辅助判断当前价是在筹码山上方、中心还是下方。</div>';
+  h+='<div class="card note"><b>一句话总结：</b>这套模型不是为了装高深，而是为了把"最近3个月市场大部分人买在什么位置"这件事讲清楚。它的价值在于可解释、可复核、能快速辅助判断当前价是在筹码山上方、中心还是下方。</div>';
   document.getElementById('result').innerHTML=h;
   document.getElementById('result').style.display='block';
 }
