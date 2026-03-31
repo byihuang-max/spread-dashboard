@@ -24,8 +24,8 @@ def calculate_rolling_correlation(window=30):
     df.index = pd.to_datetime(df.index)
     df = df.sort_index()
     
-    # 删除有NaN的行（不同资产数据起始日期不同）
-    df = df.dropna()
+    # 前值填充（个别资产延迟时不拖住整体），再删除头部全NaN行
+    df = df.ffill().dropna()
     
     # 计算收益率
     returns = df.pct_change().dropna()
