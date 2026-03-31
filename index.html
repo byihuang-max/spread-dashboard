@@ -126,6 +126,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   border-radius:14px;padding:18px;border:1px solid;
   transition:all .2s ease;cursor:default;
   backdrop-filter:blur(4px);animation:fadeUp .4s ease-out both;
+  min-width:180px;flex-shrink:0;
 }
 .ms-strat-card:nth-child(1){animation-delay:.05s}
 .ms-strat-card:nth-child(2){animation-delay:.1s}
@@ -204,7 +205,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   .refresh-btn{font-size:10px;padding:4px 8px}
   .overview-grid{grid-template-columns:1fr}
   .ov-card .ov-value{font-size:20px}
-  #ms-strat-grid{grid-template-columns:repeat(2,1fr)!important}
   #ms-bottom-row{grid-template-columns:1fr!important}
   #ms-radar{width:140px!important;height:140px!important}
   #ov-cards{grid-template-columns:repeat(2,1fr)!important}
@@ -457,7 +457,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div>
 
         <!-- ═══ 策略红绿灯 ═══ -->
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:20px" id="ms-strat-grid">
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:20px;padding-bottom:8px">
+          <div id="ms-strat-grid" style="display:flex;gap:14px;min-width:min-content">
+          </div>
         </div>
 
         <!-- ═══ 中观标签 + 配置建议 ═══ -->
