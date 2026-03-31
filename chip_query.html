@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个股筹码查询 | GAMT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.header .title{font-size:20px;font-weight:700;color:#e2e8f0}
+.header .back{color:#5daeff;text-decoration:none;font-size:14px;opacity:0.8}
+.header .back:hover{opacity:1}
+.search-bar{display:flex;gap:10px;padding:20px 24px;max-width:600px;margin:0 auto}
+.search-bar input{flex:1;padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a2332;color:#e2e8f0;font-size:16px;outline:none}
+.search-bar input:focus{border-color:#5daeff}
+.search-bar input::placeholder{color:#4a5568}
+.search-bar button{padding:12px 28px;border-radius:8px;border:none;background:#5daeff;color:#fff;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+.search-bar button:hover{background:#4a9bef}
+.search-bar button:disabled{background:#3a4a5a;cursor:not-allowed}
+.container{max-width:900px;margin:0 auto;padding:0 24px 40px}
+.loading{text-align:center;padding:60px 20px;display:none}
+.loading .spinner{font-size:32px;animation:pulse 1.2s infinite ease-in-out}
+.loading .text{font-size:16px;color:#cbd5e1;margin-top:10px}
+.loading .sub{font-size:13px;color:#64748b;margin-top:6px}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:.6}}
+.error{display:none;text-align:center;padding:40px;color:#f87171;font-size:15px}
+.result{display:none}
+.stock-header{text-align:center;margin:24px 0 20px}
+.stock-header .name{font-size:24px;font-weight:700;color:#e2e8f0}
+.stock-header .code{font-size:14px;color:#64748b;margin-left:8px}
+.stock-header .date{font-size:13px;color:#64748b;display:block;margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.card{background:#1a2332;border-radius:10px;border:1px solid rgba(255,255,255,0.06)}
+.metric-card{text-align:center;padding:18px 12px}
+.metric-card .label{font-size:11px;color:#64748b;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-card .value{font-size:22px;font-weight:700}
+.section{padding:18px}
+.section .title{font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.row:last-child{border-bottom:none}
+.row .k{font-size:13px;color:#64748b}
+.row .v{font-size:14px;font-weight:600;color:#e2e8f0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.note{margin-top:20px;padding:16px;font-size:13px;color:#64748b;line-height:1.8}
+.fundamentals-text{margin-top:12px;font-size:13px;color:#94a3b8;line-height:1.8;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+@media(max-width:640px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .search-bar{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="title">📊 个股筹码查询</span>
+  <a href="index.html" class="back">← 返回看板</a>
+</div>
+<div class="search-bar">
+  <input id="codeInput" type="text" placeholder="输入股票代码，如 600519 或 002180.SZ" autofocus>
+  <button id="searchBtn" onclick="doSearch()">查询</button>
+</div>
+<div class="container">
+  <div class="loading" id="loading">
+    <div class="spinner">⏳</div>
+    <div class="text">正在查询个股筹码…</div>
+    <div class="sub">预计 10–30 秒，请稍等</div>
+  </div>
+  <div class="error" id="error"></div>
+  <div class="result" id="result"></div>
+</div>
+<script>
+document.getElementById('codeInput').addEventListener('keypress',function(e){if(e.key==='Enter')doSearch()});
+</script>
+</body>
+</html>
+<script>
+function doSearch(){
+  var code=document.getElementById('codeInput').value.trim().toUpperCase();
+  if(!code)return;
+  if(/^\d{6}$/.test(code)){
+    if(code[0]==='6')code+='.SH';
+    else if(code[0]==='0'||code[0]==='3')code+='.SZ';
+    else if(code[0]==='8'||code[0]==='4')code+='.BJ';
+    document.getElementById('codeInput').value=code;
+  }
+  document.getElementById('loading').style.display='block';
+  document.getElementById('error').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('searchBtn').disabled=true;
+  document.getElementById('searchBtn').textContent='查询中…';
+  fetch('/api/chip_query?code='+encodeURIComponent(code))
+    .then(function(r){return r.json()})
+    .then(function(d){
+      document.getElementById('loading').style.display='none';
+      document.getElementById('searchBtn').disabled=false;
+      document.getElementById('searchBtn').textContent='查询';
+      if(!d.success){showErr(d.error||'查询失败');return}
+      showResult(d);
+    })
+    .catch(function(e){
+      document.getElementById('loading').style.display='none';
+      document.getElementById('searchBtn').disabled=false;
+      document.getElementById('searchBtn').textContent='查询';
+      showErr('网络错误: '+e.message);
+    });
+}
+function showErr(msg){
+  document.getElementById('error').textContent=msg;
+  document.getElementById('error').style.display='block';
+}
+function fmtPct(v){return v!=null?(v*100).toFixed(1)+'%':'N/A'}
+function fmtMoney(v){
+  if(v==null)return 'N/A';
+  var abs=Math.abs(v);
+  if(abs>=1e8)return (v/1e8).toFixed(2)+'亿';
+  if(abs>=1e4)return (v/1e4).toFixed(2)+'万';
+  return v.toFixed(2);
+}
+function row(k,v,color){
+  return '<div class="row"><span class="k">'+k+'</span><span class="v" style="color:'+(color||'#e2e8f0')+'">'+v+'</span></div>';
+}
+function showResult(d){
+  var c=d.chip,mf=d.moneyflow||{},b=d.basics||{},f=d.fundamentals||{};
+  var h='';
+  h+='<div class="stock-header"><span class="name">'+d.stock_name+'</span><span class="code">'+d.ts_code+'</span><span class="date">数据区间：'+d.date_range+'</span></div>';
+  h+='<div class="cards">';
+  h+='<div class="card metric-card"><div class="label">当前价</div><div class="value" style="color:#5daeff">'+c.current_price+'</div></div>';
+  h+='<div class="card metric-card"><div class="label">平均成本</div><div class="value" style="color:#59e0c5">'+c.avg_cost+'</div></div>';
+  h+='<div class="card metric-card"><div class="label">50%成本位</div><div class="value" style="color:#9f8bff">'+c.median_cost+'</div></div>';
+  h+='<div class="card metric-card"><div class="label">主筹码峰</div><div class="value" style="color:#fbbf24">'+c.peak_price+'</div></div>';
+  h+='</div>';
+  h+='<div class="grid2">';
+  h+='<div class="card section"><div class="title">筹码结构</div>';
+  h+=row('70%筹码区间',c.range_70?c.range_70[0]+' ~ '+c.range_70[1]:'N/A');
+  h+=row('90%筹码区间',c.range_90?c.range_90[0]+' ~ '+c.range_90[1]:'N/A');
+  h+=row('获利盘',fmtPct(c.profit_ratio),'#59e0c5');
+  h+=row('套牢盘',fmtPct(c.locked_ratio),'#f87171');
+  h+=row('偏离主峰',c.peak_distance+'%');
+  h+='</div>';
+  h+='<div>';
+  h+='<div class="card section" style="margin-bottom:16px"><div class="title">资金异动</div>';
+  h+=row('近5日主力净流入',fmtMoney(mf.main_net_5d),mf.main_net_5d>0?'#59e0c5':'#f87171');
+  h+=row('近10日主力净流入',fmtMoney(mf.main_net_10d),mf.main_net_10d>0?'#59e0c5':'#f87171');
+  h+='</div>';
+  h+='<div class="card section"><div class="title">基本面</div>';
+  h+=row('PE(TTM)',b.pe_ttm||'N/A');
+  h+=row('PB',b.pb||'N/A');
+  h+=row('总市值',fmtMoney(b.total_mv?b.total_mv*10000:null));
+  h+='</div>';
+  h+='</div></div>';
+  if(f.summary_text||f.financials_text||f.info_text){
+    h+='<div class="card section"><div class="title">iFind 基本面增强</div>';
+    if(f.info_text)h+='<div class="fundamentals-text">'+f.info_text.slice(0,500)+'</div>';
+    if(f.summary_text)h+='<div class="fundamentals-text">'+f.summary_text.slice(0,500)+'</div>';
+    if(f.financials_text)h+='<div class="fundamentals-text">'+f.financials_text.slice(0,500)+'</div>';
+    h+='</div>';
+  }
+  h+='<div class="card note"><b>口径说明：</b>近3个月日线数据，按每日换手率对历史筹码做衰减，新增成交按当日价格区间分布。输出为筹码迁移近似结果，非交易所级逐笔持仓重建。主力净流入为超大单+大单净额口径。</div>';
+  document.getElementById('result').innerHTML=h;
+  document.getElementById('result').style.display='block';
+}
+</script>

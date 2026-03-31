@@ -391,7 +391,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
       <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')"><span class="icon">🔬</span> 择时研究</div>
-      <div class="nav-item" id="navChipQuery" style="display:none" data-module="chip-query"><span class="icon">📊</span> 个股筹码查询</div>
+      <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query.html','_blank')"><span class="icon">📊</span> 个股筹码查询</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
@@ -7060,7 +7060,7 @@ function chipShowErr(msg){
   document.getElementById('chipResult').style.display='none';
 }
 function chipShowRes(d){
-  var c=d.chip,mf=d.moneyflow,b=d.basics;
+  var c=d.chip,mf=d.moneyflow,b=d.basics,f=d.fundamentals||{};
   var html='<div style="text-align:center;margin-bottom:20px"><span style="font-size:22px;font-weight:700;color:#e2e8f0">'+d.stock_name+'（'+d.ts_code+'）</span><span style="font-size:13px;color:#70809a;margin-left:12px">'+d.date_range+'</span></div>';
   html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">';
   html+='<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:#8b92a5;margin-bottom:6px">当前价</div><div style="font-size:24px;font-weight:700;color:#5daeff">'+c.current_price+'</div></div>';
@@ -7086,6 +7086,13 @@ function chipShowRes(d){
   html+=chipRow('PB',b.pb||'N/A');
   html+=chipRow('总市值',chipFmtMoney(b.total_mv?b.total_mv*10000:null));
   html+='</div></div></div>';
+  html+='<div class="card" style="margin-top:20px;padding:20px"><div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px">iFind 基本面增强</div>';
+  html+=chipRow('公司摘要', f.summary_text ? '已获取' : '暂无');
+  html+=chipRow('财务指标', f.financials_text ? '已获取' : '暂无');
+  html+=chipRow('股票信息', f.info_text ? '已获取' : '暂无');
+  if(f.summary_text) html+='<div style="margin-top:12px;color:#cbd5e1;font-size:13px;line-height:1.8;white-space:pre-wrap">'+String(f.summary_text).slice(0,300)+'</div>';
+  if(f.info_text) html+='<div style="margin-top:12px;color:#94a3b8;font-size:12px;line-height:1.8;white-space:pre-wrap">'+String(f.info_text).slice(0,300)+'</div>';
+  html+='</div>';
   html+='<div class="card" style="margin-top:20px;padding:14px;color:#8b92a5;font-size:13px;line-height:1.8"><b>口径说明：</b>近3个月日线数据，按每日换手率对历史筹码做衰减，新增成交按当日价格区间分布。输出为筹码迁移近似结果，非交易所级逐笔持仓重建。主力净流入为超大单+大单净额口径。</div>';
   document.getElementById('chipResult').innerHTML=html;
   document.getElementById('chipResult').style.display='block';
