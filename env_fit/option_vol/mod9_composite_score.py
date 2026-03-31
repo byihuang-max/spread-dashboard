@@ -88,7 +88,7 @@ def regime_from_rows(rows):
         'avg_composite_score': avg_score,
         'n_sellable': len(sellable),
         'sector_breadth': breadth,
-        'top3': [{'symbol': r['symbol'], 'score': r['composite_score']} for r in rows[:3]],
+        'top3': [{'symbol': r['symbol'], 'cn_name': r.get('cn_name', r['symbol']), 'score': r['composite_score']} for r in rows[:3]],
     }
 
 
@@ -166,6 +166,7 @@ def main():
 
         rows.append({
             'symbol': symbol,
+            'cn_name': rv.get('cn_name', symbol),
             'sector': rv.get('sector', '其他'),
             'composite_score': composite,
             'signal': signal,
