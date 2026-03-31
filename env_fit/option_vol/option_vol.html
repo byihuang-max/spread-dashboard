@@ -2,118 +2,214 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>商品期权卖权环境</title>
   <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
-    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(15,23,42,.04);margin-bottom:14px}
-    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}.sub{font-size:12px;color:#64748b}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
-    .metric,.scorebox,.term{border-left:4px solid #6366f1;background:#f8fafc;border-radius:12px;padding:12px}
-    .metric .k,.scorebox .k{font-size:12px;color:#64748b}.metric .v,.scorebox .v{font-size:24px;font-weight:800;margin-top:4px}
-    table{width:100%;border-collapse:collapse;font-size:13px}.table-wrap{overflow:auto;margin-top:12px}
-    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top} th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
-    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
-    .green{background:#dcfce7;color:#166534}.yellow{background:#fef3c7;color:#92400e}.gray{background:#e5e7eb;color:#374151}.red{background:#fee2e2;color:#991b1b}
-    .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
-    .scorebox .v{font-size:20px}.note{font-size:12px;line-height:1.8;color:#475569}.explain{font-size:12px;line-height:1.7;color:#334155;background:#f8fafc;border-radius:12px;padding:10px 12px;margin-top:10px}
+    *{box-sizing:border-box}
+    body{font-family:-apple-system,sans-serif;background:#0f172a;margin:0;padding:12px;color:#e2e8f0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px}
+    .full{grid-column:1/-1}
+    .title{font-size:15px;font-weight:700;color:#f8fafc;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .sub{font-size:11px;color:#64748b;margin-top:2px}
+    .hero{text-align:center;padding:20px;border-radius:12px;margin-bottom:12px}
+    .hero.green{background:linear-gradient(135deg,#059669,#10b981)}
+    .hero.yellow{background:linear-gradient(135deg,#d97706,#f59e0b)}
+    .hero.gray{background:linear-gradient(135deg,#475569,#64748b)}
+    .hero.red{background:linear-gradient(135deg,#dc2626,#ef4444)}
+    .hero .big{font-size:48px;font-weight:900;color:#fff}
+    .hero .label{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px}
+    .hero .desc{font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px}
+    .metric{text-align:center;padding:12px}
+    .metric .val{font-size:32px;font-weight:800;color:#f8fafc}
+    .metric .lbl{font-size:11px;color:#94a3b8;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+    th,td{padding:8px 6px;border-bottom:1px solid #1e293b;text-align:left}
+    th{color:#64748b;font-size:11px;background:#0f172a;position:sticky;top:0}
+    .pct{font-weight:700;font-size:14px}
+    .pct.extreme{color:#f87171}
+    .pct.high{color:#fbbf24}
+    .pct.mid{color:#94a3b8}
+    .pct.good{color:#34d399}
+    .pct.low{color:#f87171}
+    .tab-bar{display:flex;gap:4px;margin-bottom:12px}
+    .tab-btn{padding:8px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:12px}
+    .tab-btn.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+    .tab-page{display:none}
+    .tab-page.active{display:block}
+    .chart-box{height:250px;position:relative;margin-top:8px}
+    .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+    .badge.sell{background:#065f46;color:#34d399}
+    .badge.select{background:#78350f;color:#fbbf24}
+    .badge.watch{background:#1e293b;color:#94a3b8}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <div class="card">
-    <div class="title">🧾 商品期权卖权环境</div>
-    <div class="sub" id="metaLine">读取中...</div>
-    <div class="grid">
-      <div class="metric"><div class="k">市场 Regime</div><div class="v" id="regimeLabel">--</div><div class="sub" id="regimeDesc"></div></div>
-      <div class="metric"><div class="k">平均分</div><div class="v" id="avgScore">--</div><div class="sub">综合评分</div></div>
-      <div class="metric"><div class="k">可卖品种数</div><div class="v" id="sellable">--</div><div class="sub">score ≥ 65</div></div>
-      <div class="metric"><div class="k">Top 3</div><div class="v" id="top3">--</div><div class="sub">当前最优先观察</div></div>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="title">🔍 当前第一名：为什么是它？</div>
-    <div class="sub">把总分拆开，不看黑箱</div>
-    <div id="topExplain"></div>
-  </div>
+<div class="hero" id="heroBox">
+  <div class="label">期权卖权环境指数</div>
+  <div class="big" id="heroScore">--</div>
+  <div class="label" id="heroSignal">加载中...</div>
+  <div class="desc" id="heroDesc"></div>
+</div>
 
-  <div class="card">
-    <div class="title">📊 品种评分明细</div>
-    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>品种</th><th>信号</th><th>总分</th><th>RV分</th><th>IV-RV分</th><th>Skew分</th><th>期限分</th><th>流动性</th><th>到期</th><th>一句话原因</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
+<div class="grid">
+  <div class="card metric">
+    <div class="val" id="ivPct">--</div>
+    <div class="lbl">波动率分位（11品种）</div>
   </div>
+  <div class="card metric">
+    <div class="val" id="liqPct">--</div>
+    <div class="lbl">流动性分位（11品种）</div>
+  </div>
+  <div class="card metric">
+    <div class="val" id="totalSymbols">--</div>
+    <div class="lbl">全市场活跃品种</div>
+  </div>
+  <div class="card metric">
+    <div class="val" id="bothHigh">--</div>
+    <div class="lbl">高IV+高流动性品种</div>
+  </div>
+</div>
 
+<div class="tab-bar">
+  <div class="tab-btn active" data-tab="iv">📊 波动率分位</div>
+  <div class="tab-btn" data-tab="liq">💧 流动性分位</div>
+  <div class="tab-btn" data-tab="breadth">🌐 全品种明细</div>
+</div>
+
+<div class="tab-page active" id="tab-iv">
   <div class="card">
-    <div class="title">📝 术语白话注释</div>
-    <div class="note">
-      <b>双卖最怕的不是没波动，而是突然单边大波动。</b><br>
-      • <b>IV（隐含波动率）</b>：市场愿意为波动付多少钱。IV 越高，保险越贵。<br>
-      • <b>RV（真实波动率）</b>：标的真实走出来的波动，是已经发生的波动。<br>
-      • <b>IV-RV spread</b>：保险费相对真实波动贵不贵。正得越多，卖方赔率通常越好。<br>
-      • <b>ATM</b>：平值期权，行权价最接近当前价格。<br>
-      • <b>OTM</b>：虚值期权，通常也是双卖最常卖的那类“保险”。<br>
-      • <b>Skew</b>：虚值 put / call 相对 ATM 的贵贱程度。高 skew 说明尾部保险费更肥。<br>
-      • <b>Term Structure（期限结构）</b>：近月和远月 IV 的关系。看这波高波动是短期恐慌还是长期真风险。<br>
-      • <b>Theta</b>：时间价值衰减。站在卖方角度，就是“时间每天在帮你赚钱”。<br>
-      • <b>Gamma</b>：标的价格一旦剧烈移动，仓位风险会突然变快。离到期越近，Gamma 风险越高。<br>
-      • <b>Delta</b>：期权价格对标的涨跌的敏感度。双卖一般希望 Delta 不要太偏。<br>
-    </div>
+    <div class="title">📊 各品种 IV 历史分位</div>
+    <div class="sub">ATM IV 在过去1年的分位数 · 越高=保险费越贵=卖方赔率越好</div>
+    <table>
+      <thead><tr><th>品种</th><th>当前IV</th><th>1年均值</th><th>历史分位</th></tr></thead>
+      <tbody id="ivBody"></tbody>
+    </table>
   </div>
+  <div class="card">
+    <div class="title">📈 IV 走势</div>
+    <select id="ivSelect" style="padding:6px 10px;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;font-size:12px">
+      <option value="">选择品种</option>
+    </select>
+    <div class="chart-box"><canvas id="ivChart"></canvas></div>
+  </div>
+</div>
+
+<div class="tab-page" id="tab-liq">
+  <div class="card">
+    <div class="title">💧 各品种流动性历史分位</div>
+    <div class="sub">成交量+持仓量在过去1年的分位数 · 流动性高=赌徒多=有人买保险</div>
+    <table>
+      <thead><tr><th>品种</th><th>成交量</th><th>持仓量</th><th>成交量分位</th><th>持仓量分位</th><th>综合</th></tr></thead>
+      <tbody id="liqBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tab-page" id="tab-breadth">
+  <div class="card">
+    <div class="title">🌐 全品种横截面（53品种）</div>
+    <div class="sub">按期权价格/期货价格比排序 · 比值越高=保险费越贵</div>
+    <table>
+      <thead><tr><th>品种</th><th>期货价格</th><th>ATM价格</th><th>价格比</th><th>成交量</th><th>持仓量</th></tr></thead>
+      <tbody id="breadthBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <div class="sub" id="updateTime" style="text-align:center"></div>
+</div>
 
 <script>
-function cls(label){ if(label==='STRONG_SELL_VOL') return 'green'; if(label==='SELECTIVE_SELL') return 'yellow'; if(label==='NEUTRAL') return 'gray'; return 'red'; }
-function fmt(x,d=4){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
-function num(x){ return (x===null||x===undefined||x==='') ? '--' : x; }
-fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).then(d=>{
-  const comp=d.mod9_composite_score||{};
-  const regime=comp.regime||{};
-  const symbols=comp.symbols||[];
-  document.getElementById('metaLine').innerHTML='数据源：Tushare 期权行情 · 用期权市场价格反算出隐含波动率（Black-76 公式，期货期权标准定价模型）';
-  document.getElementById('regimeLabel').innerHTML='<span class="badge '+cls(regime.label)+'">'+(regime.label||'--')+'</span>';
-  document.getElementById('regimeDesc').textContent=regime.description||'--';
-  document.getElementById('avgScore').textContent=regime.avg_composite_score ?? '--';
-  document.getElementById('sellable').textContent=regime.n_sellable ?? '--';
-  document.getElementById('top3').textContent=(regime.top3||[]).map(x=>x.symbol+'('+x.cn_name+')').join(' / ') || '--';
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+  });
+});
 
-  const top=symbols[0];
-  if(top){
-    document.getElementById('topExplain').innerHTML = `
-      <div style="font-size:20px;font-weight:800;margin-top:6px">${top.symbol}（${top.cn_name||top.symbol}）${top.signal||''} ${top.composite_score}分</div>
-      <div class="mini-grid">
-        <div class="scorebox"><div class="k">RV环境分</div><div class="v">${num(top.rv_score)}</div></div>
-        <div class="scorebox"><div class="k">IV-RV赔率分</div><div class="v">${num(top.iv_score)}</div></div>
-        <div class="scorebox"><div class="k">Skew分</div><div class="v">${num(top.skew_score)}</div></div>
-        <div class="scorebox"><div class="k">期限结构分</div><div class="v">${num(top.term_score)}</div></div>
-        <div class="scorebox"><div class="k">流动性分</div><div class="v">${num(top.liquidity_score)}</div></div>
-        <div class="scorebox"><div class="k">到期结构分</div><div class="v">${num(top.expiry_score)}</div></div>
-      </div>
-      <div class="explain"><b>一句话解释：</b>${top.reason_text||'--'}</div>
-      <div class="explain"><b>当前原始指标：</b> IV-RV=${fmt(top.iv_rv_spread)}；Put Skew=${fmt(top.put_skew)}；Term=${fmt(top.term_slope)}；ATM IV=${fmt(top.atm_iv)}；RV20=${fmt(top.rv_20d)}</div>
-    `;
+let ivChart = null;
+
+Promise.all([
+  fetch('iv_percentile.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('liquidity_percentile.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('timing_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+  fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
+]).then(([iv, liq, signal, breadth])=>{
+  // Hero
+  if(signal && signal.market_signal){
+    const ms = signal.market_signal;
+    document.getElementById('heroScore').textContent = ms.composite_score;
+    document.getElementById('heroSignal').textContent = ms.label;
+    document.getElementById('heroDesc').textContent = ms.description;
+    const box = document.getElementById('heroBox');
+    if(ms.signal==='STRONG_SELL') box.className='hero green';
+    else if(ms.signal==='SELECTIVE_SELL') box.className='hero yellow';
+    else if(ms.signal==='WATCH') box.className='hero gray';
+    else box.className='hero red';
   }
-
-  document.getElementById('tbody').innerHTML=symbols.map(row=>'<tr>'+
-    '<td><b>'+row.symbol+'</b>（'+(row.cn_name||row.symbol)+'）</td>'+
-    '<td>'+ (row.signal||'') +' '+ (row.label||'') +'</td>'+
-    '<td><b>'+ num(row.composite_score) +'</b></td>'+
-    '<td>'+num(row.rv_score)+'</td>'+
-    '<td>'+num(row.iv_score)+'</td>'+
-    '<td>'+num(row.skew_score)+'</td>'+
-    '<td>'+num(row.term_score)+'</td>'+
-    '<td>'+num(row.liquidity_score)+'</td>'+
-    '<td>'+num(row.expiry_score)+'</td>'+
-    '<td style="max-width:320px;line-height:1.6">'+(row.reason_text||'--')+'</td>'+
-  '</tr>').join('');
-}).catch(err=>{ document.getElementById('metaLine').textContent='加载失败：'+err; });
+  
+  // Metrics
+  if(iv) document.getElementById('ivPct').textContent = iv.market_iv_percentile+'%';
+  if(liq) document.getElementById('liqPct').textContent = liq.market_liquidity_percentile+'%';
+  if(breadth && breadth.market_breadth){
+    const mb = breadth.market_breadth;
+    document.getElementById('totalSymbols').textContent = mb.total_symbols;
+    document.getElementById('bothHigh').textContent = mb.both_high_count+'/'+mb.total_symbols;
+  }
+  
+  // IV table
+  if(iv && iv.symbols){
+    const sel = document.getElementById('ivSelect');
+    document.getElementById('ivBody').innerHTML = iv.symbols.map(s=>{
+      let cls = s.iv_percentile>=85?'extreme':s.iv_percentile>=70?'high':'mid';
+      sel.innerHTML += `<option value="${s.symbol}">${s.symbol}(${s.cn_name})</option>`;
+      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.current_iv}</td><td>${s.iv_1y_mean}</td><td><span class="pct ${cls}">${s.iv_percentile}%</span></td></tr>`;
+    }).join('');
+    
+    sel.addEventListener('change',function(){
+      const sym = this.value;
+      if(!sym) return;
+      const data = iv.symbols.find(s=>s.symbol===sym);
+      if(!data||!data.iv_history) return;
+      if(ivChart) ivChart.destroy();
+      ivChart = new Chart(document.getElementById('ivChart').getContext('2d'),{
+        type:'line',
+        data:{labels:data.iv_history.map(h=>h.date.slice(4,6)+'/'+h.date.slice(6,8)),
+              datasets:[{label:sym+' ATM IV',data:data.iv_history.map(h=>h.iv),
+                        borderColor:'#6366f1',borderWidth:2,fill:true,
+                        backgroundColor:'rgba(99,102,241,0.1)',tension:0.3}]},
+        options:{responsive:true,maintainAspectRatio:false,
+                plugins:{legend:{labels:{color:'#94a3b8'}}},
+                scales:{y:{ticks:{color:'#64748b'}},x:{ticks:{color:'#64748b'}}}}
+      });
+    });
+  }
+  
+  // Liquidity table
+  if(liq && liq.symbols){
+    document.getElementById('liqBody').innerHTML = liq.symbols.map(s=>{
+      let cls = s.liquidity_percentile>=70?'good':s.liquidity_percentile>=40?'mid':'low';
+      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.current_vol.toLocaleString()}</td><td>${s.current_oi.toLocaleString()}</td><td>${s.vol_percentile}%</td><td>${s.oi_percentile}%</td><td><span class="pct ${cls}">${s.liquidity_percentile}%</span></td></tr>`;
+    }).join('');
+  }
+  
+  // Breadth table
+  if(breadth && breadth.symbols){
+    document.getElementById('breadthBody').innerHTML = breadth.symbols.map(s=>{
+      return `<tr><td><b>${s.symbol}</b>(${s.cn_name})</td><td>${s.fut_price}</td><td>${s.atm_price}</td><td>${s.price_ratio}</td><td>${s.total_vol.toLocaleString()}</td><td>${s.total_oi.toLocaleString()}</td></tr>`;
+    }).join('');
+  }
+  
+  // Update time
+  const times = [iv,liq,signal,breadth].filter(Boolean).map(d=>d.update_time).filter(Boolean);
+  if(times.length) document.getElementById('updateTime').textContent = '更新时间: '+times[0];
+});
 </script>
 </body>
 </html>
