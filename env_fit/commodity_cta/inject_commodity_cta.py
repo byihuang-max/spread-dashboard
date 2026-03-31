@@ -772,10 +772,11 @@ def build_html(data):
         r2_color = '#10b981' if r2 > 0.8 else '#f59e0b' if r2 > 0.5 else '#94a3b8'
         oi_color = '#10b981' if oi_5d > 3 else '#ef4444' if oi_5d < -3 else '#94a3b8'
 
+        sym_label = f"{sym}（{CN_NAME.get(sym, sym)}）"
         html += f'''
             <tr style="border-bottom:1px solid #f1f5f9" title="{driver_str}">
               <td style="padding:6px 4px;color:#94a3b8">{i+1}</td>
-              <td style="padding:6px 4px;font-weight:700">{sym}</td>
+              <td style="padding:6px 4px;font-weight:700">{sym_label}</td>
               <td style="padding:6px 4px;color:#64748b;font-size:11px">{sec}</td>
               <td style="padding:6px 4px">{close:,.1f}</td>
               <td style="padding:6px 4px;color:{chg_color};font-weight:600">{chg:+.1f}%</td>
