@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>波动率历史分位</title>
+  <style>
+    body{font-family:-apple-system,sans-serif;background:#f8fafc;margin:0;padding:18px;color:#0f172a}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+    .title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+    .sub{font-size:12px;color:#64748b;margin-top:4px}
+    .hero{text-align:center;padding:24px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:16px;color:#fff;margin-bottom:16px}
+    .hero .big{font-size:56px;font-weight:900;margin:8px 0}
+    .hero .label{font-size:14px;opacity:0.9}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+    th,td{padding:10px 8px;border-bottom:1px solid #f3f4f6;text-align:left}
+    th{font-size:12px;color:#64748b;background:#f8fafc;position:sticky;top:0}
+    .pct{font-weight:700;font-size:16px}
+    .pct.extreme{color:#dc2626}
+    .pct.high{color:#f59e0b}
+    .pct.mid{color:#64748b}
+    .chart-box{position:relative;height:300px;margin-top:12px}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="hero">
+    <div class="label">全市场波动率分位</div>
+    <div class="big" id="marketPct">--</div>
+    <div class="sub" id="marketDesc">--</div>
+  </div>
+
+  <div class="card">
+    <div class="title">📊 各品种 IV 历史分位</div>
+    <div class="sub">当前 ATM IV 在过去1年的分位数 · 分位越高，保险费越贵，卖方赔率越好</div>
+    <table>
+      <thead>
+        <tr>
+          <th>品种</th>
+          <th>当前IV</th>
+          <th>1年均值</th>
+          <th>1年最高</th>
+          <th>1年最低</th>
+          <th>历史分位</th>
+          <th>样本数</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="title">📈 IV 历史走势</div>
+    <div class="sub">选择品种查看过去1年的 ATM IV 变化</div>
+    <select id="symbolSelect" style="padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;margin-top:8px">
+      <option value="">-- 选择品种 --</option>
+    </select>
+    <div class="chart-box"><canvas id="ivChart"></canvas></div>
+  </div>
+
+<script>
+let allData = null;
+let ivChart = null;
+
+fetch('iv_percentile.json?t='+Date.now()).then(r=>r.json()).then(d=>{
+  allData = d;
+  const marketPct = d.market_iv_percentile || 0;
+  document.getElementById('marketPct').textContent = marketPct.toFixed(1) + '%';
+  
+  let desc = '';
+  if(marketPct >= 80) desc = '🔴 极高位 · 强卖方窗口';
+  else if(marketPct >= 60) desc = '🟡 高位 · 精选窗口';
+  else if(marketPct >= 40) desc = '🟢 中性';
+  else desc = '⚪ 低位 · 不适合卖权';
+  document.getElementById('marketDesc').textContent = desc;
+  
+  const symbols = d.symbols || [];
+  document.getElementById('tbody').innerHTML = symbols.map(s=>{
+    let pctClass = 'mid';
+    if(s.iv_percentile >= 80) pctClass = 'extreme';
+    else if(s.iv_percentile >= 60) pctClass = 'high';
+    return `<tr>
+      <td><b>${s.symbol}</b>（${s.cn_name}）</td>
+      <td>${s.current_iv}</td>
+      <td>${s.iv_1y_mean}</td>
+      <td>${s.iv_1y_max}</td>
+      <td>${s.iv_1y_min}</td>
+      <td><span class="pct ${pctClass}">${s.iv_percentile}%</span></td>
+      <td>${s.samples}</td>
+    </tr>`;
+  }).join('');
+  
+  // 填充下拉框
+  const sel = document.getElementById('symbolSelect');
+  symbols.forEach(s=>{
+    const opt = document.createElement('option');
+    opt.value = s.symbol;
+    opt.textContent = `${s.symbol}（${s.cn_name}）`;
+    sel.appendChild(opt);
+  });
+  
+  sel.addEventListener('change', function(){
+    const sym = this.value;
+    if(!sym) return;
+    const data = symbols.find(s=>s.symbol===sym);
+    if(!data || !data.iv_history) return;
+    
+    const labels = data.iv_history.map(h=>h.date.slice(4,6)+'/'+h.date.slice(6,8));
+    const values = data.iv_history.map(h=>h.iv);
+    
+    if(ivChart) ivChart.destroy();
+    
+    const ctx = document.getElementById('ivChart').getContext('2d');
+    ivChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: `${sym} ATM IV`,
+          data: values,
+          borderColor: '#6366f1',
+          backgroundColor: 'rgba(99,102,241,0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {display: true},
+          tooltip: {
+            callbacks: {
+              label: ctx => `IV: ${ctx.parsed.y.toFixed(4)}`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            ticks: {callback: v=>v.toFixed(2)}
+          }
+        }
+      }
+    });
+  });
+  
+}).catch(err=>{
+  document.body.innerHTML = '<div style="padding:20px;color:#dc2626">加载失败: '+err+'</div>';
+});
+</script>
+</body>
+</html>
