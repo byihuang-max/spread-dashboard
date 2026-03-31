@@ -1,0 +1,251 @@
+{
+  "meta": {
+    "generated": "2026-03-31 18:34:21",
+    "module": "option_vol.mod1_rv_regime",
+    "version": "mvp",
+    "top_n": 10,
+    "rv_window": 20,
+    "pctile_window": 120,
+    "data_source": "commodity_cta/fut_daily.csv + commodity_cta/mod1b_pca_engine.json"
+  },
+  "regime": {
+    "label": "SELECTIVE_SELL",
+    "description": "部分品种有机会，精选双卖",
+    "avg_sell_score": 65.1,
+    "n_sellable": 8,
+    "sector_breadth": 3,
+    "top3_symbols": [
+      {
+        "symbol": "SC",
+        "sell_score": 78
+      },
+      {
+        "symbol": "AU",
+        "sell_score": 75
+      },
+      {
+        "symbol": "AG",
+        "sell_score": 75
+      }
+    ]
+  },
+  "pca_context": {
+    "date": "20260330",
+    "env_type": "温和趋势",
+    "momentum_signal": "动量偏空",
+    "pc1_ratio": 0.3134,
+    "pca_friendly": 50.0
+  },
+  "symbols": [
+    {
+      "symbol": "SC",
+      "sector": "能源化工",
+      "avg_amount_wan": 5702799.4,
+      "n_days": 175,
+      "rv_20d": 1.1322,
+      "rv_pctile_120d": 0.9667,
+      "rv_accel": 1.218,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.1637,
+      "sell_score": 78,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 97,
+        "tail_risk_score": 55,
+        "env_score": 65,
+        "accel_score": 35,
+        "loading_score": 59
+      }
+    },
+    {
+      "symbol": "AU",
+      "sector": "贵金属",
+      "avg_amount_wan": 27759129.1,
+      "n_days": 175,
+      "rv_20d": 0.4328,
+      "rv_pctile_120d": 0.8083,
+      "rv_accel": 1.0268,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0225,
+      "sell_score": 75,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 81,
+        "tail_risk_score": 68,
+        "env_score": 65,
+        "accel_score": 55,
+        "loading_score": 94
+      }
+    },
+    {
+      "symbol": "AG",
+      "sector": "贵金属",
+      "avg_amount_wan": 22320414.7,
+      "n_days": 175,
+      "rv_20d": 0.8529,
+      "rv_pctile_120d": 0.7583,
+      "rv_accel": 0.9037,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0118,
+      "sell_score": 75,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 76,
+        "tail_risk_score": 74,
+        "env_score": 65,
+        "accel_score": 75,
+        "loading_score": 97
+      }
+    },
+    {
+      "symbol": "SN",
+      "sector": "有色金属",
+      "avg_amount_wan": 6055269.6,
+      "n_days": 175,
+      "rv_20d": 0.5797,
+      "rv_pctile_120d": 0.6667,
+      "rv_accel": 0.8579,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0017,
+      "sell_score": 73,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 67,
+        "tail_risk_score": 80,
+        "env_score": 65,
+        "accel_score": 90,
+        "loading_score": 100
+      }
+    },
+    {
+      "symbol": "SA",
+      "sector": "能源化工",
+      "avg_amount_wan": 3281010.9,
+      "n_days": 175,
+      "rv_20d": 0.3044,
+      "rv_pctile_120d": 0.8333,
+      "rv_accel": 1.1596,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.1724,
+      "sell_score": 70,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 83,
+        "tail_risk_score": 54,
+        "env_score": 65,
+        "accel_score": 35,
+        "loading_score": 57
+      }
+    },
+    {
+      "symbol": "RU",
+      "sector": "能源化工",
+      "avg_amount_wan": 4498663.2,
+      "n_days": 175,
+      "rv_20d": 0.1842,
+      "rv_pctile_120d": 0.575,
+      "rv_accel": 0.8295,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0926,
+      "sell_score": 65,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 57,
+        "tail_risk_score": 75,
+        "env_score": 65,
+        "accel_score": 90,
+        "loading_score": 77
+      }
+    },
+    {
+      "symbol": "CU",
+      "sector": "有色金属",
+      "avg_amount_wan": 6976964.9,
+      "n_days": 175,
+      "rv_20d": 0.2147,
+      "rv_pctile_120d": 0.5167,
+      "rv_accel": 0.8814,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0297,
+      "sell_score": 64,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 52,
+        "tail_risk_score": 78,
+        "env_score": 65,
+        "accel_score": 90,
+        "loading_score": 93
+      }
+    },
+    {
+      "symbol": "NI",
+      "sector": "有色金属",
+      "avg_amount_wan": 4026805.1,
+      "n_days": 175,
+      "rv_20d": 0.2026,
+      "rv_pctile_120d": 0.5167,
+      "rv_accel": 0.6698,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.0838,
+      "sell_score": 62,
+      "signal": "🟡",
+      "label": "可考虑双卖",
+      "breakdown": {
+        "odds_score": 52,
+        "tail_risk_score": 75,
+        "env_score": 65,
+        "accel_score": 90,
+        "loading_score": 79
+      }
+    },
+    {
+      "symbol": "FG",
+      "sector": "能源化工",
+      "avg_amount_wan": 3861026.2,
+      "n_days": 175,
+      "rv_20d": 0.2929,
+      "rv_pctile_120d": 0.5,
+      "rv_accel": 1.0841,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.1472,
+      "sell_score": 55,
+      "signal": "⚪",
+      "label": "观望",
+      "breakdown": {
+        "odds_score": 50,
+        "tail_risk_score": 62,
+        "env_score": 65,
+        "accel_score": 55,
+        "loading_score": 63
+      }
+    },
+    {
+      "symbol": "RB",
+      "sector": "黑色系",
+      "avg_amount_wan": 3537104.1,
+      "n_days": 175,
+      "rv_20d": 0.067,
+      "rv_pctile_120d": 0.025,
+      "rv_accel": 0.8254,
+      "pca_env": "温和趋势",
+      "pc1_loading_abs": 0.1365,
+      "sell_score": 34,
+      "signal": "🔴",
+      "label": "不宜双卖",
+      "breakdown": {
+        "odds_score": 2,
+        "tail_risk_score": 73,
+        "env_score": 65,
+        "accel_score": 90,
+        "loading_score": 66
+      }
+    }
+  ]
+}
