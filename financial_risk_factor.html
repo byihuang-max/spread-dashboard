@@ -26,7 +26,11 @@ a{color:inherit;text-decoration:none}
 .header .sub{margin-top:10px;color:#8ea2bd;font-size:14px;line-height:1.8}
 .header .sub span{display:inline-block;margin-right:8px;margin-top:6px;padding:6px 10px;border-radius:999px;background:#0c1a32;border:1px solid #1f2d47;font-size:12px}
 .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-bottom:20px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.summary-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.summary-strip .metric{padding:14px 16px;border-radius:14px}
+.summary-strip .metric .value{font-size:26px;margin-top:4px}
+.summary-strip .metric .sub{margin-top:4px;line-height:1.45;font-size:11px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .card{
   background:rgba(10,20,39,.82);border:1px solid #1f2d47;border-radius:22px;
@@ -127,7 +131,7 @@ window.onerror=function(msg,src,line,col,err){
     </div>
   </div>
 
-  <div class="grid-4" id="overviewCards"></div>
+  <div class="summary-strip" id="overviewCards"></div>
 
   <div class="layout" style="margin-top:20px">
     <div class="card">
