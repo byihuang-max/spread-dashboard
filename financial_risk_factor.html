@@ -264,6 +264,10 @@ const FACTOR_LABELS = {
   working_capital_score:"营运资本恶化"
 };
 
+const state = { industry: null, stockCode: null };
+const charts = {};
+let INDUSTRIES = [];
+
 const INDUSTRY_META = {
   "电子": {
     definition: "电子本质上是需求和库存共同驱动的周期行业。它不是简单的成长股集合，而是一个库存、订单、回款、资本开支高度联动的生意。真正危险的时候，不是利润先坏，而是库存和应收先坏。",
