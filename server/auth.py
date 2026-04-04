@@ -9,6 +9,9 @@ GAMT 用户认证模块
 
 import sqlite3, hashlib, uuid, os, time, secrets
 
+MAX_FAILED_LOGINS = 5
+LOGIN_LOCK_MINUTES = 10
+
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'users.db')
 
 INVITE_MODE_OPEN = 'open'
@@ -55,6 +58,12 @@ def init_db():
             action TEXT,
             success INTEGER,
             created_at TEXT DEFAULT (datetime('now','localtime'))
+        );
+        CREATE TABLE IF NOT EXISTS login_locks (
+            ip TEXT PRIMARY KEY,
+            failed_count INTEGER DEFAULT 0,
+            locked_until TEXT,
+            updated_at TEXT DEFAULT (datetime('now','localtime'))
         );
         CREATE TABLE IF NOT EXISTS system_settings (
             key TEXT PRIMARY KEY,
@@ -296,11 +305,68 @@ def register(username, password, display_name='', invite_code=''):
         return False, '用户名已存在'
 
 
+def _get_login_lock(conn, ip):
+    if not ip:
+        return None
+    return conn.execute('SELECT * FROM login_locks WHERE ip=?', (ip,)).fetchone()
+
+
+def _clear_login_lock(conn, ip):
+    if not ip:
+        return
+    conn.execute('DELETE FROM login_locks WHERE ip=?', (ip,))
+
+
+def _register_failed_login(conn, ip):
+    if not ip:
+        return None
+    row = _get_login_lock(conn, ip)
+    if row:
+        failed = int(row['failed_count'] or 0) + 1
+    else:
+        failed = 1
+    locked_until = None
+    if failed >= MAX_FAILED_LOGINS:
+        locked_until = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time() + LOGIN_LOCK_MINUTES * 60))
+    conn.execute('''
+        INSERT INTO login_locks (ip, failed_count, locked_until, updated_at)
+        VALUES (?, ?, ?, datetime('now','localtime'))
+        ON CONFLICT(ip) DO UPDATE SET
+            failed_count=excluded.failed_count,
+            locked_until=excluded.locked_until,
+            updated_at=datetime('now','localtime')
+    ''', (ip, failed, locked_until))
+    return {'failed_count': failed, 'locked_until': locked_until}
+
+
+def _check_login_locked(conn, ip):
+    if not ip:
+        return False, None
+    row = _get_login_lock(conn, ip)
+    if not row:
+        return False, None
+    locked_until = row['locked_until']
+    now_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+    if locked_until and locked_until > now_str:
+        return True, locked_until
+    if locked_until and locked_until <= now_str:
+        _clear_login_lock(conn, ip)
+    return False, None
+
+
 def login(username, password, ip=''):
     """登录，支持用户名或姓名登录，返回 (ok, data)"""
     login_input = username.strip()
     login_lower = login_input.lower()
     c = _conn()
+
+    locked, locked_until = _check_login_locked(c, ip)
+    if locked:
+        c.execute('INSERT INTO login_log (username, ip, action, success) VALUES (?,?,?,?)',
+                  (login_input, ip, 'login_locked', 0))
+        c.commit(); c.close()
+        return False, f'登录失败次数过多，请 {LOGIN_LOCK_MINUTES} 分钟后再试'
+
     # 先按用户名精确匹配（小写）
     row = c.execute('SELECT * FROM users WHERE username=?', (login_lower,)).fetchone()
     # 没找到则按姓名匹配（原始大小写）
@@ -308,6 +374,7 @@ def login(username, password, ip=''):
         row = c.execute('SELECT * FROM users WHERE display_name=?', (login_input,)).fetchone()
 
     if not row:
+        _register_failed_login(c, ip)
         c.execute('INSERT INTO login_log (username, ip, action, success) VALUES (?,?,?,?)',
                   (login_input, ip, 'login', 0))
         c.commit(); c.close()
@@ -319,10 +386,13 @@ def login(username, password, ip=''):
 
     h, _ = _hash_pw(password, row['salt'])
     if h != row['password_hash']:
+        _register_failed_login(c, ip)
         c.execute('INSERT INTO login_log (user_id, username, ip, action, success) VALUES (?,?,?,?,?)',
                   (row['id'], login_input, ip, 'login', 0))
         c.commit(); c.close()
         return False, '用户名或密码错误'
+
+    _clear_login_lock(c, ip)
 
     # 登录成功，创建 session token (7天有效)
     token = uuid.uuid4().hex
