@@ -135,14 +135,14 @@ window.onerror=function(msg,src,line,col,err){
         <h2 style="margin:0;padding:0;border:none">第一层：行业风险地图</h2>
         <div class="tag" id="asOfTag"></div>
       </div>
-      <div id="industryHeatmap" class="chart"></div>
+      <div id="industryHeatmap" class="chart"></div><div id="industryHeatmapHtml" class="heat-grid" style="display:none"></div>
     </div>
     <div class="card">
       <div class="section-title">
         <h2 style="margin:0;padding:0;border:none">行业主导矛盾</h2>
         <div class="tag">主视角</div>
       </div>
-      <div id="industryRank" class="chart"></div>
+      <div id="industryRank" class="chart"></div><div id="industryRankHtml" class="html-chart" style="display:none"></div>
     </div>
   </div>
 
@@ -179,11 +179,11 @@ window.onerror=function(msg,src,line,col,err){
         <div class="grid-2">
           <div class="card" style="margin-bottom:0;padding:18px">
             <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业因子画像</h2><div class="tag">均值</div></div>
-            <div id="industryFactorBar" class="chart-sm"></div>
+            <div id="industryFactorBar" class="chart-sm"></div><div id="industryFactorBarHtml" class="html-chart" style="display:none"></div>
           </div>
           <div class="card" style="margin-bottom:0;padding:18px">
             <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业内风险分布</h2><div class="tag">完整分层</div></div>
-            <div id="industryDistribution" class="chart-sm"></div>
+            <div id="industryDistribution" class="chart-sm"></div><div id="industryDistributionHtml" class="html-chart" style="display:none"></div>
           </div>
         </div>
       </div>
@@ -498,7 +498,42 @@ function renderOverview(){
   document.getElementById("asOfTag").textContent = DATA.as_of;
 }
 
+function showHtmlFallback(idChart,idHtml){
+  const c=document.getElementById(idChart), h=document.getElementById(idHtml);
+  if(c) c.style.display='none';
+  if(h) h.style.display='';
+}
+
+function renderHeatmapHtml(){
+  const el=document.getElementById("industryHeatmapHtml");
+  const header=['<div class="heat-cell">行业\因子</div>'].concat(FACTOR_NAMES.map(k=>`<div class="heat-cell">${FACTOR_LABELS[k]}</div>`)).join('');
+  const rows=INDUSTRIES.map(ind=>['<div class="heat-cell">'+ind.name+'</div>'].concat(FACTOR_NAMES.map(k=>`<div class="heat-cell">${score(ind.factorMeans[k])}</div>`)).join('')).join('');
+  el.innerHTML=header+rows;
+  showHtmlFallback('industryHeatmap','industryHeatmapHtml');
+}
+
+function renderIndustryRankHtml(){
+  const el=document.getElementById('industryRankHtml');
+  el.innerHTML=INDUSTRIES.map(i=>`<div class="html-row"><div class="html-label">${i.name}</div><div class="html-bar"><div class="html-fill" style="width:${(i.avgRisk*100).toFixed(1)}%"></div></div><div class="html-val">${score(i.avgRisk)}</div></div>`).join('');
+  showHtmlFallback('industryRank','industryRankHtml');
+}
+
+function renderIndustryFactorBarHtml(ind){
+  const el=document.getElementById('industryFactorBarHtml');
+  el.innerHTML=FACTOR_NAMES.map(k=>`<div class="html-row"><div class="html-label">${FACTOR_LABELS[k]}</div><div class="html-bar"><div class="html-fill" style="width:${(ind.factorMeans[k]*100).toFixed(1)}%"></div></div><div class="html-val">${score(ind.factorMeans[k])}</div></div>`).join('');
+  showHtmlFallback('industryFactorBar','industryFactorBarHtml');
+}
+
+function renderIndustryDistributionHtml(bins){
+  const labels=['低','中','高','极高'];
+  const max=Math.max(...bins,1);
+  const el=document.getElementById('industryDistributionHtml');
+  el.innerHTML=bins.map((v,idx)=>`<div class="html-row"><div class="html-label">${labels[idx]}</div><div class="html-bar"><div class="html-fill" style="width:${(v/max*100).toFixed(1)}%"></div></div><div class="html-val">${v}</div></div>`).join('');
+  showHtmlFallback('industryDistribution','industryDistributionHtml');
+}
+
 function renderHeatmap(){
+  try {
   const heatData = [];
   INDUSTRIES.forEach((ind, i) => {
     FACTOR_NAMES.forEach((k, j) => heatData.push([i,j,Number(ind.factorMeans[k].toFixed(2))]));
@@ -512,9 +547,11 @@ function renderHeatmap(){
     visualMap:{min:0,max:1,calculable:false,orient:"horizontal",left:"center",bottom:10,textStyle:{color:"#9db0c8"},inRange:{color:["#123554","#1e6fae","#36b7c8","#f5b75b","#ff6f7a"]}},
     series:[{type:"heatmap",data:heatData,label:{show:true,color:"#eef5ff",formatter:p=>p.value[2]},itemStyle:{borderColor:"rgba(255,255,255,.08)",borderWidth:1}}]
   });
+  } catch(e){ renderHeatmapHtml(); }
 }
 
 function renderIndustryRank(){
+  try {
   charts.rank = echarts.init(document.getElementById("industryRank"));
   charts.rank.setOption({
     tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
@@ -526,6 +563,7 @@ function renderIndustryRank(){
       {type:"scatter",data:INDUSTRIES.map(i=>[i.avgRisk,i.name]),symbolSize:16,itemStyle:{color:"#5ce1c2"},label:{show:true,position:"right",color:"#9cb0ca",formatter:p=>FACTOR_LABELS[INDUSTRIES.find(x=>x.name===p.value[1]).primary]}}
     ]
   });
+  } catch(e){ renderIndustryRankHtml(); }
 }
 
 function renderIndustryList(){
@@ -569,6 +607,7 @@ function renderIndustrySection(){
   ].map(x => `<div class="mini"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div></div>`).join("");
 
   if(charts.factorBar) charts.factorBar.dispose();
+  try {
   charts.factorBar = echarts.init(document.getElementById("industryFactorBar"));
   charts.factorBar.setOption({
     tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
@@ -576,6 +615,7 @@ function renderIndustrySection(){
     yAxis:{type:"value",max:1,axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
     series:[{type:"bar",data:FACTOR_NAMES.map(k=>Number(ind.factorMeans[k].toFixed(2))),barWidth:28,itemStyle:{color:(p)=>["#67b7ff","#5ce1c2","#f7c95c","#a08bff"][p.dataIndex],borderRadius:[8,8,0,0]}}]
   });
+  } catch(e){ renderIndustryFactorBarHtml(ind); }
 
   const bins = [0,0,0,0];
   ind.stocks.forEach(s => {
@@ -585,6 +625,7 @@ function renderIndustrySection(){
     else bins[0]++;
   });
   if(charts.distribution) charts.distribution.dispose();
+  try {
   charts.distribution = echarts.init(document.getElementById("industryDistribution"));
   charts.distribution.setOption({
     tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
@@ -592,6 +633,7 @@ function renderIndustrySection(){
     yAxis:{type:"value",axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
     series:[{type:"bar",data:bins,barWidth:36,itemStyle:{color:(p)=>["#3b82f6","#5ce1c2","#f7c95c","#ff7f86"][p.dataIndex],borderRadius:[8,8,0,0]},label:{show:true,position:"top",color:"#d7e0ea"}}]
   });
+  } catch(e){ renderIndustryDistributionHtml(bins); }
 
   document.querySelectorAll(".industry-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.industry === state.industry));
 }
