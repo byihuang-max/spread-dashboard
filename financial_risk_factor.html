@@ -514,7 +514,7 @@ function renderHeatmapHtml(){
 
 function renderIndustryRankHtml(){
   const el=document.getElementById('industryRankHtml');
-  el.innerHTML=INDUSTRIES.map(i=>`<div class="html-row"><div class="html-label">${i.name}</div><div class="html-bar"><div class="html-fill" style="width:${(i.avgRisk*100).toFixed(1)}%"></div></div><div class="html-val">${score(i.avgRisk)}</div></div>`).join('');
+  el.innerHTML=INDUSTRIES.map(i=>`<div class="html-row"><div class="html-label">${i.name}·${FACTOR_LABELS[i.primary].replace('恶化','')}</div><div class="html-bar"><div class="html-fill" style="width:${(i.avgRisk*100).toFixed(1)}%"></div></div><div class="html-val">${score(i.avgRisk)}</div></div>`).join('');
   showHtmlFallback('industryRank','industryRankHtml');
 }
 
@@ -526,9 +526,9 @@ function renderIndustryFactorBarHtml(ind){
 
 function renderIndustryDistributionHtml(bins){
   const labels=['低','中','高','极高'];
-  const max=Math.max(...bins,1);
+  const total=bins.reduce((a,b)=>a+b,0)||1;
   const el=document.getElementById('industryDistributionHtml');
-  el.innerHTML=bins.map((v,idx)=>`<div class="html-row"><div class="html-label">${labels[idx]}</div><div class="html-bar"><div class="html-fill" style="width:${(v/max*100).toFixed(1)}%"></div></div><div class="html-val">${v}</div></div>`).join('');
+  el.innerHTML=bins.map((v,idx)=>`<div class="html-row"><div class="html-label">${labels[idx]}</div><div class="html-bar"><div class="html-fill" style="width:${(v/total*100).toFixed(1)}%"></div></div><div class="html-val">${v}/${((v/total)*100).toFixed(0)}%</div></div>`).join('');
   showHtmlFallback('industryDistribution','industryDistributionHtml');
 }
 
