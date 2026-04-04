@@ -508,22 +508,33 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="card hero">
     <div class="kicker">最终输出</div>
     <h2>这个模块成熟后，最终每天应该输出的是股票敞口值</h2>
-    <div class="note">最终不是只看某个指标涨了跌了，而是把命题结果翻译成更直接的话：现在该保守、均衡，还是积极一些；如果积极，应该偏大票还是偏小票。</div>
-  </div>
-
-  <div class="card hero" style="background:linear-gradient(135deg,rgba(9,20,43,.94),rgba(6,31,46,.92));border:1px solid rgba(93,174,255,.24)">
-    <div class="kicker">已上线</div>
-    <h2>ML 情绪接力敞口评分</h2>
-    <div class="note">先用日度强逻辑因子，基于中证2000做 3 年样本外 walk-forward，输出 0-100 的仓位评分。它不是替代 PM alpha 的黑盒模型，而是一个可解释的情绪接力交叉验证层。</div>
-    <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
-      <a href="ml_exposure_score.html" target="_blank" class="back-btn" style="margin-bottom:0">打开独立页面</a>
-    </div>
+    <div class="note">这里正式拆成两个层面：<b>10日研究</b>负责看因子研究有效性，<b>实盘净值</b>负责看如果真的按建议仓位去推，中证2000 的实际净值会怎么走。</div>
   </div>
 
   <div class="card">
-    <h2>页面预览</h2>
-    <div style="border:1px solid #1f2d47;border-radius:14px;overflow:hidden;background:#060d18">
-      <iframe src="ml_exposure_score.html" style="width:100%;height:1280px;border:0;background:#060d18"></iframe>
+    <div class="subtabs">
+      <button class="subtab-btn active" data-tab="exp_live">实盘净值</button>
+      <button class="subtab-btn" data-tab="exp_research">10日研究</button>
+    </div>
+
+    <div id="exp_live" class="tab-pane active">
+      <div class="note" style="margin-bottom:14px">T日收盘后给出 T+1 建议仓位，用 T+1 中证2000真实单日收益更新策略净值。</div>
+      <div style="margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="live_exposure_nav.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700">打开独立页面</a>
+      </div>
+      <div style="border:1px solid #1f2d47;border-radius:14px;overflow:hidden;background:#060d18">
+        <iframe src="live_exposure_nav.html" style="width:100%;height:1380px;border:0;background:#060d18"></iframe>
+      </div>
+    </div>
+
+    <div id="exp_research" class="tab-pane">
+      <div class="note" style="margin-bottom:14px">研究层保留 10 日窗口标签、历史极端信号、状态分布和模型解释，用来回答“这套因子有没有研究价值”。</div>
+      <div style="margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="ml_exposure_score.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:#0c1830;border:1px solid #2a3a58;color:#5daeff;text-decoration:none;font-weight:700">打开独立页面</a>
+      </div>
+      <div style="border:1px solid #1f2d47;border-radius:14px;overflow:hidden;background:#060d18">
+        <iframe src="ml_exposure_score.html" style="width:100%;height:1480px;border:0;background:#060d18"></iframe>
+      </div>
     </div>
   </div>
 </div>
