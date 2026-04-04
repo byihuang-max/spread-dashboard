@@ -443,10 +443,36 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, user)
             else:
                 self._json(401, {'error': '未登录或 token 已过期'})
+        elif self.path == '/api/auth/settings':
+            self._json(200, {'invite_mode': auth.get_invite_mode()})
+        elif self.path == '/api/auth/invite/validate':
+            from urllib.parse import urlparse, parse_qs
+            parsed = urlparse(self.path)
+            params = parse_qs(parsed.query)
+            code = params.get('code', [''])[0]
+            ok, msg, invite = auth.validate_invite_code(code)
+            self._json(200 if ok else 400, {
+                'ok': ok,
+                'msg': msg,
+                'invite': {
+                    'id': invite['id'],
+                    'note': invite.get('note', ''),
+                    'max_uses': invite.get('max_uses', 1),
+                    'used_count': invite.get('used_count', 0),
+                    'expires_at': invite.get('expires_at'),
+                } if invite else None
+            })
         elif self.path == '/api/admin/users':
             admin = self._require_admin()
             if admin:
                 self._json(200, {'users': auth.list_users()})
+        elif self.path == '/api/admin/invites':
+            admin = self._require_admin()
+            if admin:
+                self._json(200, {
+                    'invite_mode': auth.get_invite_mode(),
+                    'invites': auth.list_invite_codes(200)
+                })
         elif self.path.startswith('/api/admin/logs'):
             admin = self._require_admin()
             if admin:
@@ -483,7 +509,12 @@ class Handler(BaseHTTPRequestHandler):
         # ═══ 认证 API ═══
         if self.path == '/api/auth/register':
             body = self._read_body()
-            ok, msg = auth.register(body.get('username',''), body.get('password',''), body.get('display_name',''))
+            ok, msg = auth.register(
+                body.get('username',''),
+                body.get('password',''),
+                body.get('display_name',''),
+                body.get('invite_code','')
+            )
             self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
             return
 
@@ -536,6 +567,51 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(400, {'error': 'tier 只能是 0 或 1'})
                 return
             auth.set_tier(body.get('user_id'), tier)
+            self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/invite-mode':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            try:
+                mode = auth.set_invite_mode(body.get('mode', 'open'))
+            except ValueError as e:
+                self._json(400, {'error': str(e)})
+                return
+            self._json(200, {'ok': True, 'invite_mode': mode})
+            return
+
+        if self.path == '/api/admin/create-invite':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            try:
+                invite = auth.create_invite_code(
+                    note=body.get('note', ''),
+                    max_uses=body.get('max_uses', 1),
+                    expires_at=body.get('expires_at'),
+                    created_by=admin['id'],
+                    code=body.get('code', '')
+                )
+                self._json(200, {'ok': True, 'invite': invite})
+            except Exception as e:
+                self._json(400, {'ok': False, 'error': str(e)})
+            return
+
+        if self.path == '/api/admin/toggle-invite':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            auth.toggle_invite_code(body.get('invite_id'), body.get('status', 'disabled'))
+            self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/delete-invite':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            auth.delete_invite_code(body.get('invite_id'))
             self._json(200, {'ok': True})
             return
 
