@@ -158,6 +158,16 @@ a{color:inherit;text-decoration:none}
             <div class="summary-grid" id="industrySummaryGrid"></div>
           </div>
         </div>
+        <div class="role-grid">
+          <div class="definition-box">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业定义</h2><div class="tag">生意本质</div></div>
+            <p id="industryDefinition" class="note"></p>
+          </div>
+          <div class="factor-role-box">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">因子角色</h2><div class="tag">先看什么</div></div>
+            <div id="factorRoleList" class="role-list"></div>
+          </div>
+        </div>
         <div class="grid-2">
           <div class="card" style="margin-bottom:0;padding:18px">
             <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业因子画像</h2><div class="tag">均值</div></div>
@@ -244,6 +254,73 @@ const FACTOR_LABELS = {
   cashflow_score:"现金流恶化",
   debt_score:"短债压力",
   working_capital_score:"营运资本恶化"
+};
+
+const INDUSTRY_META = {
+  "电子": {
+    definition: "电子本质上是需求和库存共同驱动的周期行业。它不是简单的成长股集合，而是一个库存、订单、回款、资本开支高度联动的生意。真正危险的时候，不是利润先坏，而是库存和应收先坏。",
+    roles: [
+      {k:"先行因子", v:"存货周转天数、应收账款账期。因为需求开始转弱时，最先反映在卖不动和收不到钱，而不是利润表。"},
+      {k:"同步验证", v:"经营现金流。它验证库存和应收恶化是否已经开始侵蚀真实经营质量。"},
+      {k:"滞后结果", v:"净利润同比。利润下滑通常是前面几步传导后的结果，不能拿它当前置信号。"}
+    ]
+  },
+  "医药生物": {
+    definition: "医药是一个容易被营收假象欺骗的行业。营收可以被渠道压货撑住，但扣非利润和经营现金流更能反映真实质量。医药看的是利润质量，而不是表面增速。",
+    roles: [
+      {k:"先行因子", v:"应收账款、渠道库存。因为渠道压货和回款变慢，会先于利润表暴露问题。"},
+      {k:"同步验证", v:"扣非净利润、经营现金流。它们一起走弱，才说明经营质量真的在下台阶。"},
+      {k:"滞后结果", v:"净利润表观增速。它可能被非经常性损益美化，所以不能单独看。"}
+    ]
+  },
+  "机械设备": {
+    definition: "机械设备本质是订单兑现型生意，不是概念故事型生意。真正重要的不是接了多少单，而是订单能不能验收、回款能不能兑现。",
+    roles: [
+      {k:"先行因子", v:"合同负债、应收账款。前者看新订单质量，后者看旧订单回款质量。"},
+      {k:"同步验证", v:"经营现金流。它验证应收账款恶化是否已经转化成现金流压力。"},
+      {k:"滞后结果", v:"净利润同比。利润通常最后才反映，所以不能把它当核心判断依据。"}
+    ]
+  },
+  "基础化工": {
+    definition: "化工本质是价格周期和资产负债表共同驱动的行业。价格周期决定利润波动，杠杆水平决定能不能熬过下行期。",
+    roles: [
+      {k:"先行因子", v:"产品价格、库存跌价、价差变化。化工行业最先变的是价格，不是利润。"},
+      {k:"同步验证", v:"经营现金流、毛利率。它们一起走弱时，说明景气真的在下行。"},
+      {k:"滞后结果", v:"净利润下滑。真正更危险的是货币资金/短债覆盖恶化，这是独立于利润的资金链风险。"}
+    ]
+  },
+  "计算机": {
+    definition: "计算机/软件是项目制和人力驱动型生意。它最容易出现的错觉是利润还行，但回款已经崩了。看这个行业，本质是看项目兑现与现金回笼。",
+    roles: [
+      {k:"先行因子", v:"合同负债、应收账款。前者看新签项目，后者看老项目收款。"},
+      {k:"同步验证", v:"经营现金流。它是利润真实性的验证器，尤其适合识别'纸面利润'。"},
+      {k:"滞后结果", v:"净利润和费用率。它们往往是项目延期和回款问题扩散后的结果。"}
+    ]
+  },
+  "建筑装饰": {
+    definition: "建筑装饰本质不是一个纯经营问题，而是上游地产/基建付款能力向下游施工企业传导的问题。这个行业的核心不是利润，而是回款。",
+    roles: [
+      {k:"先行因子", v:"应收账款、回款周期。因为开发商一旦出问题，最先传导给施工方的就是收不到钱。"},
+      {k:"同步验证", v:"经营现金流、坏账计提。它们验证回款问题是否已经开始侵蚀报表。"},
+      {k:"滞后结果", v:"净利润下滑。利润恶化往往只是应收和坏账问题的结果。"}
+    ]
+  },
+  "传媒": {
+    definition: "传媒是高弹性行业，收入和利润对广告预算与内容兑现极其敏感。它的特点不是慢慢变坏，而是预算一砍，利润和现金流一起掉。",
+    roles: [
+      {k:"先行因子", v:"广告预算、投放意愿、项目排期。这些是传媒景气度的起点。"},
+      {k:"同步验证", v:"营收、经营现金流。传媒行业利润和现金流往往同步恶化，没有明显的缓冲层。"},
+      {k:"滞后结果", v:"商誉减值、版权减值。这些通常是景气持续下行后的尾部风险。"}
+    ]
+  },
+  "轻工制造": {
+    definition: "轻工制造是典型的消费传导行业。它最重要的不是利润，而是产品卖不卖得动，所以库存周转率比利润更关键。",
+    roles: [
+      {k:"先行因子", v:"存货周转率、渠道库存。产品卖不动时，最先恶化的是周转，而不是利润。"},
+      {k:"同步验证", v:"应收账款、经营现金流。它们验证库存问题是否已经开始压资金。"},
+      {k:"滞后结果", v:"净利润下滑。利润往往最后才体现，所以不能把它当行业判断的前置因子。"}
+    ]
+  }
 };
 
 const INDUSTRY_CHAIN = {
@@ -468,6 +545,9 @@ function renderIndustrySection(){
     `${i>0?'<span class="chain-arrow">→</span>':''}<div class="chain-node"><div class="n">${c.node}</div><div class="d">${c.note}</div></div>`
   ).join('');
   const focusText = (meta.focus_metrics || []).filter(Boolean).join('、');
+  const im = INDUSTRY_META[ind.name] || {definition:'',roles:[]};
+  document.getElementById("industryDefinition").textContent = im.definition || '该行业定义待补充';
+  document.getElementById("factorRoleList").innerHTML = (im.roles || []).map(r => `<div class="role-item"><div class="rk">${r.k}</div><div class="rv">${r.v}</div></div>`).join('');
   document.getElementById("industrySummary").textContent = `${ind.name}当前平均风险分数为 ${score(ind.avgRisk)}，高风险股票 ${ind.highRiskCount} 只，剔除项 ${ind.excludeCount} 只。这个行业当前最需要盯的是${FACTOR_LABELS[ind.primary]}。${focusText ? '重点指标包括：' + focusText + '。' : ''}`;
   document.getElementById("industrySummaryGrid").innerHTML = [
     {k:"行业平均风险",v:score(ind.avgRisk),cls:"amber"},
