@@ -128,6 +128,35 @@ def update_module(mod_key):
 
     return all_ok, total_time
 
+def update_timing_exposure_page():
+    """更新量化择时研究里的 ML 敞口页"""
+    log("═══ 择时敞口评分页 ═══")
+    base = os.path.expanduser('~/Desktop/quant-backtest/timing_model')
+    scripts = ['ml_exposure_score.py', 'generate_ml_exposure_page.py']
+    total = 0
+    ok_all = True
+    for script in scripts:
+        path = os.path.join(base, script)
+        log(f"运行 {script}", 'RUN')
+        t0 = time.time()
+        try:
+            result = subprocess.run(
+                [sys.executable, path],
+                cwd=base,
+                capture_output=True, text=True, timeout=600
+            )
+            elapsed = time.time() - t0
+            total += elapsed
+            if result.returncode != 0:
+                ok_all = False
+                log(f"  失败 ({elapsed:.1f}s): {result.stderr[-200:]}", 'ERR')
+            else:
+                log(f"  完成 ({elapsed:.1f}s)", 'OK')
+        except Exception as e:
+            ok_all = False
+            log(f"  异常: {e}", 'ERR')
+    return ok_all, total
+
 def git_push(msg='auto: update data'):
     """git add + commit + push"""
     log("═══ Git Push ═══")
@@ -219,6 +248,11 @@ def main():
     with open(update_log_path, 'w', encoding='utf-8') as f:
         json.dump(logs, f, indent=1, ensure_ascii=False)
     log("已更新 update_log.json")
+
+    # 更新择时敞口评分页
+    ok_exp, t_exp = update_timing_exposure_page()
+    results['timing_exposure'] = (ok_exp, t_exp)
+    print()
 
     # Git push
     if not args.no_push:
