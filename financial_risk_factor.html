@@ -54,8 +54,12 @@ a{color:inherit;text-decoration:none}
 .industry-btn .name{font-weight:700}
 .industry-btn .meta{font-size:12px;color:#8ea2bd;margin-top:5px}
 .industry-head{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-bottom:18px}
-.logic-box,.summary-box{background:#0c1830;border:1px solid #22314d;border-radius:18px;padding:18px}
-.logic-box p,.summary-box p{font-size:14px;color:#a4b7d1;line-height:1.85}
+.chain-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px}
+.chain-node{background:#0d1b34;border:1px solid #2a3f62;border-radius:12px;padding:10px 14px;min-width:110px}
+.chain-node .n{font-size:13px;font-weight:700;color:#eef5ff}
+.chain-node .d{font-size:11px;color:#7a93b5;margin-top:4px;line-height:1.5}
+.chain-arrow{color:#3b6ea8;font-size:18px;flex-shrink:0}
+
 .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
 .mini{background:#0d1b34;border:1px solid #1e3150;border-radius:14px;padding:14px}
 .mini .k{font-size:11px;color:#89a0bc}.mini .v{font-size:22px;font-weight:800;margin-top:8px}
@@ -144,8 +148,9 @@ a{color:inherit;text-decoration:none}
       <div>
         <div class="industry-head">
           <div class="logic-box">
-            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业逻辑</h2><div class="tag" id="industryNameTag"></div></div>
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业逻辑链</h2><div class="tag" id="industryNameTag"></div></div>
             <p id="industryLogic"></p>
+            <div id="industryChain" class="chain-flow"></div>
           </div>
           <div class="summary-box">
             <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业摘要</h2><div class="tag" id="industryPrimaryTag"></div></div>
@@ -241,9 +246,97 @@ const FACTOR_LABELS = {
   working_capital_score:"营运资本恶化"
 };
 
-const state = { industry: null, stockCode: null };
-const charts = {};
-let INDUSTRIES = [];
+const INDUSTRY_CHAIN = {
+  "电子": {
+    core: "电子行业的本质风险不是利润差，而是需求波动触发的库存/应收积压，最终把现金流和短债覆盖一起打穿。",
+    chain: [
+      {node:"终端需求转弱", note:"手机/PC/服务器出货量下滑"},
+      {node:"客户砍单/延迟交货", note:"订单能见度骤降"},
+      {node:"库存被动堆积", note:"存货周转天数拉长，占用大量营运资金"},
+      {node:"应收账款拉长", note:"客户压款，回款周期延长"},
+      {node:"经营现金流转负", note:"利润表可能还没反映，但钱已经收不回来"},
+      {node:"货币资金/短债覆盖恶化", note:"若短债到期，资金缺口暴露，财报窗口杀估值"}
+    ]
+  },
+  "医药生物": {
+    core: "医药行业的陷阱在于：营收可以撑住，但利润质量悄悄变差——扣非转弱、现金流恶化往往比利润表早半年到一年反映真实经营压力。",
+    chain: [
+      {node:"集采/价格压力落地", note:"产品单价被压，毛利率收窄"},
+      {node:"销售费用难以同步压缩", note:"渠道维护成本刚性，费用率上升"},
+      {node:"扣非净利润走弱", note:"非经常性损益掩盖真实盈利能力"},
+      {node:"应收账款/渠道库存抬升", note:"医院回款慢，经销商压货"},
+      {node:"经营现金流恶化", note:"利润表还看得过去，但钱收不回来"},
+      {node:"财报质量信号触发", note:"扣非+现金流双弱，说明经营本质在恶化"}
+    ]
+  },
+  "机械设备": {
+    core: "机械设备行业的风险核心是订单质量，不是订单数量——下游资本开支收缩时，回款变慢比利润下滑更早出现，应收账款是最先预警的指标。",
+    chain: [
+      {node:"下游资本开支收缩", note:"制造业/基建/新能源投资放缓"},
+      {node:"新订单放缓/验收延期", note:"合同负债减少，收入确认推迟"},
+      {node:"应收账款快速堆积", note:"已交货但客户不付款，账期拉长"},
+      {node:"净利润同比下滑", note:"收入确认减少，固定成本摊薄能力下降"},
+      {node:"经营现金流转负", note:"利润和回款双双恶化"},
+      {node:"短债压力上升", note:"若有融资扩产，债务覆盖能力下降"}
+    ]
+  },
+  "基础化工": {
+    core: "化工行业是典型的周期行业，真正危险的不是利润差，而是高杠杆公司在景气下行时货币资金撑不住短债——一旦现金流转负叠加短债覆盖失衡，资金链风险就会暴露。",
+    chain: [
+      {node:"产品价格/需求下行", note:"大宗商品价格周期性回落"},
+      {node:"毛利率压缩", note:"原料成本刚性，售价下跌，利润空间收窄"},
+      {node:"库存跌价损失", note:"高价原料库存面临减值压力"},
+      {node:"经营现金流转负", note:"利润和现金流同步恶化"},
+      {node:"货币资金低于短期借款", note:"高杠杆公司资金缺口暴露"},
+      {node:"资金链风险", note:"景气弱时融资难度上升，债务滚续压力大"}
+    ]
+  },
+  "计算机": {
+    core: "计算机/软件行业最大的陷阱是"利润看着还行，但钱收不回来"——项目制公司应收账款是核心风险，现金流比利润表更能反映真实经营质量。",
+    chain: [
+      {node:"政府/企业IT预算收缩", note:"项目立项减少，招标周期拉长"},
+      {node:"项目延期/验收拖延", note:"收入确认推迟，合同负债消耗慢"},
+      {node:"应收账款快速堆积", note:"已完工但甲方不付款，账期拉长"},
+      {node:"经营现金流恶化", note:"利润表可能还有收入，但现金没进来"},
+      {node:"费用率上升", note:"人力成本刚性，收入下滑时费用率被动抬升"},
+      {node:"财务质量信号触发", note:"应收+现金流双弱，说明业务回款能力在恶化"}
+    ]
+  },
+  "建筑装饰": {
+    core: "建筑装饰行业的风险是地产链传导的结果——下游开发商资金紧张时，最先传导到施工方的是回款变慢，应收账款和现金流恶化比利润下滑早出现。",
+    chain: [
+      {node:"地产开发商资金紧张", note:"销售回款不足，开发商付款能力下降"},
+      {node:"工程款回收放缓", note:"应收账款快速堆积，账期从3个月拉到12个月以上"},
+      {node:"经营现金流转负", note:"已完工但收不到钱，现金流先于利润恶化"},
+      {node:"净利润下滑", note:"坏账计提增加，收入确认减少"},
+      {node:"短债覆盖压力上升", note:"若有融资，货币资金被应收占用，短债覆盖恶化"},
+      {node:"资金链风险", note:"中小建筑公司尤其脆弱，大客户集中度高的更危险"}
+    ]
+  },
+  "传媒": {
+    core: "传媒行业的风险在于广告预算和内容兑现的双重不确定性——广告主砍预算时，利润断崖式下滑，同时现金流也会同步恶化，两者几乎同时出现。",
+    chain: [
+      {node:"广告主预算收缩", note:"宏观经济走弱时，广告是最先被砍的预算"},
+      {node:"营收快速下滑", note:"广告收入弹性大，下行时跌幅远超预期"},
+      {node:"内容/项目投入难以快速收缩", note:"已签约内容制作成本刚性"},
+      {node:"净利润断崖式下滑", note:"收入跌、成本刚性，利润被双向压缩"},
+      {node:"经营现金流转负", note:"广告回款慢，内容制作垫资，现金流同步恶化"},
+      {node:"财报双杀信号", note:"利润+现金流同时恶化，是传媒行业最典型的爆雷形态"}
+    ]
+  },
+  "轻工制造": {
+    core: "轻工制造行业的风险核心是消费需求传导——终端需求转弱时，库存周转率下降是最先出现的信号，它意味着产品卖不动，后续利润和现金流会跟着恶化。",
+    chain: [
+      {node:"终端消费需求转弱", note:"居民消费意愿下降，可选消费品出货放缓"},
+      {node:"渠道去库存压力", note:"经销商库存高企，补货意愿下降，订单减少"},
+      {node:"存货周转率下降", note:"产品积压，库存占用资金增加，周转天数拉长"},
+      {node:"应收账款抬升", note:"为维持渠道关系给账期，回款变慢"},
+      {node:"净利润下滑", note:"收入减少叠加库存跌价，利润被压缩"},
+      {node:"经营现金流恶化", note:"库存和应收双双占用资金，现金流走弱"}
+    ]
+  }
+};
+
 
 function mean(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
 function pct(v){ return (v*100).toFixed(1) + "%"; }
@@ -369,7 +462,11 @@ function renderIndustrySection(){
   const meta = ind.rule || {};
   document.getElementById("industryNameTag").textContent = ind.name;
   document.getElementById("industryPrimaryTag").textContent = "主导风险：" + FACTOR_LABELS[ind.primary];
-  document.getElementById("industryLogic").textContent = meta.logic || '该行业逻辑待补充';
+  document.getElementById("industryLogic").textContent = (INDUSTRY_CHAIN[ind.name]||{}).core || meta.logic || '该行业逻辑待补充';
+  const chain = (INDUSTRY_CHAIN[ind.name]||{}).chain || [];
+  document.getElementById("industryChain").innerHTML = chain.map((c,i) =>
+    `${i>0?'<span class="chain-arrow">→</span>':''}<div class="chain-node"><div class="n">${c.node}</div><div class="d">${c.note}</div></div>`
+  ).join('');
   const focusText = (meta.focus_metrics || []).filter(Boolean).join('、');
   document.getElementById("industrySummary").textContent = `${ind.name}当前平均风险分数为 ${score(ind.avgRisk)}，高风险股票 ${ind.highRiskCount} 只，剔除项 ${ind.excludeCount} 只。这个行业当前最需要盯的是${FACTOR_LABELS[ind.primary]}。${focusText ? '重点指标包括：' + focusText + '。' : ''}`;
   document.getElementById("industrySummaryGrid").innerHTML = [
