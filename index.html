@@ -393,6 +393,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-group-title">工具</div>
       <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')"><span class="icon">🔬</span> 择时研究</div>
       <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query.html','_blank')"><span class="icon">📊</span> 个股筹码查询</div>
+      <div class="nav-item" id="navFinancialRisk" style="display:none" onclick="window.open('financial_risk_factor.html','_blank')"><span class="icon">⚠️</span> 财报预期风险</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
@@ -2982,6 +2983,15 @@ function initCbCharts() {
         <div id="chipError" style="display:none;background:#7f1d1d;border:1px solid #991b1b;color:#fecaca;padding:16px;border-radius:12px;text-align:center;margin-bottom:20px"></div>
         <div id="chipResult" style="display:none"></div>
       </div>
+      <div style="max-width:1000px;margin:24px auto 0">
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;border:1px solid rgba(255,127,134,.25);background:rgba(127,29,29,.12)" onclick="window.open('financial_risk_factor.html','_blank')">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#ffd5d8;margin-bottom:6px">⚠️ 财报预期风险看板</div>
+            <div style="font-size:13px;color:#9ca3af;line-height:1.7">行业财报风险因子地图 · 8个行业 · 257只剔除项 · 季度频率<br>不是垃圾股榜单，而是行业风险如何被定义的因子化解释</div>
+          </div>
+          <div style="font-size:22px;color:#ff7f86;flex-shrink:0">→</div>
+        </div>
+      </div>
     </div><!-- /page-chip-query -->
 
 <script>
@@ -3619,6 +3629,8 @@ function initCbCharts() {
     // 所有登录用户：显示个股筹码查询
     var cq=document.getElementById('navChipQuery');
     if(cq) cq.style.display='';
+    var fr=document.getElementById('navFinancialRisk');
+    if(fr) fr.style.display='';
     // 检查是否有正在运行的刷新任务
     if(typeof STATUS_API!=='undefined'&&STATUS_API){
       fetch(STATUS_API,{headers:(typeof getAuthHeaders==='function'?getAuthHeaders():{})}).then(function(r){return r.json()}).then(function(s){

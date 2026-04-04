@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>财报风险因子地图 | GAMT</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,"SF Pro Display","PingFang SC",sans-serif;
+  background:radial-gradient(circle at top left,rgba(59,130,246,.12),transparent 28%),linear-gradient(180deg,#07101f 0%,#081427 45%,#060c16 100%);
+  color:#d7e0ea;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+.wrapper{max-width:1580px;margin:0 auto;padding:24px}
+.back-btn{
+  position:fixed;top:20px;left:20px;z-index:20;
+  background:rgba(10,20,39,.9);border:1px solid #22314d;color:#7dc3ff;
+  padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;backdrop-filter:blur(12px)
+}
+.header{padding:28px 0 18px}
+.kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:#0e1d35;border:1px solid #22314d;color:#7dc3ff;font-size:12px;margin-bottom:14px}
+.header h1{font-size:40px;font-weight:800;letter-spacing:.5px;background:linear-gradient(135deg,#5ce1c2,#6db8ff,#8b7dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{margin-top:10px;color:#8ea2bd;font-size:14px;line-height:1.8}
+.header .sub span{display:inline-block;margin-right:8px;margin-top:6px;padding:6px 10px;border-radius:999px;background:#0c1a32;border:1px solid #1f2d47;font-size:12px}
+.layout{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-bottom:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{
+  background:rgba(10,20,39,.82);border:1px solid #1f2d47;border-radius:22px;
+  padding:22px;box-shadow:0 18px 46px rgba(0,0,0,.24)
+}
+.card h2{font-size:18px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #1f2d47;color:#eef5ff}
+.hero{background:linear-gradient(135deg,rgba(10,20,39,.95),rgba(8,26,48,.86));border-color:rgba(93,174,255,.2)}
+.metric{background:#0c1830;border:1px solid #22314d;border-radius:18px;padding:18px}
+.metric .label{font-size:12px;color:#8ea2bd;letter-spacing:.3px}
+.metric .value{font-size:34px;font-weight:800;margin-top:8px}
+.metric .sub{font-size:12px;color:#92a6c0;margin-top:8px;line-height:1.6}
+.blue{color:#67b7ff}.green{color:#5ce1c2}.amber{color:#f7c95c}.purple{color:#a08bff}.red{color:#ff7f86}
+.note{color:#9cb0ca;font-size:14px;line-height:1.9}
+.chart{width:100%;height:430px}
+.chart-sm{width:100%;height:320px}
+.chart-xs{width:100%;height:240px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
+.industry-shell{display:grid;grid-template-columns:240px 1fr;gap:18px}
+.industry-list{display:flex;flex-direction:column;gap:10px}
+.industry-btn{
+  text-align:left;padding:14px 16px;border-radius:16px;background:#0c1830;border:1px solid #22314d;color:#d7e0ea;cursor:pointer;transition:.18s
+}
+.industry-btn.active,.industry-btn:hover{border-color:#58aef7;background:linear-gradient(135deg,#11284d,#0f1f3b)}
+.industry-btn .name{font-weight:700}
+.industry-btn .meta{font-size:12px;color:#8ea2bd;margin-top:5px}
+.industry-head{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-bottom:18px}
+.logic-box,.summary-box{background:#0c1830;border:1px solid #22314d;border-radius:18px;padding:18px}
+.logic-box p,.summary-box p{font-size:14px;color:#a4b7d1;line-height:1.85}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.mini{background:#0d1b34;border:1px solid #1e3150;border-radius:14px;padding:14px}
+.mini .k{font-size:11px;color:#89a0bc}.mini .v{font-size:22px;font-weight:800;margin-top:8px}
+.stock-shell{display:grid;grid-template-columns:1fr 360px;gap:18px}
+.table-wrap{max-height:620px;overflow:auto;border:1px solid #1f2d47;border-radius:16px}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th{position:sticky;top:0;background:#11213d;color:#8ea2bd;padding:12px 10px;text-align:right;z-index:1}
+.table th:first-child,.table td:first-child,.table th:nth-child(2),.table td:nth-child(2),.table th:nth-child(3),.table td:nth-child(3){text-align:left}
+.table td{padding:10px;border-bottom:1px solid #1a2942;text-align:right;color:#d7e0ea}
+.table tr{cursor:pointer;transition:.15s}
+.table tr:hover{background:#0d1d36}
+.table tr.active{background:rgba(57,124,246,.14)}
+.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.badge-red{background:rgba(239,68,68,.14);color:#ff8b94;border:1px solid rgba(239,68,68,.22)}
+.badge-green{background:rgba(16,185,129,.12);color:#65e0be;border:1px solid rgba(16,185,129,.2)}
+.badge-blue{background:rgba(59,130,246,.12);color:#7dc3ff;border:1px solid rgba(59,130,246,.18)}
+.detail-card{background:#0b1830;border:1px solid #22314d;border-radius:18px;padding:18px;position:sticky;top:24px}
+.detail-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.detail-name{font-size:24px;font-weight:800}
+.detail-meta{font-size:12px;color:#8ea2bd;margin-top:5px;line-height:1.7}
+.explain{margin-top:14px;padding:14px 16px;border-radius:14px;background:#0d1a30;border:1px solid #1f2d47;color:#a7bad3;font-size:14px;line-height:1.85}
+.filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.filter-bar input,.filter-bar select{
+  background:#0c1830;border:1px solid #22314d;color:#d7e0ea;border-radius:12px;padding:10px 12px;font-size:13px
+}
+.footer{padding:26px 0 10px;text-align:center;color:#6f86a4;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+@media (max-width:1200px){
+  .layout,.grid-4,.grid-2,.industry-head,.stock-shell{grid-template-columns:1fr}
+  .industry-shell{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<a class="back-btn" href="./index.html">← 返回择时研究</a>
+<div class="wrapper">
+  <div class="header">
+    <div class="kicker">GAMT · 财报风险因子原型</div>
+    <h1>行业财报风险因子地图</h1>
+    <div class="sub">
+      <span>不是垃圾股榜单</span>
+      <span>行业是主视角</span>
+      <span>完整 A 股映射</span>
+      <span>个股只是解释样本</span>
+      <span>季度频率</span>
+    </div>
+  </div>
+
+  <div class="card hero" style="margin-bottom:20px">
+    <div class="section-title">
+      <h2 style="margin:0;padding:0;border:none">这页的定位</h2>
+      <div class="tag">PM 可读</div>
+    </div>
+    <div class="note">
+      这页不回答"最差的几只票是谁"，而是回答"每个行业该盯哪些财务风险、这些风险现在到了什么位置、单票为什么会被打成剔除项"。
+      正式数据接入后，完整表会覆盖全部 A 股；当前原型先用示例数据把结构和交互跑通。
+    </div>
+  </div>
+
+  <div class="grid-4" id="overviewCards"></div>
+
+  <div class="layout" style="margin-top:20px">
+    <div class="card">
+      <div class="section-title">
+        <h2 style="margin:0;padding:0;border:none">第一层：行业风险地图</h2>
+        <div class="tag" id="asOfTag"></div>
+      </div>
+      <div id="industryHeatmap" class="chart"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">
+        <h2 style="margin:0;padding:0;border:none">行业主导矛盾</h2>
+        <div class="tag">主视角</div>
+      </div>
+      <div id="industryRank" class="chart"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-title">
+      <h2 style="margin:0;padding:0;border:none">第二层：行业因子拆解</h2>
+      <div class="tag">讲清行业为什么看这些指标</div>
+    </div>
+    <div class="industry-shell">
+      <div class="industry-list" id="industryList"></div>
+      <div>
+        <div class="industry-head">
+          <div class="logic-box">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业逻辑</h2><div class="tag" id="industryNameTag"></div></div>
+            <p id="industryLogic"></p>
+          </div>
+          <div class="summary-box">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业摘要</h2><div class="tag" id="industryPrimaryTag"></div></div>
+            <p id="industrySummary"></p>
+            <div class="summary-grid" id="industrySummaryGrid"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card" style="margin-bottom:0;padding:18px">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业因子画像</h2><div class="tag">均值</div></div>
+            <div id="industryFactorBar" class="chart-sm"></div>
+          </div>
+          <div class="card" style="margin-bottom:0;padding:18px">
+            <div class="section-title"><h2 style="margin:0;padding:0;border:none;font-size:16px">行业内风险分布</h2><div class="tag">完整分层</div></div>
+            <div id="industryDistribution" class="chart-sm"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h2 style="margin:0;padding:0;border:none">第三层：个股解释器 + 完整明细表</h2>
+      <div class="tag">全市场映射</div>
+    </div>
+    <div class="filter-bar">
+      <input id="keywordInput" placeholder="搜索代码 / 名称 / 行业">
+      <select id="industryFilter"></select>
+      <select id="excludeFilter">
+        <option value="all">全部股票</option>
+        <option value="1">仅剔除项</option>
+        <option value="0">仅非剔除项</option>
+      </select>
+      <select id="sortFilter">
+        <option value="landmine_score">按总分排序</option>
+        <option value="profit_score">按利润恶化排序</option>
+        <option value="cashflow_score">按现金流排序</option>
+        <option value="debt_score">按短债压力排序</option>
+        <option value="working_capital_score">按营运资本排序</option>
+      </select>
+    </div>
+    <div class="stock-shell">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>代码</th>
+              <th>名称</th>
+              <th>一级行业</th>
+              <th>总分</th>
+              <th>利润</th>
+              <th>现金流</th>
+              <th>短债</th>
+              <th>营运资本</th>
+              <th>行业分位</th>
+              <th>剔除</th>
+            </tr>
+          </thead>
+          <tbody id="stockTableBody"></tbody>
+        </table>
+      </div>
+      <div class="detail-card">
+        <div class="detail-top">
+          <div>
+            <div class="detail-name" id="detailName">-</div>
+            <div class="detail-meta" id="detailMeta"></div>
+          </div>
+          <div id="detailFlag"></div>
+        </div>
+        <div id="detailRadar" class="chart-xs"></div>
+        <div id="detailTrend" class="chart-sm"></div>
+        <div class="explain" id="detailExplain"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">financial risk factor map · gamt prototype</div>
+</div>
+<script>
+const FALLBACK_DATA = {
+  as_of: "2026Q1 原型示例",
+  industries: [],
+  stocks: []
+};
+let DATA = FALLBACK_DATA;
+
+const FACTOR_NAMES = ["profit_score","cashflow_score","debt_score","working_capital_score"];
+const FACTOR_LABELS = {
+  profit_score:"利润恶化",
+  cashflow_score:"现金流恶化",
+  debt_score:"短债压力",
+  working_capital_score:"营运资本恶化"
+};
+
+const state = { industry: null, stockCode: null };
+const charts = {};
+let INDUSTRIES = [];
+
+function mean(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
+function pct(v){ return (v*100).toFixed(1) + "%"; }
+function score(v){ return v.toFixed(2); }
+function riskLabel(v){ if(v>=0.8) return "极高"; if(v>=0.65) return "高"; if(v>=0.45) return "中"; return "低"; }
+function badge(v){ return v ? '<span class="badge badge-red">剔除项</span>' : '<span class="badge badge-green">观察</span>'; }
+
+function buildIndustryStats(){
+  if (Array.isArray(DATA.industries) && DATA.industries.length) {
+    const stockMap = {};
+    DATA.stocks.forEach(s => {
+      if(!stockMap[s.industry1]) stockMap[s.industry1] = [];
+      stockMap[s.industry1].push(s);
+    });
+    return DATA.industries.map(ind => ({
+      name: ind.name,
+      stocks: stockMap[ind.name] || [],
+      count: ind.count,
+      highRiskCount: ind.high_risk_count,
+      excludeCount: ind.exclude_count,
+      avgRisk: ind.avg_risk,
+      factorMeans: ind.factor_means,
+      primary: ind.primary_factor,
+      rule: ind.rule || {},
+      secondaryExample: ind.secondary_example || ''
+    })).sort((a,b) => b.avgRisk - a.avgRisk);
+  }
+  const grouped = {};
+  DATA.stocks.forEach(s => {
+    if(!grouped[s.industry1]) grouped[s.industry1] = [];
+    grouped[s.industry1].push(s);
+  });
+  return Object.entries(grouped).map(([name,stocks]) => {
+    const factorMeans = {};
+    FACTOR_NAMES.forEach(k => factorMeans[k] = mean(stocks.map(s => s[k])));
+    const primary = FACTOR_NAMES.slice().sort((a,b) => factorMeans[b]-factorMeans[a])[0];
+    return {
+      name,
+      stocks,
+      count: stocks.length,
+      highRiskCount: stocks.filter(s => s.landmine_score >= 0.7).length,
+      excludeCount: stocks.filter(s => s.exclude_flag).length,
+      avgRisk: mean(stocks.map(s => s.landmine_score)),
+      factorMeans,
+      primary,
+      rule: {},
+      secondaryExample: ''
+    };
+  }).sort((a,b) => b.avgRisk - a.avgRisk);
+}
+
+function renderOverview(){
+  const total = DATA.stocks.length;
+  const excludeCount = DATA.stocks.filter(s => s.exclude_flag).length;
+  const avg = mean(DATA.stocks.map(s => s.landmine_score));
+  const high = DATA.stocks.filter(s => s.landmine_score >= 0.7).length;
+  const cards = [
+    {label:"覆盖股票数",value:total,cls:"blue",sub:"完整表应该覆盖全部 A 股；当前是原型示例数据"},
+    {label:"剔除项数量",value:excludeCount,cls:"red",sub:"按行业框架与子因子共同判定，不是单一利润差"},
+    {label:"平均风险分数",value:score(avg),cls:"amber",sub:"看行业均值和分布，不只看极值股票"},
+    {label:"高风险占比",value:pct(high/total),cls:"purple",sub:"高风险定义可按阈值或行业内分位后续配置"}
+  ];
+  document.getElementById("overviewCards").innerHTML = cards.map(c => `
+    <div class="metric">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls}">${c.value}</div>
+      <div class="sub">${c.sub}</div>
+    </div>
+  `).join("");
+  document.getElementById("asOfTag").textContent = DATA.as_of;
+}
+
+function renderHeatmap(){
+  const heatData = [];
+  INDUSTRIES.forEach((ind, i) => {
+    FACTOR_NAMES.forEach((k, j) => heatData.push([i,j,Number(ind.factorMeans[k].toFixed(2))]));
+  });
+  charts.heatmap = echarts.init(document.getElementById("industryHeatmap"));
+  charts.heatmap.setOption({
+    tooltip:{formatter:p=>`${INDUSTRIES[p.value[0]].name}<br>${FACTOR_LABELS[FACTOR_NAMES[p.value[1]]]}: ${p.value[2]}`},
+    grid:{left:70,right:20,top:20,bottom:70},
+    xAxis:{type:"category",data:INDUSTRIES.map(i=>i.name),axisLabel:{color:"#9db0c8"},axisLine:{lineStyle:{color:"#31435f"}}},
+    yAxis:{type:"category",data:FACTOR_NAMES.map(k=>FACTOR_LABELS[k]),axisLabel:{color:"#9db0c8"},axisLine:{lineStyle:{color:"#31435f"}}},
+    visualMap:{min:0,max:1,calculable:false,orient:"horizontal",left:"center",bottom:10,textStyle:{color:"#9db0c8"},inRange:{color:["#123554","#1e6fae","#36b7c8","#f5b75b","#ff6f7a"]}},
+    series:[{type:"heatmap",data:heatData,label:{show:true,color:"#eef5ff",formatter:p=>p.value[2]},itemStyle:{borderColor:"rgba(255,255,255,.08)",borderWidth:1}}]
+  });
+}
+
+function renderIndustryRank(){
+  charts.rank = echarts.init(document.getElementById("industryRank"));
+  charts.rank.setOption({
+    tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+    grid:{left:80,right:20,top:20,bottom:30},
+    xAxis:{type:"value",max:1,axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
+    yAxis:{type:"category",data:INDUSTRIES.map(i=>i.name),axisLabel:{color:"#d7e0ea"}},
+    series:[
+      {type:"bar",data:INDUSTRIES.map(i=>Number(i.avgRisk.toFixed(2))),barWidth:18,itemStyle:{color:"#5d9cff",borderRadius:[0,8,8,0]}},
+      {type:"scatter",data:INDUSTRIES.map(i=>[i.avgRisk,i.name]),symbolSize:16,itemStyle:{color:"#5ce1c2"},label:{show:true,position:"right",color:"#9cb0ca",formatter:p=>FACTOR_LABELS[INDUSTRIES.find(x=>x.name===p.value[1]).primary]}}
+    ]
+  });
+}
+
+function renderIndustryList(){
+  document.getElementById("industryList").innerHTML = INDUSTRIES.map(ind => `
+    <button class="industry-btn ${ind.name===state.industry?"active":""}" data-industry="${ind.name}">
+      <div class="name">${ind.name}</div>
+      <div class="meta">均值 ${score(ind.avgRisk)} · 剔除 ${ind.excludeCount} · 主因 ${FACTOR_LABELS[ind.primary]}</div>
+    </button>
+  `).join("");
+  document.querySelectorAll(".industry-btn").forEach(btn => btn.onclick = () => {
+    state.industry = btn.dataset.industry;
+    renderIndustrySection();
+    renderTable();
+  });
+}
+
+function currentIndustry(){
+  return INDUSTRIES.find(i => i.name === state.industry);
+}
+
+function renderIndustrySection(){
+  const ind = currentIndustry();
+  const meta = ind.rule || {};
+  document.getElementById("industryNameTag").textContent = ind.name;
+  document.getElementById("industryPrimaryTag").textContent = "主导风险：" + FACTOR_LABELS[ind.primary];
+  document.getElementById("industryLogic").textContent = meta.logic || '该行业逻辑待补充';
+  const focusText = (meta.focus_metrics || []).filter(Boolean).join('、');
+  document.getElementById("industrySummary").textContent = `${ind.name}当前平均风险分数为 ${score(ind.avgRisk)}，高风险股票 ${ind.highRiskCount} 只，剔除项 ${ind.excludeCount} 只。这个行业当前最需要盯的是${FACTOR_LABELS[ind.primary]}。${focusText ? '重点指标包括：' + focusText + '。' : ''}`;
+  document.getElementById("industrySummaryGrid").innerHTML = [
+    {k:"行业平均风险",v:score(ind.avgRisk),cls:"amber"},
+    {k:"高风险股票数",v:ind.highRiskCount,cls:"red"},
+    {k:"剔除项数量",v:ind.excludeCount,cls:"blue"},
+    {k:"主导因子",v:FACTOR_LABELS[ind.primary],cls:"green"}
+  ].map(x => `<div class="mini"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div></div>`).join("");
+
+  if(charts.factorBar) charts.factorBar.dispose();
+  charts.factorBar = echarts.init(document.getElementById("industryFactorBar"));
+  charts.factorBar.setOption({
+    tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+    xAxis:{type:"category",data:FACTOR_NAMES.map(k=>FACTOR_LABELS[k]),axisLabel:{color:"#9db0c8",interval:0},axisLine:{lineStyle:{color:"#31435f"}}},
+    yAxis:{type:"value",max:1,axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
+    series:[{type:"bar",data:FACTOR_NAMES.map(k=>Number(ind.factorMeans[k].toFixed(2))),barWidth:28,itemStyle:{color:(p)=>["#67b7ff","#5ce1c2","#f7c95c","#a08bff"][p.dataIndex],borderRadius:[8,8,0,0]}}]
+  });
+
+  const bins = [0,0,0,0];
+  ind.stocks.forEach(s => {
+    if(s.landmine_score >= 0.8) bins[3]++;
+    else if(s.landmine_score >= 0.65) bins[2]++;
+    else if(s.landmine_score >= 0.45) bins[1]++;
+    else bins[0]++;
+  });
+  if(charts.distribution) charts.distribution.dispose();
+  charts.distribution = echarts.init(document.getElementById("industryDistribution"));
+  charts.distribution.setOption({
+    tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+    xAxis:{type:"category",data:["低","中","高","极高"],axisLabel:{color:"#9db0c8"}},
+    yAxis:{type:"value",axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
+    series:[{type:"bar",data:bins,barWidth:36,itemStyle:{color:(p)=>["#3b82f6","#5ce1c2","#f7c95c","#ff7f86"][p.dataIndex],borderRadius:[8,8,0,0]},label:{show:true,position:"top",color:"#d7e0ea"}}]
+  });
+
+  document.querySelectorAll(".industry-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.industry === state.industry));
+}
+
+function filteredStocks(){
+  const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
+  const industry = document.getElementById("industryFilter").value;
+  const exclude = document.getElementById("excludeFilter").value;
+  const sortKey = document.getElementById("sortFilter").value;
+  return DATA.stocks.filter(s => {
+    const matchKeyword = !keyword || [s.ts_code,s.name,s.industry1,s.industry2].join(" ").toLowerCase().includes(keyword);
+    const matchIndustry = industry === "all" || s.industry1 === industry;
+    const matchExclude = exclude === "all" || String(s.exclude_flag) === exclude;
+    return matchKeyword && matchIndustry && matchExclude;
+  }).sort((a,b) => b[sortKey] - a[sortKey]);
+}
+
+function renderTable(){
+  const rows = filteredStocks();
+  if(!rows.find(r => r.ts_code === state.stockCode) && rows[0]) state.stockCode = rows[0].ts_code;
+  document.getElementById("stockTableBody").innerHTML = rows.map(s => `
+    <tr class="${s.ts_code===state.stockCode?"active":""}" data-code="${s.ts_code}">
+      <td>${s.ts_code.replace('.SZ','').replace('.SH','')}</td>
+      <td>${s.name}</td>
+      <td>${s.industry1}</td>
+      <td>${score(s.landmine_score)}</td>
+      <td>${score(s.profit_score)}</td>
+      <td>${score(s.cashflow_score)}</td>
+      <td>${score(s.debt_score)}</td>
+      <td>${score(s.working_capital_score)}</td>
+      <td>${pct(s.industry_percentile)}</td>
+      <td>${badge(s.exclude_flag)}</td>
+    </tr>
+  `).join("");
+  document.querySelectorAll("#stockTableBody tr").forEach(tr => tr.onclick = () => {
+    state.stockCode = tr.dataset.code;
+    renderTable();
+    renderDetail();
+  });
+  renderDetail();
+}
+
+function explainStock(s){
+  const ind = INDUSTRIES.find(x => x.name === s.industry1);
+  const focus = (ind?.rule?.focus_metrics || []).filter(Boolean);
+  const worst = FACTOR_NAMES.slice().sort((a,b)=>s[b]-s[a]).slice(0,2).map(k=>FACTOR_LABELS[k]);
+  const historyText = (s.history || []).map(h => `${h.label}：${h.text}`).join('；');
+  return `${s.name}属于${s.industry1}-${s.industry2}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${historyText ? '四截面表现：' + historyText + '。' : ''}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
+}
+
+function renderDetail(){
+  const s = DATA.stocks.find(x => x.ts_code === state.stockCode) || DATA.stocks[0];
+  document.getElementById("detailName").textContent = s.name;
+  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
+  document.getElementById("detailFlag").innerHTML = badge(s.exclude_flag);
+  document.getElementById("detailExplain").textContent = explainStock(s);
+
+  if(charts.radar) charts.radar.dispose();
+  charts.radar = echarts.init(document.getElementById("detailRadar"));
+  charts.radar.setOption({
+    radar:{indicator:FACTOR_NAMES.map(k=>({name:FACTOR_LABELS[k],max:1})),axisName:{color:"#a9bdd5"},splitArea:{areaStyle:{color:["rgba(14,29,53,.25)","rgba(14,29,53,.4)"]}},splitLine:{lineStyle:{color:"#22314d"}},axisLine:{lineStyle:{color:"#22314d"}}},
+    series:[{type:"radar",data:[{value:FACTOR_NAMES.map(k=>s[k]),name:s.name,areaStyle:{color:"rgba(93,174,255,.28)"},lineStyle:{color:"#67b7ff"},itemStyle:{color:"#5ce1c2"}}]}]
+  });
+
+  if(charts.trend) charts.trend.dispose();
+  charts.trend = echarts.init(document.getElementById("detailTrend"));
+  const h = s.history || [];
+  charts.trend.setOption({
+    tooltip:{trigger:"axis"},
+    grid:{left:45,right:20,top:20,bottom:80},
+    xAxis:{type:"category",data:h.map(x=>x.label),axisLabel:{color:"#9db0c8"}},
+    yAxis:{type:"category",data:[s.name],axisLabel:{color:"#9db0c8"}},
+    visualMap:{min:0,max:3,show:false,inRange:{color:['#123554','#2b6da8','#f0b35a','#ff7f86']}},
+    series:[{type:'heatmap',data:h.map((x,i)=>[i,0, x.text && x.text.includes('待补充') ? 0 : 3]),label:{show:true,color:'#eaf2ff',formatter:p=>h[p.data[0]].text || '-'},itemStyle:{borderColor:'rgba(255,255,255,.08)',borderWidth:1}}]
+  });
+}
+
+function initFilters(){
+  document.getElementById("industryFilter").innerHTML = ['<option value="all">全部行业</option>'].concat(INDUSTRIES.map(i=>`<option value="${i.name}">${i.name}</option>`)).join("");
+  ["keywordInput","industryFilter","excludeFilter","sortFilter"].forEach(id => {
+    document.getElementById(id).addEventListener("input", renderTable);
+    document.getElementById(id).addEventListener("change", renderTable);
+  });
+  document.getElementById("industryFilter").value = state.industry;
+}
+
+async function boot(){
+  try {
+    const res = await fetch('./data/financial_risk_factor.json?_=' + Date.now());
+    if (res.ok) DATA = await res.json();
+  } catch (e) {
+    console.warn('load json failed, fallback to demo', e);
+  }
+  INDUSTRIES = buildIndustryStats();
+  if (!INDUSTRIES.length || !DATA.stocks.length) {
+    document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;right:16px;bottom:16px;background:#3b0d14;color:#ffd5d8;padding:10px 14px;border:1px solid #7f1d1d;border-radius:12px;z-index:99">未加载到真实数据，请先运行 build_financial_risk_json.py</div>');
+    return;
+  }
+  state.industry = INDUSTRIES[0].name;
+  state.stockCode = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score)[0].ts_code;
+  renderOverview();
+  renderHeatmap();
+  renderIndustryRank();
+  renderIndustryList();
+  renderIndustrySection();
+  initFilters();
+  renderTable();
+  window.addEventListener('resize', () => Object.values(charts).forEach(c => c && c.resize && c.resize()));
+}
+boot();
+</script>
+</body>
+</html>
