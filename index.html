@@ -321,6 +321,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <input type="password" id="regPass" placeholder="至少 6 位" autocomplete="new-password">
       <label>确认密码</label>
       <input type="password" id="regPass2" placeholder="请再输入一次密码">
+      <div id="inviteFieldWrap" style="display:none">
+        <label>邀请码 <span style="color:#94a3b8;font-weight:400">（当前可选/后续可切必填）</span></label>
+        <input type="text" id="regInviteCode" placeholder="输入邀请码（可空）" style="text-transform:uppercase">
+      </div>
       <button class="btn btn-primary" onclick="doRegister()">注册账号 →</button>
     </div>
     <div class="produced-by">
@@ -3541,11 +3545,13 @@ function initCbCharts() {
     var n=document.getElementById('regName').value;
     var p=document.getElementById('regPass').value;
     var p2=document.getElementById('regPass2').value;
+    var inviteCodeEl=document.getElementById('regInviteCode');
+    var inviteCode=inviteCodeEl?inviteCodeEl.value.trim().toUpperCase():'';
     if(!u||!p){document.getElementById('authErr').textContent='请填写用户名和密码';return;}
     if(!n||!n.trim()){document.getElementById('authErr').textContent='请填写姓名';return;}
     if(p!==p2){document.getElementById('authErr').textContent='两次密码不一致';return;}
     document.getElementById('authErr').textContent='注册中...';
-    apiCall('POST','/api/auth/register',{username:u,password:p,display_name:n}).then(function(d){
+    apiCall('POST','/api/auth/register',{username:u,password:p,display_name:n,invite_code:inviteCode}).then(function(d){
       if(d.ok){
         document.getElementById('authErr').style.color='#10b981';
         document.getElementById('authErr').textContent='注册成功！正在登录...';
@@ -3647,6 +3653,25 @@ function initCbCharts() {
     location.reload();
   };
 
+  function loadAuthSettings(){
+    if(!AUTH_API && AUTH_API!== '') return;
+    apiCall('GET','/api/auth/settings').then(function(d){
+      var wrap=document.getElementById('inviteFieldWrap');
+      var input=document.getElementById('regInviteCode');
+      if(!wrap||!input) return;
+      if(d.invite_mode==='required'){
+        wrap.style.display='block';
+        input.placeholder='当前必填：请输入邀请码';
+      }else if(d.invite_mode==='optional'){
+        wrap.style.display='block';
+        input.placeholder='邀请码（可选）';
+      }else{
+        wrap.style.display='none';
+        input.value='';
+      }
+    }).catch(function(){});
+  }
+
   // 启动：检查是否已登录
   discoverAPI(function(){
     if(AUTH_API===null){
@@ -3661,6 +3686,7 @@ function initCbCharts() {
       if(sideInfo) sideInfo.innerHTML='只读模式<br><span style="opacity:.5;font-size:11px">数据为最近快照</span>';
       return;
     }
+    loadAuthSettings();
     // 检查已有 token
     var token=localStorage.getItem('gamt_token');
     if(token){

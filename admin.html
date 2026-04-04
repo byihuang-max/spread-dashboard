@@ -46,6 +46,7 @@ tr:hover td{background:#fafbfc}
 
   <div class="tabs">
     <div class="tab active" onclick="switchTab('users')">👤 用户列表</div>
+    <div class="tab" onclick="switchTab('invites')">🎟️ 邀请码</div>
     <div class="tab" onclick="switchTab('logs')">📋 登录日志</div>
   </div>
 
@@ -53,6 +54,43 @@ tr:hover td{background:#fafbfc}
     <div class="card"><table><thead><tr>
       <th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>等级</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th>
     </tr></thead><tbody id="usersBody"></tbody></table></div>
+  </div>
+
+  <div class="tab-content" id="tab-invites">
+    <div class="card">
+      <h2>🎟️ 邀请码系统</h2>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+        <label style="font-size:12px;color:#64748b">注册模式</label>
+        <select id="inviteMode" onchange="saveInviteMode()" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:#fff">
+          <option value="open">open：完全开放注册</option>
+          <option value="optional">optional：开放注册，但支持邀请码</option>
+          <option value="required">required：必须邀请码注册</option>
+        </select>
+        <span style="font-size:12px;color:#94a3b8">你现在可以先保持 open，后面随时切到 required。</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;border:1px dashed #dbe2ea;border-radius:10px;background:#fafbfc">
+        <div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:6px">备注</div>
+          <input id="inviteNote" placeholder="比如：4月路演客户 / 老朋友渠道" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:220px">
+        </div>
+        <div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:6px">可用次数</div>
+          <input id="inviteMaxUses" type="number" min="1" value="1" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100px">
+        </div>
+        <div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:6px">过期时间（可空）</div>
+          <input id="inviteExpiresAt" placeholder="2026-04-30 23:59:59" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:180px">
+        </div>
+        <div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:6px">自定义邀请码（可空）</div>
+          <input id="inviteCode" placeholder="留空自动生成" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:180px;text-transform:uppercase">
+        </div>
+        <button class="btn" style="background:#2563eb;color:#fff;border-color:#2563eb;height:38px" onclick="createInvite()">生成邀请码</button>
+      </div>
+      <table><thead><tr>
+        <th>ID</th><th>邀请码</th><th>备注</th><th>使用情况</th><th>过期时间</th><th>状态</th><th>创建时间</th><th>操作</th>
+      </tr></thead><tbody id="invitesBody"></tbody></table>
+    </div>
   </div>
 
   <div class="tab-content" id="tab-logs">
@@ -94,7 +132,10 @@ function apiCall(method,path,body){
 }
 
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach(function(t,i){t.className=t.textContent.includes(name==='users'?'用户':'日志')?'tab active':'tab'});
+  document.querySelectorAll('.tab').forEach(function(t){
+    var active=(name==='users' && t.textContent.includes('用户')) || (name==='invites' && t.textContent.includes('邀请码')) || (name==='logs' && t.textContent.includes('日志'));
+    t.className=active?'tab active':'tab';
+  });
   document.querySelectorAll('.tab-content').forEach(function(c){c.className=c.id==='tab-'+name?'tab-content active':'tab-content'});
 }
 
@@ -148,6 +189,80 @@ function loadLogs(){
   });
 }
 
+function loadInvites(){
+  apiCall('GET','/api/admin/invites').then(function(d){
+    var invites=d.invites||[];
+    document.getElementById('inviteMode').value=d.invite_mode||'open';
+    var html='';
+    invites.forEach(function(v){
+      var status=v.status==='active'?'<span class="tag tag-green">启用中</span>':'<span class="tag tag-red">已停用</span>';
+      var useInfo=(v.used_count||0)+' / '+(v.max_uses||1);
+      var toggleBtn=v.status==='active'
+        ?'<button class="btn btn-danger" onclick="toggleInvite('+v.id+',\'disabled\')">停用</button>'
+        :'<button class="btn" onclick="toggleInvite('+v.id+',\'active\')">启用</button>';
+      html+='<tr>'+ 
+        '<td>'+v.id+'</td>'+
+        '<td><code style="font-size:12px;background:#f8fafc;padding:3px 6px;border-radius:6px">'+v.code+'</code></td>'+
+        '<td>'+(v.note||'-')+'</td>'+
+        '<td>'+useInfo+'</td>'+
+        '<td>'+(v.expires_at||'不过期')+'</td>'+
+        '<td>'+status+'</td>'+
+        '<td>'+(v.created_at||'-')+'</td>'+
+        '<td><button class="btn" onclick="copyInvite(\''+v.code+'\')">复制</button> '+toggleBtn+' <button class="btn btn-danger" onclick="deleteInvite('+v.id+',\''+v.code+'\')">删除</button></td>'+
+      '</tr>';
+    });
+    document.getElementById('invitesBody').innerHTML=html||'<tr><td colspan="8" class="empty">还没有邀请码</td></tr>';
+  });
+}
+
+function saveInviteMode(){
+  var mode=document.getElementById('inviteMode').value;
+  apiCall('POST','/api/admin/invite-mode',{mode:mode}).then(function(d){
+    if(d.error){alert(d.error);return;}
+  });
+}
+
+function createInvite(){
+  var note=document.getElementById('inviteNote').value;
+  var maxUses=parseInt(document.getElementById('inviteMaxUses').value||'1',10);
+  var expiresAt=document.getElementById('inviteExpiresAt').value.trim();
+  var code=document.getElementById('inviteCode').value.trim();
+  apiCall('POST','/api/admin/create-invite',{
+    note:note,
+    max_uses:maxUses,
+    expires_at:expiresAt||null,
+    code:code||''
+  }).then(function(d){
+    if(d.error){alert(d.error);return;}
+    document.getElementById('inviteNote').value='';
+    document.getElementById('inviteMaxUses').value='1';
+    document.getElementById('inviteExpiresAt').value='';
+    document.getElementById('inviteCode').value='';
+    loadInvites();
+    if(d.invite&&d.invite.code){
+      copyInvite(d.invite.code, true);
+    }
+  });
+}
+
+function toggleInvite(id,status){
+  apiCall('POST','/api/admin/toggle-invite',{invite_id:id,status:status}).then(function(){loadInvites()});
+}
+
+function deleteInvite(id,code){
+  if(!confirm('确定删除邀请码 "'+code+'" ？'))return;
+  apiCall('POST','/api/admin/delete-invite',{invite_id:id}).then(function(){loadInvites()});
+}
+
+function copyInvite(code,silent){
+  navigator.clipboard.writeText(code).then(function(){
+    if(!silent)alert('已复制邀请码：'+code);
+    if(silent)alert('邀请码已生成并复制：'+code);
+  }).catch(function(){
+    prompt('复制这个邀请码：',code);
+  });
+}
+
 function toggleUser(id,status){
   apiCall('POST','/api/admin/toggle-user',{user_id:id,status:status}).then(function(){loadUsers()});
 }
@@ -184,6 +299,7 @@ discoverAPI(function(){
       return;
     }
     loadUsers();
+    loadInvites();
     loadLogs();
   }).catch(function(){
     location.href='index.html';
