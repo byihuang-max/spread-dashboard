@@ -160,16 +160,27 @@ function loadUsers(){
       var role=u.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-gray">用户</span>';
       var tierVal=u.tier||0;
       var tierTag=u.is_admin?'<span class="tag tag-blue">全部</span>':(tierVal>=1?'<span class="tag tag-green">高级</span>':'<span class="tag tag-gray">普通</span>');
-      var status=u.status==='active'?'<span class="tag tag-green">正常</span>':'<span class="tag tag-red">已禁用</span>';
+      var statusMap={
+        active:'<span class="tag tag-green">正常</span>',
+        disabled:'<span class="tag tag-red">已禁用</span>',
+        deleted:'<span class="tag tag-gray">已删除</span>'
+      };
+      var status=statusMap[u.status]||('<span class="tag tag-gray">'+(u.status||'未知')+'</span>');
       var actions='';
       if(!u.is_admin){
-        var toggleBtn=u.status==='active'
-          ?'<button class="btn btn-danger" onclick="toggleUser('+u.id+',\'disabled\')">禁用</button>'
-          :'<button class="btn" onclick="toggleUser('+u.id+',\'active\')">启用</button>';
+        var toggleBtn='';
+        if(u.status==='active'){
+          toggleBtn='<button class="btn btn-danger" onclick="toggleUser('+u.id+',\'disabled\')">禁用</button>';
+        }else{
+          toggleBtn='<button class="btn" onclick="toggleUser('+u.id+',\'active\')">启用</button>';
+        }
         var tierBtn=tierVal>=1
           ?'<button class="btn" onclick="setTier('+u.id+',0)">降为普通</button>'
           :'<button class="btn" style="color:#16a34a;border-color:#86efac" onclick="setTier('+u.id+',1)">升为高级</button>';
-        actions=tierBtn+' '+toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> <button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
+        var deleteBtn=u.status==='deleted'
+          ?'<button class="btn" onclick="toggleUser('+u.id+',\'active\')">恢复</button>'
+          :'<button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
+        actions=tierBtn+' '+toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> '+deleteBtn;
       }
       html+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+(u.display_name||'-')+'</td><td>'+role+'</td><td>'+tierTag+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.last_login||'从未')+'</td><td>'+u.login_count+'</td><td>'+status+'</td><td>'+actions+'</td></tr>';
     });
