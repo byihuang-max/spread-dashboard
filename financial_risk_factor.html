@@ -153,7 +153,7 @@ window.onerror=function(msg,src,line,col,err){
         <div class="tag">主视角</div>
       </div>
       <div id="industryRank" class="chart"></div><div id="industryRankHtml" class="html-chart" style="display:none"></div>
-      <div class="note" style="margin-top:10px;font-size:12px">每一行颜色代表该行业当前最主导的风险来源：蓝=利润，绿=现金流，黄=短债，紫=营运资本。</div>
+      <div class="note" style="margin-top:10px;font-size:12px">每一行颜色代表该行业当前最主导的风险来源：深蓝=利润，青蓝=现金流，浅蓝=短债，紫蓝=营运资本。</div>
     </div>
   </div>
 
@@ -649,10 +649,10 @@ function renderIndustryRank(){
   charts.rank = echarts.init(document.getElementById("industryRank"));
   const primaryText = INDUSTRIES.map(i => FACTOR_LABELS[i.primary].replace('恶化',''));
   const colorMap = {
-    profit_score:'#67b7ff',
-    cashflow_score:'#5ce1c2',
-    debt_score:'#f7c95c',
-    working_capital_score:'#a08bff'
+    profit_score:'#5d9cff',
+    cashflow_score:'#4fc3d9',
+    debt_score:'#7ea6ff',
+    working_capital_score:'#8d7cf6'
   };
   charts.rank.setOption({
     tooltip:{formatter:p=>`${INDUSTRIES[p.dataIndex].name}<br>平均风险：${score(INDUSTRIES[p.dataIndex].avgRisk)}<br>主导矛盾：${FACTOR_LABELS[INDUSTRIES[p.dataIndex].primary]}`},
