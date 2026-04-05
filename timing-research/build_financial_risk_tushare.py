@@ -8,7 +8,6 @@
 """
 import json, time, requests
 from pathlib import Path
-from collections import defaultdict
 
 TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
 URL = 'https://api.tushare.pro'
@@ -28,10 +27,19 @@ PERIODS = ['20241231', '20250331', '20250630', '20250930']
 FINA_FIELDS = 'ts_code,end_date,q_dtprofit_yoy,q_sales_yoy,q_ocf_to_sales,ocf_to_or,debt_to_assets,current_ratio,quick_ratio,inv_turn,ar_turn'
 BS_FIELDS = 'ts_code,end_date,money_cap,st_borr,accounts_receiv,inventories'
 CF_FIELDS = 'ts_code,end_date,n_cashflow_act'
+S = requests.Session()
 
 def ts_call(api, params, fields=''):
-    r = requests.post(URL, json={'api_name': api, 'token': TOKEN, 'params': params, 'fields': fields}, timeout=30)
-    return r.json()
+    payload = {'api_name': api, 'token': TOKEN, 'params': params, 'fields': fields}
+    last_err = None
+    for _ in range(3):
+        try:
+            r = S.post(URL, json=payload, timeout=(10, 20))
+            return r.json()
+        except Exception as e:
+            last_err = e
+            time.sleep(1)
+    raise last_err
 
 def get_pool():
     if POOL_FILE.exists():
@@ -91,9 +99,9 @@ def main():
         try:
             data = fetch_fina(code)
             snap[code] = {'meta': stock, 'periods': data}
-            if (i + 1) % 20 == 0:
+            if (i + 1) % 5 == 0:
                 save_snapshot(snap)
-                print(f'  [{i+1}/{len(todo)}] saved checkpoint')
+                print(f'  [{i+1}/{len(todo)}] saved checkpoint', flush=True)
         except Exception as e:
             print(f'  ERR {code}: {e}')
             time.sleep(2)
