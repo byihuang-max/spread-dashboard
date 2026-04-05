@@ -15,7 +15,7 @@ h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,#59e0c5,#5da
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
 .stat{background:rgba(10,20,39,.85);border:1px solid #1f2d47;border-radius:14px;padding:18px;text-align:center}
 .stat .val{font-size:28px;font-weight:800;margin-bottom:4px}
-.stat .lbl{font-size:11px;color:#70809a;text-transform:uppercase;letter-spacing:.5px}
+.stat .lbl{font-size:11px;color:#70809a;letter-spacing:.2px}
 .card{background:rgba(10,20,39,.82);border:1px solid #1f2d47;border-radius:16px;padding:20px;margin-bottom:16px}
 .card h2{font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1f2d47}
 .chart{width:100%;height:320px}
@@ -42,20 +42,12 @@ th{color:#8ea0bb;font-weight:600;background:#0b1630}
 
 <div class="grid">
   <div class="stat">
+    <div class="val" style="color:#f87171">37.8</div>
+    <div class="lbl">0-100建议仓位</div>
+  </div>
+  <div class="stat">
     <div class="val" style="color:#f87171">-24.4</div>
     <div class="lbl">双边方向分</div>
-  </div>
-  <div class="stat">
-    <div class="val" style="color:#f87171">37.8</div>
-    <div class="lbl">概率分 / 100</div>
-  </div>
-  <div class="stat">
-    <div class="val" style="color:#f87171">-24.4</div>
-    <div class="lbl">原始双边分</div>
-  </div>
-  <div class="stat">
-    <div class="val blue">37.8</div>
-    <div class="lbl">原始概率分 / 100</div>
   </div>
   <div class="stat">
     <div class="val" style="color:#34d399">未触发</div>
