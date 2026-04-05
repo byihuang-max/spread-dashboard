@@ -109,8 +109,7 @@ th{color:#8ea0bb;font-weight:600;background:#0b1630}
         <tr>
           <th>日期</th>
           <th>类型</th>
-          <th>模型原始分</th>
-          <th>最终分</th>
+          <th>0-100建议仓位</th>
           <th>双边分</th>
           <th>状态</th>
           <th>压仓</th>
@@ -128,8 +127,7 @@ th{color:#8ea0bb;font-weight:600;background:#0b1630}
         <tr>
             <th>日期</th>
             <th>类型</th>
-            <th>模型原始分</th>
-            <th>最终分</th>
+            <th>0-100建议仓位</th>
             <th>双边分</th>
             <th>状态</th>
             <th>压仓</th>
@@ -246,7 +244,6 @@ function rowHtml(x) {
   const typeBg = x.type==='high' ? 'rgba(52,211,153,.15)' : x.type==='low' ? 'rgba(248,113,113,.15)' : 'rgba(148,163,184,.1)';
   const typeBorder = x.type==='high' ? 'rgba(52,211,153,.35)' : x.type==='low' ? 'rgba(248,113,113,.35)' : 'rgba(148,163,184,.2)';
   const typeLabel = x.type==='high' ? '高仓位' : x.type==='low' ? '低仓位' : '中性';
-  const rawScore = x.raw_score !== undefined ? x.raw_score : x.score;
   const finalScore = x.final_score !== undefined ? x.final_score : x.score;
   const signedScore = x.signed_score !== undefined ? x.signed_score : ((finalScore - 50) * 2);
   const signedColor = signedScore > 0 ? '#34d399' : signedScore < 0 ? '#f87171' : '#94a3b8';
@@ -254,7 +251,6 @@ function rowHtml(x) {
   return `<tr>
     <td>${x.date}</td>
     <td><span class="tag" style="background:${typeBg};color:${typeColor};border:1px solid ${typeBorder}">${typeLabel}</span></td>
-    <td style="color:#94a3b8">${rawScore}</td>
     <td style="color:#e2e8f0;font-weight:700">${finalScore}</td>
     <td style="color:${signedColor};font-weight:700">${signedScore>0?'+':''}${signedScore.toFixed(1)}</td>
     <td><span class="tag" style="background:${REGIME_COLOR[x.regime]||'#94a3b8'}22;color:${REGIME_COLOR[x.regime]||'#cbd5e1'};border:1px solid ${REGIME_COLOR[x.regime]||'#94a3b8'}55">${x.regime}</span></td>
