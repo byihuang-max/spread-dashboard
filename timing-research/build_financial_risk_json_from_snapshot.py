@@ -528,22 +528,77 @@ def evaluate_stock(meta, periods):
     fraud_risk_score = round(min(0.99, 0.20 + n_signals * 0.18), 4)
     # ─────────────────────────────────────────────────────────────────────
 
+    def _period_scores(r):
+        """给单个截面算四个子分（简化版，只用当期数据）"""
+        qp = to_float(r.get('q_dtprofit_yoy'))
+        qs_val = to_float(r.get('q_sales_yoy'))
+        qn = to_float(r.get('n_cashflow_act'))
+        qocf = to_float(r.get('q_ocf_to_sales'))
+        qm = to_float(r.get('money_cap'))
+        qst = to_float(r.get('st_borr'))
+        qda = to_float(r.get('debt_to_assets'))
+        qcr = to_float(r.get('current_ratio'))
+        qat = to_float(r.get('ar_turn'))
+        qit = to_float(r.get('inv_turn'))
+
+        ps = 0.30
+        if qp is not None:
+            ps += 0.48 if qp < -100 else (0.34 if qp < -50 else (0.18 if qp < 0 else 0))
+        if qs_val is not None:
+            ps += 0.12 if qs_val < -20 else (0.06 if qs_val < 0 else 0)
+        ps = clamp(ps)
+
+        cs = 0.30
+        if qn is not None and qn < 0:
+            cs += 0.28
+        if qocf is not None:
+            cs += 0.22 if qocf < -20 else (0.12 if qocf < 0 else 0)
+        cs = clamp(cs)
+
+        ds = 0.26
+        if qm is not None and qst is not None and qm < qst:
+            ds += 0.30
+        if qda is not None:
+            ds += 0.18 if qda > 80 else (0.10 if qda > 65 else 0)
+        if qcr is not None and qcr < 1:
+            ds += 0.08
+        ds = clamp(ds)
+
+        ws = 0.28
+        if qat is not None:
+            ws += 0.16 if qat < 3 else 0
+            ws += 0.10 if qat < 1.5 else 0
+        if qit is not None:
+            ws += 0.16 if qit < 2 else 0
+            ws += 0.10 if qit < 1 else 0
+        ws = clamp(ws)
+
+        return round(ps, 3), round(cs, 3), round(ds, 3), round(ws, 3)
+
     history = []
     labels = ['前年年报', '去年Q1', '去年Q2', '去年Q3']
     for label, p in zip(labels, AS_OF_PERIODS):
         r = rows.get(p) or {}
-        parts = []
+        ps, cs, ds, ws = _period_scores(r)
         qp = to_float(r.get('q_dtprofit_yoy'))
         qn = to_float(r.get('n_cashflow_act'))
         qm = to_float(r.get('money_cap'))
         qs = to_float(r.get('st_borr'))
+        parts = []
         if qp is not None:
             parts.append(f'净利润同比{qp:.1f}%')
         if qn is not None:
             parts.append('经营现金流为负' if qn < 0 else '经营现金流为正')
         if qm is not None and qs is not None:
             parts.append('货币资金低于短债' if qm < qs else '货币资金覆盖短债')
-        history.append({'label': label, 'text': '，'.join(parts) if parts else '暂无数据'})
+        history.append({
+            'label': label,
+            'text': '，'.join(parts) if parts else '暂无数据',
+            'profit_score': ps,
+            'cashflow_score': cs,
+            'debt_score': ds,
+            'working_capital_score': ws,
+        })
 
     return {
         'ts_code': meta.get('ts_code'),
