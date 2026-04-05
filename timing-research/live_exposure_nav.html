@@ -96,7 +96,8 @@ th{color:#8ea0bb;font-weight:600;background:#0b1630}
 
 <div class="card">
   <h2>三线建议仓位</h2>
-  <div id="expChart" class="chart" style="height:320px"></div>
+  <div id="expChart" class="chart" style="height:360px"></div>
+  <div class="note" style="margin-top:12px">改为并列柱状图，不再用三条折线挤在一起；同一天直接看三条仓位谁高谁低。</div>
 </div>
 
 <div class="card">
@@ -155,15 +156,16 @@ nav.setOption({
 const exp = echarts.init(document.getElementById('expChart'));
 exp.setOption({
   backgroundColor:'transparent',
-  tooltip:{trigger:'axis'},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
   legend:{data:['原始实盘线','平衡线(alpha=1.9)','低回撤约束线'],textStyle:{color:'#8ea0bb'}},
-  grid:{left:50,right:30,top:40,bottom:50},
+  grid:{left:50,right:30,top:40,bottom:70},
   xAxis:{type:'category',data:D.dates,axisLabel:{color:'#8ea0bb',rotate:30,interval:Math.floor(D.dates.length/8)},axisLine:{lineStyle:{color:'#2a3a58'}}},
   yAxis:{type:'value',min:0,max:100,axisLabel:{color:'#8ea0bb',formatter:'{value}%'},splitLine:{lineStyle:{color:'#1f2d47'}}},
+  dataZoom:[{type:'inside'},{type:'slider',height:18,bottom:10,borderColor:'#1f2d47',fillerColor:'rgba(93,174,255,.15)',textStyle:{color:'#8ea0bb'}}],
   series:[
-    {name:'原始实盘线',type:'line',data:D.base_exposures,smooth:true,symbol:'none',lineStyle:{color:LINE_COLORS['原始实盘线'],width:2}},
-    {name:'平衡线(alpha=1.9)',type:'line',data:D.alpha19_exposures,smooth:true,symbol:'none',lineStyle:{color:LINE_COLORS['平衡线(alpha=1.9)'],width:2}},
-    {name:'低回撤约束线',type:'line',data:D.mindd_exposures,smooth:true,symbol:'none',lineStyle:{color:LINE_COLORS['低回撤约束线'],width:2}}
+    {name:'原始实盘线',type:'bar',data:D.base_exposures,barMaxWidth:10,itemStyle:{color:LINE_COLORS['原始实盘线']}},
+    {name:'平衡线(alpha=1.9)',type:'bar',data:D.alpha19_exposures,barMaxWidth:10,itemStyle:{color:LINE_COLORS['平衡线(alpha=1.9)']}},
+    {name:'低回撤约束线',type:'bar',data:D.mindd_exposures,barMaxWidth:10,itemStyle:{color:LINE_COLORS['低回撤约束线']}}
   ]
 });
 
