@@ -132,7 +132,7 @@ def update_timing_exposure_page():
     """更新量化择时研究里的 ML 敞口页"""
     log("═══ 择时敞口评分页 ═══")
     base = os.path.expanduser('~/Desktop/quant-backtest/timing_model')
-    scripts = ['ml_exposure_score.py', 'generate_ml_exposure_page.py',
+    scripts = ['fetch_full_a_amount.py', 'ml_exposure_score.py', 'generate_ml_exposure_page.py',
                'live_exposure_nav.py', 'generate_live_exposure_page.py']
     total = 0
     ok_all = True
