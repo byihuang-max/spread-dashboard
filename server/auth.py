@@ -464,10 +464,20 @@ def list_users():
 
 
 def list_login_log(limit=100):
-    """管理后台：登录日志"""
+    """管理后台：登录日志，优先显示注册姓名"""
     c = _conn()
     rows = c.execute('''
-        SELECT * FROM login_log ORDER BY created_at DESC LIMIT ?
+        SELECT l.id,
+               l.user_id,
+               COALESCE(NULLIF(u.display_name, ''), l.username) AS username,
+               l.ip,
+               l.action,
+               l.success,
+               l.created_at
+        FROM login_log l
+        LEFT JOIN users u ON l.user_id = u.id
+        ORDER BY l.created_at DESC, l.id DESC
+        LIMIT ?
     ''', (limit,)).fetchall()
     c.close()
     return [dict(r) for r in rows]
