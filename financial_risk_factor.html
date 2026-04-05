@@ -156,7 +156,11 @@ window.onerror=function(msg,src,line,col,err){
       <div class="tag">讲清行业为什么看这些指标</div>
     </div>
     <div class="industry-shell">
+      <div style="margin-bottom:8px">
+        <input id="industrySearch" placeholder="搜索行业…" style="width:100%;background:#0c1830;border:1px solid #22314d;color:#d7e0ea;border-radius:10px;padding:8px 12px;font-size:13px">
+      </div>
       <div class="industry-list" id="industryList"></div>
+      <button id="industryMoreBtn" style="margin-top:8px;width:100%;background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px;font-size:12px;cursor:pointer">更多行业 ▾</button>
       <div>
         <div class="industry-head">
           <div class="logic-box">
@@ -437,30 +441,53 @@ function score(v){ return v.toFixed(2); }
 function riskLabel(v){ if(v>=0.8) return "极高"; if(v>=0.65) return "高"; if(v>=0.45) return "中"; return "低"; }
 function badge(v){ return v ? '<span class="badge badge-red">剔除项</span>' : '<span class="badge badge-green">观察</span>'; }
 
+function mapIndustryName(name){
+  const n = name || '未分类';
+  if (/银行/.test(n)) return '银行';
+  if (/保险|证券|多元金融/.test(n)) return '非银金融';
+  if (/地产|园区开发|房产服务/.test(n)) return '房地产';
+  if (/建筑工程|装修装饰|路桥/.test(n)) return '建筑装饰';
+  if (/水泥|玻璃|陶瓷|建材|矿物制品/.test(n)) return '建筑材料';
+  if (/普钢|特种钢|钢加工/.test(n)) return '钢铁';
+  if (/铜|铝|铅锌|小金属|黄金/.test(n)) return '有色金属';
+  if (/石油开采|石油加工|石油贸易/.test(n)) return '石油石化';
+  if (/煤炭|焦炭/.test(n)) return '煤炭';
+  if (/化工|化纤|塑料|橡胶|染料涂料|农药化肥|日用化工/.test(n)) return '基础化工';
+  if (/环境保护/.test(n)) return '环保';
+  if (/电气设备|新型电力|电器仪表/.test(n)) return '电力设备';
+  if (/水力发电|火力发电|水务|供气供热/.test(n)) return '公用事业';
+  if (/专用机械|机械基件|机床制造|工程机械|农用机械|轻工机械|纺织机械|化工机械/.test(n)) return '机械设备';
+  if (/船舶|航空/.test(n)) return '国防军工';
+  if (/汽车整车|汽车配件|汽车服务|摩托车/.test(n)) return '汽车';
+  if (/家用电器|电器连锁/.test(n)) return '家用电器';
+  if (/半导体|元器件/.test(n)) return '电子';
+  if (/IT设备|软件服务|互联网/.test(n)) return '计算机';
+  if (/通信设备|电信运营/.test(n)) return '通信';
+  if (/医疗保健|化学制药|生物制药|中成药|医药商业/.test(n)) return '医药生物';
+  if (/食品|白酒|啤酒|红黄酒|软饮料|乳制品/.test(n)) return '食品饮料';
+  if (/农业综合|种植业|渔业|林业|饲料/.test(n)) return '农林牧渔';
+  if (/百货|超市连锁|商品城|批发业|其他商业/.test(n)) return '商贸零售';
+  if (/旅游景点|旅游服务|酒店餐饮/.test(n)) return '社会服务';
+  if (/广告包装|影视音像|出版业/.test(n)) return '传媒';
+  if (/家居用品|造纸|文教休闲/.test(n)) return '轻工制造';
+  if (/纺织|服饰/.test(n)) return '纺织服饰';
+  if (/机场|空运|公共交通|公路|水运|港口|仓储物流|铁路|运输设备/.test(n)) return '交通运输';
+  if (/未分类|综合类/.test(n)) return '综合';
+  return n;
+}
+
 function buildIndustryStats(){
-  if (Array.isArray(DATA.industries) && DATA.industries.length) {
-    const stockMap = {};
-    DATA.stocks.forEach(s => {
-      if(!stockMap[s.industry1]) stockMap[s.industry1] = [];
-      stockMap[s.industry1].push(s);
-    });
-    return DATA.industries.map(ind => ({
-      name: ind.name,
-      stocks: stockMap[ind.name] || [],
-      count: ind.count,
-      highRiskCount: ind.high_risk_count,
-      excludeCount: ind.exclude_count,
-      avgRisk: ind.avg_risk,
-      factorMeans: ind.factor_means,
-      primary: ind.primary_factor,
-      rule: ind.rule || {},
-      secondaryExample: ind.secondary_example || ''
-    })).sort((a,b) => b.avgRisk - a.avgRisk);
-  }
   const grouped = {};
   DATA.stocks.forEach(s => {
-    if(!grouped[s.industry1]) grouped[s.industry1] = [];
-    grouped[s.industry1].push(s);
+    const group = mapIndustryName(s.industry1);
+    s.industry_group = group;
+    if(!grouped[group]) grouped[group] = [];
+    grouped[group].push(s);
+  });
+  const ruleMap = {};
+  (DATA.industries || []).forEach(ind => {
+    const group = mapIndustryName(ind.name);
+    if(!ruleMap[group] && ind.rule) ruleMap[group] = ind.rule;
   });
   return Object.entries(grouped).map(([name,stocks]) => {
     const factorMeans = {};
@@ -475,10 +502,10 @@ function buildIndustryStats(){
       avgRisk: mean(stocks.map(s => s.landmine_score)),
       factorMeans,
       primary,
-      rule: {},
-      secondaryExample: ''
+      rule: ruleMap[name] || {},
+      secondaryExample: stocks[0]?.industry1 || ''
     };
-  }).sort((a,b) => b.avgRisk - a.avgRisk);
+  }).sort((a,b) => b.count - a.count || b.avgRisk - a.avgRisk);
 }
 
 function renderOverview(){
@@ -570,8 +597,14 @@ function renderIndustryRank(){
   } catch(e){ renderIndustryRankHtml(); }
 }
 
+const INDUSTRY_LIST_PAGE = 20;
+let industryListExpanded = false;
+
 function renderIndustryList(){
-  document.getElementById("industryList").innerHTML = INDUSTRIES.map(ind => `
+  const q = (document.getElementById("industrySearch")?.value||"").trim().toLowerCase();
+  const filtered = q ? INDUSTRIES.filter(i=>i.name.includes(q)) : INDUSTRIES;
+  const shown = (industryListExpanded || q) ? filtered : filtered.slice(0, INDUSTRY_LIST_PAGE);
+  document.getElementById("industryList").innerHTML = shown.map(ind => `
     <button class="industry-btn ${ind.name===state.industry?"active":""}" data-industry="${ind.name}">
       <div class="name">${ind.name}</div>
       <div class="meta">均值 ${score(ind.avgRisk)} · 剔除 ${ind.excludeCount} · 主因 ${FACTOR_LABELS[ind.primary]}</div>
@@ -582,7 +615,20 @@ function renderIndustryList(){
     renderIndustrySection();
     renderTable();
   });
+  const moreBtn = document.getElementById("industryMoreBtn");
+  if(moreBtn){
+    const hasMore = !q && filtered.length > INDUSTRY_LIST_PAGE;
+    moreBtn.style.display = hasMore ? "" : "none";
+    moreBtn.textContent = industryListExpanded ? "收起 ▴" : `更多行业（共 ${filtered.length} 个）▾`;
+  }
 }
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const s = document.getElementById("industrySearch");
+  if(s) s.addEventListener("input", ()=>{ industryListExpanded=false; renderIndustryList(); });
+  const m = document.getElementById("industryMoreBtn");
+  if(m) m.onclick = ()=>{ industryListExpanded=!industryListExpanded; renderIndustryList(); };
+});
 
 function currentIndustry(){
   return INDUSTRIES.find(i => i.name === state.industry);
@@ -648,8 +694,8 @@ function filteredStocks(){
   const exclude = document.getElementById("excludeFilter").value;
   const sortKey = document.getElementById("sortFilter").value;
   return DATA.stocks.filter(s => {
-    const matchKeyword = !keyword || [s.ts_code,s.name,s.industry1,s.industry2].join(" ").toLowerCase().includes(keyword);
-    const matchIndustry = industry === "all" || s.industry1 === industry;
+    const matchKeyword = !keyword || [s.ts_code,s.name,s.industry1,s.industry2,s.industry_group||''].join(" ").toLowerCase().includes(keyword);
+    const matchIndustry = industry === "all" || (s.industry_group || s.industry1) === industry;
     const matchExclude = exclude === "all" || String(s.exclude_flag) === exclude;
     return matchKeyword && matchIndustry && matchExclude;
   }).sort((a,b) => b[sortKey] - a[sortKey]);
