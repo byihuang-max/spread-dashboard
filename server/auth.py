@@ -41,7 +41,8 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now','localtime')),
             last_login TEXT,
             login_count INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'active'
+            status TEXT DEFAULT 'active',
+            deleted_at TEXT
         );
         CREATE TABLE IF NOT EXISTS sessions (
             token TEXT PRIMARY KEY,
@@ -98,6 +99,14 @@ def init_db():
         c.execute('ALTER TABLE users ADD COLUMN tier INTEGER DEFAULT 0')
         c.commit()
         print('[auth] 已迁移: 添加 tier 列')
+
+    # 自动迁移：给旧表加 deleted_at 列（如果不存在）
+    try:
+        c.execute('SELECT deleted_at FROM users LIMIT 1')
+    except sqlite3.OperationalError:
+        c.execute('ALTER TABLE users ADD COLUMN deleted_at TEXT')
+        c.commit()
+        print('[auth] 已迁移: 添加 deleted_at 列')
 
     # 默认注册模式：开放注册
     c.execute('''
@@ -382,6 +391,8 @@ def login(username, password, ip=''):
 
     if row['status'] != 'active':
         c.close()
+        if row['status'] == 'deleted':
+            return False, '账号已删除'
         return False, '账号已被禁用'
 
     h, _ = _hash_pw(password, row['salt'])
@@ -442,11 +453,11 @@ def logout(token):
 
 
 def list_users():
-    """管理后台：列出所有用户"""
+    """管理后台：列出所有用户（含已删除）"""
     c = _conn()
     rows = c.execute('''
-        SELECT id, username, display_name, is_admin, tier, created_at, last_login, login_count, status
-        FROM users ORDER BY created_at DESC
+        SELECT id, username, display_name, is_admin, tier, created_at, last_login, login_count, status, deleted_at
+        FROM users ORDER BY datetime(created_at) DESC, id DESC
     ''').fetchall()
     c.close()
     return [dict(r) for r in rows]
@@ -463,17 +474,25 @@ def list_login_log(limit=100):
 
 
 def toggle_user_status(user_id, status):
-    """启用/禁用用户"""
+    """启用/禁用用户；若从已删除恢复，则清空 deleted_at"""
     c = _conn()
-    c.execute('UPDATE users SET status=? WHERE id=? AND is_admin=0', (status, user_id))
+    deleted_at = None if status == 'deleted' else None
+    if status == 'deleted':
+        c.execute('UPDATE users SET status=?, deleted_at=datetime("now","localtime") WHERE id=? AND is_admin=0', (status, user_id))
+    else:
+        c.execute('UPDATE users SET status=?, deleted_at=NULL WHERE id=? AND is_admin=0', (status, user_id))
     c.commit(); c.close()
 
 
 def delete_user(user_id):
-    """删除用户（不能删管理员）"""
+    """软删除用户（不能删管理员），保留历史记录供后台展示"""
     c = _conn()
     c.execute('DELETE FROM sessions WHERE user_id=?', (user_id,))
-    c.execute('DELETE FROM users WHERE id=? AND is_admin=0', (user_id,))
+    c.execute('''
+        UPDATE users
+        SET status='deleted', deleted_at=datetime('now','localtime')
+        WHERE id=? AND is_admin=0
+    ''', (user_id,))
     c.commit(); c.close()
 
 
