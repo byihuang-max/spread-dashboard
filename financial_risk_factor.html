@@ -297,7 +297,7 @@ window.onerror=function(msg,src,line,col,err){
         <button class="sample-tab active" data-type="命中">命中</button>
         <button class="sample-tab" data-type="漏判">漏判</button>
         <button class="sample-tab" data-type="争议">争议</button>
-        <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部 CSV</button>
+        <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部样本 CSV</button>
         <button id="sampleExpandBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">查看全部 ▾</button>
       </div>
     </div>
@@ -910,7 +910,7 @@ function renderValidationSamples(){
 
 function downloadValidationSamplesCsv(){
   if(!VALIDATION) return;
-  const allRows = VALIDATION.samples.filter(x => x.type === validationTab);
+  const allRows = VALIDATION.samples || [];
   const headers = ['类型','股票代码','股票简称','行业','在剔除名单','披露日','坏信号数','坏信号明细'];
   const rows = allRows.map(r => [
     r.type, r.ts_code, r.name, r.industry,
@@ -918,7 +918,7 @@ function downloadValidationSamplesCsv(){
   ]);
   const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  downloadCsv(csv, `财报验证_${validationTab}_${today}.csv`);
+  downloadCsv(csv, `财报验证_全量样本_${today}.csv`);
 }
 
 async function loadValidation(){
