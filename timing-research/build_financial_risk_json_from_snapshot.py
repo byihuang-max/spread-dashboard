@@ -477,6 +477,57 @@ def evaluate_stock(meta, periods):
 
     exclude_flag = 1 if landmine_score >= 0.72 or (gap is not None and gap < 0 and latest_ncf is not None and latest_ncf < 0) else 0
 
+    # ── 造假预警因子（勾稽异常检测）──────────────────────────────────────
+    # 不下"造假结论"，只标记"报表勾稽对不上"的疑点，输出 high/mid/low 三档
+    fraud_signals = []
+
+    # 1. 利润好看但经营现金流持续差（利润/现金流背离）
+    pos_profit_count = sum(1 for x in profit_vals if x is not None and x > 0)
+    neg_ncf_count_fraud = sum(1 for x in ncf_vals if x is not None and x < 0)
+    if pos_profit_count >= 2 and neg_ncf_count_fraud >= 2:
+        fraud_signals.append('利润持续为正但经营现金流持续为负')
+
+    # 2. 货币资金高但短债压力也高（钱是真的吗）
+    if latest_money is not None and latest_st_borr is not None:
+        if latest_money > 0 and latest_st_borr > 0:
+            # 货币资金看起来充裕（>短债），但利息支出/融资成本也很高
+            # 用 debt_to_assets 作为杠杆代理：高杠杆 + 高货币资金 = 疑点
+            if latest_debt is not None and latest_debt > 65 and latest_money > latest_st_borr * 1.5:
+                fraud_signals.append('高杠杆下货币资金异常充裕（疑似虚增）')
+
+    # 3. 营收增长但应收和存货涨得更快
+    latest_sales_val = latest_sales  # 营收同比%
+    if latest_sales_val is not None and latest_sales_val > 5:
+        # 应收周转变慢说明应收增速 > 营收增速
+        if latest_ar_turn is not None and latest_ar_turn < 3:
+            fraud_signals.append('营收增长但应收周转明显变慢（应收膨胀快于营收）')
+        # 存货周转变慢说明存货增速 > 营收增速
+        if latest_inv_turn is not None and latest_inv_turn < 2:
+            fraud_signals.append('营收增长但存货周转明显变慢（存货膨胀快于营收）')
+
+    # 4. 毛利率逆势稳定但现金流不跟（用 ocf_to_or 作为现金含量代理）
+    # ocf_to_or < 0 且利润为正 = 利润有但现金没进来
+    if latest_ocf_or is not None and latest_ocf_or < 0 and latest_profit is not None and latest_profit > 0:
+        fraud_signals.append('利润为正但现金流/营收比为负（利润含金量低）')
+
+    # 5. 应收/存货/其他科目异常膨胀（用周转率极低作为代理）
+    if latest_ar_turn is not None and latest_ar_turn < 1.5:
+        fraud_signals.append('应收账款周转极慢（账期异常拉长，疑似虚增应收）')
+    if latest_inv_turn is not None and latest_inv_turn < 1.0:
+        fraud_signals.append('存货周转极慢（库存异常积压，疑似虚增存货）')
+
+    # 综合评级
+    n_signals = len(fraud_signals)
+    if n_signals >= 3:
+        fraud_risk_level = 'high'
+    elif n_signals >= 1:
+        fraud_risk_level = 'mid'
+    else:
+        fraud_risk_level = 'low'
+
+    fraud_risk_score = round(min(0.99, 0.20 + n_signals * 0.18), 4)
+    # ─────────────────────────────────────────────────────────────────────
+
     history = []
     labels = ['前年年报', '去年Q1', '去年Q2', '去年Q3']
     for label, p in zip(labels, AS_OF_PERIODS):
@@ -512,6 +563,9 @@ def evaluate_stock(meta, periods):
         'debt_score': round(debt_score, 4),
         'working_capital_score': round(working_capital_score, 4),
         'landmine_score': landmine_score,
+        'fraud_risk_score': fraud_risk_score,
+        'fraud_risk_level': fraud_risk_level,
+        'fraud_signals': fraud_signals,
     }
 
 

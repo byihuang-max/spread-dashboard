@@ -223,6 +223,7 @@ window.onerror=function(msg,src,line,col,err){
         <option value="cashflow_score">按现金流排序</option>
         <option value="debt_score">按短债压力排序</option>
         <option value="working_capital_score">按营运资本排序</option>
+        <option value="fraud_risk_score">按造假预警排序</option>
       </select>
     </div>
     <div class="stock-shell">
@@ -256,6 +257,10 @@ window.onerror=function(msg,src,line,col,err){
         <div id="detailRadar" class="chart-xs"></div>
         <div id="detailTrend" class="chart-sm"></div>
         <div class="explain" id="detailExplain"></div>
+        <div id="detailFraud" style="margin-top:10px;padding:12px 14px;border-radius:12px;background:#1a0d0d;border:1px solid #4a1a1a;display:none">
+          <div style="font-size:12px;color:#ff9a9a;font-weight:700;margin-bottom:6px">⚠️ 造假预警疑点</div>
+          <div id="detailFraudSignals" style="font-size:12px;color:#e0a0a0;line-height:1.8"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -782,7 +787,8 @@ function explainStock(s){
   const focus = (ind?.rule?.focus_metrics || []).filter(Boolean);
   const worst = FACTOR_NAMES.slice().sort((a,b)=>s[b]-s[a]).slice(0,2).map(k=>FACTOR_LABELS[k]);
   const historyText = (s.history || []).map(h => `${h.label}：${h.text}`).join('；');
-  return `${s.name}属于${s.industry1}-${s.industry2}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${historyText ? '四截面表现：' + historyText + '。' : ''}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
+  const fraudText = (s.fraud_signals || []).length ? `另外，报表勾稽上还有${s.fraud_signals.length}条造假预警疑点，主要是：${s.fraud_signals.slice(0,2).join('；')}。` : '';
+  return `${s.name}属于${s.industry1}-${s.industry2}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${historyText ? '四截面表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
 }
 
 function renderDetail(){
@@ -791,6 +797,16 @@ function renderDetail(){
   document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
   document.getElementById("detailFlag").innerHTML = badge(s.exclude_flag);
   document.getElementById("detailExplain").textContent = explainStock(s);
+
+  // 造假预警疑点展示
+  const fraudBox = document.getElementById('detailFraud');
+  const fraudSignals = s.fraud_signals || [];
+  if(fraudSignals.length > 0){
+    document.getElementById('detailFraudSignals').innerHTML = fraudSignals.map(sig => `· ${sig}`).join('<br>');
+    fraudBox.style.display = '';
+  } else {
+    fraudBox.style.display = 'none';
+  }
 
   if(charts.radar) charts.radar.dispose();
   charts.radar = echarts.init(document.getElementById("detailRadar"));
