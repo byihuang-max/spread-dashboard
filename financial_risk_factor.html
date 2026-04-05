@@ -47,7 +47,9 @@ a{color:inherit;text-decoration:none}
 .chart{width:100%;height:430px}
 .chart-sm{width:100%;height:320px}
 .chart-xs{width:100%;height:240px}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.sample-tab{background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer}
+.sample-tab.active{background:#1a3a6e;border-color:#5d9cff;color:#fff}
+
 .section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
 .industry-shell{display:grid;grid-template-columns:240px 1fr;gap:18px}
 .industry-list{display:flex;flex-direction:column;gap:10px}
@@ -255,6 +257,51 @@ window.onerror=function(msg,src,line,col,err){
         <div id="detailTrend" class="chart-sm"></div>
         <div class="explain" id="detailExplain"></div>
       </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px" id="validationSection">
+    <div class="section-title">
+      <h2 style="margin:0;padding:0;border:none">第四层：财报验证层</h2>
+      <div class="tag" id="validationAsOf"></div>
+    </div>
+    <p class="note" style="margin-bottom:16px">用新披露的2025年报，验证行业风险定义、恶化链条与筛选命中率。不是统计表，而是逻辑验证层。</p>
+
+    <!-- 总览 -->
+    <div class="summary-strip" id="validationSummaryCards"></div>
+
+    <!-- 恶化链条验证表 -->
+    <div class="section-title" style="margin-top:20px">
+      <h2 style="margin:0;padding:0;border:none;font-size:16px">恶化链条验证表</h2>
+      <div class="tag">行业逻辑 × 财报后验</div>
+    </div>
+    <div style="overflow-x:auto;margin-bottom:20px">
+      <table class="table" id="chainTable">
+        <thead><tr>
+          <th>行业</th><th>类型</th><th>核心风险</th><th>变得更差的标准</th>
+          <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
+        </tr></thead>
+        <tbody id="chainTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 样本清单 -->
+    <div class="section-title" style="margin-top:20px">
+      <h2 style="margin:0;padding:0;border:none;font-size:16px">样本清单</h2>
+      <div style="display:flex;gap:8px">
+        <button class="sample-tab active" data-type="命中">命中</button>
+        <button class="sample-tab" data-type="漏判">漏判</button>
+        <button class="sample-tab" data-type="争议">争议</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="table">
+        <thead><tr>
+          <th>类型</th><th>代码</th><th>名称</th><th>行业</th>
+          <th>在剔除名单</th><th>披露日</th><th>坏信号数</th><th>坏信号明细</th>
+        </tr></thead>
+        <tbody id="sampleTableBody"></tbody>
+      </table>
     </div>
   </div>
 
@@ -784,6 +831,75 @@ function downloadCsv(content, filename){
   a.click();
 }
 
+let VALIDATION = null;
+let validationTab = '命中';
+
+function renderValidationSummary(){
+  if(!VALIDATION) return;
+  const s = VALIDATION.summary;
+  document.getElementById('validationAsOf').textContent = s.as_of || '';
+  const cards = [
+    ['已披露样本', s.published_total, 'blue'],
+    ['命中样本', s.hit_count, 'red'],
+    ['漏判样本', s.miss_count_bad2, 'amber'],
+    ['当前命中率', pct(s.hit_rate), 'green']
+  ];
+  document.getElementById('validationSummaryCards').innerHTML = cards.map(([label,value,cls]) => `
+    <div class="metric"><div class="label">${label}</div><div class="value ${cls}">${value}</div><div class="sub">${s.note || ''}</div></div>
+  `).join('');
+}
+
+function renderValidationChains(){
+  if(!VALIDATION) return;
+  document.getElementById('chainTableBody').innerHTML = VALIDATION.chains.map(r => `
+    <tr>
+      <td>${r.industry}</td>
+      <td>${r.type}</td>
+      <td>${r.core_risk}</td>
+      <td>${(r.worse_when||[]).join('；')}</td>
+      <td>${(r.top_signals||[]).join('；') || '-'}</td>
+      <td>${r.hit_count}</td>
+      <td>${r.miss_count}</td>
+      <td>${(r.not_worse_if||[]).join('；') || r.warning || '-'}</td>
+    </tr>
+  `).join('');
+}
+
+function renderValidationSamples(){
+  if(!VALIDATION) return;
+  const rows = VALIDATION.samples.filter(x => x.type === validationTab).slice(0, 80);
+  document.getElementById('sampleTableBody').innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.type}</td>
+      <td>${r.ts_code}</td>
+      <td>${r.name}</td>
+      <td>${r.industry}</td>
+      <td>${r.in_exclude ? '是' : '否'}</td>
+      <td>${r.actual_date}</td>
+      <td>${r.bad_count}</td>
+      <td>${r.bad_signals || '-'}</td>
+    </tr>
+  `).join('');
+  document.querySelectorAll('.sample-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.type === validationTab));
+}
+
+async function loadValidation(){
+  try {
+    const res = await fetch('./data/financial_validation/validation_view.json?_=' + Date.now());
+    if(!res.ok) return;
+    VALIDATION = await res.json();
+    renderValidationSummary();
+    renderValidationChains();
+    renderValidationSamples();
+    document.querySelectorAll('.sample-tab').forEach(btn => btn.onclick = () => {
+      validationTab = btn.dataset.type;
+      renderValidationSamples();
+    });
+  } catch(e) {
+    console.warn('load validation failed', e);
+  }
+}
+
 function initFilters(){
   document.getElementById("industryFilter").innerHTML = ['<option value="all">全部行业</option>'].concat(INDUSTRIES.map(i=>`<option value="${i.name}">${i.name}</option>`)).join("");
   ["keywordInput","industryFilter","excludeFilter","sortFilter"].forEach(id => {
@@ -823,6 +939,7 @@ async function boot(){
   renderIndustrySection();
   initFilters();
   renderTable();
+  loadValidation();
   window.addEventListener('resize', () => Object.values(charts).forEach(c => c && c.resize && c.resize()));
 }
 if (typeof echarts === "undefined") { document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;right:16px;bottom:16px;background:#3b0d14;color:#ffd5d8;padding:10px 14px;border:1px solid #7f1d1d;border-radius:12px;z-index:99">图表库加载失败，请刷新或联系维护</div>'); } else { boot(); }

@@ -1,0 +1,3765 @@
+{
+  "summary": {
+    "published_total": 1281,
+    "hit_count": 85,
+    "miss_count_bad2": 149,
+    "hit_rate": 0.0664,
+    "as_of": "2025年报 截至20260405",
+    "note": "命中=剔除项中已披露2025年报且有≥2个坏信号；漏判=非剔除项中有≥2个坏信号"
+  },
+  "chains": [
+    {
+      "industry": "建筑工程",
+      "type": "订单回款型",
+      "core_risk": "回款慢、应收膨胀、资金链收紧",
+      "worse_when": [
+        "应收账款同比继续抬升",
+        "经营现金流继续恶化或由正转负",
+        "货币资金/短债覆盖继续下降",
+        "合同资产+应收+其他应收同步膨胀"
+      ],
+      "not_worse_if": [
+        "应收虽高但回款加速（CFO改善）",
+        "短债压力高但有新融资覆盖"
+      ],
+      "warning": "",
+      "hit_count": 7,
+      "miss_count": 3,
+      "top_signals": [
+        "资产负债率>70%",
+        "经营现金流为负",
+        "货币资金<短债"
+      ],
+      "samples": [
+        {
+          "ts_code": "600502.SH",
+          "name": "安徽建工",
+          "signals": "资产负债率>70%"
+        },
+        {
+          "ts_code": "300675.SZ",
+          "name": "建科院",
+          "signals": "经营现金流为负；货币资金<短债"
+        },
+        {
+          "ts_code": "001267.SZ",
+          "name": "汇绿生态",
+          "signals": "经营现金流为负；货币资金<短债"
+        }
+      ]
+    },
+    {
+      "industry": "环境保护",
+      "type": "订单回款型",
+      "core_risk": "政府应收账款长期挂账、现金流弱",
+      "worse_when": [
+        "应收继续抬升且账龄拉长",
+        "CFO继续恶化",
+        "新增融资无法覆盖到期债务"
+      ],
+      "not_worse_if": [
+        "政府回款加速，CFO改善"
+      ],
+      "warning": "",
+      "hit_count": 0,
+      "miss_count": 2,
+      "top_signals": [
+        "货币资金<短债",
+        "资产负债率>70%"
+      ],
+      "samples": [
+        {
+          "ts_code": "300388.SZ",
+          "name": "节能国祯",
+          "signals": "货币资金<短债；资产负债率>70%"
+        },
+        {
+          "ts_code": "002672.SZ",
+          "name": "东江环保",
+          "signals": "货币资金<短债；资产负债率>70%"
+        }
+      ]
+    },
+    {
+      "industry": "半导体",
+      "type": "高研发成长型",
+      "core_risk": "库存堆积、现金消耗、商业化兑现弱",
+      "worse_when": [
+        "存货继续堆积，周转天数拉长",
+        "现金储备继续下降",
+        "收入增速低于研发投入增速",
+        "应收+存货同步恶化（不只是研发投入问题，经营链条也失控）"
+      ],
+      "not_worse_if": [
+        "亏损扩大但收入加速兑现",
+        "现金流为负但融资能力强、现金储备充足",
+        "存货高但是战略备货，周转未恶化"
+      ],
+      "warning": "",
+      "hit_count": 6,
+      "miss_count": 9,
+      "top_signals": [
+        "现金流/营收为负",
+        "经营现金流为负",
+        "货币资金<短债"
+      ],
+      "samples": [
+        {
+          "ts_code": "001309.SZ",
+          "name": "德明利",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        },
+        {
+          "ts_code": "300077.SZ",
+          "name": "国民技术",
+          "signals": "货币资金<短债；资产负债率>70%"
+        },
+        {
+          "ts_code": "688525.SH",
+          "name": "佰维存储",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "生物制药",
+      "type": "高研发成长型",
+      "core_risk": "商业化兑现慢、现金消耗快、融资依赖高",
+      "worse_when": [
+        "亏损扩大且收入不及预期",
+        "现金储备继续下降",
+        "短期偿债能力变差",
+        "研发管线无新进展但费用继续高企"
+      ],
+      "not_worse_if": [
+        "亏损但有重磅产品商业化加速",
+        "现金流为负但刚完成大额融资"
+      ],
+      "warning": "",
+      "hit_count": 0,
+      "miss_count": 6,
+      "top_signals": [
+        "现金流/营收为负",
+        "经营现金流为负",
+        "资产负债率>70%"
+      ],
+      "samples": [
+        {
+          "ts_code": "688062.SH",
+          "name": "迈威生物-U",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "688192.SH",
+          "name": "迪哲医药-U",
+          "signals": "经营现金流为负；现金流/营收为负"
+        },
+        {
+          "ts_code": "688180.SH",
+          "name": "君实生物-U",
+          "signals": "经营现金流为负；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "化学制药",
+      "type": "高研发成长型",
+      "core_risk": "集采压价、毛利率下滑、研发投入回报不确定",
+      "worse_when": [
+        "毛利率继续下滑且无新品放量",
+        "CFO继续恶化",
+        "存货+应收同步恶化"
+      ],
+      "not_worse_if": [
+        "集采影响已消化，新品开始放量",
+        "毛利率下滑但规模效应抵消"
+      ],
+      "warning": "",
+      "hit_count": 0,
+      "miss_count": 2,
+      "top_signals": [
+        "经营现金流为负",
+        "现金流/营收为负",
+        "资产负债率>70%"
+      ],
+      "samples": [
+        {
+          "ts_code": "688373.SH",
+          "name": "盟科药业-U",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "301089.SZ",
+          "name": "拓新药业",
+          "signals": "经营现金流为负；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "普钢",
+      "type": "周期重资产型",
+      "core_risk": "产能过剩、价格下行、杠杆高",
+      "worse_when": [
+        "钢价继续下行且库存继续积压",
+        "CFO持续为负",
+        "杠杆继续抬升，再融资能力下降"
+      ],
+      "not_worse_if": [
+        "周期底部正常承压，但资产负债表未进一步恶化",
+        "钢价企稳，库存开始去化"
+      ],
+      "warning": "",
+      "hit_count": 0,
+      "miss_count": 4,
+      "top_signals": [
+        "现金流/营收为负",
+        "经营现金流为负",
+        "资产负债率>70%"
+      ],
+      "samples": [
+        {
+          "ts_code": "000761.SZ",
+          "name": "本钢板材",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "600581.SH",
+          "name": "*ST八钢",
+          "signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "000898.SZ",
+          "name": "鞍钢股份",
+          "signals": "货币资金<短债；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "化工原料",
+      "type": "周期重资产型",
+      "core_risk": "价格波动、库存周期、资金链",
+      "worse_when": [
+        "库存继续积压，周转天数拉长",
+        "CFO继续恶化",
+        "短债压力抬升"
+      ],
+      "not_worse_if": [
+        "库存高但价格企稳，去化预期改善"
+      ],
+      "warning": "",
+      "hit_count": 3,
+      "miss_count": 5,
+      "top_signals": [
+        "货币资金<短债",
+        "现金流/营收为负",
+        "经营现金流为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "002068.SZ",
+          "name": "黑猫股份",
+          "signals": "货币资金<短债"
+        },
+        {
+          "ts_code": "301349.SZ",
+          "name": "信德新材",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        },
+        {
+          "ts_code": "301256.SZ",
+          "name": "华融化学",
+          "signals": "货币资金<短债"
+        }
+      ]
+    },
+    {
+      "industry": "证券",
+      "type": "金融资产负债表型",
+      "core_risk": "市场波动影响收益、资本约束、风险敞口",
+      "worse_when": [
+        "核心业务收益继续恶化",
+        "风险敞口继续扩大",
+        "资本约束进一步收紧"
+      ],
+      "not_worse_if": [
+        "资产负债率高是正常业务结构（客户保证金），不代表风险",
+        "经营现金流为负是正常业务特征，不代表危险"
+      ],
+      "warning": "绝不能用普通企业的资产负债率/经营现金流口径判断券商",
+      "hit_count": 0,
+      "miss_count": 14,
+      "top_signals": [
+        "现金流/营收为负",
+        "资产负债率>70%",
+        "经营现金流为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "600999.SH",
+          "name": "招商证券",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "300059.SZ",
+          "name": "东方财富",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "000776.SZ",
+          "name": "广发证券",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "银行",
+      "type": "金融资产负债表型",
+      "core_risk": "资产质量、不良率、净息差收窄",
+      "worse_when": [
+        "不良率继续上升",
+        "净息差继续收窄且无改善预期",
+        "拨备覆盖率继续下降"
+      ],
+      "not_worse_if": [
+        "资产负债率高是正常银行结构",
+        "经营现金流口径对银行无意义"
+      ],
+      "warning": "银行需要专用字段（不良率/拨备），当前快照字段覆盖不足，验证能力有限",
+      "hit_count": 0,
+      "miss_count": 8,
+      "top_signals": [
+        "资产负债率>70%",
+        "现金流/营收为负",
+        "经营现金流为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "002839.SZ",
+          "name": "张家港行",
+          "signals": "经营现金流为负；资产负债率>70%"
+        },
+        {
+          "ts_code": "601916.SH",
+          "name": "浙商银行",
+          "signals": "经营现金流为负；资产负债率>70%"
+        },
+        {
+          "ts_code": "600015.SH",
+          "name": "华夏银行",
+          "signals": "资产负债率>70%；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "多元金融",
+      "type": "金融资产负债表型",
+      "core_risk": "资产质量、杠杆、流动性",
+      "worse_when": [
+        "资产质量继续恶化",
+        "流动性压力继续抬升",
+        "核心收益继续下滑"
+      ],
+      "not_worse_if": [
+        "资产负债率高是正常业务结构"
+      ],
+      "warning": "金融类行业统一口径有限，需要专用字段",
+      "hit_count": 1,
+      "miss_count": 4,
+      "top_signals": [
+        "经营现金流为负",
+        "现金流/营收为负",
+        "资产负债率>70%"
+      ],
+      "samples": [
+        {
+          "ts_code": "600318.SH",
+          "name": "新力金融",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        },
+        {
+          "ts_code": "603123.SH",
+          "name": "翠微股份",
+          "signals": "经营现金流为负；资产负债率>70%；现金流/营收为负"
+        },
+        {
+          "ts_code": "002961.SZ",
+          "name": "瑞达期货",
+          "signals": "经营现金流为负；资产负债率>70%"
+        }
+      ]
+    },
+    {
+      "industry": "食品",
+      "type": "消费渠道型",
+      "core_risk": "渠道去化弱、存货积压、收入增长失速",
+      "worse_when": [
+        "存货继续积压，周转天数拉长",
+        "收入继续下滑",
+        "渠道压货迹象加重（应收+存货同步抬升）"
+      ],
+      "not_worse_if": [
+        "存货高但是季节性备货，周转未恶化",
+        "收入短期承压但渠道库存已开始去化"
+      ],
+      "warning": "",
+      "hit_count": 0,
+      "miss_count": 4,
+      "top_signals": [
+        "现金流/营收为负",
+        "经营现金流为负",
+        "货币资金<短债"
+      ],
+      "samples": [
+        {
+          "ts_code": "300175.SZ",
+          "name": "ST朗源",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        },
+        {
+          "ts_code": "300765.SZ",
+          "name": "新诺威",
+          "signals": "经营现金流为负；现金流/营收为负"
+        },
+        {
+          "ts_code": "300138.SZ",
+          "name": "晨光生物",
+          "signals": "货币资金<短债；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "软件服务",
+      "type": "高研发成长型",
+      "core_risk": "收入增长失速、现金流弱、应收拉长",
+      "worse_when": [
+        "收入继续下滑且无新增长点",
+        "CFO继续恶化",
+        "应收继续拉长，回款质量下降"
+      ],
+      "not_worse_if": [
+        "收入短期承压但合同负债（预收）在增加，说明订单在积累"
+      ],
+      "warning": "",
+      "hit_count": 6,
+      "miss_count": 1,
+      "top_signals": [
+        "货币资金<短债",
+        "经营现金流为负",
+        "现金流/营收为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "000158.SZ",
+          "name": "常山北明",
+          "signals": "货币资金<短债"
+        },
+        {
+          "ts_code": "300020.SZ",
+          "name": "ST银江",
+          "signals": "货币资金<短债"
+        },
+        {
+          "ts_code": "688030.SH",
+          "name": "山石网科",
+          "signals": "经营现金流为负；货币资金<短债"
+        }
+      ]
+    },
+    {
+      "industry": "元器件",
+      "type": "高研发成长型",
+      "core_risk": "库存周期、客户集中、现金流",
+      "worse_when": [
+        "库存继续积压",
+        "CFO继续恶化",
+        "应收+存货同步恶化"
+      ],
+      "not_worse_if": [
+        "库存高但下游需求回暖，去化预期改善"
+      ],
+      "warning": "",
+      "hit_count": 8,
+      "miss_count": 10,
+      "top_signals": [
+        "货币资金<短债",
+        "经营现金流为负",
+        "现金流/营收为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "688636.SH",
+          "name": "智明达",
+          "signals": "经营现金流为负；现金流/营收为负"
+        },
+        {
+          "ts_code": "002876.SZ",
+          "name": "三利谱",
+          "signals": "货币资金<短债"
+        },
+        {
+          "ts_code": "603678.SH",
+          "name": "火炬电子",
+          "signals": "经营现金流为负；货币资金<短债；现金流/营收为负"
+        }
+      ]
+    },
+    {
+      "industry": "电气设备",
+      "type": "订单回款型",
+      "core_risk": "应收账款、回款周期、资金链",
+      "worse_when": [
+        "应收继续抬升",
+        "CFO继续恶化",
+        "短债覆盖继续下降"
+      ],
+      "not_worse_if": [
+        "应收高但回款加速，CFO改善"
+      ],
+      "warning": "",
+      "hit_count": 12,
+      "miss_count": 5,
+      "top_signals": [
+        "经营现金流为负",
+        "货币资金<短债",
+        "现金流/营收为负"
+      ],
+      "samples": [
+        {
+          "ts_code": "300093.SZ",
+          "name": "*ST金刚",
+          "signals": "经营现金流为负；现金流/营收为负"
+        },
+        {
+          "ts_code": "002471.SZ",
+          "name": "中超控股",
+          "signals": "货币资金<短债"
+        },
+        {
+          "ts_code": "603507.SH",
+          "name": "振江股份",
+          "signals": "经营现金流为负；货币资金<短债；资产负债率>70%"
+        }
+      ]
+    },
+    {
+      "industry": "航空",
+      "type": "周期重资产型",
+      "core_risk": "高杠杆、油价敏感、现金流波动",
+      "worse_when": [
+        "杠杆继续抬升",
+        "CFO继续恶化",
+        "短债覆盖继续下降"
+      ],
+      "not_worse_if": [
+        "高杠杆是行业常态，关键看CFO能否覆盖利息",
+        "经营现金流为负但是季节性低谷"
+      ],
+      "warning": "",
+      "hit_count": 3,
+      "miss_count": 5,
+      "top_signals": [
+        "经营现金流为负",
+        "现金流/营收为负",
+        "货币资金<短债"
+      ],
+      "samples": [
+        {
+          "ts_code": "600893.SH",
+          "name": "航发动力",
+          "signals": "经营现金流为负；货币资金<短债"
+        },
+        {
+          "ts_code": "600879.SH",
+          "name": "航天电子",
+          "signals": "经营现金流为负；货币资金<短债"
+        },
+        {
+          "ts_code": "000697.SZ",
+          "name": "ST炼石",
+          "signals": "经营现金流为负"
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "type": "命中",
+      "ts_code": "300426.SZ",
+      "name": "华智数媒",
+      "industry": "影视音像",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600343.SH",
+      "name": "航天动力",
+      "industry": "机械基件",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "经营现金流为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600502.SH",
+      "name": "安徽建工",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 1,
+      "bad_signals": "资产负债率>70%",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000158.SZ",
+      "name": "常山北明",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600895.SH",
+      "name": "张江高科",
+      "industry": "园区开发",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300020.SZ",
+      "name": "ST银江",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600168.SH",
+      "name": "武汉控股",
+      "industry": "水务",
+      "in_exclude": true,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688636.SH",
+      "name": "智明达",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "601992.SH",
+      "name": "金隅集团",
+      "industry": "水泥",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600893.SH",
+      "name": "航发动力",
+      "industry": "航空",
+      "in_exclude": true,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300227.SZ",
+      "name": "光韵达",
+      "industry": "专用机械",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600358.SH",
+      "name": "ST联合",
+      "industry": "广告包装",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600879.SH",
+      "name": "航天电子",
+      "industry": "航空",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688030.SH",
+      "name": "山石网科",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300675.SZ",
+      "name": "建科院",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "001267.SZ",
+      "name": "汇绿生态",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000697.SZ",
+      "name": "ST炼石",
+      "industry": "航空",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 1,
+      "bad_signals": "经营现金流为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603083.SH",
+      "name": "剑桥科技",
+      "industry": "通信设备",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "001309.SZ",
+      "name": "德明利",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260228",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600719.SH",
+      "name": "大连热电",
+      "industry": "供气供热",
+      "in_exclude": true,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300093.SZ",
+      "name": "*ST金刚",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002471.SZ",
+      "name": "中超控股",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603507.SH",
+      "name": "振江股份",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260401",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300077.SZ",
+      "name": "国民技术",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002068.SZ",
+      "name": "黑猫股份",
+      "industry": "化工原料",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002642.SZ",
+      "name": "荣联科技",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300455.SZ",
+      "name": "航天智装",
+      "industry": "IT设备",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300659.SZ",
+      "name": "中孚信息",
+      "industry": "IT设备",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603458.SH",
+      "name": "勘设股份",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260404",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603270.SH",
+      "name": "金帝股份",
+      "industry": "机械基件",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600876.SH",
+      "name": "凯盛新能",
+      "industry": "玻璃",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "命中",
+      "ts_code": "601186.SH",
+      "name": "中国铁建",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002876.SZ",
+      "name": "三利谱",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688525.SH",
+      "name": "佰维存储",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600963.SH",
+      "name": "岳阳林纸",
+      "industry": "造纸",
+      "in_exclude": true,
+      "actual_date": "20260311",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "301082.SZ",
+      "name": "久盛电气",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000790.SZ",
+      "name": "华神科技",
+      "industry": "中成药",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "601618.SH",
+      "name": "中国中冶",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002842.SZ",
+      "name": "翔鹭钨业",
+      "industry": "小金属",
+      "in_exclude": true,
+      "actual_date": "20260401",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600712.SH",
+      "name": "南宁百货",
+      "industry": "百货",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603333.SH",
+      "name": "尚纬股份",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260317",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603678.SH",
+      "name": "火炬电子",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002451.SZ",
+      "name": "摩恩电气",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260330",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300323.SZ",
+      "name": "华灿光电",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260323",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002633.SZ",
+      "name": "申科股份",
+      "industry": "机械基件",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300307.SZ",
+      "name": "慈星股份",
+      "industry": "纺织机械",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688737.SH",
+      "name": "中自科技",
+      "industry": "汽车配件",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000878.SZ",
+      "name": "云南铜业",
+      "industry": "铜",
+      "in_exclude": true,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002029.SZ",
+      "name": "七匹狼",
+      "industry": "服饰",
+      "in_exclude": true,
+      "actual_date": "20260403",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002172.SZ",
+      "name": "澳洋健康",
+      "industry": "医疗保健",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002460.SZ",
+      "name": "赣锋锂业",
+      "industry": "小金属",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600973.SH",
+      "name": "宝胜股份",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260314",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002552.SZ",
+      "name": "宝鼎科技",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260321",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300491.SZ",
+      "name": "通合科技",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260326",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300465.SZ",
+      "name": "高伟达",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260327",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300926.SZ",
+      "name": "博俊科技",
+      "industry": "汽车配件",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "920682.BJ",
+      "name": "球冠电缆",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000509.SZ",
+      "name": "华塑控股",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260325",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600433.SH",
+      "name": "冠豪高新",
+      "industry": "造纸",
+      "in_exclude": true,
+      "actual_date": "20260311",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300008.SZ",
+      "name": "天海防务",
+      "industry": "船舶",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300322.SZ",
+      "name": "硕贝德",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "003013.SZ",
+      "name": "地铁设计",
+      "industry": "建筑工程",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "301349.SZ",
+      "name": "信德新材",
+      "industry": "化工原料",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603165.SH",
+      "name": "荣晟环保",
+      "industry": "造纸",
+      "in_exclude": true,
+      "actual_date": "20260401",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688503.SH",
+      "name": "聚和材料",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002838.SZ",
+      "name": "道恩股份",
+      "industry": "塑料",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688213.SH",
+      "name": "思特威-W",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002813.SZ",
+      "name": "路畅科技",
+      "industry": "汽车配件",
+      "in_exclude": true,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600255.SH",
+      "name": "鑫科材料",
+      "industry": "小金属",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000034.SZ",
+      "name": "神州数码",
+      "industry": "软件服务",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000407.SZ",
+      "name": "胜利股份",
+      "industry": "供气供热",
+      "in_exclude": true,
+      "actual_date": "20260325",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002400.SZ",
+      "name": "省广集团",
+      "industry": "广告包装",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 1,
+      "bad_signals": "经营现金流为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300857.SZ",
+      "name": "协创数据",
+      "industry": "IT设备",
+      "in_exclude": true,
+      "actual_date": "20260317",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688678.SH",
+      "name": "福立旺",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260318",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002237.SZ",
+      "name": "恒邦股份",
+      "industry": "黄金",
+      "in_exclude": true,
+      "actual_date": "20260325",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600318.SH",
+      "name": "新力金融",
+      "industry": "多元金融",
+      "in_exclude": true,
+      "actual_date": "20260326",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "688535.SH",
+      "name": "华海诚科",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260318",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "001298.SZ",
+      "name": "好上好",
+      "industry": "元器件",
+      "in_exclude": true,
+      "actual_date": "20260313",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "300522.SZ",
+      "name": "世名科技",
+      "industry": "染料涂料",
+      "in_exclude": true,
+      "actual_date": "20260321",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "301256.SZ",
+      "name": "华融化学",
+      "industry": "化工原料",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "920190.BJ",
+      "name": "雷神科技",
+      "industry": "IT设备",
+      "in_exclude": true,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "000905.SZ",
+      "name": "厦门港务",
+      "industry": "港口",
+      "in_exclude": true,
+      "actual_date": "20260314",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "600805.SH",
+      "name": "悦达投资",
+      "industry": "综合类",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 1,
+      "bad_signals": "货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "002560.SZ",
+      "name": "通达股份",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 0,
+      "bad_signals": "",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "命中",
+      "ts_code": "603985.SH",
+      "name": "恒润股份",
+      "industry": "电气设备",
+      "in_exclude": true,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600038.SH",
+      "name": "中直股份",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002168.SZ",
+      "name": "*ST惠程",
+      "industry": "电气设备",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002047.SZ",
+      "name": "*ST宝鹰",
+      "industry": "装修装饰",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000488.SZ",
+      "name": "ST晨鸣",
+      "industry": "造纸",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603007.SH",
+      "name": "*ST花王",
+      "industry": "建筑工程",
+      "in_exclude": false,
+      "actual_date": "20260306",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000002.SZ",
+      "name": "万科Ａ",
+      "industry": "全国地产",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603268.SH",
+      "name": "*ST松发",
+      "industry": "船舶",
+      "in_exclude": false,
+      "actual_date": "20260310",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600765.SH",
+      "name": "中航重机",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260313",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688107.SH",
+      "name": "安路科技",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688297.SH",
+      "name": "中无人机",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260317",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000011.SZ",
+      "name": "深物业A",
+      "industry": "房产服务",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688062.SH",
+      "name": "迈威生物-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600760.SH",
+      "name": "中航沈飞",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688373.SH",
+      "name": "盟科药业-U",
+      "industry": "化学制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600702.SH",
+      "name": "舍得酒业",
+      "industry": "白酒",
+      "in_exclude": false,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600560.SH",
+      "name": "金自天正",
+      "industry": "电气设备",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300489.SZ",
+      "name": "光智科技",
+      "industry": "专用机械",
+      "in_exclude": false,
+      "actual_date": "20260324",
+      "bad_count": 3,
+      "bad_signals": "货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000768.SZ",
+      "name": "中航西飞",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688802.SH",
+      "name": "沐曦股份-U",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002747.SZ",
+      "name": "埃斯顿",
+      "industry": "机械基件",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000856.SZ",
+      "name": "冀东装备",
+      "industry": "专用机械",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000962.SZ",
+      "name": "东方钽业",
+      "industry": "小金属",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300374.SZ",
+      "name": "中铁装配",
+      "industry": "其他建材",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 3,
+      "bad_signals": "货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000909.SZ",
+      "name": "*ST数源",
+      "industry": "区域地产",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600399.SH",
+      "name": "抚顺特钢",
+      "industry": "特种钢",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "605289.SH",
+      "name": "罗曼股份",
+      "industry": "建筑工程",
+      "in_exclude": false,
+      "actual_date": "20260403",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600657.SH",
+      "name": "信达地产",
+      "industry": "全国地产",
+      "in_exclude": false,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688655.SH",
+      "name": "迅捷兴",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688256.SH",
+      "name": "寒武纪",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260313",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688192.SH",
+      "name": "迪哲医药-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000029.SZ",
+      "name": "深深房Ａ",
+      "industry": "区域地产",
+      "in_exclude": false,
+      "actual_date": "20260320",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688180.SH",
+      "name": "君实生物-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260314",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002742.SZ",
+      "name": "*ST三圣",
+      "industry": "水泥",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000761.SZ",
+      "name": "本钢板材",
+      "industry": "普钢",
+      "in_exclude": false,
+      "actual_date": "20260404",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603316.SH",
+      "name": "诚邦股份",
+      "industry": "建筑工程",
+      "in_exclude": false,
+      "actual_date": "20260307",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002490.SZ",
+      "name": "山东墨龙",
+      "industry": "化工机械",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000910.SZ",
+      "name": "大亚圣象",
+      "industry": "家居用品",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600121.SH",
+      "name": "郑州煤电",
+      "industry": "煤炭开采",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002166.SZ",
+      "name": "莱茵生物",
+      "industry": "中成药",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603186.SH",
+      "name": "华正新材",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260324",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000965.SZ",
+      "name": "天保基建",
+      "industry": "区域地产",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603123.SH",
+      "name": "翠微股份",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300388.SZ",
+      "name": "节能国祯",
+      "industry": "环境保护",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600539.SH",
+      "name": "狮头股份",
+      "industry": "互联网",
+      "in_exclude": false,
+      "actual_date": "20260228",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600685.SH",
+      "name": "中船防务",
+      "industry": "船舶",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300175.SZ",
+      "name": "ST朗源",
+      "industry": "食品",
+      "in_exclude": false,
+      "actual_date": "20260404",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002839.SZ",
+      "name": "张家港行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002868.SZ",
+      "name": "*ST绿康",
+      "industry": "农业综合",
+      "in_exclude": false,
+      "actual_date": "20260310",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688052.SH",
+      "name": "纳芯微",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000548.SZ",
+      "name": "湖南投资",
+      "industry": "路桥",
+      "in_exclude": false,
+      "actual_date": "20260404",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002456.SZ",
+      "name": "欧菲光",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603688.SH",
+      "name": "石英股份",
+      "industry": "矿物制品",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002800.SZ",
+      "name": "天顺股份",
+      "industry": "仓储物流",
+      "in_exclude": false,
+      "actual_date": "20260228",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688220.SH",
+      "name": "翱捷科技-U",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688331.SH",
+      "name": "荣昌生物",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688353.SH",
+      "name": "华盛锂电",
+      "industry": "化工原料",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000798.SZ",
+      "name": "中水渔业",
+      "industry": "渔业",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002672.SZ",
+      "name": "东江环保",
+      "industry": "环境保护",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002961.SZ",
+      "name": "瑞达期货",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688556.SH",
+      "name": "高测股份",
+      "industry": "专用机械",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600581.SH",
+      "name": "*ST八钢",
+      "industry": "普钢",
+      "in_exclude": false,
+      "actual_date": "20260330",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603429.SH",
+      "name": "*ST集友",
+      "industry": "广告包装",
+      "in_exclude": false,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600129.SH",
+      "name": "太极集团",
+      "industry": "中成药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600962.SH",
+      "name": "国投中鲁",
+      "industry": "软饮料",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603208.SH",
+      "name": "江山欧派",
+      "industry": "家居用品",
+      "in_exclude": false,
+      "actual_date": "20260403",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688141.SH",
+      "name": "杰华特",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002024.SZ",
+      "name": "ST易购",
+      "industry": "电器连锁",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600999.SH",
+      "name": "招商证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002865.SZ",
+      "name": "钧达股份",
+      "industry": "电气设备",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688266.SH",
+      "name": "泽璟制药-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000670.SZ",
+      "name": "盈方微",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300059.SZ",
+      "name": "东方财富",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000776.SZ",
+      "name": "广发证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600095.SH",
+      "name": "湘财股份",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002285.SZ",
+      "name": "世联行",
+      "industry": "房产服务",
+      "in_exclude": false,
+      "actual_date": "20260404",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300083.SZ",
+      "name": "创世纪",
+      "industry": "机床制造",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "301089.SZ",
+      "name": "拓新药业",
+      "industry": "化学制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600029.SH",
+      "name": "南方航空",
+      "industry": "空运",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600115.SH",
+      "name": "中国东航",
+      "industry": "空运",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600871.SH",
+      "name": "石化油服",
+      "industry": "石油开采",
+      "in_exclude": false,
+      "actual_date": "20260317",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601991.SH",
+      "name": "大唐发电",
+      "industry": "火力发电",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002121.SZ",
+      "name": "科陆电子",
+      "industry": "电器仪表",
+      "in_exclude": false,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002882.SZ",
+      "name": "金龙羽",
+      "industry": "电气设备",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603286.SH",
+      "name": "日盈电子",
+      "industry": "汽车配件",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601916.SH",
+      "name": "浙商银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600369.SH",
+      "name": "西南证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600403.SH",
+      "name": "大有能源",
+      "industry": "煤炭开采",
+      "in_exclude": false,
+      "actual_date": "20260403",
+      "bad_count": 4,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601238.SH",
+      "name": "广汽集团",
+      "industry": "汽车整车",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601456.SH",
+      "name": "国联民生",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300765.SZ",
+      "name": "新诺威",
+      "industry": "食品",
+      "in_exclude": false,
+      "actual_date": "20260317",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "688519.SH",
+      "name": "南亚新材",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600189.SH",
+      "name": "泉阳泉",
+      "industry": "软饮料",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300456.SZ",
+      "name": "赛微电子",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000810.SZ",
+      "name": "创维数字",
+      "industry": "家用电器",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "001896.SZ",
+      "name": "豫能控股",
+      "industry": "火力发电",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600858.SH",
+      "name": "银座股份",
+      "industry": "百货",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601866.SH",
+      "name": "中远海发",
+      "industry": "水运",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603296.SH",
+      "name": "华勤技术",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260324",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000698.SZ",
+      "name": "ST沈化",
+      "industry": "石油加工",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "货币资金<短债；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000898.SZ",
+      "name": "鞍钢股份",
+      "industry": "普钢",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600605.SH",
+      "name": "汇通能源",
+      "industry": "房产服务",
+      "in_exclude": false,
+      "actual_date": "20260311",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000062.SZ",
+      "name": "深圳华强",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600997.SH",
+      "name": "开滦股份",
+      "industry": "焦炭加工",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002213.SZ",
+      "name": "大为股份",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260306",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300850.SZ",
+      "name": "新强联",
+      "industry": "机械基件",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600310.SH",
+      "name": "广西能源",
+      "industry": "水力发电",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002119.SZ",
+      "name": "康强电子",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000631.SZ",
+      "name": "顺发恒能",
+      "industry": "综合类",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601702.SH",
+      "name": "华峰铝业",
+      "industry": "铝",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600231.SH",
+      "name": "凌钢股份",
+      "industry": "普钢",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600675.SH",
+      "name": "中华企业",
+      "industry": "区域地产",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002252.SZ",
+      "name": "上海莱士",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002881.SZ",
+      "name": "美格智能",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300047.SZ",
+      "name": "天源迪科",
+      "industry": "软件服务",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600015.SH",
+      "name": "华夏银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300390.SZ",
+      "name": "天华新能",
+      "industry": "电气设备",
+      "in_exclude": false,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002841.SZ",
+      "name": "视源股份",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000521.SZ",
+      "name": "长虹美菱",
+      "industry": "家用电器",
+      "in_exclude": false,
+      "actual_date": "20260403",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000970.SZ",
+      "name": "中科三环",
+      "industry": "矿物制品",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000166.SZ",
+      "name": "申万宏源",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600362.SH",
+      "name": "江西铜业",
+      "industry": "铜",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600882.SH",
+      "name": "妙可蓝多",
+      "industry": "乳制品",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002386.SZ",
+      "name": "天原股份",
+      "industry": "化工原料",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002945.SZ",
+      "name": "华林证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002345.SZ",
+      "name": "潮宏基",
+      "industry": "服饰",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002779.SZ",
+      "name": "中坚科技",
+      "industry": "农用机械",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601198.SH",
+      "name": "东兴证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600132.SH",
+      "name": "重庆啤酒",
+      "industry": "啤酒",
+      "in_exclude": false,
+      "actual_date": "20260311",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "300138.SZ",
+      "name": "晨光生物",
+      "industry": "食品",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600958.SH",
+      "name": "东方证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002948.SZ",
+      "name": "青岛银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600016.SH",
+      "name": "民生银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601818.SH",
+      "name": "光大银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603026.SH",
+      "name": "石大胜华",
+      "industry": "化工原料",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "920022.BJ",
+      "name": "世昌股份",
+      "industry": "汽车配件",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "603093.SH",
+      "name": "南华期货",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "301606.SZ",
+      "name": "绿联科技",
+      "industry": "元器件",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "920971.BJ",
+      "name": "天马新材",
+      "industry": "化工原料",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601963.SH",
+      "name": "重庆银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601688.SH",
+      "name": "华泰证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "002673.SZ",
+      "name": "西部证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601881.SH",
+      "name": "中国银河",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601077.SH",
+      "name": "渝农商行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000960.SZ",
+      "name": "锡业股份",
+      "industry": "小金属",
+      "in_exclude": false,
+      "actual_date": "20260330",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600711.SH",
+      "name": "盛屯矿业",
+      "industry": "小金属",
+      "in_exclude": false,
+      "actual_date": "20260320",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600727.SH",
+      "name": "鲁北化工",
+      "industry": "化工原料",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "600073.SH",
+      "name": "光明肉业",
+      "industry": "食品",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "601236.SH",
+      "name": "红塔证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "漏判",
+      "ts_code": "000563.SZ",
+      "name": "陕国投Ａ",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260210",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600893.SH",
+      "name": "航发动力",
+      "industry": "航空",
+      "in_exclude": true,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600879.SH",
+      "name": "航天电子",
+      "industry": "航空",
+      "in_exclude": true,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；货币资金<短债",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600038.SH",
+      "name": "中直股份",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "001309.SZ",
+      "name": "德明利",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260228",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "300077.SZ",
+      "name": "国民技术",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688525.SH",
+      "name": "佰维存储",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "300323.SZ",
+      "name": "华灿光电",
+      "industry": "半导体",
+      "in_exclude": true,
+      "actual_date": "20260323",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600765.SH",
+      "name": "中航重机",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260313",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688107.SH",
+      "name": "安路科技",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688297.SH",
+      "name": "中无人机",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260317",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688062.SH",
+      "name": "迈威生物-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600760.SH",
+      "name": "中航沈飞",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688373.SH",
+      "name": "盟科药业-U",
+      "industry": "化学制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "000768.SZ",
+      "name": "中航西飞",
+      "industry": "航空",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688802.SH",
+      "name": "沐曦股份-U",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600318.SH",
+      "name": "新力金融",
+      "industry": "多元金融",
+      "in_exclude": true,
+      "actual_date": "20260326",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688256.SH",
+      "name": "寒武纪",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260313",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688192.SH",
+      "name": "迪哲医药-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688180.SH",
+      "name": "君实生物-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260314",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "603123.SH",
+      "name": "翠微股份",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002839.SZ",
+      "name": "张家港行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688052.SH",
+      "name": "纳芯微",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688220.SH",
+      "name": "翱捷科技-U",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688331.SH",
+      "name": "荣昌生物",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002961.SZ",
+      "name": "瑞达期货",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688141.SH",
+      "name": "杰华特",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；货币资金<短债；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600999.SH",
+      "name": "招商证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "688266.SH",
+      "name": "泽璟制药-U",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "300059.SZ",
+      "name": "东方财富",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260320",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "000776.SZ",
+      "name": "广发证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600095.SH",
+      "name": "湘财股份",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260321",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "争议",
+      "ts_code": "301089.SZ",
+      "name": "拓新药业",
+      "industry": "化学制药",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601916.SH",
+      "name": "浙商银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；资产负债率>70%",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600369.SH",
+      "name": "西南证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601456.SH",
+      "name": "国联民生",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "300456.SZ",
+      "name": "赛微电子",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002213.SZ",
+      "name": "大为股份",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260306",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002119.SZ",
+      "name": "康强电子",
+      "industry": "半导体",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "货币资金<短债；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002252.SZ",
+      "name": "上海莱士",
+      "industry": "生物制药",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "综合财务质量偏弱"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600015.SH",
+      "name": "华夏银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "000166.SZ",
+      "name": "申万宏源",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002945.SZ",
+      "name": "华林证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260401",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601198.SH",
+      "name": "东兴证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600958.SH",
+      "name": "东方证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002948.SZ",
+      "name": "青岛银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260327",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "600016.SH",
+      "name": "民生银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601818.SH",
+      "name": "光大银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "603093.SH",
+      "name": "南华期货",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601963.SH",
+      "name": "重庆银行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260325",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601688.SH",
+      "name": "华泰证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 3,
+      "bad_signals": "经营现金流为负；资产负债率>70%；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "争议",
+      "ts_code": "002673.SZ",
+      "name": "西部证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260402",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "经营现金流为负"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601881.SH",
+      "name": "中国银河",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260331",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601077.SH",
+      "name": "渝农商行",
+      "industry": "银行",
+      "in_exclude": false,
+      "actual_date": "20260326",
+      "bad_count": 2,
+      "bad_signals": "资产负债率>70%；现金流/营收为负",
+      "primary_reason": "短债覆盖严重失衡"
+    },
+    {
+      "type": "争议",
+      "ts_code": "601236.SH",
+      "name": "红塔证券",
+      "industry": "证券",
+      "in_exclude": false,
+      "actual_date": "20260328",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    },
+    {
+      "type": "争议",
+      "ts_code": "000563.SZ",
+      "name": "陕国投Ａ",
+      "industry": "多元金融",
+      "in_exclude": false,
+      "actual_date": "20260210",
+      "bad_count": 2,
+      "bad_signals": "经营现金流为负；现金流/营收为负",
+      "primary_reason": "净利润同比断崖"
+    }
+  ]
+}
