@@ -823,13 +823,26 @@ function renderDetail(){
   if(charts.trend) charts.trend.dispose();
   charts.trend = echarts.init(document.getElementById("detailTrend"));
   const h = s.history || [];
+  const labels = h.map(x => x.label);
+  // 每个截面存 factor scores，若无则用当前值填充
+  const factorHistory = FACTOR_NAMES.map(k => ({
+    name: FACTOR_LABELS[k],
+    data: h.map(x => x[k] !== undefined ? Number(x[k].toFixed(2)) : Number(s[k].toFixed(2)))
+  }));
+  const colors = ['#67b7ff','#5ce1c2','#f7c95c','#a08bff'];
   charts.trend.setOption({
-    tooltip:{trigger:"axis"},
-    grid:{left:45,right:20,top:20,bottom:80},
-    xAxis:{type:"category",data:h.map(x=>x.label),axisLabel:{color:"#9db0c8"}},
-    yAxis:{type:"category",data:[s.name],axisLabel:{color:"#9db0c8"}},
-    visualMap:{min:0,max:3,show:false,inRange:{color:['#123554','#2b6da8','#f0b35a','#ff7f86']}},
-    series:[{type:'heatmap',data:h.map((x,i)=>[i,0, x.text && x.text.includes('待补充') ? 0 : 3]),label:{show:true,color:'#eaf2ff',formatter:p=>h[p.data[0]].text || '-'},itemStyle:{borderColor:'rgba(255,255,255,.08)',borderWidth:1}}]
+    tooltip:{trigger:'axis'},
+    legend:{data:FACTOR_NAMES.map(k=>FACTOR_LABELS[k]),textStyle:{color:'#9db0c8'},bottom:0,itemWidth:12,itemHeight:8,fontSize:11},
+    grid:{left:40,right:16,top:16,bottom:60},
+    xAxis:{type:'category',data:labels,axisLabel:{color:'#9db0c8'},axisLine:{lineStyle:{color:'#31435f'}}},
+    yAxis:{type:'value',min:0,max:1,axisLabel:{color:'#9db0c8',formatter:v=>v.toFixed(1)},splitLine:{lineStyle:{color:'#1f2d47'}}},
+    series: factorHistory.map((f,i)=>({
+      name:f.name, type:'line', data:f.data,
+      lineStyle:{color:colors[i],width:2},
+      itemStyle:{color:colors[i]},
+      symbol:'circle', symbolSize:6,
+      label:{show:true,position:'top',color:colors[i],fontSize:11,formatter:p=>p.value}
+    }))
   });
 }
 
