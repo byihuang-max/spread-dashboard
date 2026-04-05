@@ -145,6 +145,7 @@ window.onerror=function(msg,src,line,col,err){
         <div class="tag" id="asOfTag"></div>
       </div>
       <div id="industryHeatmap" class="chart"></div><div id="industryHeatmapHtml" class="heat-grid" style="display:none"></div>
+      <div class="note" style="margin-top:10px;font-size:12px">颜色表示该行业在对应因子上的平均风险分，越红越差，越蓝越轻；把鼠标移到色块上看具体分数。</div>
     </div>
     <div class="card">
       <div class="section-title">
@@ -152,6 +153,7 @@ window.onerror=function(msg,src,line,col,err){
         <div class="tag">主视角</div>
       </div>
       <div id="industryRank" class="chart"></div><div id="industryRankHtml" class="html-chart" style="display:none"></div>
+      <div class="note" style="margin-top:10px;font-size:12px">每一行颜色代表该行业当前最主导的风险来源：蓝=利润，绿=现金流，黄=短债，紫=营运资本。</div>
     </div>
   </div>
 
@@ -636,8 +638,8 @@ function renderHeatmap(){
     grid:{left:70,right:20,top:20,bottom:110},
     xAxis:{type:"category",data:INDUSTRIES.map(i=>i.name),axisLabel:{color:"#9db0c8",interval:0,rotate:35,fontSize:10,margin:14},axisLine:{lineStyle:{color:"#31435f"}}},
     yAxis:{type:"category",data:FACTOR_NAMES.map(k=>FACTOR_LABELS[k]),axisLabel:{color:"#9db0c8"},axisLine:{lineStyle:{color:"#31435f"}}},
-    visualMap:{min:0,max:1,calculable:false,orient:"horizontal",left:"center",bottom:10,textStyle:{color:"#9db0c8"},inRange:{color:["#123554","#1e6fae","#36b7c8","#f5b75b","#ff6f7a"]}},
-    series:[{type:"heatmap",data:heatData,label:{show:true,color:"#eef5ff",fontSize:10,formatter:p=>p.value[2]},itemStyle:{borderColor:"rgba(255,255,255,.08)",borderWidth:1}}]
+    visualMap:{min:0,max:1,calculable:false,orient:"horizontal",left:"center",bottom:10,text:['高风险','低风险'],textStyle:{color:"#9db0c8"},inRange:{color:["#123554","#1e6fae","#36b7c8","#f5b75b","#ff6f7a"]}},
+    series:[{type:"heatmap",data:heatData,label:{show:false},emphasis:{itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,.35)'}},itemStyle:{borderColor:"rgba(255,255,255,.12)",borderWidth:1}}]
   });
   } catch(e){ renderHeatmapHtml(); }
 }
@@ -645,15 +647,24 @@ function renderHeatmap(){
 function renderIndustryRank(){
   try {
   charts.rank = echarts.init(document.getElementById("industryRank"));
+  const primaryText = INDUSTRIES.map(i => FACTOR_LABELS[i.primary].replace('恶化',''));
+  const colorMap = {
+    profit_score:'#67b7ff',
+    cashflow_score:'#5ce1c2',
+    debt_score:'#f7c95c',
+    working_capital_score:'#a08bff'
+  };
   charts.rank.setOption({
-    tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+    tooltip:{formatter:p=>`${INDUSTRIES[p.dataIndex].name}<br>平均风险：${score(INDUSTRIES[p.dataIndex].avgRisk)}<br>主导矛盾：${FACTOR_LABELS[INDUSTRIES[p.dataIndex].primary]}`},
     grid:{left:100,right:20,top:20,bottom:30},
     xAxis:{type:"value",max:1,axisLabel:{color:"#9db0c8"},splitLine:{lineStyle:{color:"#1f2d47"}}},
-    yAxis:{type:"category",data:INDUSTRIES.map(i=>i.name),axisLabel:{color:"#d7e0ea",fontSize:11}},
-    series:[
-      {type:"bar",data:INDUSTRIES.map(i=>Number(i.avgRisk.toFixed(2))),barWidth:18,itemStyle:{color:"#5d9cff",borderRadius:[0,8,8,0]}},
-      {type:"scatter",data:INDUSTRIES.map(i=>[i.avgRisk,i.name]),symbolSize:16,itemStyle:{color:"#5ce1c2"},label:{show:true,position:"right",color:"#9cb0ca",fontSize:10,formatter:p=>FACTOR_LABELS[INDUSTRIES.find(x=>x.name===p.value[1]).primary]}}
-    ]
+    yAxis:{type:"category",data:INDUSTRIES.map(i=>i.name),axisLabel:{color:"#d7e0ea",fontSize:11},axisTick:{show:false},axisLine:{show:false}},
+    series:[{
+      type:"bar",
+      data:INDUSTRIES.map(i=>({value:Number(i.avgRisk.toFixed(2)),itemStyle:{color:colorMap[i.primary]||'#5d9cff',borderColor:'rgba(255,255,255,.18)',borderWidth:1,borderRadius:[0,8,8,0]}})),
+      barWidth:18,
+      label:{show:true,position:'right',color:'#d7e0ea',fontSize:10,formatter:p=>primaryText[p.dataIndex]}
+    }]
   });
   } catch(e){ renderIndustryRankHtml(); }
 }
