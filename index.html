@@ -3632,11 +3632,16 @@ function initCbCharts() {
       var tr=document.getElementById('navTimingResearch');
       if(tr) tr.style.display='';
     }
-    // 所有登录用户：显示个股筹码查询
-    var cq=document.getElementById('navChipQuery');
-    if(cq) cq.style.display='';
-    var fr=document.getElementById('navFinancialRisk');
-    if(fr) fr.style.display='';
+    // 仅管理员：显示个股筹码查询
+    if(user.is_admin){
+      var cq=document.getElementById('navChipQuery');
+      if(cq) cq.style.display='';
+    }
+    // 管理员 或 高级客户(tier>=1)：显示财报预期风险
+    if(user.is_admin || (user.tier && user.tier >= 1)){
+      var fr=document.getElementById('navFinancialRisk');
+      if(fr) fr.style.display='';
+    }
     // 检查是否有正在运行的刷新任务
     if(typeof STATUS_API!=='undefined'&&STATUS_API){
       fetch(STATUS_API,{headers:(typeof getAuthHeaders==='function'?getAuthHeaders():{})}).then(function(r){return r.json()}).then(function(s){
