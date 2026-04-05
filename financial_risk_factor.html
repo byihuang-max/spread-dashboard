@@ -201,7 +201,11 @@ window.onerror=function(msg,src,line,col,err){
   <div class="card">
     <div class="section-title">
       <h2 style="margin:0;padding:0;border:none">第三层：个股解释器 + 完整明细表</h2>
-      <div class="tag">全市场映射</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button id="downloadFilteredCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer">下载当前结果 CSV</button>
+        <button id="downloadAllCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer">下载全量 CSV</button>
+        <div class="tag">全市场映射</div>
+      </div>
     </div>
     <div class="filter-bar">
       <input id="keywordInput" placeholder="搜索代码 / 名称 / 行业">
@@ -761,6 +765,25 @@ function renderDetail(){
   });
 }
 
+function stocksToCsv(stocks){
+  const headers = ['股票代码','股票简称','原始行业','归并行业','总分','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
+  const rows = stocks.map(s => [
+    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1,
+    s.landmine_score, s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
+    s.industry_percentile, s.exclude_flag ? '是' : '否',
+    s.primary_reason||s.worst_metric||'',
+    (s.why_dangerous||'').replace(/,/g,'；')
+  ]);
+  return '\uFEFF' + [headers, ...rows].map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+}
+
+function downloadCsv(content, filename){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type:'text/csv;charset=utf-8'}));
+  a.download = filename;
+  a.click();
+}
+
 function initFilters(){
   document.getElementById("industryFilter").innerHTML = ['<option value="all">全部行业</option>'].concat(INDUSTRIES.map(i=>`<option value="${i.name}">${i.name}</option>`)).join("");
   ["keywordInput","industryFilter","excludeFilter","sortFilter"].forEach(id => {
@@ -784,6 +807,15 @@ async function boot(){
   }
   state.industry = INDUSTRIES[0].name;
   state.stockCode = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score)[0].ts_code;
+  document.getElementById("downloadFilteredCsv").onclick = () => {
+    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    downloadCsv(stocksToCsv(filteredStocks()), `财报风险_筛选结果_${today}.csv`);
+  };
+  document.getElementById("downloadAllCsv").onclick = () => {
+    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    const all = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score);
+    downloadCsv(stocksToCsv(all), `财报风险_全量_${today}.csv`);
+  };
   renderOverview();
   renderHeatmap();
   renderIndustryRank();
