@@ -154,6 +154,7 @@ tr:hover td{background:#fafbfc}
         <thead>
           <tr>
             <th>公司</th><th>基金名称</th><th>代码</th><th>类别</th><th>区间</th>
+            <th>管理规模(亿)</th><th>基金经理</th>
             <th>收益</th><th>最大回撤</th><th>年化波动</th><th>股票基准</th><th>业绩比较基准</th><th>净值样本数</th>
           </tr>
         </thead>
@@ -170,6 +171,7 @@ tr:hover td{background:#fafbfc}
     <div class="item"><b>年化波动率：</b>区间内复权净值日收益率的标准差 × √252，反映净值日常波动水平。数值越大说明净值变动越剧烈。</div>
     <div class="item"><b>正收益占比：</b>该公司/类别下，区间收益率 > 0 的产品数量 ÷ 总产品数量 × 100%。反映管理人整体"做正收益"的一致性。</div>
     <div class="item"><b>产品分类原则：</b>以业绩比较基准优先定义产品属性，不以名称或基金大类标签硬判。纯债原则上不应含股票基准；固收加本质是债券打底 + 少量权益增强；若股票基准占比 > 30%，则视为偏股混合并剔除。</div>
+    <div class="item"><b>管理规模 / 基金经理：</b>产品明细中的管理规模取 UQER 最新一期可得净资产（亿元）；基金经理展示当前在任基金经理名单。</div>
     <div class="item"><b>管理人汇总逻辑：</b>按公司维度将旗下全部纯债/固收加产品分别聚合；平均收益、平均回撤为产品数加权；中位收益、中位回撤为产品级中位数；年化波动为同类产品波动率的简单均值。</div>
     
     <div class="item"><b>数据来源：</b>UQER / 优矿（通联数据），日频基金净值 + 基金基础信息。底表范围来自桌面基金池研究表。</div>
@@ -226,6 +228,8 @@ function renderDetail(funds){
       +'<td style="color:#94a3b8">'+f.code+'</td>'
       +'<td>'+catTag(f.category)+'</td>'
       +'<td>'+f.horizon+'</td>'
+      +'<td style="text-align:right">'+(f.asset_size_bn!=null?f.asset_size_bn.toFixed(2):'-')+'</td>'
+      +'<td style="max-width:120px;white-space:normal;font-size:11px">'+(f.manager||'-')+'</td>'
       +'<td class="'+cls(f.return_pct)+'">'+pct(f.return_pct)+'</td>'
       +'<td class="'+cls(f.max_drawdown_pct)+'">'+pct(f.max_drawdown_pct)+'</td>'
       +'<td>'+(f.annualized_vol_pct!=null?pct(f.annualized_vol_pct):'-')+'</td>'
