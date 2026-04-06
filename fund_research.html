@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公募基金研究 · GAMT</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#1e2433;font-size:13px}
+.topbar{background:#1e2433;color:#e2e6ed;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.topbar a{color:#7c8598;text-decoration:none;font-size:12px}
+.topbar a:hover{color:#e2e6ed}
+.topbar .title{font-size:16px;font-weight:700;color:#fff}
+.topbar .sub{font-size:12px;color:#7c8598;margin-left:4px}
+.container{max-width:1280px;margin:0 auto;padding:20px 24px}
+.section{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.section-title{font-size:14px;font-weight:700;color:#1e2433;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title .badge{font-size:10px;background:#e8f0fe;color:#3b5bdb;padding:2px 8px;border-radius:10px;font-weight:600}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filter-row label{font-size:12px;color:#64748b;font-weight:600}
+.filter-row select,.filter-row input{border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:12px;color:#1e2433;background:#fff;cursor:pointer}
+.filter-row select:focus,.filter-row input:focus{outline:none;border-color:#3b5bdb}
+.tabs{display:flex;gap:0;border-bottom:2px solid #e8eaef;margin-bottom:16px}
+.tab{padding:8px 18px;cursor:pointer;font-size:13px;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab.active{color:#3b5bdb;border-bottom-color:#3b5bdb;font-weight:600}
+.tab:hover{color:#3b5bdb}
+.tab-content{display:none}.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f8fafc;color:#64748b;font-weight:600;padding:8px 10px;text-align:left;border-bottom:2px solid #e8eaef;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f1f5f9;color:#334155}
+tr:hover td{background:#f8fafc}
+.pos{color:#16a34a;font-weight:600}
+.neg{color:#dc2626;font-weight:600}
+.neu{color:#64748b}
+.tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:600}
+.tag-bond{background:#e0f2fe;color:#0369a1}
+.tag-plus{background:#fef3c7;color:#b45309}
+.tag-short{background:#dcfce7;color:#15803d}
+.tag-hold{background:#f3e8ff;color:#7c3aed}
+.tag-long{background:#fee2e2;color:#dc2626}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
+.summary-card{background:#f8fafc;border-radius:10px;padding:14px;border:1px solid #e8eaef}
+.summary-card .company{font-size:12px;font-weight:700;color:#1e2433;margin-bottom:4px}
+.summary-card .cat{font-size:11px;color:#64748b;margin-bottom:8px}
+.summary-card .metrics{display:flex;gap:16px}
+.summary-card .metric{flex:1}
+.summary-card .metric .val{font-size:16px;font-weight:700}
+.summary-card .metric .lbl{font-size:10px;color:#94a3b8;margin-top:1px}
+.chart-wrap{position:relative;height:280px}
+.as-of{font-size:11px;color:#94a3b8;margin-left:auto}
+.search-input{border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:12px;width:200px}
+.search-input:focus{outline:none;border-color:#3b5bdb}
+.count-badge{font-size:11px;color:#94a3b8;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← 返回GAMT看板</a>
+  <span class="title">公募基金研究</span>
+  <span class="sub">华夏 · 工银瑞信 · 鹏华</span>
+  <span class="as-of" id="asOf"></span>
+</div>
+
+<div class="container">
+
+  <!-- 筛选栏 -->
+  <div class="section">
+    <div class="filter-row">
+      <label>公司</label>
+      <select id="filterCompany">
+        <option value="">全部</option>
+        <option>华夏基金</option>
+        <option>工银瑞信基金</option>
+        <option>鹏华基金</option>
+      </select>
+      <label>类别</label>
+      <select id="filterCat">
+        <option value="">全部</option>
+        <option>纯债-短债</option>
+        <option>纯债-持有期</option>
+        <option>纯债-中长债</option>
+        <option>固收加-偏债混合</option>
+        <option>固收加-养老稳健</option>
+        <option>固收加-FOF</option>
+      </select>
+      <label>搜索</label>
+      <input class="search-input" id="searchInput" placeholder="基金名称/代码">
+      <span class="count-badge" id="countBadge"></span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="section">
+    <div class="tabs">
+      <div class="tab active" data-tab="summary">汇总对比</div>
+      <div class="tab" data-tab="chart">图表</div>
+      <div class="tab" data-tab="detail">产品明细</div>
+    </div>
+
+    <!-- 汇总 -->
+    <div class="tab-content active" id="tab-summary">
+      <div style="margin-bottom:12px;font-size:12px;color:#64748b">
+        纯债口径：近9个月（2025-07-01起）&nbsp;|&nbsp;固收加口径：近3个月（2026-01-01起）&nbsp;|&nbsp;收益/回撤均基于复权净值重算
+      </div>
+      <div id="summaryGrid" class="summary-grid"></div>
+      <table id="summaryTable">
+        <thead>
+          <tr>
+            <th>公司</th><th>类别</th><th>区间</th><th>产品数</th>
+            <th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th>
+            <th>年化波动</th><th>正收益占比</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 图表 -->
+    <div class="tab-content" id="tab-chart">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div class="section-title">纯债 · 近9个月平均收益 vs 平均回撤</div>
+          <div class="chart-wrap"><canvas id="chartBond"></canvas></div>
+        </div>
+        <div>
+          <div class="section-title">固收加 · 近3个月平均收益 vs 平均回撤</div>
+          <div class="chart-wrap"><canvas id="chartPlus"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 明细 -->
+    <div class="tab-content" id="tab-detail">
+      <table id="detailTable">
+        <thead>
+          <tr>
+            <th>公司</th><th>基金名称</th><th>代码</th><th>类别</th><th>区间</th>
+            <th>收益</th><th>最大回撤</th><th>年化波动</th><th>净值样本数</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+var DATA = null;
+
+function pct(v, digits){
+  if(v===null||v===undefined) return '-';
+  var n = parseFloat(v);
+  var s = (n>=0?'+':'')+n.toFixed(digits||2)+'%';
+  return s;
+}
+function cls(v){ return v>0?'pos':v<0?'neg':'neu'; }
+
+function catTag(cat){
+  var m = {
+    '纯债-短债':'tag-short','纯债-持有期':'tag-hold','纯债-中长债':'tag-long',
+    '固收加-偏债混合':'tag-plus','固收加-养老稳健':'tag-plus','固收加-FOF':'tag-plus'
+  };
+  return '<span class="tag '+(m[cat]||'tag-bond')+'">'+cat+'</span>';
+}
+
+function renderSummary(rows){
+  var tbody = document.getElementById('summaryBody');
+  tbody.innerHTML = '';
+  rows.forEach(function(r){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+r.company+'</td>'
+      +'<td>'+catTag(r.category)+'</td>'
+      +'<td>'+r.horizon+'</td>'
+      +'<td>'+r.count+'</td>'
+      +'<td class="'+cls(r.avg_return_pct)+'">'+pct(r.avg_return_pct)+'</td>'
+      +'<td class="'+cls(r.median_return_pct)+'">'+pct(r.median_return_pct)+'</td>'
+      +'<td class="'+cls(r.avg_drawdown_pct)+'">'+pct(r.avg_drawdown_pct)+'</td>'
+      +'<td class="'+cls(r.median_drawdown_pct)+'">'+pct(r.median_drawdown_pct)+'</td>'
+      +'<td>'+(r.avg_vol_pct!=null?pct(r.avg_vol_pct):'-')+'</td>'
+      +'<td>'+r.positive_ratio_pct.toFixed(1)+'%</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function renderDetail(funds){
+  var tbody = document.getElementById('detailBody');
+  tbody.innerHTML = '';
+  document.getElementById('countBadge').textContent = '共 '+funds.length+' 只';
+  funds.forEach(function(f){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+f.company+'</td>'
+      +'<td>'+f.name+'</td>'
+      +'<td style="color:#94a3b8">'+f.code+'</td>'
+      +'<td>'+catTag(f.category)+'</td>'
+      +'<td>'+f.horizon+'</td>'
+      +'<td class="'+cls(f.return_pct)+'">'+pct(f.return_pct)+'</td>'
+      +'<td class="'+cls(f.max_drawdown_pct)+'">'+pct(f.max_drawdown_pct)+'</td>'
+      +'<td>'+(f.annualized_vol_pct!=null?pct(f.annualized_vol_pct):'-')+'</td>'
+      +'<td style="color:#94a3b8">'+f.obs+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function renderCharts(summary){
+  var bondRows = summary.filter(function(r){ return r.category.startsWith('纯债'); });
+  var plusRows = summary.filter(function(r){ return r.category.startsWith('固收加'); });
+
+  function makeChart(canvasId, rows){
+    var labels = rows.map(function(r){ return r.company+'\n'+r.category; });
+    var retData = rows.map(function(r){ return r.avg_return_pct; });
+    var ddData = rows.map(function(r){ return r.avg_drawdown_pct; });
+    var colors = rows.map(function(r){
+      if(r.company==='华夏基金') return 'rgba(59,130,246,0.7)';
+      if(r.company==='工银瑞信基金') return 'rgba(16,185,129,0.7)';
+      return 'rgba(245,158,11,0.7)';
+    });
+    var ctx = document.getElementById(canvasId).getContext('2d');
+    new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels:labels,
+        datasets:[
+          {label:'平均收益(%)',data:retData,backgroundColor:colors,yAxisID:'y'},
+          {label:'平均回撤(%)',data:ddData,backgroundColor:colors.map(function(c){return c.replace('0.7','0.3');}),yAxisID:'y2',type:'bar'}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+        scales:{
+          y:{position:'left',title:{display:true,text:'收益(%)',font:{size:11}},grid:{color:'#f1f5f9'}},
+          y2:{position:'right',title:{display:true,text:'回撤(%)',font:{size:11}},grid:{display:false}}
+        }
+      }
+    });
+  }
+  makeChart('chartBond', bondRows);
+  makeChart('chartPlus', plusRows);
+}
+
+function applyFilters(){
+  if(!DATA) return;
+  var comp = document.getElementById('filterCompany').value;
+  var cat = document.getElementById('filterCat').value;
+  var q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  var funds = DATA.funds.filter(function(f){
+    if(comp && f.company!==comp) return false;
+    if(cat && f.category!==cat) return false;
+    if(q && f.name.toLowerCase().indexOf(q)<0 && f.code.toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+
+  var summaryFiltered = DATA.summary.filter(function(r){
+    if(comp && r.company!==comp) return false;
+    if(cat && r.category!==cat) return false;
+    return true;
+  });
+
+  renderSummary(summaryFiltered);
+  renderDetail(funds);
+}
+
+// tabs
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+// filters
+['filterCompany','filterCat','searchInput'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', applyFilters);
+  document.getElementById(id).addEventListener('input', applyFilters);
+});
+
+// load data
+fetch('data/fund_research.json?t='+Date.now())
+  .then(function(r){return r.json();})
+  .then(function(d){
+    DATA = d;
+    document.getElementById('asOf').textContent = '数据截至 '+d.as_of;
+    renderSummary(d.summary);
+    renderDetail(d.funds);
+    renderCharts(d.summary);
+  })
+  .catch(function(e){ console.error(e); });
+</script>
+</body>
+</html>
