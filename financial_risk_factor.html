@@ -525,6 +525,10 @@ let INDUSTRIES = [];
 let SPECIAL_VALIDATION_INDUSTRIES = [];
 let industryMode = "primary";
 
+// 行业元数据：每个行业的生意本质定义 + 因子角色说明
+// definition: 用一段人话讲清楚这个行业的生意本质
+// roles: 先行因子/同步验证/滞后结果各自是什么、为什么这么看
+// 目前只有部分行业有详细定义，后续持续补充
 const INDUSTRY_META = {
   "电子": {
     definition: "电子本质上是需求和库存共同驱动的周期行业。它不是简单的成长股集合，而是一个库存、订单、回款、资本开支高度联动的生意。真正危险的时候，不是利润先坏，而是库存和应收先坏。",
@@ -592,6 +596,9 @@ const INDUSTRY_META = {
   }
 };
 
+// 行业逻辑链：把行业恶化过程可视化为一条链
+// 每个节点是恶化传导中的一个环节
+// 目的：让 PM 一眼看出"坏"是怎么从A传导到B再传导到C的
 const INDUSTRY_CHAIN = {
   "电子": {
     core: "电子行业是需求-库存周期行业。利润下滑是最后出现的结果，真正的先行信号是存货周转天数和应收账款——它们比利润表早1-2个季度反映需求的真实变化。看电子不要先看利润，要先看库存有没有开始堆积。",
@@ -899,6 +906,8 @@ function currentSpecialIndustry(){
   return SPECIAL_VALIDATION_INDUSTRIES.find(i => i['特例行业'] === state.industry);
 }
 
+// 渲染特例行业按钮列表
+// 这些行业不能直接套一级行业口径，需要单独展示规则
 function renderSpecialIndustryList(){
   const wrap = document.getElementById("specialIndustryWrap");
   const box = document.getElementById("specialIndustryList");
@@ -921,6 +930,9 @@ function renderSpecialIndustryList(){
   });
 }
 
+// 渲染行业因子拆解（第二层核心函数）
+// industryMode='primary' 时展示主行业完整画像
+// industryMode='special' 时只展示特例行业规则逻辑，不伪造统计
 function renderIndustrySection(){
   if(industryMode === 'special'){
     const ind = currentSpecialIndustry();
@@ -1126,6 +1138,8 @@ let VALIDATION = null;
 let validationTab = '命中';
 let sampleExpanded = false;
 
+// ── 第四层：财报验证层渲染函数 ──────────────────────────────────
+// 总览卡片：命中数/漏判数/命中率
 function renderValidationSummary(){
   if(!VALIDATION) return;
   const s = VALIDATION.summary || {};
@@ -1142,6 +1156,9 @@ function renderValidationSummary(){
   `).join('');
 }
 
+// 恶化链条验证表：一级行业 + 二级行业特例双表
+// primary_industries → chainTableBody（31个主行业）
+// special_industries → specialChainTableBody（8个特例行业）
 function renderValidationChains(){
   if(!VALIDATION) return;
   const primary = VALIDATION.primary_industries || [];
@@ -1175,6 +1192,8 @@ function renderValidationChains(){
   }
 }
 
+// 样本清单：命中/漏判/争议三类 tab 切换
+// 争议样本来自金融类/高研发类行业，用统一口径容易误判
 function renderValidationSamples(){
   if(!VALIDATION) return;
   const allRows = (VALIDATION.samples || []).filter(x => x['样本类型'] === validationTab);
@@ -1199,6 +1218,7 @@ function renderValidationSamples(){
   }
 }
 
+// 下载全量样本 CSV（UTF-8 with BOM，避免 Excel 乱码）
 function downloadValidationSamplesCsv(){
   if(!VALIDATION) return;
   const allRows = VALIDATION.samples || [];
@@ -1212,6 +1232,9 @@ function downloadValidationSamplesCsv(){
   downloadCsv(csv, `财报验证_全量样本_${today}.csv`);
 }
 
+// 加载验证层数据
+// 数据来源：data/financial_validation/validation_view.json
+// 由 build_financial_validation_tables.py 生成
 async function loadValidation(){
   try {
     const res = await fetch('./data/financial_validation/validation_view.json?_=' + Date.now());
