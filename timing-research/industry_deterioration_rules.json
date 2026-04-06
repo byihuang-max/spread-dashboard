@@ -21,7 +21,13 @@
         "应收虽高但回款加速（CFO改善）",
         "短债压力高但有新融资覆盖"
       ],
-      "key_fields": ["accounts_receiv", "n_cashflow_act", "money_cap", "st_borr", "total_liab"]
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr",
+        "total_liab"
+      ]
     },
     "环境保护": {
       "type": "订单回款型",
@@ -39,7 +45,12 @@
       "not_worse_if": [
         "政府回款加速，CFO改善"
       ],
-      "key_fields": ["accounts_receiv", "n_cashflow_act", "money_cap", "st_borr"]
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr"
+      ]
     },
     "半导体": {
       "type": "高研发成长型",
@@ -60,7 +71,13 @@
         "现金流为负但融资能力强、现金储备充足",
         "存货高但是战略备货，周转未恶化"
       ],
-      "key_fields": ["inventories", "n_cashflow_act", "money_cap", "accounts_receiv", "q_sales_yoy"]
+      "key_fields": [
+        "inventories",
+        "n_cashflow_act",
+        "money_cap",
+        "accounts_receiv",
+        "q_sales_yoy"
+      ]
     },
     "生物制药": {
       "type": "高研发成长型",
@@ -80,7 +97,13 @@
         "亏损但有重磅产品商业化加速",
         "现金流为负但刚完成大额融资"
       ],
-      "key_fields": ["n_cashflow_act", "money_cap", "st_borr", "q_sales_yoy", "q_dtprofit_yoy"]
+      "key_fields": [
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr",
+        "q_sales_yoy",
+        "q_dtprofit_yoy"
+      ]
     },
     "化学制药": {
       "type": "高研发成长型",
@@ -99,7 +122,12 @@
         "集采影响已消化，新品开始放量",
         "毛利率下滑但规模效应抵消"
       ],
-      "key_fields": ["n_cashflow_act", "accounts_receiv", "inventories", "q_sales_yoy"]
+      "key_fields": [
+        "n_cashflow_act",
+        "accounts_receiv",
+        "inventories",
+        "q_sales_yoy"
+      ]
     },
     "普钢": {
       "type": "周期重资产型",
@@ -118,7 +146,14 @@
         "周期底部正常承压，但资产负债表未进一步恶化",
         "钢价企稳，库存开始去化"
       ],
-      "key_fields": ["inventories", "n_cashflow_act", "total_liab", "total_assets", "money_cap", "st_borr"]
+      "key_fields": [
+        "inventories",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "money_cap",
+        "st_borr"
+      ]
     },
     "化工原料": {
       "type": "周期重资产型",
@@ -136,7 +171,12 @@
       "not_worse_if": [
         "库存高但价格企稳，去化预期改善"
       ],
-      "key_fields": ["inventories", "n_cashflow_act", "money_cap", "st_borr"]
+      "key_fields": [
+        "inventories",
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr"
+      ]
     },
     "证券": {
       "type": "金融资产负债表型",
@@ -155,7 +195,12 @@
         "资产负债率高是正常业务结构（客户保证金），不代表风险",
         "经营现金流为负是正常业务特征，不代表危险"
       ],
-      "key_fields": ["q_sales_yoy", "q_dtprofit_yoy", "total_liab", "total_assets"],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "total_liab",
+        "total_assets"
+      ],
       "_warning": "绝不能用普通企业的资产负债率/经营现金流口径判断券商"
     },
     "银行": {
@@ -175,7 +220,10 @@
         "资产负债率高是正常银行结构",
         "经营现金流口径对银行无意义"
       ],
-      "key_fields": ["q_sales_yoy", "q_dtprofit_yoy"],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy"
+      ],
       "_warning": "银行需要专用字段（不良率/拨备），当前快照字段覆盖不足，验证能力有限"
     },
     "多元金融": {
@@ -194,7 +242,12 @@
       "not_worse_if": [
         "资产负债率高是正常业务结构"
       ],
-      "key_fields": ["q_sales_yoy", "q_dtprofit_yoy", "money_cap", "st_borr"],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "money_cap",
+        "st_borr"
+      ],
       "_warning": "金融类行业统一口径有限，需要专用字段"
     },
     "食品": {
@@ -214,7 +267,12 @@
         "存货高但是季节性备货，周转未恶化",
         "收入短期承压但渠道库存已开始去化"
       ],
-      "key_fields": ["inventories", "accounts_receiv", "n_cashflow_act", "q_sales_yoy"]
+      "key_fields": [
+        "inventories",
+        "accounts_receiv",
+        "n_cashflow_act",
+        "q_sales_yoy"
+      ]
     },
     "软件服务": {
       "type": "高研发成长型",
@@ -232,7 +290,12 @@
       "not_worse_if": [
         "收入短期承压但合同负债（预收）在增加，说明订单在积累"
       ],
-      "key_fields": ["accounts_receiv", "n_cashflow_act", "q_sales_yoy", "q_dtprofit_yoy"]
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "q_sales_yoy",
+        "q_dtprofit_yoy"
+      ]
     },
     "元器件": {
       "type": "高研发成长型",
@@ -250,7 +313,12 @@
       "not_worse_if": [
         "库存高但下游需求回暖，去化预期改善"
       ],
-      "key_fields": ["inventories", "accounts_receiv", "n_cashflow_act", "q_sales_yoy"]
+      "key_fields": [
+        "inventories",
+        "accounts_receiv",
+        "n_cashflow_act",
+        "q_sales_yoy"
+      ]
     },
     "电气设备": {
       "type": "订单回款型",
@@ -268,7 +336,12 @@
       "not_worse_if": [
         "应收高但回款加速，CFO改善"
       ],
-      "key_fields": ["accounts_receiv", "n_cashflow_act", "money_cap", "st_borr"]
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr"
+      ]
     },
     "航空": {
       "type": "周期重资产型",
@@ -287,7 +360,759 @@
         "高杠杆是行业常态，关键看CFO能否覆盖利息",
         "经营现金流为负但是季节性低谷"
       ],
-      "key_fields": ["total_liab", "total_assets", "n_cashflow_act", "money_cap", "st_borr"]
+      "key_fields": [
+        "total_liab",
+        "total_assets",
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "房地产": {
+      "type": "资金链/资产负债表型",
+      "core_risk": "回款弱、短债压力、资金链断裂",
+      "bad_when": [
+        "货币资金 < 短期借款",
+        "经营现金流持续为负",
+        "资产负债率高位且融资受限"
+      ],
+      "worse_when": [
+        "销售回款继续走弱",
+        "货币资金/短债覆盖继续下降",
+        "经营现金流继续恶化或由正转负"
+      ],
+      "not_worse_if": [
+        "利润承压但融资渠道仍通畅",
+        "去库存加快、现金回笼改善"
+      ],
+      "key_fields": [
+        "money_cap",
+        "st_borr",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets"
+      ]
+    },
+    "建筑材料": {
+      "type": "周期重资产型",
+      "core_risk": "需求走弱、库存积压、现金流下滑",
+      "bad_when": [
+        "利润同比明显下滑",
+        "经营现金流为负",
+        "存货或应收明显抬升"
+      ],
+      "worse_when": [
+        "价格/销量继续走弱",
+        "库存继续积压、周转变慢",
+        "现金流继续恶化"
+      ],
+      "not_worse_if": [
+        "周期底部利润弱但库存已开始去化",
+        "现金流改善快于利润修复"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv"
+      ]
+    },
+    "建筑装饰": {
+      "type": "订单回款型",
+      "core_risk": "应收高企、合同资产膨胀、回款差",
+      "bad_when": [
+        "应收账款/营收偏高",
+        "经营现金流为负",
+        "利润下滑且回款未改善"
+      ],
+      "worse_when": [
+        "应收+合同资产继续膨胀",
+        "CFO继续恶化",
+        "项目结算放缓、回款周期拉长"
+      ],
+      "not_worse_if": [
+        "利润弱但回款显著改善",
+        "订单结构优化带来现金流修复"
+      ],
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "q_dtprofit_yoy",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "钢铁": {
+      "type": "周期重资产型",
+      "core_risk": "价格下行、库存压力、杠杆偏高",
+      "bad_when": [
+        "利润同比显著转弱",
+        "经营现金流为负",
+        "资产负债率偏高"
+      ],
+      "worse_when": [
+        "钢价继续下行",
+        "库存继续积压",
+        "现金流持续为负且再融资能力下降"
+      ],
+      "not_worse_if": [
+        "行业处周期底部但库存已去化",
+        "利润弱但资产负债表未进一步恶化"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "total_liab",
+        "total_assets"
+      ]
+    },
+    "有色金属": {
+      "type": "周期资源型",
+      "core_risk": "商品价格回落、现金流收缩、杠杆抬升",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "资产负债率上升"
+      ],
+      "worse_when": [
+        "商品价格继续回落",
+        "现金流继续恶化",
+        "杠杆继续抬升"
+      ],
+      "not_worse_if": [
+        "单季价格波动但现金流仍稳",
+        "资源品库存快速去化"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "inventories"
+      ]
+    },
+    "基础化工": {
+      "type": "周期重资产型",
+      "core_risk": "景气下行、库存累积、短债压力",
+      "bad_when": [
+        "经营现金流为负",
+        "货币资金 < 短期借款",
+        "存货/营收偏高"
+      ],
+      "worse_when": [
+        "库存继续积压",
+        "CFO继续恶化",
+        "短债覆盖继续下降"
+      ],
+      "not_worse_if": [
+        "利润弱但现金链稳定",
+        "库存高但价格企稳、去化改善"
+      ],
+      "key_fields": [
+        "n_cashflow_act",
+        "money_cap",
+        "st_borr",
+        "inventories",
+        "q_dtprofit_yoy"
+      ]
+    },
+    "石油石化": {
+      "type": "周期重资产型",
+      "core_risk": "油价波动、库存损益、资本开支压力",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流走弱",
+        "存货波动大且负债偏高"
+      ],
+      "worse_when": [
+        "油价波动继续侵蚀利润",
+        "现金流继续恶化",
+        "重资产回收周期拉长"
+      ],
+      "not_worse_if": [
+        "单季库存损益扰动但主业现金流稳",
+        "资本开支下降释放现金"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "total_liab",
+        "total_assets"
+      ]
+    },
+    "煤炭": {
+      "type": "周期资源型",
+      "core_risk": "煤价回落、现金创造减弱、杠杆约束",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流明显转弱",
+        "资产负债率高位"
+      ],
+      "worse_when": [
+        "煤价继续回落",
+        "现金流继续恶化",
+        "杠杆抬升且分红/投资难以覆盖"
+      ],
+      "not_worse_if": [
+        "利润回落但现金回款仍强",
+        "周期回撤但负债表稳定"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "money_cap"
+      ]
+    },
+    "电力设备": {
+      "type": "成长制造型",
+      "core_risk": "价格战、扩产过快、存货应收抬升",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流为负",
+        "存货或应收明显抬升"
+      ],
+      "worse_when": [
+        "价格战继续压缩利润",
+        "库存继续积压",
+        "应收+现金流同步恶化"
+      ],
+      "not_worse_if": [
+        "利润承压但仍处扩产爬坡且现金储备充足",
+        "订单兑现加快改善回款"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv",
+        "money_cap"
+      ]
+    },
+    "机械设备": {
+      "type": "订单回款型",
+      "core_risk": "订单放缓、回款恶化、应收拉长",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流为负",
+        "应收账款/营收偏高"
+      ],
+      "worse_when": [
+        "新订单继续走弱",
+        "应收继续拉长、周转变慢",
+        "CFO继续恶化"
+      ],
+      "not_worse_if": [
+        "利润弱但订单结构改善、回款恢复",
+        "单季项目验收扰动"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv",
+        "ar_turn"
+      ]
+    },
+    "国防军工": {
+      "type": "订单兑现型",
+      "core_risk": "验收延后、回款慢、存货积压",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "应收或存货明显抬升"
+      ],
+      "worse_when": [
+        "回款节奏继续放缓",
+        "应收+存货同步恶化",
+        "利润兑现继续后移"
+      ],
+      "not_worse_if": [
+        "单季验收扰动但订单充足",
+        "回款改善快于利润表现"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv",
+        "inventories"
+      ]
+    },
+    "汽车": {
+      "type": "消费制造型",
+      "core_risk": "价格战、渠道库存、现金流承压",
+      "bad_when": [
+        "利润同比显著下滑",
+        "经营现金流转弱",
+        "存货/应收明显抬升"
+      ],
+      "worse_when": [
+        "价格战继续",
+        "库存继续积压",
+        "渠道回款继续变慢"
+      ],
+      "not_worse_if": [
+        "利润波动但库存健康、现金链稳定",
+        "新品周期带来短期扰动后回升"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv",
+        "q_sales_yoy"
+      ]
+    },
+    "家用电器": {
+      "type": "消费渠道型",
+      "core_risk": "渠道压货、库存抬升、现金流转弱",
+      "bad_when": [
+        "收入或利润同比下滑",
+        "经营现金流转弱",
+        "存货明显抬升"
+      ],
+      "worse_when": [
+        "渠道库存继续升高",
+        "回款继续变慢",
+        "现金流继续恶化"
+      ],
+      "not_worse_if": [
+        "季节性备货导致库存高但周转未恶化",
+        "龙头短期波动但渠道健康"
+      ],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv"
+      ]
+    },
+    "电子": {
+      "type": "科技制造型",
+      "core_risk": "去库存、研发投入与经营失控混淆、短债压力",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流为负",
+        "存货或短债压力抬升"
+      ],
+      "worse_when": [
+        "库存继续堆积、周转变慢",
+        "现金流继续恶化",
+        "货币资金/短债覆盖下降"
+      ],
+      "not_worse_if": [
+        "研发投入期亏损但收入兑现加快",
+        "现金流虽弱但融资能力强、现金储备充足"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "计算机": {
+      "type": "软件项目型",
+      "core_risk": "回款差、应收拉长、纸面利润",
+      "bad_when": [
+        "收入或利润增速下滑",
+        "经营现金流为负",
+        "应收账款/营收偏高"
+      ],
+      "worse_when": [
+        "项目延期继续增多",
+        "应收继续拉长、回款质量下降",
+        "CFO继续恶化"
+      ],
+      "not_worse_if": [
+        "收入承压但合同负债/订单增加",
+        "利润回落但现金流与周转改善"
+      ],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv",
+        "ar_turn"
+      ]
+    },
+    "通信": {
+      "type": "订单回款型",
+      "core_risk": "资本开支放缓、回款慢、库存积压",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "应收或存货明显抬升"
+      ],
+      "worse_when": [
+        "客户资本开支继续收缩",
+        "应收继续拉长",
+        "现金流继续恶化"
+      ],
+      "not_worse_if": [
+        "单季项目扰动但订单储备充足",
+        "库存高但新产品放量带动去化"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv",
+        "inventories"
+      ]
+    },
+    "传媒": {
+      "type": "轻资产兑现型",
+      "core_risk": "收入兑现差、回款差、减值压力",
+      "bad_when": [
+        "利润同比显著下滑",
+        "经营现金流为负",
+        "应收抬升或减值压力出现"
+      ],
+      "worse_when": [
+        "广告/内容兑现继续走弱",
+        "CFO继续恶化",
+        "应收+减值迹象同步恶化"
+      ],
+      "not_worse_if": [
+        "项目周期扰动但回款改善",
+        "利润弱但费用收缩后经营质量回升"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv"
+      ]
+    },
+    "医药生物": {
+      "type": "研发+商业化型",
+      "core_risk": "商业化兑现慢、库存应收抬升、现金消耗",
+      "bad_when": [
+        "利润同比下滑或持续亏损",
+        "经营现金流为负",
+        "应收或存货明显抬升"
+      ],
+      "worse_when": [
+        "商业化兑现继续不及预期",
+        "现金储备继续下降",
+        "应收+存货同步恶化"
+      ],
+      "not_worse_if": [
+        "创新药研发投入期但现金储备充足",
+        "新品放量带动收入改善"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv",
+        "inventories",
+        "money_cap"
+      ]
+    },
+    "食品饮料": {
+      "type": "消费渠道型",
+      "core_risk": "渠道压货、需求放缓、库存上升",
+      "bad_when": [
+        "收入或利润同比下滑",
+        "经营现金流转弱",
+        "存货明显抬升"
+      ],
+      "worse_when": [
+        "渠道库存继续升高",
+        "收入继续放缓",
+        "应收+存货同步抬升"
+      ],
+      "not_worse_if": [
+        "季节性备货但周转未恶化",
+        "龙头短期波动但渠道去化良好"
+      ],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv"
+      ]
+    },
+    "农林牧渔": {
+      "type": "强周期生物资产型",
+      "core_risk": "价格周期下行、现金流波动、资产质量承压",
+      "bad_when": [
+        "利润同比显著下滑",
+        "经营现金流转弱",
+        "资产负债率抬升"
+      ],
+      "worse_when": [
+        "价格周期继续下行",
+        "现金流继续恶化",
+        "生物资产/存货去化不顺"
+      ],
+      "not_worse_if": [
+        "周期底部正常承压但资金链稳定",
+        "价格反转带来现金流改善"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "total_liab",
+        "total_assets"
+      ]
+    },
+    "商贸零售": {
+      "type": "周转型消费",
+      "core_risk": "周转变慢、库存积压、现金流转弱",
+      "bad_when": [
+        "收入或利润同比下滑",
+        "经营现金流为负",
+        "存货明显抬升"
+      ],
+      "worse_when": [
+        "库存继续积压",
+        "周转继续变慢",
+        "现金流继续恶化"
+      ],
+      "not_worse_if": [
+        "利润弱但周转改善",
+        "短期促销扰动后库存回落"
+      ],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv"
+      ]
+    },
+    "社会服务": {
+      "type": "需求恢复型",
+      "core_risk": "需求不及预期、费用刚性、现金流承压",
+      "bad_when": [
+        "收入恢复弱",
+        "利润同比下滑",
+        "经营现金流转弱"
+      ],
+      "worse_when": [
+        "需求继续不及预期",
+        "费用率高企难消化",
+        "CFO继续恶化"
+      ],
+      "not_worse_if": [
+        "短期淡季扰动但预收/订单回升",
+        "利润弱但现金流改善"
+      ],
+      "key_fields": [
+        "q_sales_yoy",
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "accounts_receiv"
+      ]
+    },
+    "交通运输": {
+      "type": "重资产运营型",
+      "core_risk": "运价/客流下滑、杠杆高、现金流弱",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "资产负债率偏高"
+      ],
+      "worse_when": [
+        "运价或客流继续走弱",
+        "CFO继续恶化",
+        "短债覆盖继续下降"
+      ],
+      "not_worse_if": [
+        "季节性低谷导致利润承压但CFO能覆盖利息",
+        "票价/运价企稳改善"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "公用事业": {
+      "type": "重资产公用型",
+      "core_risk": "回报下滑、负债重、现金创造减弱",
+      "bad_when": [
+        "经营现金流持续走弱",
+        "资产负债率偏高",
+        "利润回报下降"
+      ],
+      "worse_when": [
+        "CFO继续恶化",
+        "负债继续抬升",
+        "价格机制变化继续压缩回报"
+      ],
+      "not_worse_if": [
+        "利润波动但现金创造稳定",
+        "资本开支回落改善自由现金流"
+      ],
+      "key_fields": [
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "q_dtprofit_yoy",
+        "money_cap"
+      ]
+    },
+    "环保": {
+      "type": "订单回款型",
+      "core_risk": "政府回款慢、应收高企、负债重",
+      "bad_when": [
+        "应收账款/营收偏高",
+        "经营现金流为负",
+        "资产负债率偏高"
+      ],
+      "worse_when": [
+        "应收继续抬升",
+        "CFO继续恶化",
+        "新增融资难覆盖到期债务"
+      ],
+      "not_worse_if": [
+        "回款加速带动CFO改善",
+        "订单结构优化降低资金占用"
+      ],
+      "key_fields": [
+        "accounts_receiv",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "美容护理": {
+      "type": "品牌消费型",
+      "core_risk": "渠道库存、投放失效、现金流恶化",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "存货明显抬升"
+      ],
+      "worse_when": [
+        "渠道库存继续上升",
+        "投放费用高企但收入不跟",
+        "现金流继续恶化"
+      ],
+      "not_worse_if": [
+        "短期投放拉低利润但渠道健康、回款稳定",
+        "新品放量改善周转"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv",
+        "q_sales_yoy"
+      ]
+    },
+    "轻工制造": {
+      "type": "出口订单型",
+      "core_risk": "订单下滑、库存抬升、回款转弱",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "存货或应收抬升"
+      ],
+      "worse_when": [
+        "订单继续走弱",
+        "库存继续积压",
+        "应收+现金流同步恶化"
+      ],
+      "not_worse_if": [
+        "单季出口扰动但后续订单恢复",
+        "汇率扰动后毛利修复"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv",
+        "q_sales_yoy"
+      ]
+    },
+    "纺织服饰": {
+      "type": "季节性消费制造型",
+      "core_risk": "需求走弱、库存积压、折扣清货",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流转弱",
+        "存货明显抬升"
+      ],
+      "worse_when": [
+        "库存继续积压",
+        "终端销售继续放缓",
+        "CFO继续恶化"
+      ],
+      "not_worse_if": [
+        "季节性备货造成库存高但周转未坏",
+        "去库促销后库存回落"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "inventories",
+        "accounts_receiv",
+        "q_sales_yoy"
+      ]
+    },
+    "综合": {
+      "type": "混合资产型",
+      "core_risk": "主业不清、资产质量差、现金流弱",
+      "bad_when": [
+        "利润同比下滑",
+        "经营现金流为负",
+        "资产负债率偏高"
+      ],
+      "worse_when": [
+        "主业盈利继续恶化",
+        "现金流继续变差",
+        "资产负债表继续走弱"
+      ],
+      "not_worse_if": [
+        "剥离低效资产后经营改善",
+        "主业集中后现金流修复"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "n_cashflow_act",
+        "total_liab",
+        "total_assets",
+        "money_cap",
+        "st_borr"
+      ]
+    },
+    "非银金融": {
+      "type": "金融资产负债表型",
+      "core_risk": "市场波动、资本约束、风险敞口扩大",
+      "bad_when": [
+        "利润同比明显下滑",
+        "风险资产敞口扩大",
+        "资本约束趋紧"
+      ],
+      "worse_when": [
+        "核心业务收益继续恶化",
+        "风险敞口继续上升",
+        "资本补充压力进一步抬升"
+      ],
+      "not_worse_if": [
+        "经营现金流为负属正常特征",
+        "资产负债率高不直接代表风险"
+      ],
+      "key_fields": [
+        "q_dtprofit_yoy",
+        "q_sales_yoy",
+        "total_liab",
+        "total_assets"
+      ],
+      "_warning": "不宜用普通企业CFO/资产负债率口径机械判断"
     }
   }
 }
