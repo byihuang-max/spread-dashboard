@@ -14,11 +14,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .topbar .sub{font-size:12px;color:#7c8598;margin-left:4px}
 .container{max-width:1280px;margin:0 auto;padding:20px 24px}
 .section{background:#fff;border-radius:10px;padding:18px;margin-bottom:16px;border:1px solid #e8eaef}
-.section-title{font-size:14px;font-weight:700;color:#2d3142;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.section-title .badge{font-size:10px;background:#e8f0fe;color:#3b5bdb;padding:2px 8px;border-radius:10px;font-weight:600}
+.section-title{font-size:13px;font-weight:600;color:#2d3142;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.section-title .badge{font-size:10px;background:#e8f0fe;color:#2563eb;padding:2px 8px;border-radius:10px;font-weight:600}
 .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
 .filter-row label{font-size:12px;color:#64748b;font-weight:600}
-.filter-row select,.filter-row input{border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:12px;color:#2d3142;background:#fff;cursor:pointer}
+.filter-row select,.filter-row input{border:1px solid #e8eaef;border-radius:6px;padding:5px 10px;font-size:12px;color:#2d3142;background:#fff;cursor:pointer}
 .filter-row select:focus,.filter-row input:focus{outline:none;border-color:#2563eb;color:#2d3142}
 .tabs{display:flex;gap:0;border-bottom:1px solid #e8eaef;margin-bottom:16px}
 .tab{padding:8px 18px;cursor:pointer;font-size:13px;color:#8b92a5;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
@@ -46,11 +46,14 @@ tr:hover td{background:#fafbfc}
 .summary-card .metric{flex:1}
 .summary-card .metric .val{font-size:16px;font-weight:700}
 .summary-card .metric .lbl{font-size:10px;color:#94a3b8;margin-top:1px}
-.chart-wrap{position:relative;height:280px}
 .as-of{font-size:11px;color:#94a3b8;margin-left:auto}
-.search-input{border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:12px;width:200px}
-.search-input:focus{outline:none;border-color:#3b5bdb}
+.search-input{border:1px solid #e8eaef;border-radius:6px;padding:5px 10px;font-size:12px;width:200px}
+.search-input:focus{outline:none;border-color:#2563eb}
 .count-badge{font-size:11px;color:#94a3b8;margin-left:8px}
+.footnote{margin-top:20px;padding:16px;background:#f8f9fb;border-radius:8px;border:1px solid #e8eaef;font-size:11px;color:#64748b;line-height:1.8}
+.footnote h4{font-size:12px;color:#2d3142;margin-bottom:6px;font-weight:600}
+.footnote .item{margin-bottom:4px}
+.footnote .item b{color:#2d3142;font-weight:600}
 </style>
 </head>
 <body>
@@ -90,19 +93,47 @@ tr:hover td{background:#fafbfc}
     </div>
   </div>
 
-  <!-- Tabs -->
+  <!-- Tabs: 1=管理人汇总  2=分类表现  3=产品明细 -->
   <div class="section">
     <div class="tabs">
-      <div class="tab active" data-tab="summary">汇总对比</div>
-      <div class="tab" data-tab="chart">管理人对比</div>
+      <div class="tab active" data-tab="overview">管理人汇总</div>
+      <div class="tab" data-tab="category">分类表现</div>
       <div class="tab" data-tab="detail">产品明细</div>
     </div>
 
-    <!-- 汇总 -->
-    <div class="tab-content active" id="tab-summary">
+    <!-- Tab 1: 管理人汇总 -->
+    <div class="tab-content active" id="tab-overview">
       <div style="margin-bottom:12px;font-size:12px;color:#64748b;line-height:1.6">
         纯债口径：近9个月（2025-07-01起）&nbsp;|&nbsp;固收加口径：近3个月（2026-01-01起）&nbsp;|&nbsp;收益/回撤均基于复权净值重算<br>
-        当前页中的"固收加"标签已按业绩比较基准复核：股票基准占比 ≤ 35% 才保留；偏股混合已剔除。FOF 是否保留，也以基准中股票权重为准，不按名称硬判。
+        固收加标签已按业绩比较基准复核：股票基准占比 ≤ 35% 保留；偏股混合已剔除。
+      </div>
+
+      <div class="section-title">近9个月纯债表现 <span class="badge">2025-07-01 ~ 2026-04-03</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>管理人</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>年化波动</th><th>正收益占比</th>
+          </tr>
+        </thead>
+        <tbody id="bondOverviewBody"></tbody>
+      </table>
+
+      <div style="height:20px"></div>
+      <div class="section-title">近3个月固收加表现 <span class="badge">2026-01-01 ~ 2026-04-03</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>管理人</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>年化波动</th><th>正收益占比</th>
+          </tr>
+        </thead>
+        <tbody id="plusOverviewBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Tab 2: 分类表现 -->
+    <div class="tab-content" id="tab-category">
+      <div style="margin-bottom:12px;font-size:12px;color:#64748b;line-height:1.6">
+        按 公司 × 产品类别 拆分展示，对比同一管理人不同标签下的表现差异。
       </div>
       <div id="summaryGrid" class="summary-grid"></div>
       <table id="summaryTable">
@@ -117,44 +148,31 @@ tr:hover td{background:#fafbfc}
       </table>
     </div>
 
-    <!-- 图表 -->
-    <div class="tab-content" id="tab-chart">
-      <div style="margin-bottom:16px">
-        <div class="section-title">近9个月纯债表现（2025-07-01 至 2026-04-03）</div>
-        <table>
-          <thead>
-            <tr>
-              <th>公司</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>正收益占比</th>
-            </tr>
-          </thead>
-          <tbody id="bondSummaryBody"></tbody>
-        </table>
-      </div>
-      <div>
-        <div class="section-title">近3个月固收加表现（2026-01-01 至 2026-04-03）</div>
-        <table>
-          <thead>
-            <tr>
-              <th>公司</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>正收益占比</th>
-            </tr>
-          </thead>
-          <tbody id="plusSummaryBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 明细 -->
+    <!-- Tab 3: 产品明细 -->
     <div class="tab-content" id="tab-detail">
       <table id="detailTable">
         <thead>
           <tr>
             <th>公司</th><th>基金名称</th><th>代码</th><th>类别</th><th>区间</th>
-            <th>收益</th><th>最大回撤</th><th>股票基准</th><th>业绩比较基准</th><th>年化波动</th><th>净值样本数</th>
+            <th>收益</th><th>最大回撤</th><th>年化波动</th><th>股票基准</th><th>业绩比较基准</th><th>净值样本数</th>
           </tr>
         </thead>
         <tbody id="detailBody"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- 口径说明 -->
+  <div class="footnote">
+    <h4>📐 口径说明</h4>
+    <div class="item"><b>收益率：</b>基于 UQER 复权净值（ADJUST_NAV）计算区间首尾涨幅。纯债取近9个月（2025-07-01起），固收加取近3个月（2026-01-01起）。</div>
+    <div class="item"><b>最大回撤：</b>区间内复权净值从最高点到最低点的最大跌幅，衡量极端下行风险。</div>
+    <div class="item"><b>年化波动率：</b>区间内复权净值日收益率的标准差 × √252，反映净值日常波动水平。数值越大说明净值变动越剧烈。</div>
+    <div class="item"><b>正收益占比：</b>该公司/类别下，区间收益率 > 0 的产品数量 ÷ 总产品数量 × 100%。反映管理人整体"做正收益"的一致性。</div>
+    <div class="item"><b>股票基准占比：</b>从业绩比较基准文本中解析股票类指数（沪深300、中证500、中证A500、恒生指数等）的合计权重，用于区分纯债 / 固收加 / 偏股混合。≤ 35% 归入固收加，> 35% 视为偏股混合并剔除。</div>
+    <div class="item"><b>管理人汇总逻辑：</b>按公司维度将旗下全部纯债/固收加产品分别聚合；平均收益、平均回撤为产品数加权；中位收益、中位回撤为产品级中位数；年化波动为同类产品波动率的简单均值。</div>
+    <div class="item"><b>涨跌颜色：</b>遵循 A 股惯例，<span style="color:#dc2626;font-weight:600">红色表示正收益（涨）</span>，<span style="color:#16a34a;font-weight:600">绿色表示负收益（跌）</span>。</div>
+    <div class="item"><b>数据来源：</b>UQER / 优矿（通联数据），日频基金净值 + 基金基础信息。底表范围来自桌面基金池研究表。</div>
   </div>
 </div>
 
@@ -164,8 +182,7 @@ var DATA = null;
 function pct(v, digits){
   if(v===null||v===undefined) return '-';
   var n = parseFloat(v);
-  var s = (n>=0?'+':'')+n.toFixed(digits||2)+'%';
-  return s;
+  return (n>=0?'+':'')+n.toFixed(digits||2)+'%';
 }
 function cls(v){ return v>0?'pos':v<0?'neg':'neu'; }
 
@@ -177,6 +194,7 @@ function catTag(cat){
   return '<span class="tag '+(m[cat]||'tag-bond')+'">'+cat+'</span>';
 }
 
+/* ===== Tab 2: 分类表现 ===== */
 function renderSummary(rows){
   var tbody = document.getElementById('summaryBody');
   tbody.innerHTML = '';
@@ -196,6 +214,7 @@ function renderSummary(rows){
   });
 }
 
+/* ===== Tab 3: 产品明细 ===== */
 function renderDetail(funds){
   var tbody = document.getElementById('detailBody');
   tbody.innerHTML = '';
@@ -209,81 +228,78 @@ function renderDetail(funds){
       +'<td>'+f.horizon+'</td>'
       +'<td class="'+cls(f.return_pct)+'">'+pct(f.return_pct)+'</td>'
       +'<td class="'+cls(f.max_drawdown_pct)+'">'+pct(f.max_drawdown_pct)+'</td>'
+      +'<td>'+(f.annualized_vol_pct!=null?pct(f.annualized_vol_pct):'-')+'</td>'
       +'<td>'+(f.stock_benchmark_pct!=null?f.stock_benchmark_pct+'%':'-')+'</td>'
       +'<td style="max-width:260px;white-space:normal;font-size:11px;color:#64748b" title="'+(f.benchmark||'')+'">'+(f.benchmark?f.benchmark.substring(0,60)+(f.benchmark.length>60?'…':''):'-')+'</td>'
-      +'<td>'+(f.annualized_vol_pct!=null?pct(f.annualized_vol_pct):'-')+'</td>'
       +'<td style="color:#94a3b8">'+f.obs+'</td>';
     tbody.appendChild(tr);
   });
 }
 
-function renderCharts(summary){
-  // 按公司汇总纯债和固收加
+/* ===== Tab 1: 管理人汇总 ===== */
+function renderOverview(summary, funds){
   var companies = ['华夏基金','工银瑞信基金','鹏华基金','易方达基金'];
-  function aggByCompany(rows){
-    var map = {};
-    companies.forEach(function(c){ map[c] = {count:0, retSum:0, ddSum:0, rets:[], dds:[], pos:0}; });
-    rows.forEach(function(r){
-      var m = map[r.company];
-      if(!m) return;
-      m.count += r.count;
-      m.retSum += r.avg_return_pct * r.count;
-      m.ddSum += r.avg_drawdown_pct * r.count;
-      m.pos += Math.round(r.positive_ratio_pct * r.count / 100);
-    });
-    // also collect fund-level for median
-    return map;
-  }
-  function fundMedians(funds, isBond){
-    var map = {};
-    companies.forEach(function(c){ map[c] = {rets:[], dds:[]}; });
-    funds.forEach(function(f){
-      var isCat = isBond ? f.category.startsWith('纯债') : f.category.startsWith('固收加');
-      if(!isCat) return;
-      var m = map[f.company];
-      if(!m) return;
-      m.rets.push(f.return_pct);
-      m.dds.push(f.max_drawdown_pct);
-    });
-    return map;
-  }
   function median(arr){
     if(!arr.length) return null;
     var s = arr.slice().sort(function(a,b){return a-b;});
     var mid = Math.floor(s.length/2);
     return s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
   }
-  function fillTable(tbodyId, summaryRows, funds, isBond){
-    var agg = aggByCompany(summaryRows);
-    var meds = fundMedians(funds, isBond);
+  function buildRows(isBond){
+    var map = {};
+    companies.forEach(function(c){ map[c] = {count:0, retW:0, ddW:0, pos:0, vols:[], rets:[], dds:[]}; });
+    // from fund-level for median and vol
+    funds.forEach(function(f){
+      var match = isBond ? f.category.startsWith('纯债') : f.category.startsWith('固收加');
+      if(!match) return;
+      var m = map[f.company];
+      if(!m) return;
+      m.count++;
+      m.retW += f.return_pct;
+      m.ddW += f.max_drawdown_pct;
+      if(f.return_pct > 0) m.pos++;
+      m.rets.push(f.return_pct);
+      m.dds.push(f.max_drawdown_pct);
+      if(f.annualized_vol_pct != null) m.vols.push(f.annualized_vol_pct);
+    });
+    var rows = [];
+    companies.forEach(function(c){
+      var m = map[c];
+      if(m.count === 0) return;
+      rows.push({
+        company: c,
+        count: m.count,
+        avgRet: m.retW / m.count,
+        medRet: median(m.rets),
+        avgDd: m.ddW / m.count,
+        medDd: median(m.dds),
+        avgVol: m.vols.length ? m.vols.reduce(function(a,b){return a+b;},0) / m.vols.length : null,
+        posRatio: m.pos / m.count * 100
+      });
+    });
+    return rows;
+  }
+  function fillBody(tbodyId, rows){
     var tbody = document.getElementById(tbodyId);
     tbody.innerHTML = '';
-    companies.forEach(function(c){
-      var a = agg[c];
-      var m = meds[c];
-      if(a.count === 0) return;
-      var avgRet = a.retSum / a.count;
-      var avgDd = a.ddSum / a.count;
-      var medRet = median(m.rets);
-      var medDd = median(m.dds);
-      var posRatio = (a.pos / a.count * 100);
+    rows.forEach(function(r){
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td style="font-weight:600">'+c+'</td>'
-        +'<td>'+a.count+'</td>'
-        +'<td class="'+cls(avgRet)+'">'+pct(avgRet)+'</td>'
-        +'<td class="'+cls(medRet)+'">'+pct(medRet)+'</td>'
-        +'<td class="'+cls(avgDd)+'">'+pct(avgDd)+'</td>'
-        +'<td class="'+cls(medDd)+'">'+pct(medDd)+'</td>'
-        +'<td>'+posRatio.toFixed(1)+'%</td>';
+      tr.innerHTML = '<td style="font-weight:600">'+r.company+'</td>'
+        +'<td>'+r.count+'</td>'
+        +'<td class="'+cls(r.avgRet)+'">'+pct(r.avgRet)+'</td>'
+        +'<td class="'+cls(r.medRet)+'">'+pct(r.medRet)+'</td>'
+        +'<td class="'+cls(r.avgDd)+'">'+pct(r.avgDd)+'</td>'
+        +'<td class="'+cls(r.medDd)+'">'+pct(r.medDd)+'</td>'
+        +'<td>'+(r.avgVol!=null?pct(r.avgVol):'-')+'</td>'
+        +'<td>'+r.posRatio.toFixed(1)+'%</td>';
       tbody.appendChild(tr);
     });
   }
-  var bondRows = summary.filter(function(r){ return r.category.startsWith('纯债'); });
-  var plusRows = summary.filter(function(r){ return r.category.startsWith('固收加'); });
-  fillTable('bondSummaryBody', bondRows, DATA.funds, true);
-  fillTable('plusSummaryBody', plusRows, DATA.funds, false);
+  fillBody('bondOverviewBody', buildRows(true));
+  fillBody('plusOverviewBody', buildRows(false));
 }
 
+/* ===== 筛选 ===== */
 function applyFilters(){
   if(!DATA) return;
   var comp = document.getElementById('filterCompany').value;
@@ -305,6 +321,7 @@ function applyFilters(){
 
   renderSummary(summaryFiltered);
   renderDetail(funds);
+  renderOverview(summaryFiltered, funds);
 }
 
 // tabs
@@ -331,7 +348,7 @@ fetch('data/fund_research.json?t='+Date.now())
     document.getElementById('asOf').textContent = '数据截至 '+d.as_of;
     renderSummary(d.summary);
     renderDetail(d.funds);
-    renderCharts(d.summary);
+    renderOverview(d.summary, d.funds);
   })
   .catch(function(e){ console.error(e); });
 </script>
