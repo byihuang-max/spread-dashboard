@@ -398,6 +398,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')"><span class="icon">🔬</span> 择时研究</div>
       <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query.html','_blank')"><span class="icon">📊</span> 个股筹码查询</div>
       <div class="nav-item" id="navFinancialRisk" style="display:none" onclick="window.open('financial_risk_factor.html','_blank')"><span class="icon">⚠️</span> 财报预期风险</div>
+      <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_research.html','_blank')"><span class="icon">🏦</span> 公募基金研究</div>
       <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
@@ -3641,6 +3642,11 @@ function initCbCharts() {
     if(user.is_admin || (user.tier && user.tier >= 1)){
       var fr=document.getElementById('navFinancialRisk');
       if(fr) fr.style.display='';
+    }
+    // 管理员 或 高级客户(tier>=1)：显示公募基金研究
+    if(user.is_admin || (user.tier && user.tier >= 1)){
+      var fund=document.getElementById('navFundResearch');
+      if(fund) fund.style.display='';
     }
     // 检查是否有正在运行的刷新任务
     if(typeof STATUS_API!=='undefined'&&STATUS_API){
