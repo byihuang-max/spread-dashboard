@@ -12,6 +12,28 @@ VERIFY_MISS = list(csv.DictReader(open(Path.home() / 'Desktop/annual_verify_miss
 OUT_DIR = BASE / 'data/financial_validation'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+INDUSTRY_ALIAS = {
+    '建筑工程': '建筑装饰',
+    '环境保护': '环保',
+    '普钢': '钢铁',
+    '软件服务': '计算机',
+    '电气设备': '电力设备',
+    '半导体': '电子',
+    '元器件': '电子',
+    '生物制药': '医药生物',
+    '化学制药': '医药生物',
+    '食品': '食品饮料',
+    '证券': '非银金融',
+}
+
+SPECIAL_INDUSTRIES = {'半导体', '元器件', '软件服务', '证券', '银行', '生物制药', '航空', '化工原料'}
+
+
+def normalize_industry(name: str) -> str:
+    name = (name or '未分类').strip() or '未分类'
+    return INDUSTRY_ALIAS.get(name, name)
+
+
 stock_map = {s['ts_code']: s for s in FACTOR}
 
 # 总体验证总览表
@@ -35,7 +57,8 @@ industry_rows = []
 all_rows = VERIFY_HIT + VERIFY_MISS
 by_industry = {}
 for r in all_rows:
-    by_industry.setdefault(r['industry'] or '未分类', []).append(r)
+    norm_industry = normalize_industry(r.get('industry'))
+    by_industry.setdefault(norm_industry, []).append(r)
 
 for industry, rule in RULES.items():
     rows = by_industry.get(industry, [])
@@ -102,9 +125,10 @@ for r in VERIFY_MISS:
     })
 
 # 争议样本：先用金融类 + 高研发类里出现坏信号但可能是误判的样本
-controversy_industries = {'证券', '银行', '多元金融', '半导体', '生物制药', '化学制药', '航空'}
 for r in VERIFY_ALL:
-    if r['industry'] in controversy_industries and int(r['bad_signal_count'] or 0) >= 2:
+    raw_industry = (r.get('industry') or '').strip()
+    norm_industry = normalize_industry(raw_industry)
+    if (raw_industry in SPECIAL_INDUSTRIES or norm_industry in {'非银金融', '银行', '电子', '医药生物', '航空', '基础化工'}) and int(r['bad_signal_count'] or 0) >= 2:
         sample_rows.append({
             '样本类型': '争议',
             '股票代码': r['ts_code'],
