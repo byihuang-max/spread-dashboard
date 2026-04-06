@@ -283,10 +283,10 @@ window.onerror=function(msg,src,line,col,err){
     <!-- 总览 -->
     <div class="summary-strip" id="validationSummaryCards"></div>
 
-    <!-- 恶化链条验证表 -->
+    <!-- 一级行业恶化链条验证表 -->
     <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">恶化链条验证表</h2>
-      <div class="tag">行业逻辑 × 财报后验</div>
+      <h2 style="margin:0;padding:0;border:none;font-size:16px">一级行业恶化链条验证表</h2>
+      <div class="tag">31个主行业 × 财报后验</div>
     </div>
     <div style="overflow-x:auto;margin-bottom:20px">
       <table class="table" id="chainTable">
@@ -295,6 +295,21 @@ window.onerror=function(msg,src,line,col,err){
           <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
         </tr></thead>
         <tbody id="chainTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 重点二级行业特例 -->
+    <div class="section-title" style="margin-top:20px">
+      <h2 style="margin:0;padding:0;border:none;font-size:16px">重点二级行业特例</h2>
+      <div class="tag">误判高发行业单独拆解</div>
+    </div>
+    <div style="overflow-x:auto;margin-bottom:20px">
+      <table class="table" id="specialChainTable">
+        <thead><tr>
+          <th>特例行业</th><th>归属主行业</th><th>类型</th><th>核心风险</th>
+          <th>变得更差的标准</th><th>本期主要坏信号</th><th>命中</th><th>漏判</th>
+        </tr></thead>
+        <tbody id="specialChainTableBody"></tbody>
       </table>
     </div>
 
@@ -885,49 +900,67 @@ let sampleExpanded = false;
 
 function renderValidationSummary(){
   if(!VALIDATION) return;
-  const s = VALIDATION.summary;
-  document.getElementById('validationAsOf').textContent = s.as_of || '';
+  const s = VALIDATION.summary || {};
+  document.getElementById('validationAsOf').textContent = '2025年报验证';
   const cards = [
-    ['已披露样本', s.published_total, 'blue'],
-    ['命中样本', s.hit_count, 'red'],
-    ['漏判样本', s.miss_count_bad2, 'amber'],
-    ['当前命中率', pct(s.hit_rate), 'green']
+    ['已披露样本', s['已披露并对齐样本数'] || 0, 'blue'],
+    ['命中样本', s['命中样本数'] || 0, 'red'],
+    ['漏判样本', s['漏判样本数_bad_ge_2'] || 0, 'amber'],
+    ['当前命中率', pct((s['命中率_披露样本口径'] || 0) * 100), 'green']
   ];
+  const sub = s['命中样本_全部有_ge_2_坏信号'] === '是' ? '命中样本全部至少2个坏信号' : '';
   document.getElementById('validationSummaryCards').innerHTML = cards.map(([label,value,cls]) => `
-    <div class="metric"><div class="label">${label}</div><div class="value ${cls}">${value}</div><div class="sub">${s.note || ''}</div></div>
+    <div class="metric"><div class="label">${label}</div><div class="value ${cls}">${value}</div><div class="sub">${sub}</div></div>
   `).join('');
 }
 
 function renderValidationChains(){
   if(!VALIDATION) return;
-  document.getElementById('chainTableBody').innerHTML = VALIDATION.chains.map(r => `
+  const primary = VALIDATION.primary_industries || [];
+  const special = VALIDATION.special_industries || [];
+  document.getElementById('chainTableBody').innerHTML = primary.map(r => `
     <tr>
-      <td>${r.industry}</td>
-      <td>${r.type}</td>
-      <td>${r.core_risk}</td>
-      <td>${(r.worse_when||[]).join('；')}</td>
-      <td>${(r.top_signals||[]).join('；') || '-'}</td>
-      <td>${r.hit_count}</td>
-      <td>${r.miss_count}</td>
-      <td>${(r.not_worse_if||[]).join('；') || r.warning || '-'}</td>
+      <td>${r['行业']}</td>
+      <td>${r['行业类型']}</td>
+      <td>${r['原定义核心风险']}</td>
+      <td>${r['原定义变得更差标准']}</td>
+      <td>${r['本期主要被验证的坏信号'] || '-'}</td>
+      <td>${r['命中样本数']}</td>
+      <td>${r['漏判样本数']}</td>
+      <td>${r['不应误判情形'] || r['备注'] || '-'}</td>
     </tr>
   `).join('');
+  const specialBody = document.getElementById('specialChainTableBody');
+  if(specialBody){
+    specialBody.innerHTML = special.map(r => `
+      <tr>
+        <td>${r['特例行业']}</td>
+        <td>${r['归属主行业']}</td>
+        <td>${r['行业类型']}</td>
+        <td>${r['核心风险']}</td>
+        <td>${r['变得更差标准']}</td>
+        <td>${r['本期主要坏信号'] || '-'}</td>
+        <td>${r['命中样本数']}</td>
+        <td>${r['漏判样本数']}</td>
+      </tr>
+    `).join('');
+  }
 }
 
 function renderValidationSamples(){
   if(!VALIDATION) return;
-  const allRows = VALIDATION.samples.filter(x => x.type === validationTab);
+  const allRows = (VALIDATION.samples || []).filter(x => x['样本类型'] === validationTab);
   const rows = sampleExpanded ? allRows : allRows.slice(0, 10);
   document.getElementById('sampleTableBody').innerHTML = rows.map(r => `
     <tr>
-      <td>${r.type}</td>
-      <td>${r.ts_code}</td>
-      <td>${r.name}</td>
-      <td>${r.industry}</td>
-      <td>${r.in_exclude ? '是' : '否'}</td>
-      <td>${r.actual_date}</td>
-      <td>${r.bad_count}</td>
-      <td>${r.bad_signals || '-'}</td>
+      <td>${r['样本类型']}</td>
+      <td>${r['股票代码']}</td>
+      <td>${r['股票简称']}</td>
+      <td>${r['原始行业']}<div style="font-size:11px;color:#7f8da8;margin-top:2px">主行业：${r['归一主行业']}</div></td>
+      <td>${r['是否在剔除名单']}</td>
+      <td>${r['新财报披露日']}</td>
+      <td>${r['坏信号数']}</td>
+      <td>${r['坏信号明细'] || '-'}</td>
     </tr>
   `).join('');
   document.querySelectorAll('.sample-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.type === validationTab));
@@ -941,10 +974,10 @@ function renderValidationSamples(){
 function downloadValidationSamplesCsv(){
   if(!VALIDATION) return;
   const allRows = VALIDATION.samples || [];
-  const headers = ['类型','股票代码','股票简称','行业','在剔除名单','披露日','坏信号数','坏信号明细'];
+  const headers = ['类型','股票代码','股票简称','原始行业','归一主行业','在剔除名单','披露日','坏信号数','坏信号明细'];
   const rows = allRows.map(r => [
-    r.type, r.ts_code, r.name, r.industry,
-    r.in_exclude ? '是' : '否', r.actual_date, r.bad_count, r.bad_signals || ''
+    r['样本类型'], r['股票代码'], r['股票简称'], r['原始行业'], r['归一主行业'],
+    r['是否在剔除名单'], r['新财报披露日'], r['坏信号数'], r['坏信号明细'] || ''
   ]);
   const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
