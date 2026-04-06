@@ -464,16 +464,8 @@ def evaluate_stock(meta, periods):
         why_parts = ['综合财务质量偏弱']
     why_dangerous = '；'.join(why_parts)
 
-    why_industry_map = {
-        '电子': '电子行业要区分研发投入期和经营失控期，重点看利润、现金流、存货和短债压力是否同步恶化。',
-        '医药生物': '医药更看利润质量和商业化兑现，不能只看单期利润。',
-        '基础化工': '化工行业重点看经营现金流和短债覆盖，防周期下行时资金链绷紧。',
-        '机械设备': '机械设备最怕订单和回款一起转弱，现金流通常先于利润发出信号。',
-        '计算机': '计算机行业要防纸面利润，回款和应收恶化比利润下滑更危险。',
-        '建筑装饰': '建筑装饰是项目回款型行业，现金流和应收优先级高于利润。',
-        '房地产': '地产的核心风险来自资产负债表和债务滚动能力，而不是单纯利润波动。',
-    }
-    why_industry = why_industry_map.get(industry1, '该行业需同时观察利润、现金流、资产负债表和营运质量是否同步恶化。')
+    industry_rule = RULEBOOK.get(industry1, DEFAULT_RULE)
+    why_industry = industry_rule.get('logic', '该行业需同时观察利润、现金流、资产负债表和营运质量是否同步恶化。')
 
     exclude_flag = 1 if landmine_score >= 0.72 or (gap is not None and gap < 0 and latest_ncf is not None and latest_ncf < 0) else 0
 
