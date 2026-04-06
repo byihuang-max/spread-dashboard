@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>公募基金研究 · GAMT</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#1e2433;font-size:13px}
@@ -95,7 +94,7 @@ tr:hover td{background:#f8fafc}
   <div class="section">
     <div class="tabs">
       <div class="tab active" data-tab="summary">汇总对比</div>
-      <div class="tab" data-tab="chart">图表</div>
+      <div class="tab" data-tab="chart">管理人对比</div>
       <div class="tab" data-tab="detail">产品明细</div>
     </div>
 
@@ -120,15 +119,27 @@ tr:hover td{background:#f8fafc}
 
     <!-- 图表 -->
     <div class="tab-content" id="tab-chart">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div>
-          <div class="section-title">纯债 · 近9个月平均收益 vs 平均回撤</div>
-          <div class="chart-wrap"><canvas id="chartBond"></canvas></div>
-        </div>
-        <div>
-          <div class="section-title">固收加 · 近3个月平均收益 vs 平均回撤</div>
-          <div class="chart-wrap"><canvas id="chartPlus"></canvas></div>
-        </div>
+      <div style="margin-bottom:16px">
+        <div class="section-title">近9个月纯债表现（2025-07-01 至 2026-04-03）</div>
+        <table>
+          <thead>
+            <tr>
+              <th>公司</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>正收益占比</th>
+            </tr>
+          </thead>
+          <tbody id="bondSummaryBody"></tbody>
+        </table>
+      </div>
+      <div>
+        <div class="section-title">近3个月固收加表现（2026-01-01 至 2026-04-03）</div>
+        <table>
+          <thead>
+            <tr>
+              <th>公司</th><th>产品数</th><th>平均收益</th><th>中位收益</th><th>平均回撤</th><th>中位回撤</th><th>正收益占比</th>
+            </tr>
+          </thead>
+          <tbody id="plusSummaryBody"></tbody>
+        </table>
       </div>
     </div>
 
@@ -207,41 +218,70 @@ function renderDetail(funds){
 }
 
 function renderCharts(summary){
-  var bondRows = summary.filter(function(r){ return r.category.startsWith('纯债'); });
-  var plusRows = summary.filter(function(r){ return r.category.startsWith('固收加'); });
-
-  function makeChart(canvasId, rows){
-    var labels = rows.map(function(r){ return r.company+'\n'+r.category; });
-    var retData = rows.map(function(r){ return r.avg_return_pct; });
-    var ddData = rows.map(function(r){ return r.avg_drawdown_pct; });
-    var colors = rows.map(function(r){
-      if(r.company==='华夏基金') return 'rgba(59,130,246,0.7)';
-      if(r.company==='工银瑞信基金') return 'rgba(16,185,129,0.7)';
-      if(r.company==='易方达基金') return 'rgba(139,92,246,0.7)';
-      return 'rgba(245,158,11,0.7)';
+  // 按公司汇总纯债和固收加
+  var companies = ['华夏基金','工银瑞信基金','鹏华基金','易方达基金'];
+  function aggByCompany(rows){
+    var map = {};
+    companies.forEach(function(c){ map[c] = {count:0, retSum:0, ddSum:0, rets:[], dds:[], pos:0}; });
+    rows.forEach(function(r){
+      var m = map[r.company];
+      if(!m) return;
+      m.count += r.count;
+      m.retSum += r.avg_return_pct * r.count;
+      m.ddSum += r.avg_drawdown_pct * r.count;
+      m.pos += Math.round(r.positive_ratio_pct * r.count / 100);
     });
-    var ctx = document.getElementById(canvasId).getContext('2d');
-    new Chart(ctx, {
-      type:'bar',
-      data:{
-        labels:labels,
-        datasets:[
-          {label:'平均收益(%)',data:retData,backgroundColor:colors,yAxisID:'y'},
-          {label:'平均回撤(%)',data:ddData,backgroundColor:colors.map(function(c){return c.replace('0.7','0.3');}),yAxisID:'y2',type:'bar'}
-        ]
-      },
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{position:'top',labels:{font:{size:11}}}},
-        scales:{
-          y:{position:'left',title:{display:true,text:'收益(%)',font:{size:11}},grid:{color:'#f1f5f9'}},
-          y2:{position:'right',title:{display:true,text:'回撤(%)',font:{size:11}},grid:{display:false}}
-        }
-      }
+    // also collect fund-level for median
+    return map;
+  }
+  function fundMedians(funds, isBond){
+    var map = {};
+    companies.forEach(function(c){ map[c] = {rets:[], dds:[]}; });
+    funds.forEach(function(f){
+      var isCat = isBond ? f.category.startsWith('纯债') : f.category.startsWith('固收加');
+      if(!isCat) return;
+      var m = map[f.company];
+      if(!m) return;
+      m.rets.push(f.return_pct);
+      m.dds.push(f.max_drawdown_pct);
+    });
+    return map;
+  }
+  function median(arr){
+    if(!arr.length) return null;
+    var s = arr.slice().sort(function(a,b){return a-b;});
+    var mid = Math.floor(s.length/2);
+    return s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
+  }
+  function fillTable(tbodyId, summaryRows, funds, isBond){
+    var agg = aggByCompany(summaryRows);
+    var meds = fundMedians(funds, isBond);
+    var tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = '';
+    companies.forEach(function(c){
+      var a = agg[c];
+      var m = meds[c];
+      if(a.count === 0) return;
+      var avgRet = a.retSum / a.count;
+      var avgDd = a.ddSum / a.count;
+      var medRet = median(m.rets);
+      var medDd = median(m.dds);
+      var posRatio = (a.pos / a.count * 100);
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td style="font-weight:600">'+c+'</td>'
+        +'<td>'+a.count+'</td>'
+        +'<td class="'+cls(avgRet)+'">'+pct(avgRet)+'</td>'
+        +'<td class="'+cls(medRet)+'">'+pct(medRet)+'</td>'
+        +'<td class="'+cls(avgDd)+'">'+pct(avgDd)+'</td>'
+        +'<td class="'+cls(medDd)+'">'+pct(medDd)+'</td>'
+        +'<td>'+posRatio.toFixed(1)+'%</td>';
+      tbody.appendChild(tr);
     });
   }
-  makeChart('chartBond', bondRows);
-  makeChart('chartPlus', plusRows);
+  var bondRows = summary.filter(function(r){ return r.category.startsWith('纯债'); });
+  var plusRows = summary.filter(function(r){ return r.category.startsWith('固收加'); });
+  fillTable('bondSummaryBody', bondRows, DATA.funds, true);
+  fillTable('plusSummaryBody', plusRows, DATA.funds, false);
 }
 
 function applyFilters(){
