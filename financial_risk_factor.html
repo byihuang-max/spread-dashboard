@@ -168,6 +168,10 @@ window.onerror=function(msg,src,line,col,err){
         <button id="industryMoreBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap">更多行业 ▾</button>
       </div>
       <div class="industry-list" id="industryList"></div>
+      <div id="specialIndustryWrap" style="margin-top:10px;display:none">
+        <div style="font-size:12px;color:#7f8da8;margin-bottom:8px">重点二级行业特例</div>
+        <div class="industry-list" id="specialIndustryList"></div>
+      </div>
       <div>
         <div class="industry-head">
           <div class="logic-box">
@@ -356,6 +360,8 @@ const FACTOR_LABELS = {
 const state = { industry: null, stockCode: null };
 const charts = {};
 let INDUSTRIES = [];
+let SPECIAL_VALIDATION_INDUSTRIES = [];
+let industryMode = "primary";
 
 const INDUSTRY_META = {
   "电子": {
@@ -701,9 +707,12 @@ function renderIndustryList(){
     </button>
   `).join("");
   document.querySelectorAll(".industry-btn").forEach(btn => btn.onclick = () => {
-    state.industry = btn.dataset.industry;
-    renderIndustrySection();
-    renderTable();
+    if(btn.dataset.industry){
+      industryMode = 'primary';
+      state.industry = btn.dataset.industry;
+      renderIndustrySection();
+      renderTable();
+    }
   });
   const moreBtn = document.getElementById("industryMoreBtn");
   if(moreBtn){
@@ -724,7 +733,64 @@ function currentIndustry(){
   return INDUSTRIES.find(i => i.name === state.industry);
 }
 
+function currentSpecialIndustry(){
+  return SPECIAL_VALIDATION_INDUSTRIES.find(i => i['特例行业'] === state.industry);
+}
+
+function renderSpecialIndustryList(){
+  const wrap = document.getElementById("specialIndustryWrap");
+  const box = document.getElementById("specialIndustryList");
+  if(!wrap || !box) return;
+  if(!SPECIAL_VALIDATION_INDUSTRIES.length){
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = '';
+  box.innerHTML = SPECIAL_VALIDATION_INDUSTRIES.map(ind => `
+    <button class="industry-btn ${industryMode==='special' && ind['特例行业']===state.industry?"active":""}" data-special-industry="${ind['特例行业']}">
+      <div class="name">${ind['特例行业']}</div>
+      <div class="meta">归属 ${ind['归属主行业']} · 命中 ${ind['命中样本数']} · 漏判 ${ind['漏判样本数']}</div>
+    </button>
+  `).join('');
+  document.querySelectorAll("[data-special-industry]").forEach(btn => btn.onclick = () => {
+    industryMode = 'special';
+    state.industry = btn.dataset.specialIndustry;
+    renderIndustrySection();
+  });
+}
+
 function renderIndustrySection(){
+  if(industryMode === 'special'){
+    const ind = currentSpecialIndustry();
+    if(!ind) return;
+    document.getElementById("industryNameTag").textContent = ind['特例行业'];
+    document.getElementById("industryPrimaryTag").textContent = '特例行业 · 归属 ' + ind['归属主行业'];
+    document.getElementById("industryLogic").textContent = ind['核心风险'] || '该特例行业逻辑待补充';
+    const chain = String(ind['变得更差标准'] || '').split('；').filter(Boolean);
+    document.getElementById("industryChain").innerHTML = chain.map((c,i) => `${i>0?'<span class="chain-arrow">→</span>':''}<div class="chain-node"><div class="n">恶化节点${i+1}</div><div class="d">${c}</div></div>`).join('');
+    document.getElementById("industryDefinition").textContent = `这是 ${ind['归属主行业']} 下需要单独看待的二级行业。不能直接套一级行业统一口径，否则容易误判。`;
+    document.getElementById("factorRoleList").innerHTML = [
+      {k:'主框架',v:`先归入 ${ind['归属主行业']} 看主风险框架`},
+      {k:'特例逻辑',v:ind['差的标准'] || '待补充'},
+      {k:'防误判',v:ind['不应误判情形'] || '待补充'}
+    ].map(r => `<div class="role-item"><div class="rk">${r.k}</div><div class="rv">${r.v}</div></div>`).join('');
+    document.getElementById("industrySummary").textContent = `${ind['特例行业']} 属于 ${ind['归属主行业']}，本期命中 ${ind['命中样本数']} 个、漏判 ${ind['漏判样本数']} 个。当前主要坏信号：${ind['本期主要坏信号'] || '暂无'}。`;
+    document.getElementById("industrySummaryGrid").innerHTML = [
+      {k:'归属主行业',v:ind['归属主行业'],cls:'blue'},
+      {k:'命中样本',v:ind['命中样本数'],cls:'red'},
+      {k:'漏判样本',v:ind['漏判样本数'],cls:'amber'},
+      {k:'行业类型',v:ind['行业类型'],cls:'green'}
+    ].map(x => `<div class="mini"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div></div>`).join('');
+    document.getElementById('industryFactorBar').style.display = 'none';
+    document.getElementById('industryFactorBarHtml').style.display = 'flex';
+    document.getElementById('industryFactorBarHtml').innerHTML = `<div class="note" style="padding:18px">特例行业当前先展示规则逻辑，不强行展示均值画像，避免把二级行业解释伪装成完整统计分布。</div>`;
+    document.getElementById('industryDistribution').style.display = 'none';
+    document.getElementById('industryDistributionHtml').style.display = 'flex';
+    document.getElementById('industryDistributionHtml').innerHTML = `<div class="note" style="padding:18px">后续若接入二级行业全量样本，再补充分布图与分位统计。</div>`;
+    renderIndustryList();
+    renderSpecialIndustryList();
+    return;
+  }
   const ind = currentIndustry();
   const meta = ind.rule || {};
   document.getElementById("industryNameTag").textContent = ind.name;
@@ -989,9 +1055,11 @@ async function loadValidation(){
     const res = await fetch('./data/financial_validation/validation_view.json?_=' + Date.now());
     if(!res.ok) return;
     VALIDATION = await res.json();
+    SPECIAL_VALIDATION_INDUSTRIES = VALIDATION.special_industries || [];
     renderValidationSummary();
     renderValidationChains();
     renderValidationSamples();
+    renderSpecialIndustryList();
     document.querySelectorAll('.sample-tab').forEach(btn => btn.onclick = () => {
       validationTab = btn.dataset.type;
       sampleExpanded = false;
