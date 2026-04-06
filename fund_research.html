@@ -100,8 +100,9 @@ tr:hover td{background:#f8fafc}
 
     <!-- 汇总 -->
     <div class="tab-content active" id="tab-summary">
-      <div style="margin-bottom:12px;font-size:12px;color:#64748b">
-        纯债口径：近9个月（2025-07-01起）&nbsp;|&nbsp;固收加口径：近3个月（2026-01-01起）&nbsp;|&nbsp;收益/回撤均基于复权净值重算
+      <div style="margin-bottom:12px;font-size:12px;color:#64748b;line-height:1.6">
+        纯债口径：近9个月（2025-07-01起）&nbsp;|&nbsp;固收加口径：近3个月（2026-01-01起）&nbsp;|&nbsp;收益/回撤均基于复权净值重算<br>
+        当前页中的"固收加"标签已按业绩比较基准复核：股票基准占比 ≤ 35% 才保留；偏股混合已剔除。FOF 是否保留，也以基准中股票权重为准，不按名称硬判。
       </div>
       <div id="summaryGrid" class="summary-grid"></div>
       <table id="summaryTable">
@@ -136,7 +137,7 @@ tr:hover td{background:#f8fafc}
         <thead>
           <tr>
             <th>公司</th><th>基金名称</th><th>代码</th><th>类别</th><th>区间</th>
-            <th>收益</th><th>最大回撤</th><th>年化波动</th><th>净值样本数</th>
+            <th>收益</th><th>最大回撤</th><th>股票基准</th><th>业绩比较基准</th><th>年化波动</th><th>净值样本数</th>
           </tr>
         </thead>
         <tbody id="detailBody"></tbody>
@@ -196,6 +197,8 @@ function renderDetail(funds){
       +'<td>'+f.horizon+'</td>'
       +'<td class="'+cls(f.return_pct)+'">'+pct(f.return_pct)+'</td>'
       +'<td class="'+cls(f.max_drawdown_pct)+'">'+pct(f.max_drawdown_pct)+'</td>'
+      +'<td>'+(f.stock_benchmark_pct!=null?f.stock_benchmark_pct+'%':'-')+'</td>'
+      +'<td style="max-width:260px;white-space:normal;font-size:11px;color:#64748b" title="'+(f.benchmark||'')+'">'+(f.benchmark?f.benchmark.substring(0,60)+(f.benchmark.length>60?'…':''):'-')+'</td>'
       +'<td>'+(f.annualized_vol_pct!=null?pct(f.annualized_vol_pct):'-')+'</td>'
       +'<td style="color:#94a3b8">'+f.obs+'</td>';
     tbody.appendChild(tr);
