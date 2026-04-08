@@ -1630,3 +1630,35 @@ To https://github.com/byihuang-max/spread-dashboard.git
    e6fd6ec..77faa4c  main -> main
 [17:07:28] ✅ 推送成功
 [17:07:28] ✅ 完成！
+[18:30:00] 📋 GAMT 投研看板 — 一键更新开始
+[18:30:00] 📋 主更新模式：跳过晚到数据模块
+[18:30:00] 📋 ═══ 产品净值 (fund_nav) ═══
+[18:30:00] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:07] ✅   完成 (7.0s)
+
+[18:30:07] 📋 ═══ 风格轧差 (style_spread) ═══
+[18:30:07] 🔄 运行 size_spread/fetch_incremental.py
+[18:30:14] ✅   完成 (6.5s)
+[18:30:14] 🔄 运行 size_spread/compute_spreads.py
+[18:30:16] ✅   完成 (2.0s)
+[18:30:16] 🔄 运行 size_spread/render_html.py
+[18:30:16] ✅   完成 (0.1s)
+
+[18:30:16] 📋 ═══ 宽基量化股票 (quant_stock) ═══
+[18:30:16] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:22] ✅   完成 (5.7s)
+[18:30:22] 🔄 运行 env_fit/quant_stock/quant_stock_data.py
+[18:30:42] ✅   完成 (20.7s)
+[18:30:42] 🔄 运行 env_fit/quant_stock/excess_attribution.py
+[18:30:43] ✅   完成 (0.1s)
+[18:30:43] 🔄 运行 env_fit/quant_stock/inject_quant_stock.py
+[18:30:43] ✅   完成 (0.1s)
+
+[18:30:43] 📋 ═══ 商品CTA (commodity_cta) ═══
+[18:30:43] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:48] ✅   完成 (5.8s)
+[18:30:48] 🔄 运行 env_fit/commodity_cta/commodity_data.py
+[18:30:50] ✅   完成 (1.7s)
+[18:30:50] 🔄 运行 env_fit/commodity_cta/mod1_cta_env.py
+[18:30:50] ✅   完成 (0.2s)
+[18:30:50] 🔄 运行 env_fit/commodity_cta/mod1b_pca_engine.py
