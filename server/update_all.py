@@ -5,7 +5,7 @@ GAMT 投研看板 — 一键更新脚本
 
 用法：
   python3 update_all.py              # 主更新（自动跳过晚到数据模块）
-  python3 update_all.py --late-only  # 只跑晚到数据（强势股+耐心资本）
+  python3 update_all.py --late-only  # 只跑晚到数据（强势股+耐心资本+择时因子）
   python3 update_all.py --module quant_stock  # 只更新某个模块（不受分层影响）
   python3 update_all.py --no-push    # 只更新数据，不推送
 
@@ -180,7 +180,7 @@ def main():
     parser = argparse.ArgumentParser(description='GAMT 投研看板一键更新')
     parser.add_argument('--no-push', action='store_true', help='只更新数据，不推送')
     parser.add_argument('--module', '-m', type=str, help='只更新指定模块')
-    parser.add_argument('--late-only', action='store_true', help='只更新晚到数据模块（momentum_stock + patient_capital）')
+    parser.add_argument('--late-only', action='store_true', help='只更新晚到数据模块（momentum_stock + patient_capital + timing_factors）')
     parser.add_argument('--list', action='store_true', help='列出所有模块')
     args = parser.parse_args()
 
@@ -250,10 +250,11 @@ def main():
         json.dump(logs, f, indent=1, ensure_ascii=False)
     log("已更新 update_log.json")
 
-    # 更新择时敞口评分页
-    ok_exp, t_exp = update_timing_exposure_page()
-    results['timing_exposure'] = (ok_exp, t_exp)
-    print()
+    # 仅在本轮未包含 timing_factors 时，才额外更新择时敞口评分页
+    if 'timing_factors' not in results:
+        ok_exp, t_exp = update_timing_exposure_page()
+        results['timing_exposure'] = (ok_exp, t_exp)
+        print()
 
     # Git push
     if not args.no_push:
