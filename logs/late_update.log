@@ -276,3 +276,55 @@ To https://github.com/byihuang-max/spread-dashboard.git
    77faa4c..6a8a1a5  main -> main
 [18:01:02] ✅ 推送成功
 [18:01:02] ✅ 完成！
+[18:30:00] 📋 GAMT 投研看板 — 一键更新开始
+[18:30:00] 📋 晚到数据模式：只更新 momentum_stock, patient_capital
+[18:30:00] 📋 ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:00] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:07] ✅   完成 (7.0s)
+[18:30:07] 🔄 运行 env_fit/momentum_stock/momentum_data.py
+[18:30:10] ✅   完成 (2.4s)
+[18:30:10] 🔄 运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:30:31] ✅   完成 (21.1s)
+[18:30:31] 🔄 运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:30:31] ✅   完成 (0.1s)
+[18:30:31] 🔄 运行 env_fit/momentum_stock/momentum_sector.py
+[18:30:32] ✅   完成 (1.2s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/momentum_warning.py
+[18:30:32] ✅   完成 (0.2s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:30:33] ✅   完成 (0.3s)
+[18:30:33] 🔄 运行 env_fit/momentum_stock/inject_momentum.py
+[18:30:33] ✅   完成 (0.2s)
+[18:30:33] 🔄 运行 timing-research/generate_leader_pool.py
+[18:30:33] ✅   完成 (0.1s)
+[18:30:33] 🔄 运行 timing-research/export_leader_pool_history.py
+[18:30:33] ✅   完成 (0.3s)
+[18:30:33] 🔄 运行 timing-research/generate_replay_page.py
+[18:30:33] ✅   完成 (0.2s)
+[18:30:33] 🔄 运行 timing-research/push_limit_replay_feishu.py
+[18:30:34] ✅   完成 (1.0s)
+
+[18:30:34] 📋 ═══ 耐心资本 (patient_capital) ═══
+[18:30:34] 🔄 运行 micro_flow/patient_capital/patient_data.py
+[18:30:42] ✅   完成 (7.6s)
+[18:30:42] 🔄 运行 micro_flow/patient_capital/patient_calc.py
+[18:30:45] ✅   完成 (3.0s)
+
+[18:30:45] 📋 ═══ 汇总 ═══
+[18:30:45] 📋   ✅ 强势股情绪        (34.0s)
+[18:30:45] 📋   ✅ 耐心资本         (10.6s)
+[18:30:45] 📋 总耗时: 44.6s
+[18:30:45] 📋 已更新 update_log.json
+[18:30:45] 📋 ═══ 择时敞口评分页 ═══
+[18:30:45] 🔄 运行 fetch_full_a_amount.py
+[18:30:46] ✅   完成 (1.3s)
+[18:30:46] 🔄 运行 ml_exposure_score.py
+[18:30:59] ✅   完成 (12.8s)
+[18:30:59] 🔄 运行 generate_ml_exposure_page.py
+[18:30:59] ✅   完成 (0.1s)
+[18:30:59] 🔄 运行 live_exposure_nav.py
+[18:31:00] ✅   完成 (0.9s)
+[18:31:00] 🔄 运行 generate_live_exposure_page.py
+[18:31:01] ✅   完成 (1.0s)
+
+[18:31:01] 📋 ═══ Git Push ═══
