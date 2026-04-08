@@ -243,6 +243,7 @@ MODULE_REGISTRY = {
         'name': '择时因子系统',
         'scripts': [],
         'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py'),
+        'late_data': True,  # 依赖强势股晚到数据，需与 momentum_stock 联动后移
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
