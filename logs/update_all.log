@@ -1877,3 +1877,140 @@ fatal: unable to access 'https://github.com/byihuang-max/spread-dashboard.git/':
 [18:31:07] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
 [18:31:13] ✅   完成 (5.9s)
 [18:31:13] 🔄 运行 env_fit/cb_env/cb_data.py
+[18:31:34] ✅   完成 (20.8s)
+[18:31:34] 🔄 运行 env_fit/cb_env/cb_calc.py
+[18:31:34] ✅   完成 (0.3s)
+[18:31:34] 🔄 运行 env_fit/cb_env/inject_cb_env.py
+[18:31:34] ✅   完成 (0.1s)
+[18:31:34] 🔄 运行 env_fit/cb_env/inject_cb_nav.py
+[18:31:34] ✅   完成 (0.1s)
+
+[18:31:34] 📋 ═══ 红灯预警（A股） (alerts) ═══
+[18:31:34] 🔄 运行 alerts/alerts_data.py
+[18:31:39] ✅   完成 (4.3s)
+[18:31:39] 🔄 运行 alerts/alerts_calc.py
+[18:31:40] ✅   完成 (1.0s)
+
+[18:31:40] 📋 ═══ 美股风险监控 (us_alerts) ═══
+[18:31:40] 🔄 运行 alerts/us_alerts_data.py
+[18:31:47] ✅   完成 (7.5s)
+[18:31:47] 🔄 运行 alerts/us_alerts_calc.py
+[18:31:49] ✅   完成 (1.3s)
+
+[18:31:49] 📋 ═══ 资金流拥挤度 (crowding) ═══
+[18:31:49] 🔄 运行 micro_flow/crowding/crowding_data.py
+[18:32:11] ✅   完成 (22.2s)
+[18:32:11] 🔄 运行 micro_flow/crowding/crowding_calc.py
+[18:32:12] ✅   完成 (1.1s)
+
+[18:32:12] 📋 ═══ 期权情绪 (option_sentiment) ═══
+[18:32:12] 🔄 运行 micro_flow/option_sentiment/option_data.py
+[18:32:22] ✅   完成 (9.9s)
+[18:32:22] 🔄 运行 micro_flow/option_sentiment/option_calc.py
+[18:33:00] ✅   完成 (38.6s)
+
+[18:33:00] 📋 ═══ 宏观流动性 (macro_liquidity) ═══
+[18:33:00] 🔄 运行 macro/liquidity/liquidity_data.py
+[18:33:02] ❌   失败 (2.0s): _string
+  File "pandas/_libs/tslibs/parsing.pyx", line 688, in pandas._libs.tslibs.parsing.dateutil_parse
+pandas._libs.tslibs.parsing.DateParseError: year must be in 1..9999, not 20260330: 20260330.0
+
+[18:33:02] ❌   数据脚本失败，跳过注入
+
+[18:33:02] 📋 ═══ 利率数据 (macro_rates) ═══
+[18:33:02] 🔄 运行 macro/rates/rates_data.py
+[18:33:06] ✅   完成 (3.8s)
+[18:33:06] 🔄 运行 macro/rates/rates_calc.py
+[18:33:07] ✅   完成 (0.9s)
+
+[18:33:07] 📋 ═══ 基本面数据 (macro_fundamentals) ═══
+[18:33:07] 🔄 运行 macro/fundamentals/fundamentals_data.py
+[18:33:10] ✅   完成 (2.7s)
+[18:33:10] 🔄 运行 macro/fundamentals/fundamentals_calc.py
+[18:33:11] ✅   完成 (0.9s)
+
+[18:33:11] 📋 ═══ 反脆弱看板 (antifragile) ═══
+[18:33:11] 🔄 运行 meme/antifragile/fetch_data_ifind.py
+[18:33:26] ✅   完成 (15.8s)
+[18:33:26] 🔄 运行 meme/antifragile/calc_corr.py
+[18:33:27] ✅   完成 (1.1s)
+[18:33:27] 🔄 运行 meme/antifragile/calc_meme.py
+[18:33:28] ✅   完成 (0.9s)
+[18:33:28] 🔄 运行 meme/antifragile/render_html.py
+[18:33:29] ✅   完成 (0.8s)
+
+[18:33:29] 📋 ═══ 叙事监控 (narrative_monitor) ═══
+[18:33:29] 🔄 运行 daily_report/meme交易/narrative_monitor.py
+[18:33:45] ✅   完成 (16.0s)
+
+[18:33:45] 📋 ═══ 叙事生命周期 (narrative_lifecycle) ═══
+[18:33:45] 🔄 运行 meme/macro_lifecycle.py
+[18:33:45] ✅   完成 (0.3s)
+
+[18:33:45] 📋 ═══ 中观景气度 (chain_prosperity) ═══
+[18:33:45] 🔄 运行 meso/chain_prosperity/chain_data.py
+[18:34:13] ✅   完成 (27.6s)
+[18:34:13] 🔄 运行 meso/chain_prosperity/chain_calc.py
+[18:34:14] ✅   完成 (1.0s)
+
+[18:34:14] 📋 ═══ 宏观打分+策略适配 (macro_score) ═══
+[18:34:14] 🔄 运行 macro/score/macro_score.py
+[18:34:14] ✅   完成 (0.1s)
+
+[18:34:14] 📋 ═══ 期权卖权 (option_vol) ═══
+[18:34:14] 🔄 运行 env_fit/option_vol/option_vol_main.py
+[18:34:35] ✅   完成 (20.5s)
+
+[18:34:35] 📋 ═══ 套利 (arbitrage) ═══
+[18:34:35] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:34:41] ✅   完成 (6.0s)
+[18:34:41] 🔄 运行 env_fit/arbitrage/fetch_incremental.py
+[18:34:58] ✅   完成 (16.8s)
+[18:34:58] 🔄 运行 env_fit/arbitrage/mod1_index_arb.py
+[18:35:11] ✅   完成 (13.4s)
+[18:35:11] 🔄 运行 env_fit/arbitrage/mod2_commodity_arb.py
+[18:35:11] ✅   完成 (0.4s)
+[18:35:11] 🔄 运行 env_fit/arbitrage/mod3_option_arb.py
+[18:36:02] ✅   完成 (50.2s)
+
+[18:36:02] 📋 ═══ HALO交易 (halo_trade) ═══
+[18:36:02] 🔄 运行 halo_trade/halo_data_ifind_full.py
+[18:36:03] ❌   失败 (1.3s): 
+[18:36:03] ❌   数据脚本失败，跳过注入
+
+[18:36:03] 📋 ═══ 汇总 ═══
+[18:36:03] 📋   ✅ 产品净值         (7.9s)
+[18:36:03] 📋   ✅ 风格轧差         (8.4s)
+[18:36:03] 📋   ✅ 宽基量化股票       (27.9s)
+[18:36:03] 📋   ✅ 商品CTA        (22.5s)
+[18:36:03] 📋   ✅ 转债指增         (27.2s)
+[18:36:03] 📋   ✅ 红灯预警（A股）     (5.3s)
+[18:36:03] 📋   ✅ 美股风险监控       (8.7s)
+[18:36:03] 📋   ✅ 资金流拥挤度       (23.3s)
+[18:36:03] 📋   ✅ 期权情绪         (48.5s)
+[18:36:03] 📋   ❌ 宏观流动性        (2.0s)
+[18:36:03] 📋   ✅ 利率数据         (4.7s)
+[18:36:03] 📋   ✅ 基本面数据        (3.6s)
+[18:36:03] 📋   ✅ 反脆弱看板        (18.6s)
+[18:36:03] 📋   ✅ 叙事监控         (16.0s)
+[18:36:03] 📋   ✅ 叙事生命周期       (0.3s)
+[18:36:03] 📋   ✅ 中观景气度        (28.7s)
+[18:36:03] 📋   ✅ 宏观打分+策略适配    (0.1s)
+[18:36:03] 📋   ✅ 期权卖权         (20.5s)
+[18:36:03] 📋   ✅ 套利           (86.9s)
+[18:36:03] 📋   ❌ HALO交易       (1.3s)
+[18:36:03] 📋 总耗时: 362.2s
+[18:36:03] 📋 已更新 update_log.json
+[18:36:03] 📋 ═══ 择时敞口评分页 ═══
+[18:36:03] 🔄 运行 fetch_full_a_amount.py
+[18:36:04] ✅   完成 (1.1s)
+[18:36:04] 🔄 运行 ml_exposure_score.py
+[18:36:14] ✅   完成 (10.4s)
+[18:36:14] 🔄 运行 generate_ml_exposure_page.py
+[18:36:14] ✅   完成 (0.1s)
+[18:36:14] 🔄 运行 live_exposure_nav.py
+[18:36:15] ✅   完成 (0.9s)
+[18:36:15] 🔄 运行 generate_live_exposure_page.py
+[18:36:16] ✅   完成 (0.8s)
+
+[18:36:16] 📋 ═══ Git Push ═══
