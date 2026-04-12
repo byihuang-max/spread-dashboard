@@ -4,13 +4,16 @@ GAMT 投研看板 — 一键更新脚本
 跑一次完成：数据拉取(CSV+JSON) → 指标计算 → 注入HTML → git push
 
 用法：
-  python3 update_all.py              # 主更新（自动跳过晚到数据模块）
-  python3 update_all.py --late-only  # 只跑晚到数据（强势股+耐心资本+择时因子）
+  python3 update_all.py                     # 早间主更新（默认，只跑常规模块）
+  python3 update_all.py --phase am          # 同上：早间主更新
+  python3 update_all.py --phase pm          # 晚间全量更新（先常规，后晚到数据）
+  python3 update_all.py --late-only         # 只跑晚到数据（强势股+耐心资本+择时因子）
   python3 update_all.py --module quant_stock  # 只更新某个模块（不受分层影响）
-  python3 update_all.py --no-push    # 只更新数据，不推送
+  python3 update_all.py --no-push           # 只更新数据，不推送
 
 分层逻辑：
-  - 默认模式：跳过 late_data=True 的模块（涨跌停/15min等晚到数据）
+  - 默认 / --phase am：只跑常规模块，跳过 late_data=True
+  - --phase pm：先跑常规模块，再顺序跑晚到数据模块
   - --late-only：只跑 late_data=True 的模块
   - --module：指定模块，不受分层影响
 """
@@ -176,11 +179,35 @@ def git_push(msg='auto: update data'):
         log(f"Git 失败: {e}", 'ERR')
         return False
 
+def resolve_modules(args):
+    from module_registry import MODULE_REGISTRY
+
+    normal_modules = [k for k in MODULES.keys() if not MODULE_REGISTRY.get(k, {}).get('late_data')]
+    late_modules = [k for k, v in MODULE_REGISTRY.items() if v.get('late_data') and v.get('include_in_update_all')]
+
+    if args.module:
+        log(f"单模块模式：只更新 {args.module}")
+        return [args.module], 'single'
+
+    if args.late_only:
+        log(f"晚到数据模式：只更新 {', '.join(late_modules)}")
+        return late_modules, 'late_only'
+
+    phase = args.phase or 'am'
+    if phase == 'pm':
+        modules_to_run = normal_modules + late_modules
+        log(f"晚间全量模式：先常规后晚到，共 {len(modules_to_run)} 个模块")
+        return modules_to_run, 'pm'
+
+    log(f"早间主更新模式：跳过晚到数据模块")
+    return normal_modules, 'am'
+
 def main():
     parser = argparse.ArgumentParser(description='GAMT 投研看板一键更新')
     parser.add_argument('--no-push', action='store_true', help='只更新数据，不推送')
     parser.add_argument('--module', '-m', type=str, help='只更新指定模块')
     parser.add_argument('--late-only', action='store_true', help='只更新晚到数据模块（momentum_stock + patient_capital + timing_factors）')
+    parser.add_argument('--phase', choices=['am', 'pm'], default='am', help='am=早间主更新（默认），pm=晚间全量更新（先常规后晚到）')
     parser.add_argument('--list', action='store_true', help='列出所有模块')
     args = parser.parse_args()
 
@@ -192,20 +219,7 @@ def main():
     log("GAMT 投研看板 — 一键更新开始")
     t0 = time.time()
 
-    # 决定要跑哪些模块
-    if args.module:
-        modules_to_run = [args.module]
-    elif args.late_only:
-        # 只跑标记了 late_data=True 的模块
-        from module_registry import MODULE_REGISTRY
-        modules_to_run = [k for k, v in MODULE_REGISTRY.items() if v.get('late_data') and v.get('include_in_update_all')]
-        log(f"晚到数据模式：只更新 {', '.join(modules_to_run)}")
-    else:
-        # 默认跑所有模块，但跳过 late_data=True 的
-        from module_registry import MODULE_REGISTRY
-        modules_to_run = [k for k in MODULES.keys() if not MODULE_REGISTRY.get(k, {}).get('late_data')]
-        log(f"主更新模式：跳过晚到数据模块")
-    
+    modules_to_run, run_mode = resolve_modules(args)
     results = {}
 
     for mod_key in modules_to_run:
@@ -241,7 +255,7 @@ def main():
             'elapsed': round(t, 1),
             'time': now_str,
             'date': date_str,
-            'user': 'cron'
+            'user': f'cron:{run_mode}'
         }
         # 替换同模块旧记录
         logs = [l for l in logs if l.get('module') != k]
@@ -260,7 +274,7 @@ def main():
     if not args.no_push:
         ok_count = sum(1 for ok, _ in results.values() if ok)
         total = len(results)
-        msg = f"auto: update {ok_count}/{total} modules"
+        msg = f"auto: update {run_mode} {ok_count}/{total} modules"
         git_push(msg)
     else:
         log("跳过 git push (--no-push)", 'INFO')

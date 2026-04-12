@@ -20,7 +20,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from module_registry import build_refresh_modules, build_tab_map
+from module_registry import build_refresh_modules, build_tab_map, MODULE_REGISTRY
 
 # ═══ 更新日志 ═══
 UPDATE_LOG_PATH = os.path.join(BASE_DIR, 'server', 'update_log.json')
@@ -62,6 +62,13 @@ import auth
 # ═══ 模块配置（单一注册表生成）═══
 MODULES = build_refresh_modules()
 TAB_MAP = build_tab_map()
+
+
+def get_refresh_all_modules():
+    """refresh-all 统一口径：先常规模块，后晚到模块。"""
+    normal = [k for k in MODULES.keys() if not MODULE_REGISTRY.get(k, {}).get('late_data')]
+    late = [k for k in MODULES.keys() if MODULE_REGISTRY.get(k, {}).get('late_data')]
+    return normal + late
 
 # ═══ 全局状态 ═══
 lock = threading.Lock()
@@ -676,7 +683,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(429, {'error': '有任务正在运行', 'running_module': state['module']})
                 return
 
-            mod_keys = list(MODULES.keys())
+            mod_keys = get_refresh_all_modules()
             state['running'] = True
             state['mode'] = 'all'
             state['module'] = mod_keys[0]
