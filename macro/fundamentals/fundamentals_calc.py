@@ -55,9 +55,15 @@ def merge_monthly_series(series_map):
     merged = None
     for field, csv_name in series_map:
         df = load_csv(csv_name)
-        if df.empty or field not in df.columns or 'month' not in df.columns:
+        if df.empty or 'month' not in df.columns:
             continue
-        df = df[['month', field]].copy()
+        if field not in df.columns:
+            if field == 'ppi_yoy_proxy' and 'ppi_yoy' in df.columns:
+                df = df[['month', 'ppi_yoy']].rename(columns={'ppi_yoy': 'ppi_yoy_proxy'})
+            else:
+                continue
+        else:
+            df = df[['month', field]].copy()
         df['month'] = df['month'].astype(str)
         df[field] = pd.to_numeric(df[field], errors='coerce')
         merged = df if merged is None else merged.merge(df, on='month', how='outer')
@@ -179,31 +185,38 @@ def build_inventory_cycle():
         ('industrial_profit_ytd_yoy', 'industrial_profit_ytd_yoy.csv'),
         ('pmi_finished_goods_inventory', 'pmi_finished_goods_inventory.csv'),
         ('pmi_raw_material_inventory', 'pmi_raw_material_inventory.csv'),
+        ('ppi_yoy_proxy', 'ppi.csv'),
     ]
     df = merge_monthly_series(field_map)
     if df.empty:
         return None
-    latest = df.iloc[-1]
-    prev = df.iloc[-2] if len(df) >= 2 else latest
-    inv = float(latest['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in df.columns and pd.notna(latest['finished_goods_inventory_yoy']) else None
-    profit = float(latest['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in df.columns and pd.notna(latest['industrial_profit_ytd_yoy']) else None
-    pmi_fg = float(latest['pmi_finished_goods_inventory']) if 'pmi_finished_goods_inventory' in df.columns and pd.notna(latest['pmi_finished_goods_inventory']) else None
-    pmi_rm = float(latest['pmi_raw_material_inventory']) if 'pmi_raw_material_inventory' in df.columns and pd.notna(latest['pmi_raw_material_inventory']) else None
-    prev_inv = float(prev['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in df.columns and pd.notna(prev['finished_goods_inventory_yoy']) else None
-    prev_profit = float(prev['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in df.columns and pd.notna(prev['industrial_profit_ytd_yoy']) else None
+    base_df = df.dropna(subset=['finished_goods_inventory_yoy', 'industrial_profit_ytd_yoy'], how='any') if 'finished_goods_inventory_yoy' in df.columns and 'industrial_profit_ytd_yoy' in df.columns else df
+    latest = base_df.iloc[-1]
+    prev = base_df.iloc[-2] if len(base_df) >= 2 else latest
+    inv = float(latest['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in base_df.columns and pd.notna(latest['finished_goods_inventory_yoy']) else None
+    profit = float(latest['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in base_df.columns and pd.notna(latest['industrial_profit_ytd_yoy']) else None
+    pmi_fg = float(latest_valid(df, 'pmi_finished_goods_inventory')['pmi_finished_goods_inventory']) if latest_valid(df, 'pmi_finished_goods_inventory') is not None else None
+    pmi_rm = float(latest_valid(df, 'pmi_raw_material_inventory')['pmi_raw_material_inventory']) if latest_valid(df, 'pmi_raw_material_inventory') is not None else None
+    prev_inv = float(prev['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in base_df.columns and pd.notna(prev['finished_goods_inventory_yoy']) else None
+    prev_profit = float(prev['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in base_df.columns and pd.notna(prev['industrial_profit_ytd_yoy']) else None
+    ppi_row = latest_valid(df, 'ppi_yoy_proxy')
+    prev_ppi_row = df.dropna(subset=['ppi_yoy_proxy']).iloc[-2] if 'ppi_yoy_proxy' in df.columns and len(df.dropna(subset=['ppi_yoy_proxy'])) >= 2 else None
+    ppi = float(ppi_row['ppi_yoy_proxy']) if ppi_row is not None else None
+    prev_ppi = float(prev_ppi_row['ppi_yoy_proxy']) if prev_ppi_row is not None else None
+    ppi_up = ppi is not None and prev_ppi is not None and ppi >= prev_ppi
     status='被动去库'
     if None not in [inv, profit, prev_inv, prev_profit]:
         inv_up = inv >= prev_inv
         profit_up = profit >= prev_profit
-        if inv_up and profit_up and profit > 5:
+        if inv_up and profit_up and profit > 5 and ppi is not None and ppi >= 0 and ppi_up:
             status='主动补库'
-        elif inv_up and profit >= 0:
+        elif inv_up and profit >= 0 and (ppi is None or ppi_up):
             status='被动补库'
-        elif (not inv_up) and profit < 0:
+        elif (not inv_up) and profit < 0 and (ppi is not None and ppi < 0):
             status='主动去库'
         else:
             status='被动去库'
-    summary=f'产成品库存 {inv:.1f}% 、工业利润 {profit:.1f}% 、PMI产成品库存 {pmi_fg:.1f}、PMI原材料库存 {pmi_rm:.1f}。' if None not in [inv, profit, pmi_fg, pmi_rm] else '库存周期字段已补进来，后续可再叠 PPI 做更完整判断。'
+    summary=f'产成品库存 {inv:.1f}% 、工业利润 {profit:.1f}% 、PPI {ppi:.1f}% 、PMI产成品库存 {pmi_fg:.1f}。' if None not in [inv, profit, ppi, pmi_fg] else '库存周期字段已补进来，后续可继续优化口径。'
     series=[]
     for _, r in df.tail(24).iterrows():
         item={'month':str(r['month'])}
@@ -211,7 +224,10 @@ def build_inventory_cycle():
             if col=='month': continue
             item[col]=round(float(r[col]),2) if pd.notna(r[col]) else None
         series.append(item)
-    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    latest_out = {col: (round(float(latest[col]), 2) if col in latest.index and pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    latest_out['pmi_finished_goods_inventory'] = round(float(pmi_fg),2) if pmi_fg is not None else None
+    latest_out['pmi_raw_material_inventory'] = round(float(pmi_rm),2) if pmi_rm is not None else None
+    latest_out['ppi_yoy_proxy'] = round(float(ppi),2) if ppi is not None else None
     return {'status':status,'summary':summary,'latest':latest_out,'series':series}
 
 def build_property_recovery():
