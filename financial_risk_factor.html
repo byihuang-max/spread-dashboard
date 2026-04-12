@@ -133,6 +133,12 @@ a{color:inherit;text-decoration:none}
 .validation-subtab.active{background:#163562;border-color:#5d9cff;color:#fff}
 .validation-panel{display:none}
 .validation-panel.active{display:block}
+.industry-subtabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.industry-subtab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s
+}
+.industry-subtab.active{background:#163562;border-color:#5d9cff;color:#fff}
 
 .section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
 .industry-shell{display:block}
@@ -317,6 +323,10 @@ window.onerror=function(msg,src,line,col,err){
       <div class="tag">讲清行业为什么看这些指标</div>
     </div>
     <div class="industry-shell">
+      <div class="industry-subtabs">
+        <button class="industry-subtab active" data-industry-mode="primary">主行业</button>
+        <button class="industry-subtab" data-industry-mode="special">特例行业</button>
+      </div>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
         <input id="industrySearch" placeholder="搜索行业…" style="flex:1;background:#0c1830;border:1px solid #22314d;color:#d7e0ea;border-radius:10px;padding:8px 12px;font-size:13px">
         <button id="industryMoreBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap">更多行业 ▾</button>
@@ -564,6 +574,7 @@ const charts = {};
 let INDUSTRIES = [];
 let SPECIAL_VALIDATION_INDUSTRIES = [];
 let industryMode = "primary";
+let industryListExpanded = false;
 
 // 行业元数据：每个行业的生意本质定义 + 因子角色说明
 // definition: 用一段人话讲清楚这个行业的生意本质
@@ -902,15 +913,45 @@ function renderIndustryRank(){
   } catch(e){ renderIndustryRankHtml(); }
 }
 
+function renderIndustryModeTabs(){
+  document.querySelectorAll('.industry-subtab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.industryMode === industryMode);
+  });
+  const list = document.getElementById('industryList');
+  const wrap = document.getElementById('specialIndustryWrap');
+  const search = document.getElementById('industrySearch');
+  const moreBtn = document.getElementById('industryMoreBtn');
+  if(list) list.style.display = industryMode === 'primary' ? '' : 'none';
+  if(wrap) wrap.style.display = industryMode === 'special' ? '' : 'none';
+  if(search) search.style.display = industryMode === 'primary' ? '' : 'none';
+  if(moreBtn) moreBtn.style.display = industryMode === 'primary' ? '' : 'none';
+}
+
+function initIndustryModeTabs(){
+  document.querySelectorAll('.industry-subtab').forEach(btn => {
+    btn.onclick = () => {
+      industryMode = btn.dataset.industryMode || 'primary';
+      if(industryMode === 'primary' && !currentIndustry() && INDUSTRIES.length){
+        state.industry = INDUSTRIES[0].name;
+      }
+      if(industryMode === 'special' && SPECIAL_VALIDATION_INDUSTRIES.length){
+        if(!currentSpecialIndustry()) state.industry = SPECIAL_VALIDATION_INDUSTRIES[0]['特例行业'];
+      }
+      renderIndustryModeTabs();
+      renderIndustrySection();
+    };
+  });
+  renderIndustryModeTabs();
+}
+
 const INDUSTRY_LIST_PAGE = 20;
-let industryListExpanded = false;
 
 function renderIndustryList(){
   const q = (document.getElementById("industrySearch")?.value||"").trim().toLowerCase();
   const filtered = q ? INDUSTRIES.filter(i=>i.name.includes(q)) : INDUSTRIES;
   const shown = (industryListExpanded || q) ? filtered : filtered.slice(0, INDUSTRY_LIST_PAGE);
   document.getElementById("industryList").innerHTML = shown.map(ind => `
-    <button class="industry-btn ${ind.name===state.industry?"active":""}" data-industry="${ind.name}">
+    <button class="industry-btn ${industryMode==='primary' && ind.name===state.industry?"active":""}" data-industry="${ind.name}">
       <div class="name">${ind.name}</div>
       <div class="meta">均值 ${score(ind.avgRisk)} · 剔除 ${ind.excludeCount} · 主因 ${FACTOR_LABELS[ind.primary]}</div>
     </button>
@@ -919,6 +960,7 @@ function renderIndustryList(){
     if(btn.dataset.industry){
       industryMode = 'primary';
       state.industry = btn.dataset.industry;
+      renderIndustryModeTabs();
       renderIndustrySection();
       renderTable();
     }
@@ -926,7 +968,7 @@ function renderIndustryList(){
   const moreBtn = document.getElementById("industryMoreBtn");
   if(moreBtn){
     const hasMore = !q && filtered.length > INDUSTRY_LIST_PAGE;
-    moreBtn.style.display = hasMore ? "" : "none";
+    moreBtn.style.display = industryMode === 'primary' && hasMore ? "" : "none";
     moreBtn.textContent = industryListExpanded ? "收起 ▴" : `更多行业（共 ${filtered.length} 个）▾`;
   }
 }
@@ -956,7 +998,7 @@ function renderSpecialIndustryList(){
     wrap.style.display = 'none';
     return;
   }
-  wrap.style.display = '';
+  wrap.style.display = industryMode === 'special' ? '' : 'none';
   box.innerHTML = SPECIAL_VALIDATION_INDUSTRIES.map(ind => `
     <button class="industry-btn ${industryMode==='special' && ind['特例行业']===state.industry?"active":""}" data-special-industry="${ind['特例行业']}">
       <div class="name">${ind['特例行业']}</div>
@@ -966,6 +1008,7 @@ function renderSpecialIndustryList(){
   document.querySelectorAll("[data-special-industry]").forEach(btn => btn.onclick = () => {
     industryMode = 'special';
     state.industry = btn.dataset.specialIndustry;
+    renderIndustryModeTabs();
     renderIndustrySection();
   });
 }
@@ -1001,6 +1044,7 @@ function renderIndustrySection(){
     document.getElementById('industryDistribution').style.display = 'none';
     document.getElementById('industryDistributionHtml').style.display = 'flex';
     document.getElementById('industryDistributionHtml').innerHTML = `<div class="note" style="padding:18px">后续若接入二级行业全量样本，再补充分布图与分位统计。</div>`;
+    renderIndustryModeTabs();
     renderIndustryList();
     renderSpecialIndustryList();
     return;
@@ -1025,6 +1069,7 @@ function renderIndustrySection(){
     {k:"剔除项数量",v:ind.excludeCount,cls:"blue"},
     {k:"主导因子",v:FACTOR_LABELS[ind.primary],cls:"green"}
   ].map(x => `<div class="mini"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div></div>`).join("");
+  renderIndustryModeTabs();
 
   if(charts.factorBar) charts.factorBar.dispose();
   try {
@@ -1387,6 +1432,7 @@ async function boot(){
   renderHeatmap();
   renderIndustryRank();
   renderIndustryList();
+  initIndustryModeTabs();
   renderIndustrySection();
   initPageTabs();
   initFilters();
