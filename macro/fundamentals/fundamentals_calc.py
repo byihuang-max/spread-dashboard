@@ -151,6 +151,42 @@ def build_credit_structure():
     return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
 
 
+
+
+def build_inventory_cycle():
+    field_map = [
+        ('finished_goods_inventory_yoy', 'finished_goods_inventory_yoy.csv'),
+        ('industrial_profit_ytd_yoy', 'industrial_profit_ytd_yoy.csv'),
+        ('pmi_finished_goods_inventory', 'pmi_finished_goods_inventory.csv'),
+        ('pmi_raw_material_inventory', 'pmi_raw_material_inventory.csv'),
+    ]
+    df = merge_monthly_series(field_map)
+    if df.empty:
+        return None
+    latest = df.iloc[-1]
+    inv = float(latest['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in df.columns and pd.notna(latest['finished_goods_inventory_yoy']) else None
+    profit = float(latest['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in df.columns and pd.notna(latest['industrial_profit_ytd_yoy']) else None
+    pmi_fg = float(latest['pmi_finished_goods_inventory']) if 'pmi_finished_goods_inventory' in df.columns and pd.notna(latest['pmi_finished_goods_inventory']) else None
+    pmi_rm = float(latest['pmi_raw_material_inventory']) if 'pmi_raw_material_inventory' in df.columns and pd.notna(latest['pmi_raw_material_inventory']) else None
+    status='被动去库'
+    if inv is not None and profit is not None:
+        if inv > 5 and profit > 5:
+            status='主动补库'
+        elif inv > 3 and profit >= 0:
+            status='被动补库'
+        elif inv < 3 and profit < 0:
+            status='主动去库'
+    summary=f'产成品库存 {inv:.1f}% 、工业利润 {profit:.1f}% 、PMI产成品库存 {pmi_fg:.1f}。' if None not in [inv, profit, pmi_fg] else '库存周期字段已补进来，后续可再叠 PPI 做更完整判断。'
+    series=[]
+    for _, r in df.tail(24).iterrows():
+        item={'month':str(r['month'])}
+        for col in df.columns:
+            if col=='month': continue
+            item[col]=round(float(r[col]),2) if pd.notna(r[col]) else None
+        series.append(item)
+    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    return {'status':status,'summary':summary,'latest':latest_out,'series':series}
+
 def build_property_recovery():
     field_map = [
         ('property_sales_area_yoy', 'property_sales_area_yoy.csv'),
@@ -358,6 +394,7 @@ def calc():
     result['growth_breakdown'] = build_growth_breakdown()
     result['credit_structure'] = build_credit_structure()
     result['property_recovery'] = build_property_recovery()
+    result['inventory_cycle'] = build_inventory_cycle()
 
     latest_pmi_val = None
     latest_cpi_val = None
