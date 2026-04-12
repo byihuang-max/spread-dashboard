@@ -315,6 +315,103 @@ def factor_text(label, score):
     return f'{label}{level}'
 
 
+def normalize_industry_name(name):
+    name = (name or '').strip()
+    alias_map = {
+        '建筑装饰': '建筑工程',
+        '环保': '环境保护',
+        '电子': '半导体',
+        '医药生物': '生物制药',
+        '食品饮料': '食品',
+        '计算机': '软件服务',
+        '非银金融': '证券',
+        '全国地产': '房地产',
+        '区域地产': '房地产',
+        '元器件': '半导体',
+        '化学制药': '生物制药',
+    }
+    return alias_map.get(name, name)
+
+
+def apply_industry_overrides(industry_name, scores, metrics):
+    rule_name = normalize_industry_name(industry_name)
+    profit_score = scores['profit_score']
+    cashflow_score = scores['cashflow_score']
+    debt_score = scores['debt_score']
+    working_capital_score = scores['working_capital_score']
+
+    latest_profit = metrics.get('latest_profit')
+    latest_sales = metrics.get('latest_sales')
+    latest_ncf = metrics.get('latest_ncf')
+    latest_debt = metrics.get('latest_debt')
+    latest_ar_turn = metrics.get('latest_ar_turn')
+    latest_inv_turn = metrics.get('latest_inv_turn')
+    gap = metrics.get('gap')
+    sales_down_streak = metrics.get('sales_down_streak', 0)
+    ocf_sales_down_streak = metrics.get('ocf_sales_down_streak', 0)
+    debt_up_streak = metrics.get('debt_up_streak', 0)
+    ar_turn_down_streak = metrics.get('ar_turn_down_streak', 0)
+    inv_turn_down_streak = metrics.get('inv_turn_down_streak', 0)
+
+    if rule_name in {'建筑工程', '环境保护'}:
+        cashflow_score = clamp(cashflow_score + 0.06)
+        working_capital_score = clamp(working_capital_score + 0.08)
+        if gap is not None and gap < 0:
+            debt_score = clamp(debt_score + 0.06)
+
+    elif rule_name in {'半导体', '电子', '元器件'}:
+        working_capital_score = clamp(working_capital_score + 0.10)
+        if inv_turn_down_streak >= 2:
+            working_capital_score = clamp(working_capital_score + 0.06)
+        if latest_ncf is not None and latest_ncf < 0:
+            cashflow_score = clamp(cashflow_score + 0.04)
+        if latest_profit is not None and latest_profit < 0 and latest_ncf is not None and latest_ncf > 0 and gap is not None and gap > 0:
+            profit_score = clamp(profit_score - 0.08)
+
+    elif rule_name in {'生物制药', '化学制药', '医药生物'}:
+        cashflow_score = clamp(cashflow_score + 0.06)
+        debt_score = clamp(debt_score + 0.04)
+        if latest_sales is not None and latest_sales > 20 and gap is not None and gap > 0:
+            profit_score = clamp(profit_score - 0.06)
+
+    elif rule_name in {'食品', '食品饮料', '轻工制造', '纺织服饰'}:
+        working_capital_score = clamp(working_capital_score + 0.08)
+        if sales_down_streak >= 2:
+            profit_score = clamp(profit_score + 0.06)
+        if inv_turn_down_streak >= 2:
+            working_capital_score = clamp(working_capital_score + 0.04)
+
+    elif rule_name in {'软件服务', '计算机'}:
+        cashflow_score = clamp(cashflow_score + 0.08)
+        working_capital_score = clamp(working_capital_score + 0.06)
+        if latest_sales is not None and latest_sales < 0:
+            profit_score = clamp(profit_score + 0.04)
+
+    elif rule_name == '房地产':
+        debt_score = clamp(debt_score + 0.10)
+        cashflow_score = clamp(cashflow_score + 0.06)
+        if gap is not None and gap < 0:
+            debt_score = clamp(debt_score + 0.08)
+
+    elif rule_name in {'证券', '银行', '多元金融', '非银金融'}:
+        cashflow_score = max(0.30, cashflow_score - 0.12)
+        debt_score = max(0.26, debt_score - 0.12)
+        working_capital_score = max(0.28, working_capital_score - 0.08)
+        if latest_profit is not None and latest_profit < 0:
+            profit_score = clamp(profit_score + 0.04)
+        if latest_sales is not None and latest_sales < 0:
+            profit_score = clamp(profit_score + 0.04)
+
+    scores.update({
+        'profit_score': clamp(profit_score),
+        'cashflow_score': clamp(cashflow_score),
+        'debt_score': clamp(debt_score),
+        'working_capital_score': clamp(working_capital_score),
+        'rule_name': rule_name,
+    })
+    return scores
+
+
 def evaluate_stock(meta, periods):
     ordered_periods = sorted(periods.keys())
     if not ordered_periods:
@@ -472,14 +569,35 @@ def evaluate_stock(meta, periods):
         working_capital_score += 0.06
     working_capital_score = clamp(working_capital_score)
 
-    # 科技/高研发行业修正：避免单纯按利润误伤
     industry1 = (meta.get('industry') or '未分类').strip() or '未分类'
-    if industry1 in {'电子', '医药生物', '电力设备'}:
-        if latest_profit is not None and latest_profit < 0 and latest_ncf is not None and latest_ncf > 0 and gap is not None and gap > 0:
-            profit_score = max(0.30, profit_score - 0.10)
-        if latest_profit is not None and latest_profit < -50 and latest_ncf is not None and latest_ncf < 0 and gap is not None and gap < 0:
-            debt_score = clamp(debt_score + 0.05)
-            working_capital_score = clamp(working_capital_score + 0.05)
+    scores = apply_industry_overrides(
+        industry1,
+        {
+            'profit_score': profit_score,
+            'cashflow_score': cashflow_score,
+            'debt_score': debt_score,
+            'working_capital_score': working_capital_score,
+        },
+        {
+            'latest_profit': latest_profit,
+            'latest_sales': latest_sales,
+            'latest_ncf': latest_ncf,
+            'latest_debt': latest_debt,
+            'latest_ar_turn': latest_ar_turn,
+            'latest_inv_turn': latest_inv_turn,
+            'gap': gap,
+            'sales_down_streak': sales_down_streak,
+            'ocf_sales_down_streak': ocf_sales_down_streak,
+            'debt_up_streak': debt_up_streak,
+            'ar_turn_down_streak': ar_turn_down_streak,
+            'inv_turn_down_streak': inv_turn_down_streak,
+        },
+    )
+    profit_score = scores['profit_score']
+    cashflow_score = scores['cashflow_score']
+    debt_score = scores['debt_score']
+    working_capital_score = scores['working_capital_score']
+    rule_name = scores['rule_name']
 
     landmine_score = round((profit_score + cashflow_score + debt_score + working_capital_score) / 4, 4)
     risk_level = classify_risk(landmine_score)
@@ -517,7 +635,7 @@ def evaluate_stock(meta, periods):
         why_parts = ['综合财务质量偏弱']
     why_dangerous = '；'.join(why_parts)
 
-    industry_rule = RULEBOOK.get(industry1, DEFAULT_RULE)
+    industry_rule = RULEBOOK.get(industry1) or RULEBOOK.get(rule_name) or DEFAULT_RULE
     why_industry = industry_rule.get('logic', '该行业需同时观察利润、现金流、资产负债表和营运质量是否同步恶化。')
 
     exclude_flag = 1 if landmine_score >= 0.72 or (gap is not None and gap < 0 and latest_ncf is not None and latest_ncf < 0) else 0
@@ -681,6 +799,7 @@ def evaluate_stock(meta, periods):
         'worst_metric': worst_metric,
         'why_dangerous': why_dangerous,
         'why_industry': why_industry,
+        'industry_rule_name': rule_name,
         'exclude_flag': exclude_flag,
         'is_persistently_worsening': is_persistently_worsening,
         'persistent_worsening_count': persistent_worsening_count,
