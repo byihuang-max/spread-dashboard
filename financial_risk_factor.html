@@ -117,6 +117,14 @@ a{color:inherit;text-decoration:none}
 .chart-xs{width:100%;height:480px}
 .sample-tab{background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer}
 .sample-tab.active{background:#1a3a6e;border-color:#5d9cff;color:#fff}
+.page-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 20px}
+.page-tab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;transition:.18s
+}
+.page-tab.active{background:linear-gradient(135deg,#1a3a6e,#214b8f);border-color:#6ea8ff;color:#fff;box-shadow:0 10px 24px rgba(47,109,214,.22)}
+.page-panel{display:none}
+.page-panel.active{display:block}
 
 .section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
 .industry-shell{display:block}
@@ -237,6 +245,13 @@ window.onerror=function(msg,src,line,col,err){
   </div>
 
   <div class="summary-strip" id="overviewCards"></div>
+
+  <div class="page-tabs">
+    <button class="page-tab active" data-page-tab="risk">风险地图</button>
+    <button class="page-tab" data-page-tab="validation">财报验证</button>
+  </div>
+
+  <div class="page-panel active" id="riskMapPanel">
 
   <div class="layout" style="margin-top:20px">
     <div class="card">
@@ -408,7 +423,10 @@ window.onerror=function(msg,src,line,col,err){
     </div>
   </div>
 
-  
+  </div>
+
+  <div class="page-panel" id="validationPanel">
+
   <!-- 
   第四层：财报验证层
   ===================
@@ -499,6 +517,8 @@ window.onerror=function(msg,src,line,col,err){
         <tbody id="sampleTableBody"></tbody>
       </table>
     </div>
+  </div>
+
   </div>
 
   <div class="footer">financial risk factor map · gamt prototype</div>
@@ -1137,6 +1157,28 @@ function downloadCsv(content, filename){
 let VALIDATION = null;
 let validationTab = '命中';
 let sampleExpanded = false;
+let activePageTab = 'risk';
+
+function renderPageTabs(){
+  document.querySelectorAll('.page-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pageTab === activePageTab);
+  });
+  const riskPanel = document.getElementById('riskMapPanel');
+  const validationPanel = document.getElementById('validationPanel');
+  if(riskPanel) riskPanel.classList.toggle('active', activePageTab === 'risk');
+  if(validationPanel) validationPanel.classList.toggle('active', activePageTab === 'validation');
+  Object.values(charts).forEach(c => c && c.resize && c.resize());
+}
+
+function initPageTabs(){
+  document.querySelectorAll('.page-tab').forEach(btn => {
+    btn.onclick = () => {
+      activePageTab = btn.dataset.pageTab || 'risk';
+      renderPageTabs();
+    };
+  });
+  renderPageTabs();
+}
 
 // ── 第四层：财报验证层渲染函数 ──────────────────────────────────
 // 总览卡片：命中数/漏判数/命中率
@@ -1299,6 +1341,7 @@ async function boot(){
   renderIndustryRank();
   renderIndustryList();
   renderIndustrySection();
+  initPageTabs();
   initFilters();
   renderTable();
   loadValidation();
