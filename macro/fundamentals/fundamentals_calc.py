@@ -81,26 +81,37 @@ def build_growth_breakdown():
         return None
     core = ['industrial_production_yoy', 'retail_sales_yoy', 'exports_yoy', 'fai_ytd_yoy']
     latest = df.dropna(how='all', subset=[c for c in core if c in df.columns]).iloc[-1]
+    good_count = 0
     improve_count = 0
     weak_count = 0
+    labels = {'industrial_production_yoy': '工业', 'retail_sales_yoy': '消费', 'exports_yoy': '出口', 'fai_ytd_yoy': '投资'}
+    drivers = []
+    weak_parts = []
     for col in [c for c in core if c in df.columns]:
         vals = last_n_values(df, col, 3)
-        if trend_label(vals) == '上行':
-            improve_count += 1
+        t = trend_label(vals)
         lv = latest.get(col)
-        if pd.notna(lv) and float(lv) < 3:
+        if pd.notna(lv) and float(lv) >= 3:
+            good_count += 1
+        else:
             weak_count += 1
-    status = '结构修复'
-    if improve_count >= 3 and weak_count <= 1:
-        status = '全面修复'
-    elif improve_count <= 1 and weak_count >= 2:
-        status = '偏弱'
-    drivers = []
-    labels = {'industrial_production_yoy': '工业', 'retail_sales_yoy': '消费', 'exports_yoy': '出口', 'fai_ytd_yoy': '投资'}
-    for col in core:
-        if col in df.columns and trend_label(last_n_values(df, col, 3)) == '上行':
+            weak_parts.append(labels[col])
+        if t == '上行':
+            improve_count += 1
             drivers.append(labels[col])
-    summary = '、'.join(drivers[:2]) + '在拉动修复。' if drivers else '主要分项暂未形成同步改善。'
+    status = '结构修复'
+    if good_count >= 3 and improve_count >= 3:
+        status = '全面修复'
+    elif good_count <= 1 and improve_count <= 1:
+        status = '偏弱'
+    elif good_count >= 2 and improve_count <= 2:
+        status = '弱修复'
+    if drivers and weak_parts:
+        summary = f"{drivers[0]}{'、'+drivers[1] if len(drivers) > 1 else ''}在拉动，但{weak_parts[0]}偏弱。"
+    elif drivers:
+        summary = '、'.join(drivers[:2]) + '在拉动修复。'
+    else:
+        summary = '主要分项暂未形成同步改善。'
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
@@ -110,6 +121,8 @@ def build_growth_breakdown():
             item[col] = round(float(r[col]), 2) if pd.notna(r[col]) else None
         series.append(item)
     latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    latest_out['breadth_good_count'] = good_count
+    latest_out['breadth_improve_count'] = improve_count
     return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
 
 
@@ -129,16 +142,23 @@ def build_credit_structure():
     if 'm1_yoy' in df.columns and 'm2_yoy' in df.columns:
         df['m1_m2_scissors'] = df['m1_yoy'] - df['m2_yoy']
     latest = df.iloc[-1]
+    prev = df.iloc[-2] if len(df) >= 2 else latest
     corp = float(latest['corp_medium_long_loan']) if 'corp_medium_long_loan' in df.columns and pd.notna(latest['corp_medium_long_loan']) else None
     hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
     gov_share = float(latest['gov_bond_share_in_tsf']) if 'gov_bond_share_in_tsf' in df.columns and pd.notna(latest['gov_bond_share_in_tsf']) else None
     scissors = float(latest['m1_m2_scissors']) if 'm1_m2_scissors' in df.columns and pd.notna(latest['m1_m2_scissors']) else None
-    status = '托底扩张'
-    if corp is not None and hh is not None and scissors is not None and corp > 0 and hh > 0 and scissors > -3:
+    tsf_yoy = float(latest['tsf_stock_yoy']) if 'tsf_stock_yoy' in df.columns and pd.notna(latest['tsf_stock_yoy']) else None
+    prev_tsf_yoy = float(prev['tsf_stock_yoy']) if 'tsf_stock_yoy' in df.columns and pd.notna(prev['tsf_stock_yoy']) else None
+    status = '信用偏弱'
+    if tsf_yoy is not None and tsf_yoy >= 8:
+        status = '托底扩张'
+    if gov_share is not None and gov_share >= 25 and (hh is None or hh < 3e11):
+        status = '托底扩张'
+    if corp is not None and corp > 3e12 and hh is not None and hh > 2.5e11 and scissors is not None and scissors > -4 and tsf_yoy is not None and prev_tsf_yoy is not None and tsf_yoy >= prev_tsf_yoy:
         status = '有效扩张'
-    elif scissors is not None and scissors < -5:
+    elif scissors is not None and scissors < -4.5 and hh is not None and hh < 2e11:
         status = '空转扩张'
-    summary = f'企业中长贷 {corp:.0f}、居民中长贷 {hh:.0f}、政府债占比 {gov_share:.1f}% 。' if None not in [corp, hh, gov_share] else '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
+    summary = f'社融同比 {tsf_yoy:.1f}% 、企业中长贷 {corp/1e12:.2f} 万亿、居民中长贷 {hh/1e12:.2f} 万亿、政府债占比 {gov_share:.1f}% 。' if None not in [tsf_yoy, corp, hh, gov_share] else '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
@@ -164,19 +184,26 @@ def build_inventory_cycle():
     if df.empty:
         return None
     latest = df.iloc[-1]
+    prev = df.iloc[-2] if len(df) >= 2 else latest
     inv = float(latest['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in df.columns and pd.notna(latest['finished_goods_inventory_yoy']) else None
     profit = float(latest['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in df.columns and pd.notna(latest['industrial_profit_ytd_yoy']) else None
     pmi_fg = float(latest['pmi_finished_goods_inventory']) if 'pmi_finished_goods_inventory' in df.columns and pd.notna(latest['pmi_finished_goods_inventory']) else None
     pmi_rm = float(latest['pmi_raw_material_inventory']) if 'pmi_raw_material_inventory' in df.columns and pd.notna(latest['pmi_raw_material_inventory']) else None
+    prev_inv = float(prev['finished_goods_inventory_yoy']) if 'finished_goods_inventory_yoy' in df.columns and pd.notna(prev['finished_goods_inventory_yoy']) else None
+    prev_profit = float(prev['industrial_profit_ytd_yoy']) if 'industrial_profit_ytd_yoy' in df.columns and pd.notna(prev['industrial_profit_ytd_yoy']) else None
     status='被动去库'
-    if inv is not None and profit is not None:
-        if inv > 5 and profit > 5:
+    if None not in [inv, profit, prev_inv, prev_profit]:
+        inv_up = inv >= prev_inv
+        profit_up = profit >= prev_profit
+        if inv_up and profit_up and profit > 5:
             status='主动补库'
-        elif inv > 3 and profit >= 0:
+        elif inv_up and profit >= 0:
             status='被动补库'
-        elif inv < 3 and profit < 0:
+        elif (not inv_up) and profit < 0:
             status='主动去库'
-    summary=f'产成品库存 {inv:.1f}% 、工业利润 {profit:.1f}% 、PMI产成品库存 {pmi_fg:.1f}。' if None not in [inv, profit, pmi_fg] else '库存周期字段已补进来，后续可再叠 PPI 做更完整判断。'
+        else:
+            status='被动去库'
+    summary=f'产成品库存 {inv:.1f}% 、工业利润 {profit:.1f}% 、PMI产成品库存 {pmi_fg:.1f}、PMI原材料库存 {pmi_rm:.1f}。' if None not in [inv, profit, pmi_fg, pmi_rm] else '库存周期字段已补进来，后续可再叠 PPI 做更完整判断。'
     series=[]
     for _, r in df.tail(24).iterrows():
         item={'month':str(r['month'])}
@@ -197,18 +224,23 @@ def build_property_recovery():
     if df.empty:
         return None
     latest = df.iloc[-1]
+    prev = df.iloc[-2] if len(df) >= 2 else latest
     sales = float(latest['property_sales_area_yoy']) if 'property_sales_area_yoy' in df.columns and pd.notna(latest['property_sales_area_yoy']) else None
     invest = float(latest['real_estate_investment_ytd_yoy']) if 'real_estate_investment_ytd_yoy' in df.columns and pd.notna(latest['real_estate_investment_ytd_yoy']) else None
     hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
+    prev_sales = float(prev['property_sales_area_yoy']) if 'property_sales_area_yoy' in df.columns and pd.notna(prev['property_sales_area_yoy']) else None
+    prev_invest = float(prev['real_estate_investment_ytd_yoy']) if 'real_estate_investment_ytd_yoy' in df.columns and pd.notna(prev['real_estate_investment_ytd_yoy']) else None
+    sales_improving = sales is not None and prev_sales is not None and sales > prev_sales
+    invest_improving = invest is not None and prev_invest is not None and invest > prev_invest
     status = '政策托底'
     if sales is not None and invest is not None:
-        if sales > 0 and invest > -5:
+        if sales > 0 and invest > -8 and sales_improving and invest_improving:
             status = '弱修复'
-        elif sales > -5 and invest > -10:
+        elif sales > -10 and invest > -12 and (sales_improving or invest_improving):
             status = '低位企稳'
-        elif sales < -10 and invest < -10:
+        elif sales < -12 and invest < -10 and not sales_improving:
             status = '继续探底'
-    summary = f'销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh:.0f}。' if None not in [sales, invest, hh] else '地产三件套已接入，后续可继续补新开工和竣工。'
+    summary = f'销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh/1e12:.2f} 万亿。' if None not in [sales, invest, hh] else '地产三件套已接入，后续可继续补新开工和竣工。'
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
