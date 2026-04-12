@@ -125,6 +125,14 @@ a{color:inherit;text-decoration:none}
 .page-tab.active{background:linear-gradient(135deg,#1a3a6e,#214b8f);border-color:#6ea8ff;color:#fff;box-shadow:0 10px 24px rgba(47,109,214,.22)}
 .page-panel{display:none}
 .page-panel.active{display:block}
+.validation-subtabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 16px}
+.validation-subtab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s
+}
+.validation-subtab.active{background:#163562;border-color:#5d9cff;color:#fff}
+.validation-panel{display:none}
+.validation-panel.active{display:block}
 
 .section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
 .industry-shell{display:block}
@@ -467,55 +475,67 @@ window.onerror=function(msg,src,line,col,err){
     <!-- 总览 -->
     <div class="summary-strip" id="validationSummaryCards"></div>
 
-    <!-- 一级行业恶化链条验证表 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">一级行业恶化链条验证表</h2>
-      <div class="tag">31个主行业 × 财报后验</div>
-    </div>
-    <div style="overflow-x:auto;margin-bottom:20px">
-      <table class="table" id="chainTable">
-        <thead><tr>
-          <th>行业</th><th>类型</th><th>核心风险</th><th>变得更差的标准</th>
-          <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
-        </tr></thead>
-        <tbody id="chainTableBody"></tbody>
-      </table>
+    <div class="validation-subtabs">
+      <button class="validation-subtab active" data-validation-panel="primary">一级行业链条</button>
+      <button class="validation-subtab" data-validation-panel="special">特例行业</button>
+      <button class="validation-subtab" data-validation-panel="samples">样本清单</button>
     </div>
 
-    <!-- 重点二级行业特例 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">重点二级行业特例</h2>
-      <div class="tag">误判高发行业单独拆解</div>
-    </div>
-    <div style="overflow-x:auto;margin-bottom:20px">
-      <table class="table" id="specialChainTable">
-        <thead><tr>
-          <th>特例行业</th><th>归属主行业</th><th>类型</th><th>核心风险</th>
-          <th>变得更差的标准</th><th>本期主要坏信号</th><th>命中</th><th>漏判</th>
-        </tr></thead>
-        <tbody id="specialChainTableBody"></tbody>
-      </table>
-    </div>
-
-    <!-- 样本清单 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">样本清单</h2>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="sample-tab active" data-type="命中">命中</button>
-        <button class="sample-tab" data-type="漏判">漏判</button>
-        <button class="sample-tab" data-type="争议">争议</button>
-        <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部样本 CSV</button>
-        <button id="sampleExpandBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">查看全部 ▾</button>
+    <div class="validation-panel active" id="validationPrimaryPanel">
+      <!-- 一级行业恶化链条验证表 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">一级行业恶化链条验证表</h2>
+        <div class="tag">31个主行业 × 财报后验</div>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:20px">
+        <table class="table" id="chainTable">
+          <thead><tr>
+            <th>行业</th><th>类型</th><th>核心风险</th><th>变得更差的标准</th>
+            <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
+          </tr></thead>
+          <tbody id="chainTableBody"></tbody>
+        </table>
       </div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="table">
-        <thead><tr>
-          <th>类型</th><th>代码</th><th>名称</th><th>行业</th>
-          <th>在剔除名单</th><th>披露日</th><th>坏信号数</th><th>坏信号明细</th>
-        </tr></thead>
-        <tbody id="sampleTableBody"></tbody>
-      </table>
+
+    <div class="validation-panel" id="validationSpecialPanel">
+      <!-- 重点二级行业特例 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">重点二级行业特例</h2>
+        <div class="tag">误判高发行业单独拆解</div>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:20px">
+        <table class="table" id="specialChainTable">
+          <thead><tr>
+            <th>特例行业</th><th>归属主行业</th><th>类型</th><th>核心风险</th>
+            <th>变得更差的标准</th><th>本期主要坏信号</th><th>命中</th><th>漏判</th>
+          </tr></thead>
+          <tbody id="specialChainTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="validation-panel" id="validationSamplesPanel">
+      <!-- 样本清单 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">样本清单</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="sample-tab active" data-type="命中">命中</button>
+          <button class="sample-tab" data-type="漏判">漏判</button>
+          <button class="sample-tab" data-type="争议">争议</button>
+          <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部样本 CSV</button>
+          <button id="sampleExpandBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">查看全部 ▾</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table">
+          <thead><tr>
+            <th>类型</th><th>代码</th><th>名称</th><th>行业</th>
+            <th>在剔除名单</th><th>披露日</th><th>坏信号数</th><th>坏信号明细</th>
+          </tr></thead>
+          <tbody id="sampleTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -1158,6 +1178,7 @@ let VALIDATION = null;
 let validationTab = '命中';
 let sampleExpanded = false;
 let activePageTab = 'risk';
+let activeValidationPanel = 'primary';
 
 function renderPageTabs(){
   document.querySelectorAll('.page-tab').forEach(btn => {
@@ -1178,6 +1199,31 @@ function initPageTabs(){
     };
   });
   renderPageTabs();
+}
+
+function renderValidationPanels(){
+  document.querySelectorAll('.validation-subtab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.validationPanel === activeValidationPanel);
+  });
+  const panelMap = {
+    primary: 'validationPrimaryPanel',
+    special: 'validationSpecialPanel',
+    samples: 'validationSamplesPanel'
+  };
+  Object.entries(panelMap).forEach(([key,id]) => {
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', key === activeValidationPanel);
+  });
+}
+
+function initValidationPanels(){
+  document.querySelectorAll('.validation-subtab').forEach(btn => {
+    btn.onclick = () => {
+      activeValidationPanel = btn.dataset.validationPanel || 'primary';
+      renderValidationPanels();
+    };
+  });
+  renderValidationPanels();
 }
 
 // ── 第四层：财报验证层渲染函数 ──────────────────────────────────
@@ -1287,6 +1333,7 @@ async function loadValidation(){
     renderValidationChains();
     renderValidationSamples();
     renderSpecialIndustryList();
+    initValidationPanels();
     document.querySelectorAll('.sample-tab').forEach(btn => btn.onclick = () => {
       validationTab = btn.dataset.type;
       sampleExpanded = false;
