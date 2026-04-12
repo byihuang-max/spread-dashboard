@@ -54,6 +54,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 @media(max-width:900px){.hypothesis-grid,.chart-row{grid-template-columns:1fr}}
 .chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
 .chart-note b{color:#374151}
+.status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;margin-left:8px}
+.sub-summary{font-size:11px;color:#8b92a5;margin:-2px 0 10px 0;line-height:1.7}
 .loading{text-align:center;padding:60px;color:#8b92a5}
 </style>
 </head>
@@ -73,6 +75,34 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="clock-card" id="clockCard" style="display:none"></div>
 <div class="hypothesis-card" id="macro-hypothesis" style="display:none"></div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>🧩 增长总量拆解 <span class="status-badge" id="growthStatus"></span></h3>
+    <div class="sub-summary" id="growthSummary"></div>
+    <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+    <div class="chart-note"><b>作用：</b>看当前修复是不是从单一链条扩散到总需求。<br><b>优先看：</b>工业、消费、出口、投资是否同步改善。<br><b>首版定位：</b>作为经济基本面主论证图。</div>
+  </div>
+  <div class="chart-box">
+    <h3>💳 信用结构拆解 <span class="status-badge" id="creditStatus"></span></h3>
+    <div class="sub-summary" id="creditSummary"></div>
+    <div class="chart-wrap"><canvas id="creditChart"></canvas></div>
+    <div class="chart-note"><b>作用：</b>看宽信用有没有真正进入实体。<br><b>首版重点：</b>社融总量、政府债占比、居民/企业中长期贷款、M1/M2。<br><b>判断口径：</b>区分有效扩张、托底扩张和空转扩张。</div>
+  </div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>🏠 地产修复验证 <span class="status-badge" id="propertyStatus"></span></h3>
+    <div class="sub-summary" id="propertySummary"></div>
+    <div class="chart-wrap"><canvas id="propertyChart"></canvas></div>
+    <div class="chart-note"><b>首版先看三件套：</b>销售面积、地产投资、居民中长期贷款。<br><b>作用：</b>区分政策托底和真实止血。</div>
+  </div>
+  <div class="chart-box">
+    <h3>🗂️ 库存周期验证（预留）</h3>
+    <div class="chart-note" style="margin-top:20px">这块字段还在补，先不硬上。等第二轮 MCP 低频补查后，再把 PPI / 库存 / 工业利润正式接进来。</div>
+  </div>
+</div>
 
 <div class="chart-row section">
   <div class="chart-box">
@@ -165,6 +195,9 @@ function render(){
   }
 
   renderHypothesis();
+  renderGrowthBreakdown();
+  renderCreditStructure();
+  renderPropertyRecovery();
   renderPMI();
   renderCPI();
   renderProfitCycle();
@@ -284,6 +317,41 @@ function renderDemandRecovery(){
     })
     .catch(function(e){console.error('加载内需接棒数据失败:',e)});
 }
+
+function monthLabel(v){ var m=String(v).replace('.0',''); return m.substring(0,4)+'-'+m.substring(4,6); }
+function renderGrowthBreakdown(){
+  var d=(DATA.growth_breakdown||{}).series||[]; if(!d.length)return;
+  document.getElementById('growthStatus').textContent=(DATA.growth_breakdown||{}).status||'';
+  document.getElementById('growthSummary').textContent=(DATA.growth_breakdown||{}).summary||'';
+  new Chart(document.getElementById('growthChart'),{type:'line',data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {label:'工业增加值',data:d.map(x=>x.industrial_production_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'社零',data:d.map(x=>x.retail_sales_yoy),borderColor:'#f97316',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'出口',data:d.map(x=>x.exports_yoy),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'固投',data:d.map(x=>x.fai_ytd_yoy),borderColor:'#8b5cf6',borderWidth:2,tension:0.3,pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+function renderCreditStructure(){
+  var d=(DATA.credit_structure||{}).series||[]; if(!d.length)return;
+  document.getElementById('creditStatus').textContent=(DATA.credit_structure||{}).status||'';
+  document.getElementById('creditSummary').textContent=(DATA.credit_structure||{}).summary||'';
+  new Chart(document.getElementById('creditChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'社融存量同比',data:d.map(x=>x.tsf_stock_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'bar',label:'政府债占比',data:d.map(x=>x.gov_bond_share_in_tsf),backgroundColor:'rgba(249,115,22,0.35)',borderColor:'#f97316',borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'企业中长贷',data:d.map(x=>x.corp_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+function renderPropertyRecovery(){
+  var d=(DATA.property_recovery||{}).series||[]; if(!d.length)return;
+  document.getElementById('propertyStatus').textContent=(DATA.property_recovery||{}).status||'';
+  document.getElementById('propertySummary').textContent=(DATA.property_recovery||{}).summary||'';
+  new Chart(document.getElementById('propertyChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'销售面积同比',data:d.map(x=>x.property_sales_area_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'地产投资同比',data:d.map(x=>x.real_estate_investment_ytd_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+
 loadData();
 </script>
 </body></html>

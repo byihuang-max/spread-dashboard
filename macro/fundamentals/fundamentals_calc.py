@@ -51,6 +51,140 @@ def load_profit_cycle():
         return json.load(f)
 
 
+def merge_monthly_series(series_map):
+    merged = None
+    for field, csv_name in series_map:
+        df = load_csv(csv_name)
+        if df.empty or field not in df.columns or 'month' not in df.columns:
+            continue
+        df = df[['month', field]].copy()
+        df['month'] = df['month'].astype(str)
+        df[field] = pd.to_numeric(df[field], errors='coerce')
+        merged = df if merged is None else merged.merge(df, on='month', how='outer')
+    if merged is None:
+        return pd.DataFrame()
+    return merged.sort_values('month')
+
+
+def build_growth_breakdown():
+    field_map = [
+        ('industrial_production_yoy', 'industrial_production_yoy.csv'),
+        ('retail_sales_yoy', 'retail_sales_yoy.csv'),
+        ('exports_yoy', 'exports_yoy.csv'),
+        ('fai_ytd_yoy', 'fai_ytd_yoy.csv'),
+        ('manufacturing_investment_ytd_yoy', 'manufacturing_investment_ytd_yoy.csv'),
+        ('infrastructure_investment_ytd_yoy', 'infrastructure_investment_ytd_yoy.csv'),
+        ('real_estate_investment_ytd_yoy', 'real_estate_investment_ytd_yoy.csv'),
+    ]
+    df = merge_monthly_series(field_map)
+    if df.empty:
+        return None
+    core = ['industrial_production_yoy', 'retail_sales_yoy', 'exports_yoy', 'fai_ytd_yoy']
+    latest = df.dropna(how='all', subset=[c for c in core if c in df.columns]).iloc[-1]
+    improve_count = 0
+    weak_count = 0
+    for col in [c for c in core if c in df.columns]:
+        vals = last_n_values(df, col, 3)
+        if trend_label(vals) == '上行':
+            improve_count += 1
+        lv = latest.get(col)
+        if pd.notna(lv) and float(lv) < 3:
+            weak_count += 1
+    status = '结构修复'
+    if improve_count >= 3 and weak_count <= 1:
+        status = '全面修复'
+    elif improve_count <= 1 and weak_count >= 2:
+        status = '偏弱'
+    drivers = []
+    labels = {'industrial_production_yoy': '工业', 'retail_sales_yoy': '消费', 'exports_yoy': '出口', 'fai_ytd_yoy': '投资'}
+    for col in core:
+        if col in df.columns and trend_label(last_n_values(df, col, 3)) == '上行':
+            drivers.append(labels[col])
+    summary = '、'.join(drivers[:2]) + '在拉动修复。' if drivers else '主要分项暂未形成同步改善。'
+    series = []
+    for _, r in df.tail(24).iterrows():
+        item = {'month': str(r['month'])}
+        for col in df.columns:
+            if col == 'month':
+                continue
+            item[col] = round(float(r[col]), 2) if pd.notna(r[col]) else None
+        series.append(item)
+    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
+
+
+def build_credit_structure():
+    field_map = [
+        ('tsf_stock_yoy', 'tsf_stock_yoy.csv'),
+        ('tsf_stock_value', 'tsf_stock_value.csv'),
+        ('gov_bond_share_in_tsf', 'gov_bond_share_in_tsf.csv'),
+        ('household_medium_long_loan', 'household_medium_long_loan.csv'),
+        ('corp_medium_long_loan', 'corp_medium_long_loan.csv'),
+        ('m1_yoy', 'm1_yoy.csv'),
+        ('m2_yoy', 'm2_yoy.csv'),
+    ]
+    df = merge_monthly_series(field_map)
+    if df.empty:
+        return None
+    if 'm1_yoy' in df.columns and 'm2_yoy' in df.columns:
+        df['m1_m2_scissors'] = df['m1_yoy'] - df['m2_yoy']
+    latest = df.iloc[-1]
+    corp = float(latest['corp_medium_long_loan']) if 'corp_medium_long_loan' in df.columns and pd.notna(latest['corp_medium_long_loan']) else None
+    hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
+    gov_share = float(latest['gov_bond_share_in_tsf']) if 'gov_bond_share_in_tsf' in df.columns and pd.notna(latest['gov_bond_share_in_tsf']) else None
+    scissors = float(latest['m1_m2_scissors']) if 'm1_m2_scissors' in df.columns and pd.notna(latest['m1_m2_scissors']) else None
+    status = '托底扩张'
+    if corp is not None and hh is not None and scissors is not None and corp > 0 and hh > 0 and scissors > -3:
+        status = '有效扩张'
+    elif scissors is not None and scissors < -5:
+        status = '空转扩张'
+    summary = f'企业中长贷 {corp:.0f}、居民中长贷 {hh:.0f}、政府债占比 {gov_share:.1f}% 。' if None not in [corp, hh, gov_share] else '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
+    series = []
+    for _, r in df.tail(24).iterrows():
+        item = {'month': str(r['month'])}
+        for col in df.columns:
+            if col == 'month':
+                continue
+            item[col] = round(float(r[col]), 2) if pd.notna(r[col]) else None
+        series.append(item)
+    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
+
+
+def build_property_recovery():
+    field_map = [
+        ('property_sales_area_yoy', 'property_sales_area_yoy.csv'),
+        ('real_estate_investment_ytd_yoy', 'real_estate_investment_ytd_yoy.csv'),
+        ('household_medium_long_loan', 'household_medium_long_loan.csv'),
+    ]
+    df = merge_monthly_series(field_map)
+    if df.empty:
+        return None
+    latest = df.iloc[-1]
+    sales = float(latest['property_sales_area_yoy']) if 'property_sales_area_yoy' in df.columns and pd.notna(latest['property_sales_area_yoy']) else None
+    invest = float(latest['real_estate_investment_ytd_yoy']) if 'real_estate_investment_ytd_yoy' in df.columns and pd.notna(latest['real_estate_investment_ytd_yoy']) else None
+    hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
+    status = '政策托底'
+    if sales is not None and invest is not None:
+        if sales > 0 and invest > -5:
+            status = '弱修复'
+        elif sales > -5 and invest > -10:
+            status = '低位企稳'
+        elif sales < -10 and invest < -10:
+            status = '继续探底'
+    summary = f'销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh:.0f}。' if None not in [sales, invest, hh] else '地产三件套已接入，后续可继续补新开工和竣工。'
+    series = []
+    for _, r in df.tail(24).iterrows():
+        item = {'month': str(r['month'])}
+        for col in df.columns:
+            if col == 'month':
+                continue
+            item[col] = round(float(r[col]), 2) if pd.notna(r[col]) else None
+        series.append(item)
+    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
+
+
 def build_macro_hypothesis(context):
     pmi_val = context.get('pmi_val')
     pmi_trend = context.get('pmi_trend')
@@ -220,6 +354,10 @@ def calc():
         'update_time': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M'),
         'signals': [],
     }
+
+    result['growth_breakdown'] = build_growth_breakdown()
+    result['credit_structure'] = build_credit_structure()
+    result['property_recovery'] = build_property_recovery()
 
     latest_pmi_val = None
     latest_cpi_val = None
