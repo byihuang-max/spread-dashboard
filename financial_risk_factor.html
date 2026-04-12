@@ -392,6 +392,7 @@ window.onerror=function(msg,src,line,col,err){
       </select>
       <select id="sortFilter">
         <option value="landmine_score">按总分排序</option>
+        <option value="persistent_worsening_count">按持续恶化条数排序</option>
         <option value="profit_score">按利润恶化排序</option>
         <option value="cashflow_score">按现金流排序</option>
         <option value="debt_score">按短债压力排序</option>
@@ -407,7 +408,9 @@ window.onerror=function(msg,src,line,col,err){
               <th>代码</th>
               <th>名称</th>
               <th>一级行业</th>
+              <th>规则映射</th>
               <th>总分</th>
+              <th>持续恶化</th>
               <th>利润</th>
               <th>现金流</th>
               <th>短债</th>
@@ -433,6 +436,10 @@ window.onerror=function(msg,src,line,col,err){
           <strong>评分说明：</strong>利润恶化=净利润同比+营收同比+连续负值次数；现金流恶化=经营现金流+销售现金比+连续负值次数；短债压力=货币资金/短债覆盖+资产负债率+流动比率；营运资本恶化=应收周转+存货周转。分数越高风险越大，0.3为基础分。
         </div>
         <div class="explain" id="detailExplain"></div>
+        <div id="detailWorsening" style="grid-column:1 / -1;margin-top:0;padding:12px 14px;border-radius:12px;background:#0e1b33;border:1px solid #22314d;display:none">
+          <div style="font-size:12px;color:#7dc3ff;font-weight:700;margin-bottom:6px">↘ 持续恶化链条</div>
+          <div id="detailWorseningSignals" style="font-size:12px;color:#b7c9df;line-height:1.8"></div>
+        </div>
         <div id="detailFraud" style="grid-column:1 / -1;margin-top:0;padding:12px 14px;border-radius:12px;background:#1a0d0d;border:1px solid #4a1a1a;display:none">
           <div style="font-size:12px;color:#ff9a9a;font-weight:700;margin-bottom:6px">⚠️ 造假预警疑点</div>
           <div id="detailFraudSignals" style="font-size:12px;color:#e0a0a0;line-height:1.8"></div>
@@ -1116,6 +1123,11 @@ function filteredStocks(){
   }).sort((a,b) => b[sortKey] - a[sortKey]);
 }
 
+function worseningBadge(s){
+  if(!s.is_persistently_worsening) return '<span class="badge badge-green">否</span>';
+  return `<span class="badge badge-blue">是 · ${s.persistent_worsening_count || 0}条</span>`;
+}
+
 function renderTable(){
   const rows = filteredStocks();
   if(!rows.find(r => r.ts_code === state.stockCode) && rows[0]) state.stockCode = rows[0].ts_code;
@@ -1124,7 +1136,9 @@ function renderTable(){
       <td>${s.ts_code.replace('.SZ','').replace('.SH','')}</td>
       <td>${s.name}</td>
       <td>${s.industry1}</td>
+      <td>${s.industry_rule_name || s.industry1 || '-'}</td>
       <td>${score(s.landmine_score)}</td>
+      <td>${worseningBadge(s)}</td>
       <td>${score(s.profit_score)}</td>
       <td>${score(s.cashflow_score)}</td>
       <td>${score(s.debt_score)}</td>
@@ -1146,16 +1160,26 @@ function explainStock(s){
   const focus = (ind?.rule?.focus_metrics || []).filter(Boolean);
   const worst = FACTOR_NAMES.slice().sort((a,b)=>s[b]-s[a]).slice(0,2).map(k=>FACTOR_LABELS[k]);
   const historyText = (s.history || []).map(h => `${h.label}：${h.text}`).join('；');
+  const worseningText = (s.worsening_signals || []).length ? `持续恶化链条目前命中了${s.persistent_worsening_count || 0}条，主要是：${s.worsening_signals.slice(0,3).join('；')}。` : '';
   const fraudText = (s.fraud_signals || []).length ? `另外，报表勾稽上还有${s.fraud_signals.length}条造假预警疑点，主要是：${s.fraud_signals.slice(0,2).join('；')}。` : '';
-  return `${s.name}属于${s.industry1}-${s.industry2}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${historyText ? '四截面表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
+  return `${s.name}属于${s.industry1}-${s.industry2}，规则映射到${s.industry_rule_name || s.industry1}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${worseningText}${historyText ? '最近展示期表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
 }
 
 function renderDetail(){
   const s = DATA.stocks.find(x => x.ts_code === state.stockCode) || DATA.stocks[0];
   document.getElementById("detailName").textContent = s.name;
-  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
+  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2} · 规则映射 ${s.industry_rule_name || s.industry1 || '-'}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>持续恶化：${s.is_persistently_worsening ? `是（${s.persistent_worsening_count || 0}条）` : '否'}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
   document.getElementById("detailFlag").innerHTML = badge(s.exclude_flag);
   document.getElementById("detailExplain").textContent = explainStock(s);
+
+  const worseningBox = document.getElementById('detailWorsening');
+  const worseningSignals = s.worsening_signals || [];
+  if(worseningSignals.length > 0){
+    document.getElementById('detailWorseningSignals').innerHTML = worseningSignals.map(sig => `· ${sig}`).join('<br>');
+    worseningBox.style.display = '';
+  } else {
+    worseningBox.style.display = 'none';
+  }
 
   // 造假预警疑点展示
   const fraudBox = document.getElementById('detailFraud');
@@ -1201,10 +1225,11 @@ function renderDetail(){
 }
 
 function stocksToCsv(stocks){
-  const headers = ['股票代码','股票简称','原始行业','归并行业','总分','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
+  const headers = ['股票代码','股票简称','原始行业','归并行业','规则映射','总分','持续恶化标记','持续恶化条数','持续恶化信号','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
   const rows = stocks.map(s => [
-    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1,
-    s.landmine_score, s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
+    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1, s.industry_rule_name||s.industry1,
+    s.landmine_score, s.is_persistently_worsening ? '是' : '否', s.persistent_worsening_count || 0, (s.worsening_signals || []).join('；'),
+    s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
     s.industry_percentile, s.exclude_flag ? '是' : '否',
     s.primary_reason||s.worst_metric||'',
     (s.why_dangerous||'').replace(/,/g,'；')
