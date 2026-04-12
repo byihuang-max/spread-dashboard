@@ -84,14 +84,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <div class="sub-summary" id="growthSummary"></div>
     <div class="metric-strip" id="growthMetrics"></div>
     <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
-    <div class="chart-note"><b>作用：</b>看当前修复是不是从单一链条扩散到总需求。<br><b>优先看：</b>工业、消费、出口、投资是否同步改善。<br><b>首版定位：</b>作为经济基本面主论证图。</div>
+    <div class="chart-note"><b>这张图在证明什么：</b>经济修复是不是已经从单点改善，扩散到总需求。<br><b>怎么读：</b>先看工业、消费、出口、投资四条主线里，有几条同时站住、同时改善。<br><b>当前状态为什么这么判：</b>看的是修复广度 + 边际方向，不是谁单月冲得最高。</div>
   </div>
   <div class="chart-box">
     <h3>💳 信用结构拆解 <span class="status-badge" id="creditStatus"></span></h3>
     <div class="sub-summary" id="creditSummary"></div>
     <div class="metric-strip" id="creditMetrics"></div>
     <div class="chart-wrap"><canvas id="creditChart"></canvas></div>
-    <div class="chart-note"><b>作用：</b>看宽信用有没有真正进入实体。<br><b>首版重点：</b>社融总量、政府债占比、居民/企业中长期贷款、M1/M2。<br><b>判断口径：</b>区分有效扩张、托底扩张和空转扩张。</div>
+    <div class="chart-note"><b>这张图在证明什么：</b>宽信用到底是在托底，还是已经开始进入实体经济。<br><b>怎么读：</b>先看社融总量，再看政府债占比，最后看企业/居民中长期贷款有没有接力。<br><b>当前状态为什么这么判：</b>总量改善不等于信用修复，关键看内生信用有没有起来。</div>
   </div>
 </div>
 
@@ -101,14 +101,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <div class="sub-summary" id="propertySummary"></div>
     <div class="metric-strip" id="propertyMetrics"></div>
     <div class="chart-wrap"><canvas id="propertyChart"></canvas></div>
-    <div class="chart-note"><b>首版先看三件套：</b>销售面积、地产投资、居民中长期贷款。<br><b>作用：</b>区分政策托底和真实止血。</div>
+    <div class="chart-note"><b>这张图在证明什么：</b>地产是政策托底，还是已经开始真实止血。<br><b>怎么读：</b>先看销售面积和地产投资有没有止跌，再看居民中长贷、新开工、竣工是否跟上。<br><b>当前状态为什么这么判：</b>不只看绝对值，还看边际有没有缓和。</div>
   </div>
   <div class="chart-box">
     <h3>🗂️ 库存周期验证 <span class="status-badge" id="inventoryStatus"></span></h3>
     <div class="sub-summary" id="inventorySummary"></div>
     <div class="metric-strip" id="inventoryMetrics"></div>
     <div class="chart-wrap"><canvas id="inventoryChart"></canvas></div>
-    <div class="chart-note"><b>首版先看：</b>产成品库存同比、工业利润累计同比、PMI产成品库存、PMI原材料库存。<br><b>作用：</b>看价格修复有没有继续传到企业经营和补库行为。</div>
+    <div class="chart-note"><b>这张图在证明什么：</b>价格和利润修复，是否已经传到企业补库。<br><b>怎么读：</b>先看库存方向，再看利润和 PPI 是否配合，最后用 PMI 库存项确认企业行为。<br><b>当前状态为什么这么判：</b>单看利润不够，价格信号不配合时，不轻易判成主动补库。</div>
   </div>
 </div>
 
@@ -117,19 +117,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <h3>📊 PMI 制造业 & 非制造业</h3>
     <div class="chart-wrap"><canvas id="pmiChart"></canvas></div>
     <div class="chart-note">
-      <b>PMI：</b>增长方向的领先指标。<br>
-      <b>大摩框架里它不是孤立数据，</b>而是“增长象限”的核心锚。<br>
-      <b>更重要的是方向：</b>站上50且继续改善，才意味着增长画像真正切强。<br>
-      <b>非制造业PMI：</b>用来验证服务消费和内需修复是否跟上。
+      <b>这张图在证明什么：</b>增长端是在转强，还是只是荣枯线附近反复。<br>
+      <b>怎么读：</b>先看制造业 PMI 是否站稳 50，再看趋势是否继续上行。<br>
+      <b>为什么还看非制造业：</b>用来验证服务消费和内需修复有没有跟上，而不是只看工业一头。
     </div>
   </div>
   <div class="chart-box">
     <h3>📈 CPI / PPI 同比 & 剪刀差</h3>
     <div class="chart-wrap"><canvas id="cpiChart"></canvas></div>
     <div class="chart-note">
-      <b>CPI：</b>终端需求和服务价格。<b>PPI：</b>工业品价格和利润传导。<br>
-      <b>四象限看法：</b>CPI决定通胀温度，PPI决定利润修复斜率。<br>
-      <b>CPI-PPI剪刀差：</b>判断上下游利润分配，不只是看“通胀高低”。
+      <b>这张图在证明什么：</b>价格端是在修复，还是仍处在通缩尾部。<br>
+      <b>怎么读：</b>CPI 看终端需求温度，PPI 看工业价格和利润传导，剪刀差看上下游谁更占优。<br>
+      <b>为什么重要：</b>价格端不稳，很多盈利修复都容易只停留在交易层。
     </div>
   </div>
 </div>
@@ -139,18 +138,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <h3>🔄 利润周期监控</h3>
     <div class="chart-wrap"><canvas id="profitCycleChart"></canvas></div>
     <div class="chart-note">
-      <b>利润周期：</b>把“价格止跌 → 利润修复 → 股票环境改善”这条链具象化。<br>
-      <b>看点不是绝对高低，</b>而是从筑底切到上行、再到见顶的阶段迁移。<br>
-      <b>它是宏观到股票策略的第一座桥。</b>
+      <b>这张图在证明什么：</b>价格修复有没有真正传到企业利润。<br>
+      <b>怎么读：</b>重点不是单月高低，而是利润周期处在筑底、上行还是见顶。<br>
+      <b>为什么重要：</b>这是宏观改善能不能继续传到股票环境的第一座桥。
     </div>
   </div>
   <div class="chart-box">
     <h3>🌱 内需接棒验证</h3>
     <div class="chart-wrap"><canvas id="demandRecoveryChart"></canvas></div>
     <div class="chart-note">
-      <b>内需接棒：</b>看需求是不是从政策托底转向内生修复。<br>
-      <b>核心是三件事：</b>核心CPI、PPI环比、M1-M2剪刀差。<br>
-      <b>这张图决定风格画像：</b>内需强，价值/顺周期更站得住；内需弱，小盘成长更依赖流动性。
+      <b>这张图在证明什么：</b>需求修复有没有从政策托底，切到内生接力。<br>
+      <b>怎么读：</b>核心看核心 CPI、PPI 环比、M1-M2 剪刀差是否一起改善。<br>
+      <b>为什么重要：</b>内需强，顺周期和价值更站得住；内需弱，成长更多还是靠流动性。
     </div>
   </div>
 </div>
