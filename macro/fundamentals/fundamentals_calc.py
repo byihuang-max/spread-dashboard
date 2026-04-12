@@ -141,20 +141,27 @@ def build_credit_structure():
         ('corp_medium_long_loan', 'corp_medium_long_loan.csv'),
         ('m1_yoy', 'm1_yoy.csv'),
         ('m2_yoy', 'm2_yoy.csv'),
+        ('tsf_rmb_loan_flow', 'tsf_rmb_loan_flow.csv'),
+        ('tsf_corporate_bond_flow', 'tsf_corporate_bond_flow.csv'),
     ]
     df = merge_monthly_series(field_map)
     if df.empty:
         return None
     if 'm1_yoy' in df.columns and 'm2_yoy' in df.columns:
         df['m1_m2_scissors'] = df['m1_yoy'] - df['m2_yoy']
-    latest = df.iloc[-1]
-    prev = df.iloc[-2] if len(df) >= 2 else latest
+    base_df = df.dropna(subset=['tsf_stock_yoy'], how='any') if 'tsf_stock_yoy' in df.columns else df
+    latest = base_df.iloc[-1]
+    prev = base_df.iloc[-2] if len(base_df) >= 2 else latest
     corp = float(latest['corp_medium_long_loan']) if 'corp_medium_long_loan' in df.columns and pd.notna(latest['corp_medium_long_loan']) else None
     hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
     gov_share = float(latest['gov_bond_share_in_tsf']) if 'gov_bond_share_in_tsf' in df.columns and pd.notna(latest['gov_bond_share_in_tsf']) else None
     scissors = float(latest['m1_m2_scissors']) if 'm1_m2_scissors' in df.columns and pd.notna(latest['m1_m2_scissors']) else None
     tsf_yoy = float(latest['tsf_stock_yoy']) if 'tsf_stock_yoy' in df.columns and pd.notna(latest['tsf_stock_yoy']) else None
     prev_tsf_yoy = float(prev['tsf_stock_yoy']) if 'tsf_stock_yoy' in df.columns and pd.notna(prev['tsf_stock_yoy']) else None
+    rmb_row = latest_valid(df, 'tsf_rmb_loan_flow')
+    bond_row = latest_valid(df, 'tsf_corporate_bond_flow')
+    rmb_flow = float(rmb_row['tsf_rmb_loan_flow']) if rmb_row is not None else None
+    bond_flow = float(bond_row['tsf_corporate_bond_flow']) if bond_row is not None else None
     status = '信用偏弱'
     if tsf_yoy is not None and tsf_yoy >= 8:
         status = '托底扩张'
@@ -170,7 +177,10 @@ def build_credit_structure():
             credit_tone = '企业与居民信用同时回暖'
         elif status == '空转扩张':
             credit_tone = '总量不差，但资金活化偏弱'
-        summary = f"{credit_tone}：社融同比 {tsf_yoy:.1f}% 、企业中长贷 {corp/1e12:.2f} 万亿、居民中长贷 {hh/1e12:.2f} 万亿、政府债占比 {gov_share:.1f}% 。"
+        flow_note = ''
+        if rmb_flow is not None and bond_flow is not None:
+            flow_note = f' 人民币贷款 {rmb_flow/1e12:.2f} 万亿、企业债 {bond_flow/1e12:.2f} 万亿。'
+        summary = f"{credit_tone}：社融同比 {tsf_yoy:.1f}% 、企业中长贷 {corp/1e12:.2f} 万亿、居民中长贷 {hh/1e12:.2f} 万亿、政府债占比 {gov_share:.1f}% 。" + flow_note
     else:
         summary = '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
     series = []
@@ -181,7 +191,9 @@ def build_credit_structure():
                 continue
             item[col] = round(float(r[col]), 2) if pd.notna(r[col]) else None
         series.append(item)
-    latest_out = {col: (round(float(latest[col]), 2) if pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    latest_out = {col: (round(float(latest[col]), 2) if col in latest.index and pd.notna(latest[col]) else None) for col in df.columns if col != 'month'}
+    latest_out['tsf_rmb_loan_flow'] = round(float(rmb_flow),2) if rmb_flow is not None else None
+    latest_out['tsf_corporate_bond_flow'] = round(float(bond_flow),2) if bond_flow is not None else None
     return {'status': status, 'summary': summary, 'latest': latest_out, 'series': series}
 
 
@@ -243,6 +255,8 @@ def build_property_recovery():
         ('property_sales_area_yoy', 'property_sales_area_yoy.csv'),
         ('real_estate_investment_ytd_yoy', 'real_estate_investment_ytd_yoy.csv'),
         ('household_medium_long_loan', 'household_medium_long_loan.csv'),
+        ('housing_starts_ytd_yoy', 'housing_starts_ytd_yoy.csv'),
+        ('housing_completion_ytd_yoy', 'housing_completion_ytd_yoy.csv'),
     ]
     df = merge_monthly_series(field_map)
     if df.empty:
@@ -252,6 +266,8 @@ def build_property_recovery():
     sales = float(latest['property_sales_area_yoy']) if 'property_sales_area_yoy' in df.columns and pd.notna(latest['property_sales_area_yoy']) else None
     invest = float(latest['real_estate_investment_ytd_yoy']) if 'real_estate_investment_ytd_yoy' in df.columns and pd.notna(latest['real_estate_investment_ytd_yoy']) else None
     hh = float(latest['household_medium_long_loan']) if 'household_medium_long_loan' in df.columns and pd.notna(latest['household_medium_long_loan']) else None
+    starts = float(latest['housing_starts_ytd_yoy']) if 'housing_starts_ytd_yoy' in df.columns and pd.notna(latest['housing_starts_ytd_yoy']) else None
+    completion = float(latest['housing_completion_ytd_yoy']) if 'housing_completion_ytd_yoy' in df.columns and pd.notna(latest['housing_completion_ytd_yoy']) else None
     prev_sales = float(prev['property_sales_area_yoy']) if 'property_sales_area_yoy' in df.columns and pd.notna(prev['property_sales_area_yoy']) else None
     prev_invest = float(prev['real_estate_investment_ytd_yoy']) if 'real_estate_investment_ytd_yoy' in df.columns and pd.notna(prev['real_estate_investment_ytd_yoy']) else None
     sales_improving = sales is not None and prev_sales is not None and sales > prev_sales
@@ -268,7 +284,10 @@ def build_property_recovery():
         edge_note = '边际仍在恶化'
         if sales_improving or invest_improving:
             edge_note = '边际出现缓和'
-        summary = f"销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh/1e12:.2f} 万亿，{edge_note}。"
+        extra = ''
+        if starts is not None and completion is not None:
+            extra = f' 新开工 {starts:.1f}% 、竣工 {completion:.1f}%。'
+        summary = f"销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh/1e12:.2f} 万亿，{edge_note}。" + extra
     else:
         summary = '地产三件套已接入，后续可继续补新开工和竣工。'
     series = []

@@ -33,6 +33,10 @@ MCP_FIELDS = {
     'industrial_profit_ytd_yoy': '规模以上工业企业利润总额:累计同比',
     'pmi_finished_goods_inventory': '制造业PMI:产成品库存',
     'pmi_raw_material_inventory': '制造业PMI:原材料库存',
+    'housing_starts_ytd_yoy': '房屋新开工面积:累计同比',
+    'housing_completion_ytd_yoy': '房屋竣工面积:累计同比',
+    'tsf_rmb_loan_flow': '社会融资规模增量:人民币贷款:当月值',
+    'tsf_corporate_bond_flow': '社会融资规模增量:企业债券:当月值',
 }
 
 

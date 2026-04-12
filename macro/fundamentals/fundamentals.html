@@ -389,7 +389,8 @@ function renderCreditStructure(){
     {label:'社融同比', value:fmtNum(latest.tsf_stock_yoy)+'%'},
     {label:'政府债占比', value:fmtNum(latest.gov_bond_share_in_tsf)+'%'},
     {label:'企业中长贷', value:fmtWanYi(latest.corp_medium_long_loan)+'万亿'},
-    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'}
+    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'},
+    {label:'贷款流量', value:fmtWanYi(latest.tsf_rmb_loan_flow)+'万亿'}
   ]);
   new Chart(document.getElementById('creditChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {type:'line',label:'社融存量同比',data:d.map(x=>x.tsf_stock_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
@@ -407,12 +408,14 @@ function renderPropertyRecovery(){
   renderMetricStrip('propertyMetrics', [
     {label:'销售面积', value:fmtNum(latest.property_sales_area_yoy)+'%'},
     {label:'地产投资', value:fmtNum(latest.real_estate_investment_ytd_yoy)+'%'},
-    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'}
+    {label:'新开工', value:fmtNum(latest.housing_starts_ytd_yoy)+'%'},
+    {label:'竣工', value:fmtNum(latest.housing_completion_ytd_yoy)+'%'}
   ]);
   new Chart(document.getElementById('propertyChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {type:'line',label:'销售面积同比',data:d.map(x=>x.property_sales_area_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'地产投资同比',data:d.map(x=>x.real_estate_investment_ytd_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
-    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'bar',label:'人民币贷款流量',data:d.map(x=>x.tsf_rmb_loan_flow),backgroundColor:'rgba(6,182,212,0.20)',borderColor:'#06b6d4',borderWidth:1,yAxisID:'y1'}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
 }
 
