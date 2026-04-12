@@ -500,14 +500,14 @@ def build_html(data):
       <!-- PCA友好度走势 -->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#3b82f6"></span> PCA友好度走势</div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">综合评分0-100，核心由PC1方差解释比驱动</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">综合评分0-100，核心由PC1方差解释比驱动；若PC1明显强于PC2，通常更偏趋势CTA友好</div>
         <div style="position:relative;height:220px"><canvas id="pca-friendly-chart"></canvas></div>
       </div>
 
       <!-- PC1累计值（动量/反转）-->
       <div class="card">
         <div class="card-title"><span class="dot" style="background:#ef4444"></span> PC1累计值 — 动量 vs 反转</div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">持续同方向=动量主导（趋势跟踪有利）| 频繁翻转=反转主导</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">持续同方向=动量主导（趋势跟踪有利）| 频繁翻转=反转主导；它更像风格切换指标，不直接回答做多还是做空</div>
         <div style="position:relative;height:220px"><canvas id="pca-momentum"></canvas></div>
       </div>
 
@@ -923,10 +923,10 @@ def build_html(data):
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
         <p><b style="color:#8b5cf6">PCA核心引擎</b></p>
-        <p>① PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），PC1方差解释比为核心驱动</p>
+        <p>① PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
         <p>② PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
         <p>③ 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
-        <p>④ PC1累计值：持续正/负=动量主导，频繁翻转=反转主导</p>
+        <p>④ PC1累计值：逐日累加每个滚动窗口最新一天的 PC1 score。持续正/负=同一主轴持续演绎（动量主导），频繁翻转=反转/震荡主导；它更适合判断“趋势 vs 截面/反转”的风格环境，不直接回答做多还是做空</p>
         <p>⑤ Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
         <p>⑥ 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
         <p style="margin-top:8px"><b style="color:#64748b">传统指标</b></p>
