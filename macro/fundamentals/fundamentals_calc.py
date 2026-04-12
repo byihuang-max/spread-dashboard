@@ -113,11 +113,11 @@ def build_growth_breakdown():
     elif good_count >= 2 and improve_count <= 2:
         status = '弱修复'
     if drivers and weak_parts:
-        summary = f"{drivers[0]}{'、'+drivers[1] if len(drivers) > 1 else ''}在拉动，但{weak_parts[0]}偏弱。"
+        summary = f"{drivers[0]}{'、'+drivers[1] if len(drivers) > 1 else ''}在拉动，修复广度 {good_count}/4，但{weak_parts[0]}偏弱。"
     elif drivers:
-        summary = '、'.join(drivers[:2]) + '在拉动修复。'
+        summary = f"{'、'.join(drivers[:2])}在拉动，修复广度 {good_count}/4。"
     else:
-        summary = '主要分项暂未形成同步改善。'
+        summary = f"主要分项暂未形成同步改善，当前修复广度 {good_count}/4。"
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
@@ -164,7 +164,15 @@ def build_credit_structure():
         status = '有效扩张'
     elif scissors is not None and scissors < -4.5 and hh is not None and hh < 2e11:
         status = '空转扩张'
-    summary = f'社融同比 {tsf_yoy:.1f}% 、企业中长贷 {corp/1e12:.2f} 万亿、居民中长贷 {hh/1e12:.2f} 万亿、政府债占比 {gov_share:.1f}% 。' if None not in [tsf_yoy, corp, hh, gov_share] else '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
+    if None not in [tsf_yoy, corp, hh, gov_share]:
+        credit_tone = '政策托底仍强、内生信用偏弱'
+        if status == '有效扩张':
+            credit_tone = '企业与居民信用同时回暖'
+        elif status == '空转扩张':
+            credit_tone = '总量不差，但资金活化偏弱'
+        summary = f"{credit_tone}：社融同比 {tsf_yoy:.1f}% 、企业中长贷 {corp/1e12:.2f} 万亿、居民中长贷 {hh/1e12:.2f} 万亿、政府债占比 {gov_share:.1f}% 。"
+    else:
+        summary = '信用分项已接入，可先观察总量、政府债占比与中长期贷款结构。'
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
@@ -256,7 +264,13 @@ def build_property_recovery():
             status = '低位企稳'
         elif sales < -12 and invest < -10 and not sales_improving:
             status = '继续探底'
-    summary = f'销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh/1e12:.2f} 万亿。' if None not in [sales, invest, hh] else '地产三件套已接入，后续可继续补新开工和竣工。'
+    if None not in [sales, invest, hh]:
+        edge_note = '边际仍在恶化'
+        if sales_improving or invest_improving:
+            edge_note = '边际出现缓和'
+        summary = f"销售面积 {sales:.1f}% 、地产投资 {invest:.1f}% 、居民中长贷 {hh/1e12:.2f} 万亿，{edge_note}。"
+    else:
+        summary = '地产三件套已接入，后续可继续补新开工和竣工。'
     series = []
     for _, r in df.tail(24).iterrows():
         item = {'month': str(r['month'])}
