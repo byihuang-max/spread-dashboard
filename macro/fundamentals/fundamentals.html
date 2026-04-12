@@ -364,7 +364,8 @@ function renderInventoryCycle(){
     {type:'line',label:'产成品库存同比',data:d.map(x=>x.finished_goods_inventory_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'工业利润累计同比',data:d.map(x=>x.industrial_profit_ytd_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'PMI产成品库存',data:d.map(x=>x.pmi_finished_goods_inventory),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
-    {type:'line',label:'PMI原材料库存',data:d.map(x=>x.pmi_raw_material_inventory),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+    {type:'line',label:'PMI原材料库存',data:d.map(x=>x.pmi_raw_material_inventory),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'PPI同比',data:d.map(x=>x.ppi_yoy_proxy),borderColor:'#f59e0b',borderWidth:1.5,tension:0.3,pointRadius:0,borderDash:[4,4],yAxisID:'y'}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
 }
 
