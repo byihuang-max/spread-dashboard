@@ -3,13 +3,20 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
+import pandas as pd
+
 ROOT = Path.home() / 'Desktop' / 'gamt-dashboard'
 DATA = ROOT / 'data'
 SNAPSHOT = DATA / 'financial_risk_snapshot.json'
 OUTPUT = DATA / 'financial_risk_factor.json'
 
+PARQUET_DIR = Path.home() / 'Desktop' / '财报数据库'
+INCOME_PARQUET = PARQUET_DIR / 'wind-ashare-income(1).parq'
+BALANCE_PARQUET = PARQUET_DIR / 'wind-ashare-balancesheet.parq'
+CASHFLOW_PARQUET = PARQUET_DIR / 'wind-ahsare-cashflow.parq'
+
 AS_OF_PERIODS = ['20241231', '20250331', '20250630', '20250930']
-HISTORY_WINDOWS = 12
+HISTORY_WINDOWS = 20
 
 # 行业规则骨架：先给页面可用的解释器底座，后续可继续细化
 RULEBOOK = {
@@ -303,6 +310,88 @@ def classify_risk(score):
     return '低'
 
 
+def load_multiyear_history():
+    if not (INCOME_PARQUET.exists() and BALANCE_PARQUET.exists() and CASHFLOW_PARQUET.exists()):
+        return {}
+
+    income_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'TOT_OPER_REV', 'NET_PROFIT_EXCL_MIN_INT_INC']
+    balance_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'MONETARY_CAP', 'ST_BORROW', 'ACCT_RCV', 'INVENTORIES', 'TOT_ASSETS', 'TOT_LIAB', 'TOT_CUR_ASSETS', 'TOT_CUR_LIAB']
+    cashflow_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'NET_CASH_FLOWS_OPER_ACT']
+
+    income = pd.read_parquet(INCOME_PARQUET)
+    balance = pd.read_parquet(BALANCE_PARQUET)
+    cashflow = pd.read_parquet(CASHFLOW_PARQUET)
+
+    income = income[income_cols]
+    balance = balance[balance_cols]
+    cashflow = cashflow[cashflow_cols]
+
+    income = income.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'TOT_OPER_REV': 'tot_oper_rev',
+        'NET_PROFIT_EXCL_MIN_INT_INC': 'net_profit',
+    })
+    balance = balance.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'MONETARY_CAP': 'money_cap',
+        'ST_BORROW': 'st_borr',
+        'ACCT_RCV': 'accounts_receiv',
+        'INVENTORIES': 'inventories',
+        'TOT_ASSETS': 'tot_assets',
+        'TOT_LIAB': 'tot_liab',
+        'TOT_CUR_ASSETS': 'tot_cur_assets',
+        'TOT_CUR_LIAB': 'tot_cur_liab',
+    })
+    cashflow = cashflow.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'NET_CASH_FLOWS_OPER_ACT': 'n_cashflow_act',
+    })
+
+    merged = income.merge(balance, on=['ts_code', 'end_date'], how='outer').merge(cashflow, on=['ts_code', 'end_date'], how='outer')
+    merged = merged.dropna(subset=['ts_code', 'end_date'])
+    merged['end_date'] = merged['end_date'].astype(str)
+    merged = merged[merged['end_date'].str.len() == 8]
+    merged = merged.sort_values(['ts_code', 'end_date'])
+
+    history_map = defaultdict(dict)
+    for code, g in merged.groupby('ts_code'):
+        g = g.sort_values('end_date').copy()
+        g['sales_yoy'] = g['tot_oper_rev'].pct_change(4) * 100
+        g['profit_yoy'] = g['net_profit'].pct_change(4) * 100
+        g['q_ocf_to_sales'] = (g['n_cashflow_act'] / g['tot_oper_rev']) * 100
+        g['ocf_to_or'] = g['n_cashflow_act'] / g['tot_oper_rev']
+        g['debt_to_assets'] = (g['tot_liab'] / g['tot_assets']) * 100
+        g['current_ratio'] = g['tot_cur_assets'] / g['tot_cur_liab']
+        g['quick_ratio'] = (g['tot_cur_assets'] - g['inventories']) / g['tot_cur_liab']
+        g['inv_turn'] = g['tot_oper_rev'] / g['inventories']
+        g['ar_turn'] = g['tot_oper_rev'] / g['accounts_receiv']
+
+        for _, row in g.iterrows():
+            end_date = str(row['end_date'])
+            history_map[code][end_date] = {
+                'ts_code': code,
+                'end_date': end_date,
+                'q_dtprofit_yoy': to_float(row.get('profit_yoy')),
+                'q_sales_yoy': to_float(row.get('sales_yoy')),
+                'q_ocf_to_sales': to_float(row.get('q_ocf_to_sales')),
+                'ocf_to_or': to_float(row.get('ocf_to_or')),
+                'debt_to_assets': to_float(row.get('debt_to_assets')),
+                'current_ratio': to_float(row.get('current_ratio')),
+                'quick_ratio': to_float(row.get('quick_ratio')),
+                'inv_turn': to_float(row.get('inv_turn')),
+                'ar_turn': to_float(row.get('ar_turn')),
+                'money_cap': to_float(row.get('money_cap')),
+                'st_borr': to_float(row.get('st_borr')),
+                'accounts_receiv': to_float(row.get('accounts_receiv')),
+                'inventories': to_float(row.get('inventories')),
+                'n_cashflow_act': to_float(row.get('n_cashflow_act')),
+            }
+    return history_map
+
+
 def factor_text(label, score):
     if score >= 0.85:
         level = '明显承压'
@@ -413,13 +502,20 @@ def apply_industry_overrides(industry_name, scores, metrics):
 
 
 def evaluate_stock(meta, periods):
-    ordered_periods = sorted(periods.keys())
+    merged_periods = dict(periods or {})
+    history_seed = MULTIYEAR_HISTORY.get(meta.get('ts_code')) or {}
+    for period, row in history_seed.items():
+        base = dict(row or {})
+        base.update(merged_periods.get(period) or {})
+        merged_periods[period] = base
+
+    ordered_periods = sorted(merged_periods.keys())
     if not ordered_periods:
         ordered_periods = AS_OF_PERIODS[:]
     score_periods = ordered_periods[-HISTORY_WINDOWS:] if len(ordered_periods) > HISTORY_WINDOWS else ordered_periods
-    display_periods = [p for p in AS_OF_PERIODS if p in periods] or score_periods[-4:]
+    display_periods = score_periods
 
-    rows = {p: periods.get(p) or {} for p in score_periods}
+    rows = {p: merged_periods.get(p) or {} for p in score_periods}
 
     profit_vals = [to_float(rows[p].get('q_dtprofit_yoy')) for p in score_periods]
     sales_vals = [to_float(rows[p].get('q_sales_yoy')) for p in score_periods]
@@ -817,6 +913,9 @@ def evaluate_stock(meta, periods):
     }
 
 
+MULTIYEAR_HISTORY = load_multiyear_history()
+
+
 def main():
     snap = json.loads(SNAPSHOT.read_text(encoding='utf-8'))
     stocks = []
@@ -864,8 +963,8 @@ def main():
         })
 
     out = {
-        'as_of': 'Tushare 全市场快照 / 四截面',
-        'source_files': [str(SNAPSHOT)],
+        'as_of': '多年财报底座 + 最新快照融合',
+        'source_files': [str(SNAPSHOT), str(INCOME_PARQUET), str(BALANCE_PARQUET), str(CASHFLOW_PARQUET)],
         'industries': industries,
         'stocks': sorted(stocks, key=lambda x: x['landmine_score'], reverse=True),
     }
