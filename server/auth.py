@@ -12,7 +12,7 @@ import sqlite3, hashlib, uuid, os, time, secrets
 MAX_FAILED_LOGINS = 5
 LOGIN_LOCK_MINUTES = 10
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'users.db')
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'users.db')  # 单一主库：server/users.db（根目录 users.db 应仅作为指向此文件的兼容入口）
 
 INVITE_MODE_OPEN = 'open'
 INVITE_MODE_OPTIONAL = 'optional'
