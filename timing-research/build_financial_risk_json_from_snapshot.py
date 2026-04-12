@@ -9,6 +9,7 @@ SNAPSHOT = DATA / 'financial_risk_snapshot.json'
 OUTPUT = DATA / 'financial_risk_factor.json'
 
 AS_OF_PERIODS = ['20241231', '20250331', '20250630', '20250930']
+HISTORY_WINDOWS = 12
 
 # 行业规则骨架：先给页面可用的解释器底座，后续可继续细化
 RULEBOOK = {
@@ -315,24 +316,31 @@ def factor_text(label, score):
 
 
 def evaluate_stock(meta, periods):
-    rows = {p: periods.get(p) or {} for p in AS_OF_PERIODS}
+    ordered_periods = sorted(periods.keys())
+    if not ordered_periods:
+        ordered_periods = AS_OF_PERIODS[:]
+    score_periods = ordered_periods[-HISTORY_WINDOWS:] if len(ordered_periods) > HISTORY_WINDOWS else ordered_periods
+    display_periods = [p for p in AS_OF_PERIODS if p in periods] or score_periods[-4:]
 
-    profit_vals = [to_float(rows[p].get('q_dtprofit_yoy')) for p in AS_OF_PERIODS]
-    sales_vals = [to_float(rows[p].get('q_sales_yoy')) for p in AS_OF_PERIODS]
-    ocf_sales_vals = [to_float(rows[p].get('q_ocf_to_sales')) for p in AS_OF_PERIODS]
-    ocf_or_vals = [to_float(rows[p].get('ocf_to_or')) for p in AS_OF_PERIODS]
-    debt_vals = [to_float(rows[p].get('debt_to_assets')) for p in AS_OF_PERIODS]
-    current_vals = [to_float(rows[p].get('current_ratio')) for p in AS_OF_PERIODS]
-    quick_vals = [to_float(rows[p].get('quick_ratio')) for p in AS_OF_PERIODS]
-    inv_turn_vals = [to_float(rows[p].get('inv_turn')) for p in AS_OF_PERIODS]
-    ar_turn_vals = [to_float(rows[p].get('ar_turn')) for p in AS_OF_PERIODS]
-    money_vals = [to_float(rows[p].get('money_cap')) for p in AS_OF_PERIODS]
-    st_borr_vals = [to_float(rows[p].get('st_borr')) for p in AS_OF_PERIODS]
-    ar_vals = [to_float(rows[p].get('accounts_receiv')) for p in AS_OF_PERIODS]
-    inv_vals = [to_float(rows[p].get('inventories')) for p in AS_OF_PERIODS]
-    ncf_vals = [to_float(rows[p].get('n_cashflow_act')) for p in AS_OF_PERIODS]
+    rows = {p: periods.get(p) or {} for p in score_periods}
 
-    latest = rows.get(AS_OF_PERIODS[-1]) or rows.get(AS_OF_PERIODS[0]) or {}
+    profit_vals = [to_float(rows[p].get('q_dtprofit_yoy')) for p in score_periods]
+    sales_vals = [to_float(rows[p].get('q_sales_yoy')) for p in score_periods]
+    ocf_sales_vals = [to_float(rows[p].get('q_ocf_to_sales')) for p in score_periods]
+    ocf_or_vals = [to_float(rows[p].get('ocf_to_or')) for p in score_periods]
+    debt_vals = [to_float(rows[p].get('debt_to_assets')) for p in score_periods]
+    current_vals = [to_float(rows[p].get('current_ratio')) for p in score_periods]
+    quick_vals = [to_float(rows[p].get('quick_ratio')) for p in score_periods]
+    inv_turn_vals = [to_float(rows[p].get('inv_turn')) for p in score_periods]
+    ar_turn_vals = [to_float(rows[p].get('ar_turn')) for p in score_periods]
+    money_vals = [to_float(rows[p].get('money_cap')) for p in score_periods]
+    st_borr_vals = [to_float(rows[p].get('st_borr')) for p in score_periods]
+    ar_vals = [to_float(rows[p].get('accounts_receiv')) for p in score_periods]
+    inv_vals = [to_float(rows[p].get('inventories')) for p in score_periods]
+    ncf_vals = [to_float(rows[p].get('n_cashflow_act')) for p in score_periods]
+
+    latest_period = score_periods[-1]
+    latest = rows.get(latest_period) or {}
     latest_profit = next((x for x in reversed(profit_vals) if x is not None), None)
     latest_sales = next((x for x in reversed(sales_vals) if x is not None), None)
     latest_ocf_sales = next((x for x in reversed(ocf_sales_vals) if x is not None), None)
@@ -348,6 +356,35 @@ def evaluate_stock(meta, periods):
     latest_inv = next((x for x in reversed(inv_vals) if x is not None), None)
     latest_ncf = next((x for x in reversed(ncf_vals) if x is not None), None)
 
+    def worsening_streak(vals, worse_when='down'):
+        clean = [x for x in vals if x is not None]
+        if len(clean) < 2:
+            return 0
+        streak = 0
+        for prev, cur in zip(clean[:-1], clean[1:]):
+            bad = cur < prev if worse_when == 'down' else cur > prev
+            if bad:
+                streak += 1
+            else:
+                streak = 0
+        return streak
+
+    def count_bad(vals, predicate):
+        return sum(1 for x in vals if x is not None and predicate(x))
+
+    sales_down_streak = worsening_streak(sales_vals, 'down')
+    ocf_sales_down_streak = worsening_streak(ocf_sales_vals, 'down')
+    debt_up_streak = worsening_streak(debt_vals, 'up')
+    current_down_streak = worsening_streak(current_vals, 'down')
+    quick_down_streak = worsening_streak(quick_vals, 'down')
+    ar_turn_down_streak = worsening_streak(ar_turn_vals, 'down')
+    inv_turn_down_streak = worsening_streak(inv_turn_vals, 'down')
+
+    neg_profit_count = count_bad(profit_vals, lambda x: x < 0)
+    neg_ncf_count = count_bad(ncf_vals, lambda x: x < 0)
+    weak_sales_count = count_bad(sales_vals, lambda x: x < 0)
+    weak_ocf_sales_count = count_bad(ocf_sales_vals, lambda x: x < 0)
+
     # profit score
     profit_score = 0.30
     if latest_profit is not None:
@@ -362,8 +399,11 @@ def evaluate_stock(meta, periods):
             profit_score += 0.12
         elif latest_sales < 0:
             profit_score += 0.06
-    neg_profit_count = sum(1 for x in profit_vals if x is not None and x < 0)
     profit_score += min(0.16, neg_profit_count * 0.04)
+    if sales_down_streak >= 2:
+        profit_score += 0.08
+    if weak_sales_count >= 6:
+        profit_score += 0.06
     profit_score = clamp(profit_score)
 
     # cashflow score
@@ -377,8 +417,11 @@ def evaluate_stock(meta, periods):
             cashflow_score += 0.12
     if latest_ocf_or is not None and latest_ocf_or < 0:
         cashflow_score += 0.12
-    neg_ncf_count = sum(1 for x in ncf_vals if x is not None and x < 0)
     cashflow_score += min(0.16, neg_ncf_count * 0.04)
+    if ocf_sales_down_streak >= 2:
+        cashflow_score += 0.08
+    if weak_ocf_sales_count >= 6:
+        cashflow_score += 0.06
     cashflow_score = clamp(cashflow_score)
 
     # debt score
@@ -401,6 +444,12 @@ def evaluate_stock(meta, periods):
         debt_score += 0.08
     if latest_quick is not None and latest_quick < 0.8:
         debt_score += 0.08
+    if debt_up_streak >= 2:
+        debt_score += 0.06
+    if current_down_streak >= 2:
+        debt_score += 0.04
+    if quick_down_streak >= 2:
+        debt_score += 0.04
     debt_score = clamp(debt_score)
 
     # working capital score
@@ -417,6 +466,10 @@ def evaluate_stock(meta, periods):
         working_capital_score += 0.10
     if latest_inv_turn is not None and latest_inv_turn < 1:
         working_capital_score += 0.10
+    if ar_turn_down_streak >= 2:
+        working_capital_score += 0.06
+    if inv_turn_down_streak >= 2:
+        working_capital_score += 0.06
     working_capital_score = clamp(working_capital_score)
 
     # 科技/高研发行业修正：避免单纯按利润误伤
@@ -468,6 +521,32 @@ def evaluate_stock(meta, periods):
     why_industry = industry_rule.get('logic', '该行业需同时观察利润、现金流、资产负债表和营运质量是否同步恶化。')
 
     exclude_flag = 1 if landmine_score >= 0.72 or (gap is not None and gap < 0 and latest_ncf is not None and latest_ncf < 0) else 0
+
+    persistent_worsening_count = 0
+    persistent_worsening_count += 1 if neg_profit_count >= 6 else 0
+    persistent_worsening_count += 1 if neg_ncf_count >= 6 else 0
+    persistent_worsening_count += 1 if sales_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if ocf_sales_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if debt_up_streak >= 2 else 0
+    persistent_worsening_count += 1 if ar_turn_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if inv_turn_down_streak >= 2 else 0
+    is_persistently_worsening = 1 if persistent_worsening_count >= 2 else 0
+
+    worsening_signals = []
+    if neg_profit_count >= 6:
+        worsening_signals.append(f'近{len(score_periods)}期利润负增速出现{neg_profit_count}次')
+    if neg_ncf_count >= 6:
+        worsening_signals.append(f'近{len(score_periods)}期经营现金流为负出现{neg_ncf_count}次')
+    if sales_down_streak >= 2:
+        worsening_signals.append('营收增速连续走弱')
+    if ocf_sales_down_streak >= 2:
+        worsening_signals.append('经营现金流/收入连续走弱')
+    if debt_up_streak >= 2:
+        worsening_signals.append('资产负债率连续抬升')
+    if ar_turn_down_streak >= 2:
+        worsening_signals.append('应收周转连续变慢')
+    if inv_turn_down_streak >= 2:
+        worsening_signals.append('存货周转连续变慢')
 
     # ── 造假预警因子（勾稽异常检测）──────────────────────────────────────
     # 不下"造假结论"，只标记"报表勾稽对不上"的疑点，输出 high/mid/low 三档
@@ -568,9 +647,8 @@ def evaluate_stock(meta, periods):
         return round(ps, 3), round(cs, 3), round(ds, 3), round(ws, 3)
 
     history = []
-    labels = ['前年年报', '去年Q1', '去年Q2', '去年Q3']
-    for label, p in zip(labels, AS_OF_PERIODS):
-        r = rows.get(p) or {}
+    for p in display_periods:
+        r = periods.get(p) or {}
         ps, cs, ds, ws = _period_scores(r)
         qp = to_float(r.get('q_dtprofit_yoy'))
         qn = to_float(r.get('n_cashflow_act'))
@@ -584,7 +662,7 @@ def evaluate_stock(meta, periods):
         if qm is not None and qs is not None:
             parts.append('货币资金低于短债' if qm < qs else '货币资金覆盖短债')
         history.append({
-            'label': label,
+            'label': p,
             'text': '，'.join(parts) if parts else '暂无数据',
             'profit_score': ps,
             'cashflow_score': cs,
@@ -604,6 +682,10 @@ def evaluate_stock(meta, periods):
         'why_dangerous': why_dangerous,
         'why_industry': why_industry,
         'exclude_flag': exclude_flag,
+        'is_persistently_worsening': is_persistently_worsening,
+        'persistent_worsening_count': persistent_worsening_count,
+        'worsening_signals': worsening_signals,
+        'history_periods_used': score_periods,
         'history': history,
         'profit_score': round(profit_score, 4),
         'cashflow_score': round(cashflow_score, 4),
