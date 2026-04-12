@@ -29,6 +29,10 @@ MCP_FIELDS = {
     'm1_yoy': 'M1(货币):同比',
     'm2_yoy': 'M2(货币和准货币):同比',
     'property_sales_area_yoy': '商品房销售面积:累计同比',
+    'finished_goods_inventory_yoy': '工业企业产成品存货:同比',
+    'industrial_profit_ytd_yoy': '规模以上工业企业利润总额:累计同比',
+    'pmi_finished_goods_inventory': '制造业PMI:产成品库存',
+    'pmi_raw_material_inventory': '制造业PMI:原材料库存',
 }
 
 
@@ -143,9 +147,12 @@ class EDBMCPClient:
         text = content[0].get('text', '')
         outer = json.loads(text)
         datas = ((outer.get('data') or {}).get('datas') or [])
-        if not datas:
-            return None
-        return datas[0].get('data')
+        if datas:
+            return datas[0].get('data')
+        answer = ((outer.get('data') or {}).get('answer') or '')
+        if answer:
+            return {'answer_markdown': answer}
+        return None
 
 
 def fetch_mcp_series(client, field_key, indicator_name, start='202301', end=None):
@@ -153,23 +160,37 @@ def fetch_mcp_series(client, field_key, indicator_name, start='202301', end=None
     print(f'拉取 MCP {field_key}... ({indicator_name})')
     try:
         data = client.get_edb_data(f'{indicator_name} {start}-{end}')
-        if not data or 'data' not in data:
+        if not data:
             print('  无返回')
             return pd.DataFrame()
-        rows = data['data']
-        if not rows:
-            print('  空数据')
-            return pd.DataFrame()
         out = []
-        for row in rows:
-            if len(row) < 2:
-                continue
-            date_str = str(row[0])[:10]
-            val = pd.to_numeric(row[1], errors='coerce')
-            if pd.isna(val):
-                continue
-            month = date_str[:7].replace('-', '')
-            out.append({'month': month, field_key: float(val)})
+        if 'data' in data:
+            rows = data['data']
+            if not rows:
+                print('  空数据')
+                return pd.DataFrame()
+            for row in rows:
+                if len(row) < 2:
+                    continue
+                date_str = str(row[0])[:10]
+                val = pd.to_numeric(row[1], errors='coerce')
+                if pd.isna(val):
+                    continue
+                month = date_str[:7].replace('-', '')
+                out.append({'month': month, field_key: float(val)})
+        elif 'answer_markdown' in data:
+            for line in data['answer_markdown'].splitlines():
+                line=line.strip()
+                if not line.startswith('|20'):
+                    continue
+                parts=[x.strip() for x in line.strip('|').split('|')]
+                if len(parts) < 2:
+                    continue
+                month = parts[0][:7].replace('-', '')
+                val = pd.to_numeric(parts[1], errors='coerce')
+                if pd.isna(val):
+                    continue
+                out.append({'month': month, field_key: float(val)})
         df = pd.DataFrame(out)
         if df.empty:
             print('  解析后为空')

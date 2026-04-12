@@ -99,8 +99,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <div class="chart-note"><b>首版先看三件套：</b>销售面积、地产投资、居民中长期贷款。<br><b>作用：</b>区分政策托底和真实止血。</div>
   </div>
   <div class="chart-box">
-    <h3>🗂️ 库存周期验证（预留）</h3>
-    <div class="chart-note" style="margin-top:20px">这块字段还在补，先不硬上。等第二轮 MCP 低频补查后，再把 PPI / 库存 / 工业利润正式接进来。</div>
+    <h3>🗂️ 库存周期验证 <span class="status-badge" id="inventoryStatus"></span></h3>
+    <div class="sub-summary" id="inventorySummary"></div>
+    <div class="chart-wrap"><canvas id="inventoryChart"></canvas></div>
+    <div class="chart-note"><b>首版先看：</b>产成品库存同比、工业利润累计同比、PMI产成品库存、PMI原材料库存。<br><b>作用：</b>看价格修复有没有继续传到企业经营和补库行为。</div>
   </div>
 </div>
 
@@ -198,6 +200,7 @@ function render(){
   renderGrowthBreakdown();
   renderCreditStructure();
   renderPropertyRecovery();
+  renderInventoryCycle();
   renderPMI();
   renderCPI();
   renderProfitCycle();
@@ -349,6 +352,19 @@ function renderPropertyRecovery(){
     {type:'line',label:'销售面积同比',data:d.map(x=>x.property_sales_area_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'地产投资同比',data:d.map(x=>x.real_estate_investment_ytd_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+
+
+function renderInventoryCycle(){
+  var d=(DATA.inventory_cycle||{}).series||[]; if(!d.length)return;
+  document.getElementById('inventoryStatus').textContent=(DATA.inventory_cycle||{}).status||'';
+  document.getElementById('inventorySummary').textContent=(DATA.inventory_cycle||{}).summary||'';
+  new Chart(document.getElementById('inventoryChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'产成品库存同比',data:d.map(x=>x.finished_goods_inventory_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'工业利润累计同比',data:d.map(x=>x.industrial_profit_ytd_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'PMI产成品库存',data:d.map(x=>x.pmi_finished_goods_inventory),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'PMI原材料库存',data:d.map(x=>x.pmi_raw_material_inventory),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
 }
 
