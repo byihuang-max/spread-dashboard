@@ -87,6 +87,7 @@ MODULE_REGISTRY = {
             ('env_fit/commodity_cta', 'mod1b_pca_engine.py'),
             ('env_fit/commodity_cta', 'mod1c_market_vol.py'),
             ('env_fit/commodity_cta', 'mod2_trend_scan.py'),
+            ('env_fit/commodity_cta', 'mod2b_pca_loading.py'),
             ('env_fit/commodity_cta', 'mod3_macro_ratio.py'),
             ('env_fit/commodity_cta', 'commodity_cta_main.py'),
             ('env_fit/commodity_cta', 'inject_commodity_cta.py'),
