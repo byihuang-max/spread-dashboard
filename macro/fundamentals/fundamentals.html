@@ -55,7 +55,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 .chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
 .chart-note b{color:#374151}
 .status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;margin-left:8px}
+.status-badge.good{background:rgba(34,197,94,.14);color:#166534}.status-badge.warn{background:rgba(245,158,11,.18);color:#92400e}.status-badge.risk{background:rgba(239,68,68,.14);color:#991b1b}.status-badge.info{background:rgba(59,130,246,.12);color:#1d4ed8}
 .sub-summary{font-size:11px;color:#8b92a5;margin:-2px 0 10px 0;line-height:1.7}
+.metric-strip{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 12px 0}.metric-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#f8fafc;border:1px solid #e5e7eb;font-size:11px;color:#4b5563}.metric-chip b{color:#111827}
 .loading{text-align:center;padding:60px;color:#8b92a5}
 </style>
 </head>
@@ -80,12 +82,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
   <div class="chart-box">
     <h3>🧩 增长总量拆解 <span class="status-badge" id="growthStatus"></span></h3>
     <div class="sub-summary" id="growthSummary"></div>
+    <div class="metric-strip" id="growthMetrics"></div>
     <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
     <div class="chart-note"><b>作用：</b>看当前修复是不是从单一链条扩散到总需求。<br><b>优先看：</b>工业、消费、出口、投资是否同步改善。<br><b>首版定位：</b>作为经济基本面主论证图。</div>
   </div>
   <div class="chart-box">
     <h3>💳 信用结构拆解 <span class="status-badge" id="creditStatus"></span></h3>
     <div class="sub-summary" id="creditSummary"></div>
+    <div class="metric-strip" id="creditMetrics"></div>
     <div class="chart-wrap"><canvas id="creditChart"></canvas></div>
     <div class="chart-note"><b>作用：</b>看宽信用有没有真正进入实体。<br><b>首版重点：</b>社融总量、政府债占比、居民/企业中长期贷款、M1/M2。<br><b>判断口径：</b>区分有效扩张、托底扩张和空转扩张。</div>
   </div>
@@ -95,12 +99,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
   <div class="chart-box">
     <h3>🏠 地产修复验证 <span class="status-badge" id="propertyStatus"></span></h3>
     <div class="sub-summary" id="propertySummary"></div>
+    <div class="metric-strip" id="propertyMetrics"></div>
     <div class="chart-wrap"><canvas id="propertyChart"></canvas></div>
     <div class="chart-note"><b>首版先看三件套：</b>销售面积、地产投资、居民中长期贷款。<br><b>作用：</b>区分政策托底和真实止血。</div>
   </div>
   <div class="chart-box">
     <h3>🗂️ 库存周期验证 <span class="status-badge" id="inventoryStatus"></span></h3>
     <div class="sub-summary" id="inventorySummary"></div>
+    <div class="metric-strip" id="inventoryMetrics"></div>
     <div class="chart-wrap"><canvas id="inventoryChart"></canvas></div>
     <div class="chart-note"><b>首版先看：</b>产成品库存同比、工业利润累计同比、PMI产成品库存、PMI原材料库存。<br><b>作用：</b>看价格修复有没有继续传到企业经营和补库行为。</div>
   </div>
@@ -175,6 +181,38 @@ function chainStatusCls(v){
   if(v==='不支持') return 'reject';
   return 'neutral';
 }
+
+function statusCls(v){
+  if(!v) return 'info';
+  if(['全面修复','有效扩张','弱修复','主动补库'].includes(v)) return 'good';
+  if(['继续探底','偏弱','空转扩张','主动去库'].includes(v)) return 'risk';
+  if(['结构修复','托底扩张','低位企稳','被动补库','被动去库','政策托底'].includes(v)) return 'warn';
+  return 'info';
+}
+function setStatus(id, v){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=v||'';
+  el.className='status-badge '+statusCls(v);
+}
+function fmtNum(v, digits){
+  if(v==null || v===undefined || v==='') return '--';
+  var n=Number(v);
+  if(Number.isNaN(n)) return '--';
+  return n.toFixed(digits==null?1:digits);
+}
+function fmtWanYi(v){
+  if(v==null || v===undefined || v==='') return '--';
+  var n=Number(v);
+  if(Number.isNaN(n)) return '--';
+  return (n/1e12).toFixed(2);
+}
+function renderMetricStrip(id, items){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.innerHTML=(items||[]).map(function(x){ return '<span class="metric-chip"><span>'+x.label+'</span><b>'+x.value+'</b></span>'; }).join('');
+}
+
 function render(){
   document.getElementById('loadingMsg').style.display='none';
   document.getElementById('app').style.display='';
@@ -324,8 +362,16 @@ function renderDemandRecovery(){
 function monthLabel(v){ var m=String(v).replace('.0',''); return m.substring(0,4)+'-'+m.substring(4,6); }
 function renderGrowthBreakdown(){
   var d=(DATA.growth_breakdown||{}).series||[]; if(!d.length)return;
-  document.getElementById('growthStatus').textContent=(DATA.growth_breakdown||{}).status||'';
-  document.getElementById('growthSummary').textContent=(DATA.growth_breakdown||{}).summary||'';
+  var box=DATA.growth_breakdown||{};
+  setStatus('growthStatus', box.status||'');
+  document.getElementById('growthSummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('growthMetrics', [
+    {label:'工业', value:fmtNum(latest.industrial_production_yoy)+'%'},
+    {label:'消费', value:fmtNum(latest.retail_sales_yoy)+'%'},
+    {label:'出口', value:fmtNum(latest.exports_yoy)+'%'},
+    {label:'固投', value:fmtNum(latest.fai_ytd_yoy)+'%'}
+  ]);
   new Chart(document.getElementById('growthChart'),{type:'line',data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {label:'工业增加值',data:d.map(x=>x.industrial_production_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0},
     {label:'社零',data:d.map(x=>x.retail_sales_yoy),borderColor:'#f97316',borderWidth:2,tension:0.3,pointRadius:0},
@@ -335,8 +381,16 @@ function renderGrowthBreakdown(){
 }
 function renderCreditStructure(){
   var d=(DATA.credit_structure||{}).series||[]; if(!d.length)return;
-  document.getElementById('creditStatus').textContent=(DATA.credit_structure||{}).status||'';
-  document.getElementById('creditSummary').textContent=(DATA.credit_structure||{}).summary||'';
+  var box=DATA.credit_structure||{};
+  setStatus('creditStatus', box.status||'');
+  document.getElementById('creditSummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('creditMetrics', [
+    {label:'社融同比', value:fmtNum(latest.tsf_stock_yoy)+'%'},
+    {label:'政府债占比', value:fmtNum(latest.gov_bond_share_in_tsf)+'%'},
+    {label:'企业中长贷', value:fmtWanYi(latest.corp_medium_long_loan)+'万亿'},
+    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'}
+  ]);
   new Chart(document.getElementById('creditChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {type:'line',label:'社融存量同比',data:d.map(x=>x.tsf_stock_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'bar',label:'政府债占比',data:d.map(x=>x.gov_bond_share_in_tsf),backgroundColor:'rgba(249,115,22,0.35)',borderColor:'#f97316',borderWidth:1,yAxisID:'y'},
@@ -346,8 +400,15 @@ function renderCreditStructure(){
 }
 function renderPropertyRecovery(){
   var d=(DATA.property_recovery||{}).series||[]; if(!d.length)return;
-  document.getElementById('propertyStatus').textContent=(DATA.property_recovery||{}).status||'';
-  document.getElementById('propertySummary').textContent=(DATA.property_recovery||{}).summary||'';
+  var box=DATA.property_recovery||{};
+  setStatus('propertyStatus', box.status||'');
+  document.getElementById('propertySummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('propertyMetrics', [
+    {label:'销售面积', value:fmtNum(latest.property_sales_area_yoy)+'%'},
+    {label:'地产投资', value:fmtNum(latest.real_estate_investment_ytd_yoy)+'%'},
+    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'}
+  ]);
   new Chart(document.getElementById('propertyChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {type:'line',label:'销售面积同比',data:d.map(x=>x.property_sales_area_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'地产投资同比',data:d.map(x=>x.real_estate_investment_ytd_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
@@ -358,8 +419,16 @@ function renderPropertyRecovery(){
 
 function renderInventoryCycle(){
   var d=(DATA.inventory_cycle||{}).series||[]; if(!d.length)return;
-  document.getElementById('inventoryStatus').textContent=(DATA.inventory_cycle||{}).status||'';
-  document.getElementById('inventorySummary').textContent=(DATA.inventory_cycle||{}).summary||'';
+  var box=DATA.inventory_cycle||{};
+  setStatus('inventoryStatus', box.status||'');
+  document.getElementById('inventorySummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('inventoryMetrics', [
+    {label:'产成品库存', value:fmtNum(latest.finished_goods_inventory_yoy)+'%'},
+    {label:'工业利润', value:fmtNum(latest.industrial_profit_ytd_yoy)+'%'},
+    {label:'PPI', value:fmtNum(latest.ppi_yoy_proxy)+'%'},
+    {label:'PMI产成品库存', value:fmtNum(latest.pmi_finished_goods_inventory)}
+  ]);
   new Chart(document.getElementById('inventoryChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
     {type:'line',label:'产成品库存同比',data:d.map(x=>x.finished_goods_inventory_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
     {type:'line',label:'工业利润累计同比',data:d.map(x=>x.industrial_profit_ytd_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
