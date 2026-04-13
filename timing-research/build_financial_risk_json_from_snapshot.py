@@ -313,6 +313,14 @@ def classify_risk(score):
     return '低'
 
 
+def classify_opportunity(score):
+    if score >= 0.75:
+        return '高'
+    if score >= 0.58:
+        return '中'
+    return '低'
+
+
 def load_multiyear_history():
     if not (INCOME_PARQUET.exists() and BALANCE_PARQUET.exists() and CASHFLOW_PARQUET.exists()):
         return {}
@@ -980,6 +988,66 @@ def evaluate_stock(meta, periods):
     fraud_risk_score = round(min(0.99, 0.20 + n_signals * 0.18), 4)
     # ─────────────────────────────────────────────────────────────────────
 
+    # ── 正向机会骨架（行业机会地图第一版）──────────────────────────────
+    opportunity_signals = []
+    if sales_down_streak == 0 and sum(1 for x in sales_vals[-4:] if x is not None and x > 0) >= 3:
+        opportunity_signals.append('营收增速维持为正')
+    if latest_profit is not None and latest_single_profit is not None and prior_single_profit is not None:
+        profit_change_desc = describe_profit_change(latest_profit, latest_single_profit, prior_single_profit)
+        if profit_change_desc in {'由亏转盈', '亏损收窄'}:
+            opportunity_signals.append(profit_change_desc)
+        elif latest_profit > 0:
+            opportunity_signals.append('利润保持正增长/正水平')
+    if latest_ncf is not None and latest_ncf > 0:
+        opportunity_signals.append('经营现金流为正')
+    if gap is not None and gap >= 0:
+        opportunity_signals.append('货币资金覆盖短债')
+    if debt_up_streak == 0 and latest_debt is not None and latest_debt < 65:
+        opportunity_signals.append('资产负债率可控')
+    if ar_turn_down_streak == 0 and latest_ar_turn is not None and latest_ar_turn >= 3:
+        opportunity_signals.append('应收周转稳定')
+    if inv_turn_down_streak == 0 and latest_inv_turn is not None and latest_inv_turn >= 2:
+        opportunity_signals.append('存货周转稳定')
+
+    opportunity_score = 0.18
+    if latest_profit is not None and latest_single_profit is not None and prior_single_profit is not None:
+        profit_change_desc = describe_profit_change(latest_profit, latest_single_profit, prior_single_profit)
+        if profit_change_desc == '由亏转盈':
+            opportunity_score += 0.22
+        elif profit_change_desc == '亏损收窄':
+            opportunity_score += 0.14
+        elif latest_profit > 20:
+            opportunity_score += 0.18
+        elif latest_profit > 0:
+            opportunity_score += 0.10
+    if latest_sales is not None:
+        if latest_sales > 20:
+            opportunity_score += 0.16
+        elif latest_sales > 5:
+            opportunity_score += 0.10
+    if latest_ncf is not None and latest_ncf > 0:
+        opportunity_score += 0.12
+    if gap is not None and gap >= 0:
+        opportunity_score += 0.10
+    if latest_debt is not None and latest_debt < 65:
+        opportunity_score += 0.06
+    if latest_ar_turn is not None and latest_ar_turn >= 3:
+        opportunity_score += 0.04
+    if latest_inv_turn is not None and latest_inv_turn >= 2:
+        opportunity_score += 0.04
+    if neg_profit_count >= 6:
+        opportunity_score -= 0.10
+    if neg_ncf_count >= 6:
+        opportunity_score -= 0.08
+    if fraud_risk_level == 'high':
+        opportunity_score -= 0.12
+    elif fraud_risk_level == 'mid':
+        opportunity_score -= 0.05
+    opportunity_score = clamp(opportunity_score)
+    opportunity_level = classify_opportunity(opportunity_score)
+    is_improving = 1 if opportunity_score >= 0.58 and len(opportunity_signals) >= 3 else 0
+    # ─────────────────────────────────────────────────────────────────────
+
     def _period_scores(r, prev_same_q=None):
         """给单个截面算四个子分（简化版，只用当期数据）"""
         qp = to_float(r.get('q_dtprofit_yoy'))
@@ -1083,6 +1151,10 @@ def evaluate_stock(meta, periods):
         'why_industry': why_industry,
         'industry_rule_name': rule_name,
         'exclude_flag': exclude_flag,
+        'opportunity_score': round(opportunity_score, 4),
+        'opportunity_level': opportunity_level,
+        'is_improving': is_improving,
+        'opportunity_signals': opportunity_signals,
         'is_persistently_worsening': is_persistently_worsening,
         'persistent_worsening_count': persistent_worsening_count,
         'worsening_signals': worsening_signals,
@@ -1150,8 +1222,11 @@ def main():
             'count': len(items),
             'exclude_count': sum(x['exclude_flag'] for x in items),
             'high_risk_count': sum(1 for x in items if x['landmine_score'] >= 0.70),
+            'improving_count': sum(x.get('is_improving', 0) for x in items),
             'avg_risk': round(avg([x['landmine_score'] for x in items], 0), 4),
             'avgRisk': round(avg([x['landmine_score'] for x in items], 0), 4),
+            'avg_opportunity': round(avg([x.get('opportunity_score') for x in items], 0), 4),
+            'avgOpportunity': round(avg([x.get('opportunity_score') for x in items], 0), 4),
             'factor_means': factor_means,
             'factorMeans': factor_means,
             'primary_factor': primary_factor,
@@ -1159,6 +1234,7 @@ def main():
             'excludeCount': sum(x['exclude_flag'] for x in items),
             'highRiskCount': sum(1 for x in items if x['landmine_score'] >= 0.70),
             'rule': rule,
+            'opportunity_stocks': sorted(items, key=lambda x: x.get('opportunity_score', 0), reverse=True)[:20],
             'stocks': items[:50],
         })
 
@@ -1174,8 +1250,10 @@ def main():
             str(STOCK_INDUSTRY_JSON),
         ],
         'industry_mapping_source': 'Wind申万行业(2021版)',
+        'opportunity_axis_status': '第一版骨架已接入（先数据层，后前端展开）',
         'industries': industries,
         'stocks': sorted(stocks, key=lambda x: x['landmine_score'], reverse=True),
+        'opportunity_top_stocks': sorted(stocks, key=lambda x: x.get('opportunity_score', 0), reverse=True)[:100],
     }
     OUTPUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'✅ wrote {OUTPUT} | industries={len(industries)} stocks={len(stocks)}')
