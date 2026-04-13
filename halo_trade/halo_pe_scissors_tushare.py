@@ -3,10 +3,22 @@
 HALO PE剪刀差 - 用Tushare EPS + iFind价格计算
 重资产（能源+国防）vs 轻资产（金融）
 """
-import sys
-import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../meme/antifragile'))
-from fetch_data_ifind import get_token, IFIND_BASE
+import requests
+
+IFIND_BASE = 'https://quantapi.51ifind.com/api/v1'
+IFIND_REFRESH = 'eyJzaWduX3RpbWUiOiIyMDI2LTA0LTEyIDE2OjU1OjAzIn0=.eyJ1aWQiOiI4NTAzMDMzMDIiLCJ1c2VyIjp7InJlZnJlc2hUb2tlbkV4cGlyZWRUaW1lIjoiMjAyNi0wNS0yNyAxOTowNDoxMiIsInVzZXJJZCI6Ijg1MDMwMzMwMiJ9fQ==.B196D7D08D4DD409D2DF46092AF4EECABC774987317390F4D126DE1EF493F421'
+
+
+def get_token():
+    try:
+        r = requests.post(f'{IFIND_BASE}/get_access_token', json={'refresh_token': IFIND_REFRESH}, timeout=20)
+        d = r.json()
+        if d.get('errorcode') == 0:
+            return d['data']['access_token']
+        print(f"❌ iFind token 错误: {d.get('errmsg', d)}")
+    except Exception as e:
+        print(f"❌ iFind token 异常: {e}")
+    return None
 import requests
 import json
 from datetime import datetime, timedelta

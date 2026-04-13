@@ -1,8 +1,8 @@
 {
-  "update_time": "2026-04-10 18:32",
+  "update_time": "2026-04-13 08:22",
   "data_dates": {
     "northbound": "2026-04-10",
-    "etf": "2026-04-10",
+    "etf": "2026-04-13",
     "margin": "2026-04-09",
     "industry": "2026-04-10"
   },
@@ -25,9 +25,9 @@
       "etf_share_chg": {
         "name": "ETF份额变化",
         "direction": "outflow",
-        "latest": -36200.0,
-        "ma5": -11532.0,
-        "ma20": 9540.5
+        "latest": -73600.0,
+        "ma5": -55994.0,
+        "ma20": -720.5
       },
       "margin_chg": {
         "name": "两融变化",
@@ -40,13 +40,6 @@
     "consensus": "偏多分歧 🟡"
   },
   "direction_chart": [
-    {
-      "date": "01-09",
-      "north_net": 36.96,
-      "south_net": 5.14,
-      "etf_share_chg": 170050.0,
-      "margin_chg": 69.91
-    },
     {
       "date": "01-12",
       "north_net": 39.9,
@@ -457,7 +450,14 @@
       "date": "04-10",
       "north_net": 28.08,
       "south_net": 5.32,
-      "etf_share_chg": -36200.0,
+      "etf_share_chg": -150860.0,
+      "margin_chg": null
+    },
+    {
+      "date": "04-13",
+      "north_net": null,
+      "south_net": null,
+      "etf_share_chg": -73600.0,
       "margin_chg": null
     }
   ],
@@ -466,10 +466,6 @@
       "name": "北向资金",
       "key": "north_net",
       "data": [
-        {
-          "date": "01-09",
-          "value": 438.18
-        },
         {
           "date": "01-12",
           "value": 457.46
@@ -705,6 +701,10 @@
         {
           "date": "04-10",
           "value": 492.23
+        },
+        {
+          "date": "04-13",
+          "value": 462.71
         }
       ]
     },
@@ -712,10 +712,6 @@
       "name": "南向资金",
       "key": "south_net",
       "data": [
-        {
-          "date": "01-09",
-          "value": 91.94
-        },
         {
           "date": "01-12",
           "value": 91.99
@@ -951,6 +947,10 @@
         {
           "date": "04-10",
           "value": 95.67
+        },
+        {
+          "date": "04-13",
+          "value": 90.36
         }
       ]
     },
@@ -958,10 +958,6 @@
       "name": "ETF份额变化",
       "key": "etf_share_chg",
       "data": [
-        {
-          "date": "01-09",
-          "value": 1379640.0
-        },
         {
           "date": "01-12",
           "value": 1326640.0
@@ -1196,7 +1192,11 @@
         },
         {
           "date": "04-10",
-          "value": 190810.0
+          "value": 76150.0
+        },
+        {
+          "date": "04-13",
+          "value": -14410.0
         }
       ]
     },
@@ -1204,10 +1204,6 @@
       "name": "两融变化",
       "key": "margin_chg",
       "data": [
-        {
-          "date": "01-09",
-          "value": 1133.12
-        },
         {
           "date": "01-12",
           "value": 1660.8
@@ -1443,6 +1439,10 @@
         {
           "date": "04-10",
           "value": -559.47
+        },
+        {
+          "date": "04-13",
+          "value": -430.01
         }
       ]
     }
@@ -1534,7 +1534,7 @@
       "pct_5d": 13.67,
       "crowding_ratio": 1.4,
       "crowd_label": "warm",
-      "etf_chg": 42150.0,
+      "etf_chg": 59550.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -2218,7 +2218,7 @@
       "pct_5d": 6.29,
       "crowding_ratio": 1.2,
       "crowd_label": "warm",
-      "etf_chg": -100.0,
+      "etf_chg": -200.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -2435,7 +2435,7 @@
       "pct_5d": 5.11,
       "crowding_ratio": 1.12,
       "crowd_label": "normal",
-      "etf_chg": -960.0,
+      "etf_chg": -1080.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -2687,12 +2687,12 @@
       "pct_5d": 4.55,
       "crowding_ratio": 1.03,
       "crowd_label": "normal",
-      "etf_chg": -2000.0,
-      "etf_dir": "outflow",
+      "etf_chg": 5100.0,
+      "etf_dir": "inflow",
       "tags": [
-        "▼ETF流出"
+        "▲ETF流入"
       ],
-      "signal": null,
+      "signal": "✅ 资金确认",
       "amount_latest": 14023109.0
     },
     {
@@ -2847,7 +2847,7 @@
       "pct_5d": 4.11,
       "crowding_ratio": 1.09,
       "crowd_label": "normal",
-      "etf_chg": -1800.0,
+      "etf_chg": -2000.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -2948,7 +2948,7 @@
       "pct_5d": 4.03,
       "crowding_ratio": 0.83,
       "crowd_label": "cool",
-      "etf_chg": -1600.0,
+      "etf_chg": -2000.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -3097,7 +3097,7 @@
       "pct_5d": 3.84,
       "crowding_ratio": 1.27,
       "crowd_label": "warm",
-      "etf_chg": 14100.0,
+      "etf_chg": 10950.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -3110,7 +3110,7 @@
       "pct_5d": 3.8,
       "crowding_ratio": 0.98,
       "crowd_label": "normal",
-      "etf_chg": 12600.0,
+      "etf_chg": 13000.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -3202,13 +3202,13 @@
       "pct_5d": 3.62,
       "crowding_ratio": 1.74,
       "crowd_label": "hot",
-      "etf_chg": 3800.0,
-      "etf_dir": "inflow",
+      "etf_chg": -48900.0,
+      "etf_dir": "outflow",
       "tags": [
         "🔥拥挤",
-        "▲ETF流入"
+        "▼ETF流出"
       ],
-      "signal": null,
+      "signal": "⚠️ 追高风险",
       "amount_latest": 7797196.0
     },
     {
@@ -3449,7 +3449,7 @@
       "pct_5d": 3.14,
       "crowding_ratio": 1.13,
       "crowd_label": "normal",
-      "etf_chg": -200.0,
+      "etf_chg": -2400.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -4004,7 +4004,7 @@
       "pct_5d": 2.24,
       "crowding_ratio": 1.02,
       "crowd_label": "normal",
-      "etf_chg": -12050.0,
+      "etf_chg": -12100.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -4219,7 +4219,7 @@
       "pct_5d": 1.83,
       "crowding_ratio": 0.84,
       "crowd_label": "cool",
-      "etf_chg": 2000.0,
+      "etf_chg": 1450.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -4278,7 +4278,7 @@
       "pct_5d": 1.67,
       "crowding_ratio": 0.88,
       "crowd_label": "normal",
-      "etf_chg": -1550.0,
+      "etf_chg": -1275.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -5256,7 +5256,7 @@
       "pct_5d": -0.22,
       "crowding_ratio": 0.72,
       "crowd_label": "cool",
-      "etf_chg": -38400.0,
+      "etf_chg": -52800.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -5527,7 +5527,7 @@
       "pct_5d": -0.83,
       "crowding_ratio": 0.89,
       "crowd_label": "normal",
-      "etf_chg": -25740.0,
+      "etf_chg": -23220.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -5584,7 +5584,7 @@
       "pct_5d": -1.0,
       "crowding_ratio": 0.94,
       "crowd_label": "normal",
-      "etf_chg": 15000.0,
+      "etf_chg": 15300.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -5728,7 +5728,7 @@
       "pct_5d": -1.14,
       "crowding_ratio": 1.04,
       "crowd_label": "normal",
-      "etf_chg": 25335.0,
+      "etf_chg": 22860.0,
       "etf_dir": "inflow",
       "tags": [
         "▲ETF流入"
@@ -5809,7 +5809,7 @@
       "pct_5d": -1.35,
       "crowding_ratio": 1.15,
       "crowd_label": "normal",
-      "etf_chg": -19500.0,
+      "etf_chg": -19600.0,
       "etf_dir": "outflow",
       "tags": [
         "▼ETF流出"
@@ -6105,7 +6105,7 @@
       "pct_5d": -2.0,
       "crowding_ratio": 0.52,
       "crowd_label": "cold",
-      "etf_chg": -46400.0,
+      "etf_chg": -41650.0,
       "etf_dir": "outflow",
       "tags": [
         "❄️冷清",
@@ -6239,7 +6239,7 @@
       "pct_5d": -2.29,
       "crowding_ratio": 0.67,
       "crowd_label": "cold",
-      "etf_chg": -77940.0,
+      "etf_chg": -105540.0,
       "etf_dir": "outflow",
       "tags": [
         "❄️冷清",
@@ -6498,8 +6498,10 @@
     "signals": [
       "通信 ✅ 资金确认(+13.7%)",
       "电子 ✅ 资金确认(+10.8%)",
+      "有色金属 ✅ 资金确认(+4.5%)",
       "传媒 ✅ 资金确认(+3.8%)",
       "国防军工 ✅ 资金确认(+3.8%)",
+      "非银金融 ⚠️ 追高风险(+3.6%)",
       "卫浴制品 👀 超跌冷门(-2.1%)",
       "其他运输设备 👀 超跌冷门(-2.1%)",
       "风力发电 👀 超跌冷门(-2.2%)",
