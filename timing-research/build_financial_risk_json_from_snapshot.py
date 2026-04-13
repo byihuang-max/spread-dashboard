@@ -14,6 +14,8 @@ PARQUET_DIR = Path.home() / 'Desktop' / '财报数据库'
 INCOME_PARQUET = PARQUET_DIR / 'wind-ashare-income(1).parq'
 BALANCE_PARQUET = PARQUET_DIR / 'wind-ashare-balancesheet.parq'
 CASHFLOW_PARQUET = PARQUET_DIR / 'wind-ahsare-cashflow.parq'
+SW_CLASS_PARQUET = PARQUET_DIR / 'wind-ahsare-SWNindustriesclass.parq'
+INDUSTRY_CODE_PARQUET = PARQUET_DIR / 'wind-ahsare-industriescode.parq'
 
 AS_OF_PERIODS = ['20241231', '20250331', '20250630', '20250930']
 HISTORY_WINDOWS = 20
@@ -526,6 +528,70 @@ def normalize_industry_name(name):
     return alias_map.get(name, name)
 
 
+def _sw_parent_code(sw_code, level):
+    sw_code = str(sw_code or '').strip()
+    if len(sw_code) != 10:
+        return ''
+    if level == 2:
+        return sw_code[:4] + '0' * 12
+    if level == 3:
+        return sw_code[:6] + '0' * 10
+    if level == 4:
+        return sw_code[:8] + '0' * 8
+    return ''
+
+
+def load_wind_industry_mapping():
+    if not SW_CLASS_PARQUET.exists() or not INDUSTRY_CODE_PARQUET.exists():
+        return {}
+
+    sw_class = pd.read_parquet(SW_CLASS_PARQUET)
+    industry_code = pd.read_parquet(INDUSTRY_CODE_PARQUET)
+    industry_code = industry_code[industry_code['INDUSTRIESCODE'].astype(str).str.startswith('760')].copy()
+
+    code_map = {}
+    for _, row in industry_code.iterrows():
+        code = str(row.get('INDUSTRIESCODE') or '').strip()
+        if not code:
+            continue
+        level = row.get('LEVELNUM')
+        try:
+            level = int(level) if pd.notna(level) else None
+        except Exception:
+            level = None
+        code_map[code] = {
+            'name': row.get('INDUSTRIESNAME') or '',
+            'level': level,
+            'alias': row.get('INDUSTRIESALIAS') or '',
+            'definition': row.get('CHINESEDEFINITION') or '',
+        }
+
+    current = sw_class[(sw_class['CUR_SIGN'].astype(str) == '1') | (sw_class['CUR_SIGN'] == 1)].copy()
+    mapping = {}
+    for _, row in current.iterrows():
+        ts_code = str(row.get('S_INFO_WINDCODE') or '').strip()
+        sw_code = str(row.get('SW_IND_CODE') or '').strip()
+        if not ts_code or not sw_code:
+            continue
+        l2_code = _sw_parent_code(sw_code, 2)
+        l3_code = _sw_parent_code(sw_code, 3)
+        l4_code = _sw_parent_code(sw_code, 4)
+        mapping[ts_code] = {
+            'sw_code_raw': sw_code,
+            'sw_l2_code': l2_code,
+            'sw_l2_name': code_map.get(l2_code, {}).get('name', ''),
+            'sw_l2_alias': code_map.get(l2_code, {}).get('alias', ''),
+            'sw_l2_definition': code_map.get(l2_code, {}).get('definition', ''),
+            'sw_l3_code': l3_code,
+            'sw_l3_name': code_map.get(l3_code, {}).get('name', ''),
+            'sw_l4_code': l4_code,
+            'sw_l4_name': code_map.get(l4_code, {}).get('name', ''),
+            'entry_dt': str(row.get('ENTRY_DT') or ''),
+            'remove_dt': str(row.get('REMOVE_DT') or ''),
+        }
+    return mapping
+
+
 def apply_industry_overrides(industry_name, scores, metrics):
     rule_name = normalize_industry_name(industry_name)
     profit_score = scores['profit_score']
@@ -606,6 +672,10 @@ def apply_industry_overrides(industry_name, scores, metrics):
 
 
 def evaluate_stock(meta, periods):
+    wind_info = WIND_INDUSTRY_MAPPING.get(meta.get('ts_code'), {})
+    if wind_info.get('sw_l2_name'):
+        meta = dict(meta)
+        meta['industry'] = wind_info.get('sw_l2_name') or meta.get('industry')
     merged_periods = dict(periods or {})
     history_seed = MULTIYEAR_HISTORY.get(meta.get('ts_code')) or {}
     for period, row in history_seed.items():
@@ -982,6 +1052,15 @@ def evaluate_stock(meta, periods):
         'name': meta.get('name'),
         'industry1': industry1,
         'industry2': meta.get('market') or '',
+        'wind_industry_l2': wind_info.get('sw_l2_name') or '',
+        'wind_industry_l3': wind_info.get('sw_l3_name') or '',
+        'wind_industry_l4': wind_info.get('sw_l4_name') or '',
+        'wind_industry_code_raw': wind_info.get('sw_code_raw') or '',
+        'wind_industry_l2_code': wind_info.get('sw_l2_code') or '',
+        'wind_industry_l3_code': wind_info.get('sw_l3_code') or '',
+        'wind_industry_l4_code': wind_info.get('sw_l4_code') or '',
+        'wind_industry_alias': wind_info.get('sw_l2_alias') or '',
+        'wind_industry_definition': wind_info.get('sw_l2_definition') or '',
         'risk_level': risk_level,
         'attribution_tag': worst_metric,
         'primary_reason': worst_metric,
@@ -1007,6 +1086,7 @@ def evaluate_stock(meta, periods):
 
 
 MULTIYEAR_HISTORY = load_multiyear_history()
+WIND_INDUSTRY_MAPPING = load_wind_industry_mapping()
 
 
 def main():
@@ -1057,7 +1137,15 @@ def main():
 
     out = {
         'as_of': '多年财报底座 + 最新快照融合',
-        'source_files': [str(SNAPSHOT), str(INCOME_PARQUET), str(BALANCE_PARQUET), str(CASHFLOW_PARQUET)],
+        'source_files': [
+            str(SNAPSHOT),
+            str(INCOME_PARQUET),
+            str(BALANCE_PARQUET),
+            str(CASHFLOW_PARQUET),
+            str(SW_CLASS_PARQUET),
+            str(INDUSTRY_CODE_PARQUET),
+        ],
+        'industry_mapping_source': 'Wind申万行业(2021版)',
         'industries': industries,
         'stocks': sorted(stocks, key=lambda x: x['landmine_score'], reverse=True),
     }
