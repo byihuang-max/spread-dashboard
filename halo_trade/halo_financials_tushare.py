@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-HALO 财务指标模块 - Tushare 版本
+⚠️ 已废弃 — 2026-04-13
+旧版 Tushare 私有地址（已过期）+ 旧 token，不再使用。
+正式版本：halo_financials.py（AkShare 美股财报现金流）
+
+HALO 财务指标模块 - Tushare 版本（废弃）
 1. CapEx 二阶导（超大规模科技）
 """
 import requests
