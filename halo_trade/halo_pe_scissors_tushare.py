@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-HALO PE剪刀差 - 用Tushare EPS + iFind价格计算
+⚠️ 已废弃 — 2026-04-13
+旧版 Tushare 私有地址（已过期）+ iFind refresh token 拼接，不再使用。
+正式版本：halo_pe_scissors.py（百度美股估值接口）
+
+HALO PE剪刀差 - 用Tushare EPS + iFind价格计算（废弃）
 重资产（能源+国防）vs 轻资产（金融）
 """
 import requests

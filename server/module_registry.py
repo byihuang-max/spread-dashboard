@@ -274,8 +274,8 @@ MODULE_REGISTRY = {
         'name': 'HALO交易',
         'scripts': [
             ('halo_trade', 'halo_data_ifind_full.py'),
-            ('halo_trade', 'halo_financials.py'),
-            ('halo_trade', 'halo_pe_scissors.py'),
+            ('halo_trade', 'halo_financials.py'),       # AkShare版（替代旧 _tushare.py）
+            ('halo_trade', 'halo_pe_scissors.py'),      # 百度估值版（替代旧 _tushare.py）
             ('halo_trade', 'halo_calc.py'),
             ('halo_trade', 'china_halo.py'),
         ],
