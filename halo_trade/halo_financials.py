@@ -106,6 +106,12 @@ def main():
         output = {}
 
     output['generated_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    # 空结果保护：如果本次没拉到任何 CapEx 数据，保留旧文件不覆盖
+    if not capex_deriv:
+        print('⚠️ 本次 CapEx 数据全部为空，保留旧文件不覆盖')
+        return
+
     output['capex_second_derivative'] = capex_deriv
 
     with open(FINANCIAL_JSON, 'w', encoding='utf-8') as f:

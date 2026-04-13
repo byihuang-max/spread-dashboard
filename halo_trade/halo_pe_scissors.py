@@ -164,6 +164,11 @@ def main():
     else:
         existing = {}
 
+    # 空结果保护：如果本次没拉到有效 PE 剪刀差，保留旧文件不覆盖
+    if not scissors.get('latest'):
+        print('⚠️ PE 剪刀差数据为空，保留旧文件不覆盖')
+        return
+
     existing['eps_scissors'] = scissors
     existing['update_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     OUTPUT_JSON.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
