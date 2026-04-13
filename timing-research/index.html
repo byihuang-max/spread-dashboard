@@ -78,7 +78,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="made-by">Made by the GAMT Team · Research cockpit for stock timing & exposure</div>
 </div>
 
-<div id="updateBanner" class="card" style="max-width:1200px;margin:20px auto;background:linear-gradient(135deg,#1e3a5f,#1e293b);border:2px solid #38bdf8;position:relative">
+<div id="updateBanner" class="card" style="display:none;max-width:1200px;margin:20px auto;background:linear-gradient(135deg,#1e3a5f,#1e293b);border:2px solid #38bdf8;position:relative">
   <button onclick="closeUpdateBanner()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;padding:4px 8px">&times;</button>
   <div style="display:flex;align-items:start;gap:16px">
     <div style="font-size:32px;line-height:1">🆕</div>
@@ -319,170 +319,15 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <div class="card hero">
     <div class="kicker">冰点研究摘要</div>
     <h2>先把一句人话讲清楚：冰点不是孤立抄底技巧，而是股票择时框架里第一条已经跑通的命题</h2>
-    <div class="explain">当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。具体的回测数据和参数对比，请看下方各个迭代版本。</div>
+    <div class="explain">当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。详细回测、参数对比与最新页面，统一以独立报告为准。</div>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="ice_point_report.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700">打开独立冰点报告</a>
+    </div>
   </div>
 
-<!-- 新的冰点策略Tab结构 - 替换原有的subtabs部分 -->
-
-<div class="card">
-  <h2>冰点策略研究</h2>
-  <div class="subtabs">
-    <button class="subtab-btn active" data-tab="evolution">因子迭代</button>
-    <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
-    <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
-    <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
-    <button class="subtab-btn" data-tab="factorcard">📊 因子回测</button>
+  <div class="card" style="padding:18px 20px">
+    <div class="note">首页这里先不再内嵌旧版冰点明细，避免和独立报告口径分叉。后续如果要重新接回首页，只接动态摘要，不再手拷一整块静态内容。</div>
   </div>
-
-  <!-- Tab: 因子迭代 -->
-  <div id="evolution" class="tab-pane active">
-    
-    <div class="card hero">
-      <h2>🔬 因子演进：从涨跌停家数到封单额轧差</h2>
-      <div class="note">冰点策略的核心是找到"极端恐慌"的信号。我们测试了三代因子，最终发现：<b>封单额轧差</b>才是关键。</div>
-    </div>
-
-    <div class="card">
-      <h2>📊 三代因子对比</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr>
-            <th>版本</th>
-            <th>因子</th>
-            <th>问题</th>
-            <th>胜率</th>
-            <th>Calmar</th>
-            <th>结论</th>
-          </tr>
-          <tr>
-            <td>V1</td>
-            <td>涨停+跌停家数</td>
-            <td>过拟合（股票总数固定，涨停少必然跌停多）</td>
-            <td>73.3%</td>
-            <td>2.44</td>
-            <td style="color:#f59e0b">信号不稳定</td>
-          </tr>
-          <tr>
-            <td>V2</td>
-            <td>涨跌停比例</td>
-            <td>标准化后可比，但信号偏弱</td>
-            <td>53.8%</td>
-            <td>0.99</td>
-            <td style="color:#f59e0b">表现平平</td>
-          </tr>
-          <tr style="background:#dcfce7">
-            <td><b>V3</b></td>
-            <td><b>封单额轧差</b></td>
-            <td>直接刻画资金力量对比</td>
-            <td style="color:#16a34a"><b>91.7%</b></td>
-            <td style="color:#16a34a"><b>5.71</b></td>
-            <td style="color:#16a34a"><b>✅ 核心信号</b></td>
-          </tr>
-        </table>
-      </div>
-      <div class="explain">
-        ⚡ <b>关键洞察：</b>封单额轧差 = 涨停封单额 - 跌停封单额。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。
-        不只看家数，看资金堆在哪边，这才是真正的恐慌深度。
-      </div>
-    </div>
-
-    <div class="card hero">
-      <h2>🥇 最优策略（封单额轧差）</h2>
-      <div class="stats-row" style="margin-top:16px">
-        <div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div>
-        <div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div>
-        <div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div>
-        <div class="stat-box"><div class="val purple">沪深300</div><div class="label">标的</div></div>
-        <div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div>
-        <div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div>
-        <div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div>
-        <div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div>
-        <div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div>
-        <div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div>
-      </div>
-    </div>
-
-    <div class="card full-span">
-      <h2>📈 最优策略净值曲线（封单额轧差 vs 4指数）</h2>
-      <div style="position:relative;height:360px;margin-bottom:12px">
-        <canvas id="sealNavChart"></canvas>
-      </div>
-      <div class="explain">
-        冰点策略在7年里12次交易，11次盈利，累计收益26.9%，最大回撤仅1.0%。
-        关键特征：信号稀缺但质量极高，每次触发都是真正的极端冰点。紫色粗线=策略净值，虚线=4个宽基指数对比。
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
-          <tr style="background:#f0fdf4"><td><b>沪深300</b></td><td>12</td><td><b>91.7%</b></td><td class="pos"><b>+3.20%</b></td><td class="pos"><b>+38.4%</b></td><td><b>1.0%</b></td><td><b>5.71</b></td></tr>
-          <tr><td>中证500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td>3.23</td></tr>
-          <tr><td>中证1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td>2.13</td></tr>
-          <tr><td>中证2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td>1.73</td></tr>
-        </table>
-      </div>
-      <div class="explain">
-        封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。
-        越大盘越稳定，这是因为大盘股的封单额数据更可靠，流动性更好。
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>📊 Top10 策略（全部是封单额轧差）</h2>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <tr><th>排名</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
-          <tr style="background:#f0fdf4"><td><b>#1</b></td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
-          <tr><td>#2</td><td>5%</td><td>10d</td><td>csi500</td><td>12</td><td>83.3%</td><td class="pos">+3.90%</td><td class="pos">+46.7%</td><td>2.1%</td><td>3.23</td></tr>
-          <tr><td>#3</td><td>5%</td><td>10d</td><td>csi1000</td><td>12</td><td>83.3%</td><td class="pos">+3.71%</td><td class="pos">+44.6%</td><td>3.0%</td><td>2.13</td></tr>
-          <tr><td>#4</td><td>5%</td><td>3d</td><td>csi1000</td><td>16</td><td>62.5%</td><td class="pos">+2.00%</td><td class="pos">+32.0%</td><td>2.3%</td><td>2.05</td></tr>
-          <tr><td>#5</td><td>5%</td><td>3d</td><td>csi500</td><td>16</td><td>75.0%</td><td class="pos">+1.97%</td><td class="pos">+31.5%</td><td>2.3%</td><td>1.96</td></tr>
-          <tr><td>#6</td><td>5%</td><td>20d</td><td>csi300</td><td>9</td><td>77.8%</td><td class="pos">+4.78%</td><td class="pos">+43.0%</td><td>3.2%</td><td>1.94</td></tr>
-          <tr><td>#7</td><td>5%</td><td>10d</td><td>csi2000</td><td>12</td><td>75.0%</td><td class="pos">+3.48%</td><td class="pos">+41.8%</td><td>3.5%</td><td>1.73</td></tr>
-          <tr><td>#8</td><td>5%</td><td>15d</td><td>csi300</td><td>10</td><td>70.0%</td><td class="pos">+4.69%</td><td class="pos">+46.9%</td><td>4.0%</td><td>1.70</td></tr>
-          <tr><td>#9</td><td>5%</td><td>20d</td><td>csi500</td><td>9</td><td>88.9%</td><td class="pos">+6.11%</td><td class="pos">+55.0%</td><td>5.6%</td><td>1.43</td></tr>
-          <tr><td>#10</td><td>5%</td><td>20d</td><td>csi1000</td><td>9</td><td>88.9%</td><td class="pos">+6.27%</td><td class="pos">+56.5%</td><td>6.0%</td><td>1.36</td></tr>
-        </table>
-      </div>
-      <div class="explain">
-        Top10全部是<b>封单额轧差</b>单因子，5%极端阈值。涨跌停比例表现平平，封单额轧差才是核心。
-        参数特征：极端阈值（5%）+ 中短持有期（3-20天）+ 跨指数稳定。
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card hero" style="padding:20px">
-        <h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2>
-        <div class="note">
-          1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>
-          2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>
-          3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>
-          4. <b>跨指数稳定</b>：300/500/1000/2000都有效
-        </div>
-      </div>
-      <div class="card hero" style="padding:20px">
-        <h2 style="font-size:15px">🎯 核心结论</h2>
-        <div class="note">
-          1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>
-          2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>
-          3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>
-          4. <b>最优参数</b>：5%阈值（极端冰点），10天持有
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 保留原有的V1.1/V1.2/factorstudy/factorcard tabs -->
-  <!-- 这里不改动，继续使用原有代码 -->
-
-</div>
-
-<script>
-</script>
 
     </div>
   </div>
