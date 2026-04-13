@@ -10,11 +10,11 @@ import numpy as np
 from datetime import datetime, timedelta
 import json
 import requests
+import akshare as ak
 
 try:
     import yfinance as yf
 except ImportError:
-    print("⚠️ yfinance 未安装，跳过美国市场对比")
     yf = None
 
 # Tushare 配置
@@ -100,12 +100,9 @@ def fetch_sw_industry_data(days=252):
     return all_data, heavy_industries, light_industries
 
 def fetch_us_sector_data(days=252):
-    """拉取美国行业ETF数据（罗素3000拟合）"""
-    if yf is None:
-        return pd.DataFrame(), {}, {}
-    
+    """拉取美国行业ETF数据（罗素3000拟合）- 改用 AkShare，避免 yfinance rate limit"""
     print("🇺🇸 拉取美国行业ETF数据（罗素3000拟合）...")
-    
+
     # 重资产行业ETF
     heavy_etfs = {
         'XLE': '能源',
@@ -113,7 +110,7 @@ def fetch_us_sector_data(days=252):
         'XLI': '工业',
         'XLB': '材料'
     }
-    
+
     # 轻资产行业ETF
     light_etfs = {
         'XLK': '科技',
@@ -121,52 +118,44 @@ def fetch_us_sector_data(days=252):
         'XLC': '通信服务',
         'XLY': '可选消费'
     }
-    
+
     all_tickers = list(heavy_etfs.keys()) + list(light_etfs.keys())
-    
-    try:
-        # 拉取数据
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=days)
-        
-        data = yf.download(all_tickers, start=start_date, end=end_date, progress=False)
-        
-        if data.empty:
-            print("❌ 未获取到美国数据")
-            return pd.DataFrame(), heavy_etfs, light_etfs
-        
-        # 提取收盘价
-        if len(all_tickers) > 1:
-            prices = data['Close']
-        else:
-            prices = data[['Close']]
-        
-        # 计算日收益率
-        returns = prices.pct_change() * 100
-        returns = returns.dropna()
-        
-        # 转换为长格式
-        df_list = []
-        for ticker in all_tickers:
-            if ticker in returns.columns:
-                temp = pd.DataFrame({
-                    'ticker': ticker,
-                    'trade_date': returns.index,
-                    'pct_change': returns[ticker].values
-                })
-                df_list.append(temp)
-        
-        if not df_list:
-            print("❌ 数据处理失败")
-            return pd.DataFrame(), heavy_etfs, light_etfs
-        
-        all_data = pd.concat(df_list, ignore_index=True)
-        print(f"✅ 获取 {len(all_data)} 条数据")
-        return all_data, heavy_etfs, light_etfs
-        
-    except Exception as e:
-        print(f"❌ 拉取失败: {e}")
+    start_date = (datetime.now() - timedelta(days=days)).strftime('%Y%m%d')
+    end_date = datetime.now().strftime('%Y%m%d')
+
+    df_list = []
+    for ticker in all_tickers:
+        try:
+            df = ak.stock_us_daily(symbol=ticker, adjust='qfq')
+            if df.empty:
+                print(f"  ⚠️ {ticker} 无数据")
+                continue
+            df = df.copy()
+            df['date'] = pd.to_datetime(df['date'])
+            df = df[(df['date'] >= pd.to_datetime(start_date)) & (df['date'] <= pd.to_datetime(end_date))]
+            if df.empty:
+                print(f"  ⚠️ {ticker} 近一年无数据")
+                continue
+            df = df.sort_values('date')
+            df['pct_change'] = df['close'].pct_change() * 100
+            df = df.dropna(subset=['pct_change'])
+            temp = pd.DataFrame({
+                'ticker': ticker,
+                'trade_date': df['date'],
+                'pct_change': df['pct_change'].values
+            })
+            df_list.append(temp)
+            print(f"  ✅ {ticker}: {len(temp)} 条")
+        except Exception as e:
+            print(f"  ❌ {ticker} 拉取失败: {e}")
+
+    if not df_list:
+        print("❌ 未获取到美国数据")
         return pd.DataFrame(), heavy_etfs, light_etfs
+
+    all_data = pd.concat(df_list, ignore_index=True)
+    print(f"✅ 获取 {len(all_data)} 条数据")
+    return all_data, heavy_etfs, light_etfs
 
 def calculate_us_asset_style_index(df, heavy_dict, light_dict):
     """计算美国重资产/轻资产组合指数（等权）"""

@@ -329,8 +329,8 @@ def load_multiyear_history():
     income = income.rename(columns={
         'S_INFO_WINDCODE': 'ts_code',
         'REPORT_PERIOD': 'end_date',
-        'TOT_OPER_REV': 'tot_oper_rev',
-        'NET_PROFIT_EXCL_MIN_INT_INC': 'net_profit',
+        'TOT_OPER_REV': 'tot_oper_rev_cum',
+        'NET_PROFIT_EXCL_MIN_INT_INC': 'net_profit_cum',
     })
     balance = balance.rename(columns={
         'S_INFO_WINDCODE': 'ts_code',
@@ -347,27 +347,62 @@ def load_multiyear_history():
     cashflow = cashflow.rename(columns={
         'S_INFO_WINDCODE': 'ts_code',
         'REPORT_PERIOD': 'end_date',
-        'NET_CASH_FLOWS_OPER_ACT': 'n_cashflow_act',
+        'NET_CASH_FLOWS_OPER_ACT': 'n_cashflow_act_cum',
     })
 
     merged = income.merge(balance, on=['ts_code', 'end_date'], how='outer').merge(cashflow, on=['ts_code', 'end_date'], how='outer')
     merged = merged.dropna(subset=['ts_code', 'end_date'])
     merged['end_date'] = merged['end_date'].astype(str)
-    merged = merged[merged['end_date'].str.len() == 8]
+    merged = merged[merged['end_date'].str.len() == 8].copy()
+    merged['year'] = merged['end_date'].str[:4]
+    merged['mmdd'] = merged['end_date'].str[4:]
+    merged['quarter_order'] = merged['mmdd'].map({'0331': 1, '0630': 2, '0930': 3, '1231': 4})
+    merged = merged[merged['quarter_order'].notna()].copy()
+    merged['quarter_order'] = merged['quarter_order'].astype(int)
     merged = merged.sort_values(['ts_code', 'end_date'])
+
+    def cum_to_single(series, quarter_order):
+        out = []
+        prev_cum = None
+        prev_q = None
+        for val, q in zip(series.tolist(), quarter_order.tolist()):
+            if pd.isna(val):
+                out.append(None)
+                prev_cum = None
+                prev_q = q
+                continue
+            if q == 1:
+                single = val
+            elif prev_cum is not None and prev_q is not None and q == prev_q + 1:
+                single = val - prev_cum
+            else:
+                single = None
+            out.append(single)
+            prev_cum = val
+            prev_q = q
+        return pd.Series(out, index=series.index, dtype='float64')
 
     history_map = defaultdict(dict)
     for code, g in merged.groupby('ts_code'):
         g = g.sort_values('end_date').copy()
-        g['sales_yoy'] = g['tot_oper_rev'].pct_change(4) * 100
-        g['profit_yoy'] = g['net_profit'].pct_change(4) * 100
-        g['q_ocf_to_sales'] = (g['n_cashflow_act'] / g['tot_oper_rev']) * 100
-        g['ocf_to_or'] = g['n_cashflow_act'] / g['tot_oper_rev']
+        g['single_sales'] = pd.Series(index=g.index, dtype='float64')
+        g['single_profit'] = pd.Series(index=g.index, dtype='float64')
+        g['single_ocf'] = pd.Series(index=g.index, dtype='float64')
+        for _, y in g.groupby('year'):
+            idx = y.index
+            g.loc[idx, 'single_sales'] = cum_to_single(y['tot_oper_rev_cum'], y['quarter_order']).values
+            g.loc[idx, 'single_profit'] = cum_to_single(y['net_profit_cum'], y['quarter_order']).values
+            g.loc[idx, 'single_ocf'] = cum_to_single(y['n_cashflow_act_cum'], y['quarter_order']).values
+
+        g['sales_yoy'] = g['single_sales'].pct_change(4, fill_method=None) * 100
+        g['profit_yoy'] = g['single_profit'].pct_change(4, fill_method=None) * 100
+        g['q_ocf_to_sales'] = (g['single_ocf'] / g['single_sales']) * 100
+        g['ocf_to_or'] = g['single_ocf'] / g['single_sales']
         g['debt_to_assets'] = (g['tot_liab'] / g['tot_assets']) * 100
         g['current_ratio'] = g['tot_cur_assets'] / g['tot_cur_liab']
         g['quick_ratio'] = (g['tot_cur_assets'] - g['inventories']) / g['tot_cur_liab']
-        g['inv_turn'] = g['tot_oper_rev'] / g['inventories']
-        g['ar_turn'] = g['tot_oper_rev'] / g['accounts_receiv']
+        g['inv_turn'] = (g['single_sales'] * 4) / g['inventories']
+        g['ar_turn'] = (g['single_sales'] * 4) / g['accounts_receiv']
 
         for _, row in g.iterrows():
             end_date = str(row['end_date'])
@@ -387,7 +422,9 @@ def load_multiyear_history():
                 'st_borr': to_float(row.get('st_borr')),
                 'accounts_receiv': to_float(row.get('accounts_receiv')),
                 'inventories': to_float(row.get('inventories')),
-                'n_cashflow_act': to_float(row.get('n_cashflow_act')),
+                'n_cashflow_act': to_float(row.get('single_ocf')),
+                'single_profit': to_float(row.get('single_profit')),
+                'single_sales': to_float(row.get('single_sales')),
             }
     return history_map
 
@@ -402,6 +439,73 @@ def factor_text(label, score):
     else:
         level = '尚可'
     return f'{label}{level}'
+
+
+def describe_profit_change(yoy, current_profit, prior_profit):
+    yoy = to_float(yoy)
+    current_profit = to_float(current_profit)
+    prior_profit = to_float(prior_profit)
+    eps = 1e-6
+
+    if current_profit is None and yoy is None:
+        return None
+    if current_profit is not None and prior_profit is not None:
+        if current_profit < -eps and prior_profit > eps:
+            return '由盈转亏'
+        if current_profit > eps and prior_profit < -eps:
+            return '由亏转盈'
+        if current_profit < -eps and prior_profit < -eps:
+            if abs(current_profit) > abs(prior_profit) * 1.05:
+                return '亏损扩大'
+            if abs(current_profit) < abs(prior_profit) * 0.95:
+                return '亏损收窄'
+            return '持续亏损'
+    if yoy is not None:
+        return f'净利润同比{yoy:.1f}%'
+    return None
+
+
+def profit_score_from_metrics(yoy, sales_yoy, current_profit=None, prior_profit=None):
+    yoy = to_float(yoy)
+    sales_yoy = to_float(sales_yoy)
+    current_profit = to_float(current_profit)
+    prior_profit = to_float(prior_profit)
+    eps = 1e-6
+
+    score = 0.30
+    if current_profit is not None and prior_profit is not None:
+        if current_profit < -eps and prior_profit > eps:
+            score += 0.54
+        elif current_profit < -eps and prior_profit < -eps:
+            if abs(current_profit) > abs(prior_profit) * 1.2:
+                score += 0.48
+            elif abs(current_profit) > abs(prior_profit) * 1.05:
+                score += 0.34
+            else:
+                score += 0.24
+        elif current_profit > eps and prior_profit < -eps:
+            score += 0.12
+        elif yoy is not None:
+            if yoy < -100:
+                score += 0.48
+            elif yoy < -50:
+                score += 0.34
+            elif yoy < 0:
+                score += 0.18
+    elif yoy is not None:
+        if yoy < -100:
+            score += 0.48
+        elif yoy < -50:
+            score += 0.34
+        elif yoy < 0:
+            score += 0.18
+
+    if sales_yoy is not None:
+        if sales_yoy < -20:
+            score += 0.12
+        elif sales_yoy < 0:
+            score += 0.06
+    return clamp(score)
 
 
 def normalize_industry_name(name):
@@ -548,6 +652,10 @@ def evaluate_stock(meta, periods):
     latest_ar = next((x for x in reversed(ar_vals) if x is not None), None)
     latest_inv = next((x for x in reversed(inv_vals) if x is not None), None)
     latest_ncf = next((x for x in reversed(ncf_vals) if x is not None), None)
+    single_profit_vals = [to_float(rows[p].get('single_profit')) for p in score_periods]
+    latest_single_profit = next((x for x in reversed(single_profit_vals) if x is not None), None)
+    latest_single_profit_idx = next((i for i in range(len(single_profit_vals) - 1, -1, -1) if single_profit_vals[i] is not None), None)
+    prior_single_profit = single_profit_vals[latest_single_profit_idx - 4] if latest_single_profit_idx is not None and latest_single_profit_idx >= 4 else None
 
     def worsening_streak(vals, worse_when='down'):
         clean = [x for x in vals if x is not None]
@@ -579,25 +687,7 @@ def evaluate_stock(meta, periods):
     weak_ocf_sales_count = count_bad(ocf_sales_vals, lambda x: x < 0)
 
     # profit score
-    profit_score = 0.30
-    if latest_profit is not None:
-        if latest_profit < -100:
-            profit_score += 0.48
-        elif latest_profit < -50:
-            profit_score += 0.34
-        elif latest_profit < 0:
-            profit_score += 0.18
-    if latest_sales is not None:
-        if latest_sales < -20:
-            profit_score += 0.12
-        elif latest_sales < 0:
-            profit_score += 0.06
-    profit_score += min(0.16, neg_profit_count * 0.04)
-    if sales_down_streak >= 2:
-        profit_score += 0.08
-    if weak_sales_count >= 6:
-        profit_score += 0.06
-    profit_score = clamp(profit_score)
+    profit_score = profit_score_from_metrics(latest_profit, latest_sales, latest_single_profit, prior_single_profit)
 
     # cashflow score
     cashflow_score = 0.30
@@ -717,8 +807,10 @@ def evaluate_stock(meta, periods):
     worst_metric = reason_map[primary_reason]
 
     why_parts = []
-    if latest_profit is not None and latest_profit < 0:
-        why_parts.append(f'净利润同比{latest_profit:.1f}%')
+    if latest_profit is not None or latest_single_profit is not None:
+        profit_desc = describe_profit_change(latest_profit, latest_single_profit, prior_single_profit)
+        if profit_desc:
+            why_parts.append(profit_desc)
     if latest_ncf is not None and latest_ncf < 0:
         why_parts.append('经营现金流为负')
     if gap is not None and gap < 0:
@@ -813,7 +905,7 @@ def evaluate_stock(meta, periods):
     fraud_risk_score = round(min(0.99, 0.20 + n_signals * 0.18), 4)
     # ─────────────────────────────────────────────────────────────────────
 
-    def _period_scores(r):
+    def _period_scores(r, prev_same_q=None):
         """给单个截面算四个子分（简化版，只用当期数据）"""
         qp = to_float(r.get('q_dtprofit_yoy'))
         qs_val = to_float(r.get('q_sales_yoy'))
@@ -825,13 +917,10 @@ def evaluate_stock(meta, periods):
         qcr = to_float(r.get('current_ratio'))
         qat = to_float(r.get('ar_turn'))
         qit = to_float(r.get('inv_turn'))
+        current_single_profit = to_float(r.get('single_profit'))
+        prior_single_profit = to_float((prev_same_q or {}).get('single_profit'))
 
-        ps = 0.30
-        if qp is not None:
-            ps += 0.48 if qp < -100 else (0.34 if qp < -50 else (0.18 if qp < 0 else 0))
-        if qs_val is not None:
-            ps += 0.12 if qs_val < -20 else (0.06 if qs_val < 0 else 0)
-        ps = clamp(ps)
+        ps = profit_score_from_metrics(qp, qs_val, current_single_profit, prior_single_profit)
 
         cs = 0.30
         if qn is not None and qn < 0:
@@ -861,16 +950,20 @@ def evaluate_stock(meta, periods):
         return round(ps, 3), round(cs, 3), round(ds, 3), round(ws, 3)
 
     history = []
-    for p in display_periods:
-        r = periods.get(p) or {}
-        ps, cs, ds, ws = _period_scores(r)
+    for i, p in enumerate(display_periods):
+        r = merged_periods.get(p) or {}
+        prev_same_q = merged_periods.get(display_periods[i - 4]) if i >= 4 else None
+        ps, cs, ds, ws = _period_scores(r, prev_same_q)
         qp = to_float(r.get('q_dtprofit_yoy'))
         qn = to_float(r.get('n_cashflow_act'))
         qm = to_float(r.get('money_cap'))
         qs = to_float(r.get('st_borr'))
+        current_single_profit = to_float(r.get('single_profit'))
+        prior_single_profit = to_float((prev_same_q or {}).get('single_profit'))
         parts = []
-        if qp is not None:
-            parts.append(f'净利润同比{qp:.1f}%')
+        profit_desc = describe_profit_change(qp, current_single_profit, prior_single_profit)
+        if profit_desc:
+            parts.append(profit_desc)
         if qn is not None:
             parts.append('经营现金流为负' if qn < 0 else '经营现金流为正')
         if qm is not None and qs is not None:
