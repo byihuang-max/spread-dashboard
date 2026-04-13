@@ -408,6 +408,8 @@ window.onerror=function(msg,src,line,col,err){
               <th>代码</th>
               <th>名称</th>
               <th>一级行业</th>
+              <th>Wind层级</th>
+              <th>来源</th>
               <th>规则映射</th>
               <th>总分</th>
               <th>持续恶化</th>
@@ -1131,11 +1133,16 @@ function worseningBadge(s){
 function renderTable(){
   const rows = filteredStocks();
   if(!rows.find(r => r.ts_code === state.stockCode) && rows[0]) state.stockCode = rows[0].ts_code;
-  document.getElementById("stockTableBody").innerHTML = rows.map(s => `
+  document.getElementById("stockTableBody").innerHTML = rows.map(s => {
+    const windLevel = [s.wind_industry_l2, s.wind_industry_l3, s.wind_industry_l4].filter(Boolean).join(' / ') || '-';
+    const sourceText = s.industry_source === 'wind_sw' ? 'Wind申万' : (s.industry_source === 'stock_industry_json' ? '全量底座' : '快照');
+    return `
     <tr class="${s.ts_code===state.stockCode?"active":""}" data-code="${s.ts_code}">
       <td>${s.ts_code.replace('.SZ','').replace('.SH','')}</td>
       <td>${s.name}</td>
       <td>${s.industry1}</td>
+      <td title="${windLevel}">${windLevel}</td>
+      <td>${sourceText}</td>
       <td>${s.industry_rule_name || s.industry1 || '-'}</td>
       <td>${score(s.landmine_score)}</td>
       <td>${worseningBadge(s)}</td>
@@ -1146,7 +1153,7 @@ function renderTable(){
       <td>${pct(s.industry_percentile)}</td>
       <td>${badge(s.exclude_flag)}</td>
     </tr>
-  `).join("");
+  `}).join("");
   document.querySelectorAll("#stockTableBody tr").forEach(tr => tr.onclick = () => {
     state.stockCode = tr.dataset.code;
     renderTable();
@@ -1162,13 +1169,18 @@ function explainStock(s){
   const historyText = (s.history || []).map(h => `${h.label}：${h.text}`).join('；');
   const worseningText = (s.worsening_signals || []).length ? `持续恶化链条目前命中了${s.persistent_worsening_count || 0}条，主要是：${s.worsening_signals.slice(0,3).join('；')}。` : '';
   const fraudText = (s.fraud_signals || []).length ? `另外，报表勾稽上还有${s.fraud_signals.length}条造假预警疑点，主要是：${s.fraud_signals.slice(0,2).join('；')}。` : '';
-  return `${s.name}属于${s.industry1}-${s.industry2}，规则映射到${s.industry_rule_name || s.industry1}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${worseningText}${historyText ? '最近展示期表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
+  const sourceText = s.industry_source === 'wind_sw' ? 'Wind申万映射' : (s.industry_source === 'stock_industry_json' ? '全量行业底座' : '原始快照');
+  const windText = [s.wind_industry_l2, s.wind_industry_l3, s.wind_industry_l4].filter(Boolean).join(' → ');
+  const sourceDesc = windText ? `当前行业口径来自${sourceText}，Wind层级是：${windText}。` : `当前行业口径来自${sourceText}。`;
+  return `${s.name}属于${s.industry1}-${s.industry2}，规则映射到${s.industry_rule_name || s.industry1}。${sourceDesc}这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${worseningText}${historyText ? '最近展示期表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
 }
 
 function renderDetail(){
   const s = DATA.stocks.find(x => x.ts_code === state.stockCode) || DATA.stocks[0];
   document.getElementById("detailName").textContent = s.name;
-  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2} · 规则映射 ${s.industry_rule_name || s.industry1 || '-'}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>持续恶化：${s.is_persistently_worsening ? `是（${s.persistent_worsening_count || 0}条）` : '否'}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
+  const sourceText = s.industry_source === 'wind_sw' ? 'Wind申万映射' : (s.industry_source === 'stock_industry_json' ? '全量行业底座' : '原始快照');
+  const windText = [s.wind_industry_l2, s.wind_industry_l3, s.wind_industry_l4].filter(Boolean).join(' / ') || '-';
+  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2} · 规则映射 ${s.industry_rule_name || s.industry1 || '-'}<br>行业来源：${sourceText} · Wind层级：${windText}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>持续恶化：${s.is_persistently_worsening ? `是（${s.persistent_worsening_count || 0}条）` : '否'}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
   document.getElementById("detailFlag").innerHTML = badge(s.exclude_flag);
   document.getElementById("detailExplain").textContent = explainStock(s);
 
@@ -1225,9 +1237,9 @@ function renderDetail(){
 }
 
 function stocksToCsv(stocks){
-  const headers = ['股票代码','股票简称','原始行业','归并行业','规则映射','总分','持续恶化标记','持续恶化条数','持续恶化信号','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
+  const headers = ['股票代码','股票简称','一级行业','Wind一级行业','Wind二级行业','Wind三级行业','行业来源','规则映射','总分','持续恶化标记','持续恶化条数','持续恶化信号','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
   const rows = stocks.map(s => [
-    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1, s.industry_rule_name||s.industry1,
+    s.ts_code, s.name, s.industry1, s.wind_industry_l2||'', s.wind_industry_l3||'', s.wind_industry_l4||'', s.industry_source||'', s.industry_rule_name||s.industry1,
     s.landmine_score, s.is_persistently_worsening ? '是' : '否', s.persistent_worsening_count || 0, (s.worsening_signals || []).join('；'),
     s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
     s.industry_percentile, s.exclude_flag ? '是' : '否',
