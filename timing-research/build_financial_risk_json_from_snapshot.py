@@ -16,6 +16,7 @@ BALANCE_PARQUET = PARQUET_DIR / 'wind-ashare-balancesheet.parq'
 CASHFLOW_PARQUET = PARQUET_DIR / 'wind-ahsare-cashflow.parq'
 SW_CLASS_PARQUET = PARQUET_DIR / 'wind-ahsare-SWNindustriesclass.parq'
 INDUSTRY_CODE_PARQUET = PARQUET_DIR / 'wind-ahsare-industriescode.parq'
+STOCK_INDUSTRY_JSON = ROOT / 'env_fit' / 'momentum_stock' / '_cache' / 'stock_industry.json'
 
 AS_OF_PERIODS = ['20241231', '20250331', '20250630', '20250930']
 HISTORY_WINDOWS = 20
@@ -672,10 +673,14 @@ def apply_industry_overrides(industry_name, scores, metrics):
 
 
 def evaluate_stock(meta, periods):
-    wind_info = WIND_INDUSTRY_MAPPING.get(meta.get('ts_code'), {})
+    ts_code = meta.get('ts_code', '')
+    wind_info = WIND_INDUSTRY_MAPPING.get(ts_code, {})
+    # 三级回退：Wind申万 > stock_industry.json > snapshot原始字段
+    meta = dict(meta)
     if wind_info.get('sw_l2_name'):
-        meta = dict(meta)
-        meta['industry'] = wind_info.get('sw_l2_name') or meta.get('industry')
+        meta['industry'] = wind_info['sw_l2_name']
+    elif ts_code in STOCK_INDUSTRY_BASE and STOCK_INDUSTRY_BASE[ts_code]:
+        meta['industry'] = STOCK_INDUSTRY_BASE[ts_code]
     merged_periods = dict(periods or {})
     history_seed = MULTIYEAR_HISTORY.get(meta.get('ts_code')) or {}
     for period, row in history_seed.items():
@@ -1047,11 +1052,20 @@ def evaluate_stock(meta, periods):
             'working_capital_score': ws,
         })
 
+    # 确定行业来源标签
+    if wind_info.get('sw_l2_name'):
+        industry_source = 'wind_sw'
+    elif ts_code in STOCK_INDUSTRY_BASE and STOCK_INDUSTRY_BASE[ts_code]:
+        industry_source = 'stock_industry_json'
+    else:
+        industry_source = 'snapshot_meta'
+
     return {
         'ts_code': meta.get('ts_code'),
         'name': meta.get('name'),
         'industry1': industry1,
         'industry2': meta.get('market') or '',
+        'industry_source': industry_source,
         'wind_industry_l2': wind_info.get('sw_l2_name') or '',
         'wind_industry_l3': wind_info.get('sw_l3_name') or '',
         'wind_industry_l4': wind_info.get('sw_l4_name') or '',
@@ -1087,6 +1101,19 @@ def evaluate_stock(meta, periods):
 
 MULTIYEAR_HISTORY = load_multiyear_history()
 WIND_INDUSTRY_MAPPING = load_wind_industry_mapping()
+
+
+def _load_stock_industry_base():
+    if not STOCK_INDUSTRY_JSON.exists():
+        return {}
+    try:
+        raw = json.loads(STOCK_INDUSTRY_JSON.read_text(encoding='utf-8'))
+        return {k: v.get('industry', '') for k, v in raw.items() if isinstance(v, dict)}
+    except Exception:
+        return {}
+
+
+STOCK_INDUSTRY_BASE = _load_stock_industry_base()
 
 
 def main():
@@ -1144,6 +1171,7 @@ def main():
             str(CASHFLOW_PARQUET),
             str(SW_CLASS_PARQUET),
             str(INDUSTRY_CODE_PARQUET),
+            str(STOCK_INDUSTRY_JSON),
         ],
         'industry_mapping_source': 'Wind申万行业(2021版)',
         'industries': industries,
