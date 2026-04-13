@@ -3,12 +3,20 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
+import pandas as pd
+
 ROOT = Path.home() / 'Desktop' / 'gamt-dashboard'
 DATA = ROOT / 'data'
 SNAPSHOT = DATA / 'financial_risk_snapshot.json'
 OUTPUT = DATA / 'financial_risk_factor.json'
 
+PARQUET_DIR = Path.home() / 'Desktop' / '财报数据库'
+INCOME_PARQUET = PARQUET_DIR / 'wind-ashare-income(1).parq'
+BALANCE_PARQUET = PARQUET_DIR / 'wind-ashare-balancesheet.parq'
+CASHFLOW_PARQUET = PARQUET_DIR / 'wind-ahsare-cashflow.parq'
+
 AS_OF_PERIODS = ['20241231', '20250331', '20250630', '20250930']
+HISTORY_WINDOWS = 20
 
 # 行业规则骨架：先给页面可用的解释器底座，后续可继续细化
 RULEBOOK = {
@@ -302,6 +310,125 @@ def classify_risk(score):
     return '低'
 
 
+def load_multiyear_history():
+    if not (INCOME_PARQUET.exists() and BALANCE_PARQUET.exists() and CASHFLOW_PARQUET.exists()):
+        return {}
+
+    income_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'TOT_OPER_REV', 'NET_PROFIT_EXCL_MIN_INT_INC']
+    balance_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'MONETARY_CAP', 'ST_BORROW', 'ACCT_RCV', 'INVENTORIES', 'TOT_ASSETS', 'TOT_LIAB', 'TOT_CUR_ASSETS', 'TOT_CUR_LIAB']
+    cashflow_cols = ['S_INFO_WINDCODE', 'REPORT_PERIOD', 'NET_CASH_FLOWS_OPER_ACT']
+
+    income = pd.read_parquet(INCOME_PARQUET)
+    balance = pd.read_parquet(BALANCE_PARQUET)
+    cashflow = pd.read_parquet(CASHFLOW_PARQUET)
+
+    income = income[income_cols]
+    balance = balance[balance_cols]
+    cashflow = cashflow[cashflow_cols]
+
+    income = income.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'TOT_OPER_REV': 'tot_oper_rev_cum',
+        'NET_PROFIT_EXCL_MIN_INT_INC': 'net_profit_cum',
+    })
+    balance = balance.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'MONETARY_CAP': 'money_cap',
+        'ST_BORROW': 'st_borr',
+        'ACCT_RCV': 'accounts_receiv',
+        'INVENTORIES': 'inventories',
+        'TOT_ASSETS': 'tot_assets',
+        'TOT_LIAB': 'tot_liab',
+        'TOT_CUR_ASSETS': 'tot_cur_assets',
+        'TOT_CUR_LIAB': 'tot_cur_liab',
+    })
+    cashflow = cashflow.rename(columns={
+        'S_INFO_WINDCODE': 'ts_code',
+        'REPORT_PERIOD': 'end_date',
+        'NET_CASH_FLOWS_OPER_ACT': 'n_cashflow_act_cum',
+    })
+
+    merged = income.merge(balance, on=['ts_code', 'end_date'], how='outer').merge(cashflow, on=['ts_code', 'end_date'], how='outer')
+    merged = merged.dropna(subset=['ts_code', 'end_date'])
+    merged['end_date'] = merged['end_date'].astype(str)
+    merged = merged[merged['end_date'].str.len() == 8].copy()
+    merged['year'] = merged['end_date'].str[:4]
+    merged['mmdd'] = merged['end_date'].str[4:]
+    merged['quarter_order'] = merged['mmdd'].map({'0331': 1, '0630': 2, '0930': 3, '1231': 4})
+    merged = merged[merged['quarter_order'].notna()].copy()
+    merged['quarter_order'] = merged['quarter_order'].astype(int)
+    merged = merged.sort_values(['ts_code', 'end_date'])
+
+    def cum_to_single(series, quarter_order):
+        out = []
+        prev_cum = None
+        prev_q = None
+        for val, q in zip(series.tolist(), quarter_order.tolist()):
+            if pd.isna(val):
+                out.append(None)
+                prev_cum = None
+                prev_q = q
+                continue
+            if q == 1:
+                single = val
+            elif prev_cum is not None and prev_q is not None and q == prev_q + 1:
+                single = val - prev_cum
+            else:
+                single = None
+            out.append(single)
+            prev_cum = val
+            prev_q = q
+        return pd.Series(out, index=series.index, dtype='float64')
+
+    history_map = defaultdict(dict)
+    for code, g in merged.groupby('ts_code'):
+        g = g.sort_values('end_date').copy()
+        g['single_sales'] = pd.Series(index=g.index, dtype='float64')
+        g['single_profit'] = pd.Series(index=g.index, dtype='float64')
+        g['single_ocf'] = pd.Series(index=g.index, dtype='float64')
+        for _, y in g.groupby('year'):
+            idx = y.index
+            g.loc[idx, 'single_sales'] = cum_to_single(y['tot_oper_rev_cum'], y['quarter_order']).values
+            g.loc[idx, 'single_profit'] = cum_to_single(y['net_profit_cum'], y['quarter_order']).values
+            g.loc[idx, 'single_ocf'] = cum_to_single(y['n_cashflow_act_cum'], y['quarter_order']).values
+
+        g['sales_yoy'] = g['single_sales'].pct_change(4, fill_method=None) * 100
+        g['profit_yoy'] = g['single_profit'].pct_change(4, fill_method=None) * 100
+        g['q_ocf_to_sales'] = (g['single_ocf'] / g['single_sales']) * 100
+        g['ocf_to_or'] = g['single_ocf'] / g['single_sales']
+        g['debt_to_assets'] = (g['tot_liab'] / g['tot_assets']) * 100
+        g['current_ratio'] = g['tot_cur_assets'] / g['tot_cur_liab']
+        g['quick_ratio'] = (g['tot_cur_assets'] - g['inventories']) / g['tot_cur_liab']
+        g['inv_turn'] = (g['single_sales'] * 4) / g['inventories']
+        g['ar_turn'] = (g['single_sales'] * 4) / g['accounts_receiv']
+
+        for _, row in g.iterrows():
+            end_date = str(row['end_date'])
+            history_map[code][end_date] = {
+                'ts_code': code,
+                'end_date': end_date,
+                'q_dtprofit_yoy': to_float(row.get('profit_yoy')),
+                'q_sales_yoy': to_float(row.get('sales_yoy')),
+                'q_ocf_to_sales': to_float(row.get('q_ocf_to_sales')),
+                'ocf_to_or': to_float(row.get('ocf_to_or')),
+                'debt_to_assets': to_float(row.get('debt_to_assets')),
+                'current_ratio': to_float(row.get('current_ratio')),
+                'quick_ratio': to_float(row.get('quick_ratio')),
+                'inv_turn': to_float(row.get('inv_turn')),
+                'ar_turn': to_float(row.get('ar_turn')),
+                'money_cap': to_float(row.get('money_cap')),
+                'st_borr': to_float(row.get('st_borr')),
+                'accounts_receiv': to_float(row.get('accounts_receiv')),
+                'inventories': to_float(row.get('inventories')),
+                'n_cashflow_act': to_float(row.get('single_ocf')),
+                'single_profit': to_float(row.get('single_profit')),
+                'single_sales': to_float(row.get('single_sales')),
+            }
+    return history_map
+
+
 def factor_text(label, score):
     if score >= 0.85:
         level = '明显承压'
@@ -314,25 +441,203 @@ def factor_text(label, score):
     return f'{label}{level}'
 
 
+def describe_profit_change(yoy, current_profit, prior_profit):
+    yoy = to_float(yoy)
+    current_profit = to_float(current_profit)
+    prior_profit = to_float(prior_profit)
+    eps = 1e-6
+
+    if current_profit is None and yoy is None:
+        return None
+    if current_profit is not None and prior_profit is not None:
+        if current_profit < -eps and prior_profit > eps:
+            return '由盈转亏'
+        if current_profit > eps and prior_profit < -eps:
+            return '由亏转盈'
+        if current_profit < -eps and prior_profit < -eps:
+            if abs(current_profit) > abs(prior_profit) * 1.05:
+                return '亏损扩大'
+            if abs(current_profit) < abs(prior_profit) * 0.95:
+                return '亏损收窄'
+            return '持续亏损'
+    if yoy is not None:
+        return f'净利润同比{yoy:.1f}%'
+    return None
+
+
+def profit_score_from_metrics(yoy, sales_yoy, current_profit=None, prior_profit=None):
+    yoy = to_float(yoy)
+    sales_yoy = to_float(sales_yoy)
+    current_profit = to_float(current_profit)
+    prior_profit = to_float(prior_profit)
+    eps = 1e-6
+
+    score = 0.30
+    if current_profit is not None and prior_profit is not None:
+        if current_profit < -eps and prior_profit > eps:
+            score += 0.54
+        elif current_profit < -eps and prior_profit < -eps:
+            if abs(current_profit) > abs(prior_profit) * 1.2:
+                score += 0.48
+            elif abs(current_profit) > abs(prior_profit) * 1.05:
+                score += 0.34
+            else:
+                score += 0.24
+        elif current_profit > eps and prior_profit < -eps:
+            score += 0.12
+        elif yoy is not None:
+            if yoy < -100:
+                score += 0.48
+            elif yoy < -50:
+                score += 0.34
+            elif yoy < 0:
+                score += 0.18
+    elif yoy is not None:
+        if yoy < -100:
+            score += 0.48
+        elif yoy < -50:
+            score += 0.34
+        elif yoy < 0:
+            score += 0.18
+
+    if sales_yoy is not None:
+        if sales_yoy < -20:
+            score += 0.12
+        elif sales_yoy < 0:
+            score += 0.06
+    return clamp(score)
+
+
+def normalize_industry_name(name):
+    name = (name or '').strip()
+    alias_map = {
+        '建筑装饰': '建筑工程',
+        '环保': '环境保护',
+        '电子': '半导体',
+        '医药生物': '生物制药',
+        '食品饮料': '食品',
+        '计算机': '软件服务',
+        '非银金融': '证券',
+        '全国地产': '房地产',
+        '区域地产': '房地产',
+        '元器件': '半导体',
+        '化学制药': '生物制药',
+    }
+    return alias_map.get(name, name)
+
+
+def apply_industry_overrides(industry_name, scores, metrics):
+    rule_name = normalize_industry_name(industry_name)
+    profit_score = scores['profit_score']
+    cashflow_score = scores['cashflow_score']
+    debt_score = scores['debt_score']
+    working_capital_score = scores['working_capital_score']
+
+    latest_profit = metrics.get('latest_profit')
+    latest_sales = metrics.get('latest_sales')
+    latest_ncf = metrics.get('latest_ncf')
+    latest_debt = metrics.get('latest_debt')
+    latest_ar_turn = metrics.get('latest_ar_turn')
+    latest_inv_turn = metrics.get('latest_inv_turn')
+    gap = metrics.get('gap')
+    sales_down_streak = metrics.get('sales_down_streak', 0)
+    ocf_sales_down_streak = metrics.get('ocf_sales_down_streak', 0)
+    debt_up_streak = metrics.get('debt_up_streak', 0)
+    ar_turn_down_streak = metrics.get('ar_turn_down_streak', 0)
+    inv_turn_down_streak = metrics.get('inv_turn_down_streak', 0)
+
+    if rule_name in {'建筑工程', '环境保护'}:
+        cashflow_score = clamp(cashflow_score + 0.06)
+        working_capital_score = clamp(working_capital_score + 0.08)
+        if gap is not None and gap < 0:
+            debt_score = clamp(debt_score + 0.06)
+
+    elif rule_name in {'半导体', '电子', '元器件'}:
+        working_capital_score = clamp(working_capital_score + 0.10)
+        if inv_turn_down_streak >= 2:
+            working_capital_score = clamp(working_capital_score + 0.06)
+        if latest_ncf is not None and latest_ncf < 0:
+            cashflow_score = clamp(cashflow_score + 0.04)
+        if latest_profit is not None and latest_profit < 0 and latest_ncf is not None and latest_ncf > 0 and gap is not None and gap > 0:
+            profit_score = clamp(profit_score - 0.08)
+
+    elif rule_name in {'生物制药', '化学制药', '医药生物'}:
+        cashflow_score = clamp(cashflow_score + 0.06)
+        debt_score = clamp(debt_score + 0.04)
+        if latest_sales is not None and latest_sales > 20 and gap is not None and gap > 0:
+            profit_score = clamp(profit_score - 0.06)
+
+    elif rule_name in {'食品', '食品饮料', '轻工制造', '纺织服饰'}:
+        working_capital_score = clamp(working_capital_score + 0.08)
+        if sales_down_streak >= 2:
+            profit_score = clamp(profit_score + 0.06)
+        if inv_turn_down_streak >= 2:
+            working_capital_score = clamp(working_capital_score + 0.04)
+
+    elif rule_name in {'软件服务', '计算机'}:
+        cashflow_score = clamp(cashflow_score + 0.08)
+        working_capital_score = clamp(working_capital_score + 0.06)
+        if latest_sales is not None and latest_sales < 0:
+            profit_score = clamp(profit_score + 0.04)
+
+    elif rule_name == '房地产':
+        debt_score = clamp(debt_score + 0.10)
+        cashflow_score = clamp(cashflow_score + 0.06)
+        if gap is not None and gap < 0:
+            debt_score = clamp(debt_score + 0.08)
+
+    elif rule_name in {'证券', '银行', '多元金融', '非银金融'}:
+        cashflow_score = max(0.30, cashflow_score - 0.12)
+        debt_score = max(0.26, debt_score - 0.12)
+        working_capital_score = max(0.28, working_capital_score - 0.08)
+        if latest_profit is not None and latest_profit < 0:
+            profit_score = clamp(profit_score + 0.04)
+        if latest_sales is not None and latest_sales < 0:
+            profit_score = clamp(profit_score + 0.04)
+
+    scores.update({
+        'profit_score': clamp(profit_score),
+        'cashflow_score': clamp(cashflow_score),
+        'debt_score': clamp(debt_score),
+        'working_capital_score': clamp(working_capital_score),
+        'rule_name': rule_name,
+    })
+    return scores
+
+
 def evaluate_stock(meta, periods):
-    rows = {p: periods.get(p) or {} for p in AS_OF_PERIODS}
+    merged_periods = dict(periods or {})
+    history_seed = MULTIYEAR_HISTORY.get(meta.get('ts_code')) or {}
+    for period, row in history_seed.items():
+        base = dict(row or {})
+        base.update(merged_periods.get(period) or {})
+        merged_periods[period] = base
 
-    profit_vals = [to_float(rows[p].get('q_dtprofit_yoy')) for p in AS_OF_PERIODS]
-    sales_vals = [to_float(rows[p].get('q_sales_yoy')) for p in AS_OF_PERIODS]
-    ocf_sales_vals = [to_float(rows[p].get('q_ocf_to_sales')) for p in AS_OF_PERIODS]
-    ocf_or_vals = [to_float(rows[p].get('ocf_to_or')) for p in AS_OF_PERIODS]
-    debt_vals = [to_float(rows[p].get('debt_to_assets')) for p in AS_OF_PERIODS]
-    current_vals = [to_float(rows[p].get('current_ratio')) for p in AS_OF_PERIODS]
-    quick_vals = [to_float(rows[p].get('quick_ratio')) for p in AS_OF_PERIODS]
-    inv_turn_vals = [to_float(rows[p].get('inv_turn')) for p in AS_OF_PERIODS]
-    ar_turn_vals = [to_float(rows[p].get('ar_turn')) for p in AS_OF_PERIODS]
-    money_vals = [to_float(rows[p].get('money_cap')) for p in AS_OF_PERIODS]
-    st_borr_vals = [to_float(rows[p].get('st_borr')) for p in AS_OF_PERIODS]
-    ar_vals = [to_float(rows[p].get('accounts_receiv')) for p in AS_OF_PERIODS]
-    inv_vals = [to_float(rows[p].get('inventories')) for p in AS_OF_PERIODS]
-    ncf_vals = [to_float(rows[p].get('n_cashflow_act')) for p in AS_OF_PERIODS]
+    ordered_periods = sorted(merged_periods.keys())
+    if not ordered_periods:
+        ordered_periods = AS_OF_PERIODS[:]
+    score_periods = ordered_periods[-HISTORY_WINDOWS:] if len(ordered_periods) > HISTORY_WINDOWS else ordered_periods
+    display_periods = score_periods
 
-    latest = rows.get(AS_OF_PERIODS[-1]) or rows.get(AS_OF_PERIODS[0]) or {}
+    rows = {p: merged_periods.get(p) or {} for p in score_periods}
+
+    profit_vals = [to_float(rows[p].get('q_dtprofit_yoy')) for p in score_periods]
+    sales_vals = [to_float(rows[p].get('q_sales_yoy')) for p in score_periods]
+    ocf_sales_vals = [to_float(rows[p].get('q_ocf_to_sales')) for p in score_periods]
+    ocf_or_vals = [to_float(rows[p].get('ocf_to_or')) for p in score_periods]
+    debt_vals = [to_float(rows[p].get('debt_to_assets')) for p in score_periods]
+    current_vals = [to_float(rows[p].get('current_ratio')) for p in score_periods]
+    quick_vals = [to_float(rows[p].get('quick_ratio')) for p in score_periods]
+    inv_turn_vals = [to_float(rows[p].get('inv_turn')) for p in score_periods]
+    ar_turn_vals = [to_float(rows[p].get('ar_turn')) for p in score_periods]
+    money_vals = [to_float(rows[p].get('money_cap')) for p in score_periods]
+    st_borr_vals = [to_float(rows[p].get('st_borr')) for p in score_periods]
+    ar_vals = [to_float(rows[p].get('accounts_receiv')) for p in score_periods]
+    inv_vals = [to_float(rows[p].get('inventories')) for p in score_periods]
+    ncf_vals = [to_float(rows[p].get('n_cashflow_act')) for p in score_periods]
+
+    latest_period = score_periods[-1]
+    latest = rows.get(latest_period) or {}
     latest_profit = next((x for x in reversed(profit_vals) if x is not None), None)
     latest_sales = next((x for x in reversed(sales_vals) if x is not None), None)
     latest_ocf_sales = next((x for x in reversed(ocf_sales_vals) if x is not None), None)
@@ -347,24 +652,42 @@ def evaluate_stock(meta, periods):
     latest_ar = next((x for x in reversed(ar_vals) if x is not None), None)
     latest_inv = next((x for x in reversed(inv_vals) if x is not None), None)
     latest_ncf = next((x for x in reversed(ncf_vals) if x is not None), None)
+    single_profit_vals = [to_float(rows[p].get('single_profit')) for p in score_periods]
+    latest_single_profit = next((x for x in reversed(single_profit_vals) if x is not None), None)
+    latest_single_profit_idx = next((i for i in range(len(single_profit_vals) - 1, -1, -1) if single_profit_vals[i] is not None), None)
+    prior_single_profit = single_profit_vals[latest_single_profit_idx - 4] if latest_single_profit_idx is not None and latest_single_profit_idx >= 4 else None
+
+    def worsening_streak(vals, worse_when='down'):
+        clean = [x for x in vals if x is not None]
+        if len(clean) < 2:
+            return 0
+        streak = 0
+        for prev, cur in zip(clean[:-1], clean[1:]):
+            bad = cur < prev if worse_when == 'down' else cur > prev
+            if bad:
+                streak += 1
+            else:
+                streak = 0
+        return streak
+
+    def count_bad(vals, predicate):
+        return sum(1 for x in vals if x is not None and predicate(x))
+
+    sales_down_streak = worsening_streak(sales_vals, 'down')
+    ocf_sales_down_streak = worsening_streak(ocf_sales_vals, 'down')
+    debt_up_streak = worsening_streak(debt_vals, 'up')
+    current_down_streak = worsening_streak(current_vals, 'down')
+    quick_down_streak = worsening_streak(quick_vals, 'down')
+    ar_turn_down_streak = worsening_streak(ar_turn_vals, 'down')
+    inv_turn_down_streak = worsening_streak(inv_turn_vals, 'down')
+
+    neg_profit_count = count_bad(profit_vals, lambda x: x < 0)
+    neg_ncf_count = count_bad(ncf_vals, lambda x: x < 0)
+    weak_sales_count = count_bad(sales_vals, lambda x: x < 0)
+    weak_ocf_sales_count = count_bad(ocf_sales_vals, lambda x: x < 0)
 
     # profit score
-    profit_score = 0.30
-    if latest_profit is not None:
-        if latest_profit < -100:
-            profit_score += 0.48
-        elif latest_profit < -50:
-            profit_score += 0.34
-        elif latest_profit < 0:
-            profit_score += 0.18
-    if latest_sales is not None:
-        if latest_sales < -20:
-            profit_score += 0.12
-        elif latest_sales < 0:
-            profit_score += 0.06
-    neg_profit_count = sum(1 for x in profit_vals if x is not None and x < 0)
-    profit_score += min(0.16, neg_profit_count * 0.04)
-    profit_score = clamp(profit_score)
+    profit_score = profit_score_from_metrics(latest_profit, latest_sales, latest_single_profit, prior_single_profit)
 
     # cashflow score
     cashflow_score = 0.30
@@ -377,8 +700,11 @@ def evaluate_stock(meta, periods):
             cashflow_score += 0.12
     if latest_ocf_or is not None and latest_ocf_or < 0:
         cashflow_score += 0.12
-    neg_ncf_count = sum(1 for x in ncf_vals if x is not None and x < 0)
     cashflow_score += min(0.16, neg_ncf_count * 0.04)
+    if ocf_sales_down_streak >= 2:
+        cashflow_score += 0.08
+    if weak_ocf_sales_count >= 6:
+        cashflow_score += 0.06
     cashflow_score = clamp(cashflow_score)
 
     # debt score
@@ -401,6 +727,12 @@ def evaluate_stock(meta, periods):
         debt_score += 0.08
     if latest_quick is not None and latest_quick < 0.8:
         debt_score += 0.08
+    if debt_up_streak >= 2:
+        debt_score += 0.06
+    if current_down_streak >= 2:
+        debt_score += 0.04
+    if quick_down_streak >= 2:
+        debt_score += 0.04
     debt_score = clamp(debt_score)
 
     # working capital score
@@ -417,16 +749,41 @@ def evaluate_stock(meta, periods):
         working_capital_score += 0.10
     if latest_inv_turn is not None and latest_inv_turn < 1:
         working_capital_score += 0.10
+    if ar_turn_down_streak >= 2:
+        working_capital_score += 0.06
+    if inv_turn_down_streak >= 2:
+        working_capital_score += 0.06
     working_capital_score = clamp(working_capital_score)
 
-    # 科技/高研发行业修正：避免单纯按利润误伤
     industry1 = (meta.get('industry') or '未分类').strip() or '未分类'
-    if industry1 in {'电子', '医药生物', '电力设备'}:
-        if latest_profit is not None and latest_profit < 0 and latest_ncf is not None and latest_ncf > 0 and gap is not None and gap > 0:
-            profit_score = max(0.30, profit_score - 0.10)
-        if latest_profit is not None and latest_profit < -50 and latest_ncf is not None and latest_ncf < 0 and gap is not None and gap < 0:
-            debt_score = clamp(debt_score + 0.05)
-            working_capital_score = clamp(working_capital_score + 0.05)
+    scores = apply_industry_overrides(
+        industry1,
+        {
+            'profit_score': profit_score,
+            'cashflow_score': cashflow_score,
+            'debt_score': debt_score,
+            'working_capital_score': working_capital_score,
+        },
+        {
+            'latest_profit': latest_profit,
+            'latest_sales': latest_sales,
+            'latest_ncf': latest_ncf,
+            'latest_debt': latest_debt,
+            'latest_ar_turn': latest_ar_turn,
+            'latest_inv_turn': latest_inv_turn,
+            'gap': gap,
+            'sales_down_streak': sales_down_streak,
+            'ocf_sales_down_streak': ocf_sales_down_streak,
+            'debt_up_streak': debt_up_streak,
+            'ar_turn_down_streak': ar_turn_down_streak,
+            'inv_turn_down_streak': inv_turn_down_streak,
+        },
+    )
+    profit_score = scores['profit_score']
+    cashflow_score = scores['cashflow_score']
+    debt_score = scores['debt_score']
+    working_capital_score = scores['working_capital_score']
+    rule_name = scores['rule_name']
 
     landmine_score = round((profit_score + cashflow_score + debt_score + working_capital_score) / 4, 4)
     risk_level = classify_risk(landmine_score)
@@ -450,8 +807,10 @@ def evaluate_stock(meta, periods):
     worst_metric = reason_map[primary_reason]
 
     why_parts = []
-    if latest_profit is not None and latest_profit < 0:
-        why_parts.append(f'净利润同比{latest_profit:.1f}%')
+    if latest_profit is not None or latest_single_profit is not None:
+        profit_desc = describe_profit_change(latest_profit, latest_single_profit, prior_single_profit)
+        if profit_desc:
+            why_parts.append(profit_desc)
     if latest_ncf is not None and latest_ncf < 0:
         why_parts.append('经营现金流为负')
     if gap is not None and gap < 0:
@@ -464,10 +823,36 @@ def evaluate_stock(meta, periods):
         why_parts = ['综合财务质量偏弱']
     why_dangerous = '；'.join(why_parts)
 
-    industry_rule = RULEBOOK.get(industry1, DEFAULT_RULE)
+    industry_rule = RULEBOOK.get(industry1) or RULEBOOK.get(rule_name) or DEFAULT_RULE
     why_industry = industry_rule.get('logic', '该行业需同时观察利润、现金流、资产负债表和营运质量是否同步恶化。')
 
     exclude_flag = 1 if landmine_score >= 0.72 or (gap is not None and gap < 0 and latest_ncf is not None and latest_ncf < 0) else 0
+
+    persistent_worsening_count = 0
+    persistent_worsening_count += 1 if neg_profit_count >= 6 else 0
+    persistent_worsening_count += 1 if neg_ncf_count >= 6 else 0
+    persistent_worsening_count += 1 if sales_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if ocf_sales_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if debt_up_streak >= 2 else 0
+    persistent_worsening_count += 1 if ar_turn_down_streak >= 2 else 0
+    persistent_worsening_count += 1 if inv_turn_down_streak >= 2 else 0
+    is_persistently_worsening = 1 if persistent_worsening_count >= 2 else 0
+
+    worsening_signals = []
+    if neg_profit_count >= 6:
+        worsening_signals.append(f'近{len(score_periods)}期利润负增速出现{neg_profit_count}次')
+    if neg_ncf_count >= 6:
+        worsening_signals.append(f'近{len(score_periods)}期经营现金流为负出现{neg_ncf_count}次')
+    if sales_down_streak >= 2:
+        worsening_signals.append('营收增速连续走弱')
+    if ocf_sales_down_streak >= 2:
+        worsening_signals.append('经营现金流/收入连续走弱')
+    if debt_up_streak >= 2:
+        worsening_signals.append('资产负债率连续抬升')
+    if ar_turn_down_streak >= 2:
+        worsening_signals.append('应收周转连续变慢')
+    if inv_turn_down_streak >= 2:
+        worsening_signals.append('存货周转连续变慢')
 
     # ── 造假预警因子（勾稽异常检测）──────────────────────────────────────
     # 不下"造假结论"，只标记"报表勾稽对不上"的疑点，输出 high/mid/low 三档
@@ -520,7 +905,7 @@ def evaluate_stock(meta, periods):
     fraud_risk_score = round(min(0.99, 0.20 + n_signals * 0.18), 4)
     # ─────────────────────────────────────────────────────────────────────
 
-    def _period_scores(r):
+    def _period_scores(r, prev_same_q=None):
         """给单个截面算四个子分（简化版，只用当期数据）"""
         qp = to_float(r.get('q_dtprofit_yoy'))
         qs_val = to_float(r.get('q_sales_yoy'))
@@ -532,13 +917,10 @@ def evaluate_stock(meta, periods):
         qcr = to_float(r.get('current_ratio'))
         qat = to_float(r.get('ar_turn'))
         qit = to_float(r.get('inv_turn'))
+        current_single_profit = to_float(r.get('single_profit'))
+        prior_single_profit = to_float((prev_same_q or {}).get('single_profit'))
 
-        ps = 0.30
-        if qp is not None:
-            ps += 0.48 if qp < -100 else (0.34 if qp < -50 else (0.18 if qp < 0 else 0))
-        if qs_val is not None:
-            ps += 0.12 if qs_val < -20 else (0.06 if qs_val < 0 else 0)
-        ps = clamp(ps)
+        ps = profit_score_from_metrics(qp, qs_val, current_single_profit, prior_single_profit)
 
         cs = 0.30
         if qn is not None and qn < 0:
@@ -568,23 +950,26 @@ def evaluate_stock(meta, periods):
         return round(ps, 3), round(cs, 3), round(ds, 3), round(ws, 3)
 
     history = []
-    labels = ['前年年报', '去年Q1', '去年Q2', '去年Q3']
-    for label, p in zip(labels, AS_OF_PERIODS):
-        r = rows.get(p) or {}
-        ps, cs, ds, ws = _period_scores(r)
+    for i, p in enumerate(display_periods):
+        r = merged_periods.get(p) or {}
+        prev_same_q = merged_periods.get(display_periods[i - 4]) if i >= 4 else None
+        ps, cs, ds, ws = _period_scores(r, prev_same_q)
         qp = to_float(r.get('q_dtprofit_yoy'))
         qn = to_float(r.get('n_cashflow_act'))
         qm = to_float(r.get('money_cap'))
         qs = to_float(r.get('st_borr'))
+        current_single_profit = to_float(r.get('single_profit'))
+        prior_single_profit = to_float((prev_same_q or {}).get('single_profit'))
         parts = []
-        if qp is not None:
-            parts.append(f'净利润同比{qp:.1f}%')
+        profit_desc = describe_profit_change(qp, current_single_profit, prior_single_profit)
+        if profit_desc:
+            parts.append(profit_desc)
         if qn is not None:
             parts.append('经营现金流为负' if qn < 0 else '经营现金流为正')
         if qm is not None and qs is not None:
             parts.append('货币资金低于短债' if qm < qs else '货币资金覆盖短债')
         history.append({
-            'label': label,
+            'label': p,
             'text': '，'.join(parts) if parts else '暂无数据',
             'profit_score': ps,
             'cashflow_score': cs,
@@ -603,7 +988,12 @@ def evaluate_stock(meta, periods):
         'worst_metric': worst_metric,
         'why_dangerous': why_dangerous,
         'why_industry': why_industry,
+        'industry_rule_name': rule_name,
         'exclude_flag': exclude_flag,
+        'is_persistently_worsening': is_persistently_worsening,
+        'persistent_worsening_count': persistent_worsening_count,
+        'worsening_signals': worsening_signals,
+        'history_periods_used': score_periods,
         'history': history,
         'profit_score': round(profit_score, 4),
         'cashflow_score': round(cashflow_score, 4),
@@ -614,6 +1004,9 @@ def evaluate_stock(meta, periods):
         'fraud_risk_level': fraud_risk_level,
         'fraud_signals': fraud_signals,
     }
+
+
+MULTIYEAR_HISTORY = load_multiyear_history()
 
 
 def main():
@@ -663,8 +1056,8 @@ def main():
         })
 
     out = {
-        'as_of': 'Tushare 全市场快照 / 四截面',
-        'source_files': [str(SNAPSHOT)],
+        'as_of': '多年财报底座 + 最新快照融合',
+        'source_files': [str(SNAPSHOT), str(INCOME_PARQUET), str(BALANCE_PARQUET), str(CASHFLOW_PARQUET)],
         'industries': industries,
         'stocks': sorted(stocks, key=lambda x: x['landmine_score'], reverse=True),
     }

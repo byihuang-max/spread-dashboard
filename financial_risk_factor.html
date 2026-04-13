@@ -117,6 +117,28 @@ a{color:inherit;text-decoration:none}
 .chart-xs{width:100%;height:480px}
 .sample-tab{background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer}
 .sample-tab.active{background:#1a3a6e;border-color:#5d9cff;color:#fff}
+.page-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 20px}
+.page-tab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;transition:.18s
+}
+.page-tab.active{background:linear-gradient(135deg,#1a3a6e,#214b8f);border-color:#6ea8ff;color:#fff;box-shadow:0 10px 24px rgba(47,109,214,.22)}
+.page-panel{display:none}
+.page-panel.active{display:block}
+.validation-subtabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 16px}
+.validation-subtab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s
+}
+.validation-subtab.active{background:#163562;border-color:#5d9cff;color:#fff}
+.validation-panel{display:none}
+.validation-panel.active{display:block}
+.industry-subtabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.industry-subtab{
+  background:#0c1830;border:1px solid #22314d;color:#8fbfff;border-radius:12px;
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s
+}
+.industry-subtab.active{background:#163562;border-color:#5d9cff;color:#fff}
 
 .section-title .tag{font-size:12px;color:#7dc3ff;padding:5px 9px;border-radius:999px;background:#10213f;border:1px solid #22314d}
 .industry-shell{display:block}
@@ -238,6 +260,13 @@ window.onerror=function(msg,src,line,col,err){
 
   <div class="summary-strip" id="overviewCards"></div>
 
+  <div class="page-tabs">
+    <button class="page-tab active" data-page-tab="risk">风险地图</button>
+    <button class="page-tab" data-page-tab="validation">财报验证</button>
+  </div>
+
+  <div class="page-panel active" id="riskMapPanel">
+
   <div class="layout" style="margin-top:20px">
     <div class="card">
       <div class="section-title">
@@ -294,6 +323,10 @@ window.onerror=function(msg,src,line,col,err){
       <div class="tag">讲清行业为什么看这些指标</div>
     </div>
     <div class="industry-shell">
+      <div class="industry-subtabs">
+        <button class="industry-subtab active" data-industry-mode="primary">主行业</button>
+        <button class="industry-subtab" data-industry-mode="special">特例行业</button>
+      </div>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
         <input id="industrySearch" placeholder="搜索行业…" style="flex:1;background:#0c1830;border:1px solid #22314d;color:#d7e0ea;border-radius:10px;padding:8px 12px;font-size:13px">
         <button id="industryMoreBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap">更多行业 ▾</button>
@@ -359,6 +392,7 @@ window.onerror=function(msg,src,line,col,err){
       </select>
       <select id="sortFilter">
         <option value="landmine_score">按总分排序</option>
+        <option value="persistent_worsening_count">按持续恶化条数排序</option>
         <option value="profit_score">按利润恶化排序</option>
         <option value="cashflow_score">按现金流排序</option>
         <option value="debt_score">按短债压力排序</option>
@@ -374,7 +408,9 @@ window.onerror=function(msg,src,line,col,err){
               <th>代码</th>
               <th>名称</th>
               <th>一级行业</th>
+              <th>规则映射</th>
               <th>总分</th>
+              <th>持续恶化</th>
               <th>利润</th>
               <th>现金流</th>
               <th>短债</th>
@@ -400,6 +436,10 @@ window.onerror=function(msg,src,line,col,err){
           <strong>评分说明：</strong>利润恶化=净利润同比+营收同比+连续负值次数；现金流恶化=经营现金流+销售现金比+连续负值次数；短债压力=货币资金/短债覆盖+资产负债率+流动比率；营运资本恶化=应收周转+存货周转。分数越高风险越大，0.3为基础分。
         </div>
         <div class="explain" id="detailExplain"></div>
+        <div id="detailWorsening" style="grid-column:1 / -1;margin-top:0;padding:12px 14px;border-radius:12px;background:#0e1b33;border:1px solid #22314d;display:none">
+          <div style="font-size:12px;color:#7dc3ff;font-weight:700;margin-bottom:6px">↘ 持续恶化链条</div>
+          <div id="detailWorseningSignals" style="font-size:12px;color:#b7c9df;line-height:1.8"></div>
+        </div>
         <div id="detailFraud" style="grid-column:1 / -1;margin-top:0;padding:12px 14px;border-radius:12px;background:#1a0d0d;border:1px solid #4a1a1a;display:none">
           <div style="font-size:12px;color:#ff9a9a;font-weight:700;margin-bottom:6px">⚠️ 造假预警疑点</div>
           <div id="detailFraudSignals" style="font-size:12px;color:#e0a0a0;line-height:1.8"></div>
@@ -408,7 +448,10 @@ window.onerror=function(msg,src,line,col,err){
     </div>
   </div>
 
-  
+  </div>
+
+  <div class="page-panel" id="validationPanel">
+
   <!-- 
   第四层：财报验证层
   ===================
@@ -449,56 +492,70 @@ window.onerror=function(msg,src,line,col,err){
     <!-- 总览 -->
     <div class="summary-strip" id="validationSummaryCards"></div>
 
-    <!-- 一级行业恶化链条验证表 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">一级行业恶化链条验证表</h2>
-      <div class="tag">31个主行业 × 财报后验</div>
-    </div>
-    <div style="overflow-x:auto;margin-bottom:20px">
-      <table class="table" id="chainTable">
-        <thead><tr>
-          <th>行业</th><th>类型</th><th>核心风险</th><th>变得更差的标准</th>
-          <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
-        </tr></thead>
-        <tbody id="chainTableBody"></tbody>
-      </table>
+    <div class="validation-subtabs">
+      <button class="validation-subtab active" data-validation-panel="primary">一级行业链条</button>
+      <button class="validation-subtab" data-validation-panel="special">特例行业</button>
+      <button class="validation-subtab" data-validation-panel="samples">样本清单</button>
     </div>
 
-    <!-- 重点二级行业特例 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">重点二级行业特例</h2>
-      <div class="tag">误判高发行业单独拆解</div>
-    </div>
-    <div style="overflow-x:auto;margin-bottom:20px">
-      <table class="table" id="specialChainTable">
-        <thead><tr>
-          <th>特例行业</th><th>归属主行业</th><th>类型</th><th>核心风险</th>
-          <th>变得更差的标准</th><th>本期主要坏信号</th><th>命中</th><th>漏判</th>
-        </tr></thead>
-        <tbody id="specialChainTableBody"></tbody>
-      </table>
-    </div>
-
-    <!-- 样本清单 -->
-    <div class="section-title" style="margin-top:20px">
-      <h2 style="margin:0;padding:0;border:none;font-size:16px">样本清单</h2>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="sample-tab active" data-type="命中">命中</button>
-        <button class="sample-tab" data-type="漏判">漏判</button>
-        <button class="sample-tab" data-type="争议">争议</button>
-        <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部样本 CSV</button>
-        <button id="sampleExpandBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">查看全部 ▾</button>
+    <div class="validation-panel active" id="validationPrimaryPanel">
+      <!-- 一级行业恶化链条验证表 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">一级行业恶化链条验证表</h2>
+        <div class="tag">31个主行业 × 财报后验</div>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:20px">
+        <table class="table" id="chainTable">
+          <thead><tr>
+            <th>行业</th><th>类型</th><th>核心风险</th><th>变得更差的标准</th>
+            <th>本期主要坏信号</th><th>命中</th><th>漏判</th><th>不应误判情形</th>
+          </tr></thead>
+          <tbody id="chainTableBody"></tbody>
+        </table>
       </div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="table">
-        <thead><tr>
-          <th>类型</th><th>代码</th><th>名称</th><th>行业</th>
-          <th>在剔除名单</th><th>披露日</th><th>坏信号数</th><th>坏信号明细</th>
-        </tr></thead>
-        <tbody id="sampleTableBody"></tbody>
-      </table>
+
+    <div class="validation-panel" id="validationSpecialPanel">
+      <!-- 重点二级行业特例 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">重点二级行业特例</h2>
+        <div class="tag">误判高发行业单独拆解</div>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:20px">
+        <table class="table" id="specialChainTable">
+          <thead><tr>
+            <th>特例行业</th><th>归属主行业</th><th>类型</th><th>核心风险</th>
+            <th>变得更差的标准</th><th>本期主要坏信号</th><th>命中</th><th>漏判</th>
+          </tr></thead>
+          <tbody id="specialChainTableBody"></tbody>
+        </table>
+      </div>
     </div>
+
+    <div class="validation-panel" id="validationSamplesPanel">
+      <!-- 样本清单 -->
+      <div class="section-title" style="margin-top:20px">
+        <h2 style="margin:0;padding:0;border:none;font-size:16px">样本清单</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="sample-tab active" data-type="命中">命中</button>
+          <button class="sample-tab" data-type="漏判">漏判</button>
+          <button class="sample-tab" data-type="争议">争议</button>
+          <button id="downloadSampleCsv" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">下载全部样本 CSV</button>
+          <button id="sampleExpandBtn" style="background:#0c1830;border:1px solid #22314d;color:#7dc3ff;border-radius:10px;padding:5px 12px;font-size:12px;cursor:pointer">查看全部 ▾</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table">
+          <thead><tr>
+            <th>类型</th><th>代码</th><th>名称</th><th>行业</th>
+            <th>在剔除名单</th><th>披露日</th><th>坏信号数</th><th>坏信号明细</th>
+          </tr></thead>
+          <tbody id="sampleTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   </div>
 
   <div class="footer">financial risk factor map · gamt prototype</div>
@@ -524,6 +581,7 @@ const charts = {};
 let INDUSTRIES = [];
 let SPECIAL_VALIDATION_INDUSTRIES = [];
 let industryMode = "primary";
+let industryListExpanded = false;
 
 // 行业元数据：每个行业的生意本质定义 + 因子角色说明
 // definition: 用一段人话讲清楚这个行业的生意本质
@@ -862,15 +920,45 @@ function renderIndustryRank(){
   } catch(e){ renderIndustryRankHtml(); }
 }
 
+function renderIndustryModeTabs(){
+  document.querySelectorAll('.industry-subtab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.industryMode === industryMode);
+  });
+  const list = document.getElementById('industryList');
+  const wrap = document.getElementById('specialIndustryWrap');
+  const search = document.getElementById('industrySearch');
+  const moreBtn = document.getElementById('industryMoreBtn');
+  if(list) list.style.display = industryMode === 'primary' ? '' : 'none';
+  if(wrap) wrap.style.display = industryMode === 'special' ? '' : 'none';
+  if(search) search.style.display = industryMode === 'primary' ? '' : 'none';
+  if(moreBtn) moreBtn.style.display = industryMode === 'primary' ? '' : 'none';
+}
+
+function initIndustryModeTabs(){
+  document.querySelectorAll('.industry-subtab').forEach(btn => {
+    btn.onclick = () => {
+      industryMode = btn.dataset.industryMode || 'primary';
+      if(industryMode === 'primary' && !currentIndustry() && INDUSTRIES.length){
+        state.industry = INDUSTRIES[0].name;
+      }
+      if(industryMode === 'special' && SPECIAL_VALIDATION_INDUSTRIES.length){
+        if(!currentSpecialIndustry()) state.industry = SPECIAL_VALIDATION_INDUSTRIES[0]['特例行业'];
+      }
+      renderIndustryModeTabs();
+      renderIndustrySection();
+    };
+  });
+  renderIndustryModeTabs();
+}
+
 const INDUSTRY_LIST_PAGE = 20;
-let industryListExpanded = false;
 
 function renderIndustryList(){
   const q = (document.getElementById("industrySearch")?.value||"").trim().toLowerCase();
   const filtered = q ? INDUSTRIES.filter(i=>i.name.includes(q)) : INDUSTRIES;
   const shown = (industryListExpanded || q) ? filtered : filtered.slice(0, INDUSTRY_LIST_PAGE);
   document.getElementById("industryList").innerHTML = shown.map(ind => `
-    <button class="industry-btn ${ind.name===state.industry?"active":""}" data-industry="${ind.name}">
+    <button class="industry-btn ${industryMode==='primary' && ind.name===state.industry?"active":""}" data-industry="${ind.name}">
       <div class="name">${ind.name}</div>
       <div class="meta">均值 ${score(ind.avgRisk)} · 剔除 ${ind.excludeCount} · 主因 ${FACTOR_LABELS[ind.primary]}</div>
     </button>
@@ -879,6 +967,7 @@ function renderIndustryList(){
     if(btn.dataset.industry){
       industryMode = 'primary';
       state.industry = btn.dataset.industry;
+      renderIndustryModeTabs();
       renderIndustrySection();
       renderTable();
     }
@@ -886,7 +975,7 @@ function renderIndustryList(){
   const moreBtn = document.getElementById("industryMoreBtn");
   if(moreBtn){
     const hasMore = !q && filtered.length > INDUSTRY_LIST_PAGE;
-    moreBtn.style.display = hasMore ? "" : "none";
+    moreBtn.style.display = industryMode === 'primary' && hasMore ? "" : "none";
     moreBtn.textContent = industryListExpanded ? "收起 ▴" : `更多行业（共 ${filtered.length} 个）▾`;
   }
 }
@@ -916,7 +1005,7 @@ function renderSpecialIndustryList(){
     wrap.style.display = 'none';
     return;
   }
-  wrap.style.display = '';
+  wrap.style.display = industryMode === 'special' ? '' : 'none';
   box.innerHTML = SPECIAL_VALIDATION_INDUSTRIES.map(ind => `
     <button class="industry-btn ${industryMode==='special' && ind['特例行业']===state.industry?"active":""}" data-special-industry="${ind['特例行业']}">
       <div class="name">${ind['特例行业']}</div>
@@ -926,6 +1015,7 @@ function renderSpecialIndustryList(){
   document.querySelectorAll("[data-special-industry]").forEach(btn => btn.onclick = () => {
     industryMode = 'special';
     state.industry = btn.dataset.specialIndustry;
+    renderIndustryModeTabs();
     renderIndustrySection();
   });
 }
@@ -961,6 +1051,7 @@ function renderIndustrySection(){
     document.getElementById('industryDistribution').style.display = 'none';
     document.getElementById('industryDistributionHtml').style.display = 'flex';
     document.getElementById('industryDistributionHtml').innerHTML = `<div class="note" style="padding:18px">后续若接入二级行业全量样本，再补充分布图与分位统计。</div>`;
+    renderIndustryModeTabs();
     renderIndustryList();
     renderSpecialIndustryList();
     return;
@@ -985,6 +1076,7 @@ function renderIndustrySection(){
     {k:"剔除项数量",v:ind.excludeCount,cls:"blue"},
     {k:"主导因子",v:FACTOR_LABELS[ind.primary],cls:"green"}
   ].map(x => `<div class="mini"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div></div>`).join("");
+  renderIndustryModeTabs();
 
   if(charts.factorBar) charts.factorBar.dispose();
   try {
@@ -1031,6 +1123,11 @@ function filteredStocks(){
   }).sort((a,b) => b[sortKey] - a[sortKey]);
 }
 
+function worseningBadge(s){
+  if(!s.is_persistently_worsening) return '<span class="badge badge-green">否</span>';
+  return `<span class="badge badge-blue">是 · ${s.persistent_worsening_count || 0}条</span>`;
+}
+
 function renderTable(){
   const rows = filteredStocks();
   if(!rows.find(r => r.ts_code === state.stockCode) && rows[0]) state.stockCode = rows[0].ts_code;
@@ -1039,7 +1136,9 @@ function renderTable(){
       <td>${s.ts_code.replace('.SZ','').replace('.SH','')}</td>
       <td>${s.name}</td>
       <td>${s.industry1}</td>
+      <td>${s.industry_rule_name || s.industry1 || '-'}</td>
       <td>${score(s.landmine_score)}</td>
+      <td>${worseningBadge(s)}</td>
       <td>${score(s.profit_score)}</td>
       <td>${score(s.cashflow_score)}</td>
       <td>${score(s.debt_score)}</td>
@@ -1061,16 +1160,26 @@ function explainStock(s){
   const focus = (ind?.rule?.focus_metrics || []).filter(Boolean);
   const worst = FACTOR_NAMES.slice().sort((a,b)=>s[b]-s[a]).slice(0,2).map(k=>FACTOR_LABELS[k]);
   const historyText = (s.history || []).map(h => `${h.label}：${h.text}`).join('；');
+  const worseningText = (s.worsening_signals || []).length ? `持续恶化链条目前命中了${s.persistent_worsening_count || 0}条，主要是：${s.worsening_signals.slice(0,3).join('；')}。` : '';
   const fraudText = (s.fraud_signals || []).length ? `另外，报表勾稽上还有${s.fraud_signals.length}条造假预警疑点，主要是：${s.fraud_signals.slice(0,2).join('；')}。` : '';
-  return `${s.name}属于${s.industry1}-${s.industry2}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${historyText ? '四截面表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
+  return `${s.name}属于${s.industry1}-${s.industry2}，规则映射到${s.industry_rule_name || s.industry1}。这个行业重点看${focus.length ? focus.join('、') : '利润、现金流、短债和营运资本'}。该股当前 landmine_score 为 ${score(s.landmine_score)}，位于行业内 ${pct(s.industry_percentile)} 分位，主导矛盾集中在${worst.join('和')}。危险原因是：${s.why_dangerous || s.primary_reason || '待补充'}。${worseningText}${historyText ? '最近展示期表现：' + historyText + '。' : ''}${fraudText}因此它不是单一利润扰动，而是行业框架下多项财务信号同步走弱。`;
 }
 
 function renderDetail(){
   const s = DATA.stocks.find(x => x.ts_code === state.stockCode) || DATA.stocks[0];
   document.getElementById("detailName").textContent = s.name;
-  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
+  document.getElementById("detailMeta").innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2} · 规则映射 ${s.industry_rule_name || s.industry1 || '-'}<br>总分 ${score(s.landmine_score)} · 行业内分位 ${pct(s.industry_percentile)}<br>持续恶化：${s.is_persistently_worsening ? `是（${s.persistent_worsening_count || 0}条）` : '否'}<br>主因：${s.why_dangerous || s.primary_reason || s.worst_metric || '-'}`;
   document.getElementById("detailFlag").innerHTML = badge(s.exclude_flag);
   document.getElementById("detailExplain").textContent = explainStock(s);
+
+  const worseningBox = document.getElementById('detailWorsening');
+  const worseningSignals = s.worsening_signals || [];
+  if(worseningSignals.length > 0){
+    document.getElementById('detailWorseningSignals').innerHTML = worseningSignals.map(sig => `· ${sig}`).join('<br>');
+    worseningBox.style.display = '';
+  } else {
+    worseningBox.style.display = 'none';
+  }
 
   // 造假预警疑点展示
   const fraudBox = document.getElementById('detailFraud');
@@ -1116,10 +1225,11 @@ function renderDetail(){
 }
 
 function stocksToCsv(stocks){
-  const headers = ['股票代码','股票简称','原始行业','归并行业','总分','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
+  const headers = ['股票代码','股票简称','原始行业','归并行业','规则映射','总分','持续恶化标记','持续恶化条数','持续恶化信号','利润分','现金流分','短债分','营运资本分','行业内分位','是否剔除','主因','风险解释'];
   const rows = stocks.map(s => [
-    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1,
-    s.landmine_score, s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
+    s.ts_code, s.name, s.industry1, s.industry_group||s.industry1, s.industry_rule_name||s.industry1,
+    s.landmine_score, s.is_persistently_worsening ? '是' : '否', s.persistent_worsening_count || 0, (s.worsening_signals || []).join('；'),
+    s.profit_score, s.cashflow_score, s.debt_score, s.working_capital_score,
     s.industry_percentile, s.exclude_flag ? '是' : '否',
     s.primary_reason||s.worst_metric||'',
     (s.why_dangerous||'').replace(/,/g,'；')
@@ -1137,6 +1247,54 @@ function downloadCsv(content, filename){
 let VALIDATION = null;
 let validationTab = '命中';
 let sampleExpanded = false;
+let activePageTab = 'risk';
+let activeValidationPanel = 'primary';
+
+function renderPageTabs(){
+  document.querySelectorAll('.page-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pageTab === activePageTab);
+  });
+  const riskPanel = document.getElementById('riskMapPanel');
+  const validationPanel = document.getElementById('validationPanel');
+  if(riskPanel) riskPanel.classList.toggle('active', activePageTab === 'risk');
+  if(validationPanel) validationPanel.classList.toggle('active', activePageTab === 'validation');
+  Object.values(charts).forEach(c => c && c.resize && c.resize());
+}
+
+function initPageTabs(){
+  document.querySelectorAll('.page-tab').forEach(btn => {
+    btn.onclick = () => {
+      activePageTab = btn.dataset.pageTab || 'risk';
+      renderPageTabs();
+    };
+  });
+  renderPageTabs();
+}
+
+function renderValidationPanels(){
+  document.querySelectorAll('.validation-subtab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.validationPanel === activeValidationPanel);
+  });
+  const panelMap = {
+    primary: 'validationPrimaryPanel',
+    special: 'validationSpecialPanel',
+    samples: 'validationSamplesPanel'
+  };
+  Object.entries(panelMap).forEach(([key,id]) => {
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', key === activeValidationPanel);
+  });
+}
+
+function initValidationPanels(){
+  document.querySelectorAll('.validation-subtab').forEach(btn => {
+    btn.onclick = () => {
+      activeValidationPanel = btn.dataset.validationPanel || 'primary';
+      renderValidationPanels();
+    };
+  });
+  renderValidationPanels();
+}
 
 // ── 第四层：财报验证层渲染函数 ──────────────────────────────────
 // 总览卡片：命中数/漏判数/命中率
@@ -1245,6 +1403,7 @@ async function loadValidation(){
     renderValidationChains();
     renderValidationSamples();
     renderSpecialIndustryList();
+    initValidationPanels();
     document.querySelectorAll('.sample-tab').forEach(btn => btn.onclick = () => {
       validationTab = btn.dataset.type;
       sampleExpanded = false;
@@ -1298,7 +1457,9 @@ async function boot(){
   renderHeatmap();
   renderIndustryRank();
   renderIndustryList();
+  initIndustryModeTabs();
   renderIndustrySection();
+  initPageTabs();
   initFilters();
   renderTable();
   loadValidation();

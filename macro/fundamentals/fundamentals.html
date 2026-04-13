@@ -54,6 +54,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 @media(max-width:900px){.hypothesis-grid,.chart-row{grid-template-columns:1fr}}
 .chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
 .chart-note b{color:#374151}
+.status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;margin-left:8px}
+.status-badge.good{background:rgba(34,197,94,.14);color:#166534}.status-badge.warn{background:rgba(245,158,11,.18);color:#92400e}.status-badge.risk{background:rgba(239,68,68,.14);color:#991b1b}.status-badge.info{background:rgba(59,130,246,.12);color:#1d4ed8}
+.sub-summary{font-size:11px;color:#8b92a5;margin:-2px 0 10px 0;line-height:1.7}
+.metric-strip{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 12px 0}.metric-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#f8fafc;border:1px solid #e5e7eb;font-size:11px;color:#4b5563}.metric-chip b{color:#111827}
 .loading{text-align:center;padding:60px;color:#8b92a5}
 </style>
 </head>
@@ -76,22 +80,55 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="chart-row section">
   <div class="chart-box">
+    <h3>🧩 增长总量拆解 <span class="status-badge" id="growthStatus"></span></h3>
+    <div class="sub-summary" id="growthSummary"></div>
+    <div class="metric-strip" id="growthMetrics"></div>
+    <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+    <div class="chart-note"><b>这张图在论证什么：</b>经济修复到底是“少数分项好看”，还是已经扩散到总需求层面。它的核心不是找最强项，而是判断工业、消费、出口、投资四条主线，是否开始形成更广泛、更可持续的接力。<br><b>怎么读：</b>先看广度：四条主线里有几条同时为正、同时改善；再看结构：当前修复主要靠出口、靠政策投资，还是消费也开始跟上；最后看斜率：改善是一次性脉冲，还是已经出现连续抬升。如果只有出口强、内需弱，这更像外需托底；如果消费和投资也同步改善，才更接近内生修复。<br><b>它最终想告诉你什么：</b>这张图本质上是在回答：当前宏观环境能不能支撑更普遍的风险偏好回升。广度越宽，说明修复越不依赖单一部门，增长交易越扎实；广度越窄，说明市场更容易停留在结构性机会，而不是进入全面修复叙事。</div>
+  </div>
+  <div class="chart-box">
+    <h3>💳 信用结构拆解 <span class="status-badge" id="creditStatus"></span></h3>
+    <div class="sub-summary" id="creditSummary"></div>
+    <div class="metric-strip" id="creditMetrics"></div>
+    <div class="chart-wrap"><canvas id="creditChart"></canvas></div>
+    <div class="chart-note"><b>这张图在论证什么：</b>眼下的宽信用，究竟只是政策层面的“托底信用”，还是已经转化成企业和居民愿意加杠杆、愿意扩张的“有效信用”。它要分清楚：总量回升是不是表面改善，还是信用真的开始往实体需求和投资行为里渗透。<br><b>怎么读：</b>先看社融总量，判断信用环境是在扩张还是收缩；再看政府债占比，识别这份扩张里有多少是政策托底；最后看企业中长期贷款、居民中长期贷款和贷款流量有没有同步抬升——如果总量起来了，但企业和居民没接力，那大概率只是政府把总信用托住了。<br><b>它最终想告诉你什么：</b>这张图本质上是在回答：宏观信用是否已经具备把经济修复往下传导的能力。若只是政府债支撑，总量虽稳，但对风险资产的支撑更偏防守型；只有企业和居民信用同时改善，才说明信用脉冲开始转向内生，对顺周期、地产链和盈利修复的意义才更大。</div>
+  </div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3>🏠 地产修复验证 <span class="status-badge" id="propertyStatus"></span></h3>
+    <div class="sub-summary" id="propertySummary"></div>
+    <div class="metric-strip" id="propertyMetrics"></div>
+    <div class="chart-wrap"><canvas id="propertyChart"></canvas></div>
+    <div class="chart-note"><b>这张图在论证什么：</b>地产这条链条，当前到底还是宏观的主要拖累项，还是已经从“持续恶化”转向“边际止血”。它不是拿来喊地产反转的，而是用来判断：地产对总需求、信用和风险偏好的压制，是否已经开始减轻。<br><b>怎么读：</b>先看销售面积，因为销售最接近真实需求；再看地产投资，判断开发端有没有停止继续下探；然后结合居民中长贷、新开工、竣工，去看融资、施工、交付三端有没有出现连续修复。销售改善如果只是短期脉冲，而贷款、投资、开工都没跟上，那只能算边际缓和，不能算真正企稳。<br><b>它最终想告诉你什么：</b>这张图本质上是在回答：地产还能不能继续往下拖宏观。如果销售、投资、新开工仍全面偏弱，地产就是风险源；如果销售先止跌、投资降幅收窄、居民中长贷和交付指标跟上，那地产至少从“持续拖累”变成“拖累减轻”。对配置来说，这决定了你是继续把地产链视为压制项，还是可以开始把它当成边际改善变量。</div>
+  </div>
+  <div class="chart-box">
+    <h3>🗂️ 库存周期验证 <span class="status-badge" id="inventoryStatus"></span></h3>
+    <div class="sub-summary" id="inventorySummary"></div>
+    <div class="metric-strip" id="inventoryMetrics"></div>
+    <div class="chart-wrap"><canvas id="inventoryChart"></canvas></div>
+    <div class="chart-note"><b>这张图在论证什么：</b>企业当前是因为需求转强而主动补库，还是因为销售不顺、价格不行而被动堆库存。它要判断的不是库存高不高，而是库存背后的行为属性：企业是在准备下一轮生产，还是仍在消化上一轮压力。<br><b>怎么读：</b>先看产成品库存方向，判断库存是在累积还是去化；再看工业利润和 PPI 有没有同步修复，因为没有价格和利润改善，企业通常不会真正在经营层面主动补库；最后结合 PMI 产成品库存和原材料库存，看企业是提前备料、准备扩张，还是只是库存被动留在账上。库存升但利润弱，往往不是好事；库存升、利润升、价格也回暖，才更像主动补库。<br><b>它最终想告诉你什么：</b>这张图本质上是在回答：工业链的盈利修复有没有进入更可持续的阶段。如果还在去库或被动补库，顺周期交易持续性有限；如果开始主动补库，往往意味着企业信心、订单和盈利预期正在同步改善，这对工业链、周期股和盈利驱动型行情都更有支撑。</div>
+  </div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
     <h3>📊 PMI 制造业 & 非制造业</h3>
     <div class="chart-wrap"><canvas id="pmiChart"></canvas></div>
     <div class="chart-note">
-      <b>PMI：</b>增长方向的领先指标。<br>
-      <b>大摩框架里它不是孤立数据，</b>而是“增长象限”的核心锚。<br>
-      <b>更重要的是方向：</b>站上50且继续改善，才意味着增长画像真正切强。<br>
-      <b>非制造业PMI：</b>用来验证服务消费和内需修复是否跟上。
+      <b>这张图在证明什么：</b>增长端是在转强，还是只是荣枯线附近反复。<br>
+      <b>怎么读：</b>先看制造业 PMI 是否站稳 50，再看趋势是否继续上行。<br>
+      <b>为什么还看非制造业：</b>用来验证服务消费和内需修复有没有跟上，而不是只看工业一头。
     </div>
   </div>
   <div class="chart-box">
     <h3>📈 CPI / PPI 同比 & 剪刀差</h3>
     <div class="chart-wrap"><canvas id="cpiChart"></canvas></div>
     <div class="chart-note">
-      <b>CPI：</b>终端需求和服务价格。<b>PPI：</b>工业品价格和利润传导。<br>
-      <b>四象限看法：</b>CPI决定通胀温度，PPI决定利润修复斜率。<br>
-      <b>CPI-PPI剪刀差：</b>判断上下游利润分配，不只是看“通胀高低”。
+      <b>这张图在证明什么：</b>价格端是在修复，还是仍处在通缩尾部。<br>
+      <b>怎么读：</b>CPI 看终端需求温度，PPI 看工业价格和利润传导，剪刀差看上下游谁更占优。<br>
+      <b>为什么重要：</b>价格端不稳，很多盈利修复都容易只停留在交易层。
     </div>
   </div>
 </div>
@@ -101,18 +138,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     <h3>🔄 利润周期监控</h3>
     <div class="chart-wrap"><canvas id="profitCycleChart"></canvas></div>
     <div class="chart-note">
-      <b>利润周期：</b>把“价格止跌 → 利润修复 → 股票环境改善”这条链具象化。<br>
-      <b>看点不是绝对高低，</b>而是从筑底切到上行、再到见顶的阶段迁移。<br>
-      <b>它是宏观到股票策略的第一座桥。</b>
+      <b>这张图在证明什么：</b>价格修复有没有真正传到企业利润。<br>
+      <b>怎么读：</b>重点不是单月高低，而是利润周期处在筑底、上行还是见顶。<br>
+      <b>为什么重要：</b>这是宏观改善能不能继续传到股票环境的第一座桥。
     </div>
   </div>
   <div class="chart-box">
     <h3>🌱 内需接棒验证</h3>
     <div class="chart-wrap"><canvas id="demandRecoveryChart"></canvas></div>
     <div class="chart-note">
-      <b>内需接棒：</b>看需求是不是从政策托底转向内生修复。<br>
-      <b>核心是三件事：</b>核心CPI、PPI环比、M1-M2剪刀差。<br>
-      <b>这张图决定风格画像：</b>内需强，价值/顺周期更站得住；内需弱，小盘成长更依赖流动性。
+      <b>这张图在证明什么：</b>需求修复有没有从政策托底，切到内生接力。<br>
+      <b>怎么读：</b>核心看核心 CPI、PPI 环比、M1-M2 剪刀差是否一起改善。<br>
+      <b>为什么重要：</b>内需强，顺周期和价值更站得住；内需弱，成长更多还是靠流动性。
     </div>
   </div>
 </div>
@@ -143,6 +180,38 @@ function chainStatusCls(v){
   if(v==='不支持') return 'reject';
   return 'neutral';
 }
+
+function statusCls(v){
+  if(!v) return 'info';
+  if(['全面修复','有效扩张','弱修复','主动补库'].includes(v)) return 'good';
+  if(['继续探底','偏弱','空转扩张','主动去库'].includes(v)) return 'risk';
+  if(['结构修复','托底扩张','低位企稳','被动补库','被动去库','政策托底'].includes(v)) return 'warn';
+  return 'info';
+}
+function setStatus(id, v){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=v||'';
+  el.className='status-badge '+statusCls(v);
+}
+function fmtNum(v, digits){
+  if(v==null || v===undefined || v==='') return '--';
+  var n=Number(v);
+  if(Number.isNaN(n)) return '--';
+  return n.toFixed(digits==null?1:digits);
+}
+function fmtWanYi(v){
+  if(v==null || v===undefined || v==='') return '--';
+  var n=Number(v);
+  if(Number.isNaN(n)) return '--';
+  return (n/1e12).toFixed(2);
+}
+function renderMetricStrip(id, items){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.innerHTML=(items||[]).map(function(x){ return '<span class="metric-chip"><span>'+x.label+'</span><b>'+x.value+'</b></span>'; }).join('');
+}
+
 function render(){
   document.getElementById('loadingMsg').style.display='none';
   document.getElementById('app').style.display='';
@@ -165,6 +234,10 @@ function render(){
   }
 
   renderHypothesis();
+  renderGrowthBreakdown();
+  renderCreditStructure();
+  renderPropertyRecovery();
+  renderInventoryCycle();
   renderPMI();
   renderCPI();
   renderProfitCycle();
@@ -284,6 +357,92 @@ function renderDemandRecovery(){
     })
     .catch(function(e){console.error('加载内需接棒数据失败:',e)});
 }
+
+function monthLabel(v){ var m=String(v).replace('.0',''); return m.substring(0,4)+'-'+m.substring(4,6); }
+function renderGrowthBreakdown(){
+  var d=(DATA.growth_breakdown||{}).series||[]; if(!d.length)return;
+  var box=DATA.growth_breakdown||{};
+  setStatus('growthStatus', box.status||'');
+  document.getElementById('growthSummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('growthMetrics', [
+    {label:'工业', value:fmtNum(latest.industrial_production_yoy)+'%'},
+    {label:'消费', value:fmtNum(latest.retail_sales_yoy)+'%'},
+    {label:'出口', value:fmtNum(latest.exports_yoy)+'%'},
+    {label:'固投', value:fmtNum(latest.fai_ytd_yoy)+'%'}
+  ]);
+  new Chart(document.getElementById('growthChart'),{type:'line',data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {label:'工业增加值',data:d.map(x=>x.industrial_production_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'社零',data:d.map(x=>x.retail_sales_yoy),borderColor:'#f97316',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'出口',data:d.map(x=>x.exports_yoy),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:0},
+    {label:'固投',data:d.map(x=>x.fai_ytd_yoy),borderColor:'#8b5cf6',borderWidth:2,tension:0.3,pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+function renderCreditStructure(){
+  var d=(DATA.credit_structure||{}).series||[]; if(!d.length)return;
+  var box=DATA.credit_structure||{};
+  setStatus('creditStatus', box.status||'');
+  document.getElementById('creditSummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('creditMetrics', [
+    {label:'社融同比', value:fmtNum(latest.tsf_stock_yoy)+'%'},
+    {label:'政府债占比', value:fmtNum(latest.gov_bond_share_in_tsf)+'%'},
+    {label:'企业中长贷', value:fmtWanYi(latest.corp_medium_long_loan)+'万亿'},
+    {label:'居民中长贷', value:fmtWanYi(latest.household_medium_long_loan)+'万亿'},
+    {label:'贷款流量', value:fmtWanYi(latest.tsf_rmb_loan_flow)+'万亿'}
+  ]);
+  new Chart(document.getElementById('creditChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'社融存量同比',data:d.map(x=>x.tsf_stock_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'bar',label:'政府债占比',data:d.map(x=>x.gov_bond_share_in_tsf),backgroundColor:'rgba(249,115,22,0.35)',borderColor:'#f97316',borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'企业中长贷',data:d.map(x=>x.corp_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+function renderPropertyRecovery(){
+  var d=(DATA.property_recovery||{}).series||[]; if(!d.length)return;
+  d=d.map(function(x){
+    return Object.assign({tsf_rmb_loan_flow:null}, x);
+  });
+  var box=DATA.property_recovery||{};
+  setStatus('propertyStatus', box.status||'');
+  document.getElementById('propertySummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('propertyMetrics', [
+    {label:'销售面积', value:fmtNum(latest.property_sales_area_yoy)+'%'},
+    {label:'地产投资', value:fmtNum(latest.real_estate_investment_ytd_yoy)+'%'},
+    {label:'新开工', value:fmtNum(latest.housing_starts_ytd_yoy)+'%'},
+    {label:'竣工', value:fmtNum(latest.housing_completion_ytd_yoy)+'%'}
+  ]);
+  new Chart(document.getElementById('propertyChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'销售面积同比',data:d.map(x=>x.property_sales_area_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'地产投资同比',data:d.map(x=>x.real_estate_investment_ytd_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'居民中长贷',data:d.map(x=>x.household_medium_long_loan),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'bar',label:'人民币贷款流量',data:d.map(x=>x.tsf_rmb_loan_flow),backgroundColor:'rgba(6,182,212,0.20)',borderColor:'#06b6d4',borderWidth:1,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+
+
+function renderInventoryCycle(){
+  var d=(DATA.inventory_cycle||{}).series||[]; if(!d.length)return;
+  var box=DATA.inventory_cycle||{};
+  setStatus('inventoryStatus', box.status||'');
+  document.getElementById('inventorySummary').textContent=box.summary||'';
+  var latest=box.latest||{};
+  renderMetricStrip('inventoryMetrics', [
+    {label:'产成品库存', value:fmtNum(latest.finished_goods_inventory_yoy)+'%'},
+    {label:'工业利润', value:fmtNum(latest.industrial_profit_ytd_yoy)+'%'},
+    {label:'PPI', value:fmtNum(latest.ppi_yoy_proxy)+'%'},
+    {label:'PMI产成品库存', value:fmtNum(latest.pmi_finished_goods_inventory)}
+  ]);
+  new Chart(document.getElementById('inventoryChart'),{data:{labels:d.map(x=>monthLabel(x.month)),datasets:[
+    {type:'line',label:'产成品库存同比',data:d.map(x=>x.finished_goods_inventory_yoy),borderColor:'#2563eb',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'工业利润累计同比',data:d.map(x=>x.industrial_profit_ytd_yoy),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+    {type:'line',label:'PMI产成品库存',data:d.map(x=>x.pmi_finished_goods_inventory),borderColor:'#10b981',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'PMI原材料库存',data:d.map(x=>x.pmi_raw_material_inventory),borderColor:'#8b5cf6',borderWidth:1.8,tension:0.3,pointRadius:0,yAxisID:'y1'},
+    {type:'line',label:'PPI同比',data:d.map(x=>x.ppi_yoy_proxy),borderColor:'#f59e0b',borderWidth:1.5,tension:0.3,pointRadius:0,borderDash:[4,4],yAxisID:'y'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{position:'left',grid:{color:'#f0f0f0'}},y1:{position:'right',grid:{display:false}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}});
+}
+
 loadData();
 </script>
 </body></html>

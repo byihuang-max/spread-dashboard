@@ -336,3 +336,127 @@ To https://github.com/byihuang-max/spread-dashboard.git
 [18:31:33] ❌ Git 失败: Command '['git', 'push', 'origin', 'main']' timed out after 30 seconds
 [18:31:33] ✅ 完成！
 fatal: Authentication failed for 'https://github.com/byihuang-max/spread-dashboard.git/'
+[18:30:01] 📋 GAMT 投研看板 — 一键更新开始
+[18:30:01] 📋 晚到数据模式：只更新 momentum_stock, patient_capital, timing_factors
+[18:30:01] 📋 ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:01] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:08] ✅   完成 (7.8s)
+[18:30:08] 🔄 运行 env_fit/momentum_stock/momentum_data.py
+[18:30:12] ✅   完成 (3.4s)
+[18:30:12] 🔄 运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:30:32] ✅   完成 (20.3s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:30:32] ✅   完成 (0.1s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/momentum_sector.py
+[18:30:35] ✅   完成 (2.8s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/momentum_warning.py
+[18:30:35] ✅   完成 (0.2s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:30:35] ✅   完成 (0.2s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/inject_momentum.py
+[18:30:36] ✅   完成 (0.2s)
+[18:30:36] 🔄 运行 timing-research/generate_leader_pool.py
+[18:30:36] ✅   完成 (0.1s)
+[18:30:36] 🔄 运行 timing-research/export_leader_pool_history.py
+[18:30:36] ✅   完成 (0.2s)
+[18:30:36] 🔄 运行 timing-research/generate_replay_page.py
+[18:30:36] ✅   完成 (0.2s)
+[18:30:36] 🔄 运行 timing-research/push_limit_replay_feishu.py
+[18:30:38] ✅   完成 (2.0s)
+
+[18:30:38] 📋 ═══ 耐心资本 (patient_capital) ═══
+[18:30:38] 🔄 运行 micro_flow/patient_capital/patient_data.py
+[18:30:47] ✅   完成 (9.4s)
+[18:30:47] 🔄 运行 micro_flow/patient_capital/patient_calc.py
+[18:30:50] ✅   完成 (2.8s)
+
+[18:30:50] 📋 ═══ 择时因子系统 (timing_factors) ═══
+[18:30:50] 🔄 运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[18:31:28] ✅   完成 (37.5s)
+
+[18:31:28] 📋 ═══ 汇总 ═══
+[18:31:28] 📋   ✅ 强势股情绪        (37.3s)
+[18:31:28] 📋   ✅ 耐心资本         (12.2s)
+[18:31:28] 📋   ✅ 择时因子系统       (37.5s)
+[18:31:28] 📋 总耗时: 87.1s
+[18:31:28] 📋 已更新 update_log.json
+[18:31:28] 📋 ═══ Git Push ═══
+[18:31:29] 同步到云端...
+[main 223cb77] auto: update 3/3 modules
+ 61 files changed, 10139 insertions(+), 7559 deletions(-)
+ create mode 100644 timing-research/leader_pool_history/20260409.json
+failed to store: -61
+To https://github.com/byihuang-max/spread-dashboard.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/byihuang-max/spread-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:31:30] ❌ Git 失败: Command '['git', 'push', 'origin', 'main']' returned non-zero exit status 1.
+[18:31:30] ✅ 完成！
+[18:31:33] ✅ 同步完成
+[18:31:33] ✅ 后端已重启
+[18:30:00] 📋 GAMT 投研看板 — 一键更新开始
+[18:30:00] 📋 晚到数据模式：只更新 momentum_stock, patient_capital, timing_factors
+[18:30:00] 📋 ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:00] 🔄 运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:08] ✅   完成 (8.4s)
+[18:30:08] 🔄 运行 env_fit/momentum_stock/momentum_data.py
+[18:30:12] ✅   完成 (3.3s)
+[18:30:12] 🔄 运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:30:32] ✅   完成 (20.2s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:30:32] ✅   完成 (0.1s)
+[18:30:32] 🔄 运行 env_fit/momentum_stock/momentum_sector.py
+[18:30:35] ✅   完成 (2.6s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/momentum_warning.py
+[18:30:35] ✅   完成 (0.2s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:30:35] ✅   完成 (0.2s)
+[18:30:35] 🔄 运行 env_fit/momentum_stock/inject_momentum.py
+[18:30:35] ✅   完成 (0.1s)
+[18:30:35] 🔄 运行 timing-research/generate_leader_pool.py
+[18:30:35] ✅   完成 (0.1s)
+[18:30:35] 🔄 运行 timing-research/export_leader_pool_history.py
+[18:30:35] ✅   完成 (0.2s)
+[18:30:35] 🔄 运行 timing-research/generate_replay_page.py
+[18:30:36] ✅   完成 (0.2s)
+[18:30:36] 🔄 运行 timing-research/push_limit_replay_feishu.py
+[18:30:37] ✅   完成 (1.7s)
+
+[18:30:37] 📋 ═══ 耐心资本 (patient_capital) ═══
+[18:30:37] 🔄 运行 micro_flow/patient_capital/patient_data.py
+[18:30:46] ✅   完成 (8.8s)
+[18:30:46] 🔄 运行 micro_flow/patient_capital/patient_calc.py
+[18:30:49] ✅   完成 (2.9s)
+
+[18:30:49] 📋 ═══ 择时因子系统 (timing_factors) ═══
+[18:30:49] 🔄 运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[18:31:26] ✅   完成 (37.2s)
+
+[18:31:26] 📋 ═══ 汇总 ═══
+[18:31:26] 📋   ✅ 强势股情绪        (37.4s)
+[18:31:26] 📋   ✅ 耐心资本         (11.6s)
+[18:31:26] 📋   ✅ 择时因子系统       (37.2s)
+[18:31:26] 📋 总耗时: 86.2s
+[18:31:26] 📋 已更新 update_log.json
+[18:31:26] 📋 ═══ Git Push ═══
+[18:31:27] 同步到云端...
+[main ea5c791] auto: update 3/3 modules
+ 61 files changed, 10042 insertions(+), 7675 deletions(-)
+ create mode 100644 timing-research/leader_pool_history/20260410.json
+failed to store: -61
+To https://github.com/byihuang-max/spread-dashboard.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/byihuang-max/spread-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:31:29] ❌ Git 失败: Command '['git', 'push', 'origin', 'main']' returned non-zero exit status 1.
+[18:31:29] ✅ 完成！
+[18:31:31] ✅ 同步完成
+[18:31:31] ✅ 后端已重启
