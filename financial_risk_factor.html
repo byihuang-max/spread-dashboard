@@ -262,6 +262,7 @@ window.onerror=function(msg,src,line,col,err){
 
   <div class="page-tabs">
     <button class="page-tab active" data-page-tab="risk">风险地图</button>
+    <button class="page-tab" data-page-tab="opportunity">机会地图</button>
     <button class="page-tab" data-page-tab="validation">财报验证</button>
   </div>
 
@@ -452,6 +453,69 @@ window.onerror=function(msg,src,line,col,err){
 
   </div>
 
+  <div class="page-panel" id="opportunityPanel">
+    <div class="layout" style="margin-top:20px">
+      <div class="card">
+        <div class="section-title">
+          <h2 style="margin:0;padding:0;border:none">第一层：行业机会地图</h2>
+          <div class="tag" id="opportunityAsOfTag"></div>
+        </div>
+        <div id="opportunityIndustryRank" class="chart"></div><div id="opportunityIndustryRankHtml" class="html-chart" style="display:none"></div>
+        <div class="note" style="margin-top:10px;font-size:12px">先回答“哪些行业正在出现财务改善线索”。当前先用行业平均机会分 + improving_count 作为第一版机会排序。</div>
+      </div>
+      <div class="card">
+        <div class="section-title">
+          <h2 style="margin:0;padding:0;border:none">机会轴摘要</h2>
+          <div class="tag">第一版骨架</div>
+        </div>
+        <div class="grid-4" id="opportunityOverviewCards"></div>
+        <div class="note" style="margin-top:10px;font-size:12px">这层先做“候选池/观察池”，不直接回答组合加权公式。</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="section-title">
+        <h2 style="margin:0;padding:0;border:none">第二层：行业机会候选池</h2>
+        <div class="tag">行业改善链条</div>
+      </div>
+      <div class="filter-bar">
+        <select id="opportunityIndustryFilter"></select>
+      </div>
+      <div class="stock-shell">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>代码</th>
+                <th>名称</th>
+                <th>一级行业</th>
+                <th>机会分</th>
+                <th>机会等级</th>
+                <th>改善标记</th>
+                <th>核心改善信号</th>
+              </tr>
+            </thead>
+            <tbody id="opportunityTableBody"></tbody>
+          </table>
+        </div>
+        <div class="detail-card">
+          <div class="detail-top">
+            <div>
+              <div class="detail-name" id="opportunityDetailName">-</div>
+              <div class="detail-meta" id="opportunityDetailMeta"></div>
+            </div>
+            <div id="opportunityDetailFlag"></div>
+          </div>
+          <div id="opportunityDetailExplain" class="explain" style="grid-column:1 / -1"></div>
+          <div id="opportunitySignalsBox" style="grid-column:1 / -1;padding:12px 14px;border-radius:12px;background:#0e1b33;border:1px solid #22314d;display:none">
+            <div style="font-size:12px;color:#7dc3ff;font-weight:700;margin-bottom:6px">↗ 改善链条</div>
+            <div id="opportunitySignals" style="font-size:12px;color:#b7c9df;line-height:1.8"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="page-panel" id="validationPanel">
 
   <!-- 
@@ -578,7 +642,7 @@ const FACTOR_LABELS = {
   working_capital_score:"营运资本恶化"
 };
 
-const state = { industry: null, stockCode: null };
+const state = { industry: null, stockCode: null, opportunityIndustry: 'all', opportunityStockCode: null };
 const charts = {};
 let INDUSTRIES = [];
 let SPECIAL_VALIDATION_INDUSTRIES = [];
@@ -843,6 +907,27 @@ function renderOverview(){
     </div>
   `).join("");
   document.getElementById("asOfTag").textContent = DATA.as_of;
+}
+
+function renderOpportunityOverview(){
+  const total = DATA.stocks.length;
+  const improvingCount = DATA.stocks.filter(s => s.is_improving).length;
+  const avgOpp = mean(DATA.stocks.map(s => s.opportunity_score || 0));
+  const highOpp = DATA.stocks.filter(s => (s.opportunity_score || 0) >= 0.75).length;
+  const cards = [
+    {label:"覆盖股票数",value:total,cls:"blue",sub:"先做机会观察池，不急着进组合公式"},
+    {label:"改善候选数",value:improvingCount,cls:"green",sub:"is_improving=1 的股票数"},
+    {label:"平均机会分",value:score(avgOpp),cls:"amber",sub:"看行业均值和候选池，不只看单票极值"},
+    {label:"高机会占比",value:pct(highOpp/total),cls:"purple",sub:"当前阈值：opportunity_score ≥ 0.75"}
+  ];
+  document.getElementById("opportunityOverviewCards").innerHTML = cards.map(c => `
+    <div class="metric">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls}">${c.value}</div>
+      <div class="sub">${c.sub}</div>
+    </div>
+  `).join("");
+  document.getElementById("opportunityAsOfTag").textContent = DATA.opportunity_axis_status || DATA.as_of;
 }
 
 function showHtmlFallback(idChart,idHtml){
@@ -1256,6 +1341,83 @@ function downloadCsv(content, filename){
   a.click();
 }
 
+function opportunityRows(){
+  const all = DATA.stocks.slice().sort((a,b)=>(b.opportunity_score||0)-(a.opportunity_score||0) || (b.landmine_score||0)-(a.landmine_score||0));
+  return all.filter(s => state.opportunityIndustry === 'all' || s.industry1 === state.opportunityIndustry);
+}
+
+function improvingBadge(s){
+  return s.is_improving ? '<span class="badge badge-green">是</span>' : '<span class="badge badge-blue">观察</span>';
+}
+
+function renderOpportunityIndustryRank(){
+  const inds = (DATA.industries || []).slice().sort((a,b)=>(b.avg_opportunity||0)-(a.avg_opportunity||0));
+  try {
+    charts.opportunityRank = echarts.init(document.getElementById('opportunityIndustryRank'));
+    charts.opportunityRank.setOption({
+      tooltip:{formatter:p=>`${inds[p.dataIndex].name}<br>平均机会分：${score(inds[p.dataIndex].avg_opportunity||0)}<br>改善候选数：${inds[p.dataIndex].improving_count||0}`},
+      grid:{left:100,right:20,top:20,bottom:30},
+      xAxis:{type:'value',max:1,axisLabel:{color:'#9db0c8'},splitLine:{lineStyle:{color:'#1f2d47'}}},
+      yAxis:{type:'category',data:inds.map(i=>i.name),axisLabel:{color:'#d7e0ea',fontSize:11},axisTick:{show:false},axisLine:{show:false}},
+      series:[{type:'bar',data:inds.map(i=>Number((i.avg_opportunity||0).toFixed(2))),barWidth:18,itemStyle:{color:'#5ce1c2',borderRadius:[0,8,8,0]},label:{show:true,position:'right',color:'#d7e0ea',fontSize:10,formatter:p=>`${inds[p.dataIndex].improving_count||0}票`}}]
+    });
+  } catch(e){
+    const el=document.getElementById('opportunityIndustryRankHtml');
+    el.innerHTML=inds.map(i=>`<div class="html-row"><div class="html-label">${i.name}</div><div class="html-bar"><div class="html-fill" style="width:${((i.avg_opportunity||0)*100).toFixed(1)}%"></div></div><div class="html-val">${score(i.avg_opportunity||0)} · ${i.improving_count||0}票</div></div>`).join('');
+    showHtmlFallback('opportunityIndustryRank','opportunityIndustryRankHtml');
+  }
+}
+
+function initOpportunityFilters(){
+  const inds = ['<option value="all">全部行业</option>'].concat((DATA.industries||[]).map(i=>`<option value="${i.name}">${i.name}</option>`));
+  document.getElementById('opportunityIndustryFilter').innerHTML = inds.join('');
+  document.getElementById('opportunityIndustryFilter').value = state.opportunityIndustry;
+  document.getElementById('opportunityIndustryFilter').onchange = (e) => {
+    state.opportunityIndustry = e.target.value;
+    renderOpportunityTable();
+  };
+}
+
+function renderOpportunityTable(){
+  const rows = opportunityRows();
+  if(!rows.find(r => r.ts_code === state.opportunityStockCode) && rows[0]) state.opportunityStockCode = rows[0].ts_code;
+  document.getElementById('opportunityTableBody').innerHTML = rows.slice(0,100).map(s=>`
+    <tr class="${s.ts_code===state.opportunityStockCode?'active':''}" data-code="${s.ts_code}">
+      <td>${s.ts_code.replace('.SZ','').replace('.SH','')}</td>
+      <td>${s.name}</td>
+      <td>${s.industry1}</td>
+      <td>${score(s.opportunity_score||0)}</td>
+      <td>${s.opportunity_level||'-'}</td>
+      <td>${improvingBadge(s)}</td>
+      <td title="${(s.opportunity_signals||[]).join('；')}">${(s.opportunity_signals||[]).slice(0,3).join('；') || '-'}</td>
+    </tr>
+  `).join('');
+  document.querySelectorAll('#opportunityTableBody tr').forEach(tr => tr.onclick = () => {
+    state.opportunityStockCode = tr.dataset.code;
+    renderOpportunityTable();
+    renderOpportunityDetail();
+  });
+  renderOpportunityDetail();
+}
+
+function renderOpportunityDetail(){
+  const rows = opportunityRows();
+  const s = rows.find(x => x.ts_code === state.opportunityStockCode) || rows[0];
+  if(!s) return;
+  document.getElementById('opportunityDetailName').textContent = s.name;
+  document.getElementById('opportunityDetailMeta').innerHTML = `${s.ts_code}<br>${s.industry1} / ${s.industry2}<br>机会分 ${score(s.opportunity_score||0)} · 等级 ${s.opportunity_level||'-'} · 改善标记 ${s.is_improving ? '是' : '观察'}`;
+  document.getElementById('opportunityDetailFlag').innerHTML = improvingBadge(s);
+  document.getElementById('opportunityDetailExplain').textContent = `${s.name}当前被放入${s.industry1}行业的机会观察池。第一版机会轴主要看利润改善、营收维持、经营现金流转正、短债覆盖和营运质量稳定。该股当前机会分为 ${score(s.opportunity_score||0)}，命中的改善信号包括：${(s.opportunity_signals||[]).join('、') || '暂无明显改善信号'}。这一版先把它定义成“候选池/观察池”，不直接等同于组合加仓结论。`;
+  const sigs = s.opportunity_signals || [];
+  const box = document.getElementById('opportunitySignalsBox');
+  if(sigs.length){
+    document.getElementById('opportunitySignals').innerHTML = sigs.map(sig => `· ${sig}`).join('<br>');
+    box.style.display = '';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
 let VALIDATION = null;
 let validationTab = '命中';
 let sampleExpanded = false;
@@ -1267,8 +1429,10 @@ function renderPageTabs(){
     btn.classList.toggle('active', btn.dataset.pageTab === activePageTab);
   });
   const riskPanel = document.getElementById('riskMapPanel');
+  const opportunityPanel = document.getElementById('opportunityPanel');
   const validationPanel = document.getElementById('validationPanel');
   if(riskPanel) riskPanel.classList.toggle('active', activePageTab === 'risk');
+  if(opportunityPanel) opportunityPanel.classList.toggle('active', activePageTab === 'opportunity');
   if(validationPanel) validationPanel.classList.toggle('active', activePageTab === 'validation');
   Object.values(charts).forEach(c => c && c.resize && c.resize());
 }
@@ -1471,6 +1635,11 @@ async function boot(){
   renderIndustryList();
   initIndustryModeTabs();
   renderIndustrySection();
+  renderOpportunityOverview();
+  renderOpportunityIndustryRank();
+  initOpportunityFilters();
+  state.opportunityStockCode = (DATA.opportunity_top_stocks || DATA.stocks || [])[0]?.ts_code || null;
+  renderOpportunityTable();
   initPageTabs();
   initFilters();
   renderTable();
