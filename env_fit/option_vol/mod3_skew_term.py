@@ -95,7 +95,11 @@ def load_mod2():
 
 
 def get_trade_date():
-    cal_rows = tushare_call('trade_cal', {'start_date': '20260301', 'end_date': '20260331'}, 'cal_date,is_open')
+    # 动态取当月交易日历，避免跨月后日期停滞
+    _now = datetime.now()
+    _start = _now.strftime('%Y%m01')
+    _end = _now.strftime('%Y%m%d')
+    cal_rows = tushare_call('trade_cal', {'start_date': _start, 'end_date': _end}, 'cal_date,is_open')
     opens = [r['cal_date'] for r in cal_rows if int(r['is_open']) == 1]
     return opens[-1]
 

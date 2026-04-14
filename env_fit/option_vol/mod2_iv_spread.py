@@ -114,7 +114,11 @@ def pick_atm_options(symbol):
         return None
 
     # 用全市场最新交易日作为当前日期锚点
-    cal_rows = tushare_call('trade_cal', {'start_date': '20260301', 'end_date': '20260331'}, 'cal_date,is_open')
+    # 动态取当月交易日历，避免跨月后日期停滞
+    _now = datetime.now()
+    _start = _now.strftime('%Y%m01')
+    _end = _now.strftime('%Y%m%d')
+    cal_rows = tushare_call('trade_cal', {'start_date': _start, 'end_date': _end}, 'cal_date,is_open')
     open_dates = [r['cal_date'] for r in cal_rows if int(r['is_open']) == 1]
     if not open_dates:
         return None

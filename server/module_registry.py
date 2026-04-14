@@ -252,6 +252,7 @@ MODULE_REGISTRY = {
         'name': '期权卖权',
         'scripts': [
             ('env_fit/option_vol', 'option_vol_main.py'),
+            ('env_fit', 'env_fit_signals.py'),
         ],
         'aliases': ['option-vol'],
         'include_in_update_all': True,
@@ -340,7 +341,7 @@ MODULE_REGISTRY = {
             ('server', 'overview_calc.py'),
         ],
         'aliases': ['overview'],
-        'include_in_update_all': False,
+        'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
 }
