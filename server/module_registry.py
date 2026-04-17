@@ -244,6 +244,9 @@ MODULE_REGISTRY = {
         'name': '择时因子系统',
         'scripts': [],
         'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py'),
+        'post_inject': [
+            ('timing-research', 'update_ic_table.py'),  # 注入 index.html IC表格 + factor_system 数据
+        ],
         'late_data': True,  # 依赖强势股晚到数据，需与 momentum_stock 联动后移
         'include_in_update_all': True,
         'include_in_refresh_server': False,
