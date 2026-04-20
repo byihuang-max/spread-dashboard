@@ -2774,14 +2774,15 @@ function initCbCharts() {
         function initArbNav(){
           Promise.all([
             fetch('size_spread/fund_nav/fund_nav_arbitrage.json').then(r=>r.json()),
-            fetch('env_fit/arbitrage/mod3_option_arb.json').then(r=>r.json())
+            fetch('env_fit/arbitrage/mod3_option_arb.json').then(r=>r.json()),
+            fetch('env_fit/arbitrage/hv_long.json').then(r=>r.json()).catch(function(){return null;})
           ]).then(function(res){
           try{
           if(!res[0] || !res[0].fund || !res[0].fund.chart){
             console.error('[arb-nav] fund_nav_arbitrage.json 结构异常', res[0]);
             return;
           }
-          var fn=res[0].fund.chart, arb=res[1];
+          var fn=res[0].fund.chart, arb=res[1], hvLong=res[2];
           var dates=fn.dates.map(function(d){return d.slice(5)});
           var datesFull=fn.dates.map(function(d){return d.replace(/-/g,'')});
           var fundPct=fn.fund_nav.map(function(v){return ((v-1)*100)});
@@ -2798,23 +2799,39 @@ function initCbCharts() {
           });
           var anomalyData=weekRet.map(function(r){return Math.abs(r)>0.5?999:0});
 
-          // HV lookup from arb series
-          var hvMap={};
+          // HV map：优先用 hv_long（长序列，覆盖一整年），mod3 只补 PCR tooltip
+          var hvLongMap={};
+          if(hvLong && hvLong.series){
+            hvLong.series.forEach(function(s){hvLongMap[s.date]=s.hv_20;});
+          }
+          var pcrMap={};
           arb.series.forEach(function(s){
-            hvMap[s.date]={hv:s.hv_20,pcr_vol:s.pcr_vol,pcr_oi:s.pcr_oi,total_vol:s.total_vol};
+            pcrMap[s.date]={pcr_vol:s.pcr_vol,pcr_oi:s.pcr_oi,total_vol:s.total_vol};
           });
 
-          // Align HV to fund dates (nearest match)
+          // Align HV to fund dates (nearest date <= fund date)
+          var hvLongDates=Object.keys(hvLongMap).sort();
           var arbDates=arb.series.map(function(s){return s.date}).sort();
-          function nearestHV(dt){
-            // Find closest arb date <= dt
+          function nearestIn(sortedDates, dt){
             var best=null;
-            for(var j=arbDates.length-1;j>=0;j--){
-              if(arbDates[j]<=dt){best=arbDates[j];break;}
+            for(var j=sortedDates.length-1;j>=0;j--){
+              if(sortedDates[j]<=dt){best=sortedDates[j];break;}
             }
-            return best?hvMap[best]:null;
+            return best;
           }
-          var hvLine=datesFull.map(function(d){var e=nearestHV(d);return e?e.hv:null});
+          function nearestHV(dt){
+            var d=nearestIn(hvLongDates, dt);
+            if(d!=null && hvLongMap[d]!=null) return hvLongMap[d];
+            // fallback mod3
+            var d2=nearestIn(arbDates, dt);
+            if(d2!=null){var s=arb.series.find(function(x){return x.date===d2;});return s?s.hv_20:null;}
+            return null;
+          }
+          function nearestPCR(dt){
+            var d=nearestIn(arbDates, dt);
+            return d!=null ? pcrMap[d] : null;
+          }
+          var hvLine=datesFull.map(function(d){return nearestHV(d);});
 
           var el=document.getElementById('arb-nav-chart');
           var ctx=el.getContext('2d');
@@ -2846,16 +2863,19 @@ function initCbCharts() {
                   if(context.tooltip.opacity===0){tt.style.display='none';return;}
                   var i=context.tooltip.dataPoints[0].dataIndex;
                   var dt=datesFull[i];
-                  var e=nearestHV(dt);
+                  var hv=nearestHV(dt);
+                  var pcr=nearestPCR(dt);
                   var html='<div style="font-weight:800;font-size:14px;margin-bottom:8px;color:#fff">';
                   html+=dates[i]+' <span style="color:#a5b4fc">产品 '+fundPct[i].toFixed(2)+'%</span>';
                   if(i>0) html+=' <span style="color:'+(weekRet[i]>=0?'#6ee7b7':'#fca5a5')+'">周 '+(weekRet[i]>=0?'+':'')+weekRet[i].toFixed(2)+'%</span>';
                   html+='</div>';
-                  if(e){
+                  if(hv!=null || pcr){
                     html+='<div style="margin-top:2px">';
-                    html+='<div>📊 HV20波动率: <b>'+e.hv.toFixed(2)+'%</b></div>';
-                    html+='<div>📈 PCR(成交量): <b>'+e.pcr_vol.toFixed(4)+'</b></div>';
-                    html+='<div>📈 PCR(持仓量): <b>'+e.pcr_oi.toFixed(4)+'</b></div>';
+                    if(hv!=null) html+='<div>📊 HV20波动率: <b>'+hv.toFixed(2)+'%</b></div>';
+                    if(pcr){
+                      html+='<div>📈 PCR(成交量): <b>'+pcr.pcr_vol.toFixed(4)+'</b></div>';
+                      html+='<div>📈 PCR(持仓量): <b>'+pcr.pcr_oi.toFixed(4)+'</b></div>';
+                    }
                     html+='</div>';
                   }
                   if(Math.abs(weekRet[i])>0.5){
