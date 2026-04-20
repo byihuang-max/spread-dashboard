@@ -73,6 +73,45 @@ def pct(series, current):
     if not series: return 50.0
     return float((np.array(series, dtype=float) <= current).mean() * 100)
 
+# ── 冷启动：从 history_breadth.json 预加载历史到品种缓存 ──
+HISTORY_FILE = CACHE_DIR / "history_breadth.json"
+_history_by_symbol = {}  # symbol -> [{"date":..., "iv_proxy":..., "vol":..., "amount":..., "oi":...}]
+
+def _load_history():
+    if _history_by_symbol:
+        return
+    if not HISTORY_FILE.exists():
+        return
+    with open(HISTORY_FILE, encoding="utf-8") as f:
+        hist = json.load(f)
+    for rec in hist.get("records", []):
+        dt = rec["date"]
+        for s in rec.get("symbols", []):
+            sym = s.get("symbol")
+            if not sym:
+                continue
+            _history_by_symbol.setdefault(sym, []).append({
+                "date": dt,
+                "iv_proxy": s.get("iv_proxy", 0),
+                "vol": s.get("vol", 0),
+                "amount": s.get("amount", 0),
+                "oi": s.get("oi", 0),
+            })
+    # 排序去重
+    for sym in _history_by_symbol:
+        _history_by_symbol[sym] = sorted(_history_by_symbol[sym], key=lambda x: x["date"])
+
+def seed_cache(symbol, cache_records):
+    """如果缓存记录太少，用 history_breadth 补齐"""
+    _load_history()
+    hist = _history_by_symbol.get(symbol, [])
+    if not hist or len(cache_records) >= 60:
+        return cache_records
+    existing_dates = {r["date"] for r in cache_records}
+    merged = [r for r in hist if r["date"] not in existing_dates] + cache_records
+    merged = sorted(merged, key=lambda x: x["date"])[-180:]
+    return merged
+
 print("=" * 60)
 print("全品种期权卖权环境指数 V2")
 print("=" * 60)
@@ -148,10 +187,11 @@ for fp, info in opt_all.items():
     atm_price = float(np.average(prices, weights=vols)) if vols.sum() > 0 else float(np.median(prices))
     iv_proxy = atm_price / F if F > 0 else 0
 
-    # 读/写缓存
+    # 读/写缓存（冷启动：从 history_breadth.json 补历史）
     cache_path = CACHE_DIR / f"{fp}_breadth_cache.json"
     cache = json.load(open(cache_path, encoding="utf-8")) if cache_path.exists() else {"records": []}
     records = [r for r in cache.get("records", []) if r.get("date") != today]
+    records = seed_cache(fp, records)  # 用历史数据补齐
     records.append({"date": today, "iv_proxy": round(iv_proxy, 6),
                    "vol": round(info["vol"], 2), "amount": round(info["amount"], 2),
                    "oi": round(info["oi"], 2)})
