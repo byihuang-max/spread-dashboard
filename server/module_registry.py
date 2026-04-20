@@ -254,6 +254,8 @@ MODULE_REGISTRY = {
     'option_vol': {
         'name': '期权卖权',
         'scripts': [
+            ('env_fit/option_vol', 'backfill_history.py'),
+            ('env_fit/option_vol', 'calc_signal.py'),
             ('env_fit/option_vol', 'option_vol_main.py'),
             ('env_fit', 'env_fit_signals.py'),
         ],
