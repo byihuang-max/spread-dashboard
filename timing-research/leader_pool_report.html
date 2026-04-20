@@ -67,6 +67,8 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
   <div class="toolbar">
     <select id="dateSelect" class="select"></select>
     <button id="latestBtn" class="btn">刷新到最新</button>
+    <button id="downloadCsvBtn" class="btn" style="background:#143827;border-color:#2d5a3f;color:#8ef0bf">⬇ 下载CSV</button>
+    <button id="downloadAllBtn" class="btn" style="background:#2a1f56;border-color:#4a3a8a;color:#c3b5ff">⬇ 导出全历史</button>
     <div class="muted" id="toolbarHint">支持按交易日回看，每天可刷最新一版</div>
   </div>
 </div>
@@ -158,6 +160,112 @@ document.querySelectorAll('.step-tab').forEach(btn=>{
 
 document.getElementById('dateSelect').addEventListener('change', e=>loadByDate(e.target.value));
 document.getElementById('latestBtn').addEventListener('click', ()=>{ if(historyIndex.latest_trade_date) loadByDate(historyIndex.latest_trade_date); });
+document.getElementById('downloadCsvBtn').addEventListener('click', ()=>downloadCsv());
+document.getElementById('downloadAllBtn').addEventListener('click', ()=>downloadAllHistory());
+
+let currentData = null;
+
+function csvEscape(v){
+  if(v===null||v===undefined) return '';
+  const s = String(v);
+  if(/[",\n\r]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+
+function downloadCsv(){
+  if(!currentData){alert('数据未加载，请稍候再试');return;}
+  const pool = currentData.pool.pool || [];
+  const td = currentData.trade_date;
+  const rec = currentData.confirm.recognition_leader;
+  const amt = currentData.confirm.amount_leader;
+  const headers = ['序号','ts_code','股票名称','行业','入池来源','候选分','涨幅(%)','成交额(亿)','辨识度龙头','成交额龙头','入池原因'];
+  const rows = pool.map((r,i)=>[
+    i+1,
+    r.ts_code,
+    r.name,
+    r.industry,
+    (r.source_types||[]).join('|'),
+    r.candidate_score,
+    r.pct_chg,
+    (Number(r.amount||0)/1e8).toFixed(2),
+    rec && rec.ts_code===r.ts_code ? 'Y' : '',
+    amt && amt.ts_code===r.ts_code ? 'Y' : '',
+    (r.reasons||[]).join(' | ')
+  ]);
+  const lines = [headers, ...rows].map(row=>row.map(csvEscape).join(','));
+  // UTF-8 BOM，避免 Excel 中文乱码
+  const csv = '\uFEFF' + lines.join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `leader_pool_${td}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function downloadAllHistory(){
+  const dates = (historyIndex.dates || []).slice();
+  if(!dates.length){alert('历史索引为空，无法导出');return;}
+  const btn = document.getElementById('downloadAllBtn');
+  const oldText = btn.textContent;
+  btn.disabled = true;
+  const total = dates.length;
+  const headers = ['trade_date','序号','ts_code','股票名称','行业','入池来源','候选分','涨幅(%)','成交额(亿)','辨识度龙头','成交额龙头','入池原因'];
+  const allRows = [];
+  const batchSize = 20;
+  let done = 0;
+  try{
+    for(let i=0; i<dates.length; i+=batchSize){
+      const batch = dates.slice(i, i+batchSize);
+      const results = await Promise.all(batch.map(td=>
+        fetch(`leader_pool_history/${td}.json`).then(r=>r.ok?r.json():null).catch(()=>null).then(d=>[td,d])
+      ));
+      for(const [td, data] of results){
+        if(!data || !data.pool || !data.pool.pool) continue;
+        const rec = data.confirm && data.confirm.recognition_leader;
+        const amt = data.confirm && data.confirm.amount_leader;
+        data.pool.pool.forEach((r, idx)=>{
+          allRows.push([
+            td.slice(0,4)+'-'+td.slice(4,6)+'-'+td.slice(6,8),
+            idx+1,
+            r.ts_code,
+            r.name,
+            r.industry,
+            (r.source_types||[]).join('|'),
+            r.candidate_score,
+            r.pct_chg,
+            (Number(r.amount||0)/1e8).toFixed(2),
+            rec && rec.ts_code===r.ts_code ? 'Y' : '',
+            amt && amt.ts_code===r.ts_code ? 'Y' : '',
+            (r.reasons||[]).join(' | ')
+          ]);
+        });
+      }
+      done = Math.min(i+batchSize, total);
+      btn.textContent = `导出中 ${done}/${total}...`;
+    }
+    if(!allRows.length){alert('未拉到任何有效历史数据');return;}
+    const lines = [headers, ...allRows].map(row=>row.map(csvEscape).join(','));
+    const csv = '\uFEFF' + lines.join('\r\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leader_pool_history_${dates[0]}_${dates[dates.length-1]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    alert('导出失败: '+e.message);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = oldText;
+  }
+}
 
 fetch('leader_pool_history/index.json')
   .then(r=>r.ok ? r.json() : Promise.reject(new Error('历史索引不存在')))
@@ -191,6 +299,7 @@ function loadByDate(tradeDate){
 }
 
 function render(data){
+  currentData = data;
   document.getElementById('loading').style.display='none';
   clearTables();
   const pool=data.pool, confirm=data.confirm;
