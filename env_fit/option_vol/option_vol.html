@@ -138,9 +138,9 @@
 
 <script>
 function fmt(x,d=1){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
-function fmtDate(s){ // '20250925' → '09-25', '2025-09-25' → '09-25'
+function fmtDate(s){ // '20250925' → '25/09-25', '2025-09-25' → '25/09-25'
   s = String(s).replace(/-/g,'');
-  return s.length>=8 ? s.slice(4,6)+'-'+s.slice(6,8) : s.slice(5);
+  return s.length>=8 ? s.slice(2,4)+'/'+s.slice(4,6)+'-'+s.slice(6,8) : s;
 }
 
 Promise.all([
