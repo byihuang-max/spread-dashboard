@@ -2771,10 +2771,16 @@ function initCbCharts() {
 
       <script>
       (function(){
-        Promise.all([
-          fetch('size_spread/fund_nav/fund_nav_arbitrage.json').then(r=>r.json()),
-          fetch('env_fit/arbitrage/mod3_option_arb.json').then(r=>r.json())
-        ]).then(function(res){
+        function initArbNav(){
+          Promise.all([
+            fetch('size_spread/fund_nav/fund_nav_arbitrage.json').then(r=>r.json()),
+            fetch('env_fit/arbitrage/mod3_option_arb.json').then(r=>r.json())
+          ]).then(function(res){
+          try{
+          if(!res[0] || !res[0].fund || !res[0].fund.chart){
+            console.error('[arb-nav] fund_nav_arbitrage.json 结构异常', res[0]);
+            return;
+          }
           var fn=res[0].fund.chart, arb=res[1];
           var dates=fn.dates.map(function(d){return d.slice(5)});
           var datesFull=fn.dates.map(function(d){return d.replace(/-/g,'')});
@@ -2874,7 +2880,20 @@ function initCbCharts() {
               }
             }
           });
-        });
+          }catch(err){
+            console.error('[arb-nav] 渲染套利产品净值图失败:', err);
+          }
+          }).catch(function(err){
+            console.error('[arb-nav] 加载套利数据失败:', err);
+          });
+        }
+
+        // 等 Chart.js 加载完再执行；同时当首次切到 strat-arbitrage 时再 resize 一次避免容器 0×0
+        function waitChart(cb){
+          if(window.Chart) return cb();
+          setTimeout(function(){waitChart(cb)}, 100);
+        }
+        waitChart(initArbNav);
       })();
       </script>
 
