@@ -269,6 +269,7 @@ MODULE_REGISTRY = {
             ('env_fit/arbitrage', 'mod1_index_arb.py'),
             ('env_fit/arbitrage', 'mod2_commodity_arb.py'),
             ('env_fit/arbitrage', 'mod3_option_arb.py'),
+            ('env_fit/arbitrage', 'hv_long.py'),
         ],
         'aliases': ['arbitrage'],
         'include_in_update_all': True,
