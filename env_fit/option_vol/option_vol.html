@@ -138,6 +138,10 @@
 
 <script>
 function fmt(x,d=1){ return (x===null||x===undefined||x==='') ? '--' : Number(x).toFixed(d); }
+function fmtDate(s){ // '20250925' → '09-25', '2025-09-25' → '09-25'
+  s = String(s).replace(/-/g,'');
+  return s.length>=8 ? s.slice(4,6)+'-'+s.slice(6,8) : s.slice(5);
+}
 
 Promise.all([
   fetch('sell_signal.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
@@ -171,7 +175,7 @@ Promise.all([
     new Chart(ctx1, {
       type:'line',
       data:{
-        labels: hist.map(x=>x.date.slice(5)),
+        labels: hist.map(x=>fmtDate(x.date)),
         datasets:[{
           label:'卖权环境信号',
           data: hist.map(x=>x.sell_signal),
@@ -205,7 +209,7 @@ Promise.all([
     new Chart(ctx2, {
       type:'line',
       data:{
-        labels: hist.map(x=>x.date.slice(5)),
+        labels: hist.map(x=>fmtDate(x.date)),
         datasets:[
           {
             label:'高 IV 占比 (%)',
