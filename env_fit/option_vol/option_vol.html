@@ -31,7 +31,7 @@
   <!-- 第一屏：顶部环境指标 -->
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#6366f1"></span> 期权卖权环境指数</div>
-    <div class="sub" id="metaLine">基于 2 年历史数据（483 天）计算</div>
+    <div class="sub" id="metaLine">基于 2 年历史数据（483 天）计算 | <span id="signalTime" style="color:#94a3b8">--</span></div>
     <div class="grid">
       <div class="metric">
         <div class="k">卖权环境信号</div>
@@ -63,7 +63,7 @@
   <!-- 第二屏：卖权环境总信号图 -->
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#6366f1"></span> 卖权环境信号走势</div>
-    <div class="sub">全市场卖权环境信号（0~1），越高说明当前越适合系统性做卖权策略</div>
+    <div class="sub">全市场卖权环境信号（0~1），越高说明当前越适合系统性做卖权策略 | <span id="signalChartTime" style="color:#94a3b8">--</span></div>
     <div class="chart-wrap"><canvas id="signalChart"></canvas></div>
   </div>
 
@@ -77,14 +77,14 @@
   <!-- 第四屏：Top 3 建议品种 -->
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#10b981"></span> 当前建议观察品种（Top 3）</div>
-    <div class="sub">基于综合评分模型筛选的重点品种</div>
+    <div class="sub">基于综合评分模型筛选的重点品种 | <span id="top3Time" style="color:#94a3b8">--</span></div>
     <div id="top3Container" style="margin-top:12px"></div>
   </div>
 
   <!-- 第五屏：品种综合评分明细（旧版完整保留） -->
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 品种综合评分明细</div>
-    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构</div>
+    <div class="sub">综合评分 = RV环境 + IV-RV赔率 + Skew + 期限结构 + 流动性 + 到期结构 | <span id="compTime" style="color:#94a3b8">--</span></div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
@@ -100,7 +100,7 @@
   <!-- 第六屏：全品种环境明细 -->
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#64748b"></span> 全品种环境明细</div>
-    <div class="sub">全市场 59 品种的 IV / 成交额 / 流动性分位（基于 2 年历史）</div>
+    <div class="sub">全市场 59 品种的 IV / 成交额 / 流动性分位（基于 180 天历史） | <span id="breadthTime" style="color:#94a3b8">--</span></div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
@@ -148,6 +148,23 @@ Promise.all([
   fetch('market_breadth.json?t='+Date.now()).then(r=>r.json()).catch(()=>null),
   fetch('option_vol.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
 ]).then(([signal, breadth, composite])=>{
+
+  // ── 刷新时间标注 ──
+  const setTime = (id, t) => { const el=document.getElementById(id); if(el&&t) el.textContent='最新刷新: '+t; };
+  // sell_signal.json
+  if(signal?.history?.length){
+    const lastDate = signal.history[signal.history.length-1].date;
+    const d = String(lastDate).replace(/-/g,'');
+    const nice = d.length>=8 ? d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8) : lastDate;
+    setTime('signalTime', nice);
+    setTime('signalChartTime', nice);
+  }
+  // market_breadth.json
+  setTime('breadthTime', breadth?.update_time || null);
+  // composite / mod9
+  const comp9 = composite?.mod9_composite_score || composite || {};
+  setTime('compTime', comp9?.meta?.generated || null);
+  setTime('top3Time', comp9?.meta?.generated || null);
   
   // 第一屏：顶部指标
   if(signal?.current){

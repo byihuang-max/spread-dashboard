@@ -21,6 +21,8 @@ MODULES = [
     ('mod2_iv_spread.py', 'mod2_iv_spread.json', 'IV-RV Spread'),
     ('mod3_skew_term.py', 'mod3_skew_term.json', 'Skew + 期限结构'),
     ('mod9_composite_score.py', 'mod9_composite_score.json', '综合评分'),
+    ('mod7_market_breadth_v2.py', 'market_breadth.json', '全品种环境明细'),
+    ('mod8_sell_window_signal.py', 'sell_window_signal.json', '卖权窗口信号'),
 ]
 OUT_JSON = os.path.join(BASE, 'option_vol.json')
 
