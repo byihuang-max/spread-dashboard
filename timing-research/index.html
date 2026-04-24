@@ -102,6 +102,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <button class="page-tab-btn" data-page="factorlib">研究方法 / 因子库</button>
   <button class="page-tab-btn" data-page="research">命题研究</button>
   <button class="page-tab-btn" data-page="exposure">敞口输出</button>
+  <button class="page-tab-btn" data-page="leader">🐉 龙头跟踪</button>
 </div>
 
 <div id="overview" class="page-pane active">
@@ -206,29 +207,11 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     </div>
   </div>
 
-  <div class="card hero" style="margin-top:18px">
-    <div class="kicker">盘中发现层原型</div>
-    <h2>龙头观察池 / 龙头确认</h2>
-    <div class="note">这部分放在 <b>盘中发现因子</b> 与下方 <b>日频因子回测/IC</b> 之间，定位不是正式回测，而是先把 <b>角色层 → 龙头观察池 → 龙头确认</b> 跑通。当前口径基于 Tushare <code>limit_list_d</code> 链路落地后的本地缓存，后续会继续接板块归因和叙事联动。</div>
-    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
-      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
-        <div style="font-size:12px;color:#8fa5c2">最新交易日</div>
-        <div style="font-size:24px;font-weight:800;color:#5daeff;margin-top:6px">每日自动刷新</div>
-        <div style="font-size:12px;color:#8fa5c2;margin-top:6px">跟随强势股模块更新</div>
-      </div>
-      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
-        <div style="font-size:12px;color:#8fa5c2">页面结构</div>
-        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">Step 1 吐池<br>Step 2 选龙头<br>Step 3 为什么选它</div>
-      </div>
-      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
-        <div style="font-size:12px;color:#8fa5c2">查看方式</div>
-        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">首页看摘要<br>独立页看完整细节</div>
-      </div>
-    </div>
-    <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-      <a href="leader_pool_report.html" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(59,130,246,.28)">打开独立原型页 →</a>
-      <a href="intraday_limit_replay.html" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#0f766e,#14b8a6 55%,#5eead4);color:#06231f;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(20,184,166,.22)">打开盘后复盘页 →</a>
-      <span style="font-size:12px;color:#8fa5c2">手机端已改为摘要卡，不再内嵌整页</span>
+  <div class="card" style="margin-top:18px;border-color:#fbbf24;border-style:dashed">
+    <h2>🐉 龙头跟踪已独立为顶级 Tab</h2>
+    <div class="note">龙头观察池、盘后复盘等内容已移至独立的 <b>「龙头跟踪」</b> Tab。</div>
+    <div style="margin-top:12px">
+      <button class="page-tab-btn" data-page="leader" style="background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);border-color:#4f7dff;color:#fff">前往龙头跟踪 →</button>
     </div>
   </div>
 
@@ -345,6 +328,56 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <div class="kicker">命题3</div>
       <h2>强势股接力研究</h2>
       <div class="note">这条命题更像在回答"赚钱效应是否具备延续性"，后面适合和封单额轧差联动看。</div>
+    </div>
+  </div>
+</div>
+
+<div id="leader" class="page-pane">
+  <div class="card hero">
+    <div class="kicker">独立模块</div>
+    <h2>🐉 龙头跟踪</h2>
+    <div class="note">龙头观察池 + 盘后复盘，从择时因子库独立出来。<br>数据源：强势股模块每日缓存 → <code>leader_pool_builder</code> 吐池 → <code>leader_confirm_engine</code> 确认 → <code>narrative_engine</code> 盘后叙事复盘。</div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">数据链路</div>
+        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">Tushare limit_list_d<br>→ 强势股缓存<br>→ 龙头池 + 确认 + 复盘</div>
+      </div>
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">核心流程</div>
+        <div style="font-size:15px;font-weight:700;color:#dce7f5;margin-top:6px;line-height:1.8">Step 1 吐池（候选筛选）<br>Step 2 选龙头（打分排序）<br>Step 3 为什么选它（归因）</div>
+      </div>
+      <div style="padding:16px;border-radius:14px;background:#0c1a36;border:1px solid #203455">
+        <div style="font-size:12px;color:#8fa5c2">更新频率</div>
+        <div style="font-size:24px;font-weight:800;color:#5daeff;margin-top:6px">每日盘后</div>
+        <div style="font-size:12px;color:#8fa5c2;margin-top:6px">跟随强势股模块自动刷新</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="subtabs">
+      <button class="subtab-btn active" data-tab="leader_pool">龙头观察池</button>
+      <button class="subtab-btn" data-tab="leader_replay">盘后复盘</button>
+    </div>
+
+    <div id="leader_pool" class="tab-pane active">
+      <div class="note" style="margin-bottom:14px">每日收盘后自动生成龙头观察池，含辨识度龙头 + 成交额龙头 + 候选梯队。</div>
+      <div style="margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="leader_pool_report.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:#0c1830;border:1px solid #2a3a58;color:#5daeff;text-decoration:none;font-weight:700">在新窗口打开 ↗</a>
+      </div>
+      <div style="border:1px solid #1f2d47;border-radius:14px;overflow:hidden;background:#060d18">
+        <iframe src="leader_pool_report.html" style="width:100%;height:1200px;border:0;background:#060d18"></iframe>
+      </div>
+    </div>
+
+    <div id="leader_replay" class="tab-pane">
+      <div class="note" style="margin-bottom:14px">盘后事实复盘：板位结构变化、高位票跟踪、昨日龙头今日表现、核心方向变化。</div>
+      <div style="margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="intraday_limit_replay.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:#0c1830;border:1px solid #2a3a58;color:#5daeff;text-decoration:none;font-weight:700">在新窗口打开 ↗</a>
+      </div>
+      <div style="border:1px solid #1f2d47;border-radius:14px;overflow:hidden;background:#060d18">
+        <iframe src="intraday_limit_replay.html" style="width:100%;height:1200px;border:0;background:#060d18"></iframe>
+      </div>
     </div>
   </div>
 </div>
