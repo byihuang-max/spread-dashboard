@@ -172,9 +172,25 @@ def git_push(msg='auto: update data'):
             log("没有变更，跳过 push", 'OK')
             return True
         subprocess.run(['git', 'commit', '-m', msg], cwd=BASE_DIR, check=True)
-        subprocess.run(['git', 'push', 'origin', 'main'], cwd=BASE_DIR, check=True, timeout=30)
-        log("推送成功", 'OK')
-        return True
+        # 优先推 Gitee（国内直连），再尝试 GitHub
+        pushed = False
+        for remote in ['gitee', 'origin']:
+            try:
+                subprocess.run(['git', 'push', remote, 'main'], cwd=BASE_DIR, check=True, timeout=30)
+                log(f"推送 {remote} 成功", 'OK')
+                pushed = True
+                break
+            except Exception as e:
+                log(f"推送 {remote} 失败: {e}", 'WARN')
+        # 尝试同步到腾讯云
+        try:
+            subprocess.run(['ssh', '-o', 'ConnectTimeout=5', 'ubuntu@111.229.129.146',
+                          'cd /home/ubuntu/gamt-dashboard && git fetch origin && git reset --hard origin/main'],
+                          check=True, timeout=30)
+            log("腾讯云同步成功", 'OK')
+        except Exception:
+            log("腾讯云同步失败（非致命）", 'WARN')
+        return pushed
     except Exception as e:
         log(f"Git 失败: {e}", 'ERR')
         return False
