@@ -243,37 +243,37 @@ def main():
     # ── 分组定义 ──
     groups = [
         {
-            'name': '📈 风格轧差',
+            'name': '风格轧差',
             'subs': ['经济敏感轧差', '拥挤-反身性', '风格轧差净值', '双创等权'],
             'new_subs': [],
             'signal_fn': _style_spread_signal,
         },
         {
-            'name': '🎯 策略环境适配度',
+            'name': '策略环境适配度',
             'subs': ['宽基量化', '强势股', 'CTA', '转债', '套利', '期权卖权'],
             'new_subs': ['期权卖权'],
             'signal_fn': _env_fit_signal,
         },
         {
-            'name': '💰 资金流与微观结构',
+            'name': '资金流与微观结构',
             'subs': ['耐心资本持筹', '拥挤度监控', '期权异常值监控'],
             'new_subs': [],
             'signal_fn': _fund_flow_signal,
         },
         {
-            'name': '🌍 宏观与流动性',
+            'name': '宏观与流动性',
             'subs': ['境内流动性', '全球利率与汇率', '经济基本面', '利润周期', '内需接棒', '反脆弱看板', 'HALO交易'],
             'new_subs': ['利润周期', '内需接棒'],
             'signal_fn': _macro_signal,
         },
         {
-            'name': '🏭 中观景气',
+            'name': '中观景气',
             'subs': ['产业链景气'],
             'new_subs': [],
             'signal_fn': _meso_signal,
         },
         {
-            'name': '🚨 红灯预警',
+            'name': '红灯预警',
             'subs': ['A股风险', '美股风险'],
             'new_subs': [],
             'signal_fn': _alerts_signal,
@@ -297,16 +297,16 @@ def main():
 
     # ── 兼容：平铺 modules（旧格式）──
     flat_modules = [
-        ('📈 风格轧差', 'style-spread', f'{BASE}/size_spread/style_spread_signals.json', 'signals'),
-        ('🎯 策略环境适配度', 'env-fit', f'{BASE}/env_fit/env_fit_signals.json', 'signals'),
-        ('💰 耐心资本', 'patient-capital', f'{BASE}/micro_flow/patient_capital/patient_capital.json', None),
-        ('📡 拥挤度监控', 'crowding', f'{BASE}/micro_flow/crowding/crowding.json', None),
-        ('🎯 期权情绪', 'option-sentiment', f'{BASE}/micro_flow/option_sentiment/option_sentiment.json', None),
-        ('💧 境内流动性', 'liquidity', f'{BASE}/macro/liquidity/liquidity.json', None),
-        ('🌍 利率汇率', 'rates', f'{BASE}/macro/rates/rates.json', None),
-        ('📊 经济基本面', 'fundamentals', f'{BASE}/macro/fundamentals/fundamentals.json', None),
-        ('🏭 产业链景气', 'chain-prosperity', f'{BASE}/meso/chain_prosperity/chain_prosperity.json', None),
-        ('🚨 红灯预警', 'alerts', f'{BASE}/alerts/alerts.json', None),
+        ('风格轧差', 'style-spread', f'{BASE}/size_spread/style_spread_signals.json', 'signals'),
+        ('策略环境适配度', 'env-fit', f'{BASE}/env_fit/env_fit_signals.json', 'signals'),
+        ('耐心资本', 'patient-capital', f'{BASE}/micro_flow/patient_capital/patient_capital.json', None),
+        ('拥挤度监控', 'crowding', f'{BASE}/micro_flow/crowding/crowding.json', None),
+        ('期权情绪', 'option-sentiment', f'{BASE}/micro_flow/option_sentiment/option_sentiment.json', None),
+        ('境内流动性', 'liquidity', f'{BASE}/macro/liquidity/liquidity.json', None),
+        ('利率汇率', 'rates', f'{BASE}/macro/rates/rates.json', None),
+        ('经济基本面', 'fundamentals', f'{BASE}/macro/fundamentals/fundamentals.json', None),
+        ('产业链景气', 'chain-prosperity', f'{BASE}/meso/chain_prosperity/chain_prosperity.json', None),
+        ('红灯预警', 'alerts', f'{BASE}/alerts/alerts.json', None),
     ]
     for name, key, jp, sig_key in flat_modules:
         d = read_json(jp)
