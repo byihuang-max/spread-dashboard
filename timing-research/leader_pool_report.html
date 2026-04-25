@@ -132,6 +132,7 @@ let currentDate = null;
 function esc(s){const d=document.createElement('div');d.textContent=s ?? '';return d.innerHTML}
 function tags(arr,cls){return (arr||[]).map(t=>`<span class="${cls}">${esc(t)}</span>`).join('')}
 function fmtAmt(v){return (Number(v||0)/1e8).toFixed(2)}
+function lianBanTag(r){const lt=Number(r.limit_times||0);return lt>=2?` (${lt}连板)`:'';}
 function formatDate(td){return td ? `${td.slice(0,4)}-${td.slice(4,6)}-${td.slice(6,8)}` : '--'}
 function setLoading(msg){document.getElementById('loading').style.display='block';document.getElementById('loading').textContent=msg}
 function clearTables(){document.querySelector('#poolTable tbody').innerHTML='';document.querySelector('#recTable tbody').innerHTML='';document.querySelector('#amtTable tbody').innerHTML='';document.getElementById('reasonCards').innerHTML='';document.getElementById('leaderHero').innerHTML='';document.getElementById('sourceStats').innerHTML='';document.getElementById('ruleCards').innerHTML=''}
@@ -318,17 +319,20 @@ function render(data){
 
   const tbody=document.querySelector('#poolTable tbody');
   pool.pool.forEach((r,i)=>{
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${r.ts_code}</b><br>${esc(r.name)}<div class="small muted">涨幅 ${r.pct_chg}% / ${fmtAmt(r.amount)} 亿</div></td><td>${esc(r.industry)}</td><td>${tags(r.source_types,'tag')}</td><td class="num">${r.candidate_score}</td><td class="reason">${(r.reasons||[]).map(esc).join('<br>')}</td></tr>`;
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${r.ts_code}</b><br>${esc(r.name)}${lianBanTag(r)}<div class="small muted">涨幅 ${r.pct_chg}% / ${fmtAmt(r.amount)} 亿</div></td><td>${esc(r.industry)}</td><td>${tags(r.source_types,'tag')}</td><td class="num">${r.candidate_score}</td><td class="reason">${(r.reasons||[]).map(esc).join('<br>')}</td></tr>`;
   });
 
   const rec=confirm.recognition_leader, amt=confirm.amount_leader;
+  // 查找龙头在pool中的完整数据以获取limit_times
+  const recPool = pool.pool.find(x=>x.ts_code===rec.ts_code) || {};
+  const amtPool = pool.pool.find(x=>x.ts_code===amt.ts_code) || {};
   document.getElementById('leaderHero').innerHTML=`
-    <div class="leader-card rec"><div class="leader-label">辨识度龙头</div><div class="leader-name green">${esc(rec.name)}</div><div class="leader-code">${rec.ts_code} ｜ score ${rec.recognition_score}</div><div class="leader-tags">${tags(rec.recognition_reasons,'tag2')}</div></div>
-    <div class="leader-card amt"><div class="leader-label">成交额龙头</div><div class="leader-name blue">${esc(amt.name)}</div><div class="leader-code">${amt.ts_code} ｜ score ${amt.amount_score}</div><div class="leader-tags">${tags(amt.amount_reasons,'tag')}</div></div>`;
+    <div class="leader-card rec"><div class="leader-label">辨识度龙头</div><div class="leader-name green">${esc(rec.name)}${lianBanTag(recPool)}</div><div class="leader-code">${rec.ts_code} ｜ score ${rec.recognition_score}</div><div class="leader-tags">${tags(rec.recognition_reasons,'tag2')}</div></div>
+    <div class="leader-card amt"><div class="leader-label">成交额龙头</div><div class="leader-name blue">${esc(amt.name)}${lianBanTag(amtPool)}</div><div class="leader-code">${amt.ts_code} ｜ score ${amt.amount_score}</div><div class="leader-tags">${tags(amt.amount_reasons,'tag')}</div></div>`;
 
   [['recTable',confirm.top_recognition_rank,'recognition_score'],['amtTable',confirm.top_amount_rank,'amount_score']].forEach(([id,arr,scoreKey])=>{
     const tb=document.querySelector('#'+id+' tbody');
-    (arr||[]).forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.ts_code}</b> ${esc(x.name)}</td><td>${esc(x.industry)}</td><td class="num">${x[scoreKey]}</td></tr>`;});
+    (arr||[]).forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.ts_code}</b> ${esc(x.name)}${lianBanTag(x)}</td><td>${esc(x.industry)}</td><td class="num">${x[scoreKey]}</td></tr>`;});
   });
 
   const rc=document.getElementById('reasonCards');
@@ -337,7 +341,7 @@ function render(data){
     let badge='';
     if(isRec) badge+='<span class="tag2" style="font-size:13px;font-weight:700">⭐ 辨识度龙头</span> ';
     if(isAmt) badge+='<span class="tag" style="font-size:13px;font-weight:700">💰 成交额龙头</span> ';
-    rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${(r.reasons||[]).map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
+    rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}${lianBanTag(r)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${(r.reasons||[]).map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
   });
 }
 </script>
