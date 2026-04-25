@@ -379,33 +379,33 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- ═══ 侧边栏 ═══ -->
 <aside class="sidebar">
-  <div class="logo">📊 <em>GAMT</em> 投研看板</div>
+  <div class="logo"><em>GAMT</em> 投研看板</div>
   <nav>
     <div class="nav-group">
       <div class="nav-group-title">总览</div>
-      <div class="nav-item active" data-module="overview"><span class="icon">🏠</span> 仪表盘</div>
+      <div class="nav-item active" data-module="overview">仪表盘</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">分析</div>
-      <div class="nav-item" data-module="style-spread"><span class="icon">📈</span> 风格轧差</div>
-      <div class="nav-item" data-module="env-fit"><span class="icon">🎯</span> 策略环境适配度</div>
-      <div class="nav-item" data-module="fund-flow"><span class="icon">💰</span> 资金流与微观结构</div>
-      <div class="nav-item" data-module="macro"><span class="icon">🌍</span> 宏观与流动性</div>
-      <div class="nav-item" data-module="meso"><span class="icon">🏭</span> 中观景气</div>
+      <div class="nav-item" data-module="style-spread">风格轧差</div>
+      <div class="nav-item" data-module="env-fit">策略环境适配度</div>
+      <div class="nav-item" data-module="fund-flow">资金流与微观结构</div>
+      <div class="nav-item" data-module="macro">宏观与流动性</div>
+      <div class="nav-item" data-module="meso">中观景气</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
-      <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')"><span class="icon">🔬</span> 择时研究</div>
-      <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query.html','_blank')"><span class="icon">📊</span> 个股筹码查询</div>
-      <div class="nav-item" id="navFinancialRisk" style="display:none" onclick="window.open('financial_risk_factor.html','_blank')"><span class="icon">⚠️</span> 财报预期风险</div>
-      <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_research.html','_blank')"><span class="icon">🏦</span> 公募基金研究</div>
-      <div class="nav-item" data-module="alerts"><span class="icon">🚨</span> 红灯预警</div>
-      <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none"><span class="icon">📝</span> 刷新记录</div>
-      <div class="nav-item" data-module="report" style="opacity:.35"><span class="icon">📋</span> 每日报告</div>
+      <div class="nav-item" id="navTimingResearch" style="display:none" onclick="window.open('timing-research/','_blank')">择时研究</div>
+      <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query.html','_blank')">个股筹码查询</div>
+      <div class="nav-item" id="navFinancialRisk" style="display:none" onclick="window.open('financial_risk_factor.html','_blank')">财报预期风险</div>
+      <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_research.html','_blank')">公募基金研究</div>
+      <div class="nav-item" data-module="alerts">红灯预警</div>
+      <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none">刷新记录</div>
+      <div class="nav-item" data-module="report" style="opacity:.35">每日报告</div>
     </div>
     <div class="nav-group" id="adminNavGroup" style="display:none">
       <div class="nav-group-title">设置</div>
-      <div class="nav-item" onclick="location.href='admin.html'" style="cursor:pointer"><span class="icon">⚙️</span> 管理后台</div>
+      <div class="nav-item" onclick="location.href='admin.html'" style="cursor:pointer">管理后台</div>
     </div>
   </nav>
   <div class="user-info" id="sidebarUserInfo">未登录<br><span style="opacity:.5;font-size:11px">v0.3 · 2026-02-13</span></div>
@@ -417,7 +417,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="title" id="pageTitle">仪表盘</div>
     <div class="meta">
       <span id="updateTime"></span>
-      <button class="refresh-btn" id="headerRefreshBtn" onclick="headerRefresh()">🔄 刷新全部</button>
+      <button class="refresh-btn" id="headerRefreshBtn" onclick="headerRefresh()">刷新全部</button>
     </div>
   </div>
   <div class="content">
@@ -471,7 +471,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <!-- ═══ 中观标签 + 配置建议 ═══ -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px" id="ms-bottom-row">
           <div class="ms-bottom-card">
-            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155">🔍 中观观察</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155">中观观察</div>
             <div id="ms-meso-tags"></div>
           </div>
           <div class="ms-bottom-card">
@@ -498,7 +498,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div id="ov-cards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
         <!-- 模块状态表 -->
         <div style="background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-radius:14px;border:1px solid rgba(232,234,239,0.8);padding:20px;box-shadow:0 1px 8px rgba(0,0,0,0.03);animation:fadeUp .5s ease-out .35s both">
-          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#334155;display:flex;align-items:center;gap:8px">📋 模块状态</div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#334155;display:flex;align-items:center;gap:8px">模块状态</div>
           <table class="module-status-table">
             <thead><tr>
               <th>模块</th>
@@ -602,7 +602,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
           // ── Strategy cards ──
           var stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
-          var stratIcons={quant_stock:'📊',momentum_stock:'🚀',commodity_cta:'🛢️',cb_env:'🔄',arbitrage:'⚖️',option_vol:'🧾'};
+          var stratIcons={quant_stock:'',momentum_stock:'',commodity_cta:'',cb_env:'',arbitrage:'',option_vol:''};
           var grid=document.getElementById('ms-strat-grid');
           grid.innerHTML=stratOrder.map(function(k){
             var st=S.strategies[k]||{};
@@ -762,15 +762,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </script>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
-          <div class="strat-tab" data-strat="momentum-stock">🔥 强势股</div>
-          <div class="strat-tab" data-strat="cta">📦 商品CTA</div>
-          <div class="strat-tab" data-strat="option-vol">🧾 期权卖权</div>
-          <div class="strat-tab" data-strat="convertible">🔄 转债</div>
-          <div class="strat-tab" data-strat="arbitrage">⚖️ 套利</div>
+          <div class="strat-tab active" data-strat="quant-stock">宽基量化股票</div>
+          <div class="strat-tab" data-strat="momentum-stock">强势股</div>
+          <div class="strat-tab" data-strat="cta">商品CTA</div>
+          <div class="strat-tab" data-strat="option-vol">期权卖权</div>
+          <div class="strat-tab" data-strat="convertible">转债</div>
+          <div class="strat-tab" data-strat="arbitrage">套利</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button id="refreshBtn" onclick="refreshActiveTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+          <button id="refreshBtn" onclick="refreshActiveTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
 
@@ -780,7 +780,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <div class="strat-page" id="strat-momentum-stock">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px;gap:12px;flex-wrap:wrap">
-        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">2026-04-24</b><span style="color:#94a3b8;font-size:11px"> · 子模块延迟 收益归因:02/26</span></span>
+        <span style="font-size:13px;color:#888">强势股环境诊断 · 主面板截至 <b style="color:#2d3142">2026-04-24</b><span style="color:#94a3b8;font-size:11px"> · 子模块延迟 收益归因:02/26</span></span>
       </div>
 
       <!-- 区块一：环境总览 -->
@@ -1266,7 +1266,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                       var ret='\n收益: '+liAllRet[i].toFixed(2)+'%';
                       ret+='\n高低开: '+liAllGap[i].toFixed(2)+'%';
                       if(liAllBias[i]>3)ret+='\n⚠️ BIAS偏高，拥挤警告';
-                      if(liAllBias[i]<-3)ret+='\n💡 BIAS偏低，关注反转';
+                      if(liAllBias[i]<-3)ret+='\nBIAS偏低，关注反转';
                       return ret;
                     }
                   }
@@ -1333,8 +1333,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                       if(!navDD[i])return '';
                       var dt=navDatesFull[i];
                       var dc=decompLookup[dt];
-                      if(!dc)return '\n📉 基准回撤区域';
-                      return '\n📉 基准回撤区域'
+                      if(!dc)return '\n基准回撤区域';
+                      return '\n基准回撤区域'
                         +'\nBeta贡献: '+dc.cum_beta.toFixed(2)+'%'
                         +'\n情绪贡献: '+dc.cum_sentiment.toFixed(2)+'%'
                         +'\n管理人Alpha: '+dc.cum_alpha.toFixed(2)+'%'
@@ -1398,7 +1398,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
       <div class="strat-page" id="strat-cta">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-        <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">2026-04-24</b></span>
+        <span style="font-size:13px;color:#888">商品CTA · 数据截至 <b style="color:#2d3142">2026-04-24</b></span>
       </div>
 
       <!-- ═══ PCA核心引擎（主角） ═══ -->
@@ -1438,7 +1438,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <!-- 策略评价 -->
       <div class="card" style="background:linear-gradient(135deg,#f8fafc,#f0f4ff);border-left:4px solid #f59e0b">
         <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-bottom:8px">🌤️ 温和环境：可交易但别重仓，等共振信号加强</div>
-        <div style="font-size:12px;line-height:2"><span style="color:#f59e0b">⚠️ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span><br><span style="color:#94a3b8">📊 <b>截面策略中性</b>：板块有一定差异但不突出</span></div>
+        <div style="font-size:12px;line-height:2"><span style="color:#f59e0b">⚠️ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span><br><span style="color:#94a3b8"><b>截面策略中性</b>：板块有一定差异但不突出</span></div>
         <div style="font-size:10px;color:#94a3b8;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:6px">
           参考阈值：PC1 &gt;35%=强共振(趋势CTA利好) · 25-35%=中等 · &lt;20%=困难 | PC2 &gt;15%=截面/多空有空间 · &lt;10%=空间有限
         </div>
@@ -1492,7 +1492,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div>
         <!-- 归因解读 -->
         <div style="background:#fefce8;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;line-height:1.7">
-          <div style="font-weight:700;color:#92400e;margin-bottom:2px">💡 归因解读</div>
+          <div style="font-weight:700;color:#92400e;margin-bottom:2px">归因解读</div>
           <div style="color:#78716c">• 产品与南华商品指数几乎无相关性 — CTA做的是多空择时，非商品多头</div>
           <div style="color:#78716c">• 管理人alpha明显为负，需关注择时能力 ⚠️</div>
         </div>
@@ -2482,7 +2482,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">2026-04-24</b></span>
+  <span style="font-size:13px;color:#888">转债指增 · 数据截至 <b style="color:#2d3142">2026-04-24</b></span>
 </div>
 
 <!-- 总览卡片 -->
@@ -2521,7 +2521,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- 子分数卡片 -->
 <div class="card" style="padding:14px;margin-bottom:16px">
-  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">📊 分项评分</div>
+  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">分项评分</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
     <div style="text-align:center">
       <div style="font-size:10px;color:var(--text-sub)">活跃度</div>
@@ -2871,10 +2871,10 @@ function initCbCharts() {
                   html+='</div>';
                   if(hv!=null || pcr){
                     html+='<div style="margin-top:2px">';
-                    if(hv!=null) html+='<div>📊 HV20波动率: <b>'+hv.toFixed(2)+'%</b></div>';
+                    if(hv!=null) html+='<div>HV20波动率: <b>'+hv.toFixed(2)+'%</b></div>';
                     if(pcr){
-                      html+='<div>📈 PCR(成交量): <b>'+pcr.pcr_vol.toFixed(4)+'</b></div>';
-                      html+='<div>📈 PCR(持仓量): <b>'+pcr.pcr_oi.toFixed(4)+'</b></div>';
+                      html+='<div>PCR(成交量): <b>'+pcr.pcr_vol.toFixed(4)+'</b></div>';
+                      html+='<div>PCR(持仓量): <b>'+pcr.pcr_oi.toFixed(4)+'</b></div>';
                     }
                     html+='</div>';
                   }
@@ -2929,12 +2929,12 @@ function initCbCharts() {
     <div class="module-page" id="page-fund-flow">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="patient-capital">🏛️ 耐心资本持筹</div>
-          <div class="strat-tab" data-strat="crowding">📡 拥挤度监控</div>
-          <div class="strat-tab" data-strat="option-sentiment">🎯 期权异常值监控</div>
+          <div class="strat-tab active" data-strat="patient-capital">耐心资本持筹</div>
+          <div class="strat-tab" data-strat="crowding">拥挤度监控</div>
+          <div class="strat-tab" data-strat="option-sentiment">期权异常值监控</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button id="refreshBtnFlow" onclick="refreshFlowTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+          <button id="refreshBtnFlow" onclick="refreshFlowTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
 
@@ -2953,14 +2953,14 @@ function initCbCharts() {
     <div class="module-page" id="page-macro">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="antifragile">🌐 反脆弱看板</div>
-          <div class="strat-tab" data-strat="halo">🎯 HALO交易</div>
+          <div class="strat-tab active" data-strat="antifragile">反脆弱看板</div>
+          <div class="strat-tab" data-strat="halo">HALO交易</div>
           <div class="strat-tab" data-strat="liquidity">💧 境内流动性</div>
-          <div class="strat-tab" data-strat="rates">📊 全球利率与汇率</div>
-          <div class="strat-tab" data-strat="fundamentals">📈 经济基本面</div>
+          <div class="strat-tab" data-strat="rates">全球利率与汇率</div>
+          <div class="strat-tab" data-strat="fundamentals">经济基本面</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button id="refreshBtnMacro" onclick="refreshMacroTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+          <button id="refreshBtnMacro" onclick="refreshMacroTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
       <div class="strat-page active" id="strat-antifragile">
@@ -2984,10 +2984,10 @@ function initCbCharts() {
     <div class="module-page" id="page-meso">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="chain-prosperity">🏭 产业链景气</div>
+          <div class="strat-tab active" data-strat="chain-prosperity">产业链景气</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button id="refreshBtnMeso" onclick="refreshMesoTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新当前</button>
+          <button id="refreshBtnMeso" onclick="refreshMesoTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
       <div class="strat-page active" id="strat-chain-prosperity">
@@ -2998,7 +2998,7 @@ function initCbCharts() {
     <!-- ══ 红灯预警 ══ -->
     <div class="module-page" id="page-alerts">
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-        <button id="refreshBtnAlerts" onclick="refreshAlertsTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#dc2626';this.style.color='#dc2626'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">🔄 刷新数据</button>
+        <button id="refreshBtnAlerts" onclick="refreshAlertsTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#dc2626';this.style.color='#dc2626'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新数据</button>
       </div>
       <iframe src="alerts/alerts.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 80px)"></iframe>
     </div><!-- /page-alerts -->
@@ -3009,7 +3009,7 @@ function initCbCharts() {
         <div id="update-log-loading" style="text-align:center;padding:40px;color:#8b92a5">加载刷新记录...</div>
         <div id="update-log-content" style="display:none"></div>
         <div id="update-log-empty" style="display:none;text-align:center;padding:60px;color:#8b92a5">
-          <div style="font-size:48px;margin-bottom:16px">📝</div>
+          <div style="font-size:24px;margin-bottom:16px;color:#94a3b8;font-weight:600">每日报告</div>
           <div style="font-size:14px">暂无刷新记录</div>
           <div style="font-size:12px;margin-top:8px;opacity:.6">模块刷新后会自动记录</div>
         </div>
@@ -3020,7 +3020,7 @@ function initCbCharts() {
     <div class="module-page" id="page-chip-query">
       <div style="max-width:1000px;margin:0 auto">
         <div class="card" style="margin-bottom:24px">
-          <h2 style="font-size:20px;margin-bottom:16px">📊 个股筹码分布查询</h2>
+          <h2 style="font-size:20px;margin-bottom:16px">个股筹码分布查询</h2>
           <p style="color:#8b92a5;font-size:14px;margin-bottom:20px">输入股票代码，查询近3个月筹码成本分布、获利盘/套牢盘结构、资金异动和基本面标签</p>
           <div style="display:flex;gap:12px;max-width:500px">
             <input type="text" id="chipCodeInput" placeholder="如 600519.SH 或 300750.SZ" style="flex:1;background:#0e1a2f;border:1px solid #2a3a58;color:#e2e8f0;padding:12px 16px;border-radius:10px;font-size:14px" />
@@ -3189,9 +3189,9 @@ function initCbCharts() {
     var elapsed=document.getElementById('toastElapsed');
     var logDiv=document.getElementById('toastLog');
     if(p.total_modules>1){
-      title.textContent='🔄 全部刷新 '+p.completed_modules+'/'+p.total_modules;
+      title.textContent='全部刷新 '+p.completed_modules+'/'+p.total_modules;
     }else{
-      title.textContent='🔄 '+(s.module_name||s.module||'刷新中');
+      title.textContent='+(s.module_name||s.module||'刷新中');
     }
     var pct=0;
     if(p.total_modules>1){
@@ -3232,7 +3232,7 @@ function initCbCharts() {
       var activeMod=document.querySelector('.nav-item.active');
       if(activeMod) strat=activeMod.getAttribute('data-module');
     }
-    if(!strat){btn.innerHTML='❌ 未选中模块';setTimeout(function(){btn.innerHTML='🔄 刷新当前';},2000);return;}
+    if(!strat){btn.innerHTML='未选中模块';setTimeout(function(){btn.innerHTML='刷新当前';},2000);return;}
     refreshModule(strat,btn);
   };
 
@@ -3371,9 +3371,9 @@ function initCbCharts() {
     var currentModule=document.querySelector('.nav-item.active').dataset.module;
     var btn=document.getElementById('headerRefreshBtn');
     if(currentModule==='overview'){
-      btn.innerHTML='🔄 刷新全部';
+      btn.innerHTML='刷新全部';
     }else{
-      btn.innerHTML='🔄 刷新当前';
+      btn.innerHTML='刷新当前';
     }
   }
 
@@ -3771,7 +3771,7 @@ function initCbCharts() {
 <!-- ═══ 刷新进度 Toast ═══ -->
 <div id="refreshToast" style="display:none; position:fixed; bottom:24px; right:24px; z-index:9999; background:#1e293b; color:#fff; border-radius:12px; padding:16px 20px; min-width:320px; max-width:420px; box-shadow:0 8px 32px rgba(0,0,0,.25); font-size:13px; line-height:1.6;">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-    <span id="toastTitle" style="font-weight:600; font-size:14px;">🔄 刷新中...</span>
+    <span id="toastTitle" style="font-weight:600; font-size:14px;">刷新中...</span>
     <span id="toastElapsed" style="color:#94a3b8; font-size:12px;">0s</span>
   </div>
   <div style="background:#334155; border-radius:6px; height:6px; overflow:hidden; margin-bottom:8px;">
