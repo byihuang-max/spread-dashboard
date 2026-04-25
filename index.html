@@ -607,10 +607,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           grid.innerHTML=stratOrder.map(function(k){
             var st=S.strategies[k]||{};
             var sc2=st.score||0;
-            var light,bg,border,glow;
-            if(sc2>=70){light='🟢';bg='linear-gradient(135deg,#f0fdf4,#dcfce7)';border='#86efac';glow='0 4px 16px rgba(16,185,129,0.12)';}
-            else if(sc2>=45){light='🟡';bg='linear-gradient(135deg,#fffbeb,#fef3c7)';border='#fcd34d';glow='0 4px 16px rgba(245,158,11,0.12)';}
-            else{light='🔴';bg='linear-gradient(135deg,#fef2f2,#fee2e2)';border='#fca5a5';glow='0 4px 16px rgba(239,68,68,0.12)';}
+            var bg,border,glow;
+            if(sc2>=70){bg='linear-gradient(135deg,#f0fdf4,#dcfce7)';border='#86efac';glow='0 4px 16px rgba(16,185,129,0.12)';}
+            else if(sc2>=45){bg='linear-gradient(135deg,#fffbeb,#fef3c7)';border='#fcd34d';glow='0 4px 16px rgba(245,158,11,0.12)';}
+            else{bg='linear-gradient(135deg,#fef2f2,#fee2e2)';border='#fca5a5';glow='0 4px 16px rgba(239,68,68,0.12)';}
 
             var progColor=sc2>=70?'#22c55e':sc2>=45?'#eab308':'#ef4444';
             var sigs2=(st.signals||[]).slice(0,2).map(function(s){
@@ -709,7 +709,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           var groups=D.module_groups||[];
           var html='';
           groups.forEach(function(g){
-            var st=g.status==='on'?'<span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">运行中</span>':'<span style="background:#f1f5f9;color:#94a3b8;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">离线</span>';
+            var st=g.status==='on'?'<span style="color:#16a34a;font-size:11px;font-weight:600">正常</span>':'<span style="color:#94a3b8;font-size:11px;font-weight:600">离线</span>';
             var newSet={};
             (g.new_subs||[]).forEach(function(n){newSet[n]=true;});
             var subHtml=(g.subs||[]).map(function(s){
