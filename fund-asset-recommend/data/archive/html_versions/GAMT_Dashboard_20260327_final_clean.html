@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+const fundData = [
+  {
+    "name": "正仁股票择时四期",
+    "code": "SATL65",
+    "strategy": "股票多头-300指增",
+    "has_data": false
+  },
+  {
+    "name": "立心-私募学院菁英353号",
+    "code": "SCJ476",
+    "strategy": "股票多头-主观多头",
+    "latest_nav": 1.4183,
+    "latest_cum_nav": 6.31165992,
+    "latest_date": "2026-03-26",
+    "daily_change": -0.21107436999999998,
+    "week_return": 0.2473848682675639,
+    "month_return": -1.5342959565098235,
+    "3month_return": 1.7577845509859413,
+    "ytd_return": 1.4883721166564001,
+    "total_return": 25.591074095724075,
+    "max_drawdown": 4.923228550166412,
+    "has_data": true
+  },
+  {
+    "name": "波克宏观配置1号",
+    "code": "SARZ77",
+    "strategy": "多资产-宏观策略",
+    "latest_nav": 1.4109,
+    "latest_cum_nav": 1.43971074,
+    "latest_date": "2026-03-27",
+    "daily_change": -1.05890603,
+    "week_return": -1.0589057769760046,
+    "month_return": -1.6931438939227994,
+    "3month_return": 5.775530085959879,
+    "ytd_return": 3.2642906326208587,
+    "total_return": 44.02868547418968,
+    "max_drawdown": 7.511559875436455,
+    "has_data": true
+  },
+  {
+    "name": "太衍光年中证2000指数增强2号",
+    "code": "SBCA75",
+    "strategy": "股票多头-2000指增",
+    "latest_nav": 1.1206,
+    "latest_cum_nav": 1.1206,
+    "latest_date": "2026-03-26",
+    "daily_change": -1.64135873,
+    "week_return": -3.50469301644708,
+    "month_return": -7.35014468788755,
+    "3month_return": 5.916824196597359,
+    "ytd_return": 3.913204747774479,
+    "total_return": 12.060000000000004,
+    "max_drawdown": 13.895143132840145,
+    "has_data": true
+  },
+  {
+    "name": "翔云50二号A类",
+    "code": "VB166A",
+    "strategy": "股票多头-另类多头",
+    "latest_nav": 2.0031,
+    "latest_cum_nav": 2.0031,
+    "latest_date": "2026-03-26",
+    "daily_change": -0.74327338,
+    "week_return": -0.24402390438247323,
+    "month_return": -1.8040100004902193,
+    "3month_return": 1.5101606446054738,
+    "ytd_return": 0.009985520994559849,
+    "total_return": 9.885347523177357,
+    "max_drawdown": 6.683438553187451,
+    "has_data": true
+  },
+  {
+    "name": "创世纪顾锝灵活多策略1号",
+    "code": "SBDC67",
+    "strategy": "股票多头",
+    "latest_nav": 1.0064,
+    "latest_cum_nav": 1.0064,
+    "latest_date": "2026-03-26",
+    "daily_change": -0.59265113,
+    "week_return": -1.5264187866927625,
+    "month_return": -3.0629936428433924,
+    "3month_return": -3.26797385620915,
+    "ytd_return": -3.9969474387102966,
+    "total_return": 0.6399999999999961,
+    "max_drawdown": 5.4916021890922835,
+    "has_data": true
+  },
+  {
+    "name": "瀚鑫纸鸢量化优选",
+    "code": "SZC020",
+    "strategy": "股票多头-量化选股",
+    "has_data": false
+  },
+  {
+    "name": "碳硅1号",
+    "code": "SXJ836",
+    "strategy": "期货策略-主观期货",
+    "latest_nav": 0.9695,
+    "latest_cum_nav": 1.5555764,
+    "latest_date": "2026-03-26",
+    "daily_change": 0.24816462000000003,
+    "week_return": -0.24693938269283455,
+    "month_return": -4.246913850479784,
+    "3month_return": -4.256369928471104,
+    "ytd_return": -3.0209065621746856,
+    "total_return": 29.80443925233647,
+    "max_drawdown": 10.148975528840275,
+    "has_data": true
+  },
+  {
+    "name": "顽岩量化选股1号",
+    "code": "SATW62",
+    "strategy": "股票多头-量化选股",
+    "latest_nav": 1.8558,
+    "latest_cum_nav": 1.8558,
+    "latest_date": "2026-03-20",
+    "daily_change": -5.89249493,
+    "week_return": -5.892494929006087,
+    "month_return": -2.0686015831134608,
+    "3month_return": 12.62972628512471,
+    "ytd_return": 1.216253067902917,
+    "total_return": 85.59855985598558,
+    "max_drawdown": 7.482014388489211,
+    "has_data": true
+  },
+  {
+    "name": "正仁股票择时一期",
+    "code": "SARD76",
+    "strategy": "股票多头-择时择股",
+    "latest_nav": 1.1713,
+    "latest_cum_nav": 1.3200551,
+    "latest_date": "2026-03-26",
+    "daily_change": -1.03920243,
+    "week_return": -0.3657706702960173,
+    "month_return": -1.505213588967369,
+    "3month_return": 3.720837589376913,
+    "ytd_return": 3.6149999999999904,
+    "total_return": 36.214539263233945,
+    "max_drawdown": 3.4190347316193095,
+    "has_data": true
+  },
+  {
+    "name": "格林基金鲲鹏6号",
+    "code": "SVZ638",
+    "strategy": "债券策略-债券复合",
+    "latest_nav": 8.2645,
+    "latest_cum_nav": 8.2645,
+    "latest_date": "2026-03-20",
+    "daily_change": -6.724377280000001,
+    "week_return": -12.573653087347003,
+    "month_return": -10.367229187453908,
+    "3month_return": 0.9342940889105922,
+    "ytd_return": 1.0206576213176888,
+    "total_return": 138.844575458066,
+    "max_drawdown": 18.383369543748763,
+    "has_data": true
+  },
+  {
+    "name": "赢仕安盈二号",
+    "code": "SLQ349",
+    "strategy": "股票多头-可转债",
+    "latest_nav": 1.1458,
+    "latest_cum_nav": 1.84199395,
+    "latest_date": "2026-03-26",
+    "daily_change": -1.31771596,
+    "week_return": 0.5087719455240114,
+    "month_return": -5.43953907732867,
+    "3month_return": 2.7142388092371794,
+    "ytd_return": 1.0526505953180942,
+    "total_return": 32.71667789034114,
+    "max_drawdown": 7.872738657102787,
+    "has_data": true
+  },
+  {
+    "name": "具力芒种1号",
+    "code": "STE836",
+    "strategy": "股票多头-可转债",
+    "latest_nav": 1.1315,
+    "latest_cum_nav": 1.57612526,
+    "latest_date": "2026-03-20",
+    "daily_change": -3.125,
+    "week_return": -3.1249999807924866,
+    "month_return": -6.0293995616333635,
+    "3month_return": -0.2995860547664764,
+    "ytd_return": -3.488570489076892,
+    "total_return": 21.73298590596209,
+    "max_drawdown": 6.169665612347963,
+    "has_data": true
+  },
+  {
+    "name": "时间序列红利增强1号",
+    "code": "SSV122",
+    "strategy": "股票多头-红利指增",
+    "has_data": false
+  },
+  {
+    "name": "积沐领航者",
+    "code": "SAJJ91",
+    "strategy": "股票多头-1000指增",
+    "latest_nav": 1.8603,
+    "latest_cum_nav": 1.8603,
+    "latest_date": "2026-03-26",
+    "daily_change": -1.3208147700000001,
+    "week_return": -3.561430793157072,
+    "month_return": -6.3717348633549715,
+    "3month_return": 3.765060240963858,
+    "ytd_return": 2.287348105789855,
+    "total_return": 61.34431916738943,
+    "max_drawdown": 14.669926650366746,
+    "has_data": true
+  },
+  {
+    "name": "旌安思源1号B类",
+    "code": "AEU46B",
+    "strategy": "股票多头-另类多头",
+    "latest_nav": 1.2182,
+    "latest_cum_nav": 1.2182,
+    "latest_date": "2026-03-26",
+    "daily_change": -0.08202100000000001,
+    "week_return": 0.32943501894251437,
+    "month_return": -0.8787632221318287,
+    "3month_return": 0.1068288273481599,
+    "ytd_return": -0.17208883061542446,
+    "total_return": 6.672504378283728,
+    "max_drawdown": 5.179033142678058,
+    "has_data": true
+  },
+  {
+    "name": "涌泉君安三号",
+    "code": "SZM385",
+    "strategy": "期货策略-量化期货",
+    "latest_nav": 1.419,
+    "latest_cum_nav": 1.419,
+    "latest_date": "2026-03-27",
+    "daily_change": 0.2755989,
+    "week_return": 0.27559889760440104,
+    "month_return": 3.3127047688387368,
+    "3month_return": 8.727300589993114,
+    "ytd_return": 9.490740740740744,
+    "total_return": 12.744319084697286,
+    "max_drawdown": 9.758565852248086,
+    "has_data": true
+  },
+  {
+    "name": "铭跃行远均衡一号",
+    "code": "SVZ009",
+    "strategy": "期货策略-量化期货",
+    "latest_nav": 1.035,
+    "latest_cum_nav": 1.318784,
+    "latest_date": "2026-03-20",
+    "daily_change": -0.38498556,
+    "week_return": -0.384985581216446,
+    "month_return": -2.908067497322242,
+    "3month_return": 6.820348139740928,
+    "ytd_return": 3.499999968607437,
+    "total_return": 16.706548672566377,
+    "max_drawdown": 2.908067497322237,
+    "has_data": true
+  },
+  {
+    "name": "正仁双创择时一号",
+    "code": "SXG834",
+    "strategy": "股票多头-1000指增",
+    "latest_nav": 1.4107,
+    "latest_cum_nav": 1.4808986,
+    "latest_date": "2026-03-26",
+    "daily_change": -2.06192724,
+    "week_return": -4.261961656223212,
+    "month_return": -4.648376406404786,
+    "3month_return": 0.9336559432933322,
+    "ytd_return": 0.10129782344192595,
+    "total_return": 6.264250861079224,
+    "max_drawdown": 8.342537771432822,
+    "has_data": true
+  },
+  {
+    "name": "特夫郁金香全量化",
+    "code": "SQX078",
+    "strategy": "股票对冲-打板",
+    "latest_nav": 1.0267,
+    "latest_cum_nav": 2.63292791,
+    "latest_date": "2026-03-26",
+    "daily_change": -0.09730466,
+    "week_return": 0.18540210095414622,
+    "month_return": -0.3203880549874638,
+    "3month_return": 0.7888129148326151,
+    "ytd_return": 0.771153902562971,
+    "total_return": 11.083175672190993,
+    "max_drawdown": 5.135387487648755,
+    "has_data": true
+  },
+  {
+    "name": "海鹏扬帆",
+    "code": "SSR379",
+    "strategy": "期货策略-主观期货",
+    "latest_nav": 1.176,
+    "latest_cum_nav": 2.77754047,
+    "latest_date": "2026-03-20",
+    "daily_change": -2.89017341,
+    "week_return": -2.8901732426653504,
+    "month_return": 1.2919899552631398,
+    "3month_return": 7.299270019416815,
+    "ytd_return": 0.4269854568658138,
+    "total_return": 17.953861521287994,
+    "max_drawdown": 10.396975609915398,
+    "has_data": true
+  }
+];
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMT核心资产看板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #121a29;
+            --bg-card: #1e293b;
+            --bg-group: rgba(255, 255, 255, 0.02);
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-primary: #2563eb;
+            --accent-primary-light: #3b82f6;
+            --accent-green: #059669;
+            --accent-green-light: #10b981;
+            --accent-red: #dc2626;
+            --accent-red-light: #ef4444;
+            --accent-gold: #d4af37;
+            --accent-yellow: #f59e0b;
+            --accent-purple: #7c3aed;
+            --accent-cyan: #0891b2;
+            --accent-orange: #ea580c;
+            --menu-hover: rgba(37, 99, 235, 0.1);
+            --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+        @media print {
+            body {
+                background: white;
+            }
+            .app-container {
+                grid-template-columns: 1fr !important;
+                padding: 0 !important;
+            }
+            .sidebar, .right-panel {
+                display: none !important;
+            }
+            .export-btn {
+                display: none !important;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .app-container {
+            display: grid;
+            grid-template-columns: 220px 1fr 260px;
+            min-height: 100vh;
+            gap: 20px;
+            padding: 20px;
+        }
+        @media (max-width: 1400px) {
+            .app-container {
+                grid-template-columns: 200px 1fr 240px;
+            }
+        }
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 200px 1fr;
+                grid-template-areas: 
+                    "sidebar main"
+                    "sidebar right";
+            }
+        }
+        .sidebar {
+            grid-column: 1;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .logo-area {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .logo-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-primary-light);
+            letter-spacing: 0.5px;
+        }
+        .logo-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-weight: 400;
+        }
+        .menu-item {
+            display: block;
+            padding: 14px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            background: var(--menu-hover);
+            color: var(--accent-primary-light);
+        }
+        .menu-item.active {
+            background: var(--menu-hover);
+            color: var(--accent-primary-light);
+            border-left-color: var(--accent-primary-light);
+        }
+        .menu-item-icon {
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+        .main-content {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .content-module {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .module-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .period-selector {
+            display: inline-flex;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .period-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .period-btn.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+        .filter-area {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .filter-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+        @media (max-width: 900px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        select {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .radio-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            padding: 18px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-primary-light);
+        }
+        .stat-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .stat-change.up { color: var(--accent-green-light); }
+        .stat-change.down { color: var(--accent-red-light); }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .overview-charts-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+        }
+        .product-table-container {
+            overflow-x: auto;
+        }
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .product-table th {
+            background: var(--bg-card);
+            text-align: left;
+            padding: 14px 12px;
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            letter-spacing: 0.5px;
+        }
+        .product-table th:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .product-table th:after {
+            content: " ↕";
+            opacity: 0.5;
+        }
+        .product-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .product-table tr:hover {
+            background: var(--bg-group);
+        }
+        .strategy-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+        .strategy-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .return-positive { color: var(--accent-green-light); font-weight: 600; }
+        .return-negative { color: var(--accent-red-light); font-weight: 600; }
+        .rank-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .rank-top { background: rgba(5, 150, 105, 0.15); color: var(--accent-green-light); border: 1px solid rgba(5, 150, 105, 0.3); }
+        .rank-middle { background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .rank-bottom { background: rgba(220, 38, 38, 0.15); color: var(--accent-red-light); border: 1px solid rgba(220, 38, 38, 0.3); }
+        .detail-btn {
+            padding: 6px 14px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .detail-btn:hover {
+            background: var(--accent-primary-light);
+        }
+        .right-panel {
+            grid-column: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (max-width: 1200px) {
+            .right-panel {
+                grid-column: 2;
+            }
+        }
+        .panel-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        .announce-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .announce-item {
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-primary);
+            transition: transform 0.2s;
+        }
+        .announce-item:hover {
+            transform: translateX(2px);
+        }
+        .announce-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .announce-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .gauge-container {
+            margin-bottom: 20px;
+        }
+        .gauge-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .gauge-level {
+            font-weight: 600;
+        }
+        .gauge-bar {
+            height: 10px;
+            background: var(--bg-card);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+        .gauge-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .comment-box {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 8px;
+            min-height: 140px;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .export-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .export-btn:hover {
+            background-color: var(--accent-green-light);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background: var(--bg-secondary);
+            margin: 5% auto;
+            padding: 24px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+        .modal-close {
+            position: absolute;
+            right: 18px;
+            top: 15px;
+            font-size: 28px;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="logo-area">
+                <div class="logo-title">GAMT资产看板</div>
+                <div class="logo-subtitle">机构核心资产跟踪</div>
+            </div>
+            <div class="menu" id="mainMenu">
+                <div class="menu-item" data-module="module1">
+                    <span class="menu-item-icon">📈</span>市场策略观察
+                </div>
+                <div class="menu-item active" data-module="module2">
+                    <span class="menu-item-icon">🏆</span>GAMT核心资产
+                </div>
+                <div class="menu-item" data-module="module3">
+                    <span class="menu-item-icon">💼</span>模拟组合FOF
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间主内容区 -->
+        <div class="main-content">
+            <!-- GAMT核心资产模块 -->
+            <div id="module2" class="content-module">
+                <h2 class="module-title">
+                    GAMT核心资产周报
+                    <div class="period-selector">
+                        <button class="period-btn active" data-period="week">本周</button>
+                        <button class="period-btn" data-period="month">本月</button>
+                        <button class="period-btn" data-period="ytd">本年至今</button>
+                    </div>
+                </h2>
+
+                <div style="margin-bottom: 16px; color: #cbd5e1; font-size: 14px;">
+                    <strong>统计区间：</strong>近一周 <span style="color:#888">(2026.03.06 - 2026.03.13)</span>
+                </div>
+                
+                <!-- 筛选区域 -->
+                <div class="filter-area">
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label class="filter-label">策略类型筛选</label>
+                            <select id="strategyFilter">
+                                <option value="all">全部</option>
+                                <option value="量选类">量选类</option>
+                                <option value="风格类">风格类</option>
+                                <option value="绝对收益">绝对收益</option>
+                                <option value="商品类">商品类</option>
+                                <option value="多策略">多策略</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-label">风险等级</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="riskFilter" value="all" checked> 全部
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="riskFilter" value="high"> 高波动
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="riskFilter" value="medium"> 中波动
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="riskFilter" value="low"> 低波动
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-label">排序方式</label>
+                            <select id="sortFilter">
+                                <option value="week-desc">近一周收益 ↓</option>
+                                <option value="month-desc">近一月收益 ↓</option>
+                                <option value="sharpe-desc">夏普比率 ↓</option>
+                                <option value="drawdown-asc">最大回撤 ↑</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 顶部核心概览 统计卡片 -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value">20</div>
+                        <div class="stat-label">核心基金总数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--accent-red-light)">-0.60%</div>
+                        <div class="stat-change down">▼ 0.34% 较上周</div>
+                        <div class="stat-label">近一周平均收益</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--accent-green-light)">+1.82%</div>
+                        <div class="stat-label">近一月平均收益</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--accent-gold)">5/19</div>
+                        <div class="stat-label">正收益产品</div>
+                    </div>
+                </div>
+
+                <!-- 概览图表 -->
+                <div class="overview-charts-row">
+                    <div class="chart-container">
+                        <canvas id="strategyPieChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="weeklyCompareChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 核心产品明细表 -->
+                <div class="product-table-container">
+                    <table class="product-table" id="productTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="index">序号</th>
+                                <th data-sort="name">产品名称</th>
+                                <th data-sort="strategy">策略类型</th>
+                                <th data-sort="weekReturn">近一周收益</th>
+                                <th data-sort="monthReturn">近一月收益</th>
+                                <th data-sort="ytdReturn">今年以来</th>
+                                <th data-sort="sharpe">夏普比率(月)</th>
+                                <th data-sort="drawdown">最大回撤(月)</th>
+                                <th data-sort="rank">同类排名</th>
+                                <th data-sort="action">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <!-- 右侧信息栏 -->
+        <div class="right-panel">
+            <div class="panel-section">
+                <h3 class="panel-title">版本更新公告</h3>
+                <div class="announce-list">
+                    <div class="announce-item">
+                        <div class="announce-date">2026-03-22</div>
+                        <div class="announce-text">按新策略分类重构完成：<br>量选类/风格类/绝对收益/商品类/多策略</div>
+                    </div>
+                    <div class="announce-item">
+                        <div class="announce-date">2026-03-06</div>
+                        <div class="announce-text">新增：太衍光年中证2000指数增强2号</div>
+                    </div>
+                    <div class="announce-item">
+                        <div class="announce-date">2026-02-27</div>
+                        <div class="announce-text">纳入观察：正仁双创择时一号</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">本周市场温度</h3>
+                <div class="gauge-container">
+                    <div class="gauge-title">
+                        <span>市场波动率</span>
+                        <span class="gauge-level" style="color: var(--accent-yellow)">中高</span>
+                    </div>
+                    <div class="gauge-bar">
+                        <div class="gauge-fill" style="width: 70%; background: linear-gradient(90deg, var(--accent-green), var(--accent-yellow), var(--accent-red))"></div>
+                    </div>
+                </div>
+                <div class="gauge-container">
+                    <div class="gauge-title">
+                        <span>贪婪/恐惧指数</span>
+                        <span class="gauge-level" style="color: var(--accent-red-light)">恐惧</span>
+                    </div>
+                    <div class="gauge-bar">
+                        <div class="gauge-fill" style="width: 25%; background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow), var(--accent-green))"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">投资经理观点</h3>
+                <div class="comment-box">
+本周A股整体震荡调整，大小盘风格分化，中证2000等小盘指数回调幅度较大。短期波动加大对高频量化策略带来一定回撤，中频选股策略相对稳健。商品、债券对冲属性有所体现，宏观多策略表现出较好韧性。<br><br>
+<strong>展望：</strong>关注美联储政策边际变化与国内经济数据，建议保持中性仓位，均衡配置不同风格策略。当前时点，红利策略和绝对收益策略配置价值提升。
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <button class="export-btn" onclick="generatePDF()">📄 生成PDF周报</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品详情模态框 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeDetailModal()">&times;</span>
+            <h2 id="modalTitle" style="margin-bottom: 24px; padding-right: 30px;"></h2>
+            <div class="chart-container" style="height: 280px; margin-bottom: 24px;">
+                <canvas id="detailChart"></canvas>
+            </div>
+            <div id="modalDetailTable"></div>
+        </div>
+    </div>
+
+<script>
+// 完整的20只产品数据 - 更新于2026-03-27（累计复权净值计算）
+const productData = [
+    // 1-2 量选类
+    {
+        id: 1,
+        name: "量化选股（顽岩量化选股1号）",
+        category: "量选类",
+        strategyColor: "#3b82f6",
+        weekReturn: +0.36,
+        monthReturn: -6.91,
+        ytdReturn: +8.03,
+        sharpe: 1.85,
+        maxDrawdown: -2.3,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    {
+        id: 2,
+        name: "股票择时（正仁股票择时一期）",
+        category: "量选类",
+        strategyColor: "#3b82f6",
+        weekReturn: -0.02,
+        monthReturn: -1.94,
+        ytdReturn: +4.39,
+        sharpe: 0.45,
+        maxDrawdown: -1.6,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "medium"
+    },
+    // 3-9 风格类 (共7只)
+    {
+        id: 3,
+        name: "双创择时（正仁双创）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: -2.29,
+        monthReturn: null,
+        ytdReturn: +2.01,
+        sharpe: 1.52,
+        maxDrawdown: -3.1,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    {
+        id: 4,
+        name: "微盘择时（瀚鑫纸鸢量化优选）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: +1.69,
+        monthReturn: -3.40,
+        ytdReturn: +1.38,
+        sharpe: 0.51,
+        maxDrawdown: -2.1,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "medium"
+    },
+    {
+        id: 5,
+        name: "1000指增（积沐领航者）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: +0.13,
+        monthReturn: -7.81,
+        ytdReturn: +5.75,
+        sharpe: 1.28,
+        maxDrawdown: -3.8,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    {
+        id: 6,
+        name: "2000指增T0（太衍光年中证2000指数增强2号）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: +0.66,
+        monthReturn: -8.30,
+        ytdReturn: +7.66,
+        sharpe: 1.15,
+        maxDrawdown: -4.2,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "high"
+    },
+    {
+        id: 7,
+        name: "红利指增（时间序列红利增强）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: -0.59,
+        monthReturn: -2.93,
+        ytdReturn: +2.85,
+        sharpe: 0.62,
+        maxDrawdown: -1.8,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "medium"
+    },
+    {
+        id: 8,
+        name: "转债多头-集中类（赢仕安盈二号）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: +1.36,
+        monthReturn: -2.66,
+        ytdReturn: +2.80,
+        sharpe: -0.35,
+        maxDrawdown: -2.5,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "medium"
+    },
+    {
+        id: 9,
+        name: "转债多头-分散类（具力芒种1号）",
+        category: "风格类",
+        strategyColor: "#10b981",
+        weekReturn: +1.46,
+        monthReturn: -3.29,
+        ytdReturn: +0.82,
+        sharpe: -0.12,
+        maxDrawdown: -1.9,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "low"
+    },
+    // 10-14 绝对收益 (共5只)
+    {
+        id: 10,
+        name: "短线择时（旌安思源1号B类）",
+        category: "绝对收益",
+        strategyColor: "#8b5cf6",
+        weekReturn: +0.33,
+        monthReturn: -0.99,
+        ytdReturn: +0.55,
+        sharpe: -0.58,
+        maxDrawdown: -1.8,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "medium"
+    },
+    {
+        id: 11,
+        name: "趋势策略（创世纪顾锝灵活多策略1号）",
+        category: "绝对收益",
+        strategyColor: "#8b5cf6",
+        weekReturn: -0.76,
+        monthReturn: -2.52,
+        ytdReturn: -2.98,
+        sharpe: -0.65,
+        maxDrawdown: -2.1,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "medium"
+    },
+    {
+        id: 12,
+        name: "主线择时（立心-私募学院菁英353号）",
+        category: "绝对收益",
+        strategyColor: "#8b5cf6",
+        weekReturn: +0.29,
+        monthReturn: -0.96,
+        ytdReturn: +0.65,
+        sharpe: 0.58,
+        maxDrawdown: -2.8,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    {
+        id: 13,
+        name: "大盘择时（翔云50二号A类）",
+        category: "绝对收益",
+        strategyColor: "#8b5cf6",
+        weekReturn: +0.83,
+        monthReturn: -3.65,
+        ytdReturn: +2.47,
+        sharpe: 0.72,
+        maxDrawdown: -2.4,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "medium"
+    },
+    {
+        id: 14,
+        name: "量化打板（特夫郁金香全量化）",
+        category: "绝对收益",
+        strategyColor: "#8b5cf6",
+        weekReturn: +0.06,
+        monthReturn: -1.11,
+        ytdReturn: +0.06,
+        sharpe: 1.35,
+        maxDrawdown: -1.9,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    // 15-18 商品类 (共4只)
+    {
+        id: 15,
+        name: "量化时序cta（铭跃行远均衡一号)",
+        category: "商品类",
+        strategyColor: "#f97316",
+        weekReturn: +0.15,
+        monthReturn: -1.67,
+        ytdReturn: +3.43,
+        sharpe: -0.48,
+        maxDrawdown: -2.2,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "medium"
+    },
+    {
+        id: 16,
+        name: "化工-碳硅1号",
+        category: "商品",
+        strategyColor: "#f97316",
+        weekReturn: +0.40,
+        monthReturn: -3.16,
+        ytdReturn: -1.39,
+        sharpe: -0.32,
+        maxDrawdown: -3.0,
+        rank: "bottom",
+        rankText: "后1/3",
+        risk: "high"
+    },
+    {
+        id: 17,
+        name: "黑色-涌泉君安三号",
+        category: "商品",
+        strategyColor: "#f97316",
+        weekReturn: +0.28,
+        monthReturn: +1.49,
+        ytdReturn: +8.41,
+        sharpe: 1.68,
+        maxDrawdown: -2.5,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "high"
+    },
+    {
+        id: 18,
+        name: "农产品-海鹏扬帆",
+        category: "商品",
+        strategyColor: "#f97316",
+        weekReturn: -0.54,
+        monthReturn: -0.45,
+        ytdReturn: +2.16,
+        sharpe: 0.03,
+        maxDrawdown: -1.8,
+        rank: "middle",
+        rankText: "中1/3",
+        risk: "medium"
+    },
+    // 19-20 多策略 (共2只)
+    {
+        id: 19,
+        name: "黄金大类（格林基金鲲鹏六号）",
+        category: "多策略",
+        strategyColor: "#06b6d4",
+        weekReturn: -5.25,
+        monthReturn: -17.14,
+        ytdReturn: -3.25,
+        sharpe: 2.15,
+        maxDrawdown: -1.8,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "medium"
+    },
+    {
+        id: 20,
+        name: "宏观大类（波克宏观配置一号）",
+        category: "多策略",
+        strategyColor: "#06b6d4",
+        weekReturn: -1.04,
+        monthReturn: -3.04,
+        ytdReturn: +7.84,
+        sharpe: 1.42,
+        maxDrawdown: -1.2,
+        rank: "top",
+        rankText: "前1/3",
+        risk: "low"
+    }
+];
+
+// 颜色 mapping
+const categoryColors = {
+    "量选类": "#3b82f6",
+    "风格类": "#10b981", 
+    "绝对收益": "#8b5cf6",
+    "商品类": "#f97316",
+    "多策略": "#06b6d4"
+};
+
+// 初始化页面 - 按策略分类顺序排列
+document.addEventListener("DOMContentLoaded", function() {
+    // 默认按策略分类分组排序
+    let sorted = [...productData];
+    sorted.sort((a, b) => {
+        const order = {"量选类": 1, "风格类": 2, "绝对收益": 3, "商品类": 4, "多策略": 5};
+        return order[a.category] - order[b.category];
+    });
+    renderProductTable(sorted);
+    initCharts();
+    
+    // 绑定筛选事件
+    document.getElementById("strategyFilter").addEventListener("change", applyFilters);
+    document.querySelectorAll("input[name='riskFilter']").forEach(radio => {
+        radio.addEventListener("change", applyFilters);
+    });
+    document.getElementById("sortFilter").addEventListener("change", applyFilters);
+    
+    // 表头点击排序
+    document.querySelectorAll('#productTable th[data-sort]').forEach(th => {
+        th.addEventListener('click', function() {
+            const sortKey = this.getAttribute('data-sort');
+            let sorted = [...productData];
+            
+            sorted.sort((a, b) => {
+                if (sortKey === 'index') return a.id - b.id;
+                if (sortKey === 'name') return a.name.localeCompare(b.name);
+                if (sortKey === 'weekReturn') return (b.weekReturn || -999) - (a.weekReturn || -999);
+                if (sortKey === 'monthReturn') return (b.monthReturn || -999) - (a.monthReturn || -999);
+                if (sortKey === 'ytdReturn') return (b.ytdReturn || -999) - (a.ytdReturn || -999);
+                if (sortKey === 'sharpe') return b.sharpe - a.sharpe;
+                if (sortKey === 'drawdown') return a.maxDrawdown - b.maxDrawdown;
+                return 0;
+            });
+            
+            renderProductTable(sorted);
+        });
+    });
+});
+
+// 渲染产品表格到tbody
+function renderProductTable(data = productData) {
+    const tbody = document.getElementById("productTableBody");
+    tbody.innerHTML = "";
+    
+    data.forEach(product => {
+        const tr = document.createElement("tr");
+        const weekReturnHtml = product.weekReturn !== null 
+            ? `<span class="${product.weekReturn >= 0 ? 'return-positive' : 'return-negative'}">${product.weekReturn >= 0 ? '+' : ''}${product.weekReturn.toFixed(2)}%</span>`
+            : '-';
+        const monthReturnHtml = product.monthReturn !== null 
+            ? `<span class="${product.monthReturn >= 0 ? 'return-positive' : 'return-negative'}">${product.monthReturn >= 0 ? '+' : ''}${product.monthReturn.toFixed(2)}%</span>`
+            : '-';
+        const ytdReturnHtml = product.ytdReturn !== null 
+            ? `<span class="${product.ytdReturn >= 0 ? 'return-positive' : 'return-negative'}">${product.ytdReturn >= 0 ? '+' : ''}${product.ytdReturn.toFixed(2)}%</span>`
+            : '-';
+        
+        tr.innerHTML = `
+            <td>${product.id}</td>
+            <td><strong>${product.name}</strong></td>
+            <td>
+                <span class="strategy-tag">
+                    <span class="strategy-dot" style="background: ${product.strategyColor}"></span>
+                    ${product.category}
+                </span>
+            </td>
+            <td>${weekReturnHtml}</td>
+            <td>${monthReturnHtml}</td>
+            <td>${ytdReturnHtml}</td>
+            <td>${product.sharpe.toFixed(2)}</td>
+            <td class="${product.maxDrawdown >= -2 ? 'return-positive' : 'return-negative'}">${product.maxDrawdown.toFixed(2)}%</td>
+            <td><span class="rank-tag rank-${product.rank}">${product.rankText}</span></td>
+            <td><button class="detail-btn" onclick="openDetailModal(${product.id})">详情</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// 初始化顶部图表
+function initCharts() {
+    // 策略分类占比环形图
+    const categoryCounts = {};
+    productData.forEach(p => {
+        categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+    });
+    
+    const labels = Object.keys(categoryCounts);
+    const data = Object.values(categoryCounts);
+    const colors = labels.map(l => categoryColors[l]);
+    
+    const ctxPie = document.getElementById("strategyPieChart").getContext("2d");
+    new Chart(ctxPie, {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: document.documentElement.style.getPropertyValue('--bg-primary'),
+                cutout: "65%"
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "策略类型分布",
+                    color: "#f1f5f9",
+                    font: { size: 14 }
+                },
+                legend: {
+                    position: "bottom",
+                    labels: { color: "#cbd5e1", padding: 15 }
+                }
+            }
+        }
+    });
+    
+    // 本周vs上周对比柱状图
+    const ctxCompare = document.getElementById("weeklyCompareChart").getContext("2d");
+    new Chart(ctxCompare, {
+        type: "bar",
+        data: {
+            labels: ["上周平均", "本周平均"],
+            datasets: [{
+                label: "平均收益",
+                data: [-0.26, -0.60],
+                backgroundColor: ["#64748b", "#ef4444"],
+                borderRadius: 6,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "本周 vs 上周 平均收益对比",
+                    color: "#f1f5f9",
+                    font: { size: 14 }
+                },
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    ticks: { 
+                        color: "#cbd5e1",
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    grid: { color: "rgba(255,255,255,0.05)" },
+                    suggestedMin: -1.5,
+                    suggestedMax: 0
+                },
+                x: {
+                    ticks: { color: "#cbd5e1" },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// 筛选和排序
+function applyFilters() {
+    const selectedStrategy = document.getElementById("strategyFilter").value;
+    const selectedRisk = document.querySelector("input[name='riskFilter']:checked").value;
+    const sortBy = document.getElementById("sortFilter").value;
+    
+    let filtered = productData.filter(p => {
+        if (selectedStrategy !== "all" && p.category !== selectedStrategy) {
+            return false;
+        }
+        if (selectedRisk !== "all" && p.risk !== selectedRisk) {
+            return false;
+        }
+        return true;
+    });
+    
+    // 排序
+    filtered.sort((a, b) => {
+        switch(sortBy) {
+            case "week-desc":
+                return (b.weekReturn || -999) - (a.weekReturn || -999);
+            case "month-desc":
+                return (b.monthReturn || -999) - (a.monthReturn || -999);
+            case "sharpe-desc":
+                return b.sharpe - a.sharpe;
+            case "drawdown-asc":
+                return a.maxDrawdown - b.maxDrawdown;
+            default:
+                const order = {"量选类": 1, "风格类": 2, "绝对收益": 3, "商品类": 4, "多策略": 5};
+                return order[a.category] - order[b.category];
+        }
+    });
+    
+    renderProductTable(filtered);
+}
+
+// 切换周期
+function switchPeriod(e) {
+    document.querySelectorAll(".period-btn").forEach(b => b.classList.remove("active"));
+    e.target.classList.add("active");
+}
+
+// 切换菜单
+function switchMenu(e) {
+    const target = e.target.closest(".menu-item");
+    document.querySelectorAll(".menu-item").forEach(i => i.classList.remove("active"));
+    target.classList.add("active");
+}
+
+// 打开详情模态框
+function openDetailModal(productId) {
+    const product = productData.find(p => p.id === productId);
+    document.getElementById("detailModal").style.display = "block";
+    document.getElementById("modalTitle").textContent = product.name;
+    
+    const modalTable = document.getElementById("modalDetailTable");
+    modalTable.innerHTML = `
+        <table class="product-table" style="width:100%">
+            <tbody>
+                <tr><td><strong>策略类型</strong></td><td>${product.category}</td></tr>
+                <tr><td><strong>近一周收益</strong></td><td>${product.weekReturn !== null ? (product.weekReturn >= 0 ? '+' : '') + product.weekReturn.toFixed(2) + '%' : '-'}</td></tr>
+                <tr><td><strong>近一月收益</strong></td><td>${(product.monthReturn >= 0 ? '+' : '') + product.monthReturn.toFixed(2)}%</td></tr>
+                <tr><td><strong>夏普比率(月)</strong></td><td>${product.sharpe.toFixed(2)}</td></tr>
+                <tr><td><strong>最大回撤(月)</strong></td><td>${product.maxDrawdown.toFixed(2)}%</td></tr>
+                <tr><td><strong>风险等级</strong></td><td>${product.risk === 'high' ? '高波动' : (product.risk === 'medium' ? '中波动' : '低波动')}</td></tr>
+                <tr><td><strong>同类排名</strong></td><td><span class="rank-tag rank-${product.rank}">${product.rankText}</span></td></tr>
+            </tbody>
+        </table>
+    `;
+}
+
+function closeDetailModal() {
+    document.getElementById("detailModal").style.display = "none";
+}
+
+// 点击模态框外部关闭
+window.onclick = function(event) {
+    const modal = document.getElementById("detailModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+
+// 生成PDF（调用浏览器打印保存为PDF）
+function generatePDF() {
+    window.print();
+}
+</script>
+</body>
+</html>
