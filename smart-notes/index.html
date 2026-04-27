@@ -97,6 +97,7 @@ body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   </div>
   <div id="contentArea"></div>
   <canvas id="graphCanvas" style="display:none; width:100%; height:100%;"></canvas>
+  <iframe id="graphFrame" src="" style="display:none; width:100%; height:100%; border:none;"></iframe>
 </div>
 
 <script>
@@ -392,17 +393,28 @@ function showWelcome() {
 function switchView(view) {
   if (view==='graph') {
     document.getElementById('contentArea').style.display = 'none';
-    document.getElementById('graphCanvas').style.display = 'block';
+    document.getElementById('graphCanvas').style.display = 'none';
+    var gf = document.getElementById('graphFrame');
+    gf.style.display = 'block';
+    if (!gf.src || gf.src === '' || gf.src === location.href) gf.src = 'graph.html';
     document.getElementById('btnGraph').classList.add('active');
     document.getElementById('btnNotes').classList.remove('active');
-    drawGraph();
   } else {
     document.getElementById('contentArea').style.display = 'block';
     document.getElementById('graphCanvas').style.display = 'none';
+    document.getElementById('graphFrame').style.display = 'none';
     document.getElementById('btnNotes').classList.add('active');
     document.getElementById('btnGraph').classList.remove('active');
   }
 }
+
+// Listen for graph node clicks
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'openNote') {
+    switchView('notes');
+    openNote(e.data.id);
+  }
+});
 
 function drawGraph() {
   var canvas = document.getElementById('graphCanvas');

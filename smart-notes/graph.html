@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Notes — 知识图谱</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #1e1e2e; --bg2: #252536; --bg3: #2d2d44;
+  --text: #cdd6f4; --text2: #a6adc8; --text3: #6c7086;
+  --accent: #89b4fa; --green: #a6e3a1; --yellow: #f9e2af;
+  --red: #f38ba8; --mauve: #cba6f7; --border: #45475a;
+}
+body { font-family: -apple-system, 'PingFang SC', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+#toolbar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg2); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 12px; }
+#toolbar input { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 13px; width: 220px; outline: none; }
+#toolbar input:focus { border-color: var(--accent); }
+#toolbar .legend { display: flex; gap: 12px; font-size: 12px; color: var(--text3); margin-left: auto; }
+#toolbar .legend span { display: flex; align-items: center; gap: 4px; }
+#toolbar .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+#toolbar .stats { font-size: 12px; color: var(--text3); }
+#graph { width: 100vw; height: 100vh; padding-top: 44px; }
+svg { width: 100%; height: 100%; }
+.link { stroke: rgba(137,180,250,0.12); stroke-width: 1; }
+.link.highlighted { stroke: rgba(137,180,250,0.6); stroke-width: 2; }
+.link.keyword { stroke: rgba(203,166,247,0.08); stroke-width: 0.5; }
+.link.keyword.highlighted { stroke: rgba(203,166,247,0.5); stroke-width: 1.5; }
+.node circle { cursor: pointer; stroke: transparent; stroke-width: 2; transition: stroke 0.15s; }
+.node circle:hover { stroke: #fff; }
+.node.highlighted circle { stroke: #fff; stroke-width: 2.5; }
+.node.dimmed circle { opacity: 0.15; }
+.node.dimmed text { opacity: 0.1; }
+.node text { fill: var(--text2); font-size: 10px; pointer-events: none; user-select: none; }
+.node.highlighted text { fill: #fff; font-weight: 600; font-size: 11px; }
+.node.dimmed text { fill: var(--text3); }
+.link.dimmed { opacity: 0.03; }
+#tooltip { position: fixed; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--text); pointer-events: none; display: none; z-index: 20; max-width: 320px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+#tooltip .tt-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+#tooltip .tt-cat { color: var(--text3); font-size: 11px; margin-bottom: 6px; }
+#tooltip .tt-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+#tooltip .tt-tag { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--yellow); }
+#tooltip .tt-links { margin-top: 6px; font-size: 11px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div id="toolbar">
+  <input type="text" id="searchInput" placeholder="搜索节点...">
+  <span class="stats" id="stats"></span>
+  <div class="legend">
+    <span><span class="dot" style="background:#89b4fa"></span>概念</span>
+    <span><span class="dot" style="background:#a6e3a1"></span>对话</span>
+    <span><span class="dot" style="background:#f9e2af"></span>决策</span>
+    <span style="color:var(--text3);font-size:11px">实线=wiki链接 虚线=关键词关联</span>
+  </div>
+</div>
+<div id="graph"></div>
+<div id="tooltip"></div>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+// ========== 数据加载 ==========
+async function loadData() {
+  let notes = [];
+  try {
+    const resp = await fetch('/api/notes');
+    notes = await resp.json();
+  } catch(e) {
+    console.warn('API unavailable, using empty set');
+    return { nodes: [], links: [] };
+  }
+
+  const parsed = notes.map(n => {
+    const title = n.content.match(/^#\s+(.+)$/m)?.[1] || n.name;
+    const tags = [...n.content.matchAll(/#([^\s#]+)/g)].map(m => m[1]);
+    const wikiLinks = [...n.content.matchAll(/\[\[([^\]]+)\]\]/g)].map(m => m[1]);
+    const id = n.path.replace(/\.md$/, '');
+    return { id, title, category: n.category, tags, wikiLinks, content: n.content };
+  });
+
+  const STOP = new Set(['的','和','与','在','是','了','不','也','都','有','这','那','就','会','要','对','为','中','上','下','到','从','被','把','让','给','用','做','说','看','去','来','能','可以','已','还','又','很','更','最','但','而','或','如果','因为','所以','虽然','然而','关于','通过','进行','使用','以及','其中','包括','需要','可能','应该','已经','目前','当前','后续','建议','方案','问题','分析','设计','实现','优化','框架','模块','系统','数据','指标','策略','模型','因子','回测','信号','市场','环境','风险','收益','仓位','评分','逻辑','结构','定义','验证','研究','讨论','记录','说明','总结','背景','核心','关键','重要','基本','主要','具体','详细','完整','标准','统一','独立','相关','对应','支持','提供','确认','判断','识别','监控','跟踪','更新','生成','计算','处理','输出','输入','配置','部署','运行','测试','修复','调整','改进','升级','扩展','补充','整合','接入','同步','推送','拉取','下载','上传','保存','加载','读取','写入','删除','创建','修改','查询','搜索','过滤','排序','统计','汇总','展示','显示','页面','前端','后端','脚本','文件','目录','路径','接口','参数','字段','格式','类型','状态','阶段','版本','日期','时间','频率','周期','窗口','范围','阈值','权重','比例','分位','均值','趋势','变化','增长','下降','上升','回落','改善','恶化','稳定','波动','极端','正常','异常','高位','低位','当日','近期','历史','未来','长期','短期','中期']);
+
+  function extractKeywords(note) {
+    const kws = new Set();
+    note.tags.forEach(t => { if (t.length > 1 && !STOP.has(t)) kws.add(t.toLowerCase()); });
+    note.title.replace(/[（）()【】\[\]《》<>「」『』""''、，。！？：；…—·\-_\/\\|@#$%^&*+=~`]/g, ' ')
+      .split(/\s+/).filter(w => w.length >= 2 && !STOP.has(w))
+      .forEach(w => kws.add(w.toLowerCase()));
+    return [...kws];
+  }
+
+  const noteKeywords = {};
+  parsed.forEach(n => { noteKeywords[n.id] = extractKeywords(n); });
+
+  const nodes = parsed.map(n => ({
+    id: n.id, title: n.title, category: n.category,
+    tags: n.tags, wikiLinks: n.wikiLinks,
+    keywords: noteKeywords[n.id], linkCount: 0
+  }));
+  const nodeMap = {}; nodes.forEach(n => { nodeMap[n.id] = n; });
+
+  const links = [], linkSet = new Set();
+
+  // Wiki links
+  parsed.forEach(note => {
+    note.wikiLinks.forEach(linkName => {
+      const target = parsed.find(n => n.title === linkName || n.id.endsWith('/' + linkName) || n.id.includes(linkName.replace(/\s+/g, '_')));
+      if (target && target.id !== note.id) {
+        const key = [note.id, target.id].sort().join('|');
+        if (!linkSet.has(key)) { linkSet.add(key); links.push({ source: note.id, target: target.id, type: 'wiki' }); }
+      }
+    });
+  });
+
+  // Keyword co-occurrence
+  for (let i = 0; i < parsed.length; i++) {
+    for (let j = i + 1; j < parsed.length; j++) {
+      const shared = noteKeywords[parsed[i].id].filter(k => noteKeywords[parsed[j].id].includes(k));
+      if (shared.length >= 2) {
+        const key = [parsed[i].id, parsed[j].id].sort().join('|');
+        if (!linkSet.has(key)) { linkSet.add(key); links.push({ source: parsed[i].id, target: parsed[j].id, type: 'keyword', weight: shared.length, keywords: shared.slice(0, 5) }); }
+      }
+    }
+  }
+
+  links.forEach(l => { if (nodeMap[l.source]) nodeMap[l.source].linkCount++; if (nodeMap[l.target]) nodeMap[l.target].linkCount++; });
+  return { nodes, links };
+}
+
+// ========== 渲染 ==========
+async function renderGraph() {
+  const { nodes, links } = await loadData();
+  if (!nodes.length) { document.getElementById('stats').textContent = '无数据'; return; }
+
+  document.getElementById('stats').textContent = nodes.length + ' 篇 · ' + links.filter(l=>l.type==='wiki').length + ' wiki · ' + links.filter(l=>l.type==='keyword').length + ' 关键词';
+
+  const container = document.getElementById('graph');
+  const width = container.clientWidth, height = container.clientHeight;
+  const svg = d3.select('#graph').append('svg').attr('width', width).attr('height', height);
+  const g = svg.append('g');
+  const zoom = d3.zoom().scaleExtent([0.1, 5]).on('zoom', e => g.attr('transform', e.transform));
+  svg.call(zoom);
+
+  const colorMap = { concepts: '#89b4fa', sessions: '#a6e3a1', decisions: '#f9e2af' };
+
+  const simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(d => d.type === 'wiki' ? 100 : 160).strength(d => d.type === 'wiki' ? 0.3 : 0.05))
+    .force('charge', d3.forceManyBody().strength(-200).distanceMax(400))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => Math.sqrt(d.linkCount + 1) * 4 + 12));
+
+  const link = g.append('g').selectAll('line').data(links).join('line').attr('class', d => 'link ' + d.type);
+  const node = g.append('g').selectAll('g').data(nodes).join('g').attr('class', 'node')
+    .call(d3.drag()
+      .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }));
+
+  node.append('circle').attr('r', d => Math.sqrt(d.linkCount + 1) * 3 + 4).attr('fill', d => colorMap[d.category] || '#cdd6f4');
+  node.append('text').attr('dy', d => Math.sqrt(d.linkCount + 1) * 3 + 16).attr('text-anchor', 'middle')
+    .text(d => d.title.length > 18 ? d.title.slice(0, 18) + '…' : d.title);
+
+  const tooltip = document.getElementById('tooltip');
+  const linkedNodes = {};
+  links.forEach(l => {
+    const sid = typeof l.source === 'object' ? l.source.id : l.source;
+    const tid = typeof l.target === 'object' ? l.target.id : l.target;
+    if (!linkedNodes[sid]) linkedNodes[sid] = new Set();
+    if (!linkedNodes[tid]) linkedNodes[tid] = new Set();
+    linkedNodes[sid].add(tid); linkedNodes[tid].add(sid);
+  });
+
+  node.on('mouseover', (e, d) => {
+    const nb = linkedNodes[d.id] || new Set();
+    node.classed('highlighted', n => n.id === d.id || nb.has(n.id)).classed('dimmed', n => n.id !== d.id && !nb.has(n.id));
+    link.classed('highlighted', l => { const s = l.source.id || l.source, t = l.target.id || l.target; return s === d.id || t === d.id; });
+    link.classed('dimmed', l => { const s = l.source.id || l.source, t = l.target.id || l.target; return s !== d.id && t !== d.id; });
+    const catLabel = { concepts: '💡 概念', sessions: '💬 对话', decisions: '⚖️ 决策' };
+    tooltip.innerHTML = '<div class="tt-title">' + d.title + '</div><div class="tt-cat">' + (catLabel[d.category]||'') + ' · ' + d.linkCount + ' 关联</div>'
+      + (d.tags.length ? '<div class="tt-tags">' + d.tags.slice(0,8).map(t=>'<span class="tt-tag">#'+t+'</span>').join('') + '</div>' : '')
+      + (d.keywords.length ? '<div class="tt-links">关键词: ' + d.keywords.slice(0,6).join(', ') + '</div>' : '');
+    tooltip.style.display = 'block'; tooltip.style.left = (e.pageX+12)+'px'; tooltip.style.top = (e.pageY-10)+'px';
+  }).on('mousemove', e => { tooltip.style.left = (e.pageX+12)+'px'; tooltip.style.top = (e.pageY-10)+'px'; })
+  .on('mouseout', () => { node.classed('highlighted',false).classed('dimmed',false); link.classed('highlighted',false).classed('dimmed',false); tooltip.style.display='none'; });
+
+  node.on('click', (e, d) => { if (window.parent !== window) window.parent.postMessage({ type: 'openNote', id: d.id }, '*'); });
+
+  simulation.on('tick', () => {
+    link.attr('x1', d=>d.source.x).attr('y1', d=>d.source.y).attr('x2', d=>d.target.x).attr('y2', d=>d.target.y);
+    node.attr('transform', d => 'translate('+d.x+','+d.y+')');
+  });
+
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (!q) { node.style('display',null); link.style('display',null); node.classed('highlighted',false).classed('dimmed',false); return; }
+    const matchIds = new Set();
+    nodes.forEach(n => { if (n.title.toLowerCase().includes(q) || n.tags.some(t=>t.toLowerCase().includes(q)) || n.keywords.some(k=>k.includes(q))) matchIds.add(n.id); });
+    const expanded = new Set(matchIds);
+    matchIds.forEach(id => (linkedNodes[id]||new Set()).forEach(nid => expanded.add(nid)));
+    node.style('display', d => expanded.has(d.id) ? null : 'none');
+    node.classed('highlighted', d => matchIds.has(d.id)).classed('dimmed', d => !matchIds.has(d.id) && expanded.has(d.id));
+    link.style('display', l => { const s=l.source.id||l.source, t=l.target.id||l.target; return expanded.has(s)&&expanded.has(t)?null:'none'; });
+  });
+
+  setTimeout(() => svg.call(zoom.transform, d3.zoomIdentity.translate(width*0.1, height*0.1).scale(0.8)), 500);
+}
+
+renderGraph();
+</script>
+</body>
+</html>
