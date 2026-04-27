@@ -399,6 +399,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-item" id="navChipQuery" style="display:none" onclick="window.open('chip_query/chip_query.html','_blank')">个股筹码查询</div>
       <div class="nav-item" id="navFinancialRisk" style="display:none" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">财报预期风险</div>
       <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_analysis/fund_research.html','_blank')">公募基金研究</div>
+      <div class="nav-item" id="navSmartNotes" style="display:none" onclick="window.open('smart-notes/','_blank')">Smart Notes</div>
       <div class="nav-item" data-module="alerts">红灯预警</div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none">刷新记录</div>
       <div class="nav-item" data-module="report" style="opacity:.35">每日报告</div>
@@ -3680,6 +3681,11 @@ function initCbCharts() {
     if(user.is_admin){
       var cq=document.getElementById('navChipQuery');
       if(cq) cq.style.display='';
+    }
+    // 仅管理员：显示 Smart Notes
+    if(user.is_admin){
+      var sn=document.getElementById('navSmartNotes');
+      if(sn) sn.style.display='';
     }
     // 管理员 或 高级客户(tier>=1)：显示财报预期风险
     if(user.is_admin || (user.tier && user.tier >= 1)){

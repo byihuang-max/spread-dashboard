@@ -1,6 +1,6 @@
 """
 更新 Smart Notes index.html 的 BUILTIN_NOTES
-读取 notes/、sessions/、concepts/ 目录下所有 md 文件，重建嵌入数据
+递归扫描所有 .md 文件，重建嵌入数据
 """
 import json, re
 from pathlib import Path
@@ -8,10 +8,47 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent
 INDEX_HTML = _BASE / "index.html"
 
-# 读取所有目录的笔记
 entries = []
+seen_paths = set()
 
-# 1. notes/ 目录（通过index.json）
+def add_entry(name, rel_path, category, content):
+    if rel_path in seen_paths:
+        return
+    seen_paths.add(rel_path)
+    entries.append({
+        "name": name,
+        "path": rel_path,
+        "category": category,
+        "content": content
+    })
+
+def guess_category(rel_path):
+    """从相对路径推断分类"""
+    parts = rel_path.split("/")
+    if "concepts" in parts:
+        return "concepts"
+    elif "conversations" in parts:
+        return "conversations"
+    elif "decisions" in parts:
+        return "decisions"
+    elif "sessions" in parts:
+        return "sessions"
+    elif "notes" in parts:
+        return "notes"
+    else:
+        return "notes"
+
+def name_from_stem(stem):
+    """从文件名提取显示名"""
+    # 去掉日期前缀 (如 2026-03-15_xxx 或 001_xxx)
+    name = stem
+    if re.match(r'^\d{4}-\d{2}-\d{2}_', name):
+        name = name.split("_", 1)[1]
+    elif re.match(r'^\d{3}_', name):
+        name = name.split("_", 1)[1]
+    return name
+
+# 1. 先读 notes/index.json（如果存在）
 NOTES_DIR = _BASE / "notes"
 index_json = NOTES_DIR / "index.json"
 if index_json.exists():
@@ -21,40 +58,18 @@ if index_json.exists():
         note_path = NOTES_DIR / item["path"]
         if note_path.exists():
             content = note_path.read_text(encoding="utf-8")
-            entries.append({
-                "name": item["name"],
-                "path": f"notes/{item['path']}",
-                "category": item["category"],
-                "content": content
-            })
+            rel = f"notes/{item['path']}"
+            add_entry(item["name"], rel, item.get("category", "notes"), content)
 
-# 2. sessions/ 目录（直接扫描）
-SESSIONS_DIR = _BASE / "sessions"
-if SESSIONS_DIR.exists():
-    for md_file in SESSIONS_DIR.glob("*.md"):
-        content = md_file.read_text(encoding="utf-8")
-        # 从文件名提取标题（去掉日期前缀）
-        name = md_file.stem
-        if "_" in name:
-            name = name.split("_", 1)[1]
-        entries.append({
-            "name": name,
-            "path": f"sessions/{md_file.name}",
-            "category": "sessions",
-            "content": content
-        })
-
-# 3. concepts/ 目录（直接扫描）
-CONCEPTS_DIR = _BASE / "concepts"
-if CONCEPTS_DIR.exists():
-    for md_file in CONCEPTS_DIR.glob("*.md"):
-        content = md_file.read_text(encoding="utf-8")
-        entries.append({
-            "name": md_file.stem,
-            "path": f"concepts/{md_file.name}",
-            "category": "concepts",
-            "content": content
-        })
+# 2. 递归扫描所有 .md 文件
+for md_file in sorted(_BASE.rglob("*.md")):
+    rel = str(md_file.relative_to(_BASE))
+    if rel in seen_paths:
+        continue
+    content = md_file.read_text(encoding="utf-8")
+    category = guess_category(rel)
+    name = name_from_stem(md_file.stem)
+    add_entry(name, rel, category, content)
 
 # 序列化
 notes_json = json.dumps(entries, ensure_ascii=False)
