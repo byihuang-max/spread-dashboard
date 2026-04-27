@@ -196,10 +196,10 @@ MODULE_REGISTRY = {
     'antifragile': {
         'name': '反脆弱看板',
         'scripts': [
-            ('meme/antifragile', 'fetch_data_ifind.py'),
-            ('meme/antifragile', 'calc_corr.py'),
-            ('meme/antifragile', 'calc_meme.py'),
-            ('meme/antifragile', 'render_html.py'),
+            ('macro/meme/antifragile', 'fetch_data_ifind.py'),
+            ('macro/meme/antifragile', 'calc_corr.py'),
+            ('macro/meme/antifragile', 'calc_meme.py'),
+            ('macro/meme/antifragile', 'render_html.py'),
         ],
         'aliases': ['antifragile'],
         'include_in_update_all': True,
@@ -216,7 +216,7 @@ MODULE_REGISTRY = {
     'narrative_lifecycle': {
         'name': '叙事生命周期',
         'scripts': [
-            ('meme', 'macro_lifecycle.py'),
+            ('macro/meme', 'macro_lifecycle.py'),
         ],
         'include_in_update_all': True,
         'include_in_refresh_server': False,
@@ -277,14 +277,14 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
-    'halo_trade': {
+    'macro/halo_trade': {
         'name': 'HALO交易',
         'scripts': [
-            ('halo_trade', 'halo_data_ifind_full.py'),
-            ('halo_trade', 'halo_financials.py'),       # AkShare版（替代旧 _tushare.py）
-            ('halo_trade', 'halo_pe_scissors.py'),      # 百度估值版（替代旧 _tushare.py）
-            ('halo_trade', 'halo_calc.py'),
-            ('halo_trade', 'china_halo.py'),
+            ('macro/halo_trade', 'halo_data_ifind_full.py'),
+            ('macro/halo_trade', 'halo_financials.py'),       # AkShare版（替代旧 _tushare.py）
+            ('macro/halo_trade', 'halo_pe_scissors.py'),      # 百度估值版（替代旧 _tushare.py）
+            ('macro/halo_trade', 'halo_calc.py'),
+            ('macro/halo_trade', 'china_halo.py'),
         ],
         'aliases': ['halo'],
         'include_in_update_all': True,
@@ -335,7 +335,7 @@ MODULE_REGISTRY = {
         'name': '宏观Meme叙事',
         'scripts': [
             ('daily_report/meme交易', 'narrative_monitor.py'),
-            ('meme', 'macro_lifecycle.py'),
+            ('macro/meme', 'macro_lifecycle.py'),
         ],
         'aliases': ['macro-meme'],
         'include_in_update_all': False,
