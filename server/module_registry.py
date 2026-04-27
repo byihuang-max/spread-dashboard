@@ -341,6 +341,16 @@ MODULE_REGISTRY = {
         'include_in_update_all': False,
         'include_in_refresh_server': True,
     },
+    'fund_asset': {
+        'name': '团队基金优选',
+        'scripts': [
+            ('fund-asset-recommend/scripts', 'fetch_data.py'),
+            ('fund-asset-recommend/scripts', 'render_html.py'),
+        ],
+        'aliases': ['fund-asset'],
+        'include_in_update_all': True,
+        'include_in_refresh_server': False,
+    },
     'overview': {
         'name': '仪表盘汇总',
         'scripts': [
