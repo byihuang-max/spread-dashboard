@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 算力链轮动监控 — 流程图</title>
+<style>
+  body { margin: 0; padding: 20px; background: #0d1117; color: #c9d1d9; font-family: -apple-system, sans-serif; }
+  h1 { text-align: center; font-size: 22px; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+  .mermaid { display: flex; justify-content: center; }
+  .mermaid svg { max-width: 100%; }
+</style>
+</head>
+<body>
+<h1>🚀 AI 算力链轮动监控 — 全流程图</h1>
+<div class="subtitle">GAMT 中观层 · 产业链景气度子模块 · 2026-04-26</div>
+
+<div class="mermaid">
+graph TD
+    subgraph 数据层["📡 数据拉取层"]
+        T1["Tushare Pro<br/>A股日线 + 成交额"]
+        T2["iFind<br/>美股日线 SOXX等"]
+        T3["Tushare Pro<br/>ETF份额 fund_share"]
+    end
+
+    subgraph 篮子["🧺 篮子编制（4+1层）"]
+        B1["<b>硬件层</b><br/>光模块/芯片/PCB/封测<br/>中际旭创 新易盛 天孚 等8只"]
+        B2["<b>基建层</b><br/>服务器/IDC/液冷/散热<br/>浪潮信息 中科曙光 等6只"]
+        B3["<b>模型层</b><br/>大模型/云计算/AI PaaS<br/>金山办公 科大讯飞 等3只"]
+        B4["<b>应用层</b><br/>具身智能/自动驾驶/AI垂直<br/>中科创达 石头科技 等（待细化）"]
+        B5["<b>美股锚</b><br/>NVDA / AVGO / AMD / TSM<br/>SOXX费城半导体"]
+    end
+
+    T1 --> B1 & B2 & B3 & B4
+    T2 --> B5
+    T3 --> ETF
+
+    subgraph 收益["📊 等权日收益率"]
+        R1["各篮子等权日收益率<br/>本币计，不做汇率转换"]
+    end
+
+    B1 & B2 & B3 & B4 & B5 --> R1
+
+    subgraph 信号1["🔢 信号层① — 滚动比价 Z-score"]
+        P1["硬件 vs 基建<br/>建设周期前后段"]
+        P2["硬件 vs 应用<br/>建设期 vs 爆发期"]
+        P3["基建 vs 应用<br/>投入 vs 落地"]
+        P4["美股 vs A股硬件<br/>海外定价传导"]
+        P5["美股 vs A股应用<br/>海外 vs 本土"]
+        P6["模型 vs 应用<br/>技术 vs 商业化"]
+        ZS["累计收益差 → 20日滚动μ+σ → Z-score<br/>|Z|>2 极端 · 1~2 偏离 · &lt;1 中性"]
+    end
+
+    R1 --> P1 & P2 & P3 & P4 & P5 & P6
+    P1 & P2 & P3 & P4 & P5 & P6 --> ZS
+
+    subgraph 信号2["📈 信号层② — 量价状态分类"]
+        VP["对4个A股篮子分别判断"]
+        VPM["🟢 量价齐升 = 趋势确认<br/>🟡 价升量不跟 = 动能衰竭<br/>🔵 量升价不升 = 底部蓄力<br/>🔴 量价齐跌 = 趋势确认↓"]
+        VPS["关键组合：<br/>篮子A 价升量不跟 + 篮子B 量价齐升<br/>→ 资金从A切向B的早期信号"]
+    end
+
+    R1 --> VP --> VPM --> VPS
+
+    subgraph 信号3["💰 信号层③ — ETF资金流验证"]
+        ETF["芯片ETF 159995<br/>AI ETF 159819<br/>半导体ETF 512480"]
+        ETFC["日度份额变动<br/>正=净申购 负=净赎回<br/>跨ETF差值 → 产业链内部切换方向"]
+    end
+
+    ETF --> ETFC
+
+    subgraph 综合["⚡ 综合信号引擎"]
+        CS["三层交叉验证"]
+        CSR["🔴 三层共振 → 强信号（高低切确认）<br/>🟡 两层一致 → 中等信号<br/>🟠 单层触发 → 关注<br/>🟢 全部中性 → 均衡"]
+    end
+
+    ZS --> CS
+    VPS --> CS
+    ETFC --> CS
+    CS --> CSR
+
+    subgraph 输出["📋 GAMT 页面输出"]
+        O1["1. 产业链轮动热力图<br/>4层 × 信号强度"]
+        O2["2. 6组比价Z-score折线图<br/>含 ±1σ / ±2σ 参考线"]
+        O3["3. 量价状态矩阵<br/>4层 × 4种状态"]
+        O4["4. ETF资金流柱状图<br/>日度份额变动"]
+        O5["5. 综合信号摘要<br/>状态 + 强度 + 方向"]
+    end
+
+    CSR --> O1 & O2 & O3 & O4 & O5
+
+    subgraph 传导["🌐 美股领先信号传导"]
+        US1["美股T日收盘"]
+        US2["港股T+1验证"]
+        US3["A股T+1反应"]
+        US4["若A股不跟 → 本土逻辑主导，信号打折"]
+    end
+
+    US1 --> US2 --> US3 --> US4
+
+    classDef dataNode fill:#1a3a5c,stroke:#58a6ff,color:#c9d1d9
+    classDef basketNode fill:#1c3d2e,stroke:#3fb950,color:#c9d1d9
+    classDef signalNode fill:#3d2c1c,stroke:#d29922,color:#c9d1d9
+    classDef outputNode fill:#2d1a3d,stroke:#bc8cff,color:#c9d1d9
+    classDef compositeNode fill:#5c1a1a,stroke:#f85149,color:#c9d1d9
+
+    class T1,T2,T3 dataNode
+    class B1,B2,B3,B4,B5 basketNode
+    class P1,P2,P3,P4,P5,P6,ZS,VP,VPM,VPS,ETF,ETFC signalNode
+    class O1,O2,O3,O4,O5 outputNode
+    class CS,CSR compositeNode
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+        darkMode: true,
+        background: '#0d1117',
+        primaryColor: '#1a3a5c',
+        primaryTextColor: '#c9d1d9',
+        lineColor: '#58a6ff',
+        fontSize: '13px',
+    },
+    flowchart: {
+        curve: 'basis',
+        padding: 15,
+        nodeSpacing: 30,
+        rankSpacing: 40,
+    },
+});
+</script>
+</body>
+</html>

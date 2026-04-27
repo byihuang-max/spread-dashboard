@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 # 添加筹码分析系统路径
-chip_dir = Path(__file__).parent.parent / '独立股票的筹码分析系统'
+chip_dir = Path(__file__).parent.parent / 'chip_query'
 sys.path.insert(0, str(chip_dir))
 
 from chip_analyzer import ChipAnalyzer
