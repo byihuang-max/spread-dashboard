@@ -198,28 +198,45 @@ def render():
     nav_history = data.get('nav_history', {})
     html = html.replace('/*__NAV_HISTORY__*/{}', json.dumps(nav_history, ensure_ascii=False))
 
-    # 日期注释
+    # 日期注释 — 从 API 实际数据取截止日
     from dateutil.relativedelta import relativedelta
+
+    # 市场策略基准的实际截止日
+    annual_raw = market_data.get('annual', [])
+    monthly_raw = market_data.get('monthly', [])
+    quarterly_raw = market_data.get('quarterly', [])
+    annual_end = annual_raw[0]['return']['trade_date'] if annual_raw else update_date
+    monthly_end = monthly_raw[0]['return']['trade_date'] if monthly_raw else update_date
+    quarterly_end = quarterly_raw[0]['return']['trade_date'] if quarterly_raw else update_date
+    annual_cycle = annual_raw[0]['return'].get('cycle', '') if annual_raw else ''
+    monthly_cycle = monthly_raw[0]['return'].get('cycle', '') if monthly_raw else ''
+    quarterly_cycle = quarterly_raw[0]['return'].get('cycle', '') if quarterly_raw else ''
+
+    # 核心资产/FOF 的日期区间用 update_date（产品净值是日频的）
     end_dt = datetime.strptime(update_date, '%Y-%m-%d')
     y1_start = (end_dt - relativedelta(years=1)).strftime('%Y-%m-%d')
     m1_start = (end_dt - relativedelta(months=1)).strftime('%Y-%m-%d')
     q1_start = (end_dt - relativedelta(months=3)).strftime('%Y-%m-%d')
     w1_start = (end_dt - timedelta(days=7)).strftime('%Y-%m-%d')
 
+    # 市场策略基准的年度区间用实际截止日
+    annual_end_dt = datetime.strptime(annual_end, '%Y-%m-%d')
+    annual_start = (annual_end_dt - relativedelta(years=1)).strftime('%Y-%m-%d')
+
     html = html.replace('/*__ANNUAL_RANGE__*/',
-        f'（年度滚动 {y1_start} ~ {update_date}）')
+        f'（年度滚动 {annual_start} ~ {annual_end}）')
     html = html.replace('/*__MARKET_SUBTITLE__*/',
-        f'统计截至 {update_date} · 数据来源：火富牛策略观察 API<br/>年度指标区间：{y1_start} ~ {update_date} ｜ 月度收益区间：{m1_start} ~ {update_date} ｜ 季度收益区间：{q1_start} ~ {update_date}')
+        f'数据来源：火富牛策略观察 API<br/>年度指标截至 {annual_end}（{annual_cycle}） ｜ 月度收益截至 {monthly_end}（{monthly_cycle}） ｜ 季度收益截至 {quarterly_end}（{quarterly_cycle}）')
     html = html.replace('/*__MARKET_NOTE__*/',
-        f'说明：年度指标统计区间为 {y1_start} ~ {update_date}（近一年滚动），月度收益区间为 {m1_start} ~ {update_date}，季度收益区间为 {q1_start} ~ {update_date}。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。')
+        f'说明：年度指标统计截至 {annual_end}（{annual_cycle}），月度收益截至 {monthly_end}（{monthly_cycle}），季度收益截至 {quarterly_end}（{quarterly_cycle}）。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。')
     html = html.replace('/*__CORE_SUBTITLE__*/',
-        f'统计截至 <b>{update_date}</b> ｜ 生成时间 {update_time}<br/>近一周：{w1_start} ~ {update_date} ｜ 近一月：{m1_start} ~ {update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31 ~ {update_date}')
+        f'生成时间 {update_time} ｜ 各产品净值日期见表格"净值日期"列<br/>近一周/近一月/今年以来 均以各产品最新净值日为基准计算')
     html = html.replace('/*__CORE_NOTE__*/',
-        f'近一周：{w1_start} ~ {update_date} ｜ 近一月：{m1_start} ~ {update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31 ~ {update_date}')
+        f'各产品净值更新频率不同（日度/周度），具体见"净值日期"列')
     html = html.replace('/*__FOF_SUBTITLE__*/',
-        f'统计截至 {update_date} ｜ 点击组合卡片查看详细分析报告')
+        f'生成时间 {update_time} ｜ 各组合净值日期见表格 ｜ 点击组合卡片查看详细分析报告')
     html = html.replace('/*__FOF_NOTE__*/',
-        f'说明：数据来源火富牛模拟组合 /combi/price API。近一周：{w1_start}~{update_date} ｜ 近一月：{m1_start}~{update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31~{update_date}。夏普无风险利率取2%，年化波动率=日波动率×√252。')
+        f'说明：数据来源火富牛模拟组合 /combi/price API。各组合净值更新日期见表格"净值日期"列。夏普无风险利率取2%，年化波动率=日波动率×√252。')
 
     # 写输出
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:

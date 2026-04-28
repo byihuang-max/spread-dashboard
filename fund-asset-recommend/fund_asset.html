@@ -229,7 +229,7 @@ tr:hover td { background:#f8fafc; }
       <div class="panel-header">
         <div class="panel-title-wrap">
           <h1>市场策略看板</h1>
-          <div class="sub">统计截至 2026-04-28 · 数据来源：火富牛策略观察 API<br/>年度指标区间：2025-04-28 ~ 2026-04-28 ｜ 月度收益区间：2026-03-28 ~ 2026-04-28 ｜ 季度收益区间：2026-01-28 ~ 2026-04-28</div>
+          <div class="sub">数据来源：火富牛策略观察 API<br/>年度指标截至 2025-12-31（2025） ｜ 月度收益截至 2026-03-31（2026-03） ｜ 季度收益截至 2026-03-31（2026Q1）</div>
         </div>
       </div>
 
@@ -266,7 +266,7 @@ tr:hover td { background:#f8fafc; }
       </div>
 
       <div class="section">
-        <div class="section-title">收益分位分布图 <span style="font-size:11px;color:var(--muted);font-weight:400">（年度滚动 2025-04-28 ~ 2026-04-28）</span></div>
+        <div class="section-title">收益分位分布图 <span style="font-size:11px;color:var(--muted);font-weight:400">（年度滚动 2024-12-31 ~ 2025-12-31）</span></div>
         <div class="mkt-chart-grid" id="mktChartGrid"></div>
       </div>
 
@@ -275,7 +275,7 @@ tr:hover td { background:#f8fafc; }
         <div class="mkt-radar-grid" id="mktRadarGrid"></div>
       </div>
 
-      <div class="section"><div class="note">说明：年度指标统计区间为 2025-04-28 ~ 2026-04-28（近一年滚动），月度收益区间为 2026-03-28 ~ 2026-04-28，季度收益区间为 2026-01-28 ~ 2026-04-28。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。</div></div>
+      <div class="section"><div class="note">说明：年度指标统计截至 2025-12-31（2025），月度收益截至 2026-03-31（2026-03），季度收益截至 2026-03-31（2026Q1）。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。</div></div>
     </div>
 
 </section>
@@ -285,7 +285,7 @@ tr:hover td { background:#f8fafc; }
         <div class="panel-header">
           <div class="panel-title-wrap">
             <h1>GAMT核心资产</h1>
-            <div class="sub">统计截至 <b>2026-04-28</b> ｜ 生成时间 2026-04-28 13:04:41<br/>近一周：2026-04-21 ~ 2026-04-28 ｜ 近一月：2026-03-28 ~ 2026-04-28 ｜ 今年以来：2025-12-31 ~ 2026-04-28</div>
+            <div class="sub">生成时间 2026-04-28 13:04:41 ｜ 各产品净值日期见表格"净值日期"列<br/>近一周/近一月/今年以来 均以各产品最新净值日为基准计算</div>
           </div>
           <div class="topbar-tag">机构跟踪视图</div>
         </div>
@@ -335,7 +335,7 @@ tr:hover td { background:#f8fafc; }
 
         <div class="section hidden" id="tableView">
           <div class="section-title">产品明细</div>
-          <div class="note" style="margin-bottom:10px;">近一周：2026-04-21 ~ 2026-04-28 ｜ 近一月：2026-03-28 ~ 2026-04-28 ｜ 今年以来：2025-12-31 ~ 2026-04-28</div>
+          <div class="note" style="margin-bottom:10px;">各产品净值更新频率不同（日度/周度），具体见"净值日期"列</div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -365,7 +365,7 @@ tr:hover td { background:#f8fafc; }
       <div class="panel-header">
         <div class="panel-title-wrap">
           <h1>FOF组合管理</h1>
-          <div class="sub">统计截至 2026-04-28 ｜ 点击组合卡片查看详细分析报告</div>
+          <div class="sub">生成时间 2026-04-28 13:04:41 ｜ 各组合净值日期见表格 ｜ 点击组合卡片查看详细分析报告</div>
         </div>
         <div class="topbar-tag">组合分析</div>
       </div>
@@ -379,7 +379,7 @@ tr:hover td { background:#f8fafc; }
           <th>组合</th><th>净值日期</th><th>运行天数</th><th>最新净值</th><th>近一周</th><th>近一月</th><th>今年以来</th><th>成立以来</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>卡玛</th><th>波动率</th>
         </tr></thead><tbody id="fofCompareBody"></tbody></table></div>
       </div>
-      <div class="section"><div class="note">说明：数据来源火富牛模拟组合 /combi/price API。近一周：2026-04-21~2026-04-28 ｜ 近一月：2026-03-28~2026-04-28 ｜ 今年以来：2025-12-31~2026-04-28。夏普无风险利率取2%，年化波动率=日波动率×√252。</div></div>
+      <div class="section"><div class="note">说明：数据来源火富牛模拟组合 /combi/price API。各组合净值更新日期见表格"净值日期"列。夏普无风险利率取2%，年化波动率=日波动率×√252。</div></div>
     </div>
     <div id="fofDetailModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:1001;align-items:center;justify-content:center;">
       <div style="background:#fff;border-radius:16px;width:92%;max-width:920px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);">
