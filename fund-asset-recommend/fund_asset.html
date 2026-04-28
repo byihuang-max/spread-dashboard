@@ -182,12 +182,7 @@ tr:hover td { background:#f8fafc; }
 .fof-metric-label { font-size:11px; color:#64748b; margin-bottom:3px; }
 .fof-metric-val { font-size:18px; font-weight:800; color:#0f172a; }
 .fof-metric-sub { font-size:10px; color:#94a3b8; margin-top:2px; }
-.fof-monthly-grid { display:flex; gap:6px; align-items:flex-end; height:120px; padding:8px 0; }
-.fof-month-item { flex:1; display:flex; flex-direction:column; align-items:center; }
-.fof-month-bar-wrap { flex:1; width:100%; display:flex; align-items:flex-end; justify-content:center; }
-.fof-month-bar { width:65%; border-radius:4px 4px 0 0; min-height:2px; }
-.fof-month-val { font-size:10px; font-weight:700; margin-top:3px; }
-.fof-month-label { font-size:9px; color:#94a3b8; }
+.fof-monthly-grid { width:100%; }
 @media(max-width:900px){.fof-metrics-grid{grid-template-columns:repeat(2,1fr);}.fof-card-grid{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -775,15 +770,115 @@ function showFofDetail(idx){
       <div class="fof-metric-card"><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${fmtP(c.max_down)}</div><div class="fof-metric-sub">${c.max_down_date}</div></div>
     </div>
     <div style="font-size:14px;font-weight:700;margin:16px 0 8px">月度收益</div>
-    <div class="fof-monthly-grid" id="fofModalMonthly"></div>
+    <div class="fof-monthly-grid"><canvas id="fofModalMonthly" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas></div>
     <div class="note" style="margin-top:12px">运行${c.run_days}天 ｜ ${c.start_date}~${c.end_date} ｜ 最大回撤区间：${c.dd_period}</div>`;
   setTimeout(()=>{
     drawFofLine('fofModalNav',c.nav_data,'#2563eb','rgba(37,99,235,0.1)',v=>v.toFixed(4),false);
     drawFofLine('fofModalDd',c.dd_data,'#ef4444','rgba(239,68,68,0.08)',v=>(v*100).toFixed(1)+'%',true);
     const mg=document.getElementById('fofModalMonthly');
-    if(mg){mg.innerHTML=c.monthly_returns.map(m=>{const v=m['return'],cls=v>0?'pos':v<0?'neg':'',barH=Math.min(Math.abs(v)/0.07*100,100),barColor=v>0?'var(--primary)':'var(--up)';return`<div class="fof-month-item"><div class="fof-month-bar-wrap"><div class="fof-month-bar" style="height:${barH}%;background:${barColor}"></div></div><div class="fof-month-val ${cls}">${(v*100).toFixed(2)}%</div><div class="fof-month-label">${m.month.slice(5)}月</div></div>`;}).join('');}
+    if(mg){drawMonthlyBar('fofModalMonthly', c.monthly_returns);}
   },50);
 }
+function drawMonthlyBar(canvasId, monthlyReturns) {
+  const cv = document.getElementById(canvasId);
+  if (!cv || !monthlyReturns.length) return;
+  // 最多显示最近12个月
+  const data = monthlyReturns.slice(-12);
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.parentElement.clientWidth || 700;
+  const h = 200;
+  cv.width = w * dpr; cv.height = h * dpr;
+  cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h);
+
+  const pad = {top: 28, right: 20, bottom: 32, left: 48};
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
+  const n = data.length;
+  const vals = data.map(m => m['return'] * 100);
+  const labels = data.map(m => m.month.slice(2).replace('-', '/'));
+
+  const dataMax = Math.max(...vals, 0);
+  const dataMin = Math.min(...vals, 0);
+  const margin = Math.max((dataMax - dataMin) * 0.15, 1);
+  const yMax = dataMax + margin;
+  const yMin = dataMin - margin;
+  const yRange = yMax - yMin || 1;
+
+  function yPos(v) { return pad.top + ch * (1 - (v - yMin) / yRange); }
+
+  // Background
+  ctx.fillStyle = '#fafbfc';
+  ctx.fillRect(pad.left, pad.top, cw, ch);
+
+  // Grid lines
+  const yTicks = 4;
+  ctx.strokeStyle = '#e8ecf0'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= yTicks; i++) {
+    const v = yMin + yRange * i / yTicks;
+    const y = yPos(v);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+    ctx.fillStyle = '#8c99a6'; ctx.font = '10px -apple-system, sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(v.toFixed(1) + '%', pad.left - 6, y + 3);
+  }
+
+  // Zero line
+  const zeroY = yPos(0);
+  if (zeroY > pad.top && zeroY < pad.top + ch) {
+    ctx.strokeStyle = '#b0b8c4'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(pad.left + cw, zeroY); ctx.stroke();
+  }
+
+  // Bars
+  const barGap = Math.max(cw * 0.08 / n, 2);
+  const barW = Math.min((cw - barGap * (n + 1)) / n, 48);
+  const totalW = n * barW + (n + 1) * barGap;
+  const offsetX = pad.left + (cw - totalW) / 2;
+
+  for (let i = 0; i < n; i++) {
+    const v = vals[i];
+    const x = offsetX + barGap + i * (barW + barGap);
+    const barTop = v >= 0 ? yPos(v) : zeroY;
+    const barBot = v >= 0 ? zeroY : yPos(v);
+    const barH = Math.max(barBot - barTop, 1);
+
+    ctx.fillStyle = v >= 0 ? '#1a56db' : '#c0392b';
+    const r = Math.min(3, barW / 4);
+    // Rounded top corners
+    ctx.beginPath();
+    if (v >= 0) {
+      ctx.moveTo(x, barBot);
+      ctx.lineTo(x, barTop + r);
+      ctx.quadraticCurveTo(x, barTop, x + r, barTop);
+      ctx.lineTo(x + barW - r, barTop);
+      ctx.quadraticCurveTo(x + barW, barTop, x + barW, barTop + r);
+      ctx.lineTo(x + barW, barBot);
+    } else {
+      ctx.moveTo(x, barTop);
+      ctx.lineTo(x, barBot - r);
+      ctx.quadraticCurveTo(x, barBot, x + r, barBot);
+      ctx.lineTo(x + barW - r, barBot);
+      ctx.quadraticCurveTo(x + barW, barBot, x + barW, barBot - r);
+      ctx.lineTo(x + barW, barTop);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Value label
+    ctx.fillStyle = v >= 0 ? '#1a56db' : '#c0392b';
+    ctx.font = '10px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    const labelY = v >= 0 ? barTop - 5 : barBot + 12;
+    ctx.fillText(v.toFixed(2) + '%', x + barW / 2, labelY);
+
+    // Month label
+    ctx.fillStyle = '#8c99a6';
+    ctx.font = '10px -apple-system, sans-serif';
+    ctx.fillText(labels[i], x + barW / 2, h - pad.bottom + 16);
+  }
+}
+
 function drawFofLine(id,data,color,fill,yFmt,inv){
   const cv=document.getElementById(id);if(!cv)return;
   const dpr=window.devicePixelRatio||1,w=cv.parentElement.clientWidth||800,h=260;
@@ -943,21 +1038,15 @@ function showDetail(code, name) {
       <div class="fof-metric-card"><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${hasNav ? fmtPct(maxDown) : '-'}</div>${maxDownDate ? '<div class="fof-metric-sub">'+maxDownDate+'</div>' : ''}</div>
     </div>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">月度收益</div>
-    <div class="fof-monthly-grid" id="modalMonthly"></div>
+    <div class="fof-monthly-grid"><canvas id="modalMonthly" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas></div>
     <div class="note" style="margin-top:12px">${hasNav ? navData[0][0]+' ~ '+navData[navData.length-1][0]+' ｜ 最大回撤区间：'+ddPeriod : '暂无历史净值数据'}</div>`;
 
   setTimeout(() => {
     if (hasNav) {
       drawFofLine('modalNavChart', navData, '#2563eb', 'rgba(37,99,235,0.1)', v => v.toFixed(4), false);
       drawFofLine('modalDdChart', ddData, '#ef4444', 'rgba(239,68,68,0.08)', v => (v*100).toFixed(1)+'%', true);
-      const mg = document.getElementById('modalMonthly');
-      if (mg && monthlyReturns.length) {
-        mg.innerHTML = monthlyReturns.map(m => {
-          const v = m['return'], c = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
-          const barH = Math.min(Math.abs(v) / 0.07 * 100, 100);
-          const barColor = v > 0 ? 'var(--primary)' : 'var(--up)';
-          return '<div class="fof-month-item"><div class="fof-month-bar-wrap"><div class="fof-month-bar" style="height:'+barH+'%;background:'+barColor+'"></div></div><div class="fof-month-val '+c+'">'+(v*100).toFixed(2)+'%</div><div class="fof-month-label">'+m.month.slice(5)+'月</div></div>';
-        }).join('');
+      if (monthlyReturns.length) {
+        drawMonthlyBar('modalMonthly', monthlyReturns);
       }
     } else {
       const cv1 = document.getElementById('modalNavChart');
