@@ -2,10 +2,25 @@
 # -*- coding: utf-8 -*-
 """
 团队基金优选模块 - 数据采集
-统一封装火富牛 API 调用，支持 SDK 和 REST 两种方式
+================================
+统一封装火富牛 API 调用，采集三类数据：
+  1. 核心产品净值（28只，FundCompanyPrice / FundPrice SDK）
+  2. FOF 组合净值（6只，/combi/price REST API）
+  3. 市场策略基准分位数（16个分类，/market/category SDK）
+
+输出：
+  - data/fund_asset_latest.json  最新完整数据（render_html.py 读取）
+  - data/fund_asset_history.jsonl 每日追加一行（历史快照）
+  - data/products_history.csv    产品净值增量（UTF-8 BOM）
+  - data/fof_history.csv         FOF 组合净值增量（UTF-8 BOM）
+  - data/raw/fund_asset_YYYYMMDD.json  原始 API 响应备份
+
+使用方式：
+  python3 fetch_data.py
+  （已注册到 module_registry.py，由 update_all.py 自动调用）
 """
 
-import hashlib, time, json, os, math, urllib.parse
+import hashlib, time, json, os, sys, math, urllib.parse
 import requests
 from datetime import datetime, timedelta
 
@@ -136,6 +151,40 @@ def fetch_market_data():
     quarterly = fetch_market_category(3)
     print(f"  季度: {len(quarterly)} 策略")
     return annual, monthly, quarterly
+
+
+# ========== 4. 基准指数净值 ==========
+
+def fetch_benchmark_indices():
+    """拉取策略对标基准指数的净值序列"""
+    from config import STRATEGY_BENCHMARK
+    from mall_sdk.fof99 import IndexPrice
+
+    # 收集需要拉取的唯一基准代码
+    codes = set()
+    for cfg in STRATEGY_BENCHMARK.values():
+        if cfg.get('benchmark'):
+            codes.add(cfg['benchmark'])
+
+    print(f"📡 拉取基准指数净值 ({len(codes)} 只)...")
+    benchmark_navs = {}
+    for code in sorted(codes):
+        try:
+            req = IndexPrice(APP_ID, APP_KEY)
+            req.set_params(reg_code=code, start_date='2025-01-01')
+            data = req.do_request()
+            if data:
+                # 转成 [[date, nav], ...] 正序
+                series = sorted([[d['price_date'], d['nav']] for d in data], key=lambda x: x[0])
+                benchmark_navs[code] = series
+                print(f"  ✅ {code}: {len(series)} 条")
+            else:
+                print(f"  ⚠️ {code}: 无数据")
+            time.sleep(0.2)
+        except Exception as e:
+            print(f"  ❌ {code}: {e}")
+
+    return benchmark_navs
 
 
 # ========== 收益指标计算 ==========
@@ -480,8 +529,9 @@ def save_csv_incremental(products, combis, update_date):
     print(f"📊 CSV追加: {fof_csv} (+{len(combis)} 行)")
 
 
-def save_data(products, combis, market_annual, market_monthly, market_quarterly):
+def save_data(products, combis, market_annual, market_monthly, market_quarterly, benchmark_navs=None):
     """保存所有数据到 JSON + CSV（增量）"""
+    from config import STRATEGY_BENCHMARK
     os.makedirs(RAW_DIR, exist_ok=True)
     today = datetime.now().strftime('%Y%m%d')
     update_date = datetime.now().strftime('%Y-%m-%d')
@@ -511,6 +561,8 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
         },
         'fof_combis': fof_combis,
         'nav_history': nav_history,
+        'benchmark_navs': benchmark_navs or {},
+        'strategy_benchmark': {str(k): v for k, v in STRATEGY_BENCHMARK.items()},
     }
 
     # 保存带日期版本（JSON 快照）
@@ -564,8 +616,11 @@ def main():
     # 3. 市场基准
     annual, monthly, quarterly = fetch_market_data()
 
-    # 4. 保存
-    output = save_data(products, combis, annual, monthly, quarterly)
+    # 4. 基准指数净值
+    benchmark_navs = fetch_benchmark_indices()
+
+    # 5. 保存
+    output = save_data(products, combis, annual, monthly, quarterly, benchmark_navs)
 
     # 统计
     ok_count = sum(1 for p in products + combis if p.get('status') == '正常')

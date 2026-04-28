@@ -235,10 +235,13 @@ tr:hover td { background:#f8fafc; }
 
       <div class="section">
         <div class="mkt-toolbar">
+          <span class="toolbar-label">时间周期</span>
+          <div id="mktPeriodChips"></div>
+          <div class="divider"></div>
           <span class="toolbar-label">策略分组</span>
           <div id="mktGroupChips"></div>
-          <div class="divider"></div>
-          <span class="toolbar-label">指标</span>
+          <div class="divider" id="mktMetricDivider"></div>
+          <span class="toolbar-label" id="mktMetricLabel">指标</span>
           <div id="mktMetricChips"></div>
         </div>
       </div>
@@ -247,31 +250,19 @@ tr:hover td { background:#f8fafc; }
         <div class="section-title">策略指标分布总览</div>
         <div class="mkt-table-wrap">
           <table class="mkt-table" id="mktTable">
-            <thead><tr>
-              <th>策略</th>
-              <th>样本数</th>
-              <th>年度收益均值</th>
-              <th>年度收益中位</th>
-              <th>年度正收益比</th>
-              <th>年度夏普均值</th>
-              <th>年度夏普中位</th>
-              <th>年度最大回撤均值</th>
-              <th>年度波动率均值</th>
-              <th>年度卡玛均值</th>
-              <th>近一月收益均值</th>
-            </tr></thead>
+            <thead id="mktHead"></thead>
             <tbody id="mktBody"></tbody>
           </table>
         </div>
       </div>
 
       <div class="section">
-        <div class="section-title">收益分位分布图 <span style="font-size:11px;color:var(--muted);font-weight:400">/*__ANNUAL_RANGE__*/</span></div>
+        <div class="section-title" id="mktChartTitle">收益分位分布图 <span style="font-size:11px;color:var(--muted);font-weight:400">/*__ANNUAL_RANGE__*/</span></div>
         <div class="mkt-chart-grid" id="mktChartGrid"></div>
       </div>
 
-      <div class="section">
-        <div class="section-title">指标对比图 <span style="font-size:11px;color:var(--muted);font-weight:400">（年度均值对比）</span></div>
+      <div class="section" id="mktRadarSection">
+        <div class="section-title" id="mktRadarTitle">指标对比图 <span style="font-size:11px;color:var(--muted);font-weight:400">（年度均值对比）</span></div>
         <div class="mkt-radar-grid" id="mktRadarGrid"></div>
       </div>
 
@@ -412,6 +403,13 @@ tr:hover td { background:#f8fafc; }
 </div>
 <script>
 const marketData = /*__MARKET_DATA__*/[];
+const marketMonthly = /*__MARKET_MONTHLY__*/[];
+const marketQuarterly = /*__MARKET_QUARTERLY__*/[];
+const marketMeta = /*__MARKET_META__*/{};
+const benchmarkNavs = /*__BENCHMARK_NAVS__*/{};
+const strategyBenchmark = /*__STRATEGY_BENCHMARK__*/{};
+const strategyCharts = /*__STRATEGY_CHARTS__*/{};
+const strategyCurves = /*__STRATEGY_CURVES__*/{};
 
 const rows = /*__ROWS_DATA__*/[];
 const strategySummary = /*__STRATEGY_SUMMARY__*/[];
@@ -486,6 +484,17 @@ function renderTable(){
 
 let mktGroup = '全部';
 let mktMetric = 'return';
+let mktPeriod = 'monthly';
+
+// Global tier definitions
+const TIER_NAMES = {1:'权益多头',7:'对冲中性',11:'债券',12:'另类策略'};
+const TIER_BOUNDARY = {8:1,9:1,10:1,7:1,6:1,16:1, 5:7,4:7,11:7,12:7, 15:11, 2:12,3:12,13:12,14:12};
+const TIER_ORDER = {
+  8: 1, 9: 2, 10: 3, 7: 4, 6: 5, 16: 6,
+  5: 7, 4: 8, 11: 9, 12: 10,
+  15: 11,
+  2: 12, 3: 13, 13: 14, 14: 15,
+};
 
 function fmtPctM(v, digits) {
   if (v === null || v === undefined) return '-';
@@ -497,47 +506,153 @@ function fmtNum(v, digits) {
   return v.toFixed(digits || 2);
 }
 
+function getMktDataByPeriod() {
+  if (mktPeriod === 'monthly') return marketMonthly;
+  if (mktPeriod === 'quarterly') return marketQuarterly;
+  return marketData;
+}
+
+function getPeriodLabel() {
+  if (mktPeriod === 'monthly') return '月度';
+  if (mktPeriod === 'quarterly') return '季度';
+  return '年度';
+}
+
+function getPeriodRange() {
+  const m = marketMeta || {};
+  if (mktPeriod === 'monthly') return m.monthly_range || '';
+  if (mktPeriod === 'quarterly') return m.quarterly_range || '';
+  return m.annual_range || '';
+}
+
+function hasFullMetrics() {
+  return mktPeriod === 'annual';
+}
+
 function renderMarket() {
+  const pLabel = getPeriodLabel();
+
+  // Period chips
+  const periods = [{k:'monthly',l:'月度'},{k:'quarterly',l:'季度'},{k:'annual',l:'年度'}];
+  const pc = document.getElementById('mktPeriodChips');
+  if (pc) {
+    pc.innerHTML = periods.map(p => `<button class="btn ${p.k===mktPeriod?'active':''}" data-p="${p.k}">${p.l}</button>`).join('');
+    pc.querySelectorAll('button').forEach(b => b.onclick = () => {
+      mktPeriod = b.dataset.p;
+      if (!hasFullMetrics()) mktMetric = 'return';
+      renderMarket();
+    });
+  }
+
   // Group chips
-  const groups = ['全部', '股票策略', '期货策略', '其他策略'];
+  const groups = ['全部', '权益多头', '对冲中性', '债券', '另类策略'];
   const gc = document.getElementById('mktGroupChips');
   if (!gc) return;
   gc.innerHTML = groups.map(g => `<button class="btn ${g===mktGroup?'active':''}" data-g="${g}">${g}</button>`).join('');
   gc.querySelectorAll('button').forEach(b => b.onclick = () => { mktGroup = b.dataset.g; renderMarket(); });
 
-  // Metric chips
-  const metrics = [{k:'return',l:'收益分位'},{k:'sharpe',l:'夏普比率'},{k:'maxdd',l:'最大回撤'},{k:'vol',l:'波动率'},{k:'calmar',l:'卡玛比率'}];
+  // Metric chips — full set for annual, hidden for monthly/quarterly
   const mc = document.getElementById('mktMetricChips');
-  mc.innerHTML = metrics.map(m => `<button class="btn ${m.k===mktMetric?'active':''}" data-m="${m.k}">${m.l}</button>`).join('');
-  mc.querySelectorAll('button').forEach(b => b.onclick = () => { mktMetric = b.dataset.m; renderMarket(); });
+  const metricLabel = document.getElementById('mktMetricLabel');
+  const metricDivider = document.getElementById('mktMetricDivider');
+  if (hasFullMetrics()) {
+    const metrics = [{k:'return',l:'收益分位'},{k:'sharpe',l:'夏普比率'},{k:'maxdd',l:'最大回撤'},{k:'vol',l:'波动率'},{k:'calmar',l:'卡玛比率'}];
+    mc.innerHTML = metrics.map(m => `<button class="btn ${m.k===mktMetric?'active':''}" data-m="${m.k}">${m.l}</button>`).join('');
+    mc.querySelectorAll('button').forEach(b => b.onclick = () => { mktMetric = b.dataset.m; renderMarket(); });
+    mc.style.display = '';
+    if (metricLabel) metricLabel.style.display = '';
+    if (metricDivider) metricDivider.style.display = '';
+  } else {
+    mktMetric = 'return';
+    mc.innerHTML = '';
+    mc.style.display = 'none';
+    if (metricLabel) metricLabel.style.display = 'none';
+    if (metricDivider) metricDivider.style.display = 'none';
+  }
 
-  const data = mktGroup === '全部' ? marketData : marketData.filter(d => d.group === mktGroup);
-  data.sort((a, b) => (b.ret_mean || 0) - (a.ret_mean || 0));
+  const srcData = getMktDataByPeriod();
 
-  // Table
-  const body = document.getElementById('mktBody');
-  body.innerHTML = data.map(d => {
-    const retCls = (d.ret_mean || 0) > 0 ? 'pos' : (d.ret_mean || 0) < 0 ? 'neg' : '';
-    const mCls = (d.month_mean || 0) > 0 ? 'pos' : (d.month_mean || 0) < 0 ? 'neg' : '';
-    return `<tr>
-      <td style="font-weight:600">${d.name}</td>
-      <td>${d.count}</td>
-      <td class="${retCls}">${fmtPctM(d.ret_mean)}</td>
-      <td class="${retCls}">${fmtPctM(d.ret_median)}</td>
-      <td>${fmtPctM(d.profit_rate)}</td>
-      <td>${fmtNum(d.sp_mean)}</td>
-      <td>${fmtNum(d.sp_median)}</td>
-      <td class="neg">${fmtPctM(d.md_mean)}</td>
-      <td>${fmtPctM(d.vol_mean)}</td>
-      <td>${fmtNum(d.cal_mean)}</td>
-      <td class="${mCls}">${fmtPctM(d.month_mean)}</td>
+  const filtered = mktGroup === '全部' ? [...srcData] : srcData.filter(d => {
+    const tier = TIER_BOUNDARY[d.id];
+    const tName = TIER_NAMES[tier] || '';
+    return tName === mktGroup;
+  });
+  const data = filtered.sort((a, b) => (TIER_ORDER[a.id] || 99) - (TIER_ORDER[b.id] || 99));
+
+  // Table header
+  const head = document.getElementById('mktHead');
+  if (hasFullMetrics()) {
+    head.innerHTML = `<tr>
+      <th>策略</th><th>样本数</th>
+      <th>${pLabel}收益均值</th><th>${pLabel}收益中位</th><th>${pLabel}正收益比</th>
+      <th>${pLabel}夏普均值</th><th>${pLabel}夏普中位</th>
+      <th>${pLabel}最大回撤均值</th><th>${pLabel}波动率均值</th><th>${pLabel}卡玛均值</th>
     </tr>`;
+  } else {
+    head.innerHTML = `<tr>
+      <th>策略</th><th>样本数</th>
+      <th>${pLabel}收益均值</th><th>${pLabel}收益中位</th><th>${pLabel}正收益比</th>
+      <th>10%分位</th><th>25%分位</th><th>75%分位</th><th>90%分位</th>
+    </tr>`;
+  }
+
+  // Table body with tier separators
+  const colSpan = hasFullMetrics() ? 10 : 9;
+  const body = document.getElementById('mktBody');
+  let lastTier = null;
+  body.innerHTML = data.map(d => {
+    const tier = TIER_BOUNDARY[d.id] || 99;
+    let sep = '';
+    if (tier !== lastTier && mktGroup === '全部') {
+      const tName = TIER_NAMES[tier] || '';
+      sep = `<tr class="tier-sep"><td colspan="${colSpan}" style="padding:6px 12px;font-size:11px;font-weight:700;color:var(--muted);background:#f1f5f9;border-bottom:1px solid var(--line);letter-spacing:1px">${tName}</td></tr>`;
+      lastTier = tier;
+    }
+    const retCls = (d.ret_mean || 0) > 0 ? 'pos' : (d.ret_mean || 0) < 0 ? 'neg' : '';
+    const rowClick = `onclick="openStrategyDetail(${d.id})" style="cursor:pointer"`;
+    if (hasFullMetrics()) {
+      return sep + `<tr ${rowClick}>
+        <td style="font-weight:600">${d.name}</td>
+        <td>${d.count}</td>
+        <td class="${retCls}">${fmtPctM(d.ret_mean)}</td>
+        <td class="${retCls}">${fmtPctM(d.ret_median)}</td>
+        <td>${fmtPctM(d.profit_rate)}</td>
+        <td>${fmtNum(d.sp_mean)}</td>
+        <td>${fmtNum(d.sp_median)}</td>
+        <td class="neg">${fmtPctM(d.md_mean)}</td>
+        <td>${fmtPctM(d.vol_mean)}</td>
+        <td>${fmtNum(d.cal_mean)}</td>
+      </tr>`;
+    } else {
+      return sep + `<tr ${rowClick}>
+        <td style="font-weight:600">${d.name}</td>
+        <td>${d.count}</td>
+        <td class="${retCls}">${fmtPctM(d.ret_mean)}</td>
+        <td class="${retCls}">${fmtPctM(d.ret_median)}</td>
+        <td>${fmtPctM(d.profit_rate)}</td>
+        <td>${fmtPctM(d.ret_10)}</td>
+        <td>${fmtPctM(d.ret_25)}</td>
+        <td>${fmtPctM(d.ret_75)}</td>
+        <td>${fmtPctM(d.ret_90)}</td>
+      </tr>`;
+    }
   }).join('');
+
+  // Chart title
+  const chartTitle = document.getElementById('mktChartTitle');
+  if (chartTitle) chartTitle.innerHTML = `收益分位分布图 <span style="font-size:11px;color:var(--muted);font-weight:400">${getPeriodRange()}</span>`;
 
   // Box plot charts
   renderMktCharts(data);
-  // Radar charts
-  renderMktRadar(data);
+
+  // Radar section — only show for annual
+  const radarSection = document.getElementById('mktRadarSection');
+  if (radarSection) radarSection.style.display = hasFullMetrics() ? '' : 'none';
+  if (hasFullMetrics()) {
+    const radarTitle = document.getElementById('mktRadarTitle');
+    if (radarTitle) radarTitle.innerHTML = `指标对比图 <span style="font-size:11px;color:var(--muted);font-weight:400">（${pLabel}均值对比）</span>`;
+    renderMktRadar(data);
+  }
 }
 
 function renderMktCharts(data) {
@@ -553,6 +668,7 @@ function renderMktCharts(data) {
   const m = metricMap[mktMetric];
   if (!m) return;
 
+  let lastTier = null;
   grid.innerHTML = data.map(d => {
     const vals = m.keys.map(k => d[k]).filter(v => v !== null && v !== undefined);
     if (vals.length === 0) return '';
@@ -562,9 +678,17 @@ function renderMktCharts(data) {
 
     function pos(v) { return ((v - min) / range * 80 + 10).toFixed(1); }
 
+    // Tier separator
+    let sep = '';
+    const tier = TIER_BOUNDARY[d.id] || 99;
+    if (tier !== lastTier && mktGroup === '全部') {
+      const tName = TIER_NAMES[tier] || '';
+      sep = `<div style="padding:8px 0 4px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;border-top:${lastTier !== null ? '1px solid var(--line)' : 'none'};margin-top:${lastTier !== null ? '4px' : '0'}">${tName}</div>`;
+      lastTier = tier;
+    }
+
     let bars = '';
     if (m.keys.length === 5) {
-      // 5-point: 10%, 25%, median, 75%, 90%
       const [p10, p25, med, p75, p90] = m.keys.map(k => d[k]);
       bars = `
         <div class="box-whisker">
@@ -576,7 +700,6 @@ function renderMktCharts(data) {
           <div class="box-label" style="left:${pos(p90)}%">${m.fmt(p90)}</div>
         </div>`;
     } else {
-      // 3-point: 10%, median, 90%
       const [p10, med, p90] = m.keys.map(k => d[k]);
       bars = `
         <div class="box-whisker">
@@ -587,7 +710,7 @@ function renderMktCharts(data) {
           <div class="box-label" style="left:${pos(p90)}%">${m.fmt(p90)}</div>
         </div>`;
     }
-    return `<div class="mkt-chart-item"><div class="mkt-chart-name">${d.name}</div>${bars}</div>`;
+    return sep + `<div class="mkt-chart-item"><div class="mkt-chart-name">${d.name}</div>${bars}</div>`;
   }).join('');
 }
 
@@ -849,6 +972,222 @@ function drawChart(canvas, data, name) {
 
 document.getElementById('modalClose').onclick = () => document.getElementById('detailModal').style.display = 'none';
 document.getElementById('detailModal').onclick = (e) => { if(e.target.id === 'detailModal') e.target.style.display = 'none'; };
+// ========== 策略详情弹窗 ==========
+// Market category id → fund_nav tab mapping
+const STRATEGY_TAB_MAP = {
+  10: 'quant-stock',     // 1000指增
+  8: 'quant-stock',      // 300指增 (共用1000指增数据)
+  9: 'quant-stock',      // 500指增 (共用1000指增数据)
+  7: 'momentum-stock',   // 主观多头 → 强势股
+  6: 'momentum-stock',   // 股票多头 → 强势股
+  16: 'convertible',     // 可转债多头
+  2: 'cta',              // 量化期货
+  3: 'cta',              // 主观期货
+  1: 'cta',              // 期货策略
+  11: 'arbitrage',       // 套利策略
+};
+rows.forEach(r => { if(r.code) PRODUCT_NAMES[r.code] = r.name; });
+strategySummary.forEach(g => g.items && g.items.forEach(it => { if(it.code) PRODUCT_NAMES[it.code] = it.name; }));
+
+const PRODUCT_COLORS = ['#c0392b','#e67e22','#27ae60','#8e44ad','#2980b9','#d35400'];
+
+function openStrategyDetail(strategyId) {
+  const stratName = marketData.find(d => d.id === strategyId)?.name || '策略 ' + strategyId;
+  const modal = document.getElementById('strategyModal');
+  const title = document.getElementById('strategyModalTitle');
+  const sub = document.getElementById('strategyModalSub');
+  const legend = document.getElementById('strategyLegend');
+  const excessWrap = document.getElementById('strategyExcessWrap');
+  excessWrap.style.display = 'none';
+
+  const curve = strategyCurves[String(strategyId)];
+
+  if (!curve || !curve.dates || curve.dates.length < 2) {
+    title.textContent = stratName;
+    sub.textContent = '暂无策略收益曲线数据';
+    const ctx = document.getElementById('strategyNavChart').getContext('2d');
+    ctx.clearRect(0, 0, 9999, 9999);
+    legend.innerHTML = '';
+    modal.style.display = 'flex';
+    return;
+  }
+
+  const dates = curve.dates;
+  const stratRet = curve.strategy_return;
+  const bmRet = curve.benchmark_return;
+  const excess = curve.excess;
+  const bmName = curve.benchmark_name;
+
+  title.textContent = `${stratName} — 月度累计收益`;
+  const dateRange = `${dates[0]} ~ ${dates[dates.length-1]}`;
+  sub.textContent = bmName ? `基准: ${bmName} ｜ 区间: ${dateRange} ｜ 月频数据` : `区间: ${dateRange} ｜ 月频数据`;
+
+  // Build series
+  const seriesList = [
+    {name: stratName, color: '#c0392b', norm: dates.map((d,i) => [d, stratRet[i]]), isBenchmark: false, isExcess: false},
+  ];
+  if (bmRet) {
+    seriesList.push({name: bmName + '（基准）', color: '#7cb5ec', norm: dates.map((d,i) => [d, bmRet[i]]), isBenchmark: true, isExcess: false});
+  }
+  if (excess) {
+    seriesList.push({name: '累计超额', color: '#1e3a5f', norm: dates.map((d,i) => [d, excess[i]]), isBenchmark: false, isExcess: true});
+  }
+
+  drawReturnChart(document.getElementById('strategyNavChart'), seriesList, dates[0]);
+
+  // Legend
+  const legendItems = [{name: stratName, color: '#c0392b', val: `${curve.total_return >= 0 ? '+' : ''}${curve.total_return}%`}];
+  if (bmName && curve.index_return !== null) {
+    legendItems.push({name: bmName, color: '#7cb5ec', val: `${curve.index_return >= 0 ? '+' : ''}${curve.index_return}%`});
+  }
+  if (curve.excess_return !== null) {
+    legendItems.push({name: '累计超额', color: '#1e3a5f', val: `${curve.excess_return >= 0 ? '+' : ''}${curve.excess_return}%`});
+  }
+  legend.innerHTML = legendItems.map(s =>
+    `<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:3px;display:inline-block;border-radius:2px;background:${s.color}"></span><span style="font-weight:600;color:${s.color}">${s.name}</span> <span style="color:${s.color}">${s.val}</span></span>`
+  ).join('');
+
+  modal.style.display = 'flex';
+}
+document.getElementById('strategyModal').onclick = (e) => { if(e.target.id === 'strategyModal') e.target.style.display = 'none'; };
+
+function drawReturnChart(canvas, seriesList, startDate) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.parentElement.clientWidth || 800;
+  const h = 360;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const pad = {top:24, right:24, bottom:44, left:56};
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
+
+  // All dates
+  let allDates = [];
+  seriesList.forEach(s => s.norm.forEach(d => { if (!allDates.includes(d[0])) allDates.push(d[0]); }));
+  allDates.sort();
+  const dateIdx = {};
+  allDates.forEach((d,i) => dateIdx[d] = i);
+  if (allDates.length === 0) return;
+
+  // Y range (all values in %)
+  let allVals = [];
+  seriesList.forEach(s => s.norm.forEach(d => allVals.push(d[1])));
+  const dataMin = Math.min(...allVals);
+  const dataMax = Math.max(...allVals);
+  const margin = (dataMax - dataMin) * 0.1 || 2;
+  const yMin = dataMin - margin;
+  const yMax = dataMax + margin;
+  const yRange = yMax - yMin || 1;
+
+  function xPos(date) { return pad.left + (dateIdx[date] / (allDates.length-1)) * cw; }
+  function yPos(val) { return pad.top + ch * (1 - (val - yMin) / yRange); }
+
+  // Background
+  ctx.fillStyle = '#fafbfc';
+  ctx.fillRect(pad.left, pad.top, cw, ch);
+
+  // Grid lines + Y labels
+  const yTicks = 5;
+  ctx.strokeStyle = '#e8ecf0'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= yTicks; i++) {
+    const val = yMin + yRange * i / yTicks;
+    const y = yPos(val);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+    ctx.fillStyle = '#8c99a6'; ctx.font = '11px -apple-system, sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(val.toFixed(1) + '%', pad.left - 8, y + 4);
+  }
+
+  // Zero line
+  const zeroY = yPos(0);
+  if (zeroY > pad.top && zeroY < pad.top + ch) {
+    ctx.strokeStyle = '#b0b8c4'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(pad.left + cw, zeroY); ctx.stroke();
+  }
+
+  // X labels
+  ctx.fillStyle = '#8c99a6'; ctx.font = '10px -apple-system, sans-serif'; ctx.textAlign = 'center';
+  const xStep = Math.max(1, Math.floor(allDates.length / 7));
+  for (let i = 0; i < allDates.length; i += xStep) {
+    const x = xPos(allDates[i]);
+    ctx.fillText(allDates[i].slice(2, 7).replace('-', '/'), x, h - pad.bottom + 18);
+  }
+
+  // Fill area between product and benchmark (excess shading)
+  const prodLine = seriesList.find(s => !s.isBenchmark && !s.isExcess);
+  const bmLine = seriesList.find(s => s.isBenchmark);
+  if (prodLine && bmLine) {
+    const prodMap = {}; prodLine.norm.forEach(d => prodMap[d[0]] = d[1]);
+    const bmMap = {}; bmLine.norm.forEach(d => bmMap[d[0]] = d[1]);
+    const commonDates = allDates.filter(d => prodMap[d] !== undefined && bmMap[d] !== undefined);
+    if (commonDates.length > 1) {
+      // Positive excess fill (red/pink)
+      ctx.beginPath();
+      commonDates.forEach((d, i) => {
+        const x = xPos(d);
+        const py = yPos(prodMap[d]);
+        if (i === 0) ctx.moveTo(x, py); else ctx.lineTo(x, py);
+      });
+      for (let i = commonDates.length - 1; i >= 0; i--) {
+        const d = commonDates[i];
+        ctx.lineTo(xPos(d), yPos(bmMap[d]));
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(220, 53, 69, 0.08)';
+      ctx.fill();
+    }
+  }
+
+  // Draw lines: benchmark first (behind), then product, then excess
+  const drawOrder = [
+    ...seriesList.filter(s => s.isBenchmark),
+    ...seriesList.filter(s => s.isExcess),
+    ...seriesList.filter(s => !s.isBenchmark && !s.isExcess),
+  ];
+
+  drawOrder.forEach(s => {
+    const pts = [...s.norm].sort((a,b) => a[0].localeCompare(b[0]));
+    if (pts.length === 0) return;
+    ctx.beginPath();
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.isExcess ? 1.5 : (s.isBenchmark ? 1.5 : 2.5);
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    if (s.dash) ctx.setLineDash(s.dash); else ctx.setLineDash([]);
+    pts.forEach((pt, i) => {
+      const x = xPos(pt[0]);
+      const y = yPos(pt[1]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Period label
+  const endDate = allDates[allDates.length - 1];
+  ctx.fillStyle = '#64748b'; ctx.font = '11px -apple-system, sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(`统计区间: ${startDate} ~ ${endDate}`, pad.left + 4, pad.top - 6);
+}
+
 </script>
+<!-- 策略详情弹窗 -->
+<div id="strategyModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center">
+  <div style="background:#fff;border-radius:16px;width:90%;max-width:900px;max-height:85vh;overflow-y:auto;padding:28px;position:relative">
+    <button onclick="document.getElementById('strategyModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b">✕</button>
+    <div id="strategyModalTitle" style="font-size:18px;font-weight:700;margin-bottom:4px"></div>
+    <div id="strategyModalSub" style="font-size:12px;color:#64748b;margin-bottom:16px"></div>
+    <canvas id="strategyNavChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
+    <div id="strategyLegend" style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap"></div>
+    <div id="strategyExcessWrap" style="margin-top:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">超额收益（产品 vs 基准）</div>
+      <canvas id="strategyExcessChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
+    </div>
+  </div>
+</div>
 </body>
 </html>

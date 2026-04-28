@@ -1,8 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-团队基金优选模块 - HTML 渲染（v3 模板注入版）
-读取 fund_asset_latest.json，注入到 v3 模板生成 fund_asset.html
+团队基金优选模块 - HTML 渲染器
+================================
+读取 fund_asset_latest.json + strategy_curves.json，
+注入到 fund_asset_template.html 模板，生成最终的 fund_asset.html。
+
+数据流：
+  fetch_data.py → fund_asset_latest.json  ─┐
+  fetch_strategy_curves.py → strategy_curves.json ─┤→ render_html.py → fund_asset.html
+  fund_asset_template.html ─────────────────┘
+
+模板占位符说明：
+  /*__ROWS_DATA__*/[]          核心资产表格行数据
+  /*__STRATEGY_SUMMARY__*/[]   策略分组摘要（核心资产卡片用）
+  /*__MARKET_DATA__*/[]        市场策略基准年度数据（扁平化后）
+  /*__MARKET_MONTHLY__*/[]     市场策略基准月度数据
+  /*__MARKET_QUARTERLY__*/[]   市场策略基准季度数据
+  /*__MARKET_META__*/{}        各周期的副标题/区间文案
+  /*__FOF_COMBIS__*/[]         FOF 组合数据
+  /*__NAV_HISTORY__*/{}        产品净值历史（code → [[date, nav], ...]）
+  /*__BENCHMARK_NAVS__*/{}     基准指数净值
+  /*__STRATEGY_BENCHMARK__*/{} 策略→基准映射（config.py 中定义）
+  /*__STRATEGY_CHARTS__*/{}    策略环境代表产品净值曲线（fund_nav.json）
+  /*__STRATEGY_CURVES__*/{}    策略分类月度累计收益曲线（自建）
+  /*__UPDATE_DATE__*/          数据更新日期
+  /*__MARKET_SUBTITLE__*/      市场策略看板副标题
+  /*__CORE_SUBTITLE__*/        核心资产副标题
+  /*__FOF_SUBTITLE__*/         FOF 组合副标题
+  等日期注释占位符
+
+使用方式：
+  python3 render_html.py
 """
 
 import json, os, re
@@ -15,13 +44,20 @@ DATA_PATH = os.path.join(MODULE_DIR, 'data', 'fund_asset_latest.json')
 OUTPUT_PATH = os.path.join(MODULE_DIR, 'fund_asset.html')
 
 
+# 火富牛策略分类 id → v3 HTML 的策略分组名
+# 用于 flatten_market_data 中给每条记录打 group 标签
 GROUP_MAP = {5: '股票策略', 10: '股票策略', 9: '股票策略', 8: '股票策略', 7: '股票策略',
-             4: '股票策略', 6: '股票策略', 2: '期货策略', 3: '期货策略', 1: '期货策略',
+             4: '股票策略', 6: '股票策略', 2: '期货策略', 3: '期货策略',
              11: '其他策略', 12: '其他策略', 13: '其他策略', 15: '其他策略', 14: '其他策略', 16: '其他策略'}
 
 
 def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
-    """把 API 嵌套结构转成 v3 HTML 需要的扁平结构"""
+    """
+    把火富牛 API 返回的嵌套结构转成 v3 HTML 需要的扁平结构。
+    API 返回: {return: {mean, median, ten, ...}, sp_return_data: {...}, ...}
+    v3 需要: {ret_mean, ret_median, ret_10, sp_mean, sp_median, ...}
+    同时合并月度/季度收益到 month_mean / quarter_mean 字段。
+    """
     # 建立月度/季度索引
     monthly_map = {}
     for item in (monthly_list or []):
@@ -174,6 +210,10 @@ def render():
     market_quarterly_raw = market_data.get('quarterly', [])
     market_annual = flatten_market_data(market_annual_raw, market_monthly_raw, market_quarterly_raw)
 
+    # Flatten monthly and quarterly for period switching
+    market_monthly = flatten_market_data(market_monthly_raw)
+    market_quarterly = flatten_market_data(market_quarterly_raw)
+
     # 生成 rows
     rows = build_rows(strategy_summary)
 
@@ -182,6 +222,8 @@ def render():
 
     # JSON 序列化
     js_market = json.dumps(market_annual, ensure_ascii=False)
+    js_market_monthly = json.dumps(market_monthly, ensure_ascii=False)
+    js_market_quarterly = json.dumps(market_quarterly, ensure_ascii=False)
     js_rows = json.dumps(rows, ensure_ascii=False)
     js_strategy = json.dumps(strategy_summary, ensure_ascii=False)
     js_fof = json.dumps(fof_combis, ensure_ascii=False)
@@ -189,6 +231,8 @@ def render():
     # 注入数据
     html = template
     html = html.replace('/*__MARKET_DATA__*/[]', js_market)
+    html = html.replace('/*__MARKET_MONTHLY__*/[]', js_market_monthly)
+    html = html.replace('/*__MARKET_QUARTERLY__*/[]', js_market_quarterly)
     html = html.replace('/*__ROWS_DATA__*/[]', js_rows)
     html = html.replace('/*__STRATEGY_SUMMARY__*/[]', js_strategy)
     html = html.replace('/*__FOF_COMBIS__*/[]', js_fof)
@@ -197,6 +241,40 @@ def render():
     # navHistory: 从 JSON 中读取
     nav_history = data.get('nav_history', {})
     html = html.replace('/*__NAV_HISTORY__*/{}', json.dumps(nav_history, ensure_ascii=False))
+
+    # 基准指数净值 + 策略→基准映射
+    benchmark_navs = data.get('benchmark_navs', {})
+    strategy_benchmark = data.get('strategy_benchmark', {})
+    html = html.replace('/*__BENCHMARK_NAVS__*/{}', json.dumps(benchmark_navs, ensure_ascii=False))
+    html = html.replace('/*__STRATEGY_BENCHMARK__*/{}', json.dumps(strategy_benchmark, ensure_ascii=False))
+
+    # 策略指数净值曲线（来自 size_spread/fund_nav/fund_nav.json）
+    fund_nav_path = os.path.join(MODULE_DIR, '..', 'size_spread', 'fund_nav', 'fund_nav.json')
+    strategy_charts = {}
+    if os.path.exists(fund_nav_path):
+        with open(fund_nav_path, 'r', encoding='utf-8') as f:
+            fnav = json.load(f)
+        for item in fnav.get('funds', []):
+            tab = item.get('tab', '')
+            strategy_charts[tab] = {
+                'name': item.get('name', ''),
+                'benchmark_name': item.get('benchmark_name', ''),
+                'date_range': item.get('date_range', ''),
+                'total_return': item.get('total_return'),
+                'index_return': item.get('index_return'),
+                'excess_return': item.get('excess_return'),
+                'chart': item.get('chart', {}),
+            }
+    html = html.replace('/*__STRATEGY_CHARTS__*/{}', json.dumps(strategy_charts, ensure_ascii=False))
+
+    # 策略分类月度累计收益曲线（自建）
+    curves_path = os.path.join(MODULE_DIR, 'data', 'strategy_curves.json')
+    strategy_curves = {}
+    if os.path.exists(curves_path):
+        with open(curves_path, 'r', encoding='utf-8') as f:
+            sc = json.load(f)
+        strategy_curves = sc.get('curves', {})
+    html = html.replace('/*__STRATEGY_CURVES__*/{}', json.dumps(strategy_curves, ensure_ascii=False))
 
     # 日期注释 — 从 API 实际数据取截止日
     from dateutil.relativedelta import relativedelta
@@ -225,6 +303,14 @@ def render():
 
     html = html.replace('/*__ANNUAL_RANGE__*/',
         f'（年度滚动 {annual_start} ~ {annual_end}）')
+
+    # Market meta for JS period switching
+    market_meta = {
+        'annual_range': f'（年度滚动 {annual_start} ~ {annual_end}）',
+        'monthly_range': f'（月度 {monthly_end}，{monthly_cycle}）',
+        'quarterly_range': f'（季度 {quarterly_end}，{quarterly_cycle}）',
+    }
+    html = html.replace('/*__MARKET_META__*/{}', json.dumps(market_meta, ensure_ascii=False))
     html = html.replace('/*__MARKET_SUBTITLE__*/',
         f'数据来源：火富牛策略观察 API<br/>年度指标截至 {annual_end}（{annual_cycle}） ｜ 月度收益截至 {monthly_end}（{monthly_cycle}） ｜ 季度收益截至 {quarterly_end}（{quarterly_cycle}）')
     html = html.replace('/*__MARKET_NOTE__*/',

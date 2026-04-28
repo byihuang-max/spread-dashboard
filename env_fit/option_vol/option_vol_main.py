@@ -20,9 +20,13 @@ MODULES = [
     ('mod1_rv_regime.py', 'mod1_rv_regime.json', 'RV 极值环境'),
     ('mod2_iv_spread.py', 'mod2_iv_spread.json', 'IV-RV Spread'),
     ('mod3_skew_term.py', 'mod3_skew_term.json', 'Skew + 期限结构'),
-    ('mod9_composite_score.py', 'mod9_composite_score.json', '综合评分'),
+    ('mod4_iv_percentile.py', 'iv_percentile.json', 'IV 分位数'),
+    ('mod5_liquidity_percentile.py', 'liquidity_percentile.json', '流动性分位数'),
+    ('mod6_timing_signal.py', 'timing_signal.json', '择时信号'),
     ('mod7_market_breadth_v2.py', 'market_breadth.json', '全品种环境明细'),
     ('mod8_sell_window_signal.py', 'sell_window_signal.json', '卖权窗口信号'),
+    ('mod9_composite_score.py', 'mod9_composite_score.json', '综合评分'),
+    ('mod10_contract_scanner.py', 'contract_opportunities.json', '合约机会扫描'),
 ]
 OUT_JSON = os.path.join(BASE, 'option_vol.json')
 

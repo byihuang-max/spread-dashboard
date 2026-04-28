@@ -116,61 +116,80 @@ print("=" * 60)
 print("全品种期权卖权环境指数 V2")
 print("=" * 60)
 
+
+def _fetch_market_data(trade_date):
+    """批量拉取指定日期的期权+期货日线，返回 (opt_all, fut_prices)"""
+    opt_all = {}
+    for ex in EXCHANGES:
+        daily, err = ts_api("opt_daily", exchange=ex, trade_date=trade_date,
+                           fields="ts_code,close,vol,amount,oi")
+        if not daily:
+            print(f"  {ex} 期权: 无数据 ({err})")
+            continue
+        print(f"  {ex} 期权: {len(daily)} 合约")
+        for d in daily:
+            opt_prefix, cp = parse_opt_prefix(d["ts_code"])
+            if not opt_prefix: continue
+            fp = get_fut_prefix(opt_prefix)
+            if fp not in opt_all:
+                opt_all[fp] = {"exchange": ex, "vol": 0, "amount": 0, "oi": 0,
+                              "call_prices": [], "call_vols": []}
+            row = opt_all[fp]
+            row["vol"] += float(d.get("vol", 0) or 0)
+            row["amount"] += float(d.get("amount", 0) or 0)
+            row["oi"] += float(d.get("oi", 0) or 0)
+            if cp == "C":
+                p = float(d.get("close", 0) or 0)
+                if p > 0:
+                    row["call_prices"].append(p)
+                    row["call_vols"].append(float(d.get("vol", 0) or 0))
+        time.sleep(0.3)
+
+    fut_prices = {}
+    for ex in EXCHANGES:
+        daily, err = ts_api("fut_daily", trade_date=trade_date, exchange=ex,
+                           fields="ts_code,close,vol")
+        if not daily:
+            print(f"  {ex} 期货: 无数据 ({err})")
+            continue
+        print(f"  {ex} 期货: {len(daily)} 合约")
+        by_prefix = {}
+        for d in daily:
+            fp = parse_fut_prefix(d["ts_code"])
+            if not fp: continue
+            v = float(d.get("vol", 0) or 0)
+            c = float(d.get("close", 0) or 0)
+            if c > 0 and (fp not in by_prefix or v > by_prefix[fp][1]):
+                by_prefix[fp] = (c, v)
+        for fp, (c, _) in by_prefix.items():
+            fut_prices[fp] = c
+        time.sleep(0.3)
+
+    return opt_all, fut_prices
+
+
 today = datetime.date.today().strftime("%Y%m%d")
 
-# ── Step 1: 批量拉全市场期权 + 期货日线 ──
+# ── Step 1: 批量拉全市场期权 + 期货日线（今天无数据则回退最多5个自然日）──
 print("\n[1/3] 批量拉取全市场数据...")
+use_date = today
+opt_all, fut_prices = _fetch_market_data(today)
 
-# 1a. 期权日线（按交易所批量）
-opt_all = {}  # fut_prefix -> {vol, amount, oi, call_prices, call_vols, exchange}
-for ex in EXCHANGES:
-    daily, err = ts_api("opt_daily", exchange=ex, trade_date=today,
-                       fields="ts_code,close,vol,amount,oi")
-    if not daily:
-        print(f"  {ex} 期权: 无数据 ({err})")
-        continue
-    print(f"  {ex} 期权: {len(daily)} 合约")
-    for d in daily:
-        opt_prefix, cp = parse_opt_prefix(d["ts_code"])
-        if not opt_prefix: continue
-        fp = get_fut_prefix(opt_prefix)
-        if fp not in opt_all:
-            opt_all[fp] = {"exchange": ex, "vol": 0, "amount": 0, "oi": 0,
-                          "call_prices": [], "call_vols": []}
-        row = opt_all[fp]
-        row["vol"] += float(d.get("vol", 0) or 0)
-        row["amount"] += float(d.get("amount", 0) or 0)
-        row["oi"] += float(d.get("oi", 0) or 0)
-        if cp == "C":
-            p = float(d.get("close", 0) or 0)
-            if p > 0:
-                row["call_prices"].append(p)
-                row["call_vols"].append(float(d.get("vol", 0) or 0))
-    time.sleep(0.3)
+if not opt_all:
+    print(f"\n  ⚠️ {today} 无数据，尝试回退到上一个交易日...")
+    for offset in range(1, 6):
+        fallback = (datetime.date.today() - datetime.timedelta(days=offset)).strftime("%Y%m%d")
+        print(f"  尝试 {fallback}...")
+        opt_all, fut_prices = _fetch_market_data(fallback)
+        if opt_all:
+            use_date = fallback
+            print(f"  ✅ 使用 {fallback} 数据")
+            break
+    if not opt_all:
+        print("  ❌ 最近5天均无数据，跳过本次更新")
+        raise SystemExit(0)
 
-# 1b. 期货日线（按交易所批量）——用主力合约价格
-fut_prices = {}  # fut_prefix -> close
-for ex in EXCHANGES:
-    daily, err = ts_api("fut_daily", trade_date=today, exchange=ex,
-                       fields="ts_code,close,vol")
-    if not daily:
-        print(f"  {ex} 期货: 无数据 ({err})")
-        continue
-    print(f"  {ex} 期货: {len(daily)} 合约")
-    # 取每个品种成交量最大的合约作为主力
-    by_prefix = {}
-    for d in daily:
-        fp = parse_fut_prefix(d["ts_code"])
-        if not fp: continue
-        v = float(d.get("vol", 0) or 0)
-        c = float(d.get("close", 0) or 0)
-        if c > 0 and (fp not in by_prefix or v > by_prefix[fp][1]):
-            by_prefix[fp] = (c, v)
-    for fp, (c, _) in by_prefix.items():
-        fut_prices[fp] = c
-    time.sleep(0.3)
-
-print(f"\n  期权品种: {len(opt_all)}, 期货品种: {len(fut_prices)}")
+print(f"\n  期权品种: {len(opt_all)}, 期货品种: {len(fut_prices)}, 数据日期: {use_date}")
 
 # ── Step 2: 计算各品种指标 ──
 print("\n[2/3] 计算各品种卖波+成交热度...")
@@ -190,9 +209,9 @@ for fp, info in opt_all.items():
     # 读/写缓存（冷启动：从 history_breadth.json 补历史）
     cache_path = CACHE_DIR / f"{fp}_breadth_cache.json"
     cache = json.load(open(cache_path, encoding="utf-8")) if cache_path.exists() else {"records": []}
-    records = [r for r in cache.get("records", []) if r.get("date") != today]
+    records = [r for r in cache.get("records", []) if r.get("date") != use_date]
     records = seed_cache(fp, records)  # 用历史数据补齐
-    records.append({"date": today, "iv_proxy": round(iv_proxy, 6),
+    records.append({"date": use_date, "iv_proxy": round(iv_proxy, 6),
                    "vol": round(info["vol"], 2), "amount": round(info["amount"], 2),
                    "oi": round(info["oi"], 2)})
     records = sorted(records, key=lambda x: x["date"])[-180:]
@@ -221,7 +240,8 @@ for fp, info in opt_all.items():
 
 print(f"  成功: {len(metrics)} 品种")
 if not metrics:
-    raise SystemExit("无可用品种")
+    print("  ⚠️ 无可用品种，保留上次数据")
+    raise SystemExit(0)
 
 # ── Step 3: 计算 breadth 指标 ──
 print("\n[3/3] 计算 breadth 环境指数...")
@@ -253,8 +273,8 @@ print(f"  卖权环境指数: {env_index:.1f}")
 
 history_file = CACHE_DIR / "breadth_env_history.json"
 history = json.load(open(history_file, encoding="utf-8")) if history_file.exists() else []
-history = [h for h in history if h.get("date") != today]
-history.append({"date": today, "env_index": round(env_index, 1),
+history = [h for h in history if h.get("date") != use_date]
+history.append({"date": use_date, "env_index": round(env_index, 1),
                "pct_iv70": round(pct_iv70, 1), "pct_amt50": round(pct_amt50, 1),
                "pct_liq50": round(pct_liq50, 1), "pct_both": round(pct_both, 1)})
 history = sorted(history, key=lambda x: x["date"])[-365:]
