@@ -68,7 +68,7 @@ def fetch_all_products():
         navs = fetch_fund_nav_history(p['code'], source=source)
         if navs:
             metrics = compute_fund_metrics(navs)
-            results.append({**p, **metrics, 'source_type': 'fund', 'data_source': 'api', 'status': '正常'})
+            results.append({**p, **metrics, '_raw_navs': navs, 'source_type': 'fund', 'data_source': 'api', 'status': '正常'})
             print(f"✅ {len(navs)}条")
         else:
             results.append({**p, 'source_type': 'fund', 'data_source': 'api', 'status': '无数据'})
@@ -429,6 +429,15 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
     strategy_summary = build_strategy_summary(products, combis)
     fof_combis = build_fof_combis(combis)
 
+    # 构建 navHistory（code → [[date, nav], ...]）
+    nav_history = {}
+    for p in products + combis:
+        code = p.get('code', '')
+        raw_navs = p.get('_raw_navs', [])
+        if code and raw_navs:
+            sorted_navs = sorted(raw_navs, key=lambda x: x[0])
+            nav_history[code] = [[d, v] for d, v in sorted_navs]
+
     # 主数据文件
     output = {
         'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -439,6 +448,7 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
             'quarterly': market_quarterly,
         },
         'fof_combis': fof_combis,
+        'nav_history': nav_history,
     }
 
     # 保存带日期版本

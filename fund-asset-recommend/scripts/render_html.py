@@ -6,7 +6,7 @@
 """
 
 import json, os, re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODULE_DIR = os.path.dirname(SCRIPT_DIR)
@@ -84,6 +84,20 @@ def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
 
         result.append(flat)
     return result
+
+
+def build_nav_history(strategy_summary):
+    """从 strategy_summary 中提取各产品的净值历史（code → [[date, nav], ...]）"""
+    nav_history = {}
+    for group in strategy_summary:
+        for item in group.get('items', []):
+            code = item.get('code', '')
+            raw_navs = item.get('_raw_navs', [])
+            if code and raw_navs:
+                # 按日期正序
+                sorted_navs = sorted(raw_navs, key=lambda x: x[0])
+                nav_history[code] = [[d, v] for d, v in sorted_navs]
+    return nav_history
 
 
 def build_rows(strategy_summary):
@@ -177,6 +191,33 @@ def render():
     html = html.replace('/*__STRATEGY_SUMMARY__*/[]', js_strategy)
     html = html.replace('/*__FOF_COMBIS__*/[]', js_fof)
     html = html.replace('/*__UPDATE_DATE__*/', update_date)
+
+    # navHistory: 从 JSON 中读取
+    nav_history = data.get('nav_history', {})
+    html = html.replace('/*__NAV_HISTORY__*/{}', json.dumps(nav_history, ensure_ascii=False))
+
+    # 日期注释
+    from dateutil.relativedelta import relativedelta
+    end_dt = datetime.strptime(update_date, '%Y-%m-%d')
+    y1_start = (end_dt - relativedelta(years=1)).strftime('%Y-%m-%d')
+    m1_start = (end_dt - relativedelta(months=1)).strftime('%Y-%m-%d')
+    q1_start = (end_dt - relativedelta(months=3)).strftime('%Y-%m-%d')
+    w1_start = (end_dt - timedelta(days=7)).strftime('%Y-%m-%d')
+
+    html = html.replace('/*__ANNUAL_RANGE__*/',
+        f'（年度滚动 {y1_start} ~ {update_date}）')
+    html = html.replace('/*__MARKET_SUBTITLE__*/',
+        f'统计截至 {update_date} · 数据来源：火富牛策略观察 API<br/>年度指标区间：{y1_start} ~ {update_date} ｜ 月度收益区间：{m1_start} ~ {update_date} ｜ 季度收益区间：{q1_start} ~ {update_date}')
+    html = html.replace('/*__MARKET_NOTE__*/',
+        f'说明：年度指标统计区间为 {y1_start} ~ {update_date}（近一年滚动），月度收益区间为 {m1_start} ~ {update_date}，季度收益区间为 {q1_start} ~ {update_date}。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。')
+    html = html.replace('/*__CORE_SUBTITLE__*/',
+        f'统计截至 <b>{update_date}</b> ｜ 生成时间 {update_time}<br/>近一周：{w1_start} ~ {update_date} ｜ 近一月：{m1_start} ~ {update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31 ~ {update_date}')
+    html = html.replace('/*__CORE_NOTE__*/',
+        f'近一周：{w1_start} ~ {update_date} ｜ 近一月：{m1_start} ~ {update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31 ~ {update_date}')
+    html = html.replace('/*__FOF_SUBTITLE__*/',
+        f'统计截至 {update_date} ｜ 点击组合卡片查看详细分析报告')
+    html = html.replace('/*__FOF_NOTE__*/',
+        f'说明：数据来源火富牛模拟组合 /combi/price API。近一周：{w1_start}~{update_date} ｜ 近一月：{m1_start}~{update_date} ｜ 今年以来：{str(end_dt.year-1)}-12-31~{update_date}。夏普无风险利率取2%，年化波动率=日波动率×√252。')
 
     # 写输出
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
