@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>强势股日报 · 订阅管理</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,system-ui,sans-serif; background:#f1f5f9; color:#1e293b; min-height:100vh; }
+.container { max-width:720px; margin:0 auto; padding:24px 16px; }
+h1 { font-size:20px; font-weight:600; margin-bottom:4px; }
+.subtitle { color:#64748b; font-size:13px; margin-bottom:24px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:20px; margin-bottom:16px; }
+.stats { display:flex; gap:16px; margin-bottom:20px; }
+.stat-box { flex:1; background:#f8fafc; border-radius:8px; padding:12px; text-align:center; }
+.stat-num { font-size:24px; font-weight:700; color:#4f46e5; }
+.stat-label { font-size:12px; color:#94a3b8; margin-top:2px; }
+
+/* 表格 */
+table { width:100%; border-collapse:collapse; }
+th { text-align:left; font-size:12px; color:#94a3b8; font-weight:500; padding:8px 12px; border-bottom:1px solid #e2e8f0; }
+td { padding:10px 12px; border-bottom:1px solid #f1f5f9; font-size:14px; }
+tr:hover { background:#f8fafc; }
+.email-col { color:#475569; }
+.name-col { font-weight:500; }
+
+/* 状态开关 */
+.toggle { position:relative; width:40px; height:22px; cursor:pointer; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle .slider { position:absolute; inset:0; background:#cbd5e1; border-radius:11px; transition:.2s; }
+.toggle .slider:before { content:''; position:absolute; width:18px; height:18px; left:2px; top:2px; background:#fff; border-radius:50%; transition:.2s; }
+.toggle input:checked + .slider { background:#4f46e5; }
+.toggle input:checked + .slider:before { transform:translateX(18px); }
+
+/* 按钮 */
+.btn { border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:500; cursor:pointer; transition:.15s; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-primary:hover { background:#4338ca; }
+.btn-danger { background:#fee2e2; color:#dc2626; }
+.btn-danger:hover { background:#fecaca; }
+.btn-ghost { background:transparent; color:#64748b; padding:4px 8px; }
+.btn-ghost:hover { background:#f1f5f9; }
+.btn-sm { padding:5px 10px; font-size:12px; }
+
+/* 添加表单 */
+.add-form { display:none; gap:8px; align-items:end; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid #e2e8f0; }
+.add-form.show { display:flex; }
+.form-group { flex:1; min-width:140px; }
+.form-group label { display:block; font-size:12px; color:#64748b; margin-bottom:4px; }
+.form-group input { width:100%; padding:8px 10px; border:1px solid #e2e8f0; border-radius:6px; font-size:14px; outline:none; }
+.form-group input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+
+/* 空状态 */
+.empty { text-align:center; padding:40px; color:#94a3b8; }
+.empty-icon { font-size:40px; margin-bottom:8px; }
+
+/* toast */
+.toast { position:fixed; top:20px; right:20px; background:#065f46; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:99; }
+.toast.show { opacity:1; }
+.toast.error { background:#dc2626; }
+
+/* 操作栏 */
+.actions { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📧 强势股日报 · 订阅管理</h1>
+  <p class="subtitle">每个工作日 18:00 自动推送</p>
+
+  <div class="stats">
+    <div class="stat-box"><div class="stat-num" id="totalCount">0</div><div class="stat-label">总订阅</div></div>
+    <div class="stat-box"><div class="stat-num" id="activeCount">0</div><div class="stat-label">活跃</div></div>
+    <div class="stat-box"><div class="stat-num" id="pausedCount">0</div><div class="stat-label">已暂停</div></div>
+  </div>
+
+  <div class="card">
+    <div class="actions">
+      <span style="font-size:14px;font-weight:500">订阅者列表</span>
+      <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">+ 添加</button>
+    </div>
+
+    <div id="tableWrap"></div>
+
+    <div class="add-form" id="addForm">
+      <div class="form-group" style="flex:1.5">
+        <label>邮箱</label>
+        <input id="newEmail" type="email" placeholder="xxx@qq.com">
+      </div>
+      <div class="form-group">
+        <label>备注名</label>
+        <input id="newName" type="text" placeholder="客户名称">
+      </div>
+      <button class="btn btn-primary" onclick="addSubscriber()">确认添加</button>
+      <button class="btn btn-ghost" onclick="toggleAddForm()">取消</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:13px;color:#64748b">配置文件：email_subscribers.json</span>
+    <button class="btn btn-ghost btn-sm" onclick="exportJSON()">导出 JSON</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 数据层（API + localStorage 缓存）=====
+const STORAGE_KEY = 'email_subscribers';
+const API_BASE = window.location.origin;
+let DATA_CACHE = null;
+
+function getToken() {
+  try { return JSON.parse(localStorage.getItem('auth_token') || localStorage.getItem('token') || '""'); } catch(e) { return localStorage.getItem('auth_token') || ''; }
+}
+
+async function loadData() {
+  if (DATA_CACHE) return DATA_CACHE;
+  try {
+    const resp = await fetch(API_BASE + '/api/email-subscribers', {
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    });
+    if (resp.ok) { DATA_CACHE = await resp.json(); return DATA_CACHE; }
+  } catch(e) {}
+  // fallback localStorage
+  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
+  return { subscribers: [] };
+}
+
+async function saveData(subs) {
+  DATA_CACHE = null;
+  try {
+    await fetch(API_BASE + '/api/email-subscribers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
+      body: JSON.stringify({ subscribers: subs })
+    });
+  } catch(e) { console.warn('API save failed, using localStorage'); }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ subscribers: subs }, null, 2));
+  await renderAsync();
+}
+
+// ===== 渲染 =====
+async function renderAsync() {
+  const data = await loadData();
+  const subs = data.subscribers || [];
+  const active = subs.filter(s => s.enabled !== false);
+  const paused = subs.filter(s => s.enabled === false);
+
+  document.getElementById('totalCount').textContent = subs.length;
+  document.getElementById('activeCount').textContent = active.length;
+  document.getElementById('pausedCount').textContent = paused.length;
+
+  const wrap = document.getElementById('tableWrap');
+  if (!subs.length) {
+    wrap.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>暂无订阅者<br>点击上方「添加」按钮</div>';
+    return;
+  }
+
+  let html = '<table><thead><tr><th>备注</th><th>邮箱</th><th>状态</th><th></th></tr></thead><tbody>';
+  subs.forEach((s, i) => {
+    html += `<tr>
+      <td class="name-col">${esc(s.name || '-')}</td>
+      <td class="email-col">${esc(s.email)}</td>
+      <td><label class="toggle"><input type="checkbox" ${s.enabled !== false ? 'checked' : ''} onchange="toggleEnabled(${i})"><span class="slider"></span></label></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removeSub(${i})">删除</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ===== 操作 =====
+function toggleAddForm() {
+  const f = document.getElementById('addForm');
+  f.classList.toggle('show');
+  if (f.classList.contains('show')) document.getElementById('newEmail').focus();
+}
+
+async function addSubscriber() {
+  const email = document.getElementById('newEmail').value.trim();
+  const name = document.getElementById('newName').value.trim();
+  if (!email || !email.includes('@')) { toast('请输入有效邮箱', true); return; }
+
+  const data = await loadData();
+  if (data.subscribers.some(s => s.email === email)) { toast('该邮箱已存在', true); return; }
+
+  data.subscribers.push({ email, name: name || email.split('@')[0], enabled: true });
+  document.getElementById('newEmail').value = '';
+  document.getElementById('newName').value = '';
+  document.getElementById('addForm').classList.remove('show');
+  await saveData(data.subscribers);
+  toast(`已添加 ${name || email}`);
+}
+
+async function toggleEnabled(idx) {
+  const data = await loadData();
+  data.subscribers[idx].enabled = !data.subscribers[idx].enabled;
+  const s = data.subscribers[idx];
+  await saveData(data.subscribers);
+  toast(`${s.name}: ${s.enabled ? '已启用' : '已暂停'}`);
+}
+
+async function removeSub(idx) {
+  const data = await loadData();
+  const s = data.subscribers[idx];
+  if (!confirm(`确认删除 ${s.name} (${s.email})？`)) return;
+  data.subscribers.splice(idx, 1);
+  await saveData(data.subscribers);
+  toast(`已删除 ${s.name}`);
+}
+
+async function exportJSON() {
+  const data = await loadData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'email_subscribers.json';
+  a.click();
+  toast('已导出 JSON');
+}
+
+// ===== Toast =====
+function toast(msg, isError) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = 'toast', 2000);
+}
+
+// ===== 初始化 =====
+renderAsync();
+</script>
+</body>
+</html>
