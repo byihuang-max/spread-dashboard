@@ -76,7 +76,7 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-sys
 .value-small { font-size:15px; line-height:1.4; }
 
 /* Overview */
-.overview { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; }
+.overview { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; }
 .overview-card,.mini-card,.strategy-card { background:var(--panel-soft); border:1px solid var(--line); border-radius:14px; }
 .overview-card { padding:18px; }
 .overview-main { font-size:16px; font-weight:700; line-height:1.7; color:#1e293b; }
@@ -108,7 +108,7 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-sys
 .metric-label { color:var(--muted); font-size:10px; font-weight:500; }
 .metric-value { margin-top:4px; font-size:16px; font-weight:700; }
 .strategy-leader { color:#3d5068; font-size:12px; margin-bottom:10px; }
-.product-chip-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.product-chip-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; }
 .product-chip { background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px; transition:border-color .15s; }
 .product-chip:hover { border-color:#94a3b8; }
 .product-chip-name { font-size:12px; font-weight:600; margin-bottom:5px; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -408,6 +408,7 @@ function renderSortFilters(){
 function renderCards(){
   const grid = document.getElementById('strategyGrid');
   const data = currentStrategy === '全部' ? strategySummary : strategySummary.filter(x => x.strategy === currentStrategy);
+  grid.style.gridTemplateColumns = data.length === 1 ? '1fr' : 'repeat(2,1fr)';
   grid.innerHTML = data.map(group => {
     const items = sortRows(group.items).slice(0, 4);
     const chips = items.map(item => `
@@ -786,13 +787,13 @@ function drawMonthlyBar(canvasId, monthlyReturns) {
   const data = monthlyReturns.slice(-12);
   const dpr = window.devicePixelRatio || 1;
   const w = cv.parentElement.clientWidth || 700;
-  const h = 200;
+  const h = 240;
   cv.width = w * dpr; cv.height = h * dpr;
   cv.style.width = w + 'px'; cv.style.height = h + 'px';
   const ctx = cv.getContext('2d');
   ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h);
 
-  const pad = {top: 28, right: 20, bottom: 32, left: 48};
+  const pad = {top: 32, right: 24, bottom: 36, left: 52};
   const cw = w - pad.left - pad.right;
   const ch = h - pad.top - pad.bottom;
   const n = data.length;
@@ -830,15 +831,14 @@ function drawMonthlyBar(canvasId, monthlyReturns) {
     ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(pad.left + cw, zeroY); ctx.stroke();
   }
 
-  // Bars
-  const barGap = Math.max(cw * 0.08 / n, 2);
-  const barW = Math.min((cw - barGap * (n + 1)) / n, 48);
-  const totalW = n * barW + (n + 1) * barGap;
-  const offsetX = pad.left + (cw - totalW) / 2;
+  // Bars — fill full width, 30% gap ratio
+  const barW = cw / n * 0.65;
+  const barGap = cw / n * 0.35;
+  const offsetX = pad.left + barGap / 2;
 
   for (let i = 0; i < n; i++) {
     const v = vals[i];
-    const x = offsetX + barGap + i * (barW + barGap);
+    const x = offsetX + i * (barW + barGap);
     const barTop = v >= 0 ? yPos(v) : zeroY;
     const barBot = v >= 0 ? zeroY : yPos(v);
     const barH = Math.max(barBot - barTop, 1);
@@ -869,7 +869,7 @@ function drawMonthlyBar(canvasId, monthlyReturns) {
     ctx.fillStyle = v >= 0 ? '#1a56db' : '#c0392b';
     ctx.font = '10px -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    const labelY = v >= 0 ? barTop - 5 : barBot + 12;
+    const labelY = v >= 0 ? barTop - 8 : barBot + 14;
     ctx.fillText(v.toFixed(2) + '%', x + barW / 2, labelY);
 
     // Month label
