@@ -67,8 +67,8 @@ COMBIS = [
     {"id": "f3a5298b3ec32ce7", "name": "飞虹路-鑫益大方向1号",      "group": "FOF组合",   "detail": "FOF组合"},
     {"id": "bb24bad1d31a4173", "name": "长盛71号",                  "group": "FOF组合",   "detail": "FOF组合"},
     {"id": "ea21daabf8d35fd6", "name": "飞虹路-长盛65号",           "group": "FOF组合",   "detail": "FOF组合"},
-    {"id": "63983e4cd5cdda5f", "name": "君宜安鑫",                  "group": "FOF组合",   "detail": "FOF组合"},
-    {"id": "52b8287b5c62e21b", "name": "宁涌富春分8号（凌总）组合",  "group": "FOF组合",   "detail": "FOF组合"},
+    {"id": "63983e4cd5cdda5f", "name": "君宜安鑫",                  "group": "FOF组合",   "detail": "FOF组合", "hidden": True},
+    {"id": "52b8287b5c62e21b", "name": "宁涌富春分8号（凌总）组合",  "group": "FOF组合",   "detail": "FOF组合", "hidden": True},
 ]
 
 # 市场策略基准 ID 列表（火富牛 /market/category 接口）

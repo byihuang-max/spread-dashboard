@@ -240,6 +240,8 @@ def build_strategy_summary(products, combis):
     groups = defaultdict(list)
 
     for p in products + combis:
+        if p.get('hidden'):
+            continue
         groups[p['group']].append(p)
 
     # 策略组描述
@@ -299,7 +301,7 @@ def build_fof_combis(combis):
     from collections import defaultdict
     fof_list = []
     # 只取 FOF组合 分组的（不含 FOF组合类）
-    fof_items = [c for c in combis if c.get('group') == 'FOF组合' and c.get('_raw_navs')]
+    fof_items = [c for c in combis if c.get('group') == 'FOF组合' and c.get('_raw_navs') and not c.get('hidden')]
 
     for c in fof_items:
         navs = c['_raw_navs']  # [(date, nav), ...]
@@ -487,9 +489,11 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
     strategy_summary = build_strategy_summary(products, combis)
     fof_combis = build_fof_combis(combis)
 
-    # 构建 navHistory（code → [[date, nav], ...]）
+    # 构建 navHistory（code → [[date, nav], ...]），hidden 的不进前端
     nav_history = {}
     for p in products + combis:
+        if p.get('hidden'):
+            continue
         code = p.get('code', '')
         raw_navs = p.get('_raw_navs', [])
         if code and raw_navs:
