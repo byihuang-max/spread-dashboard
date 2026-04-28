@@ -178,7 +178,7 @@ tr:hover td { background:#f8fafc; }
 .fof-compare-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff; }
 .fof-metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
 .fof-metric-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; text-align:center; }
-.fof-metric-icon { font-size:22px; margin-bottom:4px; }
+
 .fof-metric-label { font-size:11px; color:#64748b; margin-bottom:3px; }
 .fof-metric-val { font-size:18px; font-weight:800; color:#0f172a; }
 .fof-metric-sub { font-size:10px; color:#94a3b8; margin-top:2px; }
@@ -759,22 +759,22 @@ function showFofDetail(idx){
       <div class="stat"><div class="label">成立以来</div><div class="value ${pcls(c.total_ret)}">${fmtP(c.total_ret)}</div></div>
       <div class="stat"><div class="label">年化收益</div><div class="value ${pcls(c.ann_ret)}">${fmtP(c.ann_ret)}</div></div>
     </div>
-    <div style="font-size:14px;font-weight:700;margin:12px 0 8px">📈 累计净值走势</div>
+    <div style="font-size:14px;font-weight:700;margin:12px 0 8px">累计净值走势</div>
     <canvas id="fofModalNav" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
-    <div style="font-size:14px;font-weight:700;margin:16px 0 8px">📉 回撤走势</div>
+    <div style="font-size:14px;font-weight:700;margin:16px 0 8px">回撤走势</div>
     <canvas id="fofModalDd" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
     <div style="font-size:14px;font-weight:700;margin:16px 0 8px">风险收益指标</div>
     <div class="fof-metrics-grid">
-      <div class="fof-metric-card"><div class="fof-metric-icon">📊</div><div class="fof-metric-label">年化波动率</div><div class="fof-metric-val">${fmtP(c.ann_vol)}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">⚡</div><div class="fof-metric-label">夏普比率</div><div class="fof-metric-val">${fmtN(c.sharpe)}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🛡️</div><div class="fof-metric-label">最大回撤</div><div class="fof-metric-val neg">${fmtP(c.max_dd)}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🎯</div><div class="fof-metric-label">卡玛比率</div><div class="fof-metric-val">${fmtN(c.calmar)}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">📅</div><div class="fof-metric-label">当前回撤</div><div class="fof-metric-val neg">${fmtP(c.current_dd)}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🏆</div><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${fmtP(c.win_rate,1)}</div><div class="fof-metric-sub">涨${c.pos_days}天/跌${c.neg_days}天</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🔺</div><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${fmtP(c.max_up)}</div><div class="fof-metric-sub">${c.max_up_date}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🔻</div><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${fmtP(c.max_down)}</div><div class="fof-metric-sub">${c.max_down_date}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">年化波动率</div><div class="fof-metric-val">${fmtP(c.ann_vol)}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">夏普比率</div><div class="fof-metric-val">${fmtN(c.sharpe)}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大回撤</div><div class="fof-metric-val neg">${fmtP(c.max_dd)}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">卡玛比率</div><div class="fof-metric-val">${fmtN(c.calmar)}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">当前回撤</div><div class="fof-metric-val neg">${fmtP(c.current_dd)}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${fmtP(c.win_rate,1)}</div><div class="fof-metric-sub">涨${c.pos_days}天/跌${c.neg_days}天</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${fmtP(c.max_up)}</div><div class="fof-metric-sub">${c.max_up_date}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${fmtP(c.max_down)}</div><div class="fof-metric-sub">${c.max_down_date}</div></div>
     </div>
-    <div style="font-size:14px;font-weight:700;margin:16px 0 8px">📅 月度收益</div>
+    <div style="font-size:14px;font-weight:700;margin:16px 0 8px">月度收益</div>
     <div class="fof-monthly-grid" id="fofModalMonthly"></div>
     <div class="note" style="margin-top:12px">运行${c.run_days}天 ｜ ${c.start_date}~${c.end_date} ｜ 最大回撤区间：${c.dd_period}</div>`;
   setTimeout(()=>{
@@ -927,22 +927,22 @@ function showDetail(code, name) {
       <div class="stat"><div class="label">今年以来</div><div class="value ${cls(p.ytd_return)}">${fmtPct(p.ytd_return)}</div></div>
       <div class="stat"><div class="label">净值日期</div><div class="value value-small">${p.latest_date || '-'}</div></div>
     </div>
-    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:12px 0 8px">📈 累计净值走势</div>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:12px 0 8px">累计净值走势</div>
     <canvas id="modalNavChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
-    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">📉 回撤走势</div>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">回撤走势</div>
     <canvas id="modalDdChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">风险收益指标</div>
     <div class="fof-metrics-grid">
-      <div class="fof-metric-card"><div class="fof-metric-icon">📊</div><div class="fof-metric-label">年化波动率</div><div class="fof-metric-val">${p.ann_vol != null ? fmtPct(p.ann_vol) : '-'}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">⚡</div><div class="fof-metric-label">夏普比率</div><div class="fof-metric-val">${p.sharpe != null ? p.sharpe.toFixed(2) : '-'}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🛡️</div><div class="fof-metric-label">最大回撤</div><div class="fof-metric-val neg">${p.max_dd != null ? '-'+fmtPct(p.max_dd) : '-'}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🎯</div><div class="fof-metric-label">卡玛比率</div><div class="fof-metric-val">${p.calmar != null ? p.calmar.toFixed(2) : '-'}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">📅</div><div class="fof-metric-label">当前回撤</div><div class="fof-metric-val neg">${hasNav ? '-'+fmtPct(currentDd) : '-'}</div></div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🏆</div><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${hasNav ? fmtPct(winRate) : '-'}</div>${hasNav ? '<div class="fof-metric-sub">涨'+posDays+'天/跌'+negDays+'天</div>' : ''}</div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🔺</div><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${hasNav ? fmtPct(maxUp) : '-'}</div>${maxUpDate ? '<div class="fof-metric-sub">'+maxUpDate+'</div>' : ''}</div>
-      <div class="fof-metric-card"><div class="fof-metric-icon">🔻</div><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${hasNav ? fmtPct(maxDown) : '-'}</div>${maxDownDate ? '<div class="fof-metric-sub">'+maxDownDate+'</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-label">年化波动率</div><div class="fof-metric-val">${p.ann_vol != null ? fmtPct(p.ann_vol) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">夏普比率</div><div class="fof-metric-val">${p.sharpe != null ? p.sharpe.toFixed(2) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大回撤</div><div class="fof-metric-val neg">${p.max_dd != null ? '-'+fmtPct(p.max_dd) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">卡玛比率</div><div class="fof-metric-val">${p.calmar != null ? p.calmar.toFixed(2) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">当前回撤</div><div class="fof-metric-val neg">${hasNav ? '-'+fmtPct(currentDd) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${hasNav ? fmtPct(winRate) : '-'}</div>${hasNav ? '<div class="fof-metric-sub">涨'+posDays+'天/跌'+negDays+'天</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${hasNav ? fmtPct(maxUp) : '-'}</div>${maxUpDate ? '<div class="fof-metric-sub">'+maxUpDate+'</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${hasNav ? fmtPct(maxDown) : '-'}</div>${maxDownDate ? '<div class="fof-metric-sub">'+maxDownDate+'</div>' : ''}</div>
     </div>
-    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">📅 月度收益</div>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">月度收益</div>
     <div class="fof-monthly-grid" id="modalMonthly"></div>
     <div class="note" style="margin-top:12px">${hasNav ? navData[0][0]+' ~ '+navData[navData.length-1][0]+' ｜ 最大回撤区间：'+ddPeriod : '暂无历史净值数据'}</div>`;
 
