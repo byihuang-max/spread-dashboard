@@ -421,10 +421,68 @@ def build_fof_combis(combis):
     return fof_list
 
 
+def save_csv_incremental(products, combis, update_date):
+    """增量追加 CSV（产品 + FOF 各一张表）"""
+    import csv
+
+    # --- 产品净值快照 ---
+    prod_csv = os.path.join(DATA_DIR, 'products_history.csv')
+    prod_fields = ['date', 'code', 'name', 'strategy', 'strategy_detail',
+                   'latest_date', 'latest_cum_nav', 'week_return', 'month_return', 'ytd_return', 'status']
+    write_header = not os.path.exists(prod_csv)
+    with open(prod_csv, 'a', newline='', encoding='utf-8-sig') as f:
+        w = csv.DictWriter(f, fieldnames=prod_fields)
+        if write_header:
+            w.writeheader()
+        for p in products:
+            w.writerow({
+                'date': update_date,
+                'code': p.get('code', ''),
+                'name': p.get('name', ''),
+                'strategy': p.get('group', ''),
+                'strategy_detail': p.get('detail', ''),
+                'latest_date': p.get('latest_date', ''),
+                'latest_cum_nav': p.get('latest_cum_nav', ''),
+                'week_return': p.get('week_return', ''),
+                'month_return': p.get('month_return', ''),
+                'ytd_return': p.get('ytd_return', ''),
+                'status': p.get('status', ''),
+            })
+    print(f"📊 CSV追加: {prod_csv} (+{len(products)} 行)")
+
+    # --- FOF 组合快照 ---
+    fof_csv = os.path.join(DATA_DIR, 'fof_history.csv')
+    fof_fields = ['date', 'combi_id', 'name', 'latest_nav', 'total_ret', 'ann_ret',
+                  'ann_vol', 'sharpe', 'max_dd', 'calmar', 'ytd_ret', 'week_ret', 'month_ret']
+    write_header = not os.path.exists(fof_csv)
+    with open(fof_csv, 'a', newline='', encoding='utf-8-sig') as f:
+        w = csv.DictWriter(f, fieldnames=fof_fields)
+        if write_header:
+            w.writeheader()
+        for c in combis:
+            w.writerow({
+                'date': update_date,
+                'combi_id': c.get('code', c.get('id', '')),
+                'name': c.get('name', ''),
+                'latest_nav': c.get('latest_cum_nav', ''),
+                'total_ret': c.get('total_return', ''),
+                'ann_ret': c.get('ann_return', ''),
+                'ann_vol': c.get('ann_vol', ''),
+                'sharpe': c.get('sharpe', ''),
+                'max_dd': c.get('max_dd', ''),
+                'calmar': c.get('calmar', ''),
+                'ytd_ret': c.get('ytd_return', ''),
+                'week_ret': c.get('week_return', ''),
+                'month_ret': c.get('month_return', ''),
+            })
+    print(f"📊 CSV追加: {fof_csv} (+{len(combis)} 行)")
+
+
 def save_data(products, combis, market_annual, market_monthly, market_quarterly):
-    """保存所有数据到 JSON"""
+    """保存所有数据到 JSON + CSV（增量）"""
     os.makedirs(RAW_DIR, exist_ok=True)
     today = datetime.now().strftime('%Y%m%d')
+    update_date = datetime.now().strftime('%Y-%m-%d')
 
     strategy_summary = build_strategy_summary(products, combis)
     fof_combis = build_fof_combis(combis)
@@ -451,17 +509,34 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
         'nav_history': nav_history,
     }
 
-    # 保存带日期版本
+    # 保存带日期版本（JSON 快照）
     dated_path = os.path.join(RAW_DIR, f'fund_asset_{today}.json')
     with open(dated_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"💾 保存: {dated_path}")
+    print(f"💾 JSON快照: {dated_path}")
 
-    # 保存 latest 版本
+    # 保存 latest 版本（渲染用，覆盖）
     latest_path = os.path.join(DATA_DIR, 'fund_asset_latest.json')
     with open(latest_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"💾 保存: {latest_path}")
+    print(f"💾 JSON最新: {latest_path}")
+
+    # JSONL 增量追加（一行一天，方便程序读取历史）
+    jsonl_path = os.path.join(DATA_DIR, 'fund_asset_history.jsonl')
+    with open(jsonl_path, 'a', encoding='utf-8') as f:
+        compact = {
+            'date': update_date,
+            'update_time': output['update_time'],
+            'products': [{k: v for k, v in item.items() if k != '_raw_navs'}
+                         for group in strategy_summary for item in group.get('items', [])],
+            'fof_combis': [{k: v for k, v in fc.items() if k not in ('nav_data', 'dd_data', 'monthly_returns')}
+                           for fc in fof_combis],
+        }
+        f.write(json.dumps(compact, ensure_ascii=False) + '\n')
+    print(f"📝 JSONL追加: {jsonl_path}")
+
+    # CSV 增量追加
+    save_csv_incremental(products, combis, update_date)
 
     return output
 
