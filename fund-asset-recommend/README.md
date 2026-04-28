@@ -1,45 +1,46 @@
 # 团队基金优选模块
 
-GAMT 看板子模块，跟踪团队核心私募产品业绩。
+GAMT 看板子模块，展示团队跟踪的私募产品、FOF 组合和市场策略基准。
 
-## 目录结构
+## 架构
 
 ```
 fund-asset-recommend/
+├── fund_asset.html              # 最终页面（自动生成，勿手动编辑）
+├── fund_asset_template.html     # HTML 模板（含占位符）
 ├── scripts/
-│   ├── config.py          # 统一配置（API密钥、产品列表、路径）
-│   └── fetch_data.py      # 数据采集主脚本（一个文件搞定）
+│   ├── config.py                # 产品列表 + API 密钥
+│   ├── fetch_data.py            # 数据采集（火富牛 API → JSON）
+│   └── render_html.py           # 渲染（JSON + 模板 → HTML）
 ├── data/
-│   ├── fund_asset_latest.json   # 最新数据（每次覆盖）
-│   ├── raw/                     # 带日期的历史快照
-│   └── archive/                 # 原始文件归档（勿动）
-│       ├── original_scripts/    # 原始70个py脚本
-│       ├── html_versions/       # 原始23个HTML版本
-│       └── *.csv/*.xlsx/*.json  # 原始数据文件
-└── sdk/
-    └── huofuniu-sdk-original/   # 原始SDK备份（与主看板SDK一致）
+│   ├── fund_asset_latest.json   # 最新数据（fetch_data.py 输出）
+│   └── raw/                     # 历史快照（按日期归档）
+└── README.md
 ```
 
-## 使用
+## 数据流
+
+```
+火富牛 API ──→ fetch_data.py ──→ fund_asset_latest.json ──→ render_html.py ──→ fund_asset.html
+```
+
+## 运行
 
 ```bash
 cd ~/Desktop/gamt-dashboard/fund-asset-recommend/scripts
-python3 fetch_data.py
+/opt/homebrew/bin/python3 fetch_data.py    # 拉取最新数据
+/opt/homebrew/bin/python3 render_html.py   # 生成 HTML
 ```
 
-一个脚本完成：产品净值采集 → 组合净值采集 → 市场基准采集 → 收益计算 → JSON输出。
+已注册到 `module_registry.py`，`update_all.py` 日更时自动执行。
 
-## 数据覆盖
+## 覆盖范围
 
-- 27只基金产品（7个策略组）
-- 6个FOF组合
-- 16个市场策略基准
+- **27 只私募产品**：量选 / 风格 / 绝对收益 / 商品 / 多策略 / FOF组合类（7 个策略组）
+- **6 个 FOF 模拟组合**：含净值曲线、回撤、夏普等完整指标
+- **16 个市场策略基准**：年度 / 月度 / 季度收益分位
 
 ## 数据源
 
-火富牛 API（mallapi.huofuniu.com），使用主看板已有的 fof99 SDK。
-
-## 后续
-
-- [ ] 生成 HTML 页面，接入 GAMT 主看板
-- [ ] 接入 update_all.py 日更链路
+- **API**: 火富牛 `mallapi.huofuniu.com`（直连，不走代理）
+- **密钥**: 见 `config.py`（APP_ID / APP_KEY）
