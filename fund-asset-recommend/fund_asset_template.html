@@ -281,29 +281,9 @@ tr:hover td { background:#f8fafc; }
           <div class="topbar-tag">机构跟踪视图</div>
         </div>
 
-        <div class="section"><div class="stats">
-          <div class="stat"><div class="label">核心产品数</div><div class="value">28</div></div>
-          <div class="stat"><div class="label">本周上涨 / 下跌 / 持平</div><div class="value">25 / 3 / 0</div></div>
-          <div class="stat"><div class="label">今年以来正收益</div><div class="value">26</div></div>
-          <div class="stat"><div class="label">YTD领先产品</div><div class="value value-small">正仁择时量选听涛二号</div></div>
-          <div class="stat"><div class="label">缓存兜底</div><div class="value">0</div></div>
-          <div class="stat"><div class="label">截点滞后</div><div class="value">1</div></div>
-        </div></div>
+        <div class="section"><div class="stats" id="coreStats"></div></div>
 
-        <div class="section"><div class="overview">
-          <div class="overview-card">
-            <div class="overview-main">本期共有 <span class="pos">23</span> 只产品周度上涨，YTD领先产品为 <span class="pos">正仁择时量选听涛二号</span>。</div>
-            <div class="overview-sub">以轻量交互和专业配色承载机构浏览场景，核心信息集中于摘要、榜单、分类卡与明细表。</div>
-          </div>
-          <div class="mini-card">
-            <div class="mini-title">周度领先 TOP 5</div>
-            <div class="mini-row"><span class="mini-name">正仁择时量选听涛二号</span><span class="mini-val pos">8.74%</span></div><div class="mini-row"><span class="mini-name">龙旗科技创新精选1号</span><span class="mini-val pos">7.99%</span></div><div class="mini-row"><span class="mini-name">太衍光年2000增强</span><span class="mini-val pos">6.25%</span></div><div class="mini-row"><span class="mini-name">顽岩量化选股</span><span class="mini-val pos">6.22%</span></div><div class="mini-row"><span class="mini-name">正仁双创择时</span><span class="mini-val pos">6.20%</span></div>
-          </div>
-          <div class="mini-card">
-            <div class="mini-title">YTD领先 TOP 5</div>
-            <div class="mini-row"><span class="mini-name">正仁择时量选听涛二号</span><span class="mini-val pos">32.89%</span></div><div class="mini-row"><span class="mini-name">龙旗科技创新精选1号</span><span class="mini-val pos">11.78%</span></div><div class="mini-row"><span class="mini-name">太衍光年2000增强</span><span class="mini-val pos">11.38%</span></div><div class="mini-row"><span class="mini-name">玉数涵瑞专享十七号</span><span class="mini-val pos">10.41%</span></div><div class="mini-row"><span class="mini-name">顽岩量化选股</span><span class="mini-val pos">10.34%</span></div>
-          </div>
-        </div></div>
+        <div class="section"><div class="overview" id="coreOverview"></div></div>
 
         <div class="section">
           <div class="section-title">筛选与视图</div>
@@ -385,18 +365,12 @@ tr:hover td { background:#f8fafc; }
 </section>
   
     <div id="detailModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;">
-      <div style="background:#fff;border-radius:16px;width:90%;max-width:860px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+      <div style="background:#fff;border-radius:16px;width:92%;max-width:920px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #e2e8f0;">
           <h2 id="modalTitle" style="margin:0;font-size:20px;font-weight:800;color:#0f172a;"></h2>
           <button id="modalClose" style="border:none;background:#f1f5f9;color:#64748b;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
         </div>
-        <div style="padding:20px 24px;">
-          <div id="modalInfo"></div>
-          <div style="margin-top:16px;">
-            <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:10px;">📈 累计净值走势</div>
-            <canvas id="navChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px;"></canvas>
-          </div>
-        </div>
+        <div style="padding:20px 24px;" id="modalBody"></div>
       </div>
     </div>
 </main>
@@ -858,116 +832,138 @@ document.getElementById('showTable').onclick = () => {
 };
 renderAll();
 
+// ========== 动态 KPI 统计区 + 概览区 ==========
+function renderCoreStats() {
+  const total = rows.length;
+  const weekUp = rows.filter(r => (r.week_return || 0) > 0).length;
+  const weekDown = rows.filter(r => (r.week_return || 0) < 0).length;
+  const weekFlat = total - weekUp - weekDown;
+  const ytdPos = rows.filter(r => (r.ytd_return || 0) > 0).length;
+  const fallback = rows.filter(r => r.data_source === 'fallback').length;
+  const lagging = rows.filter(r => r.status_label === '滞后').length;
+  const ytdLeader = [...rows].sort((a,b) => (b.ytd_return||0) - (a.ytd_return||0))[0];
+
+  document.getElementById('coreStats').innerHTML = `
+    <div class="stat"><div class="label">核心产品数</div><div class="value">${total}</div></div>
+    <div class="stat"><div class="label">本周上涨 / 下跌 / 持平</div><div class="value">${weekUp} / ${weekDown} / ${weekFlat}</div></div>
+    <div class="stat"><div class="label">今年以来正收益</div><div class="value">${ytdPos}</div></div>
+    <div class="stat"><div class="label">YTD领先产品</div><div class="value value-small">${ytdLeader ? ytdLeader.name : '-'}</div></div>
+    <div class="stat"><div class="label">缓存兜底</div><div class="value">${fallback}</div></div>
+    <div class="stat"><div class="label">截点滞后</div><div class="value">${lagging}</div></div>`;
+
+  const weekTop5 = [...rows].sort((a,b) => (b.week_return||0) - (a.week_return||0)).slice(0,5);
+  const ytdTop5 = [...rows].sort((a,b) => (b.ytd_return||0) - (a.ytd_return||0)).slice(0,5);
+  function miniRows(items, key) {
+    return items.map(i => `<div class="mini-row"><span class="mini-name">${i.name}</span><span class="mini-val ${cls(i[key])}">${fmtPct(i[key])}</span></div>`).join('');
+  }
+  document.getElementById('coreOverview').innerHTML = `
+    <div class="overview-card">
+      <div class="overview-main">本期共有 <span class="${weekUp > weekDown ? 'pos' : 'neg'}">${weekUp}</span> 只产品周度上涨，YTD领先产品为 <span class="pos">${ytdLeader ? ytdLeader.name : '-'}</span>（${fmtPct(ytdLeader ? ytdLeader.ytd_return : 0)}）。</div>
+      <div class="overview-sub">核心信息集中于摘要、榜单、分类卡与明细表，点击产品可查看详细风险收益分析。</div>
+    </div>
+    <div class="mini-card"><div class="mini-title">周度领先 TOP 5</div>${miniRows(weekTop5, 'week_return')}</div>
+    <div class="mini-card"><div class="mini-title">YTD领先 TOP 5</div>${miniRows(ytdTop5, 'ytd_return')}</div>`;
+}
+renderCoreStats();
+
 // 历史净值数据
 const navHistory = /*__NAV_HISTORY__*/{};
 
 function showDetail(code, name) {
   const modal = document.getElementById('detailModal');
   const title = document.getElementById('modalTitle');
-  const canvas = document.getElementById('navChart');
-  const info = document.getElementById('modalInfo');
-  
+  const body = document.getElementById('modalBody');
+
   title.textContent = name;
   modal.style.display = 'flex';
-  
-  // 找产品信息
+
   const product = rows.find(r => (r.code||r.name) === code) || {};
   const summaryItem = strategySummary.flatMap(s => s.items).find(i => (i.code||i.name) === code) || {};
-  
-  info.innerHTML = `
-    <div class="modal-kpi-grid">
-      <div class="modal-kpi"><div class="modal-kpi-label">策略分类</div><div class="modal-kpi-val">${product.strategy || '-'} · ${product.strategy_detail || summaryItem.strategy_detail || '-'}</div></div>
-      <div class="modal-kpi"><div class="modal-kpi-label">近一周</div><div class="modal-kpi-val ${cls(product.week_return)}">${fmtPct(product.week_return)}</div></div>
-      <div class="modal-kpi"><div class="modal-kpi-label">近一月</div><div class="modal-kpi-val ${cls(product.month_return)}">${fmtPct(product.month_return)}</div></div>
-      <div class="modal-kpi"><div class="modal-kpi-label">今年以来</div><div class="modal-kpi-val ${cls(product.ytd_return)}">${fmtPct(product.ytd_return)}</div></div>
-      <div class="modal-kpi"><div class="modal-kpi-label">最新净值日</div><div class="modal-kpi-val">${summaryItem.latest_date || product.stat_end_used_date || '-'}</div></div>
-      <div class="modal-kpi"><div class="modal-kpi-label">累计净值</div><div class="modal-kpi-val">${summaryItem.latest_cum_nav ? summaryItem.latest_cum_nav.toFixed(4) : '-'}</div></div>
-    </div>`;
-  
-  // 画净值曲线
-  const navData = navHistory[code];
-  if (!navData || navData.length === 0) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#64748b';
-    ctx.font = '14px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('暂无历史净值数据', canvas.width/2, canvas.height/2);
-    return;
-  }
-  
-  drawChart(canvas, navData, name);
-}
+  const p = {...summaryItem, ...product};
 
-function drawChart(canvas, data, name) {
-  const dpr = window.devicePixelRatio || 1;
-  const w = canvas.parentElement.clientWidth || 800;
-  const h = 320;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, w, h);
-  
-  const pad = {top:20, right:20, bottom:40, left:60};
-  const cw = w - pad.left - pad.right;
-  const ch = h - pad.top - pad.bottom;
-  
-  // 数据按日期排序
-  const sorted = [...data].sort((a,b) => a[0].localeCompare(b[0]));
-  const dates = sorted.map(d => d[0]);
-  const vals = sorted.map(d => d[1]);
-  const minV = Math.min(...vals) * 0.998;
-  const maxV = Math.max(...vals) * 1.002;
-  const range = maxV - minV || 1;
-  
-  // 网格线
-  ctx.strokeStyle = '#e2e8f0';
-  ctx.lineWidth = 0.5;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + ch * (1 - i/4);
-    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
-    ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText((minV + range * i/4).toFixed(4), pad.left - 8, y + 4);
+  const navData = navHistory[code];
+  const hasNav = navData && navData.length >= 2;
+
+  // 从净值序列计算详细指标
+  let ddData = [], monthlyReturns = [], winRate = 0, posDays = 0, negDays = 0, maxUp = 0, maxUpDate = '', maxDown = 0, maxDownDate = '', currentDd = 0, ddPeriod = '-';
+  if (hasNav) {
+    const sorted = [...navData].sort((a,b) => a[0].localeCompare(b[0]));
+    const dates = sorted.map(d => d[0]), vals = sorted.map(d => d[1]);
+    let peak = vals[0], peakDate = dates[0], maxDdVal = 0, ddStart = dates[0], ddEnd = dates[0];
+    for (let i = 0; i < vals.length; i++) {
+      if (vals[i] >= peak) { peak = vals[i]; peakDate = dates[i]; }
+      const dd = (vals[i] - peak) / peak;
+      ddData.push([dates[i], dd]);
+      if (Math.abs(dd) > maxDdVal) { maxDdVal = Math.abs(dd); ddStart = peakDate; ddEnd = dates[i]; }
+    }
+    currentDd = Math.abs(ddData[ddData.length-1][1]);
+    ddPeriod = ddStart + ' ~ ' + ddEnd;
+    const rets = [];
+    for (let i = 1; i < vals.length; i++) rets.push({date: dates[i], ret: vals[i]/vals[i-1]-1});
+    posDays = rets.filter(r => r.ret > 0).length;
+    negDays = rets.filter(r => r.ret < 0).length;
+    winRate = posDays / Math.max(posDays + negDays, 1);
+    if (rets.length) {
+      const best = rets.reduce((a,b) => a.ret > b.ret ? a : b);
+      const worst = rets.reduce((a,b) => a.ret < b.ret ? a : b);
+      maxUp = best.ret; maxUpDate = best.date;
+      maxDown = worst.ret; maxDownDate = worst.date;
+    }
+    const monthMap = {};
+    for (let i = 1; i < vals.length; i++) {
+      const mk = dates[i].slice(0,7);
+      if (!monthMap[mk]) monthMap[mk] = {start: vals[i-1], end: vals[i]};
+      else monthMap[mk].end = vals[i];
+    }
+    monthlyReturns = Object.entries(monthMap).sort((a,b) => a[0].localeCompare(b[0])).map(([m, v]) => ({month: m, 'return': v.end/v.start - 1}));
   }
-  
-  // X轴标签
-  ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-  const step = Math.max(1, Math.floor(dates.length / 6));
-  for (let i = 0; i < dates.length; i += step) {
-    const x = pad.left + (i / (dates.length-1)) * cw;
-    ctx.fillText(dates[i].slice(5), x, h - pad.bottom + 20);
-  }
-  
-  // 净值曲线
-  ctx.beginPath();
-  ctx.strokeStyle = '#2563eb';
-  ctx.lineWidth = 2;
-  ctx.lineJoin = 'round';
-  for (let i = 0; i < vals.length; i++) {
-    const x = pad.left + (i / (vals.length-1)) * cw;
-    const y = pad.top + ch * (1 - (vals[i] - minV) / range);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-  
-  // 渐变填充
-  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-  grad.addColorStop(0, 'rgba(37,99,235,0.12)');
-  grad.addColorStop(1, 'rgba(37,99,235,0)');
-  ctx.lineTo(pad.left + cw, pad.top + ch);
-  ctx.lineTo(pad.left, pad.top + ch);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-  
-  // 起止标注
-  ctx.fillStyle = '#1e293b'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText(vals[0].toFixed(4), pad.left + 4, pad.top + ch * (1 - (vals[0]-minV)/range) - 8);
-  ctx.textAlign = 'right';
-  ctx.fillText(vals[vals.length-1].toFixed(4), pad.left + cw - 4, pad.top + ch * (1 - (vals[vals.length-1]-minV)/range) - 8);
+
+  body.innerHTML = `
+    <div class="stats" style="margin-bottom:16px">
+      <div class="stat"><div class="label">策略分类</div><div class="value value-small">${p.strategy || '-'} · ${p.strategy_detail || '-'}</div></div>
+      <div class="stat"><div class="label">累计净值</div><div class="value">${p.latest_cum_nav ? p.latest_cum_nav.toFixed(4) : '-'}</div></div>
+      <div class="stat"><div class="label">近一周</div><div class="value ${cls(p.week_return)}">${fmtPct(p.week_return)}</div></div>
+      <div class="stat"><div class="label">近一月</div><div class="value ${cls(p.month_return)}">${fmtPct(p.month_return)}</div></div>
+      <div class="stat"><div class="label">今年以来</div><div class="value ${cls(p.ytd_return)}">${fmtPct(p.ytd_return)}</div></div>
+      <div class="stat"><div class="label">净值日期</div><div class="value value-small">${p.latest_date || '-'}</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:12px 0 8px">📈 累计净值走势</div>
+    <canvas id="modalNavChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">📉 回撤走势</div>
+    <canvas id="modalDdChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">风险收益指标</div>
+    <div class="fof-metrics-grid">
+      <div class="fof-metric-card"><div class="fof-metric-icon">📊</div><div class="fof-metric-label">年化波动率</div><div class="fof-metric-val">${p.ann_vol != null ? fmtPct(p.ann_vol) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">⚡</div><div class="fof-metric-label">夏普比率</div><div class="fof-metric-val">${p.sharpe != null ? p.sharpe.toFixed(2) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">🛡️</div><div class="fof-metric-label">最大回撤</div><div class="fof-metric-val neg">${p.max_dd != null ? '-'+fmtPct(p.max_dd) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">🎯</div><div class="fof-metric-label">卡玛比率</div><div class="fof-metric-val">${p.calmar != null ? p.calmar.toFixed(2) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">📅</div><div class="fof-metric-label">当前回撤</div><div class="fof-metric-val neg">${hasNav ? '-'+fmtPct(currentDd) : '-'}</div></div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">🏆</div><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${hasNav ? fmtPct(winRate) : '-'}</div>${hasNav ? '<div class="fof-metric-sub">涨'+posDays+'天/跌'+negDays+'天</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">🔺</div><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${hasNav ? fmtPct(maxUp) : '-'}</div>${maxUpDate ? '<div class="fof-metric-sub">'+maxUpDate+'</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-icon">🔻</div><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${hasNav ? fmtPct(maxDown) : '-'}</div>${maxDownDate ? '<div class="fof-metric-sub">'+maxDownDate+'</div>' : ''}</div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">📅 月度收益</div>
+    <div class="fof-monthly-grid" id="modalMonthly"></div>
+    <div class="note" style="margin-top:12px">${hasNav ? navData[0][0]+' ~ '+navData[navData.length-1][0]+' ｜ 最大回撤区间：'+ddPeriod : '暂无历史净值数据'}</div>`;
+
+  setTimeout(() => {
+    if (hasNav) {
+      drawFofLine('modalNavChart', navData, '#2563eb', 'rgba(37,99,235,0.1)', v => v.toFixed(4), false);
+      drawFofLine('modalDdChart', ddData, '#ef4444', 'rgba(239,68,68,0.08)', v => (v*100).toFixed(1)+'%', true);
+      const mg = document.getElementById('modalMonthly');
+      if (mg && monthlyReturns.length) {
+        mg.innerHTML = monthlyReturns.map(m => {
+          const v = m['return'], c = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+          const barH = Math.min(Math.abs(v) / 0.07 * 100, 100);
+          const barColor = v > 0 ? 'var(--primary)' : 'var(--up)';
+          return '<div class="fof-month-item"><div class="fof-month-bar-wrap"><div class="fof-month-bar" style="height:'+barH+'%;background:'+barColor+'"></div></div><div class="fof-month-val '+c+'">'+(v*100).toFixed(2)+'%</div><div class="fof-month-label">'+m.month.slice(5)+'月</div></div>';
+        }).join('');
+      }
+    } else {
+      const cv1 = document.getElementById('modalNavChart');
+      if (cv1) { const ctx = cv1.getContext('2d'); ctx.clearRect(0,0,cv1.width,cv1.height); ctx.fillStyle='#64748b'; ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.fillText('暂无历史净值数据', cv1.width/2, 80); }
+    }
+  }, 50);
 }
 
 document.getElementById('modalClose').onclick = () => document.getElementById('detailModal').style.display = 'none';
@@ -986,6 +982,7 @@ const STRATEGY_TAB_MAP = {
   1: 'cta',              // 期货策略
   11: 'arbitrage',       // 套利策略
 };
+const PRODUCT_NAMES = {};
 rows.forEach(r => { if(r.code) PRODUCT_NAMES[r.code] = r.name; });
 strategySummary.forEach(g => g.items && g.items.forEach(it => { if(it.code) PRODUCT_NAMES[it.code] = it.name; }));
 
