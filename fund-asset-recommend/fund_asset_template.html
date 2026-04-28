@@ -343,6 +343,7 @@ tr:hover td { background:#f8fafc; }
                   <th>产品</th>
                   <th>分类</th>
                   <th>子策略</th>
+                  <th>净值日期</th>
                   <th>近一周</th>
                   <th>近一月</th>
                   <th>今年以来</th>
@@ -375,7 +376,7 @@ tr:hover td { background:#f8fafc; }
       <div class="section">
         <div class="section-title">组合对比</div>
         <div class="fof-compare-wrap"><table class="mkt-table"><thead><tr>
-          <th>组合</th><th>运行天数</th><th>最新净值</th><th>近一周</th><th>近一月</th><th>今年以来</th><th>成立以来</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>卡玛</th><th>波动率</th>
+          <th>组合</th><th>净值日期</th><th>运行天数</th><th>最新净值</th><th>近一周</th><th>近一月</th><th>今年以来</th><th>成立以来</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>卡玛</th><th>波动率</th>
         </tr></thead><tbody id="fofCompareBody"></tbody></table></div>
       </div>
       <div class="section"><div class="note">/*__FOF_NOTE__*/</div></div>
@@ -475,6 +476,7 @@ function renderTable(){
       <td>${item.name}</td>
       <td>${item.strategy}</td>
       <td>${safe(item.strategy_detail)}</td>
+      <td style="color:#888;font-size:12px">${item.latest_date || '-'}</td>
       <td class="${cls(item.week_return)}">${fmtPct(item.week_return)}</td>
       <td class="${cls(item.month_return)}">${fmtPct(item.month_return)}</td>
       <td class="${cls(item.ytd_return)}">${fmtPct(item.ytd_return)}</td>
@@ -642,7 +644,7 @@ function renderFofCards(){
     </div></div>`).join('');
   const body=document.getElementById('fofCompareBody');
   body.innerHTML=fofCombis.map((c,idx)=>`<tr onclick="showFofDetail(${idx})" style="cursor:pointer">
-    <td style="font-weight:600">${c.name}</td><td>${c.run_days}</td><td>${c.latest_nav.toFixed(4)}</td>
+    <td style="font-weight:600">${c.name}</td><td style="color:#888;font-size:12px">${c.end_date || '-'}</td><td>${c.run_days}</td><td>${c.latest_nav.toFixed(4)}</td>
     <td class="${pcls(c.week_ret)}">${fmtP(c.week_ret)}</td><td class="${pcls(c.month_ret)}">${fmtP(c.month_ret)}</td>
     <td class="${pcls(c.ytd_ret)}">${fmtP(c.ytd_ret)}</td><td class="${pcls(c.total_ret)}">${fmtP(c.total_ret)}</td>
     <td class="${pcls(c.ann_ret)}">${fmtP(c.ann_ret)}</td><td>${fmtN(c.sharpe)}</td>

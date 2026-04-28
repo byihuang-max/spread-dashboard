@@ -139,8 +139,10 @@ def build_rows(strategy_summary):
 
             rows.append({
                 'name': display_name,
+                'code': item.get('code', ''),
                 'strategy': item.get('strategy', group.get('strategy', '')),
                 'strategy_detail': item.get('strategy_detail', ''),
+                'latest_date': item.get('latest_date', ''),
                 'week_return': item.get('week_return'),
                 'month_return': item.get('month_return'),
                 'ytd_return': item.get('ytd_return'),
