@@ -97,7 +97,8 @@ def fetch_all_combis():
         navs = fetch_combi_nav(c['id'])
         if navs:
             metrics = compute_fund_metrics(navs)
-            results.append({**c, 'code': c['id'], **metrics, 'source_type': 'combi', 'data_source': 'api', 'status': '正常'})
+            results.append({**c, 'code': c['id'], **metrics, '_raw_navs': navs,
+                            'source_type': 'combi', 'data_source': 'api', 'status': '正常'})
             print(f"✅ {len(navs)}条")
         else:
             results.append({**c, 'code': c['id'], 'source_type': 'combi', 'data_source': 'api', 'status': '无数据'})
@@ -293,12 +294,140 @@ def build_strategy_summary(products, combis):
     return summary
 
 
+def build_fof_combis(combis):
+    """构建 FOF 组合详情数据（含净值曲线、回撤曲线、月度收益等），供 v3 HTML FOF 模块使用"""
+    from collections import defaultdict
+    fof_list = []
+    # 只取 FOF组合 分组的（不含 FOF组合类）
+    fof_items = [c for c in combis if c.get('group') == 'FOF组合' and c.get('_raw_navs')]
+
+    for c in fof_items:
+        navs = c['_raw_navs']  # [(date, nav), ...]
+        if len(navs) < 2:
+            continue
+
+        dates = [n[0] for n in navs]
+        vals = [n[1] for n in navs]
+        start_date = dates[0]
+        end_date = dates[-1]
+        latest_nav = vals[-1]
+        run_days = (datetime.strptime(end_date, '%Y-%m-%d') - datetime.strptime(start_date, '%Y-%m-%d')).days
+        total_ret = latest_nav / vals[0] - 1
+
+        # 日收益率
+        returns = [(vals[i] / vals[i-1] - 1) for i in range(1, len(vals))]
+
+        # 年化
+        ann_ret = (1 + total_ret) ** (365 / max(run_days, 1)) - 1
+        avg_ret = sum(returns) / len(returns) if returns else 0
+        var = sum((r - avg_ret)**2 for r in returns) / max(len(returns)-1, 1) if returns else 0
+        ann_vol = math.sqrt(var) * math.sqrt(252)
+        sharpe = (ann_ret - 0.02) / ann_vol if ann_vol > 0 else 0
+
+        # 回撤序列
+        peak = vals[0]
+        dd_data = []
+        max_dd = 0
+        max_dd_start = start_date
+        max_dd_end = start_date
+        current_peak_date = start_date
+        for i, v in enumerate(vals):
+            if v >= peak:
+                peak = v
+                current_peak_date = dates[i]
+            dd = (v - peak) / peak  # negative
+            dd_data.append([dates[i], dd])
+            if abs(dd) > max_dd:
+                max_dd = abs(dd)
+                max_dd_start = current_peak_date
+                max_dd_end = dates[i]
+
+        current_dd = abs(dd_data[-1][1]) if dd_data else 0
+
+        # 胜率
+        pos_days = sum(1 for r in returns if r > 0)
+        neg_days = sum(1 for r in returns if r < 0)
+        win_rate = pos_days / max(pos_days + neg_days, 1)
+
+        # 最大单日涨跌
+        max_up = max(returns) if returns else 0
+        max_up_date = dates[returns.index(max_up) + 1] if returns else ''
+        max_down = min(returns) if returns else 0
+        max_down_date = dates[returns.index(max_down) + 1] if returns else ''
+
+        # YTD / 周 / 月
+        ytd_ret = c.get('ytd_return', 0) or 0
+        week_ret = c.get('week_return', 0) or 0
+        month_ret = c.get('month_return', 0) or 0
+
+        # 月度收益
+        monthly_map = defaultdict(list)
+        for i in range(1, len(vals)):
+            month_key = dates[i][:7]
+            monthly_map[month_key].append(vals[i] / vals[i-1] - 1)
+        # 按月累计
+        monthly_returns = []
+        prev_month_end = None
+        month_keys = sorted(monthly_map.keys())
+        for mk in month_keys:
+            # 找该月最后一个净值
+            month_vals = [(dates[i], vals[i]) for i in range(len(dates)) if dates[i][:7] == mk]
+            if not month_vals:
+                continue
+            month_end_nav = month_vals[-1][1]
+            # 找上月末净值
+            month_start_nav = None
+            for i in range(len(dates)):
+                if dates[i][:7] == mk:
+                    month_start_nav = vals[i-1] if i > 0 else vals[0]
+                    break
+            if month_start_nav and month_start_nav > 0:
+                monthly_returns.append({'month': mk, 'return': month_end_nav / month_start_nav - 1})
+
+        calmar = ann_ret / max_dd if max_dd > 0 else 0
+
+        nav_data = [[d, v] for d, v in zip(dates, vals)]
+
+        fof_list.append({
+            'name': c['name'],
+            'combi_id': c['id'],
+            'start_date': start_date,
+            'end_date': end_date,
+            'latest_nav': latest_nav,
+            'run_days': run_days,
+            'total_ret': total_ret,
+            'ann_ret': ann_ret,
+            'ann_vol': ann_vol,
+            'sharpe': sharpe,
+            'max_dd': max_dd,
+            'dd_period': f"{max_dd_start} ~ {max_dd_end}",
+            'current_dd': current_dd,
+            'calmar': calmar,
+            'win_rate': win_rate,
+            'pos_days': pos_days,
+            'neg_days': neg_days,
+            'max_up': max_up,
+            'max_up_date': max_up_date,
+            'max_down': max_down,
+            'max_down_date': max_down_date,
+            'ytd_ret': ytd_ret,
+            'week_ret': week_ret,
+            'month_ret': month_ret,
+            'monthly_returns': monthly_returns,
+            'nav_data': nav_data,
+            'dd_data': dd_data,
+        })
+
+    return fof_list
+
+
 def save_data(products, combis, market_annual, market_monthly, market_quarterly):
     """保存所有数据到 JSON"""
     os.makedirs(RAW_DIR, exist_ok=True)
     today = datetime.now().strftime('%Y%m%d')
 
     strategy_summary = build_strategy_summary(products, combis)
+    fof_combis = build_fof_combis(combis)
 
     # 主数据文件
     output = {
@@ -309,6 +438,7 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly)
             'monthly': market_monthly,
             'quarterly': market_quarterly,
         },
+        'fof_combis': fof_combis,
     }
 
     # 保存带日期版本
