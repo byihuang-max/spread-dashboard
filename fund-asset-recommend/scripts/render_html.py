@@ -15,6 +15,77 @@ DATA_PATH = os.path.join(MODULE_DIR, 'data', 'fund_asset_latest.json')
 OUTPUT_PATH = os.path.join(MODULE_DIR, 'fund_asset.html')
 
 
+GROUP_MAP = {5: '股票策略', 10: '股票策略', 9: '股票策略', 8: '股票策略', 7: '股票策略',
+             4: '股票策略', 6: '股票策略', 2: '期货策略', 3: '期货策略', 1: '期货策略',
+             11: '其他策略', 12: '其他策略', 13: '其他策略', 15: '其他策略', 14: '其他策略', 16: '其他策略'}
+
+
+def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
+    """把 API 嵌套结构转成 v3 HTML 需要的扁平结构"""
+    # 建立月度/季度索引
+    monthly_map = {}
+    for item in (monthly_list or []):
+        ret = item.get('return', {})
+        monthly_map[item.get('id')] = {'month_mean': ret.get('mean', 0), 'month_profit': ret.get('profit_rate', 0)}
+    quarterly_map = {}
+    for item in (quarterly_list or []):
+        ret = item.get('return', {})
+        quarterly_map[item.get('id')] = {'quarter_mean': ret.get('mean', 0), 'quarter_profit': ret.get('profit_rate', 0)}
+
+    result = []
+    for item in raw_list:
+        # 如果已经是扁平结构（旧缓存），直接用
+        if 'ret_mean' in item:
+            result.append(item)
+            continue
+
+        flat = {
+            'id': item.get('id'),
+            'name': item.get('name', ''),
+            'group': GROUP_MAP.get(item.get('id'), '其他策略'),
+        }
+        ret = item.get('return', {})
+        flat['count'] = ret.get('count', 0)
+        flat['ret_mean'] = ret.get('mean', 0)
+        flat['ret_median'] = ret.get('median', 0)
+        flat['ret_10'] = ret.get('ten', 0)
+        flat['ret_25'] = ret.get('tf', 0)
+        flat['ret_75'] = ret.get('sf', 0)
+        flat['ret_90'] = ret.get('ninety', 0)
+        flat['profit_rate'] = ret.get('profit_rate', 0)
+        sp = item.get('sp_return_data', {})
+        flat['sp_mean'] = sp.get('mean', 0)
+        flat['sp_median'] = sp.get('median', 0)
+        flat['sp_10'] = sp.get('ten', 0)
+        flat['sp_90'] = sp.get('ninety', 0)
+        md = item.get('md_return_data', {})
+        flat['md_mean'] = md.get('mean', 0)
+        flat['md_median'] = md.get('median', 0)
+        flat['md_10'] = md.get('ten', 0)
+        flat['md_90'] = md.get('ninety', 0)
+        vol = item.get('vol_return_data', {})
+        flat['vol_mean'] = vol.get('mean', 0)
+        flat['vol_median'] = vol.get('median', 0)
+        flat['vol_10'] = vol.get('ten', 0)
+        flat['vol_90'] = vol.get('ninety', 0)
+        cal = item.get('calmar_return_data', {})
+        flat['cal_mean'] = cal.get('mean', 0)
+        flat['cal_median'] = cal.get('median', 0)
+        flat['cal_10'] = cal.get('ten', 0)
+        flat['cal_90'] = cal.get('ninety', 0)
+        # 月度/季度从对应数据合并
+        mid = item.get('id')
+        m = monthly_map.get(mid, {})
+        flat['month_mean'] = m.get('month_mean', 0)
+        flat['month_profit'] = m.get('month_profit', 0)
+        q = quarterly_map.get(mid, {})
+        flat['quarter_mean'] = q.get('quarter_mean', 0)
+        flat['quarter_profit'] = q.get('quarter_profit', 0)
+
+        result.append(flat)
+    return result
+
+
 def build_rows(strategy_summary):
     """从 strategy_summary 扁平化生成 rows（核心资产表格用）"""
     rows = []
@@ -81,7 +152,11 @@ def render():
     market_data = data.get('market_data', {})
 
     # 市场基准：合并年度数据（v3 用的是 annual）
-    market_annual = market_data.get('annual', [])
+    # API 返回嵌套结构，v3 HTML 需要扁平结构
+    market_annual_raw = market_data.get('annual', [])
+    market_monthly_raw = market_data.get('monthly', [])
+    market_quarterly_raw = market_data.get('quarterly', [])
+    market_annual = flatten_market_data(market_annual_raw, market_monthly_raw, market_quarterly_raw)
 
     # 生成 rows
     rows = build_rows(strategy_summary)
