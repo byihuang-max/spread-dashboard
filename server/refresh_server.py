@@ -496,6 +496,16 @@ class Handler(BaseHTTPRequestHandler):
                 # 按日期倒序，最近的在前
                 logs.reverse()
                 self._json(200, {'logs': logs})
+        elif self.path == '/api/email-subscribers':
+            admin = self._require_admin()
+            if not admin: return
+            sub_path = os.path.join(BASE_DIR, 'env_fit', 'momentum_stock', 'email_subscribers.json')
+            try:
+                with open(sub_path, encoding='utf-8') as f:
+                    self._json(200, json.load(f))
+            except FileNotFoundError:
+                self._json(200, {'subscribers': []})
+
         elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
         else:
@@ -671,6 +681,22 @@ class Handler(BaseHTTPRequestHandler):
             t = threading.Thread(target=_run_in_background, args=([mod_key],), daemon=True)
             t.start()
             self._json(202, {'ok': True, 'message': f'已启动刷新: {MODULES[mod_key]["name"]}'})
+
+        elif self.path == '/api/email-subscribers':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            sub_path = os.path.join(BASE_DIR, 'env_fit', 'momentum_stock', 'email_subscribers.json')
+            # 只允许更新 subscribers 列表
+            try:
+                with open(sub_path, encoding='utf-8') as f:
+                    cfg = json.load(f)
+            except FileNotFoundError:
+                cfg = {'subscribers': [], 'sender': {}, 'settings': {}}
+            cfg['subscribers'] = body.get('subscribers', cfg['subscribers'])
+            with open(sub_path, 'w', encoding='utf-8') as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=2)
+            self._json(200, {'ok': True, 'count': len(cfg['subscribers'])})
 
         # POST /api/refresh-all
         elif self.path == '/api/refresh-all':
