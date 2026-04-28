@@ -1012,36 +1012,62 @@ function openStrategyDetail(strategyId) {
     return;
   }
 
-  const dates = curve.dates;
-  const stratRet = curve.strategy_return;
-  const bmRet = curve.benchmark_return;
-  const excess = curve.excess;
+  // Slice data based on current mktPeriod
+  let sliceN = curve.dates.length; // annual: show all
+  let periodLabel = '年度累计收益';
+  let freqLabel = '月频数据';
+  if (mktPeriod === 'quarterly') {
+    sliceN = Math.min(5, curve.dates.length); // last ~4 months (1 quarter + 1 base point)
+    periodLabel = '季度累计收益';
+    freqLabel = '月频数据（近一季度）';
+  } else if (mktPeriod === 'monthly') {
+    sliceN = Math.min(7, curve.dates.length); // last ~6 months for context
+    periodLabel = '月度收益走势';
+    freqLabel = '月频数据（近半年）';
+  }
+
+  const startIdx = Math.max(0, curve.dates.length - sliceN);
+  const dates = curve.dates.slice(startIdx);
+  const stratRet = curve.strategy_return.slice(startIdx);
+  const bmRet = curve.benchmark_return ? curve.benchmark_return.slice(startIdx) : null;
+  const excess = curve.excess ? curve.excess.slice(startIdx) : null;
   const bmName = curve.benchmark_name;
 
-  title.textContent = `${stratName} — 月度累计收益`;
+  // Rebase to start from 0 for sliced view
+  const baseS = stratRet[0] || 0;
+  const rebasedStrat = stratRet.map(v => v - baseS);
+  let rebasedBm = null, rebasedExcess = null;
+  if (bmRet) { const baseB = bmRet[0] || 0; rebasedBm = bmRet.map(v => v - baseB); }
+  if (excess) { const baseE = excess[0] || 0; rebasedExcess = excess.map(v => v - baseE); }
+
+  const totalRet = rebasedStrat[rebasedStrat.length - 1];
+  const idxRet = rebasedBm ? rebasedBm[rebasedBm.length - 1] : null;
+  const excessRet = rebasedExcess ? rebasedExcess[rebasedExcess.length - 1] : null;
+
+  title.textContent = `${stratName} — ${periodLabel}`;
   const dateRange = `${dates[0]} ~ ${dates[dates.length-1]}`;
-  sub.textContent = bmName ? `基准: ${bmName} ｜ 区间: ${dateRange} ｜ 月频数据` : `区间: ${dateRange} ｜ 月频数据`;
+  sub.textContent = bmName ? `基准: ${bmName} ｜ 区间: ${dateRange} ｜ ${freqLabel}` : `区间: ${dateRange} ｜ ${freqLabel}`;
 
   // Build series
   const seriesList = [
-    {name: stratName, color: '#c0392b', norm: dates.map((d,i) => [d, stratRet[i]]), isBenchmark: false, isExcess: false},
+    {name: stratName, color: '#c0392b', norm: dates.map((d,i) => [d, rebasedStrat[i]]), isBenchmark: false, isExcess: false},
   ];
-  if (bmRet) {
-    seriesList.push({name: bmName + '（基准）', color: '#7cb5ec', norm: dates.map((d,i) => [d, bmRet[i]]), isBenchmark: true, isExcess: false});
+  if (rebasedBm) {
+    seriesList.push({name: bmName + '（基准）', color: '#7cb5ec', norm: dates.map((d,i) => [d, rebasedBm[i]]), isBenchmark: true, isExcess: false});
   }
-  if (excess) {
-    seriesList.push({name: '累计超额', color: '#1e3a5f', norm: dates.map((d,i) => [d, excess[i]]), isBenchmark: false, isExcess: true});
+  if (rebasedExcess) {
+    seriesList.push({name: '累计超额', color: '#1e3a5f', norm: dates.map((d,i) => [d, rebasedExcess[i]]), isBenchmark: false, isExcess: true});
   }
 
   drawReturnChart(document.getElementById('strategyNavChart'), seriesList, dates[0]);
 
   // Legend
-  const legendItems = [{name: stratName, color: '#c0392b', val: `${curve.total_return >= 0 ? '+' : ''}${curve.total_return}%`}];
-  if (bmName && curve.index_return !== null) {
-    legendItems.push({name: bmName, color: '#7cb5ec', val: `${curve.index_return >= 0 ? '+' : ''}${curve.index_return}%`});
+  const legendItems = [{name: stratName, color: '#c0392b', val: `${totalRet >= 0 ? '+' : ''}${totalRet.toFixed(2)}%`}];
+  if (bmName && idxRet !== null) {
+    legendItems.push({name: bmName, color: '#7cb5ec', val: `${idxRet >= 0 ? '+' : ''}${idxRet.toFixed(2)}%`});
   }
-  if (curve.excess_return !== null) {
-    legendItems.push({name: '累计超额', color: '#1e3a5f', val: `${curve.excess_return >= 0 ? '+' : ''}${curve.excess_return}%`});
+  if (excessRet !== null) {
+    legendItems.push({name: '累计超额', color: '#1e3a5f', val: `${excessRet >= 0 ? '+' : ''}${excessRet.toFixed(2)}%`});
   }
   legend.innerHTML = legendItems.map(s =>
     `<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:3px;display:inline-block;border-radius:2px;background:${s.color}"></span><span style="font-weight:600;color:${s.color}">${s.name}</span> <span style="color:${s.color}">${s.val}</span></span>`
