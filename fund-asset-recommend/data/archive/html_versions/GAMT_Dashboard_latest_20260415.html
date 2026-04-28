@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GAMT资产看板 2026-04-10</title>
+<style>
+:root {
+  --bg:#eef3f8;
+  --sidebar:#0f1b2d;
+  --sidebar-2:#16263d;
+  --sidebar-text:#e6eef8;
+  --sidebar-muted:#97a8bd;
+  --panel:#ffffff;
+  --panel-soft:#f7fafd;
+  --line:#dde6f0;
+  --line-soft:#eaf0f6;
+  --text:#162033;
+  --muted:#69788f;
+  --primary:#1d4f91;
+  --primary-soft:#edf4fb;
+  --up:#c43d4b;
+  --down:#1f8b5c;
+  --gold:#c8a96a;
+  --shadow:0 14px 34px rgba(15,27,45,.08);
+}
+* { box-sizing:border-box; }
+body { margin:0; background:linear-gradient(180deg,#eff4f9 0%, #ecf1f7 100%); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif; }
+.app { display:grid; grid-template-columns:280px minmax(0,1fr); min-height:100vh; }
+.sidebar { background:linear-gradient(180deg, var(--sidebar) 0%, var(--sidebar-2) 100%); color:var(--sidebar-text); padding:24px 18px; border-right:1px solid rgba(255,255,255,.05); }
+.brand { display:flex; flex-direction:column; gap:6px; padding:6px 8px 18px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:18px; }
+.brand-top { font-size:28px; font-weight:800; letter-spacing:.6px; }
+.brand-sub { font-size:12px; color:var(--sidebar-muted); line-height:1.7; }
+.nav-group-title { font-size:12px; color:var(--sidebar-muted); margin:18px 10px 10px; text-transform:uppercase; letter-spacing:.8px; }
+.module-nav { display:flex; flex-direction:column; gap:8px; }
+.module-btn { width:100%; border:1px solid transparent; background:transparent; color:var(--sidebar-text); padding:14px 14px; border-radius:14px; text-align:left; cursor:pointer; transition:all .18s ease; }
+.module-btn:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.06); }
+.module-btn.active { background:rgba(64,112,176,.18); border-color:rgba(104,144,199,.32); }
+.module-btn-title { font-size:15px; font-weight:700; margin-bottom:5px; }
+.module-btn-desc { font-size:12px; color:var(--sidebar-muted); }
+.sidebar-footer { margin-top:24px; padding:14px 10px 0; border-top:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--sidebar-muted); line-height:1.7; }
+.main { padding:22px; }
+.topbar { display:none; }
+.topbar-sub { color:var(--muted); font-size:13px; line-height:1.8; }
+.topbar-tag { display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); color:#36527a; border-radius:999px; padding:10px 14px; font-size:12px; white-space:nowrap; }
+.module-panel { display:none; }
+.module-panel.active { display:block; }
+.empty-shell { background:var(--panel); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); padding:26px; }
+.empty-panel { min-height:620px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#fbfcfe,#f5f8fb); border:1px dashed var(--line); border-radius:18px; }
+.empty-inner { text-align:center; max-width:460px; padding:32px; }
+.empty-icon { font-size:42px; margin-bottom:12px; }
+.empty-title { font-size:22px; font-weight:800; color:#17345e; margin-bottom:10px; }
+.empty-desc { color:var(--muted); font-size:14px; line-height:1.8; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:22px; padding:24px; box-shadow:var(--shadow); }
+.panel-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:10px; }
+.panel-title-wrap h1 { margin:0 0 8px; font-size:28px; color:#17345e; letter-spacing:.2px; }
+.sub { color:var(--muted); font-size:13px; line-height:1.8; }
+.section { margin-top:20px; }
+.section-title { font-size:16px; font-weight:700; margin-bottom:10px; color:#17345e; }
+.stats { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.stat { background:var(--panel-soft); border:1px solid var(--line); border-radius:16px; padding:14px; }
+.label { color:var(--muted); font-size:12px; }
+.value { margin-top:8px; font-size:24px; font-weight:700; color:#21314a; }
+.value-small { font-size:17px; line-height:1.45; }
+.overview { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; }
+.overview-card,.mini-card,.strategy-card { background:var(--panel-soft); border:1px solid var(--line); border-radius:16px; }
+.overview-card { padding:16px; }
+.overview-main { font-size:18px; font-weight:700; line-height:1.7; color:#24354f; }
+.overview-sub { margin-top:6px; color:var(--muted); font-size:13px; }
+.mini-card { padding:14px; }
+.mini-title { font-size:14px; font-weight:700; margin-bottom:10px; color:#17345e; }
+.mini-row { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px dashed var(--line); }
+.mini-row:last-child { border-bottom:none; }
+.mini-name { color:#2a3850; font-size:13px; }
+.mini-val { font-size:13px; font-weight:700; }
+.mini-empty { color:var(--muted); font-size:13px; }
+.toolbar,.view-toggle { display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 0; }
+.btn { border:1px solid var(--line); background:#fff; color:#2e3f59; padding:8px 12px; border-radius:999px; cursor:pointer; font-size:13px; transition:all .16s ease; }
+.btn:hover { border-color:#9eb0c8; background:#fafcff; }
+.btn.active { background:#17345e; color:#fff; border-color:#17345e; }
+.strategy-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.strategy-card { padding:16px; }
+.strategy-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px; }
+.strategy-title { font-size:17px; font-weight:700; display:flex; align-items:center; gap:8px; color:#22324a; }
+.strategy-desc { color:var(--muted); font-size:12px; }
+.dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.strategy-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:10px; }
+.metric { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px; }
+.metric-label { color:var(--muted); font-size:11px; }
+.metric-value { margin-top:5px; font-size:17px; font-weight:700; }
+.strategy-leader { color:#34435c; font-size:13px; margin-bottom:10px; }
+.product-chip-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.product-chip { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px; }
+.product-chip-name { font-size:13px; font-weight:700; margin-bottom:7px; color:#22324a; }
+.product-chip-kpi { display:flex; justify-content:space-between; gap:8px; font-size:12px; }
+.table-wrap { overflow:auto; border:1px solid var(--line); border-radius:16px; background:#fff; }
+table { width:100%; border-collapse:collapse; min-width:980px; }
+th, td { padding:11px 10px; border-bottom:1px solid var(--line-soft); text-align:left; font-size:13px; vertical-align:top; }
+th { color:#5f6d84; background:#f8fafc; white-space:nowrap; }
+.pos { color:var(--up); }
+.neg { color:var(--down); }
+.status-pill { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; background:#eef3f9; color:#48617f; }
+.note { color:var(--muted); font-size:12px; line-height:1.7; }
+.hidden { display:none !important; }
+@media (max-width:1200px) { .stats, .overview, .strategy-grid, .product-chip-grid, .strategy-metrics { grid-template-columns:1fr; } }
+@media (max-width:980px) { .app { grid-template-columns:1fr; } .sidebar { padding-bottom:10px; } .main { padding:16px; } .topbar { flex-direction:column; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-top">GAMT</div>
+      <div class="brand-sub">General Asset Management Team<br/>GAMT资产看板 · 专业资产配置平台</div>
+    </div>
+
+    <div class="nav-group-title">模块导航</div>
+    <div class="module-nav">
+      <button class="module-btn active" data-module="module-market">
+        <div class="module-btn-title">市场策略看板</div>
+        <div class="module-btn-desc">策略环境与市场观察</div>
+      </button>
+      <button class="module-btn" data-module="module-gamt">
+        <div class="module-btn-title">GAMT核心资产</div>
+        <div class="module-btn-desc">核心产品收益与状态跟踪</div>
+      </button>
+      <button class="module-btn" data-module="module-fof">
+        <div class="module-btn-title">FOF组合管理</div>
+        <div class="module-btn-desc">组合净值与结构观察</div>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      当前保留三模块统一入口。<br/>
+      已接入：GAMT核心资产<br/>
+      预留：市场策略看板 / FOF组合管理
+    </div>
+  </aside>
+
+  <main class="main">
+    <section class="module-panel active" id="module-market">
+      <div class="empty-shell">
+        <div class="empty-panel">
+          <div class="empty-inner">
+            <div class="empty-icon">📈</div>
+            <div class="empty-title">市场策略看板</div>
+            <div class="empty-desc">参考投研平台式布局已完成外壳搭建。该模块后续可承接风格轧差、策略环境、资金流与行业景气等内容，当前先保留空白占位。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="module-panel" id="module-gamt">
+      <div class="card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h1>GAMT核心资产</h1>
+            <div class="sub">统计截至 <b>2026-04-10</b> ｜ 最新可得净值至 2026-04-15 ｜ 生成时间 2026-04-15 23:29:47<br/>近一周：2026-04-03 ~ 2026-04-10 ｜ 近一月：2026-03-31 ~ 2026-04-10 ｜ 今年以来：2025-12-31 ~ 2026-04-10</div>
+          </div>
+          <div class="topbar-tag">机构跟踪视图</div>
+        </div>
+
+        <div class="section"><div class="stats">
+          <div class="stat"><div class="label">核心产品数</div><div class="value">28</div></div>
+          <div class="stat"><div class="label">本周上涨 / 下跌 / 持平</div><div class="value">23 / 3 / 2</div></div>
+          <div class="stat"><div class="label">今年以来正收益</div><div class="value">25</div></div>
+          <div class="stat"><div class="label">YTD领先产品</div><div class="value value-small">正仁择时量选听涛二号</div></div>
+          <div class="stat"><div class="label">缓存兜底</div><div class="value">2</div></div>
+          <div class="stat"><div class="label">截点滞后</div><div class="value">3</div></div>
+        </div></div>
+
+        <div class="section"><div class="overview">
+          <div class="overview-card">
+            <div class="overview-main">本期共有 <span class="pos">23</span> 只产品周度上涨，YTD领先产品为 <span class="pos">正仁择时量选听涛二号</span>。</div>
+            <div class="overview-sub">以轻量交互和专业配色承载机构浏览场景，核心信息集中于摘要、榜单、分类卡与明细表。</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">周度领先 TOP 5</div>
+            <div class="mini-row"><span class="mini-name">正仁择时量选听涛二号</span><span class="mini-val pos">8.74%</span></div><div class="mini-row"><span class="mini-name">龙旗科技创新精选1号</span><span class="mini-val pos">7.99%</span></div><div class="mini-row"><span class="mini-name">太衍光年2000增强</span><span class="mini-val pos">6.25%</span></div><div class="mini-row"><span class="mini-name">顽岩量化选股</span><span class="mini-val pos">6.22%</span></div><div class="mini-row"><span class="mini-name">正仁双创择时</span><span class="mini-val pos">6.20%</span></div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">YTD领先 TOP 5</div>
+            <div class="mini-row"><span class="mini-name">正仁择时量选听涛二号</span><span class="mini-val pos">32.89%</span></div><div class="mini-row"><span class="mini-name">龙旗科技创新精选1号</span><span class="mini-val pos">11.78%</span></div><div class="mini-row"><span class="mini-name">太衍光年2000增强</span><span class="mini-val pos">11.38%</span></div><div class="mini-row"><span class="mini-name">玉数涵瑞专享十七号</span><span class="mini-val pos">10.41%</span></div><div class="mini-row"><span class="mini-name">顽岩量化选股</span><span class="mini-val pos">10.34%</span></div>
+          </div>
+        </div></div>
+
+        <div class="section">
+          <div class="section-title">筛选与视图</div>
+          <div class="toolbar" id="strategyFilters"></div>
+          <div class="toolbar" id="sortFilters">
+            <button class="btn active" data-sort="ytd_return">按今年以来排序</button>
+            <button class="btn" data-sort="week_return">按近一周排序</button>
+            <button class="btn" data-sort="month_return">按近一月排序</button>
+          </div>
+          <div class="view-toggle">
+            <button class="btn active" id="showCards">分类卡片视图</button>
+            <button class="btn" id="showTable">明细表格视图</button>
+          </div>
+        </div>
+
+        <div class="section" id="cardsView">
+          <div class="section-title">分类概览</div>
+          <div class="strategy-grid" id="strategyGrid"></div>
+        </div>
+
+        <div class="section hidden" id="tableView">
+          <div class="section-title">产品明细</div>
+          <div class="note" style="margin-bottom:10px;">近一周：2026-04-03 ~ 2026-04-10 ｜ 近一月：2026-03-31 ~ 2026-04-10 ｜ 今年以来：2025-12-31 ~ 2026-04-10</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>产品</th>
+                  <th>分类</th>
+                  <th>子策略</th>
+                  <th>近一周</th>
+                  <th>近一月</th>
+                  <th>今年以来</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="detailBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section"><div class="note">说明：状态中的“缓存”表示实时接口未返回，使用本地历史数据兜底；“滞后”表示该产品统计净值日期早于本次统计截止日。</div></div>
+      </div>
+    </section>
+
+    <section class="module-panel" id="module-fof">
+      <div class="empty-shell">
+        <div class="empty-panel">
+          <div class="empty-inner">
+            <div class="empty-icon">🧩</div>
+            <div class="empty-title">FOF组合管理</div>
+            <div class="empty-desc">该模块将用于承接 FOF 组合净值、底层结构、组合评价与组合观察。当前先保留空白占位，后续继续沿用本页设计语言扩展。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const rows = [{"name": "顽岩量化选股", "strategy": "量选类", "strategy_detail": "量化选股", "week_return": 0.062199888330541686, "month_return": 0.021422818791946296, "ytd_return": 0.10341627515805363, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "正仁股票择时", "strategy": "量选类", "strategy_detail": "股票择时", "week_return": 0.00929143375132191, "month_return": 0.010589214129037128, "ytd_return": 0.05179878768794777, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "正仁双创择时", "strategy": "风格类", "strategy_detail": "双创择时", "week_return": 0.062012899758129514, "month_return": 0.06187021362353895, "ytd_return": 0.0783872288170282, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "瀚鑫纸鸢", "strategy": "风格类", "strategy_detail": "微盘择时", "week_return": 0.0, "month_return": 0.0, "ytd_return": -0.003071017274472121, "status_label": "缓存 / 滞后", "data_source": "fallback", "stat_end_used_date": "2026-03-20"}, {"name": "积沐领航者", "strategy": "风格类", "strategy_detail": "1000指增", "week_return": 0.055432492301042746, "month_return": 0.04220017072129756, "ytd_return": 0.09323409256253856, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "太衍光年2000增强", "strategy": "风格类", "strategy_detail": "2000指增T0", "week_return": 0.0625, "month_return": 0.046014717616809975, "ytd_return": 0.11375436609081468, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "时间序列红利增强", "strategy": "风格类", "strategy_detail": "红利指增", "week_return": 0.0, "month_return": 0.0, "ytd_return": 0.035498154981549845, "status_label": "缓存 / 滞后", "data_source": "fallback", "stat_end_used_date": "2026-03-20"}, {"name": "赢仕安盈二号", "strategy": "风格类", "strategy_detail": "转债集中", "week_return": 0.020793065073507755, "month_return": 0.02917207983937642, "ytd_return": 0.04296828246558948, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "具力芒种1号", "strategy": "风格类", "strategy_detail": "转债分散", "week_return": 0.017484377077516378, "month_return": 0.011900826446280988, "ytd_return": 0.02019730702572997, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "旌安思源1号B", "strategy": "绝对收益", "strategy_detail": "短线择时", "week_return": 0.0007419620774937741, "month_return": -0.0005763214226904845, "ytd_return": 0.0026430990336168136, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "创世纪顾锝", "strategy": "绝对收益", "strategy_detail": "趋势策略", "week_return": 0.019666867348986594, "month_return": 0.021922767497988715, "ytd_return": -0.02532131210435451, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "立心菁英353号", "strategy": "绝对收益", "strategy_detail": "主线择时", "week_return": 0.003217662491955986, "month_return": 2.4672472922038224e-05, "ytd_return": 0.005282869118777844, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "翔云50二号A", "strategy": "绝对收益", "strategy_detail": "大盘择时", "week_return": 0.023262824699793905, "month_return": 0.02136409227683056, "ytd_return": 0.032549178665585154, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "特夫郁金香", "strategy": "绝对收益", "strategy_detail": "量化打板", "week_return": 0.009975176978946454, "month_return": 0.00812150133064149, "ytd_return": 0.007335748017055721, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "铭跃行远", "strategy": "商品类", "strategy_detail": "量化时序CTA", "week_return": -0.013343799058084915, "month_return": -0.02934362934362933, "ytd_return": 0.003993610223642197, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "碳硅1号", "strategy": "商品类", "strategy_detail": "化工主观", "week_return": -0.00867793044507259, "month_return": -0.004949188333113419, "ytd_return": -0.01682206428897437, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "涌泉君安三号", "strategy": "商品类", "strategy_detail": "黑色主观", "week_return": 0.020217729393467998, "month_return": 0.01705426356589146, "ytd_return": 0.10260524104209656, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "海鹏扬帆", "strategy": "商品类", "strategy_detail": "农产品主观", "week_return": -0.0013544018058688767, "month_return": -0.004948268106162668, "ytd_return": 0.016544117647058876, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "格林鲲鹏6号", "strategy": "多策略", "strategy_detail": "黄金大类", "week_return": 0.028053333333333486, "month_return": 0.05101051713274862, "ytd_return": 0.07168272794662722, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "波克宏观配置", "strategy": "多策略", "strategy_detail": "宏观大类", "week_return": 0.018610857504038236, "month_return": 0.008062274117319967, "ytd_return": 0.08709338929695676, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "玉数纯阿尔法一号", "strategy": "风格类", "strategy_detail": "300指增T0", "week_return": 0.04669290146813987, "month_return": 0.037973733583489766, "ytd_return": 0.09379201265322257, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "玉数顺利一号", "strategy": "风格类", "strategy_detail": "500指增T0", "week_return": 0.03335471456061567, "month_return": 0.02362523105360448, "ytd_return": 0.09952224359372108, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "玉数涵瑞专享十七号", "strategy": "风格类", "strategy_detail": "1000指增T0", "week_return": 0.04439759805800447, "month_return": 0.03044245556535996, "ytd_return": 0.10406537007023231, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "龙旗科技创新精选1号", "strategy": "风格类", "strategy_detail": "双创指增", "week_return": 0.07990477669099016, "month_return": 0.044969703039711595, "ytd_return": 0.1177951574887508, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "玉数涵瑞六号", "strategy": "绝对收益", "strategy_detail": "300中性T0", "week_return": 0.011039794608472375, "month_return": 0.015799316437737687, "ytd_return": 0.07112743098055208, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "国联证券陆联1号FOF", "strategy": "FOF组合类", "strategy_detail": "低波私募FOF", "week_return": 0.0023230612433986497, "month_return": -0.0021148602527442106, "ytd_return": 0.01252233105406897, "status_label": "滞后", "data_source": "api", "stat_end_used_date": "2026-04-08"}, {"name": "大方向之中波思源365", "strategy": "FOF组合类", "strategy_detail": "中波公募FOF", "week_return": 0.02040278349845015, "month_return": 0.02185951313889345, "ytd_return": 0.03388549850375955, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}, {"name": "正仁择时量选听涛二号", "strategy": "风格类", "strategy_detail": "灵活方向择时", "week_return": 0.08737126456187738, "month_return": 0.08435053455678099, "ytd_return": 0.3288971422676157, "status_label": "正常", "data_source": "api", "stat_end_used_date": "2026-04-10"}];
+const strategySummary = [{"strategy": "FOF组合类", "description": "组合配置与稳健增强", "color": "#7b8794", "count": 2, "avg_week": 0.0113629223709244, "avg_month": 0.00987232644307462, "avg_ytd": 0.02320391477891426, "leader": "大方向之中波思源365", "items": [{"name": "国联证券陆联1号FOF", "code": "SAST37", "strategy": "FOF组合类", "strategy_detail": "低波私募FOF", "advisor": "-", "latest_date": "2026-04-08", "latest_cum_nav": 1.08180728, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-08", "stat_end_cum_nav": 1.08180728, "week_return": 0.0023230612433986497, "month_return": -0.0021148602527442106, "ytd_return": 0.01252233105406897, "status": "正常", "data_source": "api"}, {"name": "大方向之中波思源365", "code": "c59639ceac9aca1f", "strategy": "FOF组合类", "strategy_detail": "中波公募FOF", "advisor": "-", "source_type": "combi", "latest_date": "2026-04-15", "latest_cum_nav": 1.182335, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.176754, "week_return": 0.02040278349845015, "month_return": 0.02185951313889345, "ytd_return": 0.03388549850375955, "status": "正常", "data_source": "api"}]}, {"strategy": "商品类", "description": "分散配置与宏观对冲", "color": "#a36a2b", "count": 4, "avg_week": -0.0007896004788895961, "avg_month": -0.005546705554253489, "avg_ytd": 0.026580226155955816, "leader": "涌泉君安三号", "items": [{"name": "铭跃行远均衡一号", "code": "SVZ009", "strategy": "商品类", "strategy_detail": "量化时序CTA", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.257, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.257, "week_return": -0.013343799058084915, "month_return": -0.02934362934362933, "ytd_return": 0.003993610223642197, "status": "正常", "data_source": "api"}, {"name": "碳硅1号", "code": "SXJ836", "strategy": "商品类", "strategy_detail": "化工主观", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.505, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.5079, "week_return": -0.00867793044507259, "month_return": -0.004949188333113419, "ytd_return": -0.01682206428897437, "status": "正常", "data_source": "api"}, {"name": "涌泉君安三号", "code": "SZM385", "strategy": "商品类", "strategy_detail": "黑色主观", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.4432, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.4432, "week_return": 0.020217729393467998, "month_return": 0.01705426356589146, "ytd_return": 0.10260524104209656, "status": "正常", "data_source": "api"}, {"name": "海鹏扬帆", "code": "SSR379", "strategy": "商品类", "strategy_detail": "农产品主观", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 2.212, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 2.212, "week_return": -0.0013544018058688767, "month_return": -0.004948268106162668, "ytd_return": 0.016544117647058876, "status": "正常", "data_source": "api"}]}, {"strategy": "多策略", "description": "跨资产平衡配置", "color": "#3c6e71", "count": 2, "avg_week": 0.02333209541868586, "avg_month": 0.029536395625034295, "avg_ytd": 0.07938805862179199, "leader": "波克宏观配置", "items": [{"name": "格林基金鲲鹏6号", "code": "SVZ638", "strategy": "多策略", "strategy_detail": "黄金大类", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 8.6365, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 8.6742, "week_return": 0.028053333333333486, "month_return": 0.05101051713274862, "ytd_return": 0.07168272794662722, "status": "正常", "data_source": "api"}, {"name": "波克宏观配置1号", "code": "SARZ77", "strategy": "多策略", "strategy_detail": "宏观大类", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.4504, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.4504, "week_return": 0.018610857504038236, "month_return": 0.008062274117319967, "ytd_return": 0.08709338929695676, "status": "正常", "data_source": "api"}]}, {"strategy": "绝对收益", "description": "回撤控制与稳健收益", "color": "#6a4c93", "count": 6, "avg_week": 0.011317381367608181, "avg_month": 0.011109338098905, "avg_ytd": 0.01560283561853885, "leader": "玉数涵瑞六号", "items": [{"name": "旌安思源1号B类", "code": "AEU46B", "strategy": "绝对收益", "strategy_detail": "短线择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.2192, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.2139, "week_return": 0.0007419620774937741, "month_return": -0.0005763214226904845, "ytd_return": 0.0026430990336168136, "status": "正常", "data_source": "api"}, {"name": "创世纪顾锝灵活多策略1号", "code": "SBDC67", "strategy": "绝对收益", "strategy_detail": "趋势策略", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.0285, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.0162, "week_return": 0.019666867348986594, "month_return": 0.021922767497988715, "ytd_return": -0.02532131210435451, "status": "正常", "data_source": "api"}, {"name": "立心-私募学院菁英353号", "code": "SCJ476", "strategy": "绝对收益", "strategy_detail": "主线择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 4.0601, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 4.0532, "week_return": 0.003217662491955986, "month_return": 2.4672472922038224e-05, "ytd_return": 0.005282869118777844, "status": "正常", "data_source": "api"}, {"name": "翔云50二号A类", "code": "VB166A", "strategy": "绝对收益", "strategy_detail": "大盘择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 2.0599, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 2.0366, "week_return": 0.023262824699793905, "month_return": 0.02136409227683056, "ytd_return": 0.032549178665585154, "status": "正常", "data_source": "api"}, {"name": "特夫郁金香全量化", "code": "SQX078", "strategy": "绝对收益", "strategy_detail": "量化打板", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 2.2041, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 2.1971, "week_return": 0.009975176978946454, "month_return": 0.00812150133064149, "ytd_return": 0.007335748017055721, "status": "正常", "data_source": "api"}, {"name": "玉数涵瑞六号", "code": "SJD168", "strategy": "绝对收益", "strategy_detail": "300中性T0", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.5752, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.5752, "week_return": 0.011039794608472375, "month_return": 0.015799316437737687, "ytd_return": 0.07112743098055208, "status": "正常", "data_source": "api"}]}, {"strategy": "量选类", "description": "系统化选股/择时", "color": "#2f5ea8", "count": 2, "avg_week": 0.0357456610409318, "avg_month": 0.016006016460491712, "avg_ytd": 0.0776075314230007, "leader": "顽岩量化选股", "items": [{"name": "顽岩量化选股1号", "code": "SATW62", "strategy": "量选类", "strategy_detail": "量化选股", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.9024, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.9024, "week_return": 0.062199888330541686, "month_return": 0.021422818791946296, "ytd_return": 0.10341627515805363, "status": "正常", "data_source": "api"}, {"name": "正仁股票择时一期", "code": "SARD76", "strategy": "量选类", "strategy_detail": "股票择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.343, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.3361, "week_return": 0.00929143375132191, "month_return": 0.010589214129037128, "ytd_return": 0.05179878768794777, "status": "正常", "data_source": "api"}]}, {"strategy": "风格类", "description": "风格增强与弹性轮动", "color": "#1f7a6b", "count": 12, "avg_week": 0.04249534079581866, "avg_month": 0.034376638837187556, "avg_ytd": 0.09375336172852676, "leader": "正仁择时量选听涛二号", "items": [{"name": "正仁双创择时一号", "code": "SXG834", "strategy": "风格类", "strategy_detail": "双创择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.6286, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.5807, "week_return": 0.062012899758129514, "month_return": 0.06187021362353895, "ytd_return": 0.0783872288170282, "status": "正常", "data_source": "api"}, {"name": "瀚鑫纸鸢量化优选", "code": "SZC020", "strategy": "风格类", "strategy_detail": "微盘择时", "advisor": "-", "latest_date": "2026-03-20", "latest_cum_nav": 2.597, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-03-20", "stat_end_cum_nav": 2.597, "week_return": 0.0, "month_return": 0.0, "ytd_return": -0.003071017274472121, "status": "正常", "data_source": "fallback"}, {"name": "积沐领航者", "code": "SAJJ91", "strategy": "风格类", "strategy_detail": "1000指增", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.9826, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.9535, "week_return": 0.055432492301042746, "month_return": 0.04220017072129756, "ytd_return": 0.09323409256253856, "status": "正常", "data_source": "api"}, {"name": "太衍光年中证2000指数增强2号", "code": "SBCA75", "strategy": "风格类", "strategy_detail": "2000指增T0", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.1987, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.1798, "week_return": 0.0625, "month_return": 0.046014717616809975, "ytd_return": 0.11375436609081468, "status": "正常", "data_source": "api"}, {"name": "时间序列红利增强1号", "code": "SSV122", "strategy": "风格类", "strategy_detail": "红利指增", "advisor": "-", "latest_date": "2026-03-20", "latest_cum_nav": 1.4031, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-03-20", "stat_end_cum_nav": 1.4031, "week_return": 0.0, "month_return": 0.0, "ytd_return": 0.035498154981549845, "status": "正常", "data_source": "fallback"}, {"name": "赢仕安盈二号", "code": "SLQ349", "strategy": "风格类", "strategy_detail": "转债集中", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.7453, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.7428, "week_return": 0.020793065073507755, "month_return": 0.02917207983937642, "ytd_return": 0.04296828246558948, "status": "正常", "data_source": "api"}, {"name": "具力芒种1号", "code": "STE836", "strategy": "风格类", "strategy_detail": "转债分散", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.5305, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.5305, "week_return": 0.017484377077516378, "month_return": 0.011900826446280988, "ytd_return": 0.02019730702572997, "status": "正常", "data_source": "api"}, {"name": "玉数纯阿尔法一号", "code": "SGN799", "strategy": "风格类", "strategy_detail": "300指增T0", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.3831, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.3831, "week_return": 0.04669290146813987, "month_return": 0.037973733583489766, "ytd_return": 0.09379201265322257, "status": "正常", "data_source": "api"}, {"name": "玉数顺利一号", "code": "SNY231", "strategy": "风格类", "strategy_detail": "500指增T0", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.7721, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.7721, "week_return": 0.03335471456061567, "month_return": 0.02362523105360448, "ytd_return": 0.09952224359372108, "status": "正常", "data_source": "api"}, {"name": "玉数涵瑞专享十七号", "code": "SZB966", "strategy": "风格类", "strategy_detail": "1000指增T0", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 1.6349, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.6349, "week_return": 0.04439759805800447, "month_return": 0.03044245556535996, "ytd_return": 0.10406537007023231, "status": "正常", "data_source": "api"}, {"name": "龙旗科技创新精选1号", "code": "SACB34", "strategy": "风格类", "strategy_detail": "双创指增", "advisor": "-", "latest_date": "2026-04-10", "latest_cum_nav": 2.0867, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 2.0867, "week_return": 0.07990477669099016, "month_return": 0.044969703039711595, "ytd_return": 0.1177951574887508, "status": "正常", "data_source": "api"}, {"name": "正仁择时量选听涛二号", "code": "SBHP32", "strategy": "风格类", "strategy_detail": "灵活方向择时", "advisor": "-", "latest_date": "2026-04-14", "latest_cum_nav": 1.321, "stat_end_date": "2026-04-10", "stat_end_used_date": "2026-04-10", "stat_end_cum_nav": 1.2881, "week_return": 0.08737126456187738, "month_return": 0.08435053455678099, "ytd_return": 0.3288971422676157, "status": "正常", "data_source": "api"}]}];
+let currentStrategy = '全部';
+let currentSort = 'ytd_return';
+function fmtPct(v){ if(v===null||v===undefined) return '-'; return (v*100).toFixed(2)+'%'; }
+function cls(v){ if(v===null||v===undefined) return ''; if(v>0) return 'pos'; if(v<0) return 'neg'; return ''; }
+function safe(v){ return v ?? '-'; }
+function sortRows(data){ return [...data].sort((a,b)=>{ const va=a[currentSort], vb=b[currentSort]; if(va===null||va===undefined) return 1; if(vb===null||vb===undefined) return -1; return vb-va; }); }
+function filteredRows(){ const base = currentStrategy === '全部' ? rows : rows.filter(r=>r.strategy===currentStrategy); return sortRows(base); }
+function renderStrategyFilters(){
+  const wrap = document.getElementById('strategyFilters');
+  const names = ['全部', ...strategySummary.map(x=>x.strategy)];
+  wrap.innerHTML = names.map(name => `<button class="btn ${name===currentStrategy?'active':''}" data-strategy="${name}">${name}</button>`).join('');
+  wrap.querySelectorAll('button').forEach(btn => btn.onclick = () => { currentStrategy = btn.dataset.strategy; renderAll(); });
+}
+function renderSortFilters(){
+  const wrap = document.getElementById('sortFilters');
+  const disabled = currentStrategy === '全部';
+  wrap.querySelectorAll('button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sort === currentSort && !disabled);
+    btn.disabled = disabled;
+    btn.style.opacity = disabled ? '0.45' : '1';
+    btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+    btn.onclick = disabled ? null : (() => { currentSort = btn.dataset.sort; renderAll(); });
+  });
+}
+function renderCards(){
+  const grid = document.getElementById('strategyGrid');
+  const data = currentStrategy === '全部' ? strategySummary : strategySummary.filter(x => x.strategy === currentStrategy);
+  grid.innerHTML = data.map(group => {
+    const items = sortRows(group.items).slice(0, 4);
+    const chips = items.map(item => `
+      <div class="product-chip">
+        <div class="product-chip-name">${item.name}</div>
+        <div class="product-chip-kpi">
+          <span class="${cls(item.week_return)}">周 ${fmtPct(item.week_return)}</span>
+          <span class="${cls(item.ytd_return)}">YTD ${fmtPct(item.ytd_return)}</span>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="strategy-card">
+        <div class="strategy-head">
+          <div>
+            <div class="strategy-title"><span class="dot" style="background:${group.color}"></span>${group.strategy}</div>
+            <div class="strategy-desc">${group.description}</div>
+          </div>
+        </div>
+        <div class="strategy-metrics">
+          <div class="metric"><div class="metric-label">数量</div><div class="metric-value">${group.count}</div></div>
+          <div class="metric"><div class="metric-label">周均值</div><div class="metric-value ${cls(group.avg_week)}">${fmtPct(group.avg_week)}</div></div>
+          <div class="metric"><div class="metric-label">YTD均值</div><div class="metric-value ${cls(group.avg_ytd)}">${fmtPct(group.avg_ytd)}</div></div>
+        </div>
+        <div class="strategy-leader">领先产品：${group.leader}</div>
+        <div class="product-chip-grid">${chips}</div>
+      </div>`;
+  }).join('');
+}
+function renderTable(){
+  const body = document.getElementById('detailBody');
+  body.innerHTML = filteredRows().map(item => `
+    <tr>
+      <td>${item.name}</td>
+      <td>${item.strategy}</td>
+      <td>${safe(item.strategy_detail)}</td>
+      <td class="${cls(item.week_return)}">${fmtPct(item.week_return)}</td>
+      <td class="${cls(item.month_return)}">${fmtPct(item.month_return)}</td>
+      <td class="${cls(item.ytd_return)}">${fmtPct(item.ytd_return)}</td>
+      <td><span class="status-pill">${item.status_label}</span></td>
+    </tr>`).join('');
+}
+function renderAll(){ renderStrategyFilters(); renderSortFilters(); renderCards(); renderTable(); }
+
+document.querySelectorAll('.module-btn').forEach(btn => {
+  btn.onclick = () => {
+    const target = btn.dataset.module;
+    document.querySelectorAll('.module-btn').forEach(x => x.classList.toggle('active', x === btn));
+    document.querySelectorAll('.module-panel').forEach(panel => panel.classList.toggle('active', panel.id === target));
+  };
+});
+
+document.getElementById('showCards').onclick = () => {
+  document.getElementById('cardsView').classList.remove('hidden');
+  document.getElementById('tableView').classList.add('hidden');
+  document.getElementById('showCards').classList.add('active');
+  document.getElementById('showTable').classList.remove('active');
+};
+document.getElementById('showTable').onclick = () => {
+  document.getElementById('tableView').classList.remove('hidden');
+  document.getElementById('cardsView').classList.add('hidden');
+  document.getElementById('showTable').classList.add('active');
+  document.getElementById('showCards').classList.remove('active');
+};
+renderAll();
+</script>
+</body>
+</html>
