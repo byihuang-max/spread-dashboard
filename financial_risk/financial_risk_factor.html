@@ -233,7 +233,7 @@ window.onerror=function(msg,src,line,col,err){
 </script>
 </head>
 <body>
-<a class="back-btn" href="./index.html">← 返回FOF看板</a>
+<a class="back-btn" href="../index.html">← 返回FOF看板</a>
 <div class="wrapper">
   <div class="header">
     <div class="kicker">GAMT · 财报风险因子原型</div>
@@ -1571,7 +1571,7 @@ function downloadValidationSamplesCsv(){
 // 由 build_financial_validation_tables.py 生成
 async function loadValidation(){
   try {
-    const res = await fetch('./data/financial_validation/validation_view.json?_=' + Date.now());
+    const res = await fetch('../data/financial_validation/validation_view.json?_=' + Date.now());
     if(!res.ok) return;
     VALIDATION = await res.json();
     SPECIAL_VALIDATION_INDUSTRIES = VALIDATION.special_industries || [];
@@ -1608,7 +1608,7 @@ function initFilters(){
 
 async function boot(){
   try {
-    const res = await fetch('./data/financial_risk_factor.json?_=' + Date.now());
+    const res = await fetch('../data/financial_risk_factor.json?_=' + Date.now());
     if (res.ok) DATA = await res.json();
   } catch (e) {
     console.warn('load json failed, fallback to demo', e);
