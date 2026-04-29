@@ -497,6 +497,26 @@ class Handler(BaseHTTPRequestHandler):
             admin = self._require_admin()
             if admin:
                 self._json(200, auth.get_module_permissions())
+        elif self.path == '/api/modules/accessible':
+            user = self._get_user()
+            if not user:
+                # 未登录返回全部模块key（向后兼容）
+                all_keys = list(MODULE_REGISTRY.keys())
+                self._json(200, {'modules': all_keys})
+            else:
+                perms = auth.get_module_permissions()
+                perm_map = {p['module_key']: p['min_tier'] for p in perms}
+                user_tier = 99 if user.get('is_admin') else int(user.get('tier', 0))
+                accessible = []
+                for key in MODULE_REGISTRY.keys():
+                    min_tier = perm_map.get(key, 0)
+                    if user_tier >= min_tier:
+                        accessible.append(key)
+                # 也检查非 registry 中的模块（如 fund_analysis, smart-notes 等）
+                for key, min_tier in perm_map.items():
+                    if key not in accessible and user_tier >= min_tier:
+                        accessible.append(key)
+                self._json(200, {'modules': accessible})
         elif self.path.startswith('/api/chip_query'):
             self._serve_chip_query()
         elif self.path == '/api/update-log':

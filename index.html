@@ -3650,7 +3650,7 @@ function applyModuleAccess(list,user){
 }
 function loadAccessibleModules(user){
   if(user&&user.is_admin){applyModuleAccess(null,user);return;}
-  apiCall('GET','/api/modules/accessible').then(function(d){applyModuleAccess(Array.isArray(d)?d:(d.modules||d.accessible||[]),user);}).catch(function(){applyModuleAccess(null,user);});
+  apiCall('GET','/api/modules/accessible').then(function(d){if(d.error){applyModuleAccess(null,user);return;}applyModuleAccess(Array.isArray(d)?d:(d.modules||d.accessible||null),user);}).catch(function(){applyModuleAccess(null,user);});
 }
 function showApp(user){
     currentUser=user;
