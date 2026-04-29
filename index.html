@@ -3058,9 +3058,23 @@ function initCbCharts() {
   if(toggle)toggle.addEventListener('click',openSidebar);
   if(overlay)overlay.addEventListener('click',closeSidebar);
 
+  // data-module → page id 映射
+  var MODULE_PAGE_MAP={
+    'overview':'page-overview',
+    'style_spread':'page-style-spread',
+    'quant_stock':'page-env-fit',
+    'crowding':'page-fund-flow',
+    'macro_liquidity':'page-macro',
+    'chain_prosperity':'page-meso',
+    'alerts':'page-alerts',
+    'update-log':'page-update-log',
+    'chip_query':'page-chip-query'
+  };
+
   function activateModuleTab(mod,strat){
     var nav=document.querySelector('.nav-item[data-module="'+mod+'"]');
-    var page=document.getElementById('page-'+mod);
+    var pageId=MODULE_PAGE_MAP[mod]||('page-'+mod);
+    var page=document.getElementById(pageId);
     if(!nav||!page)return;
     document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
     document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
@@ -3105,8 +3119,6 @@ function initCbCharts() {
   document.querySelectorAll('.nav-item[data-module]').forEach(function(item){
     item.addEventListener('click',function(){
       var mod=this.getAttribute('data-module');
-      var page=document.getElementById('page-'+mod);
-      if(!page)return;
       closeSidebar();
       activateModuleTab(mod);
     });
