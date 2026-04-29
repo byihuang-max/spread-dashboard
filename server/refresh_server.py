@@ -12,6 +12,7 @@ GAMT 看板刷新 API 服务
 """
 
 import subprocess, sys, os, time, json, threading, gzip, io
+from urllib.parse import urlparse, parse_qs
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 

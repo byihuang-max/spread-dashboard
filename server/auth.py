@@ -91,6 +91,34 @@ def init_db():
             FOREIGN KEY (invite_id) REFERENCES invite_codes(id),
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
+        CREATE TABLE IF NOT EXISTS module_permissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            module_key TEXT NOT NULL,
+            min_tier INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now','localtime')),
+            UNIQUE(module_key)
+        );
+        CREATE TABLE IF NOT EXISTS user_notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            note TEXT NOT NULL,
+            created_by INTEGER,
+            created_at TEXT DEFAULT (datetime('now','localtime')),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            module_key TEXT,
+            type TEXT DEFAULT 'bug',
+            title TEXT NOT NULL,
+            content TEXT,
+            status TEXT DEFAULT 'open',
+            created_at TEXT DEFAULT (datetime('now','localtime')),
+            resolved_at TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+
     ''')
     # 自动迁移：给旧表加 tier 列（如果不存在）
     try:
@@ -524,3 +552,51 @@ def set_tier(user_id, tier):
 
 # 初始化
 init_db()
+
+
+def get_user_tier_label(tier):
+    labels = {0: '普通客户', 1: '重要客户', 2: '团队成员', 3: '管理员'}
+    try: return labels.get(int(tier), '普通客户')
+    except: return '普通客户'
+
+def set_tier(user_id, tier):
+    tier = int(tier)
+    if tier not in (0, 1, 2):
+        raise ValueError('tier must be 0/1/2')
+    c = _conn(); c.execute('UPDATE users SET tier=? WHERE id=? AND is_admin=0', (tier, user_id)); c.commit(); c.close()
+    return True
+
+def list_users_by_tier():
+    c = _conn(); rows = c.execute("SELECT id,username,display_name,is_admin,tier,status,created_at,last_login,login_count FROM users WHERE status!='deleted' OR status IS NULL ORDER BY is_admin DESC,tier DESC,id DESC").fetchall(); c.close()
+    groups = {'admin': [], 'team': [], 'premium': [], 'basic': []}
+    for r in rows:
+        d=dict(r); eff=3 if d.get('is_admin') else int(d.get('tier') or 0); d['tier_label']=get_user_tier_label(eff)
+        groups['admin' if eff==3 else 'team' if eff==2 else 'premium' if eff==1 else 'basic'].append(d)
+    return groups
+
+def set_module_permission(module_key, min_tier):
+    min_tier=int(min_tier)
+    if min_tier not in (0,1,2): raise ValueError('min_tier must be 0/1/2')
+    c=_conn(); c.execute("INSERT INTO module_permissions(module_key,min_tier) VALUES(?,?) ON CONFLICT(module_key) DO UPDATE SET min_tier=excluded.min_tier", (module_key,min_tier)); c.commit(); c.close(); return True
+
+def get_module_permissions():
+    c=_conn(); rows=c.execute('SELECT module_key,min_tier,created_at FROM module_permissions ORDER BY module_key').fetchall(); c.close(); return [dict(r) for r in rows]
+
+def check_user_module_access(user, module_key):
+    if not user: return False
+    if int(user.get('is_admin') or 0): return True
+    c=_conn(); r=c.execute('SELECT min_tier FROM module_permissions WHERE module_key=?',(module_key,)).fetchone(); c.close()
+    need=int(r['min_tier']) if r else 0
+    return int(user.get('tier') or 0) >= need
+
+def add_feedback(user_id, module_key, type, title, content):
+    c=_conn(); cur=c.execute('INSERT INTO feedback(user_id,module_key,type,title,content) VALUES(?,?,?,?,?)',(user_id,module_key,type or 'bug',title,content)); c.commit(); fid=cur.lastrowid; c.close(); return fid
+
+def list_feedback(status=None, user_id=None):
+    c=_conn(); sql='SELECT f.*,u.username,u.display_name FROM feedback f LEFT JOIN users u ON f.user_id=u.id WHERE 1=1'; args=[]
+    if status: sql+=' AND f.status=?'; args.append(status)
+    if user_id: sql+=' AND f.user_id=?'; args.append(user_id)
+    rows=c.execute(sql+' ORDER BY f.created_at DESC,f.id DESC',args).fetchall(); c.close(); return [dict(r) for r in rows]
+
+def resolve_feedback(feedback_id):
+    c=_conn(); c.execute("UPDATE feedback SET status='resolved', resolved_at=datetime('now','localtime') WHERE id=?",(feedback_id,)); c.commit(); c.close(); return True

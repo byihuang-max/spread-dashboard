@@ -1,320 +1,59 @@
-<!DOCTYPE html>
-<html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GAMT 管理后台</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;font-size:14px}
-.container{max-width:1100px;margin:0 auto;padding:24px}
-h1{font-size:22px;font-weight:700;margin-bottom:6px}
-.subtitle{font-size:13px;color:#8b92a5;margin-bottom:24px}
-.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid #e8eaef}
-.card h2{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
-.stat{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;border-left:3px solid #2563eb}
-.stat .label{font-size:11px;color:#8b92a5}.stat .value{font-size:24px;font-weight:700;color:#2d3142}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:10px 12px;background:#f8f9fb;color:#8b92a5;font-weight:600;font-size:11px;border-bottom:1px solid #e8eaef}
-td{padding:10px 12px;border-bottom:1px solid #f3f4f6}
-tr:hover td{background:#fafbfc}
-.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.tag-green{background:#dcfce7;color:#16a34a}.tag-red{background:#fee2e2;color:#ef4444}.tag-blue{background:#dbeafe;color:#2563eb}.tag-gray{background:#f1f5f9;color:#64748b}
-.btn{padding:5px 12px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;transition:all .15s}
-.btn:hover{background:#f8fafc}
-.btn-danger{color:#ef4444;border-color:#fca5a5}.btn-danger:hover{background:#fee2e2}
-.btn-back{margin-bottom:20px;display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:#2563eb;font-size:13px;font-weight:500}
-.btn-back:hover{text-decoration:underline}
-.empty{text-align:center;padding:40px;color:#94a3b8;font-size:13px}
-.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #e8eaef}
-.tab{padding:10px 20px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.tab.active{color:#2563eb;border-bottom-color:#2563eb}
-.tab-content{display:none}.tab-content.active{display:block}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center}
-.modal{background:#fff;border-radius:12px;padding:28px;width:380px;max-width:90vw}
-.modal h3{font-size:16px;margin-bottom:16px}
-.modal input{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:12px}
-.modal .btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
-</style>
-</head>
-<body>
-<div class="container">
-  <a class="btn-back" href="index.html">← 返回看板</a>
-  <h1>🛡️ GAMT 管理后台</h1>
-  <p class="subtitle">用户管理 · 登录日志 · 系统概况</p>
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GAMT 管理后台</title><style>
+*{box-sizing:border-box;margin:0;padding:0}:root {
+            --primary: #ff6600;
+            --primary-dark: #cc5200;
+            --primary-light: #ff8c1a;
+            --secondary: #f5a623;
+            --success: #2ecc71;
+            --warning: #f0ad4e;
+            --danger: #ff4d4f;
+            --info: #3b82f6;
+            --dark: #f2f4f8;
+            --gray: #9aa4b2;
+            --light-gray: #202635;
+            --border: #30384a;
+            --bg: #0d1117;
+            --card-bg: #161b22;
+            --text: #e6edf3;
+            --text-muted: #9aa4b2;
+            --radius: 2px;
+            --shadow: none;
+            --mono: Consolas, 'SF Mono', 'Roboto Mono', Monaco, Menlo, monospace;
+        }body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);font-size:14px}.container{max-width:1180px;margin:0 auto;padding:24px}h1{font-size:22px;margin-bottom:6px}.subtitle{font-size:13px;color:var(--text-sub);margin-bottom:22px}.btn-back{margin-bottom:20px;display:inline-flex;text-decoration:none;color:var(--accent);font-size:13px;font-weight:500}.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid var(--border)}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}.stat{background:#fff;border-radius:10px;padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent)}.stat .label{font-size:11px;color:var(--text-sub)}.stat .value{font-size:24px;font-weight:700}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:780px}th{text-align:left;padding:10px 12px;background:#f8f9fb;color:var(--text-sub);font-weight:600;font-size:11px;border-bottom:1px solid var(--border)}td{padding:10px 12px;border-bottom:1px solid #f3f4f6}tr:hover td{background:#fafbfc}.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}.tag-blue{background:#dbeafe;color:#2563eb}.tag-purple{background:#ede9fe;color:#7c3aed}.tag-green{background:#dcfce7;color:#16a34a}.tag-gray{background:#f1f5f9;color:#64748b}.tag-red{background:#fee2e2;color:#ef4444}.tag-amber{background:#fef3c7;color:#d97706}.btn,select,input{padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;font-size:12px}.btn{cursor:pointer}.btn-danger{color:#ef4444;border-color:#fca5a5}.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--border);overflow-x:auto}.tab{white-space:nowrap;padding:10px 18px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}.tab-content{display:none}.tab-content.active{display:block}.tier-block{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff}.tier-head{padding:14px 16px;display:flex;justify-content:space-between;cursor:pointer;background:#fafbfc;font-weight:700}.tier-body{display:none;padding:0 16px 14px}.tier-block.open .tier-body{display:block}.empty{text-align:center;padding:36px;color:#94a3b8}.quick{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center}.modal{background:#fff;border-radius:12px;padding:28px;width:380px;max-width:90vw}.modal input{width:100%;margin:12px 0}.btn-row{display:flex;justify-content:flex-end;gap:10px}
 
-  <div class="stats" id="statsRow"></div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('users')">👤 用户列表</div>
-    <div class="tab" onclick="switchTab('invites')">🎟️ 邀请码</div>
-    <div class="tab" onclick="switchTab('logs')">📋 登录日志</div>
-  </div>
+        /* Bloomberg terminal style overrides */
+        * { box-sizing: border-box; }
+        body { background: var(--bg) !important; color: var(--text) !important; font-family: var(--mono) !important; letter-spacing: -0.01em; }
+        .container, main { background: transparent !important; }
+        header, .header { background: #0b0f14 !important; border-bottom: 1px solid var(--primary) !important; box-shadow: none !important; }
+        h1, h2, h3, h4, .logo { color: var(--text) !important; font-family: var(--mono) !important; font-weight: 600 !important; }
+        .tabs, .tab-nav { background: #111722 !important; border: 1px solid var(--border) !important; border-radius: 0 !important; gap: 0 !important; }
+        .tab, .tab-btn, .nav-tab { background: transparent !important; color: var(--text-muted) !important; border: 0 !important; border-right: 1px solid var(--border) !important; border-radius: 0 !important; font-family: var(--mono) !important; }
+        .tab.active, .tab-btn.active, .nav-tab.active, .tab:hover, .tab-btn:hover, .nav-tab:hover { color: #0d1117 !important; background: var(--primary) !important; }
+        .card, .panel, .section, .stat-card, .module-card { background: var(--card-bg) !important; border: 1px solid var(--border) !important; border-radius: 0 !important; box-shadow: none !important; }
+        table { background: var(--card-bg) !important; color: var(--text) !important; border-collapse: collapse !important; font-family: var(--mono) !important; }
+        th { background: #111722 !important; color: var(--primary-light) !important; border-bottom: 1px solid var(--primary) !important; font-weight: 600 !important; }
+        td { border-bottom: 1px solid var(--border) !important; color: var(--text) !important; }
+        tr:hover td { background: #1b2230 !important; }
+        input, select, textarea { background: #0b0f14 !important; color: var(--text) !important; border: 1px solid var(--border) !important; border-radius: 0 !important; font-family: var(--mono) !important; }
+        input:focus, select:focus, textarea:focus { outline: 1px solid var(--primary) !important; border-color: var(--primary) !important; box-shadow: none !important; }
+        button, .btn { background: transparent !important; color: var(--primary-light) !important; border: 1px solid var(--primary) !important; border-radius: 0 !important; box-shadow: none !important; font-family: var(--mono) !important; font-weight: 500 !important; }
+        button:hover, .btn:hover { background: var(--primary) !important; color: #0d1117 !important; transform: none !important; }
+        .badge, .tag, .status, .pill { border-radius: 0 !important; border: 1px solid currentColor !important; background: transparent !important; font-family: var(--mono) !important; }
+        .text-muted, .muted, small { color: var(--text-muted) !important; }
+        code, pre, .number, .data, td { font-family: var(--mono) !important; }
 
-  <div class="tab-content active" id="tab-users">
-    <div class="card"><table><thead><tr>
-      <th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>等级</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th>
-    </tr></thead><tbody id="usersBody"></tbody></table></div>
-  </div>
-
-  <div class="tab-content" id="tab-invites">
-    <div class="card">
-      <h2>🎟️ 邀请码系统</h2>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
-        <label style="font-size:12px;color:#64748b">注册模式</label>
-        <select id="inviteMode" onchange="saveInviteMode()" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:#fff">
-          <option value="open">open：完全开放注册</option>
-          <option value="optional">optional：开放注册，但支持邀请码</option>
-          <option value="required">required：必须邀请码注册</option>
-        </select>
-        <span style="font-size:12px;color:#94a3b8">你现在可以先保持 open，后面随时切到 required。</span>
-      </div>
-      <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;border:1px dashed #dbe2ea;border-radius:10px;background:#fafbfc">
-        <div>
-          <div style="font-size:12px;color:#64748b;margin-bottom:6px">备注</div>
-          <input id="inviteNote" placeholder="比如：4月路演客户 / 老朋友渠道" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:220px">
-        </div>
-        <div>
-          <div style="font-size:12px;color:#64748b;margin-bottom:6px">可用次数</div>
-          <input id="inviteMaxUses" type="number" min="1" value="1" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100px">
-        </div>
-        <div>
-          <div style="font-size:12px;color:#64748b;margin-bottom:6px">过期时间（可空）</div>
-          <input id="inviteExpiresAt" placeholder="2026-04-30 23:59:59" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:180px">
-        </div>
-        <div>
-          <div style="font-size:12px;color:#64748b;margin-bottom:6px">自定义邀请码（可空）</div>
-          <input id="inviteCode" placeholder="留空自动生成" style="padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:180px;text-transform:uppercase">
-        </div>
-        <button class="btn" style="background:#2563eb;color:#fff;border-color:#2563eb;height:38px" onclick="createInvite()">生成邀请码</button>
-      </div>
-      <table><thead><tr>
-        <th>ID</th><th>邀请码</th><th>备注</th><th>使用情况</th><th>过期时间</th><th>状态</th><th>创建时间</th><th>操作</th>
-      </tr></thead><tbody id="invitesBody"></tbody></table>
-    </div>
-  </div>
-
-  <div class="tab-content" id="tab-logs">
-    <div class="card"><table><thead><tr>
-      <th>时间</th><th>用户名</th><th>IP</th><th>操作</th><th>结果</th>
-    </tr></thead><tbody id="logsBody"></tbody></table></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalOverlay" style="display:none">
-  <div class="modal" id="modalContent"></div>
-</div>
-
-<script>
-var AUTH_API=null;
-
-function discoverAPI(cb){
-  // 优先同源（通过 tunnel 访问时，API 就在同域）
-  fetch('/api/status').then(function(r){
-    if(r.ok){AUTH_API='';cb();return;}
-    throw new Error('not ok');
-  }).catch(function(){
-    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){
-      if(r.ok){AUTH_API='http://localhost:9876';cb();}else{throw new Error('not ok');}
-    }).catch(function(){
-      fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-        if(d&&d.url){AUTH_API=d.url;cb();}else{document.body.innerHTML='<div class="empty">服务未连接</div>';}
-      }).catch(function(){document.body.innerHTML='<div class="empty">服务未连接</div>';});
-    });
-  });
-}
-
-function apiCall(method,path,body){
-  var opts={method:method,headers:{'Content-Type':'application/json'}};
-  var token=localStorage.getItem('gamt_token');
-  if(token)opts.headers['Authorization']='Bearer '+token;
-  if(body)opts.body=JSON.stringify(body);
-  return fetch(AUTH_API+path,opts).then(function(r){return r.json()});
-}
-
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(function(t){
-    var active=(name==='users' && t.textContent.includes('用户')) || (name==='invites' && t.textContent.includes('邀请码')) || (name==='logs' && t.textContent.includes('日志'));
-    t.className=active?'tab active':'tab';
-  });
-  document.querySelectorAll('.tab-content').forEach(function(c){c.className=c.id==='tab-'+name?'tab-content active':'tab-content'});
-}
-
-function loadUsers(){
-  apiCall('GET','/api/admin/users').then(function(d){
-    if(d.error){location.href='index.html';return;}
-    var users=d.users||[];
-    // Stats
-    var total=users.length;
-    var active=users.filter(function(u){return u.status==='active'}).length;
-    var premium=users.filter(function(u){return (u.tier||0)>=1 && !u.is_admin}).length;
-    var today=new Date().toISOString().slice(0,10);
-    var todayNew=users.filter(function(u){return (u.created_at||'').slice(0,10)===today}).length;
-    document.getElementById('statsRow').innerHTML=
-      '<div class="stat"><div class="label">总用户数</div><div class="value">'+total+'</div></div>'+
-      '<div class="stat"><div class="label">活跃用户</div><div class="value">'+active+'</div></div>'+
-      '<div class="stat"><div class="label">高级客户</div><div class="value">'+premium+'</div></div>'+
-      '<div class="stat"><div class="label">今日新注册</div><div class="value">'+todayNew+'</div></div>';
-    // Table
-    var html='';
-    users.forEach(function(u){
-      var role=u.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-gray">用户</span>';
-      var tierVal=u.tier||0;
-      var tierTag=u.is_admin?'<span class="tag tag-blue">全部</span>':(tierVal>=1?'<span class="tag tag-green">高级</span>':'<span class="tag tag-gray">普通</span>');
-      var statusMap={
-        active:'<span class="tag tag-green">正常</span>',
-        disabled:'<span class="tag tag-red">已禁用</span>',
-        deleted:'<span class="tag tag-gray">已删除</span>'
-      };
-      var status=statusMap[u.status]||('<span class="tag tag-gray">'+(u.status||'未知')+'</span>');
-      var actions='';
-      if(!u.is_admin){
-        var toggleBtn='';
-        if(u.status==='active'){
-          toggleBtn='<button class="btn btn-danger" onclick="toggleUser('+u.id+',\'disabled\')">禁用</button>';
-        }else{
-          toggleBtn='<button class="btn" onclick="toggleUser('+u.id+',\'active\')">启用</button>';
-        }
-        var tierBtn=tierVal>=1
-          ?'<button class="btn" onclick="setTier('+u.id+',0)">降为普通</button>'
-          :'<button class="btn" style="color:#16a34a;border-color:#86efac" onclick="setTier('+u.id+',1)">升为高级</button>';
-        var deleteBtn=u.status==='deleted'
-          ?'<button class="btn" onclick="toggleUser('+u.id+',\'active\')">恢复</button>'
-          :'<button class="btn btn-danger" onclick="delUser('+u.id+',\''+u.username+'\')">删除</button>';
-        actions=tierBtn+' '+toggleBtn+' <button class="btn" onclick="showResetPw('+u.id+',\''+u.username+'\')">重置密码</button> '+deleteBtn;
-      }
-      html+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+(u.display_name||'-')+'</td><td>'+role+'</td><td>'+tierTag+'</td><td>'+(u.created_at||'-')+'</td><td>'+(u.last_login||'从未')+'</td><td>'+u.login_count+'</td><td>'+status+'</td><td>'+actions+'</td></tr>';
-    });
-    document.getElementById('usersBody').innerHTML=html||'<tr><td colspan="10" class="empty">暂无用户</td></tr>';
-  });
-}
-
-function loadLogs(){
-  apiCall('GET','/api/admin/logs').then(function(d){
-    var logs=d.logs||[];
-    var html='';
-    logs.forEach(function(l){
-      var result=l.success?'<span class="tag tag-green">成功</span>':'<span class="tag tag-red">失败</span>';
-      html+='<tr><td>'+(l.created_at||'-')+'</td><td>'+(l.username||'-')+'</td><td>'+(l.ip||'-')+'</td><td>'+(l.action||'-')+'</td><td>'+result+'</td></tr>';
-    });
-    document.getElementById('logsBody').innerHTML=html||'<tr><td colspan="5" class="empty">暂无日志</td></tr>';
-  });
-}
-
-function loadInvites(){
-  apiCall('GET','/api/admin/invites').then(function(d){
-    var invites=d.invites||[];
-    document.getElementById('inviteMode').value=d.invite_mode||'open';
-    var html='';
-    invites.forEach(function(v){
-      var status=v.status==='active'?'<span class="tag tag-green">启用中</span>':'<span class="tag tag-red">已停用</span>';
-      var useInfo=(v.used_count||0)+' / '+(v.max_uses||1);
-      var toggleBtn=v.status==='active'
-        ?'<button class="btn btn-danger" onclick="toggleInvite('+v.id+',\'disabled\')">停用</button>'
-        :'<button class="btn" onclick="toggleInvite('+v.id+',\'active\')">启用</button>';
-      html+='<tr>'+ 
-        '<td>'+v.id+'</td>'+
-        '<td><code style="font-size:12px;background:#f8fafc;padding:3px 6px;border-radius:6px">'+v.code+'</code></td>'+
-        '<td>'+(v.note||'-')+'</td>'+
-        '<td>'+useInfo+'</td>'+
-        '<td>'+(v.expires_at||'不过期')+'</td>'+
-        '<td>'+status+'</td>'+
-        '<td>'+(v.created_at||'-')+'</td>'+
-        '<td><button class="btn" onclick="copyInvite(\''+v.code+'\')">复制</button> '+toggleBtn+' <button class="btn btn-danger" onclick="deleteInvite('+v.id+',\''+v.code+'\')">删除</button></td>'+
-      '</tr>';
-    });
-    document.getElementById('invitesBody').innerHTML=html||'<tr><td colspan="8" class="empty">还没有邀请码</td></tr>';
-  });
-}
-
-function saveInviteMode(){
-  var mode=document.getElementById('inviteMode').value;
-  apiCall('POST','/api/admin/invite-mode',{mode:mode}).then(function(d){
-    if(d.error){alert(d.error);return;}
-  });
-}
-
-function createInvite(){
-  var note=document.getElementById('inviteNote').value;
-  var maxUses=parseInt(document.getElementById('inviteMaxUses').value||'1',10);
-  var expiresAt=document.getElementById('inviteExpiresAt').value.trim();
-  var code=document.getElementById('inviteCode').value.trim();
-  apiCall('POST','/api/admin/create-invite',{
-    note:note,
-    max_uses:maxUses,
-    expires_at:expiresAt||null,
-    code:code||''
-  }).then(function(d){
-    if(d.error){alert(d.error);return;}
-    document.getElementById('inviteNote').value='';
-    document.getElementById('inviteMaxUses').value='1';
-    document.getElementById('inviteExpiresAt').value='';
-    document.getElementById('inviteCode').value='';
-    loadInvites();
-    if(d.invite&&d.invite.code){
-      copyInvite(d.invite.code, true);
-    }
-  });
-}
-
-function toggleInvite(id,status){
-  apiCall('POST','/api/admin/toggle-invite',{invite_id:id,status:status}).then(function(){loadInvites()});
-}
-
-function deleteInvite(id,code){
-  if(!confirm('确定删除邀请码 "'+code+'" ？'))return;
-  apiCall('POST','/api/admin/delete-invite',{invite_id:id}).then(function(){loadInvites()});
-}
-
-function copyInvite(code,silent){
-  navigator.clipboard.writeText(code).then(function(){
-    if(!silent)alert('已复制邀请码：'+code);
-    if(silent)alert('邀请码已生成并复制：'+code);
-  }).catch(function(){
-    prompt('复制这个邀请码：',code);
-  });
-}
-
-function toggleUser(id,status){
-  apiCall('POST','/api/admin/toggle-user',{user_id:id,status:status}).then(function(){loadUsers()});
-}
-
-function setTier(id,tier){
-  apiCall('POST','/api/admin/set-tier',{user_id:id,tier:tier}).then(function(){loadUsers()});
-}
-
-function delUser(id,name){
-  if(!confirm('确定删除用户 "'+name+'" ？此操作不可恢复。'))return;
-  apiCall('POST','/api/admin/delete-user',{user_id:id}).then(function(){loadUsers()});
-}
-
-function showResetPw(id,name){
-  document.getElementById('modalOverlay').style.display='';
-  document.getElementById('modalContent').innerHTML=
-    '<h3>重置密码 — '+name+'</h3>'+
-    '<input type="password" id="newPw" placeholder="新密码（至少6位）">'+
-    '<div class="btn-row"><button class="btn" onclick="closeModal()">取消</button> <button class="btn" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="doResetPw('+id+')">确认重置</button></div>';
-}
-function doResetPw(id){
-  var pw=document.getElementById('newPw').value;
-  if(!pw||pw.length<6){alert('密码至少6位');return;}
-  apiCall('POST','/api/admin/reset-password',{user_id:id,password:pw}).then(function(){closeModal();loadUsers();});
-}
-function closeModal(){document.getElementById('modalOverlay').style.display='none';}
-
-// Init
-discoverAPI(function(){
-  // Verify admin access
-  apiCall('GET','/api/auth/me').then(function(d){
-    if(!d.is_admin){
-      document.body.innerHTML='<div class="container"><div class="empty">⛔ 无管理员权限<br><br><a href="index.html">返回看板</a></div></div>';
-      return;
-    }
-    loadUsers();
-    loadInvites();
-    loadLogs();
-  }).catch(function(){
-    location.href='index.html';
-  });
-});
-</script>
-</body></html>
+    </style></head><body><div class="container"><a class="btn-back" href="index.html">← 返回看板</a><h1> GAMT 管理后台</h1><p class="subtitle">权限概览 · 用户管理 · 模块权限 · 反馈 · 邀请码 · 登录日志</p><div class="tabs" id="tabs"></div><div id="tab-overview" class="tab-content active"><div class="stats" id="tierStats"></div><div id="tierBlocks"></div><div class="card"><h3>快速添加</h3><div class="quick" style="margin-top:12px"><input id="quickUser" placeholder="用户名"><select id="quickTier"><option value="0">普通客户</option><option value="1">重要客户</option><option value="2">团队</option></select><button class="btn" onclick="quickSetTier()">确认</button></div></div></div><div id="tab-users" class="tab-content"><div class="card table-wrap"><table><thead><tr><th>ID</th><th>用户名</th><th>显示名</th><th>角色</th><th>等级</th><th>注册时间</th><th>最后登录</th><th>登录次数</th><th>状态</th><th>操作</th></tr></thead><tbody id="usersBody"></tbody></table></div></div><div id="tab-modules" class="tab-content"><div class="card table-wrap"><table><thead><tr><th>模块名</th><th>模块 Key</th><th>当前最低权限</th><th>操作</th></tr></thead><tbody id="modulesBody"></tbody></table></div></div><div id="tab-feedback" class="tab-content"><div class="card"><div style="margin-bottom:14px"><button class="btn" onclick="feedbackFilter='';loadFeedback()">全部</button> <button class="btn" onclick="feedbackFilter='open';loadFeedback()">待处理</button> <button class="btn" onclick="feedbackFilter='resolved';loadFeedback()">已解决</button></div><div class="table-wrap"><table><thead><tr><th>提交人</th><th>模块</th><th>类型</th><th>标题</th><th>内容</th><th>状态</th><th>时间</th><th>操作</th></tr></thead><tbody id="feedbackBody"></tbody></table></div></div></div><div id="tab-invites" class="tab-content"><div class="card"><h2> 邀请码系统</h2><div class="quick" style="margin:16px 0"><label>注册模式</label><select id="inviteMode" onchange="saveInviteMode()"><option value="open">open</option><option value="optional">optional</option><option value="required">required</option></select><input id="inviteNote" placeholder="备注"><input id="inviteMaxUses" type="number" min="1" value="1"><input id="inviteExpiresAt" placeholder="过期时间"><input id="inviteCode" placeholder="自定义邀请码"><button class="btn" onclick="createInvite()">生成邀请码</button></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>邀请码</th><th>备注</th><th>使用情况</th><th>过期时间</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead><tbody id="invitesBody"></tbody></table></div></div></div><div id="tab-logs" class="tab-content"><div class="card table-wrap"><table><thead><tr><th>时间</th><th>用户名</th><th>IP</th><th>操作</th><th>结果</th></tr></thead><tbody id="logsBody"></tbody></table></div></div></div><div class="modal-overlay" id="modalOverlay" style="display:none"><div class="modal" id="modalContent"></div></div><script>
+var AUTH_API=null,allUsers=[],usersByTier=null,feedbackFilter='';var tabs=[['overview',' 权限概览'],['users',' 用户管理'],['modules',' 模块权限'],['feedback',' 反馈管理'],['invites',' 邀请码'],['logs',' 登录日志']];var fallback={'style_spread':'风格轧差','quant_stock':'宽基量化股票','momentum_stock':'强势股情绪','commodity_cta':'商品CTA','cb_env':'转债指增','alerts':'红灯预警','us_alerts':'美股风险监控','crowding':'资金流拥挤度','option_sentiment':'期权情绪','patient_capital':'耐心资本','macro_liquidity':'宏观流动性','macro_rates':'利率数据','macro_fundamentals':'基本面数据','antifragile':'反脆弱看板','chain_prosperity':'中观景气度','macro_score':'宏观打分','option_vol':'期权卖权','arbitrage':'套利','macro/halo_trade':'HALO交易','fund_asset':'团队基金优选','overview':'仪表盘汇总','timing_factors':'择时因子系统','financial_risk':'财报预期风险','chip_query':'个股筹码分析'};
+function discoverAPI(cb){fetch('/api/status').then(r=>{if(r.ok){AUTH_API='';cb()}else throw 0}).catch(()=>fetch('http://localhost:9876/api/status',{mode:'cors'}).then(r=>{if(r.ok){AUTH_API='http://localhost:9876';cb()}else throw 0}).catch(()=>fetch('tunnel_url.json?t='+Date.now()).then(r=>r.json()).then(d=>{if(d&&d.url){AUTH_API=d.url;cb()}else document.body.innerHTML='<div class="empty">服务未连接</div>'}).catch(()=>document.body.innerHTML='<div class="empty">服务未连接</div>')))}
+function apiCall(m,path,b){var o={method:m,headers:{'Content-Type':'application/json'}};var t=localStorage.getItem('gamt_token');if(t)o.headers.Authorization='Bearer '+t;if(b)o.body=JSON.stringify(b);return fetch(AUTH_API+path,o).then(r=>r.json())}function esc(s){return String(s==null?'-':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}function tierLabel(t,a){return a?'<span class="tag tag-blue">管理员</span>':t>=2?'<span class="tag tag-purple">团队</span>':t>=1?'<span class="tag tag-green">重要客户</span>':'<span class="tag tag-gray">普通客户</span>'}function minLabel(t){return t==99?'<span class="tag tag-blue">仅管理员</span>':t>=2?'<span class="tag tag-purple">团队+</span>':t>=1?'<span class="tag tag-green">重要客户+</span>':'<span class="tag tag-gray">所有人可见</span>'}function switchTab(n){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab==n));document.querySelectorAll('.tab-content').forEach(x=>x.classList.toggle('active',x.id=='tab-'+n))}
+document.getElementById('tabs').innerHTML=tabs.map(x=>'<div class="tab '+(x[0]=='overview'?'active':'')+'" data-tab="'+x[0]+'" onclick="switchTab(\''+x[0]+'\')">'+x[1]+'</div>').join('');
+function loadUsers(){apiCall('GET','/api/admin/users').then(d=>{if(d.error){location.href='index.html';return}allUsers=d.users||[];renderUsers();renderOverview()})}function renderUsers(){usersBody.innerHTML=allUsers.map(u=>{var ops=u.is_admin?'':('<select onchange="setTier('+u.id+',this.value)"><option>调整等级</option><option value="0">basic</option><option value="1">premium</option><option value="2">team</option></select> <button class="btn '+(u.status==='active'?'btn-danger':'')+'" onclick="toggleUser('+u.id+',\''+(u.status==='active'?'disabled':'active')+'\')">'+(u.status==='active'?'禁用':'启用')+'</button> <button class="btn" onclick="showResetPw('+u.id+',\''+esc(u.username)+'\')">重置密码</button> <button class="btn btn-danger" onclick="delUser('+u.id+',\''+esc(u.username)+'\')">删除</button>');return '<tr><td>'+u.id+'</td><td>'+esc(u.username)+'</td><td>'+esc(u.display_name)+'</td><td>'+(u.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-gray">用户</span>')+'</td><td>'+tierLabel(u.tier||0,u.is_admin)+'</td><td>'+esc(u.created_at)+'</td><td>'+esc(u.last_login||'从未')+'</td><td>'+esc(u.login_count||0)+'</td><td>'+esc(u.status)+'</td><td>'+ops+'</td></tr>'}).join('')||'<tr><td colspan="10" class="empty">暂无用户</td></tr>'}
+function renderOverview(){apiCall('GET','/api/admin/users-by-tier').then(d=>{usersByTier=d}).finally(()=>{var groups=[['admin','管理员','blue'],['team','团队','purple'],['premium','重要客户','green'],['basic','普通客户','gray']];var map={admin:allUsers.filter(u=>u.is_admin),team:allUsers.filter(u=>!u.is_admin&&(u.tier||0)>=2),premium:allUsers.filter(u=>!u.is_admin&&(u.tier||0)==1),basic:allUsers.filter(u=>!u.is_admin&&!(u.tier||0))};tierStats.innerHTML=groups.map(g=>'<div class="stat"><div class="label">'+g[1]+'</div><div class="value">'+map[g[0]].length+'</div></div>').join('');tierBlocks.innerHTML=groups.map(g=>'<div class="tier-block open"><div class="tier-head" onclick="this.parentNode.classList.toggle(\'open\')"><span>'+tierLabel(g[0]=='team'?2:g[0]=='premium'?1:0,g[0]=='admin')+' '+g[1]+' · '+map[g[0]].length+' 人</span></div><div class="tier-body"><div class="table-wrap"><table><tbody>'+map[g[0]].map(u=>'<tr><td>'+esc(u.display_name)+'</td><td>'+esc(u.username)+'</td><td>'+esc(u.last_login||'从未')+'</td><td>'+esc(u.created_at)+'</td><td>'+(u.is_admin?'不可调整':'<select onchange="setTier('+u.id+',this.value)"><option>升级/降级</option><option value="0">普通客户</option><option value="1">重要客户</option><option value="2">团队</option></select>')+'</td></tr>').join('')+'</tbody></table></div></div></div>').join('')})}
+function loadModules(){apiCall('GET','/api/admin/module-permissions').then(d=>{var arr=Array.isArray(d)?d:(d.modules||d.permissions||[]),m={};arr.forEach(x=>m[x.module_key||x.key]=x);modulesBody.innerHTML=Object.keys(fallback).map(k=>{var x=m[k]||{},v=x.min_tier==null?0:x.min_tier;return '<tr><td>'+fallback[k]+'</td><td><code>'+k+'</code></td><td id="ml-'+k.replace(/[^a-z0-9]/g,'_')+'">'+minLabel(v)+'</td><td><select onchange="saveModule(\''+k+'\',this.value)"><option value="0">所有人可见</option><option value="1">重要客户+</option><option value="2">团队+</option><option value="99">仅管理员</option></select></td></tr>'}).join('')})}function saveModule(k,v){apiCall('POST','/api/admin/set-module-permission',{module_key:k,min_tier:parseInt(v)}).then(loadModules)}
+function loadFeedback(){apiCall('GET','/api/feedback').then(d=>{var a=d.feedback||d.items||d||[];if(feedbackFilter)a=a.filter(x=>x.status==feedbackFilter);feedbackBody.innerHTML=a.map(f=>'<tr><td>'+esc(f.username||f.submitter)+'</td><td>'+esc(f.module_key)+'</td><td><span class="tag '+(f.type=='bug'?'tag-red':f.type=='data'?'tag-amber':'tag-blue')+'">'+esc(f.type)+'</span></td><td>'+esc(f.title)+'</td><td>'+esc(f.content)+'</td><td>'+esc(f.status)+'</td><td>'+esc(f.created_at)+'</td><td>'+(f.status==='resolved'?'':'<button class="btn" onclick="resolveFeedback('+f.id+')">标记已解决</button>')+'</td></tr>').join('')||'<tr><td colspan="8" class="empty">暂无反馈</td></tr>'})}function resolveFeedback(id){apiCall('POST','/api/admin/resolve-feedback',{feedback_id:id}).then(loadFeedback)}
+function loadLogs(){apiCall('GET','/api/admin/logs').then(d=>logsBody.innerHTML=(d.logs||[]).map(l=>'<tr><td>'+esc(l.created_at)+'</td><td>'+esc(l.username)+'</td><td>'+esc(l.ip)+'</td><td>'+esc(l.action)+'</td><td>'+(l.success?'<span class="tag tag-green">成功</span>':'<span class="tag tag-red">失败</span>')+'</td></tr>').join('')||'<tr><td colspan="5" class="empty">暂无日志</td></tr>')}function loadInvites(){apiCall('GET','/api/admin/invites').then(d=>{inviteMode.value=d.invite_mode||'open';invitesBody.innerHTML=(d.invites||[]).map(v=>'<tr><td>'+v.id+'</td><td><code>'+v.code+'</code></td><td>'+esc(v.note)+'</td><td>'+(v.used_count||0)+' / '+(v.max_uses||1)+'</td><td>'+esc(v.expires_at||'不过期')+'</td><td>'+esc(v.status)+'</td><td>'+esc(v.created_at)+'</td><td><button class="btn" onclick="copyInvite(\''+v.code+'\')">复制</button> <button class="btn btn-danger" onclick="deleteInvite('+v.id+',\''+v.code+'\')">删除</button></td></tr>').join('')})}
+function setTier(id,t){apiCall('POST','/api/admin/set-tier',{user_id:parseInt(id),tier:parseInt(t)}).then(loadUsers)}function quickSetTier(){var name=quickUser.value.trim(),u=allUsers.find(x=>x.username==name);if(!u)return alert('未找到用户');setTier(u.id,quickTier.value)}function toggleUser(id,s){apiCall('POST','/api/admin/toggle-user',{user_id:id,status:s}).then(loadUsers)}function delUser(id,n){if(confirm('确定删除用户 '+n+'？'))apiCall('POST','/api/admin/delete-user',{user_id:id}).then(loadUsers)}function showResetPw(id,n){modalOverlay.style.display='';modalContent.innerHTML='<h3>重置密码 — '+n+'</h3><input type="password" id="newPw" placeholder="新密码（至少6位）"><div class="btn-row"><button class="btn" onclick="modalOverlay.style.display=\'none\'">取消</button><button class="btn" onclick="doResetPw('+id+')">确认</button></div>'}function doResetPw(id){var p=newPw.value;if(!p||p.length<6)return alert('密码至少6位');apiCall('POST','/api/admin/reset-password',{user_id:id,password:p}).then(()=>{modalOverlay.style.display='none';loadUsers()})}function saveInviteMode(){apiCall('POST','/api/admin/invite-mode',{mode:inviteMode.value})}function createInvite(){apiCall('POST','/api/admin/create-invite',{note:inviteNote.value,max_uses:parseInt(inviteMaxUses.value||1),expires_at:inviteExpiresAt.value||null,code:inviteCode.value||''}).then(loadInvites)}function deleteInvite(id,c){if(confirm('删除邀请码 '+c+'？'))apiCall('POST','/api/admin/delete-invite',{invite_id:id}).then(loadInvites)}function copyInvite(c){navigator.clipboard?navigator.clipboard.writeText(c):prompt('复制',c)}
+discoverAPI(()=>apiCall('GET','/api/auth/me').then(d=>{if(!d.is_admin){document.body.innerHTML='<div class="container"><div class="empty"> 无管理员权限<br><br><a href="index.html">返回看板</a></div></div>';return}loadUsers();loadModules();loadFeedback();loadInvites();loadLogs()}).catch(()=>location.href='index.html'));
+</script></body></html>
