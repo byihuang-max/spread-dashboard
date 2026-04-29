@@ -12,7 +12,7 @@ chip_dir = Path(__file__).parent.parent / 'chip_query'
 sys.path.insert(0, str(chip_dir))
 
 from chip_analyzer import ChipAnalyzer
-from data_source import get_daily, get_moneyflow, get_stock_name, get_stock_profile, get_limit_stats, calc_big_order_stats, estimate_industry_comparison
+from data_source import get_daily, get_moneyflow, get_stock_name, get_stock_profile, get_limit_stats, calc_big_order_stats, estimate_industry_comparison, search_stock
 from ifind_enricher import get_fundamentals
 
 

@@ -36,6 +36,69 @@ def get_stock_name(ts_code: str) -> str:
     return ts_code
 
 
+# ── 股票名称/拼音 → 代码 模糊搜索 ──
+_STOCK_LIST_CACHE = None
+
+def _load_stock_list():
+    """加载全量股票列表并缓存"""
+    global _STOCK_LIST_CACHE
+    if _STOCK_LIST_CACHE is not None:
+        return _STOCK_LIST_CACHE
+    df = _ts_query('stock_basic', fields='ts_code,name,enname', list_status='L')
+    if df is None or len(df) == 0:
+        return []
+    results = []
+    for _, row in df.iterrows():
+        results.append({
+            'ts_code': row['ts_code'],
+            'name': row.get('name', ''),
+        })
+    _STOCK_LIST_CACHE = results
+    return results
+
+
+def search_stock(keyword: str, limit: int = 10) -> list:
+    """
+    按中文名/代码片段模糊搜索股票
+    返回 [{'ts_code': '600519.SH', 'name': '贵州茅台'}, ...]
+    """
+    keyword = keyword.strip()
+    if not keyword:
+        return []
+
+    stocks = _load_stock_list()
+    if not stocks:
+        return []
+
+    exact = []
+    prefix = []
+    contains = []
+
+    for s in stocks:
+        name = s.get('name', '')
+        code = s['ts_code']
+        code_num = code.split('.')[0]
+
+        # 精确匹配名称
+        if name == keyword:
+            exact.append(s)
+        # 代码数字部分精确匹配
+        elif code_num == keyword:
+            exact.append(s)
+        # 名称前缀匹配
+        elif name.startswith(keyword):
+            prefix.append(s)
+        # 代码前缀匹配
+        elif code_num.startswith(keyword):
+            prefix.append(s)
+        # 名称包含
+        elif keyword in name:
+            contains.append(s)
+
+    results = exact + prefix + contains
+    return results[:limit]
+
+
 def get_daily(ts_code: str, days: int = 60) -> pd.DataFrame:
     end = datetime.now().strftime('%Y%m%d')
     start = (datetime.now() - timedelta(days=days + 30)).strftime('%Y%m%d')

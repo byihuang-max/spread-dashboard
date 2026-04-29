@@ -371,6 +371,22 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             self._json(500, {'success': False, 'error': str(e)})
 
+    def _serve_stock_search(self):
+        """股票名称/代码模糊搜索 API"""
+        from urllib.parse import urlparse, parse_qs
+        parsed = urlparse(self.path)
+        params = parse_qs(parsed.query)
+        keyword = params.get('q', [''])[0].strip()
+        if not keyword:
+            self._json(400, {'success': False, 'error': '缺少 q 参数'})
+            return
+        try:
+            from chip_api import search_stock
+            results = search_stock(keyword)
+            self._json(200, {'success': True, 'results': results})
+        except Exception as e:
+            self._json(500, {'success': False, 'error': str(e)})
+
     def _client_ip(self):
         return self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
 
@@ -519,6 +535,8 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {'modules': accessible})
         elif self.path.startswith('/api/chip_query'):
             self._serve_chip_query()
+        elif self.path.startswith('/api/stock_search'):
+            self._serve_stock_search()
         elif self.path == '/api/update-log':
             # 更新日志（需要登录）
             user = self._get_user()

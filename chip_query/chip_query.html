@@ -80,7 +80,10 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <a href="index.html" class="back">← 返回看板</a>
 </div>
 <div class="search-bar">
-  <input id="codeInput" type="text" placeholder="输入股票代码，如 600519 或 002180.SZ" autofocus>
+  <div style="flex:1;position:relative">
+    <input id="codeInput" type="text" placeholder="输入股票代码或名称，如 600519 或 贵州茅台" autofocus autocomplete="off">
+    <div id="searchDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#1a2332;border:1px solid rgba(255,255,255,0.12);border-top:none;border-radius:0 0 8px 8px;max-height:280px;overflow-y:auto"></div>
+  </div>
   <button id="searchBtn" onclick="doSearch()">查询</button>
 </div>
 <div class="container">
@@ -123,19 +126,88 @@ function saveHistory(code,name){
 }
 function quickSearch(code){ document.getElementById('codeInput').value=code; doSearch(); }
 loadHistory();
+
+// ── 模糊搜索下拉 ──
+var _searchTimer=null;
+var _dropdown=document.getElementById('searchDropdown');
+document.getElementById('codeInput').addEventListener('input',function(){
+  clearTimeout(_searchTimer);
+  var val=this.value.trim();
+  // 如果是纯数字6位或带.SH/.SZ/.BJ后缀，不触发搜索
+  if(!val||/^\d{6}(\.[A-Z]{2})?$/i.test(val)){_dropdown.style.display='none';return;}
+  _searchTimer=setTimeout(function(){
+    fetch('/api/stock_search?q='+encodeURIComponent(val))
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(!d.success||!d.results||!d.results.length){_dropdown.style.display='none';return;}
+        var h='';
+        d.results.forEach(function(s){
+          h+='<div style="padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:#e2e8f0;display:flex;justify-content:space-between" onmouseover="this.style.background=\'rgba(93,174,255,0.1)\'" onmouseout="this.style.background=\'transparent\'" onclick="pickStock(\''+s.ts_code+'\',\''+s.name+'\')">';
+          h+='<span>'+s.name+'</span><span style="color:#64748b;font-size:13px">'+s.ts_code+'</span></div>';
+        });
+        _dropdown.innerHTML=h;
+        _dropdown.style.display='block';
+      })
+      .catch(function(){_dropdown.style.display='none';});
+  },300);
+});
+document.getElementById('codeInput').addEventListener('keypress',function(e){if(e.key==='Enter'){_dropdown.style.display='none';}});
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.search-bar'))_dropdown.style.display='none';
+});
+function pickStock(code,name){
+  document.getElementById('codeInput').value=code;
+  _dropdown.style.display='none';
+  doSearch();
+}
 </script>
 </body>
 </html>
 <script>
 function doSearch(){
-  var code=document.getElementById('codeInput').value.trim().toUpperCase();
+  var code=document.getElementById('codeInput').value.trim();
   if(!code)return;
+  _dropdown.style.display='none';
+  // 如果输入的不是标准代码格式，先做名称搜索
+  if(!/^\d{6}(\.[A-Z]{2})?$/i.test(code)){
+    document.getElementById('loading').style.display='block';
+    document.getElementById('error').style.display='none';
+    document.getElementById('result').style.display='none';
+    document.getElementById('searchBtn').disabled=true;
+    document.getElementById('searchBtn').textContent='搜索中…';
+    fetch('/api/stock_search?q='+encodeURIComponent(code))
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(!d.success||!d.results||!d.results.length){
+          document.getElementById('loading').style.display='none';
+          document.getElementById('searchBtn').disabled=false;
+          document.getElementById('searchBtn').textContent='查询';
+          showErr('未找到匹配的股票: '+code);
+          return;
+        }
+        // 取第一个结果
+        var best=d.results[0];
+        document.getElementById('codeInput').value=best.ts_code;
+        doChipQuery(best.ts_code);
+      })
+      .catch(function(e){
+        document.getElementById('loading').style.display='none';
+        document.getElementById('searchBtn').disabled=false;
+        document.getElementById('searchBtn').textContent='查询';
+        showErr('搜索失败: '+e.message);
+      });
+    return;
+  }
+  code=code.toUpperCase();
   if(/^\d{6}$/.test(code)){
     if(code[0]==='6')code+='.SH';
     else if(code[0]==='0'||code[0]==='3')code+='.SZ';
     else if(code[0]==='8'||code[0]==='4')code+='.BJ';
     document.getElementById('codeInput').value=code;
   }
+  doChipQuery(code);
+}
+function doChipQuery(code){
   document.getElementById('loading').style.display='block';
   document.getElementById('error').style.display='none';
   document.getElementById('result').style.display='none';
