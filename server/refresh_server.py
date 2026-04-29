@@ -58,6 +58,10 @@ def _record_update(mod_key, mod_name, ok, elapsed, user=None):
 
 # ═══ 认证模块 ═══
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 产品池管理 API
+POOL_SCRIPTS_DIR = os.path.join(BASE_DIR, 'fund-asset-recommend', 'scripts')
+if POOL_SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, POOL_SCRIPTS_DIR)
 import auth
 
 # ═══ 模块配置（单一注册表生成）═══
@@ -485,6 +489,14 @@ class Handler(BaseHTTPRequestHandler):
             admin = self._require_admin()
             if admin:
                 self._json(200, {'logs': auth.list_login_log(200)})
+        elif self.path == '/api/admin/users-by-tier':
+            admin = self._require_admin()
+            if admin:
+                self._json(200, auth.list_users_by_tier())
+        elif self.path == '/api/admin/module-permissions':
+            admin = self._require_admin()
+            if admin:
+                self._json(200, auth.get_module_permissions())
         elif self.path.startswith('/api/chip_query'):
             self._serve_chip_query()
         elif self.path == '/api/update-log':
@@ -506,6 +518,28 @@ class Handler(BaseHTTPRequestHandler):
                     self._json(200, json.load(f))
             except FileNotFoundError:
                 self._json(200, {'subscribers': []})
+
+        elif self.path == '/api/admin/fund-asset-pool':
+            # 产品池管理 - 查看（团队+可查看，admin 看全部）
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'})
+            elif not user.get('is_admin') and int(user.get('tier', 0)) < 2:
+                self._json(403, {'error': '需要团队权限'})
+            else:
+                import pool_api
+                pool = pool_api.get_all_pool()
+                stats = pool_api.get_pool_stats()
+                # 非管理员只能看到自己提交的 + approved 的
+                if not user.get('is_admin'):
+                    products = pool.get('products', [])
+                    pool['products'] = [
+                        p for p in products
+                        if p.get('status') == 'approved'
+                        or p.get('submitted_by') == user.get('display_name', '')
+                        or p.get('submitted_by') == user.get('username', '')
+                    ]
+                self._json(200, {'pool': pool, 'stats': stats})
 
         elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
@@ -581,11 +615,22 @@ class Handler(BaseHTTPRequestHandler):
             if not admin: return
             body = self._read_body()
             tier = body.get('tier', 0)
-            if tier not in (0, 1):
-                self._json(400, {'error': 'tier 只能是 0 或 1'})
+            if tier not in (0, 1, 2):
+                self._json(400, {'error': 'tier 只能是 0, 1 或 2'})
                 return
             auth.set_tier(body.get('user_id'), tier)
             self._json(200, {'ok': True})
+            return
+
+        if self.path == '/api/admin/set-module-permission':
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            try:
+                auth.set_module_permission(body.get('module_key', ''), body.get('min_tier', 0))
+                self._json(200, {'ok': True})
+            except Exception as e:
+                self._json(400, {'error': str(e)})
             return
 
         if self.path == '/api/admin/invite-mode':
@@ -698,6 +743,77 @@ class Handler(BaseHTTPRequestHandler):
             with open(sub_path, 'w', encoding='utf-8') as f:
                 json.dump(cfg, f, ensure_ascii=False, indent=2)
             self._json(200, {'ok': True, 'count': len(cfg['subscribers'])})
+
+        # ═══ 产品池管理 API ═══
+        elif self.path == '/api/admin/fund-asset-pool/submit':
+            # 团队成员提交产品（tier >= 2）
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            if not user.get('is_admin') and int(user.get('tier', 0)) < 2:
+                self._json(403, {'error': '需要团队权限'}); return
+            body = self._read_body()
+            import pool_api
+            ok, msg = pool_api.submit_product(
+                reg_code=body.get('code', ''),
+                group=body.get('group', ''),
+                detail=body.get('detail', ''),
+                reason=body.get('reason', ''),
+                submitted_by=user.get('display_name') or user.get('username', ''),
+                benchmark=body.get('benchmark'),
+                benchmark_name=body.get('benchmark_name'),
+            )
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
+
+        elif self.path == '/api/admin/fund-asset-pool/review':
+            # 管理员审核（approve / reject）
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            import pool_api
+            ok, msg = pool_api.review_product(
+                reg_code=body.get('code', ''),
+                action=body.get('action', ''),
+                reviewed_by=admin.get('display_name') or admin.get('username', ''),
+                review_note=body.get('review_note', ''),
+            )
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
+
+        elif self.path == '/api/admin/fund-asset-pool/remove':
+            # 管理员下架
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            import pool_api
+            ok, msg = pool_api.remove_product(
+                reg_code=body.get('code', ''),
+                removed_by=admin.get('display_name') or admin.get('username', ''),
+            )
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
+
+        elif self.path == '/api/admin/fund-asset-pool/restore':
+            # 管理员恢复
+            admin = self._require_admin()
+            if not admin: return
+            body = self._read_body()
+            import pool_api
+            ok, msg = pool_api.restore_product(
+                reg_code=body.get('code', ''),
+                restored_by=admin.get('display_name') or admin.get('username', ''),
+            )
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
+
+        elif self.path == '/api/admin/fund-asset-pool/retry':
+            # 重新验证失败的产品
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            if not user.get('is_admin') and int(user.get('tier', 0)) < 2:
+                self._json(403, {'error': '需要团队权限'}); return
+            body = self._read_body()
+            import pool_api
+            ok, msg = pool_api.retry_verify(body.get('code', ''))
+            self._json(200 if ok else 400, {'ok': ok, 'msg': msg})
 
         # POST /api/refresh-all
         elif self.path == '/api/refresh-all':
