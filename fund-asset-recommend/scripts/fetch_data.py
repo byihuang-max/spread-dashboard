@@ -157,7 +157,7 @@ def fetch_market_data():
 
 def fetch_benchmark_indices():
     """拉取策略对标基准指数的净值序列"""
-    from config import STRATEGY_BENCHMARK
+    from config import STRATEGY_BENCHMARK, PRODUCTS
     from mall_sdk.fof99 import IndexPrice
 
     # 收集需要拉取的唯一基准代码
@@ -165,6 +165,10 @@ def fetch_benchmark_indices():
     for cfg in STRATEGY_BENCHMARK.values():
         if cfg.get('benchmark'):
             codes.add(cfg['benchmark'])
+    # 也从产品级 benchmark 字段收集
+    for p in PRODUCTS:
+        if p.get('benchmark'):
+            codes.add(p['benchmark'])
 
     print(f"📡 拉取基准指数净值 ({len(codes)} 只)...")
     benchmark_navs = {}
@@ -344,6 +348,8 @@ def build_strategy_summary(products, combis):
                 'calmar': i.get('calmar'),
                 'status': i.get('status', '正常'),
                 'data_source': i.get('data_source', 'api'),
+                'benchmark': i.get('benchmark'),
+                'benchmark_name': i.get('benchmark_name'),
             } for i in items],
         })
 

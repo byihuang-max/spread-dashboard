@@ -410,7 +410,7 @@ function renderCards(){
   const data = currentStrategy === '全部' ? strategySummary : strategySummary.filter(x => x.strategy === currentStrategy);
   grid.style.gridTemplateColumns = data.length === 1 ? '1fr' : 'repeat(2,1fr)';
   grid.innerHTML = data.map(group => {
-    const items = sortRows(group.items).slice(0, 4);
+    const items = sortRows(group.items);
     const chips = items.map(item => `
       <div class="product-chip" onclick="showDetail('${item.code||item.name}', '${item.name}')" style="cursor:pointer">
         <div class="product-chip-name">${item.name}</div>
@@ -880,25 +880,77 @@ function drawMonthlyBar(canvasId, monthlyReturns) {
 }
 
 function drawFofLine(id,data,color,fill,yFmt,inv){
+  drawFofLineWithBm(id,data,color,fill,yFmt,inv,null,null,null);
+}
+function drawFofLineWithBm(id,data,color,fill,yFmt,inv,bmData,bmColor,bmName){
   const cv=document.getElementById(id);if(!cv)return;
   const dpr=window.devicePixelRatio||1,w=cv.parentElement.clientWidth||800,h=260;
   cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';
   const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);
   const p={top:16,right:16,bottom:36,left:60},cw=w-p.left-p.right,ch=h-p.top-p.bottom;
-  const vals=data.map(d=>d[1]),dates=data.map(d=>d[0]);
-  let mn=Math.min(...vals),mx=Math.max(...vals);
+  // 归一化：产品和基准都从1开始
+  const sorted=[...data].sort((a,b)=>a[0].localeCompare(b[0]));
+  const dates=sorted.map(d=>d[0]),rawVals=sorted.map(d=>d[1]);
+  const base0=rawVals[0]||1;
+  const vals=rawVals.map(v=>v/base0);
+  // 处理 benchmark：按产品日期对齐，归一化
+  let bmVals=null;
+  if(bmData&&bmData.length>=2){
+    const bmMap={};bmData.forEach(d=>{bmMap[d[0]]=d[1];});
+    // 找产品第一个日期在 benchmark 中的值作为基准
+    let bmBase=null;
+    for(let i=0;i<dates.length;i++){if(bmMap[dates[i]]!=null){bmBase=bmMap[dates[i]];break;}}
+    if(bmBase){
+      bmVals=dates.map(d=>{
+        const v=bmMap[d];
+        return v!=null?v/bmBase:null;
+      });
+    }
+  }
+  // 计算 Y 轴范围（包含 benchmark）
+  let allVals=[...vals];
+  if(bmVals) bmVals.forEach(v=>{if(v!=null)allVals.push(v);});
+  let mn=Math.min(...allVals),mx=Math.max(...allVals);
   if(inv){mn*=1.05;mx=Math.max(mx,0);}else{mn*=0.998;mx*=1.002;}
   const rng=mx-mn||0.01;
+  // 网格
   ctx.strokeStyle='#e2e8f0';ctx.lineWidth=0.5;
-  for(let i=0;i<=4;i++){const y=p.top+ch*(1-i/4);ctx.beginPath();ctx.moveTo(p.left,y);ctx.lineTo(p.left+cw,y);ctx.stroke();ctx.fillStyle='#94a3b8';ctx.font='11px sans-serif';ctx.textAlign='right';ctx.fillText(yFmt(mn+rng*i/4),p.left-8,y+4);}
+  for(let i=0;i<=4;i++){const y=p.top+ch*(1-i/4);ctx.beginPath();ctx.moveTo(p.left,y);ctx.lineTo(p.left+cw,y);ctx.stroke();ctx.fillStyle='#94a3b8';ctx.font='11px sans-serif';ctx.textAlign='right';const yv=mn+rng*i/4;ctx.fillText(yFmt(yv),p.left-8,y+4);}
+  // X 轴
   ctx.fillStyle='#94a3b8';ctx.font='10px sans-serif';ctx.textAlign='center';
   const st=Math.max(1,Math.floor(dates.length/6));
   for(let i=0;i<dates.length;i+=st){const x=p.left+(i/(dates.length-1))*cw;ctx.fillText(dates[i].slice(5),x,h-p.bottom+18);}
+  // 画 benchmark 线（在产品线下面）
+  if(bmVals){
+    ctx.beginPath();ctx.strokeStyle=bmColor||'#94a3b8';ctx.lineWidth=1.5;ctx.setLineDash([6,3]);ctx.lineJoin='round';
+    let started=false;
+    for(let i=0;i<bmVals.length;i++){
+      if(bmVals[i]==null)continue;
+      const x=p.left+(i/(vals.length-1))*cw,y=p.top+ch*(1-(bmVals[i]-mn)/rng);
+      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+    }
+    ctx.stroke();ctx.setLineDash([]);
+  }
+  // 画产品线
   ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin='round';
   for(let i=0;i<vals.length;i++){const x=p.left+(i/(vals.length-1))*cw,y=p.top+ch*(1-(vals[i]-mn)/rng);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
   ctx.stroke();
   const g=ctx.createLinearGradient(0,p.top,0,p.top+ch);g.addColorStop(0,fill);g.addColorStop(1,'rgba(0,0,0,0)');
   ctx.lineTo(p.left+cw,p.top+ch);ctx.lineTo(p.left,p.top+ch);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  // 图例
+  if(bmName){
+    const prodRet=((vals[vals.length-1]-1)*100).toFixed(2);
+    const lastBm=bmVals?bmVals.filter(v=>v!=null).pop():null;
+    const bmRet=lastBm?((lastBm-1)*100).toFixed(2):null;
+    ctx.font='11px sans-serif';
+    const lx=p.left+8,ly=p.top+14;
+    ctx.fillStyle=color;ctx.fillRect(lx,ly-6,14,3);ctx.fillStyle='#334155';ctx.textAlign='left';
+    ctx.fillText('产品 '+prodRet+'%',lx+18,ly);
+    if(bmRet!=null){
+      ctx.fillStyle=bmColor||'#94a3b8';ctx.fillRect(lx,ly+10,14,3);ctx.fillStyle='#334155';
+      ctx.fillText(bmName+' '+bmRet+'%',lx+18,ly+16);
+    }
+  }
 }
 document.getElementById('fofModalClose').onclick=()=>document.getElementById('fofDetailModal').style.display='none';
 document.getElementById('fofDetailModal').onclick=(e)=>{if(e.target.id==='fofDetailModal')e.target.style.display='none';};
@@ -1013,6 +1065,22 @@ function showDetail(code, name) {
     monthlyReturns = Object.entries(monthMap).sort((a,b) => a[0].localeCompare(b[0])).map(([m, v]) => ({month: m, 'return': v.end/v.start - 1}));
   }
 
+  // 盈利月份占比
+  const profitMonths = monthlyReturns.filter(m => m['return'] > 0).length;
+  const totalMonths = monthlyReturns.length;
+  const profitMonthRate = totalMonths > 0 ? profitMonths / totalMonths : 0;
+
+  // 最长连续回撤天数（从净值序列算）
+  let maxDdDays = 0, curDdDays = 0;
+  if (hasNav) {
+    const sorted2 = [...navData].sort((a,b) => a[0].localeCompare(b[0]));
+    let pk = sorted2[0][1];
+    for (let i = 0; i < sorted2.length; i++) {
+      if (sorted2[i][1] >= pk) { pk = sorted2[i][1]; curDdDays = 0; }
+      else { curDdDays++; if (curDdDays > maxDdDays) maxDdDays = curDdDays; }
+    }
+  }
+
   body.innerHTML = `
     <div class="stats" style="margin-bottom:16px">
       <div class="stat"><div class="label">策略分类</div><div class="value value-small">${p.strategy || '-'} · ${p.strategy_detail || '-'}</div></div>
@@ -1023,7 +1091,9 @@ function showDetail(code, name) {
       <div class="stat"><div class="label">净值日期</div><div class="value value-small">${p.latest_date || '-'}</div></div>
     </div>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:12px 0 8px">累计净值走势</div>
+    <div id="modalNavSub" style="font-size:12px;color:#64748b;margin-bottom:8px"></div>
     <canvas id="modalNavChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
+    <div id="modalNavLegend" style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap"></div>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">回撤走势</div>
     <canvas id="modalDdChart" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">风险收益指标</div>
@@ -1036,6 +1106,8 @@ function showDetail(code, name) {
       <div class="fof-metric-card"><div class="fof-metric-label">日胜率</div><div class="fof-metric-val">${hasNav ? fmtPct(winRate) : '-'}</div>${hasNav ? '<div class="fof-metric-sub">涨'+posDays+'天/跌'+negDays+'天</div>' : ''}</div>
       <div class="fof-metric-card"><div class="fof-metric-label">最大单日涨</div><div class="fof-metric-val pos">${hasNav ? fmtPct(maxUp) : '-'}</div>${maxUpDate ? '<div class="fof-metric-sub">'+maxUpDate+'</div>' : ''}</div>
       <div class="fof-metric-card"><div class="fof-metric-label">最大单日跌</div><div class="fof-metric-val neg">${hasNav ? fmtPct(maxDown) : '-'}</div>${maxDownDate ? '<div class="fof-metric-sub">'+maxDownDate+'</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-label">盈利月份占比</div><div class="fof-metric-val">${totalMonths > 0 ? fmtPct(profitMonthRate) : '-'}</div>${totalMonths > 0 ? '<div class="fof-metric-sub">'+profitMonths+'/'+totalMonths+'个月</div>' : ''}</div>
+      <div class="fof-metric-card"><div class="fof-metric-label">最长连续回撤</div><div class="fof-metric-val">${hasNav ? maxDdDays+'天' : '-'}</div></div>
     </div>
     <div style="font-size:14px;font-weight:700;color:#0f172a;margin:16px 0 8px">月度收益</div>
     <div class="fof-monthly-grid"><canvas id="modalMonthly" style="width:100%;border:1px solid #e2e8f0;border-radius:10px"></canvas></div>
@@ -1043,7 +1115,65 @@ function showDetail(code, name) {
 
   setTimeout(() => {
     if (hasNav) {
-      drawFofLine('modalNavChart', navData, '#2563eb', 'rgba(37,99,235,0.1)', v => v.toFixed(4), false);
+      const bm = productBenchmarkMap[code];
+      const sorted = [...navData].sort((a,b) => a[0].localeCompare(b[0]));
+      const navDates = sorted.map(d => d[0]), navVals = sorted.map(d => d[1]);
+      const base0 = navVals[0] || 1;
+      // 产品收益率序列（%）
+      const prodRet = navVals.map(v => (v / base0 - 1) * 100);
+
+      if (bm && benchmarkNavs[bm.index]) {
+        // 构建基准收益率序列，按产品日期对齐
+        const bmRaw = benchmarkNavs[bm.index];
+        const bmMap = {}; bmRaw.forEach(d => { bmMap[d[0]] = d[1]; });
+        // 找产品第一个日期在 benchmark 中的值
+        let bmBase = null;
+        for (let i = 0; i < navDates.length; i++) { if (bmMap[navDates[i]] != null) { bmBase = bmMap[navDates[i]]; break; } }
+        const bmRet = bmBase ? navDates.map(d => bmMap[d] != null ? (bmMap[d] / bmBase - 1) * 100 : null) : null;
+        // 超额 = 产品 - 基准
+        const excessRet = bmRet ? prodRet.map((v, i) => bmRet[i] != null ? v - bmRet[i] : null) : null;
+
+        const totalProd = prodRet[prodRet.length - 1];
+        const totalBm = bmRet ? bmRet.filter(v => v != null).pop() : null;
+        const totalExcess = excessRet ? excessRet.filter(v => v != null).pop() : null;
+
+        // 构建 seriesList，和市场策略看板一致
+        const seriesList = [
+          { name: name, color: '#c0392b', norm: navDates.map((d, i) => [d, prodRet[i]]), isBenchmark: false, isExcess: false },
+        ];
+        if (bmRet) {
+          seriesList.push({ name: bm.name + '（基准）', color: '#7cb5ec', norm: navDates.map((d, i) => bmRet[i] != null ? [d, bmRet[i]] : null).filter(Boolean), isBenchmark: true, isExcess: false });
+        }
+        if (excessRet) {
+          seriesList.push({ name: '累计超额', color: '#1e3a5f', norm: navDates.map((d, i) => excessRet[i] != null ? [d, excessRet[i]] : null).filter(Boolean), isBenchmark: false, isExcess: true });
+        }
+
+        drawReturnChart(document.getElementById('modalNavChart'), seriesList, navDates[0]);
+
+        // 副标题
+        const subEl = document.getElementById('modalNavSub');
+        if (subEl) subEl.textContent = `基准: ${bm.name} ｜ 区间: ${navDates[0]} ~ ${navDates[navDates.length-1]}`;
+
+        // 图例
+        const legendEl = document.getElementById('modalNavLegend');
+        if (legendEl) {
+          const items = [
+            { name: name, color: '#c0392b', val: `${totalProd >= 0 ? '+' : ''}${totalProd.toFixed(2)}%` },
+          ];
+          if (totalBm != null) items.push({ name: bm.name, color: '#7cb5ec', val: `${totalBm >= 0 ? '+' : ''}${totalBm.toFixed(2)}%` });
+          if (totalExcess != null) items.push({ name: '累计超额', color: '#1e3a5f', val: `${totalExcess >= 0 ? '+' : ''}${totalExcess.toFixed(2)}%` });
+          legendEl.innerHTML = items.map(s =>
+            `<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:3px;display:inline-block;border-radius:2px;background:${s.color}"></span><span style="font-weight:600;color:${s.color}">${s.name}</span> <span style="color:${s.color}">${s.val}</span></span>`
+          ).join('');
+        }
+      } else {
+        // 无 benchmark，画普通净值线
+        drawFofLine('modalNavChart', navData, '#2563eb', 'rgba(37,99,235,0.1)', v => v.toFixed(4), false);
+        const subEl = document.getElementById('modalNavSub');
+        if (subEl) subEl.textContent = `区间: ${navDates[0]} ~ ${navDates[navDates.length-1]}`;
+        const legendEl = document.getElementById('modalNavLegend');
+        if (legendEl) legendEl.innerHTML = '';
+      }
       drawFofLine('modalDdChart', ddData, '#ef4444', 'rgba(239,68,68,0.08)', v => (v*100).toFixed(1)+'%', true);
       if (monthlyReturns.length) {
         drawMonthlyBar('modalMonthly', monthlyReturns);
@@ -1073,6 +1203,23 @@ const STRATEGY_TAB_MAP = {
 };
 const PRODUCT_NAMES = {};
 rows.forEach(r => { if(r.code) PRODUCT_NAMES[r.code] = r.name; });
+
+// 产品 code → benchmark 指数映射（优先从产品自身 benchmark 字段，其次从 strategyBenchmark 反向构建）
+const productBenchmarkMap = {};
+// 先从 strategyBenchmark 反向填充
+Object.values(strategyBenchmark).forEach(sb => {
+  if (sb.benchmark && sb.products) {
+    sb.products.forEach(code => {
+      productBenchmarkMap[code] = { index: sb.benchmark, name: sb.benchmark_name };
+    });
+  }
+});
+// 再从产品自身 benchmark 字段覆盖（更精确）
+strategySummary.forEach(g => g.items && g.items.forEach(it => {
+  if (it.benchmark) {
+    productBenchmarkMap[it.code] = { index: it.benchmark, name: it.benchmark_name };
+  }
+}));
 strategySummary.forEach(g => g.items && g.items.forEach(it => { if(it.code) PRODUCT_NAMES[it.code] = it.name; }));
 
 const PRODUCT_COLORS = ['#c0392b','#e67e22','#27ae60','#8e44ad','#2980b9','#d35400'];
@@ -1284,6 +1431,110 @@ function drawReturnChart(canvas, seriesList, startDate) {
   const endDate = allDates[allDates.length - 1];
   ctx.fillStyle = '#64748b'; ctx.font = '11px -apple-system, sans-serif'; ctx.textAlign = 'left';
   ctx.fillText(`统计区间: ${startDate} ~ ${endDate}`, pad.left + 4, pad.top - 6);
+
+  // ========== Tooltip / Crosshair 交互 ==========
+  // 保存底图
+  const baseImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  // 构建每条线的日期→值映射
+  const seriesMaps = seriesList.map(s => {
+    const m = {}; s.norm.forEach(d => { m[d[0]] = d[1]; }); return m;
+  });
+
+  // 创建 tooltip div（复用或新建）
+  let tip = canvas._chartTip;
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.style.cssText = 'position:absolute;pointer-events:none;background:rgba(15,23,42,0.92);color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.6;z-index:9999;white-space:nowrap;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.15)';
+    canvas.parentElement.style.position = 'relative';
+    canvas.parentElement.appendChild(tip);
+    canvas._chartTip = tip;
+  }
+
+  // 移除旧事件
+  if (canvas._onMove) canvas.removeEventListener('mousemove', canvas._onMove);
+  if (canvas._onLeave) canvas.removeEventListener('mouseleave', canvas._onLeave);
+
+  canvas._onMove = function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    // 只在绘图区内响应
+    if (mx < pad.left || mx > pad.left + cw || my < pad.top || my > pad.top + ch) {
+      ctx.putImageData(baseImage, 0, 0);
+      tip.style.display = 'none';
+      return;
+    }
+
+    // 找最近的日期索引
+    const ratio = (mx - pad.left) / cw;
+    const idx = Math.round(ratio * (allDates.length - 1));
+    const snapIdx = Math.max(0, Math.min(allDates.length - 1, idx));
+    const snapDate = allDates[snapIdx];
+    const snapX = xPos(snapDate);
+
+    // 恢复底图
+    ctx.putImageData(baseImage, 0, 0);
+
+    // 画竖虚线
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(100,116,139,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.moveTo(snapX, pad.top);
+    ctx.lineTo(snapX, pad.top + ch);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 画各线的圆点
+    seriesList.forEach((s, si) => {
+      const val = seriesMaps[si][snapDate];
+      if (val == null) return;
+      const y = yPos(val);
+      ctx.beginPath();
+      ctx.arc(snapX, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    // 构建 tooltip 内容
+    let html = `<div style="font-weight:600;margin-bottom:4px;color:#cbd5e1">${snapDate}</div>`;
+    seriesList.forEach((s, si) => {
+      const val = seriesMaps[si][snapDate];
+      if (val == null) return;
+      const sign = val >= 0 ? '+' : '';
+      const label = s.isExcess ? '超额' : (s.isBenchmark ? s.name.replace('（基准）', '') : '产品');
+      html += `<div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:3px;display:inline-block;border-radius:1px;background:${s.color}"></span>${label}: <span style="font-weight:600">${sign}${val.toFixed(2)}%</span></div>`;
+    });
+    tip.innerHTML = html;
+    tip.style.display = 'block';
+
+    // tooltip 位置（跟随鼠标，避免溢出）
+    const tipW = tip.offsetWidth;
+    const tipH = tip.offsetHeight;
+    let tx = mx + 14;
+    let ty = my - tipH / 2;
+    if (tx + tipW > w - 4) tx = mx - tipW - 14;
+    if (ty < 0) ty = 4;
+    if (ty + tipH > h) ty = h - tipH - 4;
+    tip.style.left = tx + 'px';
+    tip.style.top = ty + 'px';
+  };
+
+  canvas._onLeave = function() {
+    ctx.putImageData(baseImage, 0, 0);
+    tip.style.display = 'none';
+  };
+
+  canvas.addEventListener('mousemove', canvas._onMove);
+  canvas.addEventListener('mouseleave', canvas._onLeave);
 }
 
 </script>

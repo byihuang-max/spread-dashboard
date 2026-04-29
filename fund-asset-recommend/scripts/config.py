@@ -40,21 +40,21 @@ if SDK_PATH not in sys.path:
 PRODUCTS = [
     # --- 量选类 ---
     {"name": "顽岩量化选股1号",       "code": "SATW62", "group": "量选类", "detail": "量化选股",     "color": "#2f5ea8"},
-    {"name": "正仁股票择时一期",       "code": "SARD76", "group": "量选类", "detail": "股票择时",     "color": "#2f5ea8"},
-    # --- 风格类 ---
-    {"name": "正仁双创择时一号",       "code": "SXG834", "group": "风格类", "detail": "双创择时",     "color": "#1f7a6b"},
-    {"name": "瀚鑫纸鸢量化优选",       "code": "SZC020", "group": "风格类", "detail": "微盘择时",     "color": "#1f7a6b"},
-    {"name": "积沐领航者",             "code": "SAJJ91", "group": "风格类", "detail": "1000指增",     "color": "#1f7a6b"},
-    {"name": "太衍光年中证2000指数增强2号", "code": "SBCA75", "group": "风格类", "detail": "2000指增T0", "color": "#1f7a6b"},
-    {"name": "时间序列红利增强1号",     "code": "SSV122", "group": "风格类", "detail": "红利指增",     "color": "#1f7a6b"},
-    {"name": "赢仕安盈二号",           "code": "SLQ349", "group": "风格类", "detail": "转债集中",     "color": "#1f7a6b"},
-    {"name": "具力芒种1号",            "code": "STE836", "group": "风格类", "detail": "转债分散",     "color": "#1f7a6b"},
-    {"name": "玉数纯阿尔法一号",       "code": "SGN799", "group": "风格类", "detail": "300指增T0",   "color": "#1f7a6b"},
-    {"name": "玉数顺利一号",           "code": "SNY231", "group": "风格类", "detail": "500指增T0",   "color": "#1f7a6b"},
-    {"name": "玉数涵瑞专享十七号",     "code": "SZB966", "group": "风格类", "detail": "1000指增T0",  "color": "#1f7a6b"},
-    {"name": "龙旗科技创新精选1号",     "code": "SACB34", "group": "风格类", "detail": "双创指增",     "color": "#1f7a6b"},
-    {"name": "正仁择时量选听涛二号",    "code": "SBHP32", "group": "风格类", "detail": "灵活方向择时", "color": "#1f7a6b"},
+    # --- 风格多头 ---
+    {"name": "积沐领航者",             "code": "SAJJ91", "group": "风格多头", "detail": "1000指增",     "color": "#1f7a6b", "benchmark": "000852", "benchmark_name": "中证1000"},
+    {"name": "太衍光年中证2000指数增强2号", "code": "SBCA75", "group": "风格多头", "detail": "2000指增T0", "color": "#1f7a6b", "benchmark": "932000", "benchmark_name": "中证2000"},
+    {"name": "时间序列红利增强1号",     "code": "SSV122", "group": "风格多头", "detail": "红利指增",     "color": "#1f7a6b", "benchmark": "000922", "benchmark_name": "中证红利"},
+    {"name": "赢仕安盈二号",           "code": "SLQ349", "group": "风格多头", "detail": "转债集中",     "color": "#1f7a6b", "benchmark": "000832", "benchmark_name": "中证转债"},
+    {"name": "具力芒种1号",            "code": "STE836", "group": "风格多头", "detail": "转债分散",     "color": "#1f7a6b", "benchmark": "000832", "benchmark_name": "中证转债"},
+    {"name": "玉数纯阿尔法一号",       "code": "SGN799", "group": "风格多头", "detail": "300指增T0",   "color": "#1f7a6b", "benchmark": "000300", "benchmark_name": "沪深300"},
+    {"name": "玉数顺利一号",           "code": "SNY231", "group": "风格多头", "detail": "500指增T0",   "color": "#1f7a6b", "benchmark": "000905", "benchmark_name": "中证500"},
+    {"name": "玉数涵瑞专享十七号",     "code": "SZB966", "group": "风格多头", "detail": "1000指增T0",  "color": "#1f7a6b", "benchmark": "000852", "benchmark_name": "中证1000"},
+    {"name": "龙旗科技创新精选1号",     "code": "SACB34", "group": "风格多头", "detail": "双创指增",     "color": "#1f7a6b", "benchmark": "931643", "benchmark_name": "科创创业50"},
     # --- 绝对收益 ---
+    {"name": "正仁股票择时一期",       "code": "SARD76", "group": "绝对收益", "detail": "股票择时",   "color": "#6a4c93"},
+    {"name": "正仁双创择时一号",       "code": "SXG834", "group": "绝对收益", "detail": "双创择时",   "color": "#6a4c93"},
+    {"name": "瀚鑫纸鸢量化优选",       "code": "SZC020", "group": "绝对收益", "detail": "微盘择时",   "color": "#6a4c93"},
+    {"name": "正仁择时量选听涛二号",    "code": "SBHP32", "group": "绝对收益", "detail": "灵活方向择时", "color": "#6a4c93"},
     {"name": "旌安思源1号B类",         "code": "AEU46B", "group": "绝对收益", "detail": "短线择时",   "color": "#6a4c93"},
     {"name": "创世纪顾锝灵活多策略1号", "code": "SBDC67", "group": "绝对收益", "detail": "趋势策略",   "color": "#6a4c93"},
     {"name": "立心-私募学院菁英353号",  "code": "SCJ476", "group": "绝对收益", "detail": "主线择时",   "color": "#6a4c93"},
@@ -100,15 +100,17 @@ PLATFORM_SOURCE_CODES = {"SZC020", "SSV122"}
 # 新版弹窗使用 fetch_strategy_curves.py 的策略分类平均收益曲线
 # benchmark=None 表示该策略只展示绝对收益
 STRATEGY_BENCHMARK = {
-    # 权益多头组
+    # 风格多头组
     8:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SGN799"]},
     9:  {"benchmark": "000905", "benchmark_name": "中证500",  "products": ["SNY231"]},
     10: {"benchmark": "000852", "benchmark_name": "中证1000", "products": ["SAJJ91", "SZB966"]},
-    7:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SARD76", "SATW62", "SBHP32"]},
-    6:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SXG834", "SACB34"]},
+    7:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SATW62"]},
+    6:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SACB34"]},
     16: {"benchmark": "000985", "benchmark_name": "中证全指", "products": ["SLQ349", "STE836"]},
+    17: {"benchmark": "932000", "benchmark_name": "中证2000", "products": ["SBCA75"]},
+    18: {"benchmark": "000922", "benchmark_name": "中证红利", "products": ["SSV122"]},
     # 对冲中性组
-    5:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": ["SJD168"]},
+    5:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": []},
     4:  {"benchmark": "000300", "benchmark_name": "沪深300",  "products": []},
     11: {"benchmark": "000905", "benchmark_name": "中证500",  "products": []},
     12: {"benchmark": "000300", "benchmark_name": "沪深300",  "products": []},
