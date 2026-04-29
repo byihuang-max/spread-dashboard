@@ -576,7 +576,7 @@ def list_users_by_tier():
 
 def set_module_permission(module_key, min_tier):
     min_tier=int(min_tier)
-    if min_tier not in (0,1,2): raise ValueError('min_tier must be 0/1/2')
+    if min_tier not in (0,1,2,3): raise ValueError('min_tier must be 0/1/2/3')
     c=_conn(); c.execute("INSERT INTO module_permissions(module_key,min_tier) VALUES(?,?) ON CONFLICT(module_key) DO UPDATE SET min_tier=excluded.min_tier", (module_key,min_tier)); c.commit(); c.close(); return True
 
 def get_module_permissions():
