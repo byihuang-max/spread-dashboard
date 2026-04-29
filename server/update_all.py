@@ -172,9 +172,18 @@ def git_push(msg='auto: update data'):
             log("没有变更，跳过 push", 'OK')
             return True
         subprocess.run(['git', 'commit', '-m', msg], cwd=BASE_DIR, check=True)
-        # 优先推 Gitee（国内直连），再尝试 GitHub
+        # 获取已配置的 remote 列表
+        configured_remotes = set()
+        try:
+            r = subprocess.run(['git', 'remote'], cwd=BASE_DIR, capture_output=True, text=True)
+            configured_remotes = set(r.stdout.strip().split('\n')) if r.stdout.strip() else set()
+        except Exception:
+            configured_remotes = {'origin'}
+        # 优先推 Gitee（国内直连），再尝试 GitHub；跳过不存在的 remote
         pushed = False
         for remote in ['gitee', 'origin']:
+            if remote not in configured_remotes:
+                continue
             try:
                 subprocess.run(['git', 'push', remote, 'main'], cwd=BASE_DIR, check=True, timeout=30)
                 log(f"推送 {remote} 成功", 'OK')
@@ -182,14 +191,17 @@ def git_push(msg='auto: update data'):
                 break
             except Exception as e:
                 log(f"推送 {remote} 失败: {e}", 'WARN')
-        # 尝试同步到腾讯云
-        try:
-            subprocess.run(['ssh', '-o', 'ConnectTimeout=5', 'ubuntu@111.229.129.146',
-                          'cd /home/ubuntu/gamt-dashboard && git fetch origin && git reset --hard origin/main'],
-                          check=True, timeout=30)
-            log("腾讯云同步成功", 'OK')
-        except Exception:
-            log("腾讯云同步失败（非致命）", 'WARN')
+        # 判断是否在腾讯云上运行（避免 SSH 自己同步自己）
+        import socket
+        is_cloud = socket.gethostname() == 'localhost' or Path('/home/ubuntu/gamt-dashboard').exists()
+        if not is_cloud:
+            try:
+                subprocess.run(['ssh', '-o', 'ConnectTimeout=5', 'ubuntu@111.229.129.146',
+                              'cd /home/ubuntu/gamt-dashboard && git fetch origin && git reset --hard origin/main'],
+                              check=True, timeout=30)
+                log("腾讯云同步成功", 'OK')
+            except Exception:
+                log("腾讯云同步失败（非致命）", 'WARN')
         return pushed
     except Exception as e:
         log(f"Git 失败: {e}", 'ERR')
