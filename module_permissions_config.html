@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>GAMT 模块权限配置表</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Consolas, 'SF Mono', 'PingFang SC', monospace; background: #0d1117; color: #e6edf3; padding: 40px; }
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #ff6600; }
+.desc { font-size: 13px; color: #8b949e; margin-bottom: 24px; line-height: 1.8; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; background: #161b22; color: #8b949e; font-weight: 600; border-bottom: 1px solid #30363d; }
+td { padding: 10px 12px; border-bottom: 1px solid #21262d; }
+tr:hover td { background: #161b22; }
+.module-name { font-weight: 600; color: #e6edf3; }
+.module-desc { color: #8b949e; font-size: 12px; }
+select { background: #0d1117; color: #e6edf3; border: 1px solid #30363d; padding: 6px 10px; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; }
+select:focus { border-color: #ff6600; outline: none; }
+.legend { margin-bottom: 20px; display: flex; gap: 20px; font-size: 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-admin { background: #f85149; }
+.dot-team { background: #a371f7; }
+.dot-premium { background: #3fb950; }
+.dot-basic { background: #8b949e; }
+.btn-save { margin-top: 24px; background: #ff6600; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-save:hover { background: #e55b00; }
+.output { margin-top: 20px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; font-size: 12px; white-space: pre-wrap; display: none; color: #7ee787; }
+.note { margin-top: 12px; font-size: 12px; color: #8b949e; }
+</style>
+</head>
+<body>
+
+<h1>GAMT 模块权限配置</h1>
+<p class="desc">
+  权限是母子嵌套关系：管理员 > 团队 > 重要客户 > 普通用户<br>
+  选择"重要客户"表示：重要客户、团队、管理员都能看到，普通用户看不到。<br>
+  选择"管理员"表示：只有管理员能看到。
+</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-basic"></div> 普通用户（所有人可见）</div>
+  <div class="legend-item"><div class="dot dot-premium"></div> 重要客户+</div>
+  <div class="legend-item"><div class="dot dot-team"></div> 团队+</div>
+  <div class="legend-item"><div class="dot dot-admin"></div> 仅管理员</div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:30%">模块</th>
+      <th style="width:35%">说明</th>
+      <th style="width:35%">最低权限层级</th>
+    </tr>
+  </thead>
+  <tbody id="moduleTable">
+  </tbody>
+</table>
+
+<button class="btn-save" onclick="saveConfig()">保存配置</button>
+<p class="note">点击保存后，下方会生成配置结果，复制发给我即可。</p>
+<pre class="output" id="output"></pre>
+
+<script>
+var modules = [
+  {key: 'overview',          name: '仪表盘汇总',       desc: '首页总览面板'},
+  {key: 'style_spread',      name: '风格轧差',         desc: '大小盘风格轮动监控'},
+  {key: 'quant_stock',       name: '策略环境适配度',    desc: '宽基量化/强势股/CTA/转债/期权/套利'},
+  {key: 'crowding',          name: '资金流与微观结构',  desc: '拥挤度/期权情绪/耐心资本'},
+  {key: 'macro_liquidity',   name: '宏观与流动性',     desc: '流动性/利率/基本面/美林时钟/HALO/Meme'},
+  {key: 'chain_prosperity',  name: '中观景气',         desc: '产业链景气度/AI算力链轮动'},
+  {key: 'alerts',            name: '红灯预警',         desc: 'A股+美股风险监控'},
+  {key: 'timing_factors',    name: '择时研究',         desc: '择时因子系统/龙头池'},
+  {key: 'chip_query',        name: '个股筹码查询',     desc: '个股筹码分析系统'},
+  {key: 'financial_risk',    name: '财报预期风险',     desc: '财报地雷/预期差监控'},
+  {key: 'fund_asset',        name: '团队基金优选',     desc: '私募产品/FOF组合/市场基准'},
+  {key: 'update-log',        name: '刷新记录',         desc: '数据更新日志'},
+  {key: 'report',            name: '每日报告',         desc: '每日投研简报'},
+];
+
+// tier: 0=普通用户(所有人), 1=重要客户+, 2=团队+, 3=仅管理员
+var tierOptions = [
+  {value: 0, label: '普通用户（所有人可见）'},
+  {value: 1, label: '重要客户+'},
+  {value: 2, label: '团队+'},
+  {value: 3, label: '仅管理员'},
+];
+
+function renderTable() {
+  var html = '';
+  modules.forEach(function(m) {
+    html += '<tr>';
+    html += '<td class="module-name">' + m.name + '</td>';
+    html += '<td class="module-desc">' + m.desc + '</td>';
+    html += '<td><select id="sel_' + m.key + '">';
+    tierOptions.forEach(function(opt) {
+      html += '<option value="' + opt.value + '">' + opt.label + '</option>';
+    });
+    html += '</select></td>';
+    html += '</tr>';
+  });
+  document.getElementById('moduleTable').innerHTML = html;
+}
+
+function saveConfig() {
+  var config = {};
+  var lines = [];
+  lines.push('模块权限配置结果：');
+  lines.push('─'.repeat(50));
+  modules.forEach(function(m) {
+    var sel = document.getElementById('sel_' + m.key);
+    var tier = parseInt(sel.value);
+    config[m.key] = tier;
+    var tierLabel = tierOptions[tier].label;
+    lines.push(m.name.padEnd(16, '　') + ' → ' + tierLabel);
+  });
+  lines.push('─'.repeat(50));
+  lines.push('');
+  lines.push('JSON: ' + JSON.stringify(config));
+
+  var output = document.getElementById('output');
+  output.style.display = 'block';
+  output.textContent = lines.join('\n');
+}
+
+renderTable();
+</script>
+</body>
+</html>
