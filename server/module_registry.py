@@ -243,7 +243,7 @@ MODULE_REGISTRY = {
     'timing_factors': {
         'name': '择时因子系统',
         'scripts': [],
-        'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py'),
+        'external_script': os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py') if os.path.exists(os.path.expanduser('~/Desktop/quant-backtest/timing_model/factor_system/daily_update.py')) else '/home/ubuntu/quant-backtest/timing_model/factor_system/daily_update.py',
         'post_inject': [
             ('timing-research', 'update_ic_table.py'),  # 注入 index.html IC表格 + factor_system 数据
         ],

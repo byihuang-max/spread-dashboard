@@ -7,8 +7,8 @@ import json, os, sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-CACHE_DIR = Path.home() / 'Desktop/gamt-dashboard/env_fit/momentum_stock/_cache'
-QUANT_DIR = Path.home() / 'Desktop/quant-backtest/timing_model'
+CACHE_DIR = Path.home() / 'Desktop/gamt-dashboard/env_fit/momentum_stock/_cache' if (Path.home() / 'Desktop/gamt-dashboard/env_fit/momentum_stock/_cache').exists() else Path('/home/ubuntu/gamt-dashboard/env_fit/momentum_stock/_cache')
+QUANT_DIR = Path.home() / 'Desktop/quant-backtest/timing_model' if (Path.home() / 'Desktop/quant-backtest/timing_model').exists() else Path('/home/ubuntu/quant-backtest/timing_model')
 OUTPUT = BASE_DIR / 'leader_pool_latest.json'
 
 sys.path.insert(0, str(QUANT_DIR))
