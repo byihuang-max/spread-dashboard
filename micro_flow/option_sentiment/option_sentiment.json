@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-04-30 08:22",
+  "update_time": "2026-04-30 17:02",
   "underlyings": [
     {
       "code": "OP000300.SH",
@@ -1472,6 +1472,24 @@
       "anomalies": [
         {
           "type": "oi_surge",
+          "label": "C5300.00",
+          "detail": "OI 477 vs 均值192（2.5x）",
+          "call_put": "C",
+          "strike": 5300.0,
+          "oi": 477,
+          "prev_avg": 192
+        },
+        {
+          "type": "oi_surge",
+          "label": "P4750.00",
+          "detail": "OI 557 vs 均值251（2.2x）",
+          "call_put": "P",
+          "strike": 4750.0,
+          "oi": 557,
+          "prev_avg": 251
+        },
+        {
+          "type": "oi_surge",
           "label": "P4700.00",
           "detail": "OI 202 vs 均值60（3.4x）",
           "call_put": "P",
@@ -1487,24 +1505,6 @@
           "strike": 5000.0,
           "oi": 377,
           "prev_avg": 184
-        },
-        {
-          "type": "oi_surge",
-          "label": "P4750.00",
-          "detail": "OI 557 vs 均值251（2.2x）",
-          "call_put": "P",
-          "strike": 4750.0,
-          "oi": 557,
-          "prev_avg": 251
-        },
-        {
-          "type": "oi_surge",
-          "label": "C5300.00",
-          "detail": "OI 477 vs 均值192（2.5x）",
-          "call_put": "C",
-          "strike": 5300.0,
-          "oi": 477,
-          "prev_avg": 192
         },
         {
           "type": "iv_spike",
@@ -2981,15 +2981,6 @@
       "anomalies": [
         {
           "type": "oi_surge",
-          "label": "P2500.00",
-          "detail": "OI 437 vs 均值194（2.3x）",
-          "call_put": "P",
-          "strike": 2500.0,
-          "oi": 437,
-          "prev_avg": 194
-        },
-        {
-          "type": "oi_surge",
           "label": "P2950.00",
           "detail": "OI 359 vs 均值158（2.3x）",
           "call_put": "P",
@@ -3005,6 +2996,15 @@
           "strike": 2950.0,
           "oi": 200,
           "prev_avg": 83
+        },
+        {
+          "type": "oi_surge",
+          "label": "P2500.00",
+          "detail": "OI 437 vs 均值194（2.3x）",
+          "call_put": "P",
+          "strike": 2500.0,
+          "oi": 437,
+          "prev_avg": 194
         },
         {
           "type": "iv_spike",
@@ -3043,31 +3043,31 @@
     {
       "code": "OP510500.SH",
       "name": "中证500ETF",
-      "latest_date": "20260429",
+      "latest_date": "20260430",
       "term_structure": [
         {
           "maturity": "05-27",
           "maturity_date": "20260527",
-          "T": 0.0767,
-          "iv": 20.84
+          "T": 0.074,
+          "iv": 20.62
         },
         {
           "maturity": "06-24",
           "maturity_date": "20260624",
-          "T": 0.1534,
-          "iv": 22.01
+          "T": 0.1507,
+          "iv": 22.07
         },
         {
           "maturity": "09-23",
           "maturity_date": "20260923",
-          "T": 0.4027,
-          "iv": 24.46
+          "T": 0.4,
+          "iv": 24.25
         },
         {
           "maturity": "12-23",
           "maturity_date": "20261223",
-          "T": 0.6521,
-          "iv": 24.31
+          "T": 0.6493,
+          "iv": 24.02
         }
       ],
       "iv_history": [
@@ -3190,6 +3190,11 @@
           "date": "04-29",
           "iv": 19.77,
           "percentile": 5.0
+        },
+        {
+          "date": "04-30",
+          "iv": 19.3,
+          "percentile": 0.0
         }
       ],
       "pcr_history": [
@@ -3822,173 +3827,160 @@
           "date": "04-29",
           "pcr_oi": 1.227,
           "pcr_vol": 0.913
+        },
+        {
+          "date": "04-30",
+          "pcr_oi": 1.173,
+          "pcr_vol": 0.888
         }
       ],
       "oi_distribution": [
         {
           "strike": 6.5,
           "call_oi": 0,
-          "put_oi": 10368,
+          "put_oi": 11470,
           "call_iv": null,
-          "put_iv": 41.08
+          "put_iv": 41.06
         },
         {
           "strike": 6.75,
           "call_oi": 0,
-          "put_oi": 17568,
+          "put_oi": 19038,
           "call_iv": null,
-          "put_iv": 36.88
+          "put_iv": 37.81
         },
         {
           "strike": 7.0,
           "call_oi": 0,
-          "put_oi": 14336,
+          "put_oi": 14827,
           "call_iv": null,
-          "put_iv": 32.52
+          "put_iv": 33.74
         },
         {
           "strike": 7.25,
           "call_oi": 0,
-          "put_oi": 22737,
+          "put_oi": 23714,
           "call_iv": null,
-          "put_iv": 30.61
+          "put_iv": 30.34
         },
         {
           "strike": 7.5,
           "call_oi": 0,
-          "put_oi": 42937,
+          "put_oi": 46221,
           "call_iv": null,
-          "put_iv": 27.4
+          "put_iv": 28.15
         },
         {
           "strike": 7.75,
-          "call_oi": 6189,
-          "put_oi": 51417,
-          "call_iv": 20.89,
-          "put_iv": 25.18
+          "call_oi": 6689,
+          "put_oi": 54720,
+          "call_iv": 17.66,
+          "put_iv": 25.69
         },
         {
           "strike": 8.0,
-          "call_oi": 25316,
-          "put_oi": 72342,
-          "call_iv": 20.53,
-          "put_iv": 23.57
+          "call_oi": 25297,
+          "put_oi": 72986,
+          "call_iv": 19.73,
+          "put_iv": 23.61
         },
         {
           "strike": 8.25,
-          "call_oi": 54068,
-          "put_oi": 64761,
-          "call_iv": 19.88,
-          "put_iv": 22.17
+          "call_oi": 58361,
+          "put_oi": 66942,
+          "call_iv": 19.16,
+          "put_iv": 22.2
         },
         {
           "strike": 8.5,
-          "call_oi": 60193,
-          "put_oi": 32013,
-          "call_iv": 19.53,
-          "put_iv": 21.79
+          "call_oi": 69458,
+          "put_oi": 36829,
+          "call_iv": 19.3,
+          "put_iv": 21.6
         },
         {
           "strike": 8.75,
-          "call_oi": 52389,
-          "put_oi": 7275,
-          "call_iv": 19.77,
-          "put_iv": 21.96
+          "call_oi": 59962,
+          "put_oi": 8945,
+          "call_iv": 19.64,
+          "put_iv": 22.21
         },
         {
           "strike": 9.0,
-          "call_oi": 55587,
-          "put_oi": 1073,
-          "call_iv": 20.65,
-          "put_iv": 25.19
+          "call_oi": 68796,
+          "put_oi": 1426,
+          "call_iv": 20.58,
+          "put_iv": 24.65
         },
         {
           "strike": 9.25,
-          "call_oi": 23958,
-          "put_oi": 529,
-          "call_iv": 22.28,
-          "put_iv": 27.96
+          "call_oi": 26250,
+          "put_oi": 557,
+          "call_iv": 22.22,
+          "put_iv": 27.87
         },
         {
           "strike": 9.5,
-          "call_oi": 13541,
-          "put_oi": 657,
-          "call_iv": 24.25,
-          "put_iv": 31.74
+          "call_oi": 15511,
+          "put_oi": 693,
+          "call_iv": 25.39,
+          "put_iv": 33.24
         }
       ],
       "anomalies": [
         {
           "type": "oi_surge",
-          "label": "P9.50",
-          "detail": "OI 657 vs 均值130（5.0x）",
+          "label": "P8.75",
+          "detail": "OI 146 vs 均值63（2.3x）",
           "call_put": "P",
-          "strike": 9.5,
-          "oi": 657,
-          "prev_avg": 130
-        },
-        {
-          "type": "oi_surge",
-          "label": "C9.50",
-          "detail": "OI 13541 vs 均值6611（2.0x）",
-          "call_put": "C",
-          "strike": 9.5,
-          "oi": 13541,
-          "prev_avg": 6611
-        },
-        {
-          "type": "oi_surge",
-          "label": "C8.50",
-          "detail": "OI 653 vs 均值298（2.2x）",
-          "call_put": "C",
-          "strike": 8.5,
-          "oi": 653,
-          "prev_avg": 298
-        },
-        {
-          "type": "oi_surge",
-          "label": "C8.25",
-          "detail": "OI 491 vs 均值238（2.1x）",
-          "call_put": "C",
-          "strike": 8.25,
-          "oi": 491,
-          "prev_avg": 238
+          "strike": 8.75,
+          "oi": 146,
+          "prev_avg": 63
         },
         {
           "type": "oi_surge",
           "label": "P8.25",
-          "detail": "OI 378 vs 均值131（2.9x）",
+          "detail": "OI 386 vs 均值180（2.1x）",
           "call_put": "P",
           "strike": 8.25,
-          "oi": 378,
-          "prev_avg": 131
+          "oi": 386,
+          "prev_avg": 180
         },
         {
-          "type": "iv_spike",
-          "label": "06月P IV缩小",
-          "detail": "IV 24.5% vs 均值26.0%（4.0σ）",
-          "direction": "缩小"
+          "type": "oi_surge",
+          "label": "P9.50",
+          "detail": "OI 693 vs 均值235（2.9x）",
+          "call_put": "P",
+          "strike": 9.5,
+          "oi": 693,
+          "prev_avg": 235
         },
         {
           "type": "iv_spike",
           "label": "09月P IV缩小",
-          "detail": "IV 28.9% vs 均值29.9%（2.9σ）",
+          "detail": "IV 28.4% vs 均值29.6%（2.3σ）",
           "direction": "缩小"
         },
         {
           "type": "iv_spike",
-          "label": "05月P IV缩小",
-          "detail": "IV 22.0% vs 均值24.6%（3.5σ）",
+          "label": "05月C IV缩小",
+          "detail": "IV 19.3% vs 均值20.0%（3.8σ）",
+          "direction": "缩小"
+        },
+        {
+          "type": "iv_spike",
+          "label": "12月P IV缩小",
+          "detail": "IV 30.5% vs 均值31.0%（3.3σ）",
           "direction": "缩小"
         }
       ],
       "summary": {
-        "pcr_oi": 1.227,
-        "pcr_vol": 0.913,
-        "atm_iv": 19.77,
-        "iv_percentile": 5.0,
-        "spot": 8.422,
-        "anomaly_count": 8
+        "pcr_oi": 1.173,
+        "pcr_vol": 0.888,
+        "atm_iv": 19.3,
+        "iv_percentile": 0.0,
+        "spot": 8.43,
+        "anomaly_count": 6
       }
     },
     {
@@ -5492,21 +5484,12 @@
       "anomalies": [
         {
           "type": "oi_surge",
-          "label": "C8200.00",
-          "detail": "OI 164 vs 均值65（2.5x）",
-          "call_put": "C",
-          "strike": 8200.0,
-          "oi": 164,
-          "prev_avg": 65
-        },
-        {
-          "type": "oi_surge",
-          "label": "C7900.00",
-          "detail": "OI 126 vs 均值52（2.4x）",
-          "call_put": "C",
-          "strike": 7900.0,
-          "oi": 126,
-          "prev_avg": 52
+          "label": "P9000.00",
+          "detail": "OI 334 vs 均值163（2.0x）",
+          "call_put": "P",
+          "strike": 9000.0,
+          "oi": 334,
+          "prev_avg": 163
         },
         {
           "type": "oi_surge",
@@ -5519,30 +5502,30 @@
         },
         {
           "type": "oi_surge",
+          "label": "C7900.00",
+          "detail": "OI 126 vs 均值52（2.4x）",
+          "call_put": "C",
+          "strike": 7900.0,
+          "oi": 126,
+          "prev_avg": 52
+        },
+        {
+          "type": "oi_surge",
+          "label": "C8200.00",
+          "detail": "OI 164 vs 均值65（2.5x）",
+          "call_put": "C",
+          "strike": 8200.0,
+          "oi": 164,
+          "prev_avg": 65
+        },
+        {
+          "type": "oi_surge",
           "label": "C9000.00",
           "detail": "OI 750 vs 均值297（2.5x）",
           "call_put": "C",
           "strike": 9000.0,
           "oi": 750,
           "prev_avg": 297
-        },
-        {
-          "type": "oi_surge",
-          "label": "P8400.00",
-          "detail": "OI 180 vs 均值80（2.2x）",
-          "call_put": "P",
-          "strike": 8400.0,
-          "oi": 180,
-          "prev_avg": 80
-        },
-        {
-          "type": "oi_surge",
-          "label": "P8200.00",
-          "detail": "OI 107 vs 均值51（2.1x）",
-          "call_put": "P",
-          "strike": 8200.0,
-          "oi": 107,
-          "prev_avg": 51
         },
         {
           "type": "oi_surge",
@@ -5555,12 +5538,21 @@
         },
         {
           "type": "oi_surge",
-          "label": "P9000.00",
-          "detail": "OI 334 vs 均值163（2.0x）",
+          "label": "P8200.00",
+          "detail": "OI 107 vs 均值51（2.1x）",
           "call_put": "P",
-          "strike": 9000.0,
-          "oi": 334,
-          "prev_avg": 163
+          "strike": 8200.0,
+          "oi": 107,
+          "prev_avg": 51
+        },
+        {
+          "type": "oi_surge",
+          "label": "P8400.00",
+          "detail": "OI 180 vs 均值80（2.2x）",
+          "call_put": "P",
+          "strike": 8400.0,
+          "oi": 180,
+          "prev_avg": 80
         },
         {
           "type": "iv_spike",
@@ -5614,8 +5606,8 @@
     "沪深300 P4750.00 OI激增2.2x，大资金建仓 🔶",
     "上证50 IV分位 0%，波动率极低，对冲成本便宜 🟢",
     "上证50 P2500.00 OI激增2.3x，大资金建仓 🔶",
-    "中证500ETF IV分位 5%，波动率极低，对冲成本便宜 🟢",
-    "中证500ETF C9.50 OI激增2.0x，大资金建仓 🔶",
+    "中证500ETF IV分位 0%，波动率极低，对冲成本便宜 🟢",
+    "中证500ETF P9.50 OI激增2.9x，大资金建仓 🔶",
     "中证1000 C9000.00 OI激增2.5x，大资金建仓 🔶"
   ]
 }
