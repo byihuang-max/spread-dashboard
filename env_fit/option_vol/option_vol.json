@@ -1,7 +1,7 @@
 {
   "mod1_rv_regime": {
     "meta": {
-      "generated": "2026-05-01 08:23:47",
+      "generated": "2026-05-01 17:03:15",
       "module": "option_vol.mod1_rv_regime",
       "version": "mvp",
       "top_n": 10,
@@ -262,7 +262,7 @@
   },
   "mod2_iv_spread": {
     "meta": {
-      "generated": "2026-05-01 08:23:51",
+      "generated": "2026-05-01 17:03:19",
       "module": "option_vol.mod2_iv_spread",
       "source": "tushare public + Black76",
       "risk_free_rate": 0.015
@@ -405,7 +405,7 @@
     ]
   },
   "iv_percentile": {
-    "update_time": "2026-05-01 08:26:16",
+    "update_time": "2026-05-01 17:05:46",
     "market_iv_percentile": 66.6,
     "symbols": [
       {
@@ -1494,7 +1494,7 @@
     ]
   },
   "liquidity_percentile": {
-    "update_time": "2026-05-01 08:27:33",
+    "update_time": "2026-05-01 17:07:04",
     "market_liquidity_percentile": 44.8,
     "symbols": [
       {
@@ -3040,7 +3040,7 @@
     ]
   },
   "timing_signal": {
-    "update_time": "2026-05-01 08:27:33",
+    "update_time": "2026-05-01 17:07:04",
     "market_signal": {
       "signal": "SELECTIVE_SELL",
       "label": "🟡 精选窗口",
@@ -3075,7 +3075,7 @@
     "opportunity_count": 3
   },
   "market_breadth": {
-    "update_time": "2026-05-01 08:27:40",
+    "update_time": "2026-05-01 17:07:12",
     "market_breadth": {
       "env_index": 51.1,
       "env_percentile": 55.6,
@@ -4275,17 +4275,17 @@
   },
   "sell_window_signal": {
     "meta": {
-      "generated": "2026-05-01 08:27:40",
+      "generated": "2026-05-01 17:07:12",
       "module": "sell_window_signal",
       "version": "v1"
     },
     "current": {
-      "score": 63.2,
-      "window": "精选窗口",
-      "color": "yellow",
-      "emoji": "🟡",
-      "n_sellable": 4,
-      "label": "SELECTIVE_SELL"
+      "score": 52.7,
+      "window": "中性观察",
+      "color": "gray",
+      "emoji": "⚪",
+      "n_sellable": 1,
+      "label": "NEUTRAL"
     },
     "timeseries": {
       "dates": [
@@ -4352,78 +4352,78 @@
         "2026-05-01"
       ],
       "scores": [
-        68.2,
-        51.2,
-        48.2,
-        71.2,
-        56.2,
-        55.2,
-        55.2,
-        52.2,
-        71.2,
-        51.2,
-        69.2,
-        71.2,
-        76.2,
-        65.2,
-        50.2,
-        66.2,
-        61.2,
-        49.2,
-        48.2,
-        50.2,
-        54.2,
-        55.2,
-        64.2,
-        67.2,
-        48.2,
-        65.2,
-        54.2,
-        70.2,
-        68.2,
-        70.2,
-        65.2,
-        61.2,
-        55.2,
-        62.2,
-        66.2,
-        56.2,
-        73.2,
-        75.2,
-        48.2,
-        72.2,
-        73.2,
-        53.2,
-        70.2,
-        61.2,
-        58.2,
-        56.2,
-        52.2,
-        54.2,
-        78.2,
-        72.2,
-        58.2,
-        51.2,
-        50.2,
-        60.2,
-        51.2,
-        59.2,
-        75.2,
-        59.2,
-        67.2,
-        56.2,
-        63.2
+        57.7,
+        40.7,
+        37.7,
+        60.7,
+        45.7,
+        44.7,
+        44.7,
+        41.7,
+        60.7,
+        40.7,
+        58.7,
+        60.7,
+        65.7,
+        54.7,
+        39.7,
+        55.7,
+        50.7,
+        38.7,
+        37.7,
+        39.7,
+        43.7,
+        44.7,
+        53.7,
+        56.7,
+        37.7,
+        54.7,
+        43.7,
+        59.7,
+        57.7,
+        59.7,
+        54.7,
+        50.7,
+        44.7,
+        51.7,
+        55.7,
+        45.7,
+        62.7,
+        64.7,
+        37.7,
+        61.7,
+        62.7,
+        42.7,
+        59.7,
+        50.7,
+        47.7,
+        45.7,
+        41.7,
+        43.7,
+        67.7,
+        61.7,
+        47.7,
+        40.7,
+        39.7,
+        49.7,
+        40.7,
+        48.7,
+        64.7,
+        48.7,
+        56.7,
+        45.7,
+        52.7
       ]
     },
     "components": {
       "iv_percentile": null,
       "iv_rv_spread": null,
-      "market_regime": "部分品种赔率合适，精选双卖"
+      "market_regime": "局部可做，谨慎参与"
     }
   },
   "mod9_composite_score": {
     "meta": {
-      "generated": "2026-05-01 08:27:40",
+      "generated": "2026-05-01 17:07:12",
       "module": "option_vol.mod9_composite_score",
       "formula": "0.30*rv + 0.28*iv + 0.18*skew + 0.12*term + 0.07*liq + 0.05*exp (full); fallback if missing layers"
     },
@@ -4735,7 +4735,7 @@
     ]
   },
   "contract_opportunities": {
-    "update_time": "2026-05-01 08:27:46",
+    "update_time": "2026-05-01 17:07:17",
     "scan_count": 0,
     "top_symbols_scanned": 20,
     "opportunities": []
