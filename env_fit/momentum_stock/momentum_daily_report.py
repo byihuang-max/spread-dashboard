@@ -43,6 +43,8 @@ def limit_highlight_picks(dt, limit_type):
     with open(cache_file) as f:
         data = json.load(f)
     items = data.get(limit_type, [])
+    # 过滤脏数据（close=0 或 pct_chg 异常的 Tushare 脏记录）
+    items = [x for x in items if x.get('close', 0) > 0 and abs(x.get('pct_chg', 0)) < 50]
     if not items:
         return '', ''
 

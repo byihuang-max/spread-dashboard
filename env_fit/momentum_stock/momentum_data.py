@@ -230,7 +230,9 @@ def fetch_daily_basic(trade_date, retries=3):
 def compute_raw_day(trade_date):
     """拉取并计算单日基础数据"""
     data = fetch_day_cached(trade_date)
-    ups, downs, zhas = data['U'], data['D'], data['Z']
+    # 过滤 Tushare 脏数据（close=0 或 pct_chg 异常）
+    _clean = lambda lst: [x for x in lst if x.get('close', 0) > 0 and abs(x.get('pct_chg', 0)) < 50]
+    ups, downs, zhas = _clean(data['U']), _clean(data['D']), data['Z']
 
     seal_zero_count = 0
     max_height = 0
