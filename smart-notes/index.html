@@ -168,7 +168,7 @@ function parseNote(id, path, category, name, content) {
 // === Navigation ===
 function renderNav(filter) {
   const nav = document.getElementById('navSection');
-  const cats = { concepts: '💡 核心概念', sessions: '💬 对话记录', decisions: '⚖️ 决策记录' };
+  const cats = { 'research/factors': '因子与择时', 'research/strategy': '策略与框架', 'research/narrative': '叙事与宏观', engineering: '工程实现', reports: '外部研报', emerging_markets: '新兴市场思考' };
   let html = '';
   for (const [cat, label] of Object.entries(cats)) {
     const ns = Object.values(NOTES).filter(n => n.category === cat &&
@@ -177,7 +177,7 @@ function renderNav(filter) {
     html += '<div class="nav-group"><div class="nav-group-title">' + label + '</div>';
     ns.forEach(n => {
       html += '<div class="nav-item ' + (currentNote?.id===n.id?'active':'') + '" onclick="openNote(\'' + n.id + '\')">'
-        + '<span class="icon">' + (cat==='concepts'?'◆':cat==='sessions'?'◇':'▸') + '</span>' + n.title + '</div>';
+        + '<span class="icon">' + ({'research/factors':'◆','research/strategy':'◈','research/narrative':'◇',engineering:'▸',reports:'◉',emerging_markets:'●'}[cat]||'▪') + '</span>' + n.title + '</div>';
     });
     html += '</div>';
   }
@@ -193,7 +193,7 @@ function openNote(id) {
   editing = false;
   renderNote(note);
   renderNav();
-  document.getElementById('breadcrumb').innerHTML = '<span>' + ({concepts:'概念',sessions:'对话',decisions:'决策'}[note.category]||'') + '</span> / ' + note.title;
+  document.getElementById('breadcrumb').innerHTML = '<span>' + ({'research/factors':'因子与择时','research/strategy':'策略与框架','research/narrative':'叙事与宏观',engineering:'工程实现',reports:'外部研报',emerging_markets:'新兴市场思考'}[note.category]||note.category) + '</span> / ' + note.title;
   document.getElementById('btnEdit').style.display = '';
   document.getElementById('btnDelete').style.display = '';
 }
@@ -295,7 +295,7 @@ function newNote() {
   document.getElementById('btnDelete').style.display = 'none';
   var area = document.getElementById('contentArea');
   area.innerHTML = '<div class="editor-bar">'
-    + '<select id="newCat"><option value="concepts">💡 概念</option><option value="sessions">💬 对话</option><option value="decisions">⚖️ 决策</option></select>'
+    + '<select id="newCat"><option value="research/factors">因子与择时</option><option value="research/strategy">策略与框架</option><option value="research/narrative">叙事与宏观</option><option value="engineering">工程实现</option><option value="reports">外部研报</option><option value="emerging_markets">新兴市场思考</option></select>'
     + '<input id="newName" placeholder="笔记标题...">'
     + '</div>'
     + '<textarea class="editor-area" id="editorTA"># 新笔记标题\n\n在这里写内容...\n\n**标签：** #标签</textarea>';
@@ -460,7 +460,7 @@ function drawGraph() {
 "content": "# 择时框架协作机制\n\n**类型：** 决策  \n**创建时间：** 2026-03-15\n\n---\n\n## 核心定位\n\nRoni（思考者）+ Musk（共创者）的协作框架\n\n**目标：** 把市场理解力翻译成PM能理解的因子和回测\n\n---\n\n## 三层架构\n\n```\n因子库（原料层）→ 命题研究（逻辑层）→ 敞口输出（决策层）\n```\n\n---\n\n## 使用方式（zs前缀）\n\n**所有择时框架操作都用\"zs\"前缀，避免和其他场景混淆**\n\n### 触发词\n\n- `zs加因子：XXX` → 分析相关性 → 提示命题 → 自动测试\n- `zs测命题：XXX` → 生成框架 → 运行回测 → 分析结果\n- `zs优化：XXX` → 分析问题 → 提出方案 → 测试对比\n- `zs加标的：XXX` → 修改回测 → 运行测试 → 对比分析\n- `zs因子库` → 查询当前所有因子\n\n---\n\n## Musk的工作机制\n\n1. **主动提示相关性**：新因子时告诉你和哪些因子/命题相关\n2. **自动关联测试**：把新因子放到对应命题里测试\n3. **勾稽关系管理**：理解因子之间、因子和命题之间的关系\n4. **记录所有操作**：写入工作日志\n\n---\n\n## 示例\n\n```\nRoni: zs加因子：封板质量\nMusk: \n  - 与封单额轧差相关性0.45（中等）\n  - 可能和\"冰点策略\"、\"强势股接力\"相关\n  - IC=+0.054, ICIR=0.62（信号稳定）\n  - 加入冰点测试：胜率75%，不如V3\n```\n\n---\n\n## 关键文件\n\n- 框架设计：`~/Desktop/quant-backtest/timing_model/memory/FRAMEWORK_DESIGN.md`\n- 使用手册：`~/Desktop/quant-backtest/timing_model/memory/HOW_TO_USE_MUSK.md`\n- 工作日志：`~/Desktop/quant-backtest/timing_model/memory/WORK_LOG.md`\n\n---\n\n## 当前状态\n\n- ✅ 框架设计完成\n- ✅ 冰点策略V3（跌停家数+封单额轧差）\n- ✅ 中证2000加入回测（4指数）\n- ⏳ 可视化页面更新中\n\n**标签:** #择时 #协作机制 #框架 #zs前缀\n"
 }
 ];if(!s||!t)return;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(t.x,t.y);ctx.stroke();});
-  var colors={concepts:'#89b4fa',sessions:'#a6e3a1',decisions:'#f9e2af'};
+  var colors={'research/factors':'#89b4fa','research/strategy':'#f9e2af','research/narrative':'#cba6f7',engineering:'#a6e3a1',reports:'#fab387',emerging_markets:'#94e2d5'};
   nodes.forEach(function(n){var r=n.id===currentNote?.id?8:5;ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=colors[n.category]||'#cdd6f4';ctx.fill();if(n.id===currentNote?.id){ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();}ctx.fillStyle='#cdd6f4';ctx.font='11px -apple-system,PingFang SC,sans-serif';ctx.textAlign='center';ctx.fillText(n.title,n.x,n.y+r+14);});
   canvas.onclick=function(e){var cr=canvas.getBoundingClientRect(),x=e.clientX-cr.left,y=e.clientY-cr.top;nodes.forEach(function(n){if(Math.abs(n.x-x)<20&&Math.abs(n.y-y)<20)openNote(n.id);});};
 }

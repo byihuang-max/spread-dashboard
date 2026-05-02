@@ -292,10 +292,13 @@ class Handler(BaseHTTPRequestHandler):
         for md_file in notes_dir.rglob("*.md"):
             rel_path = md_file.relative_to(notes_dir.parent)
             
-            # 推断分类（根据目录结构）
+            # 推断分类（根据目录结构，research下取两级）
             parts = md_file.relative_to(notes_dir).parts
             if len(parts) > 1:
-                category = parts[0]  # 第一级目录作为分类
+                if parts[0] == 'research' and len(parts) > 2:
+                    category = parts[0] + '/' + parts[1]
+                else:
+                    category = parts[0]
             else:
                 category = "uncategorized"
             
