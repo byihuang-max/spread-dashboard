@@ -37,6 +37,16 @@ def _color_pct(s):
     return _re.sub(r'[+-]?\d+\.?\d*%', _repl, s)
 
 
+def _highlight_red(s):
+    """将 <<text>> 标记转为红色加粗"""
+    return _re.sub(r'<<(.+?)>>', r'<span style="color:#cc2929;font-weight:700">\1</span>', s)
+
+
+def _gray_explain(s):
+    """将 ((text)) 标记转为灰色小字"""
+    return _re.sub(r'\(\((.+?)\)\)', r'<span style="color:#6b7280;font-size:10px;font-weight:400"> \1</span>', s)
+
+
 def report_to_html(text, footer):
     lines = text.strip().split('\n')
     html_parts = []
@@ -72,6 +82,19 @@ def report_to_html(text, footer):
                 f'margin:16px 0 6px">{s}</div>')
             continue
 
+        # 模块小字描述（紧跟章节标题的一行说明）
+        _subtitles = {'整体市场强势方向与温度', '市场核心聚焦方向',
+                      '成交额加权强度 + 上下游传导验证',
+                      '高度 + 成交聚焦的核心票筛选',
+                      '基于当日最强链与龙头方向',
+                      '综合产业链强度、百亿涨停与龙头方向',
+                      '跟随当日最强细分方向'}
+        if s in _subtitles:
+            html_parts.append(
+                f'<div style="font-size:10px;color:{C_GRAY};'
+                f'margin:-4px 0 6px;padding:0">{s}</div>')
+            continue
+
         # 产业链名称行
         if s and s[0] in '■▪●▶':
             html_parts.append(
@@ -87,18 +110,35 @@ def report_to_html(text, footer):
                 f'font-size:11px">{_color_pct(content)}</div>')
             continue
 
-        # 涨停/跌停主行
-        if s.startswith('- 涨停') or s.startswith('- 跌停'):
+        # 涨停/跌停/封单轧差 主行（同级粗体）
+        if s.startswith('- 涨停') or s.startswith('- 跌停') or s.startswith('- 封单轧差'):
             html_parts.append(
                 f'<div style="padding:4px 0;font-size:13px;font-weight:600;'
                 f'color:{C_BLACK}">{_color_pct(s[2:])}</div>')
             continue
 
-        # 方向/强度/额度
-        if s.startswith('方向:') or s.startswith('强度:') or s.startswith('额度:'):
+        # 涨停下挂的子指标（小灰字缩进）：方向/强度/额度（一级缩进）
+        _sub_l1 = ('方向:', '强度:', '额度:')
+        if any(s.startswith(kw) for kw in _sub_l1):
             html_parts.append(
                 f'<div style="padding:1px 0 1px 16px;font-size:11px;'
                 f'color:{C_GRAY};line-height:1.6">{_color_pct(s)}</div>')
+            continue
+
+        # 次级标题（>> 开头）：首板/晋级率/1进2/炸板率
+        if s.startswith('>> '):
+            content = s[3:]
+            html_parts.append(
+                f'<div style="padding:3px 0 1px 16px;font-size:12px;'
+                f'font-weight:600;color:{C_BLACK};margin-top:4px">{_color_pct(content)}</div>')
+            continue
+
+        # 次级标题的方向行（深缩进）
+        _sub_l2 = ('首板方向:', '晋级方向:', '1进2方向:', '炸板方向:')
+        if any(s.startswith(kw) for kw in _sub_l2):
+            html_parts.append(
+                f'<div style="padding:1px 0 1px 28px;font-size:10px;'
+                f'color:{C_GRAY};line-height:1.5">{_color_pct(s)}</div>')
             continue
 
         # 其余
@@ -121,9 +161,10 @@ def report_to_html(text, footer):
         # 龙头池
         if '辨识度龙头' in s or '成交额龙头' in s:
             label, val = s.split(':', 1) if ':' in s else (s, '')
+            val = _highlight_red(_color_pct(val))
             html_parts.append(
                 f'<div style="padding:2px 0 2px 8px;font-size:12px;color:{C_BLACK}">'
-                f'<span style="font-weight:600">{label.lstrip("- ")}:</span> {_color_pct(val)}</div>')
+                f'<span style="font-weight:600">{label.lstrip("- ")}:</span> {val}</div>')
             continue
 
         if '池内' in s and '只' in s:
@@ -132,18 +173,35 @@ def report_to_html(text, footer):
                 f'<div style="padding:2px 0 2px 8px;font-size:11px;color:{C_GRAY}">{content}</div>')
             continue
 
-        # 主攻/注意
-        if s.startswith('- 主攻') or s.startswith('- 注意'):
+        # 龙头池变动
+        if s.startswith('- 变动:') or s.startswith('- 变动：'):
+            content = s.lstrip('- ')
             html_parts.append(
-                f'<div style="padding:2px 0 2px 8px;font-size:12px;font-weight:700;'
-                f'color:{C_BLACK}">{s[2:]}</div>')
+                f'<div style="padding:2px 0 2px 8px;font-size:11px;color:{C_GRAY};'
+                f'line-height:1.6">{content}</div>')
             continue
 
-        # 状态/最强链
+        # 主攻/注意（主攻+注意标红，括号内解释灰色小字）
+        if s.startswith('- <<主攻') or s.startswith('- <<注意') or s.startswith('- 主攻') or s.startswith('- 注意'):
+            content = _gray_explain(_highlight_red(s[2:]))
+            html_parts.append(
+                f'<div style="padding:2px 0 2px 8px;font-size:12px;font-weight:700;'
+                f'color:{C_BLACK}">{content}</div>')
+            continue
+
+        # ETF 缩进行
+        if s.startswith('etf:'):
+            html_parts.append(
+                f'<div style="padding:1px 0 1px 20px;font-size:10px;'
+                f'color:{C_GRAY};line-height:1.5">{_color_pct(s)}</div>')
+            continue
+
+        # 状态/最强链/最强链切换/连续
         if '最强链' in s or '状态' in s:
+            content = _gray_explain(_color_pct(s[2:] if s.startswith("- ") else s))
             html_parts.append(
                 f'<div style="padding:2px 0 2px 8px;font-size:12px;'
-                f'color:{C_BLACK}">{_color_pct(s[2:] if s.startswith("- ") else s)}</div>')
+                f'color:{C_BLACK}">{content}</div>')
             continue
 
         # 普通行

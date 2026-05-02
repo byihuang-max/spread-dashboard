@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""强势股环境日报生成器 v1.2 — 飞书纯文字版"""
-import requests, json, os, sys
+"""强势股环境日报生成器 v1.5 — 飞书纯文字版（+边际变化+ETF行情）"""
+import requests, json, os, sys, shutil
 from collections import Counter
 
 TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
@@ -11,6 +11,127 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 def load_json(path):
     with open(os.path.join(BASE, path)) as f:
         return json.load(f)
+
+
+# ===== 龙头池历史快照（用于 delta 对比）=====
+LEADER_HIST_DIR = os.path.join(BASE, 'leader_pool_history')
+
+
+def save_leader_snapshot(dt, pool_items, rec_leader, amt_leader):
+    """保存当日龙头池快照，供下一交易日做 delta 对比"""
+    os.makedirs(LEADER_HIST_DIR, exist_ok=True)
+    snapshot = {
+        'trade_date': dt,
+        'pool': [p.get('name', '') for p in pool_items if isinstance(p, dict)],
+        'pool_detail': pool_items,
+        'rec_leader': rec_leader.get('name', '') if rec_leader else '',
+        'amt_leader': amt_leader.get('name', '') if amt_leader else '',
+    }
+    with open(os.path.join(LEADER_HIST_DIR, f'{dt}.json'), 'w') as f:
+        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+
+
+def load_prev_leader_snapshot(dt, daily_dates):
+    """加载前一交易日的龙头池快照，返回 dict 或 None"""
+    if not os.path.exists(LEADER_HIST_DIR):
+        return None
+    # 找 dt 的前一个交易日
+    prev_dt = None
+    for i, d in enumerate(daily_dates):
+        if d == dt and i > 0:
+            prev_dt = daily_dates[i - 1]
+            break
+    if not prev_dt:
+        return None
+    path = os.path.join(LEADER_HIST_DIR, f'{prev_dt}.json')
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
+# ===== 产业链排名历史（用于 delta 对比）=====
+CHAIN_HIST_DIR = os.path.join(BASE, 'chain_rank_history')
+
+
+def save_chain_snapshot(dt, chains):
+    """保存当日产业链排名快照"""
+    os.makedirs(CHAIN_HIST_DIR, exist_ok=True)
+    snapshot = {
+        'trade_date': dt,
+        'ranking': [(cn, strength, res) for cn, strength, res, *_ in chains],
+    }
+    with open(os.path.join(CHAIN_HIST_DIR, f'{dt}.json'), 'w') as f:
+        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+
+
+def load_prev_chain_snapshot(dt, daily_dates):
+    """加载前一交易日的产业链排名快照"""
+    if not os.path.exists(CHAIN_HIST_DIR):
+        return None
+    prev_dt = None
+    for i, d in enumerate(daily_dates):
+        if d == dt and i > 0:
+            prev_dt = daily_dates[i - 1]
+            break
+    if not prev_dt:
+        return None
+    path = os.path.join(CHAIN_HIST_DIR, f'{prev_dt}.json')
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
+def promotion_direction(dt, dt_yesterday, top_n=4):
+    """提取晋级方向、1进2方向、首板方向"""
+    cache_file = os.path.join(BASE, '_cache', f'{dt}.json')
+    cache_y_file = os.path.join(BASE, '_cache', f'{dt_yesterday}.json')
+    promo_dir = ''
+    one_to_two_dir = ''
+    shouban_dir = ''
+    shouban_focus = ''  # 集中/分散
+
+    if os.path.exists(cache_file):
+        with open(cache_file) as f:
+            cache = json.load(f)
+        ups = [u for u in cache.get('U', []) if u.get('close', 0) > 0 and abs(u.get('pct_chg', 0)) < 50]
+
+        # 晋级方向：今天连板票（limit_times > 1）的行业分布
+        lianban = [u for u in ups if u.get('limit_times', 1) > 1]
+        if lianban:
+            cnt = Counter(u.get('industry', '未知') for u in lianban)
+            top = cnt.most_common(top_n)
+            promo_dir = '  '.join(f'{ind}{n}' for ind, n in top)
+
+        # 首板方向
+        shouban = [u for u in ups if u.get('limit_times', 1) == 1]
+        if shouban:
+            cnt_sb = Counter(u.get('industry', '未知') for u in shouban)
+            top_sb = cnt_sb.most_common(top_n)
+            shouban_dir = '  '.join(f'{ind}{n}' for ind, n in top_sb)
+            # 集中度判断：Top3 占比
+            top3_pct = sum(x[1] for x in top_sb[:3]) / len(shouban) * 100
+            if top3_pct >= 40:
+                shouban_focus = '集中'
+            elif top3_pct >= 25:
+                shouban_focus = '偏集中'
+            else:
+                shouban_focus = '分散'
+
+        # 1进2方向
+        if os.path.exists(cache_y_file):
+            with open(cache_y_file) as f:
+                cache_y = json.load(f)
+            shouban_y = set(u['ts_code'] for u in cache_y.get('U', [])
+                           if u.get('limit_times', 1) == 1 and u.get('close', 0) > 0)
+            success = [u for u in ups if u['ts_code'] in shouban_y and u.get('limit_times', 1) == 2]
+            if success:
+                cnt2 = Counter(u.get('industry', '未知') for u in success)
+                top2 = cnt2.most_common(top_n)
+                one_to_two_dir = '  '.join(f'{ind}{n}' for ind, n in top2)
+
+    return promo_dir, one_to_two_dir, shouban_dir, shouban_focus
 
 
 def limit_industry_summary(dt, limit_type, top_n=4):
@@ -97,6 +218,57 @@ def fetch_sw_daily(trade_date):
     return pct_map, amt_map
 
 
+def fetch_etf_daily(trade_date):
+    """拉取 ETF 日行情 + 名字，返回 [{code6, name, pct_chg, amount_yi}] """
+    import time as _time
+    # 拉行情
+    resp = requests.post(URL, json={
+        'api_name': 'fund_daily', 'token': TOKEN,
+        'params': {'trade_date': trade_date},
+        'fields': 'ts_code,trade_date,close,pct_chg,amount'
+    }, timeout=20, proxies={'http': None, 'https': None})
+    data = resp.json()
+    if data.get('code') != 0:
+        return []
+    cols = data['data']['fields']
+    daily_map = {}
+    for row in data['data']['items']:
+        d = dict(zip(cols, row))
+        daily_map[d['ts_code'][:6]] = {
+            'pct_chg': d.get('pct_chg') or 0,
+            'amount_yi': (d.get('amount') or 0) / 10000,
+        }
+
+    _time.sleep(0.3)
+
+    # 拉名字
+    resp2 = requests.post(URL, json={
+        'api_name': 'fund_basic', 'token': TOKEN,
+        'params': {'market': 'E', 'status': 'L'},
+        'fields': 'ts_code,name'
+    }, timeout=20, proxies={'http': None, 'https': None})
+    data2 = resp2.json()
+    name_map = {}
+    if data2.get('code') == 0:
+        for row in data2['data']['items']:
+            d = dict(zip(data2['data']['fields'], row))
+            name_map[d['ts_code'][:6]] = d.get('name', '')
+
+    # 合并
+    result = []
+    for code6, info in daily_map.items():
+        name = name_map.get(code6, '')
+        if 'ETF' not in name:
+            continue
+        result.append({
+            'code': code6,
+            'name': name,
+            'pct_chg': info['pct_chg'],
+            'amount_yi': info['amount_yi'],
+        })
+    return result
+
+
 def analyze_chains(chain_map, name_to_code, code_to_pct, code_to_amt):
     results = []
     for cn, cd in chain_map['chains'].items():
@@ -167,6 +339,15 @@ def generate_report(trade_date=None):
 
     chains = analyze_chains(chain_map, name_to_code, code_to_pct, code_to_amt)
 
+    # ===== 昨日数据（用于 delta）=====
+    daily_dates = [d['date'] for d in daily]
+    ss_yesterday = ss['daily'][-2] if len(ss['daily']) >= 2 else None
+    prev_chain = load_prev_chain_snapshot(dt, daily_dates)
+    prev_leader = load_prev_leader_snapshot(dt, daily_dates)
+
+    # 保存今日快照（供明天 delta 用）
+    save_chain_snapshot(dt, chains)
+
     up_pct = pct_rank(daily, 'up_count', today['up_count'])
     down_pct = pct_rank(daily, 'down_count', today['down_count'])
     promo_pct = pct_rank(daily, 'promotion_rate', today['promotion_rate'])
@@ -191,30 +372,48 @@ def generate_report(trade_date=None):
     up_str, up_amt = limit_highlight_picks(dt, 'U')
     down_str, down_amt = limit_highlight_picks(dt, 'D')
     L.append('一、核心指标')
+    L.append('整体市场强势方向与温度')
+    # 晋级/1进2/首板 方向
+    promo_dir, one2two_dir, shouban_dir, shouban_focus = promotion_direction(dt, yesterday['date'])
+    # 涨停
     L.append(f'- 涨停 {today["up_count"]}家（分位{up_pct}%）')
     if up_ind:
         L.append(f'  方向: {up_ind}')
     if up_str or up_amt:
         picks = '  '.join(filter(None, [f'强度: {up_str}' if up_str else '', f'额度: {up_amt}' if up_amt else '']))
         L.append(f'  {picks}')
+    # 首板（次级）
+    L.append(f'  >> 首板 {today["shouban_count"]}家（{shouban_focus}）')
+    if shouban_dir:
+        L.append(f'     首板方向: {shouban_dir}')
+    # 晋级率（次级）
+    L.append(f'  >> 晋级率 {today["promotion_rate"]:.1f}%（分位{promo_pct}%）| 断板 {today["duanban_count"]}/{today["lianban_count"]+today["duanban_count"]}')
+    if promo_dir:
+        L.append(f'     晋级方向: {promo_dir}')
+    # 1进2（次级）
+    L.append(f'  >> 1进2 {today.get("rate_1to2", 0):.0f}%')
+    if one2two_dir:
+        L.append(f'     1进2方向: {one2two_dir}')
+    # 炸板率（次级）
+    L.append(f'  >> 炸板率 {today["zha_rate"]:.0f}%')
+    if zha_ind:
+        L.append(f'     炸板方向: {zha_ind}')
+    # 跌停（下挂：方向、强度/额度）
     L.append(f'- 跌停 {today["down_count"]}家（分位{down_pct}%）')
     if down_ind:
         L.append(f'  方向: {down_ind}')
     if down_str or down_amt:
         picks = '  '.join(filter(None, [f'强度: {down_str}' if down_str else '', f'额度: {down_amt}' if down_amt else '']))
         L.append(f'  {picks}')
-    L.append(f'- 晋级率 {today["promotion_rate"]:.1f}%（分位{promo_pct}%）')
-    L.append(f'- 炸板率 {today["zha_rate"]:.0f}%')
-    if zha_ind:
-        L.append(f'  方向: {zha_ind}')
+    # 封单轧差（独立指标）
     L.append(f'- 封单轧差 {ss_today["seal_spread"]:+.1f}亿（1Y分位{ss_today["spread_pct_1y"]*100:.0f}%）')
-    L.append(f'- 断板 {today["duanban_count"]}/{today["lianban_count"]+today["duanban_count"]}')
     L.append('')
 
     # 二、百亿涨停
     names = today.get('mega_cap_names', '')
     if names:
         L.append('二、百亿涨停')
+        L.append('市场核心聚焦方向')
         name_list = [n.replace('[', '(').replace(']', ')') for n in names.split('|')]
         for j in range(0, len(name_list), 3):
             chunk = name_list[j:j+3]
@@ -236,11 +435,41 @@ def generate_report(trade_date=None):
 
     # 四、产业链共振
     L.append(f'{CN_NUMS[sec_idx]}、产业链共振')
+    L.append('成交额加权强度 + 上下游传导验证')
     sec_idx += 1
+
+    # 排名变化提示
+    if prev_chain:
+        prev_ranking = [r[0] for r in prev_chain.get('ranking', [])]
+        today_ranking = [cn for cn, *_ in chains]
+        prev_top = prev_ranking[0] if prev_ranking else ''
+        today_top = today_ranking[0] if today_ranking else ''
+        if prev_top and today_top and prev_top != today_top:
+            L.append(f'- 最强链切换: {prev_top} → {today_top}')
+        elif prev_top and today_top and prev_top == today_top:
+            L.append(f'- 最强链连续: {today_top}')
+
     L.append('')
     nums = ['', '', '']
+    # 构建昨日排名 lookup
+    prev_rank_map = {}
+    if prev_chain:
+        for idx, r in enumerate(prev_chain.get('ranking', [])):
+            prev_rank_map[r[0]] = idx + 1
+
     for i, (cn, strength, res, lavg, ldata, best) in enumerate(chains[:3]):
-        L.append(f'{nums[i]} {cn} {strength:+.2f}% {res}')
+        # 排名变化标注
+        rank_delta = ''
+        if cn in prev_rank_map:
+            prev_pos = prev_rank_map[cn]
+            cur_pos = i + 1
+            if prev_pos > cur_pos:
+                rank_delta = f' ▲{prev_pos - cur_pos}'
+            elif prev_pos < cur_pos:
+                rank_delta = f' ▼{cur_pos - prev_pos}'
+        elif prev_chain:
+            rank_delta = ' NEW'
+        L.append(f'{nums[i]} {cn} {strength:+.2f}% {res}{rank_delta}')
         cols_order = ['上游', '中游', '下游']
         active = [c for c in cols_order if ldata.get(c)]
         layer_parts = []
@@ -335,37 +564,179 @@ def generate_report(trade_date=None):
             pass
 
     if pool_items:
+        # 保存今日龙头池快照（供明天 delta 用）
+        save_leader_snapshot(dt, pool_items, rec_leader, amt_leader)
+
         L.append(f'{CN_NUMS[sec_idx]}、龙头观察池')
+        L.append('高度 + 成交聚焦的核心票筛选')
         sec_idx += 1
-        # 辨识度龙头
+        # 辨识度龙头（+换人提示）
         if rec_leader:
             rec_chain = _ind_to_chain(rec_leader.get('industry', ''))
             chain_tag = f' [{rec_chain}]' if rec_chain else ''
-            L.append(f'- 辨识度龙头: {rec_leader.get("name","")}({rec_leader.get("industry","")}) {rec_leader.get("limit_times","")}板{chain_tag}')
-        # 成交额龙头
+            rec_delta = ''
+            if prev_leader and prev_leader.get('rec_leader'):
+                prev_rec = prev_leader['rec_leader']
+                if prev_rec != rec_leader.get('name', ''):
+                    rec_delta = f'（昨{prev_rec}）'
+            ht = rec_leader.get('limit_times', '')
+            L.append(f'- 辨识度龙头: {rec_leader.get("name","")}({rec_leader.get("industry","")}) <<{ht}板>>{chain_tag}{rec_delta}')
+        # 成交额龙头（+成交额+板数+换人提示）
         if amt_leader and amt_leader.get('ts_code') != rec_leader.get('ts_code'):
             amt_chain = _ind_to_chain(amt_leader.get('industry', ''))
             chain_tag = f' [{amt_chain}]' if amt_chain else ''
-            L.append(f'- 成交额龙头: {amt_leader.get("name","")}({amt_leader.get("industry","")}){chain_tag}')
+            amt_delta = ''
+            if prev_leader and prev_leader.get('amt_leader'):
+                prev_amt = prev_leader['amt_leader']
+                if prev_amt != amt_leader.get('name', ''):
+                    amt_delta = f'（昨{prev_amt}）'
+            amt_yi = (amt_leader.get('amount') or 0) / 1e8
+            amt_ht = amt_leader.get('limit_times', '')
+            L.append(f'- 成交额龙头: {amt_leader.get("name","")}({amt_leader.get("industry","")}) {amt_yi:.1f}亿 {amt_ht}板{chain_tag}{amt_delta}')
+
+        # 池内变动
+        today_pool_names = set(p.get('name', '') for p in pool_items if isinstance(p, dict))
+        if prev_leader:
+            prev_pool_names = set(prev_leader.get('pool', []))
+            new_in = today_pool_names - prev_pool_names
+            dropped = prev_pool_names - today_pool_names
+            if new_in or dropped:
+                parts = []
+                if new_in:
+                    parts.append(f'新进{len(new_in)}只: {" ".join(sorted(new_in))}')
+                if dropped:
+                    parts.append(f'退出{len(dropped)}只: {" ".join(sorted(dropped))}')
+                L.append(f'- 变动: {" / ".join(parts)}')
+
         # 池内列表（带行业后缀）
         pool_names = [f'{p["name"]}({p.get("industry","")})' for p in pool_items[:10] if isinstance(p, dict)]
         L.append(f'- 池内{len(pool_items)}只: {" / ".join(pool_names)}{"..." if len(pool_items) > 10 else ""}')
         L.append('')
 
-    # ===== 结论（逻辑勾稽）=====
-    chg_up = today['up_count'] - yesterday['up_count']
-    chg_down = today['down_count'] - yesterday['down_count']
-    L.append(f'{CN_NUMS[sec_idx]}、结论')
-    L.append(f'- 涨停{chg_up:+d} 跌停{chg_down:+d}')
-    L.append(f'- 状态: {yesterday["cycle_label"]} → {today["cycle_label"]}')
+    # ===== ETF 关注建议（第五）=====
+    # 逻辑：确定主攻方向 → 从全市场 ETF 中按当天实际涨幅动态筛选最相关的
+    all_etf_daily = fetch_etf_daily(dt)
 
-    # 主攻方向判断：产业链强度 × 百亿涨停方向 × 龙头池方向 三重验证
+    if all_etf_daily:
+        # 确定推荐方向：主攻链 + 龙头池主方向
+        rec_chain_names = []
+        if top_chain and top_chain[1] > 0:
+            rec_chain_names.append(top_chain[0])
+        if len(chains) > 1 and chains[1][1] > 0:
+            rec_chain_names.append(chains[1][0])
+        if pool_chain_count:
+            pool_top = pool_chain_count.most_common(1)[0][0]
+            if pool_top not in rec_chain_names:
+                rec_chain_names.append(pool_top)
+
+        # 从推荐链中提取最强二级行业
+        rec_industries = []
+        for cn, strength, res, lavg, ldata, best in chains:
+            if cn not in rec_chain_names:
+                continue
+            for pos in ['上游', '中游', '下游']:
+                for ind, pct, amt in ldata.get(pos, []):
+                    if pct > 0.3:
+                        rec_industries.append((ind, pct, cn))
+        rec_industries.sort(key=lambda x: x[1], reverse=True)
+
+        # 为每个方向构建搜索关键词
+        _ind_keywords = {
+            '半导体': ['半导体', '芯片', '人工智能', 'AI', '集成电路', '科创'],
+            '元件': ['电子', '元件'],
+            '电子化学品': ['电子', '化工', '材料'],
+            '计算机设备': ['计算机', '信息', '科技', '人工智能', 'AI'],
+            '软件开发': ['软件', '计算机', '信息', '云计算', '大数据'],
+            '通信设备': ['通信', '5G'],
+            '消费电子': ['消费电子', '电子'],
+            '航天装备': ['军工', '国防', '航天'],
+            '军工电子': ['军工', '国防'],
+            '自动化设备': ['机器人', '自动化', '智能制造', '工业母机'],
+            '专用设备': ['机器人', '工业母机', '高端装备', '智能制造'],
+            '通用设备': ['机械', '装备', '制造'],
+            '金属新材料': ['有色', '稀土', '新材料'],
+            '能源金属': ['锂电', '新能源', '有色', '稀土'],
+            '光伏设备': ['光伏', '新能源', '太阳能'],
+            '电池': ['电池', '锂电', '新能源', '储能'],
+            '风电设备': ['风电', '新能源'],
+            '房地产开发': ['房地产', '地产'],
+            '汽车零部件': ['汽车', '智能驾驶', '新能源车'],
+            '乘用车': ['汽车', '智能驾驶', '新能源车'],
+        }
+
+        # 按方向动态匹配 ETF
+        chain_pick_count = Counter()
+        seen_codes = set()
+        etf_lines = []
+
+        for ind, pct, cn in rec_industries:
+            if chain_pick_count[cn] >= 2:
+                continue
+            # 获取搜索关键词
+            clean_ind = ind.replace('Ⅱ', '')
+            keywords = _ind_keywords.get(clean_ind, [clean_ind])
+
+            # 从全市场 ETF 中搜索匹配的，按涨幅排序
+            matched = []
+            for etf in all_etf_daily:
+                if etf['code'] in seen_codes:
+                    continue
+                if etf['pct_chg'] <= 0:
+                    continue
+                if etf['amount_yi'] < 1:
+                    continue  # 过滤成交额太小的
+                name = etf['name']
+                if any(kw in name for kw in keywords):
+                    matched.append(etf)
+
+            matched.sort(key=lambda x: x['pct_chg'], reverse=True)
+
+            if matched:
+                # 取涨幅最高的 2 只
+                picks = matched[:2]
+                for p in picks:
+                    seen_codes.add(p['code'])
+                etf_strs = [f'{p["name"][:10]}({p["code"]}) {p["pct_chg"]:+.1f}% {p["amount_yi"]:.1f}亿' for p in picks]
+                etf_lines.append(f'- [{cn}] {clean_ind} {pct:+.1f}%')
+                etf_lines.append(f'  etf: {" / ".join(etf_strs)}')
+                chain_pick_count[cn] += 1
+
+        if etf_lines:
+            L.append(f'{CN_NUMS[sec_idx]}、ETF 关注')
+            L.append('综合产业链强度、百亿涨停与龙头方向')
+            sec_idx += 1
+            for line in etf_lines:
+                L.append(line)
+            L.append('')
+
+    # ===== 结论（第六）=====
+    L.append(f'{CN_NUMS[sec_idx]}、结论')
+
+    # 状态变化 + 解释（解释用 (()) 标记，渲染为灰色小字）
+    y_label = yesterday['cycle_label']
+    t_label = today['cycle_label']
+    state_reason = ''
+    if t_label == '加速' and y_label != '加速':
+        state_reason = f'高度{yesterday["max_height"]}→{today["max_height"]}板，涨停{today["up_count"]}家分位{up_pct}%'
+    elif t_label == '退潮':
+        state_reason = f'高度{yesterday["max_height"]}→{today["max_height"]}板回落，断板{today["duanban_count"]}家'
+    elif t_label == '冰点':
+        state_reason = f'涨停{today["up_count"]}家分位{up_pct}%，晋级率{today["promotion_rate"]:.0f}%'
+    elif t_label == '震荡':
+        state_reason = f'高度{today["max_height"]}板，方向分散'
+    elif t_label == '修复':
+        state_reason = f'涨停回升至{today["up_count"]}家，晋级率{today["promotion_rate"]:.0f}%'
+    if state_reason:
+        L.append(f'- 状态: {y_label} → {t_label} (({state_reason}))')
+    else:
+        L.append(f'- 状态: {y_label} → {t_label}')
+
+    # 主攻方向（整行标红，括号内解释用灰色小字）
     if top_chain:
         top_chain_name = top_chain[0]
         mega_in_top = mega_chain_count.get(top_chain_name, 0)
         pool_in_top = pool_chain_count.get(top_chain_name, 0)
 
-        # 构建验证链
         signals = []
         signals.append(f'链强度: {top_chain_name}({top_chain[2]})')
         if mega_in_top > 0:
@@ -374,20 +745,18 @@ def generate_report(trade_date=None):
             signals.append(f'龙头池{pool_in_top}只指向{top_chain_name}')
 
         if mega_in_top > 0 or pool_in_top > 0:
-            # 有交叉验证
             confirm_count = (1 if mega_in_top > 0 else 0) + (1 if pool_in_top > 0 else 0) + 1
             if confirm_count >= 3:
-                L.append(f'- 主攻: {top_chain_name}（三重共振: {" + ".join(signals)}）')
+                L.append(f'- <<主攻: {top_chain_name}（三重共振）>> (({" + ".join(signals)}))')
             elif confirm_count == 2:
-                L.append(f'- 主攻: {top_chain_name}（{" + ".join(signals)}）')
+                L.append(f'- <<主攻: {top_chain_name}>> (({" + ".join(signals)}))')
         else:
             L.append(f'- 最强链: {top_chain_name}（{top_chain[2]}），龙头池/百亿未集中验证')
 
-        # 如果龙头池主方向和最强链不一致，补充说明
         if pool_chain_count:
             pool_top_chain = pool_chain_count.most_common(1)[0]
             if pool_top_chain[0] != top_chain_name and pool_top_chain[1] >= 2:
-                L.append(f'- 注意: 龙头池偏向{pool_top_chain[0]}({pool_top_chain[1]}只)，与最强链{top_chain_name}分化')
+                L.append(f'- <<注意: 龙头池偏向{pool_top_chain[0]}({pool_top_chain[1]}只)，与最强链{top_chain_name}分化>>')
 
     return '\n'.join(L)
 

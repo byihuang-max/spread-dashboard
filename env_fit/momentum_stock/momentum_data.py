@@ -254,9 +254,14 @@ def compute_raw_day(trade_date):
     big_cap_up = 0
     mega_cap_up = 0
     mega_cap_names = []
-    # 加载行业映射
+    # 加载行业映射（优先申万二级，兜底申万一级）
+    ind_l2_path = os.path.join(CACHE_DIR, 'stock_industry_l2.json')
     ind_map_path = os.path.join(CACHE_DIR, 'stock_industry.json')
+    ind_l2 = {}
     ind_map = {}
+    if os.path.exists(ind_l2_path):
+        with open(ind_l2_path) as _f:
+            ind_l2 = json.load(_f)
     if os.path.exists(ind_map_path):
         with open(ind_map_path) as _f:
             ind_map = json.load(_f)
@@ -269,7 +274,8 @@ def compute_raw_day(trade_date):
             if mv and mv >= 1000000:  # >=100亿
                 big_cap_up += 1
                 name = u.get('name', ts_code)
-                ind = ind_map.get(ts_code, {}).get('industry', '')
+                # 优先申万二级，兜底申万一级
+                ind = ind_l2.get(ts_code, {}).get('industry_l2', '') or ind_map.get(ts_code, {}).get('industry', '')
                 tag = f"{name}[{ind}]" if ind else name
                 mega_cap_names.append(tag)
             if mv and mv >= 3000000:  # >=300亿
