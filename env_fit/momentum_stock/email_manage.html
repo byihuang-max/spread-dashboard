@@ -196,12 +196,15 @@ async function addSubscriber() {
   const data = await loadData();
   if (data.subscribers.some(s => s.email === email)) { toast('该邮箱已存在', true); return; }
 
-  data.subscribers.push({ email, name: name || email.split('@')[0], enabled: true });
+  const displayName = name || email.split('@')[0];
+  if (!confirm(`确认添加订阅者？\n\n姓名：${displayName}\n邮箱：${email}\n\n添加后将在每个工作日自动收到强势股日报。`)) return;
+
+  data.subscribers.push({ email, name: displayName, enabled: true });
   document.getElementById('newEmail').value = '';
   document.getElementById('newName').value = '';
   document.getElementById('addForm').classList.remove('show');
   await saveData(data.subscribers);
-  toast(`已添加 ${name || email}`);
+  toast(`已添加 ${displayName}`);
 }
 
 async function toggleEnabled(idx) {

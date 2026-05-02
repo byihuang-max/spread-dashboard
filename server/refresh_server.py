@@ -783,6 +783,24 @@ class Handler(BaseHTTPRequestHandler):
             cfg['subscribers'] = body.get('subscribers', cfg['subscribers'])
             with open(sub_path, 'w', encoding='utf-8') as f:
                 json.dump(cfg, f, ensure_ascii=False, indent=2)
+            # git commit + push 保持版本跟踪
+            def _git_sync_subscribers():
+                import subprocess
+                try:
+                    subprocess.run(['git', 'add', sub_path], cwd=BASE_DIR, timeout=10)
+                    subprocess.run(['git', 'commit', '-m', 'chore: 更新邮件订阅者列表'], cwd=BASE_DIR, timeout=10)
+                    # 推送到可用的 remote
+                    for remote in ['gitee', 'origin']:
+                        try:
+                            result = subprocess.run(['git', 'remote'], cwd=BASE_DIR, capture_output=True, text=True, timeout=5)
+                            if remote in result.stdout:
+                                subprocess.run(['git', 'push', remote, 'main'], cwd=BASE_DIR, timeout=30)
+                                break
+                        except Exception:
+                            continue
+                except Exception as e:
+                    print(f'[email-subscribers] git sync failed: {e}')
+            threading.Thread(target=_git_sync_subscribers, daemon=True).start()
             self._json(200, {'ok': True, 'count': len(cfg['subscribers'])})
 
         # ═══ 产品池管理 API ═══
