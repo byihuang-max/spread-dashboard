@@ -261,7 +261,44 @@ def generate_report(trade_date=None):
     L.append(f'其余: {" | ".join(rest)}')
     L.append('')
 
-    # 五、结论
+    # 龙头观察池
+    leader_path = os.path.join(BASE, '..', '..', 'timing-research', 'leader_pool_latest.json')
+    if not os.path.exists(leader_path):
+        # 腾讯云路径兼容
+        for alt in ['/home/ubuntu/gamt-dashboard/timing-research/leader_pool_latest.json']:
+            if os.path.exists(alt):
+                leader_path = alt
+                break
+    if os.path.exists(leader_path):
+        try:
+            with open(leader_path) as f:
+                lp = json.load(f)
+            if lp.get('trade_date') == dt:
+                confirm = lp.get('confirm', {})
+                rec = confirm.get('recognition_leader', {})
+                amt = confirm.get('amount_leader', {})
+                pool_data = lp.get('pool', {})
+                # pool 可能是 dict（含 metadata keys）或 list
+                if isinstance(pool_data, dict):
+                    pool_list = [v for v in pool_data.values() if isinstance(v, list)]
+                    pool_items = pool_list[0] if pool_list else []
+                else:
+                    pool_items = pool_data
+
+                L.append(f'{CN_NUMS[sec_idx]}、龙头观察池')
+                sec_idx += 1
+                if rec:
+                    L.append(f'- 辨识度龙头: {rec.get("name","")}({rec.get("industry","")}) {rec.get("limit_times","")}板')
+                if amt and amt.get('ts_code') != rec.get('ts_code'):
+                    L.append(f'- 成交额龙头: {amt.get("name","")}({amt.get("industry","")})')
+                if pool_items:
+                    names = [f'{p["name"]}' for p in pool_items[:8] if isinstance(p, dict)]
+                    L.append(f'- 池内{len(pool_items)}只: {" / ".join(names)}{"..." if len(pool_items) > 8 else ""}')
+                L.append('')
+        except Exception:
+            pass
+
+    # 结论
     chg_up = today['up_count'] - yesterday['up_count']
     chg_down = today['down_count'] - yesterday['down_count']
     L.append(f'{CN_NUMS[sec_idx]}、结论')

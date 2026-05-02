@@ -144,6 +144,21 @@ def report_to_html(text, footer):
                     f'color:{C_TEXT};line-height:1.7">{_color_pct(content)}</div>')
             continue
 
+        # 龙头池行
+        if '辨识度龙头' in s or '成交额龙头' in s:
+            label, val = s.split(':', 1) if ':' in s else (s, '')
+            color = C_ACCENT if '辨识度' in s else C_BLUE
+            html_parts.append(
+                f'<div style="padding:4px 12px 4px 16px;font-size:13px;color:{C_TEXT}">'
+                f'<span style="color:{color};font-weight:600">{label.lstrip("- ")}:</span>{_color_pct(val)}</div>')
+            continue
+
+        if '池内' in s and '只' in s:
+            content = s.lstrip('- ')
+            html_parts.append(
+                f'<div style="padding:4px 12px 4px 16px;font-size:12px;color:{C_MUTED}">{content}</div>')
+            continue
+
         # 结论区关键行
         if '最强链' in s or '状态' in s:
             html_parts.append(
