@@ -111,17 +111,26 @@ const API_BASE = window.location.origin;
 let DATA_CACHE = null;
 
 function getToken() {
-  try { return JSON.parse(localStorage.getItem('auth_token') || localStorage.getItem('token') || '""'); } catch(e) { return localStorage.getItem('auth_token') || ''; }
+  // 主页面登录后存的 key 是 gamt_token
+  const keys = ['gamt_token', 'auth_token', 'token'];
+  for (const k of keys) {
+    const v = localStorage.getItem(k);
+    if (v) { try { const p = JSON.parse(v); if (p) return p; } catch(e) { return v; } }
+  }
+  return '';
 }
 
 async function loadData() {
   if (DATA_CACHE) return DATA_CACHE;
+  const tk = getToken();
+  if (!tk) { toast('未检测到登录态，请先在主页面登录', true); return { subscribers: [] }; }
   try {
     const resp = await fetch(API_BASE + '/api/email-subscribers', {
-      headers: { 'Authorization': 'Bearer ' + getToken() }
+      headers: { 'Authorization': 'Bearer ' + tk }
     });
     if (resp.ok) { DATA_CACHE = await resp.json(); return DATA_CACHE; }
-  } catch(e) {}
+    if (resp.status === 401 || resp.status === 403) { toast('权限不足，请用管理员账号登录', true); }
+  } catch(e) { console.warn('API load failed:', e); }
   // fallback localStorage
   try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
   return { subscribers: [] };
