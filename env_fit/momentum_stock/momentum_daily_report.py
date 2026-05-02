@@ -261,51 +261,133 @@ def generate_report(trade_date=None):
     L.append(f'其余: {" | ".join(rest)}')
     L.append('')
 
-    # 龙头观察池
+    # ===== 构建行业→链映射 =====
+    industry_to_chain = {}
+    for cn, cdata in chain_map.get('chains', chain_map).items():
+        if not isinstance(cdata, dict):
+            continue
+        for pos in ['上游', '中游', '下游']:
+            for ind in cdata.get(pos, []):
+                # 去掉Ⅱ后缀做模糊匹配
+                industry_to_chain[ind] = cn
+                industry_to_chain[ind.replace('Ⅱ', '')] = cn
+
+    def _ind_to_chain(industry):
+        """行业名 → 所属链名，模糊匹配"""
+        if not industry:
+            return ''
+        if industry in industry_to_chain:
+            return industry_to_chain[industry]
+        # 模糊：去掉Ⅱ、去掉"Ⅱ"
+        clean = industry.replace('Ⅱ', '')
+        if clean in industry_to_chain:
+            return industry_to_chain[clean]
+        # 部分匹配
+        for k, v in industry_to_chain.items():
+            if k in industry or industry in k:
+                return v
+        return ''
+
+    # ===== 百亿涨停行业统计 =====
+    mega_industries = []
+    if names:
+        import re as _re
+        for entry in names.split('|'):
+            m = _re.search(r'[\[（(]([^）)\]]+)[\]）)]', entry)
+            if m:
+                mega_industries.append(m.group(1))
+    mega_chain_count = Counter(_ind_to_chain(ind) for ind in mega_industries if _ind_to_chain(ind))
+
+    # ===== 龙头观察池 =====
     leader_path = os.path.join(BASE, '..', '..', 'timing-research', 'leader_pool_latest.json')
     if not os.path.exists(leader_path):
-        # 腾讯云路径兼容
         for alt in ['/home/ubuntu/gamt-dashboard/timing-research/leader_pool_latest.json']:
             if os.path.exists(alt):
                 leader_path = alt
                 break
+
+    pool_items = []
+    rec_leader = {}
+    amt_leader = {}
+    pool_chain_count = Counter()
+
     if os.path.exists(leader_path):
         try:
             with open(leader_path) as f:
                 lp = json.load(f)
             if lp.get('trade_date') == dt:
                 confirm = lp.get('confirm', {})
-                rec = confirm.get('recognition_leader', {})
-                amt = confirm.get('amount_leader', {})
+                rec_leader = confirm.get('recognition_leader', {})
+                amt_leader = confirm.get('amount_leader', {})
                 pool_data = lp.get('pool', {})
-                # pool 可能是 dict（含 metadata keys）或 list
                 if isinstance(pool_data, dict):
                     pool_list = [v for v in pool_data.values() if isinstance(v, list)]
                     pool_items = pool_list[0] if pool_list else []
                 else:
                     pool_items = pool_data
-
-                L.append(f'{CN_NUMS[sec_idx]}、龙头观察池')
-                sec_idx += 1
-                if rec:
-                    L.append(f'- 辨识度龙头: {rec.get("name","")}({rec.get("industry","")}) {rec.get("limit_times","")}板')
-                if amt and amt.get('ts_code') != rec.get('ts_code'):
-                    L.append(f'- 成交额龙头: {amt.get("name","")}({amt.get("industry","")})')
-                if pool_items:
-                    names = [f'{p["name"]}' for p in pool_items[:8] if isinstance(p, dict)]
-                    L.append(f'- 池内{len(pool_items)}只: {" / ".join(names)}{"..." if len(pool_items) > 8 else ""}')
-                L.append('')
+                # 龙头池行业→链统计
+                for p in pool_items:
+                    if isinstance(p, dict):
+                        ch = _ind_to_chain(p.get('industry', ''))
+                        if ch:
+                            pool_chain_count[ch] += 1
         except Exception:
             pass
 
-    # 结论
+    if pool_items:
+        L.append(f'{CN_NUMS[sec_idx]}、龙头观察池')
+        sec_idx += 1
+        # 辨识度龙头
+        if rec_leader:
+            rec_chain = _ind_to_chain(rec_leader.get('industry', ''))
+            chain_tag = f' [{rec_chain}]' if rec_chain else ''
+            L.append(f'- 辨识度龙头: {rec_leader.get("name","")}({rec_leader.get("industry","")}) {rec_leader.get("limit_times","")}板{chain_tag}')
+        # 成交额龙头
+        if amt_leader and amt_leader.get('ts_code') != rec_leader.get('ts_code'):
+            amt_chain = _ind_to_chain(amt_leader.get('industry', ''))
+            chain_tag = f' [{amt_chain}]' if amt_chain else ''
+            L.append(f'- 成交额龙头: {amt_leader.get("name","")}({amt_leader.get("industry","")}){chain_tag}')
+        # 池内列表（带行业后缀）
+        pool_names = [f'{p["name"]}({p.get("industry","")})' for p in pool_items[:10] if isinstance(p, dict)]
+        L.append(f'- 池内{len(pool_items)}只: {" / ".join(pool_names)}{"..." if len(pool_items) > 10 else ""}')
+        L.append('')
+
+    # ===== 结论（逻辑勾稽）=====
     chg_up = today['up_count'] - yesterday['up_count']
     chg_down = today['down_count'] - yesterday['down_count']
     L.append(f'{CN_NUMS[sec_idx]}、结论')
     L.append(f'- 涨停{chg_up:+d} 跌停{chg_down:+d}')
-    if top_chain:
-        L.append(f'- 最强链: {top_chain[0]}（{top_chain[2]}）')
     L.append(f'- 状态: {yesterday["cycle_label"]} → {today["cycle_label"]}')
+
+    # 主攻方向判断：产业链强度 × 百亿涨停方向 × 龙头池方向 三重验证
+    if top_chain:
+        top_chain_name = top_chain[0]
+        mega_in_top = mega_chain_count.get(top_chain_name, 0)
+        pool_in_top = pool_chain_count.get(top_chain_name, 0)
+
+        # 构建验证链
+        signals = []
+        signals.append(f'链强度: {top_chain_name}({top_chain[2]})')
+        if mega_in_top > 0:
+            signals.append(f'百亿涨停{mega_in_top}只落在{top_chain_name}')
+        if pool_in_top > 0:
+            signals.append(f'龙头池{pool_in_top}只指向{top_chain_name}')
+
+        if mega_in_top > 0 or pool_in_top > 0:
+            # 有交叉验证
+            confirm_count = (1 if mega_in_top > 0 else 0) + (1 if pool_in_top > 0 else 0) + 1
+            if confirm_count >= 3:
+                L.append(f'- 主攻: {top_chain_name}（三重共振: {" + ".join(signals)}）')
+            elif confirm_count == 2:
+                L.append(f'- 主攻: {top_chain_name}（{" + ".join(signals)}）')
+        else:
+            L.append(f'- 最强链: {top_chain_name}（{top_chain[2]}），龙头池/百亿未集中验证')
+
+        # 如果龙头池主方向和最强链不一致，补充说明
+        if pool_chain_count:
+            pool_top_chain = pool_chain_count.most_common(1)[0]
+            if pool_top_chain[0] != top_chain_name and pool_top_chain[1] >= 2:
+                L.append(f'- 注意: 龙头池偏向{pool_top_chain[0]}({pool_top_chain[1]}只)，与最强链{top_chain_name}分化')
 
     return '\n'.join(L)
 
