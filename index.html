@@ -3679,8 +3679,9 @@ function showApp(user){
       bar.style.position='relative';bar.style.transform='none';
       var initial=(user.display_name||user.username||'U').charAt(0).toUpperCase();
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
+      var teamBtn=(!user.is_admin&&(user.tier||0)>=2)?'<button class="admin-btn" onclick="location.href=\'team.html\'">团队工作台</button>':'';
       var logoutBtn=STATIC_MODE?'':'<button class="logout-btn" onclick="doLogout()">退出</button>';
-      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+logoutBtn;
+      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+teamBtn+logoutBtn;
       header.appendChild(bar);
     }
     // 侧边栏底部：显示用户名 + 管理后台入口

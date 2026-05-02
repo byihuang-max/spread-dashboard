@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GAMT 团队工作台</title><style>
+:root{--primary:#ff6600;--primary-dark:#cc5200;--primary-light:#ff8c1a;--success:#2ecc71;--warning:#f0ad4e;--danger:#ff4d4f;--info:#3b82f6;--bg:#0d1117;--card-bg:#161b22;--text:#e6edf3;--text-muted:#9aa4b2;--border:#30384a;--mono:Consolas,'SF Mono','Roboto Mono',Monaco,Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:13px}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.top-bar h1{font-size:18px;color:var(--text)}
+.top-bar .user-info{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-muted)}
+.top-bar .avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.btn-back{text-decoration:none;color:var(--primary);font-size:12px;font-weight:500}
+.btn{padding:6px 12px;border:1px solid var(--primary);background:transparent;color:var(--primary-light);cursor:pointer;font-family:var(--mono);font-size:12px}
+.btn:hover{background:var(--primary);color:#0d1117}
+.btn-sm{padding:4px 8px;font-size:11px}
+.btn-danger{border-color:#f87171;color:#f87171}
+.btn-danger:hover{background:#f87171;color:#0d1117}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card-bg);padding:14px;border:1px solid var(--border);border-left:3px solid var(--primary)}
+.stat .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.stat .value{font-size:22px;font-weight:700;margin-top:2px}
+.stat .sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* Cards */
+.card{background:var(--card-bg);padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+.card h3{font-size:13px;margin-bottom:12px;color:var(--primary-light)}
+
+/* Tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 10px;background:#111722;color:var(--primary-light);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--primary)}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:#1b2230}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 6px;font-size:10px;font-weight:600;border:1px solid currentColor}
+.tag-green{color:#4ade80}.tag-amber{color:#fbbf24}.tag-red{color:#f87171}.tag-blue{color:#60a5fa}.tag-gray{color:#94a3b8}.tag-purple{color:#a78bfa}
+
+/* Form */
+.form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.form-row input,.form-row select{padding:6px 10px;border:1px solid var(--border);background:#0b0f14;color:var(--text);font-family:var(--mono);font-size:12px}
+.form-row input:focus,.form-row select:focus{outline:1px solid var(--primary);border-color:var(--primary)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border)}
+.tab{padding:8px 16px;font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--primary);color:#0d1117;padding:8px 20px;font-size:12px;font-family:var(--mono);z-index:9999;border:1px solid var(--primary-light);display:none}
+
+/* Empty */
+.empty{text-align:center;padding:30px;color:#94a3b8;font-size:12px}
+
+/* Accessible modules */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.module-card{background:#0b0f14;border:1px solid var(--border);padding:12px;cursor:default}
+.module-card .mod-name{font-size:12px;font-weight:600;color:var(--text)}
+.module-card .mod-key{font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* No access overlay */
+.no-access{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px}
+.no-access .msg{font-size:14px;color:var(--text-muted)}
+</style></head><body>
+<div class="container">
+  <div class="top-bar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <a class="btn-back" href="index.html">← 返回看板</a>
+      <h1>GAMT 团队工作台</h1>
+    </div>
+    <div class="user-info" id="userInfo"></div>
+  </div>
+
+  <div id="noAccess" class="no-access" style="display:none">
+    <div class="msg">需要团队权限 (tier >= 2) 才能访问</div>
+    <a href="index.html" class="btn">返回看板</a>
+  </div>
+
+  <div id="mainContent" style="display:none">
+    <!-- Stats -->
+    <div class="stats" id="statsBar"></div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-tab="pool" onclick="switchTab('pool')">产品推荐</div>
+      <div class="tab" data-tab="my-submissions" onclick="switchTab('my-submissions')">我的提交</div>
+      <div class="tab" data-tab="modules" onclick="switchTab('modules')">可用模块</div>
+    </div>
+
+    <!-- Tab: 产品推荐 -->
+    <div id="tab-pool" class="tab-content active">
+      <div class="card">
+        <h3>推荐新产品</h3>
+        <div class="form-row">
+          <input id="fCode" placeholder="火富牛 reg_code（如 SATW62）" style="width:170px">
+          <select id="fGroup">
+            <option value="">选择策略组</option>
+            <option value="量选类">量选类</option>
+            <option value="风格多头">风格多头</option>
+            <option value="绝对收益">绝对收益</option>
+            <option value="商品类">商品类</option>
+            <option value="多策略">多策略</option>
+            <option value="FOF组合类">FOF组合类</option>
+          </select>
+          <input id="fDetail" placeholder="策略细分（选填）" style="width:140px">
+          <input id="fReason" placeholder="推荐理由（至少5字）" style="width:240px">
+        </div>
+        <div class="form-row">
+          <input id="fBenchmark" placeholder="基准代码（选填）" style="width:150px">
+          <input id="fBenchmarkName" placeholder="基准名称（选填）" style="width:130px">
+          <button class="btn" onclick="doSubmit()">提交推荐</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>正式产品池</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>编码</th><th>产品名</th><th>策略组</th><th>细分</th><th>提交人</th><th>审核人</th><th>类型</th></tr></thead>
+            <tbody id="approvedBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: 我的提交 -->
+    <div id="tab-my-submissions" class="tab-content">
+      <div class="card">
+        <h3>我的提交记录</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>编码</th><th>产品名</th><th>策略组</th><th>推荐理由</th><th>提交时间</th><th>验证</th><th>审核状态</th><th>审核备注</th><th>操作</th></tr></thead>
+            <tbody id="myBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: 可用模块 -->
+    <div id="tab-modules" class="tab-content">
+      <div class="card">
+        <h3>当前可访问的看板模块</h3>
+        <div class="module-grid" id="moduleGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var AUTH_API=null,currentUser=null,poolData=null;
+
+var MODULE_NAMES={'style_spread':'风格轧差','quant_stock':'宽基量化股票','momentum_stock':'强势股情绪','commodity_cta':'商品CTA','cb_env':'转债指增','alerts':'红灯预警','us_alerts':'美股风险监控','crowding':'资金流拥挤度','option_sentiment':'期权情绪','patient_capital':'耐心资本','macro_liquidity':'宏观流动性','macro_rates':'利率数据','macro_fundamentals':'基本面数据','antifragile':'反脆弱看板','chain_prosperity':'中观景气度','macro_score':'宏观打分','option_vol':'期权卖权','arbitrage':'套利','macro/halo_trade':'HALO交易','fund_asset':'团队基金优选','overview':'仪表盘汇总','timing_factors':'择时因子系统','financial_risk':'财报预期风险','chip_query':'个股筹码分析','fund_analysis':'基金分析','report':'投研简报','smart-notes':'Smart Notes','update-log':'更新日志'};
+
+function esc(s){return String(s==null?'-':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},2500)}
+
+function switchTab(n){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x.dataset.tab==n)});document.querySelectorAll('.tab-content').forEach(function(x){x.classList.toggle('active',x.id=='tab-'+n)})}
+
+function discoverAPI(cb){
+  fetch('/api/status').then(function(r){if(r.ok){AUTH_API='';cb()}else{throw 0}}).catch(function(){
+    fetch('http://localhost:9876/api/status',{mode:'cors'}).then(function(r){if(r.ok){AUTH_API='http://localhost:9876';cb()}else{throw 0}}).catch(function(){
+      fetch('tunnel_url.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){if(d&&d.url){AUTH_API=d.url;cb()}else{showNoAccess()}}).catch(function(){showNoAccess()})
+    })
+  })
+}
+
+function apiCall(m,path,b){
+  var o={method:m,headers:{'Content-Type':'application/json'}};
+  var t=localStorage.getItem('gamt_token');
+  if(t)o.headers.Authorization='Bearer '+t;
+  if(b)o.body=JSON.stringify(b);
+  return fetch(AUTH_API+path,o).then(function(r){return r.json()})
+}
+
+function showNoAccess(){
+  document.getElementById('noAccess').style.display='flex';
+  document.getElementById('mainContent').style.display='none';
+}
+
+function init(){
+  discoverAPI(function(){
+    apiCall('GET','/api/auth/me').then(function(d){
+      if(!d.username){location.href='index.html';return}
+      currentUser=d;
+      var tier=d.is_admin?3:parseInt(d.tier||0);
+      if(tier<2){showNoAccess();return}
+
+      // Show user info
+      var initial=(d.display_name||d.username||'U').charAt(0).toUpperCase();
+      var tierTag=d.is_admin?'<span class="tag tag-blue">管理员</span>':'<span class="tag tag-purple">团队</span>';
+      document.getElementById('userInfo').innerHTML='<div class="avatar">'+initial+'</div><span>'+(d.display_name||d.username)+'</span> '+tierTag;
+
+      document.getElementById('mainContent').style.display='';
+      loadPool();
+      loadModules();
+    }).catch(function(){location.href='index.html'})
+  })
+}
+
+function loadPool(){
+  apiCall('GET','/api/admin/fund-asset-pool').then(function(d){
+    if(d.error){showToast(d.error);return}
+    poolData=d;
+    renderStats(d);
+    renderApproved(d);
+    renderMySubmissions(d);
+  })
+}
+
+function renderStats(d){
+  var pool=d.pool||{},stats=d.stats||{},products=pool.products||[];
+  var approved=products.filter(function(p){return p.status==='approved'});
+  var myAll=products.filter(function(p){return p.submitted_by===(currentUser.display_name||currentUser.username)});
+  var myPending=myAll.filter(function(p){return p.status==='pending'||p.status==='verified'});
+  var myApproved=myAll.filter(function(p){return p.status==='approved'&&!p.seed});
+
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><div class="label">正式池产品</div><div class="value">'+approved.length+'</div></div>'+
+    '<div class="stat"><div class="label">我的提交</div><div class="value">'+myAll.length+'</div><div class="sub">待审 '+myPending.length+' / 通过 '+myApproved.length+'</div></div>'+
+    '<div class="stat"><div class="label">策略组覆盖</div><div class="value">'+new Set(approved.map(function(p){return p.group})).size+'</div></div>'+
+    '<div class="stat"><div class="label">种子产品</div><div class="value">'+(stats.seed||0)+'</div></div>';
+}
+
+function renderApproved(d){
+  var products=(d.pool||{}).products||[];
+  var approved=products.filter(function(p){return p.status==='approved'});
+  document.getElementById('approvedBody').innerHTML=approved.length?approved.map(function(p){
+    var typeTag=p.seed?'<span class="tag tag-blue">种子</span>':'<span class="tag tag-gray">推荐</span>';
+    return '<tr><td><code>'+esc(p.code)+'</code></td><td>'+esc(p.name)+'</td><td>'+esc(p.group)+'</td><td>'+esc(p.detail)+'</td><td>'+esc(p.submitted_by)+'</td><td>'+esc(p.reviewed_by)+'</td><td>'+typeTag+'</td></tr>'
+  }).join(''):'<tr><td colspan="7" class="empty">暂无正式产品</td></tr>';
+}
+
+function renderMySubmissions(d){
+  var products=(d.pool||{}).products||[];
+  var me=currentUser.display_name||currentUser.username;
+  var mine=products.filter(function(p){return p.submitted_by===me});
+
+  document.getElementById('myBody').innerHTML=mine.length?mine.map(function(p){
+    var vTag=p.status==='verified'?'<span class="tag tag-green">已验证</span>':p.status==='failed'?'<span class="tag tag-red">验证失败</span>':p.status==='pending'?'<span class="tag tag-amber">验证中</span>':'';
+    var sTag=p.status==='approved'?'<span class="tag tag-green">已通过</span>':p.status==='rejected'?'<span class="tag tag-red">已拒绝</span>':p.status==='removed'?'<span class="tag tag-gray">已下架</span>':'<span class="tag tag-amber">待审核</span>';
+    var ops='';
+    if(p.status==='failed')ops='<button class="btn btn-sm" onclick="retryVerify(\''+esc(p.code)+'\')">重试验证</button>';
+    return '<tr><td><code>'+esc(p.code)+'</code></td><td>'+esc(p.name)+'</td><td>'+esc(p.group)+'</td><td>'+esc(p.reason)+'</td><td>'+esc(p.submitted_at)+'</td><td>'+vTag+'</td><td>'+sTag+'</td><td>'+esc(p.review_note)+'</td><td>'+ops+'</td></tr>'
+  }).join(''):'<tr><td colspan="9" class="empty">你还没有提交过产品</td></tr>';
+}
+
+function loadModules(){
+  apiCall('GET','/api/modules/accessible').then(function(d){
+    var mods=Array.isArray(d)?d:(d.modules||d.accessible||[]);
+    var keys=mods.map(function(x){return typeof x==='string'?x:(x.module_key||x.key)});
+    document.getElementById('moduleGrid').innerHTML=keys.map(function(k){
+      return '<div class="module-card"><div class="mod-name">'+(MODULE_NAMES[k]||k)+'</div><div class="mod-key">'+k+'</div></div>'
+    }).join('')||'<div class="empty">暂无可用模块</div>';
+  }).catch(function(){
+    document.getElementById('moduleGrid').innerHTML='<div class="empty">加载失败</div>';
+  })
+}
+
+function doSubmit(){
+  var code=document.getElementById('fCode').value.trim();
+  var group=document.getElementById('fGroup').value;
+  var detail=document.getElementById('fDetail').value.trim();
+  var reason=document.getElementById('fReason').value.trim();
+  var bm=document.getElementById('fBenchmark').value.trim();
+  var bmn=document.getElementById('fBenchmarkName').value.trim();
+
+  if(!code){showToast('请输入 reg_code');return}
+  if(!group){showToast('请选择策略组');return}
+  if(!reason||reason.length<5){showToast('推荐理由至少5个字');return}
+
+  if(!confirm('确认提交 '+code+' 到「'+group+'」？'))return;
+
+  apiCall('POST','/api/admin/fund-asset-pool/submit',{
+    code:code,group:group,detail:detail,reason:reason,
+    benchmark:bm||null,benchmark_name:bmn||null
+  }).then(function(d){
+    if(d.ok){
+      showToast(d.msg||'提交成功');
+      document.getElementById('fCode').value='';
+      document.getElementById('fDetail').value='';
+      document.getElementById('fReason').value='';
+      document.getElementById('fBenchmark').value='';
+      document.getElementById('fBenchmarkName').value='';
+      document.getElementById('fGroup').value='';
+      setTimeout(loadPool,2500);
+    }else{
+      alert(d.msg||'提交失败');
+    }
+  }).catch(function(){alert('网络错误')})
+}
+
+function retryVerify(code){
+  if(!confirm('重新验证 '+code+'？'))return;
+  apiCall('POST','/api/admin/fund-asset-pool/retry',{code:code}).then(function(d){
+    showToast(d.msg||'已提交重试');
+    setTimeout(loadPool,3000);
+  }).catch(function(){alert('网络错误')})
+}
+
+init();
+</script></body></html>
