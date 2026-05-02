@@ -31,11 +31,11 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
 
       <!-- 策略 tab 导航 -->
       <div class="strat-tabs">
-        <div class="strat-tab active" data-strat="quant-stock">📊 宽基量化股票</div>
-        <div class="strat-tab" data-strat="momentum-stock" style="opacity:0.4">🔥 强势股</div>
-        <div class="strat-tab" data-strat="cta" style="opacity:0.4">📦 商品CTA</div>
-        <div class="strat-tab" data-strat="convertible" style="opacity:0.4">🔄 转债</div>
-        <div class="strat-tab" data-strat="arbitrage" style="opacity:0.4">⚖️ 套利</div>
+        <div class="strat-tab active" data-strat="quant-stock"> 宽基量化股票</div>
+        <div class="strat-tab" data-strat="momentum-stock" style="opacity:0.4"> 强势股</div>
+        <div class="strat-tab" data-strat="cta" style="opacity:0.4"> 商品CTA</div>
+        <div class="strat-tab" data-strat="convertible" style="opacity:0.4"> 转债</div>
+        <div class="strat-tab" data-strat="arbitrage" style="opacity:0.4"> 套利</div>
       </div>
 
       <!-- ===== 宽基量化股票 ===== -->
@@ -67,18 +67,18 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
 
         <!-- 计算说明 -->
         <div class="card" style="font-size:12px;color:#999;line-height:1.8">
-          <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span> 📐 指标说明</div>
-          <p><b style="color:#555">① 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
-          <p><b style="color:#555">② 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
-          <p><b style="color:#555">③ 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
-          <p><b style="color:#555">④ 因子超额：</b>各因子指数相对中证全指的日度超额收益累计净值。成长=国证成长(399370)，红利=中证红利(000922)，小盘=中证2000(932000)</p>
+          <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span>  指标说明</div>
+          <p><b style="color:#555"> 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
+          <p><b style="color:#555"> 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
+          <p><b style="color:#555"> 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
+          <p><b style="color:#555"> 因子超额：</b>各因子指数相对中证全指的日度超额收益累计净值。成长=国证成长(399370)，红利=中证红利(000922)，小盘=中证2000(932000)</p>
         </div>
       </div>
 
       <!-- 占位策略页 -->
       <div class="strat-page" id="strat-momentum-stock">
         <div class="card" style="text-align:center;padding:60px;color:#999">
-          <div style="font-size:48px;margin-bottom:16px">🔥</div>
+          <div style="font-size:48px;margin-bottom:16px"></div>
           <div style="font-size:16px;font-weight:600;color:#666">强势股策略指标</div>
           <div style="margin-top:8px">全A+双创涨跌家数比 · WKRD动量分位数 · 信用一级拥挤度 · 变化梯度最高行业 · 涨跌停家数比</div>
           <div style="margin-top:16px;font-size:13px">模块规划中</div>
@@ -86,7 +86,7 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
       </div>
       <div class="strat-page" id="strat-cta">
         <div class="card" style="text-align:center;padding:60px;color:#999">
-          <div style="font-size:48px;margin-bottom:16px">📦</div>
+          <div style="font-size:48px;margin-bottom:16px"></div>
           <div style="font-size:16px;font-weight:600;color:#666">商品CTA策略指标</div>
           <div style="margin-top:8px">流动性总值 · 持仓排名 · CTA多样性 · 基本面+期限+趋势跟踪</div>
           <div style="margin-top:16px;font-size:13px">模块规划中</div>
@@ -94,7 +94,7 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
       </div>
       <div class="strat-page" id="strat-convertible">
         <div class="card" style="text-align:center;padding:60px;color:#999">
-          <div style="font-size:48px;margin-bottom:16px">🔄</div>
+          <div style="font-size:48px;margin-bottom:16px"></div>
           <div style="font-size:16px;font-weight:600;color:#666">转债策略指标</div>
           <div style="margin-top:8px">成交量相关性 · 换手前50%均价分位+转股溢价率 · 成交量前50%DELTA中位数 · 债底跟踪</div>
           <div style="margin-top:16px;font-size:13px">模块规划中</div>
@@ -102,7 +102,7 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
       </div>
       <div class="strat-page" id="strat-arbitrage">
         <div class="card" style="text-align:center;padding:60px;color:#999">
-          <div style="font-size:48px;margin-bottom:16px">⚖️</div>
+          <div style="font-size:48px;margin-bottom:16px"></div>
           <div style="font-size:16px;font-weight:600;color:#666">套利策略指标</div>
           <div style="margin-top:8px">期权隐含波动率时序 · 股指/商品期货流动性波动率</div>
           <div style="margin-top:16px;font-size:13px">模块规划中</div>
@@ -296,7 +296,7 @@ html = html.replace("v0.1 · 2026-02-22", f"v0.2 · {data['total_amount'][-1]['d
 with open(html_path, 'w', encoding='utf-8') as f:
     f.write(html)
 
-print(f'✅ 已注入到 {html_path}')
+print(f' 已注入到 {html_path}')
 print(f'   数据天数: {len(data["total_amount"])}')
 print(f'   最新日期: {data["total_amount"][-1]["date"]}')
 print(f'   HTML 大小: {len(html)/1024:.1f} KB')

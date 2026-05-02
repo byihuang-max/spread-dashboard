@@ -25,44 +25,44 @@ PRICE_JSON = DATA_DIR / "halo_prices.json"
 # 全球 HALO 标的池（按主线分类）
 HALO_UNIVERSE = {
     "AI能耗": {
-        "🇺🇸 Constellation": "CEG",
-        "🇺🇸 GE Vernova": "GEV",
-        "🇺🇸 NextEra": "NEE",
-        "🇺🇸 Eaton": "ETN",
-        "🇯🇵 东京电力": "9501.T",
-        "🇯🇵 关西电力": "9503.T",
-        "🇰🇷 韩国电力": "015760.KS",
-        "🇨🇳 长江电力": "600900.SS",
-        "🇨🇳 中国核电": "601985.SS",
+        "US Constellation": "CEG",
+        "US GE Vernova": "GEV",
+        "US NextEra": "NEE",
+        "US Eaton": "ETN",
+        "JP 东京电力": "9501.T",
+        "JP 关西电力": "9503.T",
+        "KR 韩国电力": "015760.KS",
+        "CN 长江电力": "600900.SS",
+        "CN 中国核电": "601985.SS",
     },
     "地缘重装": {
-        "🇺🇸 洛克希德": "LMT",
-        "🇺🇸 雷神": "RTX",
-        "🇯🇵 三菱重工": "7011.T",
-        "🇯🇵 川崎重工": "7012.T",
-        "🇰🇷 韩华航空": "012450.KS",
-        "🇰🇷 现代重工": "009540.KS",
-        "🇨🇳 中国船舶": "600150.SS",
-        "🇨🇳 中航沈飞": "600760.SS",
+        "US 洛克希德": "LMT",
+        "US 雷神": "RTX",
+        "JP 三菱重工": "7011.T",
+        "JP 川崎重工": "7012.T",
+        "KR 韩华航空": "012450.KS",
+        "KR 现代重工": "009540.KS",
+        "CN 中国船舶": "600150.SS",
+        "CN 中航沈飞": "600760.SS",
     },
     "价值兑现": {
-        "🇺🇸 埃克森": "XOM",
-        "🇺🇸 摩根大通": "JPM",
-        "🇯🇵 三菱商事": "8058.T",
-        "🇯🇵 三菱UFJ": "8306.T",
-        "🇰🇷 浦项制铁": "005490.KS",
-        "🇰🇷 KB金融": "105560.KS",
-        "🇨🇳 中国石油": "601857.SS",
-        "🇨🇳 招商银行": "600036.SS",
+        "US 埃克森": "XOM",
+        "US 摩根大通": "JPM",
+        "JP 三菱商事": "8058.T",
+        "JP 三菱UFJ": "8306.T",
+        "KR 浦项制铁": "005490.KS",
+        "KR KB金融": "105560.KS",
+        "CN 中国石油": "601857.SS",
+        "CN 招商银行": "600036.SS",
     },
 }
 
 # 基准指数（各市场）
 BENCHMARKS = {
-    "🇺🇸 标普500": "SPY",
-    "🇯🇵 日经225": "^N225",
-    "🇰🇷 KOSPI": "^KS11",
-    "🇨🇳 沪深300": "000300.SS",
+    "US 标普500": "SPY",
+    "JP 日经225": "^N225",
+    "KR KOSPI": "^KS11",
+    "CN 沪深300": "000300.SS",
 }
 
 # 合并所有标的（含基准）
@@ -78,10 +78,10 @@ def load_existing_data():
     """加载已有数据，返回 DataFrame"""
     if PRICE_CSV.exists():
         df = pd.read_csv(PRICE_CSV, parse_dates=["date"])
-        print(f"✅ 加载已有数据：{len(df)} 行，最新日期 {df['date'].max().date()}")
+        print(f" 加载已有数据：{len(df)} 行，最新日期 {df['date'].max().date()}")
         return df
     else:
-        print("📂 无历史数据，将全量拉取")
+        print(" 无历史数据，将全量拉取")
         return pd.DataFrame()
 
 
@@ -96,7 +96,7 @@ def get_date_range(existing_df):
         last_date = existing_df["date"].max()
         start_date = last_date + timedelta(days=1)
         if start_date >= end_date:
-            print("✅ 数据已是最新，无需拉取")
+            print(" 数据已是最新，无需拉取")
             return None, None
     else:
         start_date = end_date - timedelta(days=365)
@@ -127,7 +127,7 @@ def fetch_prices(tickers, start_date, end_date):
         try:
             data = yf.download(ticker, start=start_date, end=end_date, progress=False)
             if data.empty:
-                print(f"  ⚠️  {ticker} 无数据")
+                print(f"  ⚠  {ticker} 无数据")
                 continue
             
             df = data[["Close"]].reset_index()
@@ -136,9 +136,9 @@ def fetch_prices(tickers, start_date, end_date):
             df["name"] = ticker_to_name.get(ticker, ticker)
             df["theme"] = ticker_to_theme.get(ticker, "未分类")
             all_data.append(df)
-            print(f"  ✅ {ticker_to_name.get(ticker, ticker)}: {len(df)} 天")
+            print(f"   {ticker_to_name.get(ticker, ticker)}: {len(df)} 天")
         except Exception as e:
-            print(f"  ❌ {ticker} 拉取失败: {e}")
+            print(f"   {ticker} 拉取失败: {e}")
     
     if not all_data:
         return pd.DataFrame()
@@ -154,7 +154,7 @@ def save_data(df):
     """保存为 CSV + JSON"""
     # CSV（完整历史）
     df.to_csv(PRICE_CSV, index=False)
-    print(f"✅ CSV 已保存：{PRICE_CSV}（{len(df)} 行）")
+    print(f" CSV 已保存：{PRICE_CSV}（{len(df)} 行）")
     
     # JSON（最新快照 + 元数据）
     latest_date = df["date"].max()
@@ -181,7 +181,7 @@ def save_data(df):
     
     with open(PRICE_JSON, "w", encoding="utf-8") as f:
         json.dump(snapshot, f, ensure_ascii=False, indent=2)
-    print(f"✅ JSON 已保存：{PRICE_JSON}")
+    print(f" JSON 已保存：{PRICE_JSON}")
 
 
 # ==================== 主流程 ====================
@@ -202,7 +202,7 @@ def main():
     # 3. 拉取新数据
     new_df = fetch_prices(list(ALL_TICKERS.values()), start_date, end_date)
     if new_df.empty:
-        print("⚠️  未拉取到新数据")
+        print("⚠  未拉取到新数据")
         return
     
     # 4. 合并数据
@@ -217,7 +217,7 @@ def main():
     save_data(combined_df)
     
     print("=" * 60)
-    print(f"✅ 完成！共 {len(combined_df)} 行数据")
+    print(f" 完成！共 {len(combined_df)} 行数据")
     print("=" * 60)
 
 

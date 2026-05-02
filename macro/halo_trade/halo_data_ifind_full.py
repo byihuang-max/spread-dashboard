@@ -21,29 +21,29 @@ IFIND_REFRESH = 'eyJzaWduX3RpbWUiOiIyMDI2LTA0LTEyIDE2OjU1OjAzIn0=.eyJ1aWQiOiI4NT
 # HALO 股票池（全部用美股+A股）
 HALO_STOCKS = {
     "AI能耗": {
-        "🇺🇸 南方电力": "SO.N",
-        "🇺🇸 NextEra能源": "NEE.N",
-        "🇺🇸 杜克能源": "DUK.N",
-        "🇺🇸 伊顿": "ETN.N",
-        "🇨🇳 长江电力": "600900.SH",
-        "🇨🇳 中国核电": "601985.SH",
+        "US 南方电力": "SO.N",
+        "US NextEra能源": "NEE.N",
+        "US 杜克能源": "DUK.N",
+        "US 伊顿": "ETN.N",
+        "CN 长江电力": "600900.SH",
+        "CN 中国核电": "601985.SH",
     },
     "地缘重装": {
-        "🇺🇸 洛克希德": "LMT.N",
-        "🇺🇸 雷神": "RTX.N",
-        "🇺🇸 通用动力": "GD.N",
-        "🇺🇸 诺斯罗普": "NOC.N",
-        "🇨🇳 中国船舶": "600150.SH",
-        "🇨🇳 中航沈飞": "600760.SH",
+        "US 洛克希德": "LMT.N",
+        "US 雷神": "RTX.N",
+        "US 通用动力": "GD.N",
+        "US 诺斯罗普": "NOC.N",
+        "CN 中国船舶": "600150.SH",
+        "CN 中航沈飞": "600760.SH",
     },
     "价值兑现": {
-        "🇺🇸 埃克森美孚": "XOM.N",
-        "🇺🇸 摩根大通": "JPM.N",
-        "🇺🇸 高盛": "GS.N",
-        "🇺🇸 摩根士丹利": "MS.N",
-        "🇺🇸 美国银行": "BAC.N",
-        "🇨🇳 中国石油": "601857.SH",
-        "🇨🇳 招商银行": "600036.SH",
+        "US 埃克森美孚": "XOM.N",
+        "US 摩根大通": "JPM.N",
+        "US 高盛": "GS.N",
+        "US 摩根士丹利": "MS.N",
+        "US 美国银行": "BAC.N",
+        "CN 中国石油": "601857.SH",
+        "CN 招商银行": "600036.SH",
     },
 }
 
@@ -61,7 +61,7 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
     except Exception as e:
-        print(f"❌ Token 错误: {e}")
+        print(f" Token 错误: {e}")
     return None
 
 def ifind_history(token, code, start, end):
@@ -82,7 +82,7 @@ def ifind_history(token, code, start, end):
             if tables:
                 return tables[0]
     except Exception as e:
-        print(f"  ❌ {code} 失败: {e}")
+        print(f"   {code} 失败: {e}")
     return None
 
 if __name__ == '__main__':
@@ -92,10 +92,10 @@ if __name__ == '__main__':
     
     token = get_token()
     if not token:
-        print("❌ 无法获取 token")
+        print(" 无法获取 token")
         exit(1)
     
-    print("✅ Token 获取成功")
+    print(" Token 获取成功")
     
     # 拉取一年数据
     end = datetime.now().strftime('%Y-%m-%d')
@@ -118,7 +118,7 @@ if __name__ == '__main__':
                 volumes = result.get('table', {}).get('volume', [])
                 
                 if dates and closes:
-                    print(f"  ✅ {name:20} {len(dates):3}天")
+                    print(f"   {name:20} {len(dates):3}天")
                     for i, date in enumerate(dates):
                         all_data.append({
                             'date': date,
@@ -129,9 +129,9 @@ if __name__ == '__main__':
                             'volume': volumes[i] if i < len(volumes) else None,
                         })
                 else:
-                    print(f"  ⚠️  {name:20} 无数据")
+                    print(f"  ⚠  {name:20} 无数据")
             else:
-                print(f"  ❌ {name:20} 拉取失败")
+                print(f"   {name:20} 拉取失败")
             
             time.sleep(0.5)  # 避免请求过快
     
@@ -143,7 +143,7 @@ if __name__ == '__main__':
             dates = result.get('time', [])
             closes = result.get('table', {}).get('close', [])
             if dates and closes:
-                print(f"  ✅ {name:20} {len(dates):3}天")
+                print(f"   {name:20} {len(dates):3}天")
                 for i, date in enumerate(dates):
                     all_data.append({
                         'date': date,
@@ -159,7 +159,7 @@ if __name__ == '__main__':
     if all_data:
         df = pd.DataFrame(all_data)
         df.to_csv(PRICE_CSV, index=False)
-        print(f"\n✅ CSV 已保存: {PRICE_CSV}")
+        print(f"\n CSV 已保存: {PRICE_CSV}")
         print(f"   总记录数: {len(df)}")
         
         # 转换为 JSON 格式（按股票分组）
@@ -176,9 +176,9 @@ if __name__ == '__main__':
         
         with open(PRICE_JSON, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, ensure_ascii=False, indent=2)
-        print(f"✅ JSON 已保存: {PRICE_JSON}")
+        print(f" JSON 已保存: {PRICE_JSON}")
     else:
-        print("\n❌ 没有数据")
+        print("\n 没有数据")
     
     print("\n" + "="*60)
-    print("✅ 完成！")
+    print(" 完成！")

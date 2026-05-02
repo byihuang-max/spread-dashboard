@@ -265,4 +265,4 @@ output = {
 with open(BASE / "contract_opportunities.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 已保存 contract_opportunities.json")
+print(f"\n 已保存 contract_opportunities.json")

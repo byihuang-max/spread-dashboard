@@ -8,7 +8,7 @@ out_en = os.path.join(_BASE, 'style_spread.html')
 out_cn = os.path.join(_BASE, '风格轧差看板.html')
 
 if not os.path.exists(json_path):
-    print("❌ style_spread.json 不存在，请先运行 compute_spreads.py")
+    print(" style_spread.json 不存在，请先运行 compute_spreads.py")
     sys.exit(1)
 
 with open(json_path, 'r', encoding='utf-8') as f:
@@ -102,17 +102,17 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 </head><body>
 
 <div class="ss-tabs">
-  <div class="ss-tab active" data-tab="eco">📊 经济敏感轧差</div>
-  <div class="ss-tab" data-tab="crowd">🔥 拥挤-反身性</div>
-  <div class="ss-tab" data-tab="style">📈 风格轧差净值</div>
-  <div class="ss-tab" data-tab="dual">🚀 双创等权</div>
+  <div class="ss-tab active" data-tab="eco"> 经济敏感轧差</div>
+  <div class="ss-tab" data-tab="crowd"> 拥挤-反身性</div>
+  <div class="ss-tab" data-tab="style"> 风格轧差净值</div>
+  <div class="ss-tab" data-tab="dual"> 双创等权</div>
 </div>
 
 <!-- Tab 1: 经济敏感轧差 -->
 <div class="ss-page active" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📊 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
-    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
+    <span style="font-size:13px;color:#888"> 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#e67e22">
@@ -151,8 +151,8 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 2: 拥挤-反身性轧差 -->
 <div class="ss-page" id="page-crowd">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🔥 拥挤-反身性 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
-    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
+    <span style="font-size:13px;color:#888"> 拥挤-反身性 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
   </div>
   <div class="overview-grid">
     <div class="ov-card" style="border-left-color:#c0392b">
@@ -198,8 +198,8 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 3: 风格轧差净值 -->
 <div class="ss-page" id="page-style">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">📈 风格轧差净值 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
-    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
+    <span style="font-size:13px;color:#888"> 风格轧差净值 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 风格轧差多线对比</div>
@@ -219,8 +219,8 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 <!-- Tab 4: 双创等权 -->
 <div class="ss-page" id="page-dual">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888">🚀 双创等权 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
-    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280">🔄 刷新当前</button>
+    <span style="font-size:13px;color:#888"> 双创等权 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权净值</div>
@@ -342,13 +342,13 @@ function refreshData(module) {{
     }} else {{
       alert('刷新失败: ' + (data.error || '未知错误'));
       btn.disabled = false;
-      btn.textContent = '🔄 刷新当前';
+      btn.textContent = ' 刷新当前';
     }}
   }})
   .catch(err => {{
     alert('刷新失败: ' + err.message);
     btn.disabled = false;
-    btn.textContent = '🔄 刷新当前';
+    btn.textContent = ' 刷新当前';
   }});
 }}
 
@@ -366,20 +366,20 @@ function pollProgress(btn) {{
     }} else {{
       const result = data.last_result || {{}};
       if(result.ok) {{
-        btn.textContent = '✅ 完成';
+        btn.textContent = ' 完成';
         setTimeout(() => location.reload(), 1000);
       }} else {{
-        btn.textContent = '❌ 失败';
+        btn.textContent = ' 失败';
         setTimeout(() => {{
           btn.disabled = false;
-          btn.textContent = '🔄 刷新当前';
+          btn.textContent = ' 刷新当前';
         }}, 2000);
       }}
     }}
   }})
   .catch(() => {{
     btn.disabled = false;
-    btn.textContent = '🔄 刷新当前';
+    btn.textContent = ' 刷新当前';
   }});
 }}
 </script>
@@ -390,6 +390,6 @@ for path in [out_en, out_cn]:
         f.write(html)
 
 size = os.path.getsize(out_en)
-print(f"✅ HTML 生成完成: {size/1024:.1f} KB")
+print(f" HTML 生成完成: {size/1024:.1f} KB")
 print(f"   {out_en}")
 print(f"   {out_cn}")

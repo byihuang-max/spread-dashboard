@@ -30,7 +30,7 @@ def run_module(script, label):
         capture_output=False,
     )
     if result.returncode != 0:
-        print(f"  ⚠️ {label} 退出码 {result.returncode}")
+        print(f"  ⚠ {label} 退出码 {result.returncode}")
         return False
     return True
 
@@ -42,21 +42,21 @@ def merge():
         if os.path.exists(path):
             with open(path, encoding="utf-8") as f:
                 merged[json_file.replace(".json", "")] = json.load(f)
-            print(f"  ✅ 已合并 {label} ({json_file})")
+            print(f"   已合并 {label} ({json_file})")
         else:
-            print(f"  ❌ 缺失 {json_file}，跳过")
+            print(f"   缺失 {json_file}，跳过")
 
     out = os.path.join(BASE, "commodity_cta.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump(merged, f, ensure_ascii=False, indent=2)
-    print(f"\n📦 最终输出: {out}")
+    print(f"\n 最终输出: {out}")
     print(f"   大小: {os.path.getsize(out)/1024:.1f} KB")
     return merged
 
 
 def print_summary(merged):
     print("\n" + "=" * 50)
-    print("📊 CTA策略环境 — 汇总")
+    print(" CTA策略环境 — 汇总")
     print("=" * 50)
 
     # 模块一
@@ -117,13 +117,13 @@ def main():
         mode = "full"
 
     if mode == "full":
-        print("🚀 完整运行：依次执行五个模块 + 合并")
+        print(" 完整运行：依次执行五个模块 + 合并")
         for script, _, label in MODULES:
             ok = run_module(script, label)
             if not ok:
-                print(f"⚠️ {label} 失败，继续下一个...")
+                print(f"⚠ {label} 失败，继续下一个...")
     else:
-        print("📦 合并模式：直接合并已有 JSON（加 --run 可完整运行）")
+        print(" 合并模式：直接合并已有 JSON（加 --run 可完整运行）")
 
     merged = merge()
     print_summary(merged)

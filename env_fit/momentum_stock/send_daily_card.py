@@ -43,7 +43,7 @@ def build_card(report_text):
             elements.append({"tag": "markdown", "content": s})
             continue
 
-        if s and s[0] in '①②③':
+        if s and s[0] in '':
             elements.append({"tag": "hr"})
             elements.append({"tag": "markdown", "content": f"**{s}**"})
             continue
@@ -94,9 +94,9 @@ def main():
     print('发送卡片...')
     result = send_card(card, token)
     if result.get('code') == 0:
-        print('✅ 日报卡片发送成功')
+        print(' 日报卡片发送成功')
     else:
-        print(f'❌ 发送失败: {result.get("msg")}')
+        print(f' 发送失败: {result.get("msg")}')
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
 

@@ -244,7 +244,7 @@ def main():
 
     # 打印结果
     log(f"\n{'='*60}")
-    log(f"📊 PCA Loading品种分析 ({result['date']})")
+    log(f" PCA Loading品种分析 ({result['date']})")
     log(f"{'='*60}")
     log(f"  PC1解释比: {result['pc1_explained']:.1%}  |  PC2解释比: {result['pc2_explained']:.1%}")
     log(f"  分化轴:    {result['divergence_axis']}")
@@ -262,7 +262,7 @@ def main():
         log(f"    {sec['sector']:6s}  PC1均值={sec['avg_pc1_loading']:+.3f}  "
             f"一致性={sec['coherence']:.2f}  代表={sec['top_symbol']}")
 
-    log(f"\n✅ 模块2b完成")
+    log(f"\n 模块2b完成")
 
 
 if __name__ == '__main__':

@@ -124,17 +124,17 @@ def inject_cb_nav():
     html = re.sub(r'  // 转债策略 × 归因分析图表.*?  \}\n', '', html, flags=re.DOTALL)
     
     # 3. 在分项评分卡片之后插入 HTML
-    marker = '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">📊 分项评分</div>'
+    marker = '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px"> 分项评分</div>'
     pos = html.find(marker)
     if pos == -1:
-        print("❌ 找不到分项评分标题")
+        print(" 找不到分项评分标题")
         return
     
     # 往后找到包含这个标题的卡片的结束 </div>
     # 先找到这个标题所在的父级 card div
     card_start = html.rfind('<div class="card"', 0, pos)
     if card_start == -1:
-        print("❌ 找不到分项评分卡片开始")
+        print(" 找不到分项评分卡片开始")
         return
     
     # 从卡片开始位置匹配层级找结束
@@ -151,7 +151,7 @@ def inject_cb_nav():
         i += 1
     
     if depth != 0:
-        print("❌ 找不到分项评分卡片结束")
+        print(" 找不到分项评分卡片结束")
         return
     
     # 在分项评分卡片之后插入
@@ -161,13 +161,13 @@ def inject_cb_nav():
     func_marker = 'function initCbCharts() {'
     func_start = html.find(func_marker)
     if func_start == -1:
-        print("❌ 找不到 initCbCharts 函数")
+        print(" 找不到 initCbCharts 函数")
         return
     
     # 找到函数的结束 }
     func_end = html.find('\n}', func_start)
     if func_end == -1:
-        print("❌ 找不到函数结束")
+        print(" 找不到函数结束")
         return
     
     html = html[:func_end] + nav_chart_code + html[func_end:]
@@ -175,7 +175,7 @@ def inject_cb_nav():
     with open(html_file, 'w', encoding='utf-8') as f:
         f.write(html)
     
-    print(f"✅ 转债净值已注入")
+    print(f" 转债净值已注入")
     print(f"   {fund['date_range']}")
     print(f"   产品 {fund['total_return']:.2f}% | 基准 {fund['index_return']:.2f}% | 超额 {fund['excess_return']:.2f}%")
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-⚠️ 已废弃 — 2026-04-13
+⚠ 已废弃 — 2026-04-13
 旧版 Tushare 私有地址（已过期）+ 旧 token，不再使用。
 正式版本：halo_financials.py（AkShare 美股财报现金流）
 
@@ -53,14 +53,14 @@ def fetch_capex_data():
         df = ts_api('us_cashflow', ts_code=ticker, start_date=start_date, end_date=end_date)
         
         if df.empty:
-            print(f"  ⚠️  {name} 无数据")
+            print(f"  ⚠  {name} 无数据")
             continue
         
         # 筛选"购买固定资产"（CapEx）
         capex = df[df['ind_name'] == '购买固定资产'].copy()
         
         if capex.empty:
-            print(f"  ⚠️  {name} 无 CapEx 数据")
+            print(f"  ⚠  {name} 无 CapEx 数据")
             continue
         
         capex['date'] = pd.to_datetime(capex['end_date'], format='%Y%m%d')
@@ -68,7 +68,7 @@ def fetch_capex_data():
         capex = capex[['date', 'capex']].sort_values('date')
         
         results[ticker] = capex
-        print(f"  ✅ {name}: {len(capex)} 个季度")
+        print(f"   {name}: {len(capex)} 个季度")
     
     return results
 
@@ -109,7 +109,7 @@ def calculate_capex_derivatives(capex_data):
             else:
                 trend, signal = "平稳", "🟡"
         else:
-            trend, signal = "数据不足", "⚪"
+            trend, signal = "数据不足", ""
         
         results[ticker] = {
             "name": HYPERSCALERS[ticker],
@@ -124,7 +124,7 @@ def calculate_capex_derivatives(capex_data):
             "history": history
         }
     
-    print(f"✅ 完成 {len(results)} 家公司")
+    print(f" 完成 {len(results)} 家公司")
     return results
 
 if __name__ == '__main__':
@@ -146,10 +146,10 @@ if __name__ == '__main__':
         json.dump(output, f, ensure_ascii=False, indent=2)
     
     print("="*60)
-    print(f"✅ CapEx 二阶导:")
+    print(f" CapEx 二阶导:")
     for ticker, data in capex_deriv.items():
         latest = data['latest']
         print(f"   {ticker:6} {data['name']:6} CapEx={latest['capex']}B, YoY={latest['yoy_growth']}%, 二阶导={latest['second_derivative']}% {latest['signal']}")
     
-    print(f"✅ 结果已保存：{FINANCIAL_JSON}")
+    print(f" 结果已保存：{FINANCIAL_JSON}")
     print("="*60)

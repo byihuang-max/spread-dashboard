@@ -237,7 +237,7 @@ def main():
         out['stocks'].append(item)
 
     SNAPSHOT_JSON.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(f'✅ wrote {SNAPSHOT_JSON}')
+    print(f' wrote {SNAPSHOT_JSON}')
 
 
 if __name__ == '__main__':

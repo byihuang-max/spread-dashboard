@@ -189,7 +189,7 @@ for exchange, opt_prefix, cn_name, fut_prefix in SYMBOLS:
         "iv_history": [{"date": d, "iv": round(v, 4)} for d, v in zip(iv_dates, iv_series)],
     })
     
-    print(f"  ✅ IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(iv_series)}")
+    print(f"   IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(iv_series)}")
 
 # 加权汇总
 if results:
@@ -206,4 +206,4 @@ output = {
 with open(BASE / "iv_percentile.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {len(results)} 品种, 全市场IV分位={weighted_pct:.1f}%")
+print(f"\n 完成: {len(results)} 品种, 全市场IV分位={weighted_pct:.1f}%")

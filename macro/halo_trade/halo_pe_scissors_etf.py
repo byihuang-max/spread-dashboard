@@ -42,11 +42,11 @@ def fetch_pe_ratios(etf_dict):
                     'ticker': ticker,
                     'pe': round(float(pe), 2),
                 }
-                print(f"  ✅ {name}({ticker}): PE={pe:.2f}")
+                print(f"   {name}({ticker}): PE={pe:.2f}")
             else:
-                print(f"  ⚠️ {name}({ticker}) PE 数据缺失")
+                print(f"  ⚠ {name}({ticker}) PE 数据缺失")
         except Exception as e:
-            print(f"  ❌ {name}({ticker}) 拉取失败: {e}")
+            print(f"   {name}({ticker}) 拉取失败: {e}")
     return results
 
 
@@ -56,7 +56,7 @@ def calculate_eps_scissors():
     light_data = fetch_pe_ratios(LIGHT_ASSET_ETFS)
 
     if not heavy_data or not light_data:
-        print("⚠️ PE 数据不足，跳过剪刀差计算")
+        print("⚠ PE 数据不足，跳过剪刀差计算")
         return None
 
     heavy_pe = sum(d['pe'] for d in heavy_data.values()) / len(heavy_data)
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     OUTPUT_JSON.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
 
     if eps_scissors:
-        print(f"✅ PE剪刀差: 重资产 {eps_scissors['heavy_asset_pe']} vs 轻资产 {eps_scissors['light_asset_pe']}")
+        print(f" PE剪刀差: 重资产 {eps_scissors['heavy_asset_pe']} vs 轻资产 {eps_scissors['light_asset_pe']}")
         print(f"   {eps_scissors['interpretation']}")
         print(f"   历史点数: {len(eps_scissors['history'])}")
-    print(f"✅ 结果已保存：{OUTPUT_JSON}")
+    print(f" 结果已保存：{OUTPUT_JSON}")

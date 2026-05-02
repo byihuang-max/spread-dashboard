@@ -21,14 +21,14 @@ API_BASE = 'https://api.zsxq.com/v2'
 def load_config():
     """加载配置"""
     if not CONFIG_FILE.exists():
-        print("❌ 配置文件不存在，请先配置 config.json")
+        print(" 配置文件不存在，请先配置 config.json")
         return None
     
     with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
     if not config.get('cookie'):
-        print("❌ 请先在 config.json 中配置 cookie")
+        print(" 请先在 config.json 中配置 cookie")
         return None
     
     return config
@@ -56,7 +56,7 @@ def fetch_planet_topics(planet_id, config, limit=50):
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
-        print(f"❌ 获取星球 {planet_id} 失败: {e}")
+        print(f" 获取星球 {planet_id} 失败: {e}")
         return None
 
 
@@ -68,7 +68,7 @@ def save_topics(planet_name, topics_data):
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(topics_data, f, ensure_ascii=False, indent=2)
     
-    print(f"✓ 保存到: {filename}")
+    print(f" 保存到: {filename}")
 
 
 def main():
@@ -93,7 +93,7 @@ def main():
         if data:
             save_topics(planet_name, data)
     
-    print("\n✓ 抓取完成")
+    print("\n 抓取完成")
 
 
 if __name__ == '__main__':

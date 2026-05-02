@@ -500,13 +500,13 @@ def compute_sentiment(full_rows):
     """在 full_rows 上原地添加标准化因子、合成情绪、周期标签。
     
     v2 优化（2026-03-01）：
-    ① 封板质量改为大市值涨停占比（big_cap+2*mega_cap / up_count）
-    ② 标准化改为120日分位数排名（替代60日min-max，有绝对锚）
-    ③ 涨跌停比clip到20（防跌停=0时极端值）
-    ④ 加交互修正项：
+     封板质量改为大市值涨停占比（big_cap+2*mega_cap / up_count）
+     标准化改为120日分位数排名（替代60日min-max，有绝对锚）
+     涨跌停比clip到20（防跌停=0时极端值）
+     加交互修正项：
        - 高度×质量交互：连板高但封板质量低（全小票）→ 打折
        - 赚亏对冲：晋级率高但炸板率也高（分歧期）→ 打折
-    ⑤ 权重调整：空间高度0.20 晋级率0.25 反炸板率0.20 涨跌停比0.10 封板质量0.25
+     权重调整：空间高度0.20 晋级率0.25 反炸板率0.20 涨跌停比0.10 封板质量0.25
     """
     h = percentile_rank([r['max_height'] for r in full_rows])
     p = percentile_rank([r['promotion_rate'] for r in full_rows])
@@ -644,7 +644,7 @@ def main():
     dates = get_trade_dates(LOOKBACK_DAYS)
 
     if not dates:
-        log("  ⚠️ Tushare 连不上，使用已有CSV数据")
+        log("  ⚠ Tushare 连不上，使用已有CSV数据")
         raw_rows = read_raw_csv()
         if not raw_rows:
             log("  ERROR: 无交易日且无CSV数据")
@@ -661,7 +661,7 @@ def main():
                 try:
                     fetch_day_cached(dt)
                 except Exception as e:
-                    log(f"    ⚠️ 补缓存失败 {dt}: {e}")
+                    log(f"    ⚠ 补缓存失败 {dt}: {e}")
         else:
             log("  _cache 完整，无需补齐")
 
@@ -688,13 +688,13 @@ def main():
         skipped_dates = []
         for i, dt in enumerate(new_dates):
             cached = os.path.exists(os.path.join(CACHE_DIR, f'{dt}.json'))
-            tag = '📦' if cached else '🌐'
+            tag = '' if cached else ''
             log(f"  [{i+1}/{len(new_dates)}] {dt} {tag}")
             try:
                 row = compute_raw_day(dt)
             except Exception as e:
                 skipped_dates.append(dt)
-                log(f"    ⚠️ 跳过 {dt}: {e}")
+                log(f"    ⚠ 跳过 {dt}: {e}")
                 continue
             new_raw_rows.append(row)
             log(f"    U={row['up_count']} D={row['down_count']} Z={row['zha_count']} H={row['max_height']} BigCap={row['big_cap_up']} MegaCap={row['mega_cap_up']}")
@@ -728,7 +728,7 @@ def main():
     build_json(full_rows)
 
     latest = full_rows[-1]
-    log(f"\n✅ 完成: {len(full_rows)} 天")
+    log(f"\n 完成: {len(full_rows)} 天")
     log(f"   最新: {latest['date']} 情绪={latest['sentiment']} 周期={latest['cycle_label']}")
     log(f"   CSV: momentum_raw.csv + momentum_sentiment.csv")
 

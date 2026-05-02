@@ -54,7 +54,7 @@ def main():
         if col in df1.columns:
             vals = df1[col].dropna()
             if len(vals) > 0 and float(vals.iloc[-1]) > 2:
-                tab1.append(f'{col.replace("涨跌幅%","")}今日+{float(vals.iloc[-1]):.1f}% 🔥')
+                tab1.append(f'{col.replace("涨跌幅%","")}今日+{float(vals.iloc[-1]):.1f}% ')
 
     tab_signals['eco'] = tab1 if tab1 else ['经济敏感轧差无极端信号']
 
@@ -71,11 +71,11 @@ def main():
             tab2.append(f'高拥挤-低拥挤净值 {latest_nav:.4f}，累计 {total_ret:+.1f}%')
         if chg5 is not None:
             if chg5 > 1:
-                tab2.append(f'近5日高拥挤跑赢 {chg5:+.1f}%，趋势延续/追高风险 ⚠️')
-                signals.append(f'高拥挤跑赢 ({chg5:+.1f}%/5日) ⚠️')
+                tab2.append(f'近5日高拥挤跑赢 {chg5:+.1f}%，趋势延续/追高风险 ⚠')
+                signals.append(f'高拥挤跑赢 ({chg5:+.1f}%/5日) ⚠')
             elif chg5 < -1:
-                tab2.append(f'近5日低拥挤跑赢 {chg5:+.1f}%，均值回归有效 ✅')
-                signals.append(f'低拥挤跑赢 ({chg5:+.1f}%/5日) ✅')
+                tab2.append(f'近5日低拥挤跑赢 {chg5:+.1f}%，均值回归有效 ')
+                signals.append(f'低拥挤跑赢 ({chg5:+.1f}%/5日) ')
             else:
                 tab2.append(f'近5日拥挤度轧差窄幅震荡 {chg5:+.1f}%')
         if chg20 is not None:
@@ -162,10 +162,10 @@ def main():
             if len(vals) > 0 and float(vals.iloc[-1]) > 2:
                 hot_sectors.append(f"{col.replace('%','')}{float(vals.iloc[-1]):+.1f}%")
     if hot_sectors:
-        signals.append(f"周期热点: {', '.join(hot_sectors[:3])} 🔥")
+        signals.append(f"周期热点: {', '.join(hot_sectors[:3])} ")
 
     if not signals:
-        signals = ['风格轧差无极端信号 ✅']
+        signals = ['风格轧差无极端信号 ']
 
     result = {
         'signals': signals,

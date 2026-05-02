@@ -56,7 +56,7 @@ Meme反身性信号计算器 (calc_meme.py)
   阶段判断：
     < 25   🟢 叙事离散期   各走各的，无Meme行情
     25-50  🟡 叙事聚合期   开始联动，观察方向
-    50-75  🟠 反身性强化期  正反馈循环建立中
+    50-75   反身性强化期  正反馈循环建立中
     ≥ 75   🔴 反身性高峰期  极度同步，注意尾部风险
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -143,7 +143,7 @@ def calc_volume_acceleration(vol_data):
     # 只处理有权重定义且有数据的资产
     available = {k: vol_data[k] for k in VOL_WEIGHTS if k in vol_data}
     if not available:
-        print("  ⚠️ 无量能数据（需先运行 fetch_data.py）")
+        print("  ⚠ 无量能数据（需先运行 fetch_data.py）")
         return {}
 
     # 构建 DataFrame，日期为索引
@@ -237,7 +237,7 @@ def get_phase(score):
         return {
             'level': 3,
             'label': '反身性强化期',
-            'emoji': '🟠',
+            'emoji': '',
             'desc':  '正反馈循环建立中。可参与趋势，但控制仓位，设置止损'
         }
     elif score >= 25:
@@ -261,7 +261,7 @@ def get_phase(score):
 # ────────────────────────────────────────────────
 
 def main():
-    print("📊 开始计算Meme反身性信号...\n")
+    print(" 开始计算Meme反身性信号...\n")
 
     # ── 读取数据 ──────────────────────────────────
     with open('rolling_corr.json', 'r', encoding='utf-8') as f:
@@ -275,7 +275,7 @@ def main():
     print(f"  相关性矩阵日期数：{len(corr_data['corr_matrices'])}\n")
 
     # ── Step 1：叙事联动指数 ──────────────────────
-    print("① 计算叙事联动指数（NLI）...")
+    print(" 计算叙事联动指数（NLI）...")
     nli       = calc_narrative_linkage(corr_data['corr_matrices'])
     nli_pct   = to_percentile_series(nli)
     latest_nli     = list(nli.values())[-1]
@@ -283,7 +283,7 @@ def main():
     print(f"  当前NLI: {latest_nli:.3f}（历史 {latest_nli_pct:.0f}% 分位）")
 
     # ── Step 2：量能加速度 ────────────────────────
-    print("\n② 计算多资产加权量能加速度（VA）...")
+    print("\n 计算多资产加权量能加速度（VA）...")
     print(f"  权重：{ {k: f'{v*100:.0f}%' for k, v in VOL_WEIGHTS.items()} }")
     va = calc_volume_acceleration(vol_data)
 
@@ -296,10 +296,10 @@ def main():
         va_pct        = {}
         latest_va     = None
         latest_va_pct = None
-        print("  ⚠️ 量能数据不足，VA设为中性值")
+        print("  ⚠ 量能数据不足，VA设为中性值")
 
     # ── Step 3：综合Meme信号 ─────────────────────
-    print("\n③ 计算综合Meme信号（NLI×50% + VA×50%）...")
+    print("\n 计算综合Meme信号（NLI×50% + VA×50%）...")
 
     # 取NLI和VA都有分位数据的日期（VA可能比NLI短30天）
     common_dates = sorted(
@@ -359,7 +359,7 @@ def main():
     with open('meme_signal.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ 已保存到 meme_signal.json")
+    print(f"\n 已保存到 meme_signal.json")
     print(f"   历史信号点数：{len(meme_scores)} 天")
 
 

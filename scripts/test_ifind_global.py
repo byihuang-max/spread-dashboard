@@ -18,11 +18,11 @@ def get_token():
             json={'refresh_token': IFIND_REFRESH}, timeout=15)
         d = r.json()
         if d.get('errorcode') == 0:
-            print(f"✅ Token 获取成功，过期时间: {d['data'].get('expires_in', 'N/A')}秒")
+            print(f" Token 获取成功，过期时间: {d['data'].get('expires_in', 'N/A')}秒")
             return d['data']['access_token']
-        print(f"❌ Token 错误: {d.get('errmsg', '未知')}")
+        print(f" Token 错误: {d.get('errmsg', '未知')}")
     except Exception as e:
-        print(f"❌ Token 连接失败: {e}")
+        print(f" Token 连接失败: {e}")
     return None
 
 # HALO 交易需要的股票（测试几个代表性的）
@@ -79,22 +79,22 @@ def test_ifind_stocks(token):
             if d.get('errorcode') == 0 and d.get('data'):
                 data = d['data'].get(code, {})
                 if data.get('close'):
-                    print(f"✅ {code:15} {name:15} 数据点: {len(data['close'])}")
+                    print(f" {code:15} {name:15} 数据点: {len(data['close'])}")
                     success.append((code, name))
                 else:
-                    print(f"❌ {code:15} {name:15} 无数据")
+                    print(f" {code:15} {name:15} 无数据")
                     failed.append((code, name, '无数据'))
             else:
                 err = d.get('errmsg', '未知错误')
-                print(f"❌ {code:15} {name:15} 错误: {err}")
+                print(f" {code:15} {name:15} 错误: {err}")
                 failed.append((code, name, err))
         except Exception as e:
-            print(f"❌ {code:15} {name:15} 异常: {e}")
+            print(f" {code:15} {name:15} 异常: {e}")
             failed.append((code, name, str(e)))
     
     print("\n" + "="*60)
-    print(f"✅ 成功: {len(success)}/{len(TEST_STOCKS)}")
-    print(f"❌ 失败: {len(failed)}/{len(TEST_STOCKS)}")
+    print(f" 成功: {len(success)}/{len(TEST_STOCKS)}")
+    print(f" 失败: {len(failed)}/{len(TEST_STOCKS)}")
     print("="*60)
     
     if failed:
@@ -107,4 +107,4 @@ if __name__ == '__main__':
     if token:
         test_ifind_stocks(token)
     else:
-        print("❌ 无法获取 token，测试终止")
+        print(" 无法获取 token，测试终止")

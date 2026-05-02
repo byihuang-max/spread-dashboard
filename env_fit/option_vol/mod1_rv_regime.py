@@ -219,7 +219,7 @@ def score_symbol(latest_rv_pctile, accel, env_type, loading_abs):
         signal = '🟡'
         label = '可考虑双卖'
     elif sell_score >= 40:
-        signal = '⚪'
+        signal = ''
         label = '观望'
     else:
         signal = '🔴'

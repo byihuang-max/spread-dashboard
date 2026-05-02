@@ -22,9 +22,9 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
         else:
-            print(f"❌ Token 错误: {d}")
+            print(f" Token 错误: {d}")
     except Exception as e:
-        print(f"❌ Token 异常: {e}")
+        print(f" Token 异常: {e}")
     return None
 
 def test_macro_indicator(token, indicator_name, code, start, end):
@@ -54,19 +54,19 @@ def test_macro_indicator(token, indicator_name, code, start, end):
                 dates = data.get('time', [])
                 values = data.get('table', {})
                 if dates and len(dates) > 0:
-                    print(f"  ✅ 成功！数据点数: {len(dates)}")
+                    print(f"   成功！数据点数: {len(dates)}")
                     print(f"  最新: {dates[-1]}")
                     print(f"  字段: {list(values.keys())}")
                     if values:
                         first_key = list(values.keys())[0]
                         print(f"  最新值: {values[first_key][-1] if values[first_key] else 'N/A'}")
                     return True
-            print(f"  ❌ 无数据 (tables={len(tables) if tables else 0})")
+            print(f"   无数据 (tables={len(tables) if tables else 0})")
         else:
-            print(f"  ❌ 错误: {d.get('errmsg')}")
+            print(f"   错误: {d.get('errmsg')}")
         
     except Exception as e:
-        print(f"  ❌ 异常: {e}")
+        print(f"   异常: {e}")
     
     try:
         # 尝试 cmd_history_quotation（历史行情）
@@ -89,13 +89,13 @@ def test_macro_indicator(token, indicator_name, code, start, end):
                 dates = data.get('time', [])
                 values = data.get('table', {}).get('close', [])
                 if dates and len(dates) > 0:
-                    print(f"  ✅ 成功！数据点数: {len(dates)}")
+                    print(f"   成功！数据点数: {len(dates)}")
                     print(f"  最新: {dates[-1]} = {values[-1] if values else 'N/A'}")
                     return True
-            print(f"  ❌ 无数据")
+            print(f"   无数据")
         
     except Exception as e:
-        print(f"  ❌ 异常: {e}")
+        print(f"   异常: {e}")
     
     return False
 
@@ -106,10 +106,10 @@ if __name__ == '__main__':
     
     token = get_token()
     if not token:
-        print("\n❌ 无法获取 token，退出")
+        print("\n 无法获取 token，退出")
         exit(1)
     
-    print("\n✅ Token 获取成功")
+    print("\n Token 获取成功")
     
     # 测试日期范围（最近3年）
     end = datetime.now().strftime('%Y-%m-%d')
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     print("="*60)
     
     for name, success in results.items():
-        status = "✅" if success else "❌"
+        status = "" if success else ""
         print(f"{status} {name}")
     
     success_count = sum(results.values())
@@ -158,18 +158,18 @@ if __name__ == '__main__':
     
     # 社融结构
     if results.get("社融总量") and results.get("居民贷款") and results.get("企业贷款"):
-        print("✅ 社融结构数据：可用（可计算居民/企业信贷占比）")
+        print(" 社融结构数据：可用（可计算居民/企业信贷占比）")
     else:
-        print("❌ 社融结构数据：不可用")
+        print(" 社融结构数据：不可用")
     
     # 企业债利差
     if results.get("AAA企业债收益率") and results.get("3年国债收益率"):
-        print("✅ 企业债利差数据：可用（AAA企业债 - 国债）")
+        print(" 企业债利差数据：可用（AAA企业债 - 国债）")
     else:
-        print("❌ 企业债利差数据：不可用")
+        print(" 企业债利差数据：不可用")
     
     # R007-DR007利差
     if results.get("R007") and results.get("DR007"):
-        print("✅ R007-DR007利差数据：可用")
+        print(" R007-DR007利差数据：可用")
     else:
-        print("❌ R007-DR007利差数据：不可用")
+        print(" R007-DR007利差数据：不可用")

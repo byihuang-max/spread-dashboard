@@ -140,7 +140,7 @@ def migrate_json_to_csv(cache):
 
     # 指数
     if not os.path.exists(IDX_CSV) and cache.get("index_daily"):
-        print("  📦 从 JSON cache 迁移指数数据到 ss_index_daily.csv...")
+        print("   从 JSON cache 迁移指数数据到 ss_index_daily.csv...")
         rows = []
         for code, entry in cache["index_daily"].items():
             for dt, vals in sorted(entry.get("data", {}).items()):
@@ -156,7 +156,7 @@ def migrate_json_to_csv(cache):
 
     # 申万行业
     if not os.path.exists(SW_CSV) and cache.get("sw_daily"):
-        print("  📦 从 JSON cache 迁移申万行业数据到 ss_sw_daily.csv...")
+        print("   从 JSON cache 迁移申万行业数据到 ss_sw_daily.csv...")
         rows = []
         for code, entry in cache["sw_daily"].items():
             for dt, vals in sorted(entry.get("data", {}).items()):
@@ -333,14 +333,14 @@ def fetch_incremental():
         n = len(entry.get("data", {}))
         print(f"  {SW_CODES[code]:8s} ({code}): {n}条")
 
-    print(f"\n✅ 完成（CSV + JSON 双写）")
+    print(f"\n 完成（CSV + JSON 双写）")
 
 
 # ── rebuild: 从 CSV 重建 JSON cache ──
 
 def rebuild_cache_from_csv():
     """从 CSV 重建 JSON cache（灾难恢复用）"""
-    print("🔄 从 CSV 重建 JSON cache...")
+    print(" 从 CSV 重建 JSON cache...")
     cache = {"last_updated": datetime.today().strftime("%Y%m%d"), "index_daily": {}, "sw_daily": {}}
 
     # 指数
@@ -372,7 +372,7 @@ def rebuild_cache_from_csv():
     print(f"  行业: {len(sw_rows)} 行")
 
     save_cache(cache)
-    print(f"  ✅ JSON cache 已重建 ({os.path.getsize(CACHE_PATH)/1024:.1f} KB)")
+    print(f"   JSON cache 已重建 ({os.path.getsize(CACHE_PATH)/1024:.1f} KB)")
 
 
 if __name__ == "__main__":

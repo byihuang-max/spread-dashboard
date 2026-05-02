@@ -33,9 +33,9 @@ def main():
             score = latest.get('composite')
             if score is not None:
                 if score > 70:
-                    signals.append(f'强势股: 情绪高涨 {score:.0f}分 🔥')
+                    signals.append(f'强势股: 情绪高涨 {score:.0f}分 ')
                 elif score < 30:
-                    signals.append(f'强势股: 情绪低迷 {score:.0f}分 ❄️')
+                    signals.append(f'强势股: 情绪低迷 {score:.0f}分 ')
                 else:
                     signals.append(f'强势股: 情绪中性 {score:.0f}分')
 
@@ -101,7 +101,7 @@ def main():
             signals.append(f'期权卖权: 不宜开仓 avg={avg_score} 🔴')
 
     if not signals:
-        signals = ['策略环境无极端信号 ✅']
+        signals = ['策略环境无极端信号 ']
 
     result = {'signals': signals, 'update_time': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}
     with open(OUTPUT, 'w', encoding='utf-8') as f:

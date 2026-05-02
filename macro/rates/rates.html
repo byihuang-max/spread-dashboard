@@ -43,7 +43,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="chart-row section">
   <div class="chart-box">
-    <h3>📈 中国10Y vs 美国10Y国债收益率</h3>
+    <h3> 中国10Y vs 美国10Y国债收益率</h3>
     <div class="chart-wrap"><canvas id="yieldChart"></canvas></div>
     <div class="chart-note">
       <b>中国10Y：</b>国内无风险利率基准，影响股债估值中枢。下行=宽松预期，利好成长股。<br>
@@ -51,7 +51,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
     </div>
   </div>
   <div class="chart-box">
-    <h3>📊 中美利差（中10Y - 美10Y）</h3>
+    <h3> 中美利差（中10Y - 美10Y）</h3>
     <div class="chart-wrap"><canvas id="spreadChart"></canvas></div>
     <div class="chart-note">
       <b>中美利差 = 中国10Y - 美国10Y。</b><br>
@@ -80,7 +80,7 @@ function render(){
     var cls='signal-tag';
     if(s.indexOf('🟢')>=0) cls+=' good';
     else if(s.indexOf('🔴')>=0) cls+=' risk';
-    else if(s.indexOf('⚠️')>=0) cls+=' warn';
+    else if(s.indexOf('⚠')>=0) cls+=' warn';
     return '<span class="'+cls+'">'+s+'</span>';
   }).join('');
 

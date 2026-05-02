@@ -374,7 +374,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </script>
 
 <!-- ═══ 移动端菜单 ═══ -->
-<button class="menu-toggle" id="menuToggle">☰</button>
+<button class="menu-toggle" id="menuToggle"></button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ═══ 侧边栏 ═══ -->
@@ -408,7 +408,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="nav-group" id="adminNavGroup" style="display:none">
       <div class="nav-group-title">设置</div>
       <div class="nav-item" onclick="location.href='admin.html'" style="cursor:pointer">管理后台</div>
-      <div class="nav-item" onclick="window.open('env_fit/momentum_stock/email_manage.html','_blank')" style="cursor:pointer">📧 邮件订阅管理</div>
+      <div class="nav-item" onclick="window.open('env_fit/momentum_stock/email_manage.html','_blank')" style="cursor:pointer"> 邮件订阅管理</div>
     </div>
   </nav>
   <div class="user-info" id="sidebarUserInfo">未登录<br><span style="opacity:.5;font-size:11px">v0.3 · 2026-02-13</span></div>
@@ -478,7 +478,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             <div id="ms-meso-tags"></div>
           </div>
           <div class="ms-bottom-card">
-            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155">💼 配置建议</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;color:#334155"> 配置建议</div>
             <div id="ms-alloc"></div>
           </div>
         </div>
@@ -486,7 +486,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <!-- ═══ 原有顶部卡片 (风险+宏观快照) ═══ -->
         <div id="ov-risk-banner" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:18px 22px;color:#e2e6ed;margin-bottom:16px">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <div style="font-size:16px;font-weight:800">⚠️ 风险预警</div>
+            <div style="font-size:16px;font-weight:800">⚠ 风险预警</div>
             <div style="display:flex;align-items:center;gap:12px">
               <div id="ov-risk-score" style="font-size:28px;font-weight:900"></div>
               <div>
@@ -698,7 +698,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           document.getElementById('ov-risk-label').textContent='综合风险 '+(rs.level||'');
           document.getElementById('ov-risk-label').style.color=col;
           document.getElementById('ov-alerts').innerHTML=(rs.alerts||[]).map(function(a){
-            return '<div style="font-size:11px;color:#fbbf24;padding:2px 0">⚠️ '+a+'</div>';
+            return '<div style="font-size:11px;color:#fbbf24;padding:2px 0">⚠ '+a+'</div>';
           }).join('');
           var cardColors={blue:'#2563eb',green:'#16a34a',amber:'#d97706',red:'#dc2626',slate:'#64748b'};
           document.getElementById('ov-cards').innerHTML=(D.top_cards||[]).map(function(c){
@@ -738,7 +738,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 风格轧差 ══ -->
     <div class="module-page" id="page-style-spread">
-      <iframe src="size_spread/style_spread.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)" onload="window.refreshStyleSpread=function(){var t=localStorage.getItem('gamt_token'),h={'Content-Type':'application/json'};if(t)h.Authorization='Bearer '+t;var apiUrl=(REFRESH_API||'/api/refresh/')+'style_spread';fetch(apiUrl,{method:'POST',headers:h,credentials:'include'}).then(r=>r.json()).then(d=>{if(d.ok||d.message){startProgressPoll(function(){location.reload()})}else{alert('❌ '+d.error)}}).catch(e=>alert('❌ '+e.message))}"></iframe>
+      <iframe src="size_spread/style_spread.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 60px)" onload="window.refreshStyleSpread=function(){var t=localStorage.getItem('gamt_token'),h={'Content-Type':'application/json'};if(t)h.Authorization='Bearer '+t;var apiUrl=(REFRESH_API||'/api/refresh/')+'style_spread';fetch(apiUrl,{method:'POST',headers:h,credentials:'include'}).then(r=>r.json()).then(d=>{if(d.ok||d.message){startProgressPoll(function(){location.reload()})}else{alert(' '+d.error)}}).catch(e=>alert(' '+e.message))}"></iframe>
     </div>
 
     <!-- ══ 策略环境适配度 ══ -->
@@ -756,8 +756,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           document.getElementById('envFitSignalTags').innerHTML=(d.signals||[]).map(function(s){
             var bg='rgba(255,255,255,0.1)',fg='#b8bfce';
             if(s.indexOf('🟢')>=0){bg='rgba(34,197,94,0.2)';fg='#4ade80';}
-            else if(s.indexOf('🔴')>=0||s.indexOf('❄️')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
-            else if(s.indexOf('🔥')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
+            else if(s.indexOf('🔴')>=0||s.indexOf('')>=0){bg='rgba(239,68,68,0.2)';fg='#f87171';}
+            else if(s.indexOf('')>=0){bg='rgba(245,158,11,0.25)';fg='#fbbf24';}
             return '<span style="background:'+bg+';color:'+fg+';padding:3px 10px;border-radius:18px;font-size:11px">'+s+'</span>';
           }).join('');
         }).catch(function(){});
@@ -783,7 +783,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <div class="strat-page" id="strat-momentum-stock">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px;gap:12px;flex-wrap:wrap">
-        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">2026-04-30</b><span style="color:#94a3b8;font-size:11px"> · 子模块延迟 收益归因:02/26</span></span>
+        <span style="font-size:13px;color:#888"> 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">2026-04-30</b><span style="color:#94a3b8;font-size:11px"> · 子模块延迟 收益归因:02/26</span></span>
       </div>
 
       <!-- 区块一：环境总览 -->
@@ -843,15 +843,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="display:flex;align-items:flex-start;gap:8px">
             <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">信号层</div>
-            <div style="flex:1;border-left:2px solid #e2e8f0;padding-left:10px"><span style="color:#10b981;font-size:11px">✅ 无异常信号</span></div>
+            <div style="flex:1;border-left:2px solid #e2e8f0;padding-left:10px"><span style="color:#10b981;font-size:11px"> 无异常信号</span></div>
           </div>
           <div style="display:flex;align-items:flex-start;gap:8px">
             <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">确认层</div>
-            <div style="flex:1;border-left:2px solid #e2e8f0;padding-left:10px"><span style="color:#10b981;font-size:11px">✅ 成交额正常</span></div>
+            <div style="flex:1;border-left:2px solid #e2e8f0;padding-left:10px"><span style="color:#10b981;font-size:11px"> 成交额正常</span></div>
           </div>
           <div style="display:flex;align-items:flex-start;gap:8px">
             <div style="min-width:56px;font-size:11px;font-weight:700;color:#64748b;padding-top:3px">过滤层</div>
-            <div style="flex:1;border-left:2px solid #10b981;padding-left:10px"><span style="color:#10b981;font-size:11px">✅ 耐心资本持筹成本上移（在托底）</span></div>
+            <div style="flex:1;border-left:2px solid #10b981;padding-left:10px"><span style="color:#10b981;font-size:11px"> 耐心资本持筹成本上移（在托底）</span></div>
           </div>
           <div style="margin-top:4px;padding:6px 14px;border-radius:8px;background:#10b98115;border:1px solid #10b98133;color:#10b981;font-weight:700;font-size:13px;display:inline-block;align-self:flex-start">
             🟢 环境安全
@@ -919,7 +919,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           <div style="display:flex;align-items:center;gap:8px">
             <span class="dot" style="background:#94a3b8"></span>
             <span style="font-size:14px;font-weight:700;color:#1e293b">涨停指数信号</span>
-            <span style="font-size:14px;font-weight:700;color:#94a3b8">⚪ 中性震荡</span>
+            <span style="font-size:14px;font-weight:700;color:#94a3b8"> 中性震荡</span>
           </div>
           <span style="font-size:11px;color:#94a3b8">无明显共振信号，情绪加速（60），观望</span>
           <div style="margin-left:auto;display:flex;gap:16px;font-size:12px">
@@ -942,7 +942,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div style="position:relative;height:300px"><canvas id="ms-li-chart"></canvas></div>
         <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
           灰线=全涨停净值（近60日归一化，左轴） · 灰虚线=首板净值（近60日归一化，左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
-          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · ★★★=三重确认 · ★★=两重确认
+          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · =三重确认 · =两重确认
         </div>
       </div>
 
@@ -952,7 +952,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
           <div class="card-title" style="margin:0"><span class="dot" style="background:#6366f1"></span> 涨跌停封单额轧差（抄底指标）</div>
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="background:#f8fafc;color:#64748b;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600">⚪ 均衡</span>
+            <span style="background:#f8fafc;color:#64748b;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600"> 均衡</span>
             <span style="font-size:11px;color:#94a3b8">最新 04/30 · 分位 69.2%</span>
           </div>
         </div>
@@ -1010,7 +1010,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             </div>
             <div class="card">
               <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产业链传导 · 2026-04-30</div>
-              <div style="font-size:12px;line-height:2"><div style="margin-bottom:4px">科技：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">制造：✅ 上游 ✅ 中游 ❌ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">消费：✅ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">金融地产：❌ 上游 ✅ 中游 ✅ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">建筑：✅ 上游 ✅ 中游 ❌ 下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">交运：❌ 上游 ✅ 中游 ❌ 下游</div><div style="margin-bottom:4px">综合：❌ 上游 ✅ 中游 ❌ 下游</div></div>
+              <div style="font-size:12px;line-height:2"><div style="margin-bottom:4px">科技： 上游  中游  下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">制造： 上游  中游  下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">消费： 上游  中游  下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">金融地产： 上游  中游  下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">建筑： 上游  中游  下游 <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span></div><div style="margin-bottom:4px">交运： 上游  中游  下游</div><div style="margin-bottom:4px">综合： 上游  中游  下游</div></div>
             </div>
             <div class="card">
               <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 行业热力图 · 2026-04-30</div>
@@ -1026,11 +1026,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
-        <p>① 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
-        <p>② 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
-        <p>③ 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
-        <p>④ 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
-        <p>⑤ 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
+        <p> 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
+        <p> 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
+        <p> 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
+        <p> 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
+        <p> 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare · 更新：2026-05-01 18:00:07 · 区间：20251103 ~ 20260430</p>
       </div>
 
@@ -1268,8 +1268,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                       var i=ctx[0].dataIndex;
                       var ret='\n收益: '+liAllRet[i].toFixed(2)+'%';
                       ret+='\n高低开: '+liAllGap[i].toFixed(2)+'%';
-                      if(liAllBias[i]>3)ret+='\n⚠️ BIAS偏高，拥挤警告';
-                      if(liAllBias[i]<-3)ret+='\n💡 BIAS偏低，关注反转';
+                      if(liAllBias[i]>3)ret+='\n⚠ BIAS偏高，拥挤警告';
+                      if(liAllBias[i]<-3)ret+='\n BIAS偏低，关注反转';
                       return ret;
                     }
                   }
@@ -1336,8 +1336,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                       if(!navDD[i])return '';
                       var dt=navDatesFull[i];
                       var dc=decompLookup[dt];
-                      if(!dc)return '\n📉 基准回撤区域';
-                      return '\n📉 基准回撤区域'
+                      if(!dc)return '\n 基准回撤区域';
+                      return '\n 基准回撤区域'
                         +'\nBeta贡献: '+dc.cum_beta.toFixed(2)+'%'
                         +'\n情绪贡献: '+dc.cum_sentiment.toFixed(2)+'%'
                         +'\n管理人Alpha: '+dc.cum_alpha.toFixed(2)+'%'
@@ -1401,7 +1401,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       </div>
       <div class="strat-page" id="strat-cta">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-        <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">2026-04-30</b></span>
+        <span style="font-size:13px;color:#888"> 商品CTA · 数据截至 <b style="color:#2d3142">2026-04-30</b></span>
       </div>
 
       <!-- ═══ PCA核心引擎（主角） ═══ -->
@@ -1440,8 +1440,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <!-- 策略评价 -->
       <div class="card" style="background:linear-gradient(135deg,#f8fafc,#f0f4ff);border-left:4px solid #f59e0b">
-        <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-bottom:8px">🌤️ 温和环境：可交易但别重仓，等共振信号加强</div>
-        <div style="font-size:12px;line-height:2"><span style="color:#f59e0b">⚠️ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span><br><span style="color:#3b82f6">📊 <b>截面/多空策略利好</b>：板块分化大，多空对冲+板块轮动策略有空间</span></div>
+        <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-bottom:8px"> 温和环境：可交易但别重仓，等共振信号加强</div>
+        <div style="font-size:12px;line-height:2"><span style="color:#f59e0b">⚠ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span><br><span style="color:#3b82f6"> <b>截面/多空策略利好</b>：板块分化大，多空对冲+板块轮动策略有空间</span></div>
         <div style="font-size:10px;color:#94a3b8;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:6px">
           参考阈值：PC1 &gt;35%=强共振(趋势CTA利好) · 25-35%=中等 · &lt;20%=困难 | PC2 &gt;15%=截面/多空有空间 · &lt;10%=空间有限
         </div>
@@ -1495,9 +1495,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         </div>
         <!-- 归因解读 -->
         <div style="background:#fefce8;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;line-height:1.7">
-          <div style="font-weight:700;color:#92400e;margin-bottom:2px">💡 归因解读</div>
+          <div style="font-weight:700;color:#92400e;margin-bottom:2px"> 归因解读</div>
           <div style="color:#78716c">• 产品与南华商品指数几乎无相关性 — CTA做的是多空择时，非商品多头</div>
-          <div style="color:#78716c">• 管理人alpha明显为负，需关注择时能力 ⚠️</div>
+          <div style="color:#78716c">• 管理人alpha明显为负，需关注择时能力 ⚠</div>
         </div>
 
         <!-- 累计收益分解图 -->
@@ -2148,7 +2148,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.73</td>
               <td style="padding:6px 4px;color:#ef4444">-14.5%</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:700">0.780</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势空头，空头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">2</td>
@@ -2162,7 +2162,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.86</td>
               <td style="padding:6px 4px;color:#10b981">+9.8%</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:700">0.740</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认">
               <td style="padding:6px 4px;color:#94a3b8">3</td>
@@ -2176,7 +2176,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.58</td>
               <td style="padding:6px 4px;color:#10b981">+80.7%</td>
               <td style="padding:6px 4px;color:#10b981;font-weight:700">0.718</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
               <td style="padding:6px 4px;color:#94a3b8">4</td>
@@ -2190,7 +2190,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.69</td>
               <td style="padding:6px 4px;color:#94a3b8">+1.7%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.687</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">5</td>
@@ -2204,7 +2204,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.86</td>
               <td style="padding:6px 4px;color:#10b981">+9.8%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.678</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量">
               <td style="padding:6px 4px;color:#94a3b8">6</td>
@@ -2218,7 +2218,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.71</td>
               <td style="padding:6px 4px;color:#ef4444">-14.4%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.647</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，放量，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">7</td>
@@ -2232,7 +2232,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.93</td>
               <td style="padding:6px 4px;color:#ef4444">-8.4%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.628</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">8</td>
@@ -2246,7 +2246,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.89</td>
               <td style="padding:6px 4px;color:#10b981">+5.0%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.626</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">9</td>
@@ -2260,7 +2260,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.89</td>
               <td style="padding:6px 4px;color:#10b981">+10.3%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.619</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">10</td>
@@ -2274,7 +2274,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.88</td>
               <td style="padding:6px 4px;color:#10b981">+12.5%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.615</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
               <td style="padding:6px 4px;color:#94a3b8">11</td>
@@ -2288,7 +2288,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.78</td>
               <td style="padding:6px 4px;color:#10b981">+22.9%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.582</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头">
               <td style="padding:6px 4px;color:#94a3b8">12</td>
@@ -2302,7 +2302,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.64</td>
               <td style="padding:6px 4px;color:#94a3b8">+0.9%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.571</td>
-              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span></td>
+              <td style="padding:6px 4px"><span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，20日突破高点，60日突破高点，多头确认，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">13</td>
@@ -2316,7 +2316,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.85</td>
               <td style="padding:6px 4px;color:#10b981">+10.2%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.568</td>
-              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，高线性度">
               <td style="padding:6px 4px;color:#94a3b8">14</td>
@@ -2330,7 +2330,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#10b981;font-weight:600">0.85</td>
               <td style="padding:6px 4px;color:#ef4444">-8.2%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.562</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
             <tr style="border-bottom:1px solid #f1f5f9" title="趋势多头，多头确认">
               <td style="padding:6px 4px;color:#94a3b8">15</td>
@@ -2344,7 +2344,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               <td style="padding:6px 4px;color:#f59e0b;font-weight:600">0.79</td>
               <td style="padding:6px 4px;color:#10b981">+18.3%</td>
               <td style="padding:6px 4px;color:#f59e0b;font-weight:700">0.560</td>
-              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span></td>
+              <td style="padding:6px 4px"><span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span></td>
             </tr>
           </tbody>
         </table>
@@ -2452,19 +2452,19 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
         <p><b style="color:#8b5cf6">PCA核心引擎</b></p>
-        <p>① PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
-        <p>② PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
-        <p>③ 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
-        <p>④ PC1累计值：逐日累加每个滚动窗口最新一天的 PC1 score。持续正/负=同一主轴持续演绎（动量主导），频繁翻转=反转/震荡主导；它更适合判断“趋势 vs 截面/反转”的风格环境，不直接回答做多还是做空</p>
-        <p>⑤ 一句话理解：PCA这套主要看的是最近60日商品市场有没有形成清晰主轴、共振强不强，所以它更偏“中短周期的结构环境判断”，不是传统意义上看单个品种几日均线有没有拐头</p>
-        <p>⑥ Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
-        <p>⑦ 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
+        <p> PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
+        <p> PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
+        <p> 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
+        <p> PC1累计值：逐日累加每个滚动窗口最新一天的 PC1 score。持续正/负=同一主轴持续演绎（动量主导），频繁翻转=反转/震荡主导；它更适合判断“趋势 vs 截面/反转”的风格环境，不直接回答做多还是做空</p>
+        <p> 一句话理解：PCA这套主要看的是最近60日商品市场有没有形成清晰主轴、共振强不强，所以它更偏“中短周期的结构环境判断”，不是传统意义上看单个品种几日均线有没有拐头</p>
+        <p> Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
+        <p> 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
         <p style="margin-top:8px"><b style="color:#64748b">传统指标</b></p>
-        <p>⑧ CTA友好度(传统) = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比</p>
-        <p>⑨ 品种评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²15% + Donchian10%</p>
-        <p>⑩ 传统趋势扫描是混合窗口：主看20日变化，同时结合 5/10/20/60日均线排列、20日波动率、60日波动率分位、20/60日 Donchian 突破、5日持仓变化，所以更像“单品种趋势状态扫描”，不是单一固定天数</p>
-        <p>⑪ 一句话理解：PCA看60日结构共振，传统趋势扫描看20日趋势状态 + 60日确认</p>
-        <p>⑫ 铜金比↑=经济预期改善；油金比↑=通胀/需求强；工业品/农产品比↑=工业品相对强</p>
+        <p> CTA友好度(传统) = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比</p>
+        <p> 品种评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²15% + Donchian10%</p>
+        <p> 传统趋势扫描是混合窗口：主看20日变化，同时结合 5/10/20/60日均线排列、20日波动率、60日波动率分位、20/60日 Donchian 突破、5日持仓变化，所以更像“单品种趋势状态扫描”，不是单一固定天数</p>
+        <p> 一句话理解：PCA看60日结构共振，传统趋势扫描看20日趋势状态 + 60日确认</p>
+        <p> 铜金比↑=经济预期改善；油金比↑=通胀/需求强；工业品/农产品比↑=工业品相对强</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · PCA窗口60日 · 传统扫描为20日主观察+60日辅助确认 · 更新：2026-04-30</p>
       </div>
 
@@ -2485,7 +2485,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">2026-04-30</b></span>
+  <span style="font-size:13px;color:#888"> 转债指增 · 数据截至 <b style="color:#2d3142">2026-04-30</b></span>
 </div>
 
 <!-- 总览卡片 -->
@@ -2524,7 +2524,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- 子分数卡片 -->
 <div class="card" style="padding:14px;margin-bottom:16px">
-  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">📊 分项评分</div>
+  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px"> 分项评分</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
     <div style="text-align:center">
       <div style="font-size:10px;color:var(--text-sub)">活跃度</div>
@@ -2584,13 +2584,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <!-- 指标说明 -->
 <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
-  <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">📖 指标说明</div>
-  ① <b>转债友好度</b>：活跃度(25%) + 估值(25%) + DELTA(25%) + 债底(25%) 综合评分<br>
-  ② <b>活跃度</b>：转债成交额变化与中证1000/2000涨跌幅的20日滚动相关系数，高相关=小盘活跃带动转债<br>
-  ③ <b>估值水位</b>：成交量前50%转债的平均价格在历史窗口中的分位数 + 平均转股溢价率。低分位+低溢价=便宜且股性强<br>
-  ④ <b>DELTA</b>：成交量前50%转债涨跌幅 vs 正股涨跌幅的20日回归斜率中位数。高DELTA=偏股性，策略空间大<br>
-  ⑤ <b>债底</b>：全市场转债价格中位数 + 破面值(＜100元)占比。破面值少=安全垫厚<br>
-  ⑥ <b>转股溢价率</b> = (转债价格 - 转股价值) / 转股价值 × 100%，转股价值 = 面值/转股价 × 正股价
+  <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 指标说明</div>
+   <b>转债友好度</b>：活跃度(25%) + 估值(25%) + DELTA(25%) + 债底(25%) 综合评分<br>
+   <b>活跃度</b>：转债成交额变化与中证1000/2000涨跌幅的20日滚动相关系数，高相关=小盘活跃带动转债<br>
+   <b>估值水位</b>：成交量前50%转债的平均价格在历史窗口中的分位数 + 平均转股溢价率。低分位+低溢价=便宜且股性强<br>
+   <b>DELTA</b>：成交量前50%转债涨跌幅 vs 正股涨跌幅的20日回归斜率中位数。高DELTA=偏股性，策略空间大<br>
+   <b>债底</b>：全市场转债价格中位数 + 破面值(＜100元)占比。破面值少=安全垫厚<br>
+   <b>转股溢价率</b> = (转债价格 - 转股价值) / 转股价值 × 100%，转股价值 = 面值/转股价 × 正股价
 </div>
 
 </div>
@@ -2766,7 +2766,7 @@ function initCbCharts() {
         <div style="position:relative;height:380px"><canvas id="arb-nav-chart"></canvas></div>
         <div id="arb-nav-tooltip" style="display:none;position:fixed;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
         <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center;flex-wrap:wrap">
-          <span>🟣 产品净值收益</span><span>🟠 HV20历史波动率(右轴)</span>
+          <span> 产品净值收益</span><span> HV20历史波动率(右轴)</span>
           <span>|</span><span style="color:#10b981">绿色背景=周涨&gt;0.5%</span><span style="color:#ef4444">红色背景=周跌&gt;0.5%</span>
           <span>悬停查看波动率/PCR</span>
         </div>
@@ -2884,7 +2884,7 @@ function initCbCharts() {
                   if(Math.abs(weekRet[i])>0.5){
                     var dir=weekRet[i]>0?'大涨':'大跌';
                     var clr=weekRet[i]>0?'#6ee7b7':'#fca5a5';
-                    html+='<div style="color:'+clr+';margin-top:4px">⚡ 本周'+dir+' '+Math.abs(weekRet[i]).toFixed(2)+'%</div>';
+                    html+='<div style="color:'+clr+';margin-top:4px"> 本周'+dir+' '+Math.abs(weekRet[i]).toFixed(2)+'%</div>';
                   }
                   tt.innerHTML=html;
                   tt.style.display='block';
@@ -2958,7 +2958,7 @@ function initCbCharts() {
         <div class="strat-tabs" style="margin-bottom:0">
           <div class="strat-tab active" data-strat="antifragile">反脆弱看板</div>
           <div class="strat-tab" data-strat="halo">HALO交易</div>
-          <div class="strat-tab" data-strat="liquidity">💧 境内流动性</div>
+          <div class="strat-tab" data-strat="liquidity"> 境内流动性</div>
           <div class="strat-tab" data-strat="rates">全球利率与汇率</div>
           <div class="strat-tab" data-strat="fundamentals">经济基本面</div>
         </div>
@@ -3037,7 +3037,7 @@ function initCbCharts() {
       <div style="max-width:1000px;margin:24px auto 0">
         <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;border:1px solid rgba(255,127,134,.25);background:rgba(127,29,29,.12)" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">
           <div>
-            <div style="font-size:16px;font-weight:700;color:#ffd5d8;margin-bottom:6px">⚠️ 财报预期风险看板</div>
+            <div style="font-size:16px;font-weight:700;color:#ffd5d8;margin-bottom:6px">⚠ 财报预期风险看板</div>
             <div style="font-size:13px;color:#9ca3af;line-height:1.7">行业财报风险因子地图 · 8个行业 · 257只剔除项 · 季度频率<br>不是垃圾股榜单，而是行业风险如何被定义的因子化解释</div>
           </div>
           <div style="font-size:22px;color:#ff7f86;flex-shrink:0">→</div>
@@ -3231,7 +3231,7 @@ function initCbCharts() {
     var allOk=lastResult.ok!==false;
     bar.style.width='100%';
     bar.style.background=allOk?'linear-gradient(90deg,#22c55e,#4ade80)':'linear-gradient(90deg,#ef4444,#f87171)';
-    title.textContent=allOk?'✅ 刷新完成！':'⚠️ 部分失败';
+    title.textContent=allOk?' 刷新完成！':'⚠ 部分失败';
     detail.textContent='耗时 '+(lastResult.elapsed||0)+'s';
     setTimeout(function(){
       document.getElementById('refreshToast').style.display='none';
@@ -3255,7 +3255,7 @@ function initCbCharts() {
   window.refreshModule=function(modName,btn){
     var origText=btn.innerHTML;
     if(!REFRESH_API){
-      btn.innerHTML='❌ 刷新服务未连接';
+      btn.innerHTML=' 刷新服务未连接';
       setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},2000);
       return;
     }
@@ -3272,12 +3272,12 @@ function initCbCharts() {
             btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
           });
         }else{
-          btn.innerHTML='⚠️ '+(d.error||'启动失败');
+          btn.innerHTML='⚠ '+(d.error||'启动失败');
           setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
         }
       })
       .catch(function(e){
-        btn.innerHTML='❌ 服务未启动';
+        btn.innerHTML=' 服务未启动';
         setTimeout(function(){btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer'},3000);
       });
   };
@@ -3318,7 +3318,7 @@ function initCbCharts() {
     if(!btn)return;
     var origText=btn.innerHTML;
     if(!REFRESH_API){
-      btn.innerHTML='❌ 刷新服务未连接';
+      btn.innerHTML=' 刷新服务未连接';
       setTimeout(function(){btn.innerHTML=origText;},2000);
       return;
     }
@@ -3337,7 +3337,7 @@ function initCbCharts() {
             if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
           });
         }else{
-          btn.innerHTML='⚠️ '+(d.error||'启动失败');
+          btn.innerHTML='⚠ '+(d.error||'启动失败');
           setTimeout(function(){
             btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
             if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
@@ -3345,7 +3345,7 @@ function initCbCharts() {
         }
       })
       .catch(function(){
-        btn.innerHTML='❌ 服务未启动';
+        btn.innerHTML=' 服务未启动';
         setTimeout(function(){
           btn.innerHTML=origText;btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
           if(btnSingle){btnSingle.disabled=false;btnSingle.style.opacity='1';}
@@ -3476,7 +3476,7 @@ function initCbCharts() {
 
       html += '<div style="margin-bottom:24px">';
       html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e5e7eb">';
-      html += '<span style="font-size:15px;font-weight:700;color:#1e293b">📅 '+dateLabel+'</span>';
+      html += '<span style="font-size:15px;font-weight:700;color:#1e293b"> '+dateLabel+'</span>';
       html += '<span style="font-size:12px;color:#64748b">共 '+total+' 次更新';
       if(fail > 0) html += '，<span style="color:#ef4444">'+fail+' 次失败</span>';
       html += '</span></div>';
@@ -3485,7 +3485,7 @@ function initCbCharts() {
       html += '<div style="padding-left:12px;border-left:2px solid #e2e8f0">';
       items.forEach(function(item){
         var timeStr = item.time.split(' ')[1] || item.time;
-        var icon = item.ok ? '✅' : '❌';
+        var icon = item.ok ? '' : '';
         var statusColor = item.ok ? '#10b981' : '#ef4444';
         var statusText = item.ok ? '成功' : '失败';
 
@@ -4248,7 +4248,7 @@ window.addEventListener('message',function(e){
   if(e.data.action==='refresh'&&e.data.module){
     console.log('[postMessage] 收到刷新请求:', e.data.module);
     if(!STATUS_API){
-      alert('⚠️ API 未初始化，请稍后重试');
+      alert('⚠ API 未初始化，请稍后重试');
       return;
     }
     var t=localStorage.getItem('gamt_token'),h={'Content-Type':'application/json'};
@@ -4261,10 +4261,10 @@ window.addEventListener('message',function(e){
       if(d.ok||d.message){
         startProgressPoll(function(){location.reload()});
       }else{
-        alert('❌ '+d.error);
+        alert(' '+d.error);
       }
     })
-    .catch(e=>{console.error('[postMessage] 错误:', e);alert('❌ '+e.message)});
+    .catch(e=>{console.error('[postMessage] 错误:', e);alert(' '+e.message)});
   }
 });
 </script>

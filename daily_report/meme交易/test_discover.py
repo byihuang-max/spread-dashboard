@@ -75,7 +75,7 @@ def call_llm(prompt):
     
     # 调试：打印返回结果
     if "choices" not in result:
-        print(f"❌ API返回错误: {result}")
+        print(f" API返回错误: {result}")
         return None
     
     return result["choices"][0]["message"]["content"]
@@ -112,7 +112,7 @@ def discover_themes(news_list, top_n=5):
 4. 直接返回JSON数组，不要其他文字
 """
     
-    print("🔄 正在调用LLM分析...")
+    print(" 正在调用LLM分析...")
     response = call_llm(prompt)
     
     # 解析JSON
@@ -127,25 +127,25 @@ def discover_themes(news_list, top_n=5):
         themes = json.loads(response)
         return themes
     except Exception as e:
-        print(f"❌ 解析失败: {e}")
+        print(f" 解析失败: {e}")
         print(f"原始响应:\n{response}")
         return []
 
 # ==================== 主函数 ====================
 def main():
-    print("📰 拉取最近12小时的新闻...")
+    print(" 拉取最近12小时的新闻...")
     news = fetch_news(hours=12)
-    print(f"✅ 拉取到 {len(news)} 条新闻（去重后）\n")
+    print(f" 拉取到 {len(news)} 条新闻（去重后）\n")
     
-    print("🔍 开始发现新兴主题...\n")
+    print(" 开始发现新兴主题...\n")
     themes = discover_themes(news, top_n=5)
     
     if not themes:
-        print("❌ 未发现主题")
+        print(" 未发现主题")
         return
     
     print(f"\n{'='*60}")
-    print(f"🆕 今日新兴主题 ({datetime.now().strftime('%Y-%m-%d %H:%M')})")
+    print(f"[NEW] 今日新兴主题 ({datetime.now().strftime('%Y-%m-%d %H:%M')})")
     print(f"{'='*60}\n")
     
     for i, theme in enumerate(themes, 1):

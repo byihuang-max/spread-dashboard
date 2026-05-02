@@ -41,7 +41,7 @@ def run_module(script, label):
         capture_output=False,
     )
     if result.returncode != 0:
-        print(f"  ⚠️ {label} 退出码 {result.returncode}")
+        print(f"  ⚠ {label} 退出码 {result.returncode}")
         return False
     return True
 
@@ -53,19 +53,19 @@ def merge():
         if os.path.exists(path):
             with open(path, encoding='utf-8') as f:
                 merged[json_file.replace('.json', '')] = json.load(f)
-            print(f"  ✅ 已合并 {label} ({json_file})")
+            print(f"   已合并 {label} ({json_file})")
         else:
-            print(f"  ❌ 缺失 {json_file}，跳过")
+            print(f"   缺失 {json_file}，跳过")
 
     with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(merged, f, ensure_ascii=False, indent=2)
-    print(f"\n📦 最终输出: {OUT_JSON}")
+    print(f"\n 最终输出: {OUT_JSON}")
     return merged
 
 
 def print_summary(merged):
     print("\n" + '=' * 50)
-    print('📊 商品期权双卖环境 — 汇总')
+    print(' 商品期权双卖环境 — 汇总')
     print('=' * 50)
 
     comp = merged.get('mod9_composite_score', {})
@@ -90,13 +90,13 @@ def main():
         mode = 'merge-only'
 
     if mode == 'full':
-        print('🚀 完整运行：执行模块 + 合并')
+        print(' 完整运行：执行模块 + 合并')
         for script, _, label in MODULES:
             ok = run_module(script, label)
             if not ok:
-                print(f'⚠️ {label} 失败，继续下一个...')
+                print(f'⚠ {label} 失败，继续下一个...')
     else:
-        print('📦 合并模式：直接合并已有 JSON（加 --merge-only 可跳过运行）')
+        print(' 合并模式：直接合并已有 JSON（加 --merge-only 可跳过运行）')
 
     merged = merge()
     print_summary(merged)

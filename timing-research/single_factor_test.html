@@ -31,21 +31,21 @@ td { padding:7px 8px; text-align:center; border-bottom:1px solid #21262d; font-s
 <a class="back" href="/timing-research/" style="position:fixed;top:12px;left:12px;background:#161b22;border:1px solid #30363d;color:#58a6ff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;z-index:10">← 择时研究</a>
 <div class="container">
 
-<h1>🔬 单因子择时能力检验</h1>
+<h1> 单因子择时能力检验</h1>
 <p class="subtitle" id="subtitle"></p>
 
-<h2>📊 IC 汇总表</h2>
+<h2> IC 汇总表</h2>
 <div class="box" id="ic-table-box"></div>
 
-<h2>📈 分档收益（20日前瞻）</h2>
+<h2> 分档收益（20日前瞻）</h2>
 <div id="bin-charts"></div>
 
-<h2>🏷️ 周期标签择时效果</h2>
+<h2> 周期标签择时效果</h2>
 <div class="box">
   <div id="chart-labels" class="chart"></div>
 </div>
 
-<h2>📋 总结</h2>
+<h2> 总结</h2>
 <div class="box" id="summary"></div>
 
 </div>
@@ -160,7 +160,7 @@ const strong = D.ic_table.filter(r => {
 });
 let sumHTML = '<div class="insight">';
 sumHTML += `<strong>数据覆盖：</strong>${D.n_days} 天`;
-if (D.n_days < 200) sumHTML += ' ⚠️ 数据不足200天，结论仅供参考';
+if (D.n_days < 200) sumHTML += ' ⚠ 数据不足200天，结论仅供参考';
 sumHTML += '<br><br>';
 sumHTML += `<strong>有效因子（|IC|>0.03）：</strong>${strong.length} / ${D.factors.length} 个<br>`;
 strong.forEach(r => {

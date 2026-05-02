@@ -174,4 +174,4 @@ out = {
 }
 
 OUTPUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
-print(f'✅ wrote {OUTPUT} | industries={len(industries)} stocks={len(stocks)}')
+print(f' wrote {OUTPUT} | industries={len(industries)} stocks={len(stocks)}')

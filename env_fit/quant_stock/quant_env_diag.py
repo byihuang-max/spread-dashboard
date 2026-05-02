@@ -7,15 +7,15 @@
 量化超额好不好做？不是看指增产品净值，是看 alpha 环境。
 
 【五因子嵌套框架】
-① 流动性水位 (前提) — 全A成交额 + 稳定性 + 趋势
+ 流动性水位 (前提) — 全A成交额 + 稳定性 + 趋势
    → 枯竭直接红灯，其他因子不看
-② 个股离散度 (alpha来源) — 截面波动率
+ 个股离散度 (alpha来源) — 截面波动率
    → 高=选股空间大，低=同涨同跌没得选
-③ 风格集中度 (alpha杀手) — 宽基占比HHI + 因子极端演绎
+ 风格集中度 (alpha杀手) — 宽基占比HHI + 因子极端演绎
    → 与离散度是交互项：离散度高但风格极集中时alpha不稳
-④ 市场预期 (情绪结构) — 基差历史分位 + 大票虹吸三条件验证
+ 市场预期 (情绪结构) — 基差历史分位 + 大票虹吸三条件验证
    → 升水不直接扣分，要验证大票是否真的在吸走流动性
-⑤ 微观结构 (尾部风险) — 行业拥挤度 + 资金面共识
+ 微观结构 (尾部风险) — 行业拥挤度 + 资金面共识
    → 拥挤+偏空=踩踏预警
 
 【嵌套逻辑（不是简单加权！）】
@@ -89,7 +89,7 @@ def load_index_csv():
         for code in data:
             data[code].sort(key=lambda x: x['date'])
     except Exception as e:
-        print(f'  ⚠️ 读取 qs_index_daily.csv 失败: {e}')
+        print(f'  ⚠ 读取 qs_index_daily.csv 失败: {e}')
     return data
 
 index_daily = load_index_csv()
@@ -108,7 +108,7 @@ def _calc_index_return(ts_code, days):
 
 
 # ═══════════════════════════════════════
-# Factor ① 流动性水位
+# Factor  流动性水位
 # ═══════════════════════════════════════
 # 【逻辑】
 # 量化策略的基础生存条件——没有流动性，选股再好也无法执行。
@@ -196,7 +196,7 @@ def calc_liquidity():
 
     if score >= 75:   grade, emoji = '充裕', '🟢'
     elif score >= 55: grade, emoji = '正常', '🟡'
-    elif score >= 35: grade, emoji = '偏低', '🟠'
+    elif score >= 35: grade, emoji = '偏低', ''
     else:             grade, emoji = '枯竭', '🔴'
 
     signals = [
@@ -205,7 +205,7 @@ def calc_liquidity():
         f'周度环比: {decay_signal} ({ma5_vs_ma20_pct:+.1f}%)',
         f'稳定性: {stability} (CV={cv:.1%})',
     ]
-    if pulse: signals.append('⚡ 脉冲放量')
+    if pulse: signals.append(' 脉冲放量')
 
     return {
         'score': score, 'grade': grade, 'emoji': emoji,
@@ -217,7 +217,7 @@ def calc_liquidity():
 
 
 # ═══════════════════════════════════════
-# Factor ② 个股离散度
+# Factor  个股离散度
 # ═══════════════════════════════════════
 # 【逻辑】
 # 截面波动率 = 当日全A个股收益率的标准差
@@ -228,7 +228,7 @@ def calc_liquidity():
 def calc_dispersion():
     cv_data = cross_vol.get('data', [])
     if not cv_data:
-        return {'score': 50, 'grade': '数据缺失', 'emoji': '⚪',
+        return {'score': 50, 'grade': '数据缺失', 'emoji': '',
                 'cross_vol': None, 'signals': ['截面波动率数据缺失']}
 
     latest = cv_data[-1]
@@ -238,7 +238,7 @@ def calc_dispersion():
 
     # ── 评分：按截面波动率均值 ──
     if avg_vol < 1.5:   score, grade, emoji = 15, '极低', '🔴'   # 几乎无分化
-    elif avg_vol < 2.0: score, grade, emoji = 35, '偏低', '🟠'   # 分化不足
+    elif avg_vol < 2.0: score, grade, emoji = 35, '偏低', ''   # 分化不足
     elif avg_vol < 2.5: score, grade, emoji = 55, '中等', '🟡'   # 一般
     elif avg_vol < 3.0: score, grade, emoji = 75, '偏高', '🟢'   # alpha友好
     elif avg_vol < 4.0: score, grade, emoji = 90, '高', '🟢'     # 非常好
@@ -265,7 +265,7 @@ def calc_dispersion():
 
 
 # ═══════════════════════════════════════
-# Factor ③ 风格集中度
+# Factor  风格集中度
 # ═══════════════════════════════════════
 # 【逻辑】
 # 两层判断：
@@ -290,7 +290,7 @@ def calc_dispersion():
 def calc_style_concentration():
     shares = qs_data.get('index_share', [])
     if not shares:
-        return {'score': 50, 'grade': '数据缺失', 'emoji': '⚪',
+        return {'score': 50, 'grade': '数据缺失', 'emoji': '',
                 'hhi': None, 'dominant': None, 'signals': ['数据缺失'],
                 'migration': None}
 
@@ -305,7 +305,7 @@ def calc_style_concentration():
 
     total = sum(avg_shares.values())
     if total == 0:
-        return {'score': 50, 'grade': '数据异常', 'emoji': '⚪',
+        return {'score': 50, 'grade': '数据异常', 'emoji': '',
                 'hhi': None, 'dominant': None, 'signals': ['合计为0'],
                 'migration': None}
 
@@ -344,8 +344,8 @@ def calc_style_concentration():
     #   截面看着均匀不代表安全！科创可能两天从15%→30%飙上来。
     #   剧烈的流动性迁移 = 资金涌入单一风格 → 其他被抽水 → 超额炸。
     #   所以此指标与静态 HHI 搭配使用：
-    #     HHI正常 + 迁移平缓 → 安全 ✅
-    #     HHI正常 + 迁移剧烈 → 截面看不出但危险 ⚠️
+    #     HHI正常 + 迁移平缓 → 安全 
+    #     HHI正常 + 迁移剧烈 → 截面看不出但危险 ⚠
     #     HHI集中 + 迁移剧烈 → 非常危险 🔴
     migration = {
         'deltas': {},           # 每个风格的占比变化量(pp)
@@ -452,7 +452,7 @@ def calc_style_concentration():
     if score >= 75:   grade, emoji = '分散稳定', '🟢'
     elif score >= 55: grade, emoji = '较分散', '🟢'
     elif score >= 40: grade, emoji = '有迁移', '🟡'
-    elif score >= 25: grade, emoji = '快速迁移', '🟠'
+    elif score >= 25: grade, emoji = '快速迁移', ''
     else:             grade, emoji = '剧烈迁移', '🔴'
 
     # ═══ 信号 ═══
@@ -464,7 +464,7 @@ def calc_style_concentration():
     md = migration.get('max_delta_signed', 0)
     if mm and abs(md) >= 2:
         direction = '↑' if md > 0 else '↓'
-        signals.append(f'⚠️ {mm}{direction}{abs(md):.1f}pp ({migration["intensity"]})')
+        signals.append(f'⚠ {mm}{direction}{abs(md):.1f}pp ({migration["intensity"]})')
     else:
         signals.append(f'迁移{migration["intensity"]}，最大变化{mm} {md:+.1f}pp')
 
@@ -488,7 +488,7 @@ def calc_style_concentration():
 
 
 # ═══════════════════════════════════════
-# Factor ④ 市场预期（原"基差成本"）
+# Factor  市场预期（原"基差成本"）
 # ═══════════════════════════════════════
 # 【逻辑】（Roni 关键洞察）
 # 基差是结果变量，不是原因。不能看到贴水就说"成本高"。
@@ -509,7 +509,7 @@ def calc_style_concentration():
 def calc_market_expectation():
     basis = qs_data.get('basis', [])
     if not basis:
-        return {'score': 50, 'grade': '数据缺失', 'emoji': '⚪',
+        return {'score': 50, 'grade': '数据缺失', 'emoji': '',
                 'im_basis': None, 'signals': ['基差数据缺失']}
 
     latest = basis[-1]
@@ -586,7 +586,7 @@ def calc_market_expectation():
         # 极端贴水：市场极度悲观，超额波动可能加大
         score = 45
         grade = '极端悲观'
-        emoji = '🟠'
+        emoji = ''
     elif pctile < 30:
         score = 55
         grade = '偏悲观'
@@ -607,7 +607,7 @@ def calc_market_expectation():
     ]
     if siphon_confirmed:
         sd = siphon_details
-        signals.append(f'🚨 大票虹吸: 占比+{sd["share_surge"]:.1f}pp, 300跑赢1000达{sd["big_outperform"]:.1f}%')
+        signals.append(f' 大票虹吸: 占比+{sd["share_surge"]:.1f}pp, 300跑赢1000达{sd["big_outperform"]:.1f}%')
     elif is_premium and siphon_details:
         sd = siphon_details
         signals.append(f'升水但虹吸未确认 (占比差{sd["share_surge"]:+.1f}pp)')
@@ -624,7 +624,7 @@ def calc_market_expectation():
 
 
 # ═══════════════════════════════════════
-# Factor ⑤ 微观结构
+# Factor  微观结构
 # ═══════════════════════════════════════
 # 【逻辑】
 # 行业拥挤度高 + 资金面偏空 = 踩踏风险
@@ -683,14 +683,14 @@ def calc_micro_risk():
 
     if score >= 70:   grade, emoji = '健康', '🟢'
     elif score >= 45: grade, emoji = '有压力', '🟡'
-    elif score >= 25: grade, emoji = '风险偏高', '🟠'
+    elif score >= 25: grade, emoji = '风险偏高', ''
     else:             grade, emoji = '踩踏预警', '🔴'
 
     signals = []
     if total_industries:
         signals.append(f'拥挤行业: {hot_count}/{total_industries} 冷清: {cold_count}')
     if chase_risk:
-        signals.append(f'⚠️ {chase_risk}个行业追高风险')
+        signals.append(f'⚠ {chase_risk}个行业追高风险')
     if consensus:
         signals.append(f'资金面共识: {consensus}')
     for s in sig_list[:2]:
@@ -755,7 +755,7 @@ def calc_neutral_aux():
     # 配置价值判断
     if ratio >= 2:
         verdict = '有配置价值'          # 超额≥2×基差，覆盖摩擦后仍有充足收益
-        verdict_emoji = '✅'
+        verdict_emoji = ''
     elif ratio >= 1:
         verdict = '有正收益，但配置价值不足'  # 超额>基差，正收益但不够覆盖风险
         verdict_emoji = '🟡'
@@ -764,7 +764,7 @@ def calc_neutral_aux():
         verdict_emoji = '🟡'
     else:
         verdict = '中性亏钱'            # 超额<基差，对冲后亏损
-        verdict_emoji = '❌'
+        verdict_emoji = ''
 
     result = {
         'available': True,
@@ -814,7 +814,7 @@ def diagnose(liq, disp, conc, mkt, micro):
     if liq['score'] < 30:
         env_score = 15
         alpha_env = 15
-        narrative = f"⛔ 流动性枯竭（{liq['amount']:.0f}亿），量化生存环境恶劣"
+        narrative = f" 流动性枯竭（{liq['amount']:.0f}亿），量化生存环境恶劣"
         return build_result(env_score, '防御', '🔴', narrative, factors_detail,
                           alpha_env=alpha_env, alpha_label='枯竭')
 
@@ -848,7 +848,7 @@ def diagnose(liq, disp, conc, mkt, micro):
     if mkt.get('siphon_confirmed'):
         mkt_adj = -15
         sd = mkt.get('siphon_details', {})
-        mkt_note = f"🚨 大票虹吸确认(占比+{sd.get('share_surge',0):.1f}pp+跑赢{sd.get('big_outperform',0):.1f}%)，超额承压"
+        mkt_note = f" 大票虹吸确认(占比+{sd.get('share_surge',0):.1f}pp+跑赢{sd.get('big_outperform',0):.1f}%)，超额承压"
     elif mkt['grade'] == '升水观察':
         mkt_adj = 0
         mkt_note = f"升水但虹吸未确认，暂不调整"
@@ -863,7 +863,7 @@ def diagnose(liq, disp, conc, mkt, micro):
     micro_note = ''
     if micro['score'] < 30:
         micro_adj = -12
-        micro_note = f"🚨 踩踏预警！{micro['hot_count']}行业拥挤+资金{micro['consensus']}"
+        micro_note = f" 踩踏预警！{micro['hot_count']}行业拥挤+资金{micro['consensus']}"
     elif micro['score'] < 50:
         micro_adj = -5
         micro_note = f"微观有压力（{micro['hot_count']}行业拥挤）"
@@ -894,7 +894,7 @@ def diagnose(liq, disp, conc, mkt, micro):
 
     if env_score >= 75:   env_grade, env_emoji = '进攻', '🟢'
     elif env_score >= 55: env_grade, env_emoji = '均衡', '🟡'
-    elif env_score >= 40: env_grade, env_emoji = '谨慎', '🟠'
+    elif env_score >= 40: env_grade, env_emoji = '谨慎', ''
     else:                 env_grade, env_emoji = '防御', '🔴'
 
     return build_result(env_score, env_grade, env_emoji, narrative, factors_detail,
@@ -939,7 +939,7 @@ def build_result(score, grade, emoji, narrative, factors, alpha_env=None, alpha_
 # Main
 # ═══════════════════════════════════════
 if __name__ == '__main__':
-    print('📊 量化宽基超额环境诊断 v2')
+    print(' 量化宽基超额环境诊断 v2')
     print('=' * 55)
 
     liq   = calc_liquidity()
@@ -948,11 +948,11 @@ if __name__ == '__main__':
     mkt   = calc_market_expectation()
     micro = calc_micro_risk()
 
-    print(f'  ① 流动性:     {liq["emoji"]} {liq["score"]:3d} {liq["grade"]}')
-    print(f'  ② 离散度:     {disp["emoji"]} {disp["score"]:3d} {disp["grade"]}')
-    print(f'  ③ 风格集中度: {conc["emoji"]} {conc["score"]:3d} {conc["grade"]}')
-    print(f'  ④ 市场预期:   {mkt["emoji"]} {mkt["score"]:3d} {mkt["grade"]}')
-    print(f'  ⑤ 微观结构:   {micro["emoji"]} {micro["score"]:3d} {micro["grade"]}')
+    print(f'   流动性:     {liq["emoji"]} {liq["score"]:3d} {liq["grade"]}')
+    print(f'   离散度:     {disp["emoji"]} {disp["score"]:3d} {disp["grade"]}')
+    print(f'   风格集中度: {conc["emoji"]} {conc["score"]:3d} {conc["grade"]}')
+    print(f'   市场预期:   {mkt["emoji"]} {mkt["score"]:3d} {mkt["grade"]}')
+    print(f'   微观结构:   {micro["emoji"]} {micro["score"]:3d} {micro["grade"]}')
     print('=' * 55)
 
     result = diagnose(liq, disp, conc, mkt, micro)
@@ -963,11 +963,11 @@ if __name__ == '__main__':
     neutral = calc_neutral_aux()
     result['neutral_aux'] = neutral
     if neutral.get('available'):
-        print(f'\n  📎 中性辅助: {neutral["note"]}')
+        print(f'\n   中性辅助: {neutral["note"]}')
     else:
-        print(f'\n  📎 中性辅助: 不可用 ({neutral.get("reason","")})')
+        print(f'\n   中性辅助: 不可用 ({neutral.get("reason","")})')
 
     out_path = os.path.join(BASE, 'quant_env_diag.json')
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
-    print(f'\n✅ 输出 → {out_path}')
+    print(f'\n 输出 → {out_path}')

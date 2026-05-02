@@ -91,11 +91,11 @@ def fetch_index(reg_code, start_date):
             result = req.do_request()
             return result or []
         except Exception as e:
-            print(f"  ⚠️ 指数{reg_code}拉取失败 (尝试{attempt+1}/3): {e}")
+            print(f"  ⚠ 指数{reg_code}拉取失败 (尝试{attempt+1}/3): {e}")
             if attempt < 2:
                 time.sleep(2)
             else:
-                print(f"  ❌ 指数{reg_code}最终失败，使用空数据")
+                print(f"   指数{reg_code}最终失败，使用空数据")
                 return []
 
 
@@ -165,7 +165,7 @@ def main():
 
         aligned = align_and_calc(fund_data, idx_data)
         if not aligned:
-            print(f"  ⚠️ 对齐失败")
+            print(f"  ⚠ 对齐失败")
             continue
 
         latest_fund = aligned['fund_nav'][-1]
@@ -190,7 +190,7 @@ def main():
             'chart': aligned,
         }
         result['funds'].append(entry)
-        print(f"  ✅ 产品{total_ret:+.1f}% 基准{idx_ret:+.1f}% 超额{excess_ret:+.1f}%")
+        print(f"   产品{total_ret:+.1f}% 基准{idx_ret:+.1f}% 超额{excess_ret:+.1f}%")
 
     with open(OUTPUT, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False)

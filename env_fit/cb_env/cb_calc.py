@@ -418,7 +418,7 @@ def main():
     last_idx = len(data["meta"]["dates"]) - 1
     valid_idx = find_latest_index(mod1)
     if valid_idx < last_idx:
-        log(f"\n⚠️ 最后一天 {data['meta']['dates'][last_idx]} 数据不完整，总览使用 {data['meta']['dates'][valid_idx]}")
+        log(f"\n⚠ 最后一天 {data['meta']['dates'][last_idx]} 数据不完整，总览使用 {data['meta']['dates'][valid_idx]}")
         # 重建各模块的 latest
         mod1["latest"] = pick_latest(mod1["series"], valid_idx)
         mod1["latest"]["cb_amount"] = round(mod1["latest"].get("cb_amount", 0), 2)
@@ -478,7 +478,7 @@ def main():
 
     json_kb = os.path.getsize(OUTPUT_JSON) / 1024
     csv_kb = os.path.getsize(OUTPUT_CSV) / 1024
-    log(f"\n✅ 输出:")
+    log(f"\n 输出:")
     log(f"  cb_env.json: {json_kb:.0f} KB")
     log(f"  cb_env.csv: {csv_kb:.0f} KB ({len(csv_rows)} 行)")
 

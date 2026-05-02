@@ -22,7 +22,7 @@ def stop_all():
     """停止所有相关进程"""
     subprocess.run(['pkill', '-f', 'refresh_server.py'], capture_output=True)
     subprocess.run(['pkill', '-f', 'cloudflared tunnel'], capture_output=True)
-    print("✅ 已停止所有服务")
+    print(" 已停止所有服务")
 
 
 def start_server():
@@ -40,10 +40,10 @@ def start_server():
     try:
         import urllib.request
         r = urllib.request.urlopen('http://localhost:9876/api/status', timeout=3)
-        print("✅ refresh_server 启动成功 (端口 9876)")
+        print(" refresh_server 启动成功 (端口 9876)")
         return True
     except:
-        print("❌ refresh_server 启动失败")
+        print(" refresh_server 启动失败")
         return False
 
 
@@ -68,11 +68,11 @@ def start_tunnel():
             match = re.search(r'(https://[a-z0-9-]+\.trycloudflare\.com)', content)
             if match:
                 url = match.group(1)
-                print(f"✅ Tunnel: {url}")
+                print(f" Tunnel: {url}")
                 return url
         except:
             pass
-    print("❌ Tunnel 启动超时")
+    print(" Tunnel 启动超时")
     return None
 
 
@@ -84,7 +84,7 @@ def save_url(url):
     }
     with open(URL_FILE, 'w') as f:
         json.dump(data, f, indent=2)
-    print(f"✅ URL 写入 {URL_FILE}")
+    print(f" URL 写入 {URL_FILE}")
 
 
 def git_push():
@@ -97,9 +97,9 @@ def git_push():
             return
         subprocess.run(['git', 'commit', '-m', 'auto: update tunnel URL'], cwd=BASE_DIR, check=True, capture_output=True)
         subprocess.run(['git', 'push', 'origin', 'main'], cwd=BASE_DIR, check=True, capture_output=True, timeout=15)
-        print("✅ git push 完成")
+        print(" git push 完成")
     except Exception as e:
-        print(f"⚠️ git push 失败: {e}")
+        print(f"⚠ git push 失败: {e}")
 
 
 def main():
@@ -107,7 +107,7 @@ def main():
         stop_all()
         return
 
-    print("🚀 GAMT 刷新服务启动")
+    print(" GAMT 刷新服务启动")
     print("=" * 40)
 
     # 1. 启动 server
@@ -117,7 +117,7 @@ def main():
     # 2. 启动 tunnel
     url = start_tunnel()
     if not url:
-        print("⚠️ Tunnel 失败，只能本机使用")
+        print("⚠ Tunnel 失败，只能本机使用")
         return
 
     # 3. 保存 URL + push
@@ -125,8 +125,8 @@ def main():
     git_push()
 
     print()
-    print(f"🌐 外网地址: {url}")
-    print(f"🏠 本机地址: http://localhost:9876")
+    print(f" 外网地址: {url}")
+    print(f" 本机地址: http://localhost:9876")
     print(f"停止: python3 {__file__} --stop")
 
 

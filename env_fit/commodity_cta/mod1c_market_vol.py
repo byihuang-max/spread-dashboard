@@ -133,7 +133,7 @@ def main():
     with open(OUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(f"  输出: {OUT_PATH} ({len(series)}天)")
-    print("✅ 完成")
+    print(" 完成")
 
 
 if __name__ == '__main__':

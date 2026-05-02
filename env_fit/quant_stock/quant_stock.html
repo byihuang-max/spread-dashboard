@@ -70,8 +70,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </head><body>
 
 <div class="header-bar">
-  <div class="date-label" id="dateLabel">📊 宽基量化股票 · 加载中...</div>
-  <button class="refresh-btn" onclick="doRefresh()" id="refreshBtn" style="display:none">🔄 刷新</button>
+  <div class="date-label" id="dateLabel"> 宽基量化股票 · 加载中...</div>
+  <button class="refresh-btn" onclick="doRefresh()" id="refreshBtn" style="display:none"> 刷新</button>
   <script>if(window.self===window.top)document.getElementById('refreshBtn').style.display='';</script>
 </div>
 
@@ -84,8 +84,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   <div style="position:relative;height:380px"><canvas id="chartExcess"></canvas></div>
   <div id="excess-tooltip" style="display:none;position:absolute;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
   <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center">
-    <span>🟣 产品净值</span>
-    <span>⚪ 基准指数</span>
+    <span> 产品净值</span>
+    <span> 基准指数</span>
     <span>🟡 累计超额(右轴)</span>
     <span>|</span>
     <span>🟢 超额顺风 (周Δ>+1%)</span>
@@ -126,11 +126,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </div>
 
 <div class="card" style="font-size:12px;color:#999;line-height:1.8">
-  <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span> 📐 指标说明</div>
-  <p><b style="color:#555">① 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
-  <p><b style="color:#555">② 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
-  <p><b style="color:#555">③ 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
-  <p><b style="color:#555">④ 因子超额：</b>各因子指数相对中证全指的日度超额收益累计净值。成长=国证成长(399370)，红利=中证红利(000922)，小盘=中证2000(932000)</p>
+  <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span>  指标说明</div>
+  <p><b style="color:#555"> 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
+  <p><b style="color:#555"> 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
+  <p><b style="color:#555"> 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
+  <p><b style="color:#555"> 因子超额：</b>各因子指数相对中证全指的日度超额收益累计净值。成长=国证成长(399370)，红利=中证红利(000922)，小盘=中证2000(932000)</p>
 </div>
 
 <script>
@@ -177,7 +177,7 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
   // ── Factor cards ──
   html += '<div class="factor-grid">';
   var fOrder = ['流动性','离散度','风格集中度','市场预期','微观结构'];
-  var fIcons = {'流动性':'💧','离散度':'📊','风格集中度':'🎯','市场预期':'🔮','微观结构':'🔬'};
+  var fIcons = {'流动性':'','离散度':'','风格集中度':'','市场预期':'','微观结构':''};
   fOrder.forEach(function(name){
     var f = D.factors[name]||{};
     var s = f.score||0;
@@ -205,11 +205,11 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
 
   // ── Narrative ──
   html += '<div class="narrative-box">';
-  html += '<div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:8px;display:flex;align-items:center;gap:6px">🧠 诊断逻辑</div>';
+  html += '<div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:8px;display:flex;align-items:center;gap:6px"> 诊断逻辑</div>';
   var parts = D.narrative.split(' → ');
   html += '<div class="narrative-text">';
   html += parts.map(function(p,i){
-    var icon = i===0?'💧':i===1?'📊':i===2?'🔮':'🔬';
+    var icon = i===0?'':i===1?'':i===2?'':'';
     return '<span>'+icon+' '+p+'</span>';
   }).join('<span class="sep">→</span>');
   html += '</div></div>';
@@ -218,7 +218,7 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
   var N = D.neutral_aux;
   if(N && N.available){
     html += '<div class="neutral-box">';
-    html += '<div class="neutral-title">📎 中性策略参考</div>';
+    html += '<div class="neutral-title"> 中性策略参考</div>';
     html += '<div class="neutral-row">';
 
     html += '<div class="neutral-metric"><div class="val">'+N.excess_annual_pct.toFixed(1)+'%</div><div class="lab">超额年化</div></div>';
@@ -228,7 +228,7 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
     html += '<div class="neutral-metric"><div class="val">'+(N.ratio==='inf'?'∞':N.ratio.toFixed(1))+'x</div><div class="lab">超额/基差</div></div>';
     html += '<div class="neutral-divider"></div>';
 
-    var vCol = N.verdict_emoji==='✅'?'#dcfce7;color:#166534':N.verdict_emoji==='❌'?'#fee2e2;color:#991b1b':'#fef9c3;color:#854d0e';
+    var vCol = N.verdict_emoji===''?'#dcfce7;color:#166534':N.verdict_emoji===''?'#fee2e2;color:#991b1b':'#fef9c3;color:#854d0e';
     html += '<div class="neutral-verdict" style="background:'+vCol+'">'+N.verdict_emoji+' '+N.verdict+'</div>';
 
     html += '</div></div>';
@@ -277,7 +277,7 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
     }
 
     sumHtml += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e8eaef;color:#94a3b8;font-size:10px;line-height:1.6">';
-    sumHtml += '⚠️ 单一风格5日变化>5pp为剧烈迁移<br>量化持仓分散，剧烈迁移=超额风险';
+    sumHtml += '⚠ 单一风格5日变化>5pp为剧烈迁移<br>量化持仓分散，剧烈迁移=超额风险';
     sumHtml += '</div>';
 
     document.getElementById('migration-summary').innerHTML = sumHtml;
@@ -399,22 +399,22 @@ Promise.all([
           html+='</div>';
 
           var liq=e.liquidity;
-          if(liq) html+='<div>💧 成交额 <b>'+liq.amount+'亿</b> '+liq.trend+' (CV='+liq.cv+')</div>';
+          if(liq) html+='<div> 成交额 <b>'+liq.amount+'亿</b> '+liq.trend+' (CV='+liq.cv+')</div>';
 
           var disp=e.dispersion;
-          if(disp) html+='<div>📊 截面波动率 <b>'+disp.cross_vol.toFixed(2)+'</b></div>';
+          if(disp) html+='<div> 截面波动率 <b>'+disp.cross_vol.toFixed(2)+'</b></div>';
 
           var sty=e.style;
           if(sty){
-            html+='<div>🎯 HHI='+sty.hhi+' 主导:'+sty.dominant+'('+sty.dominant_pct+'%)';
-            if(Math.abs(sty.max_delta)>=1.5) html+=' <span style="color:#fca5a5">⚠️'+sty.max_mover+(sty.max_delta>0?'↑':'↓')+Math.abs(sty.max_delta).toFixed(1)+'pp</span>';
+            html+='<div> HHI='+sty.hhi+' 主导:'+sty.dominant+'('+sty.dominant_pct+'%)';
+            if(Math.abs(sty.max_delta)>=1.5) html+=' <span style="color:#fca5a5">⚠'+sty.max_mover+(sty.max_delta>0?'↑':'↓')+Math.abs(sty.max_delta).toFixed(1)+'pp</span>';
             html+='</div>';
           }
 
           var bas=e.basis;
           if(bas){
-            html+='<div>🔮 IM基差 <b>'+bas.im+'%</b> (分位'+bas.pctile+'%)';
-            if(bas.siphon) html+=' <span style="color:#fca5a5">🚨虹吸! '+bas.siphon_note+'</span>';
+            html+='<div> IM基差 <b>'+bas.im+'%</b> (分位'+bas.pctile+'%)';
+            if(bas.siphon) html+=' <span style="color:#fca5a5">虹吸! '+bas.siphon_note+'</span>';
             html+='</div>';
           }
 
@@ -422,7 +422,7 @@ Promise.all([
           if(fac){
             var facParts=[];
             for(var fn in fac){var v=fac[fn];if(Math.abs(v)>1) facParts.push(fn+(v>0?'↑':'↓')+Math.abs(v).toFixed(1)+'%');}
-            if(facParts.length) html+='<div>📈 因子: '+facParts.join(', ')+'</div>';
+            if(facParts.length) html+='<div> 因子: '+facParts.join(', ')+'</div>';
           }
 
           tt.innerHTML=html;
@@ -459,7 +459,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
   function val(v){return v==null?null:v}
 
   var lastDate=QS.total_amount[QS.total_amount.length-1].date;
-  document.getElementById('dateLabel').innerHTML='📊 宽基量化股票 · 数据截至 <b>'+fmtDate(lastDate)+'</b>';
+  document.getElementById('dateLabel').innerHTML=' 宽基量化股票 · 数据截至 <b>'+fmtDate(lastDate)+'</b>';
 
   var baseScales={x:{ticks:{maxTicksToShow:12,font:{size:10}}}};
 

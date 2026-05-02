@@ -44,7 +44,7 @@ def fetch_fund_nav(reg_code, start_date='2025-01-01'):
         if data.get('code') == 200:
             return data.get('data', [])
     except Exception as e:
-        print(f"  ⚠️ 拉取失败: {e}")
+        print(f"  ⚠ 拉取失败: {e}")
     return []
 
 def fetch_index(code, start_date='2025-01-01'):
@@ -65,7 +65,7 @@ def fetch_index(code, start_date='2025-01-01'):
         if data.get('code') == 200:
             return data.get('data', [])
     except Exception as e:
-        print(f"  ⚠️ 拉取失败: {e}")
+        print(f"  ⚠ 拉取失败: {e}")
     return []
 
 if __name__ == '__main__':

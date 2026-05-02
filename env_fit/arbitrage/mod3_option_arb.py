@@ -206,7 +206,7 @@ def main():
     log('\n[1] 获取交易日...')
     all_dates = get_trade_dates(LOOKBACK_DAYS + HV_EXTRA_DAYS)
     if not all_dates:
-        log('  ⚠️ 无法获取交易日')
+        log('  ⚠ 无法获取交易日')
         return
 
     dates = all_dates[-LOOKBACK_DAYS:]
@@ -218,7 +218,7 @@ def main():
     log('\n[2] 加载 Call/Put 映射...')
     cp_map = load_cp_map()
     if not cp_map:
-        log('  ⚠️ 无法获取 C/P 映射')
+        log('  ⚠ 无法获取 C/P 映射')
         return
 
     # 3. 指数日线（用于 HV）
@@ -313,7 +313,7 @@ def main():
     log('\n[5] 输出...')
     write_output(series, dates)
 
-    log(f'\n✅ 模块三完成')
+    log(f'\n 模块三完成')
     log(f'  JSON: {OUT_JSON}')
     log(f'  CSV:  {OUT_CSV}')
 
@@ -324,7 +324,7 @@ def main():
         avg_pcr = sum(pcr_vols) / len(pcr_vols) if pcr_vols else 0
 
         log(f'\n{"─"*55}')
-        log(f'📊 期权套利汇总 ({end_date})')
+        log(f' 期权套利汇总 ({end_date})')
         log(f'{"─"*55}')
         log(f'  PCR(成交量): {latest.get("pcr_vol", "N/A")}  (30日均值: {avg_pcr:.4f})')
         log(f'  PCR(持仓量): {latest.get("pcr_oi", "N/A")}')

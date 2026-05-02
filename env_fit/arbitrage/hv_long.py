@@ -85,7 +85,7 @@ def main():
         'end_date': today,
     }, fields='trade_date,close')
     if not rows:
-        log('❌ 未拉到数据')
+        log(' 未拉到数据')
         return
 
     # 按日期升序
@@ -130,7 +130,7 @@ def main():
 
     with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False)
-    log(f'✅ 输出：{OUT_JSON}')
+    log(f' 输出：{OUT_JSON}')
     log(f'  最新 HV20={latest.get("hv_20")}% / HV60={latest.get("hv_60")}%  '
         f'分位数={result["summary"].get("hv_20_pct_rank")}%')
 

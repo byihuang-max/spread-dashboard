@@ -45,7 +45,7 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
     except Exception as e:
-        print(f"❌ Token 错误: {e}")
+        print(f" Token 错误: {e}")
     return None
 
 def ifind_history(token, code, start, end):
@@ -66,7 +66,7 @@ def ifind_history(token, code, start, end):
             if tables:
                 return tables[0]
     except Exception as e:
-        print(f"  ❌ {code} 失败: {e}")
+        print(f"   {code} 失败: {e}")
     return None
 
 if __name__ == '__main__':
@@ -76,10 +76,10 @@ if __name__ == '__main__':
     
     token = get_token()
     if not token:
-        print("❌ 无法获取 token")
+        print(" 无法获取 token")
         exit(1)
     
-    print("✅ Token 获取成功")
+    print(" Token 获取成功")
     
     # 测试拉取最近一周数据
     end = datetime.now().strftime('%Y-%m-%d')
@@ -95,9 +95,9 @@ if __name__ == '__main__':
         if result:
             dates = result.get('time', [])
             closes = result.get('table', {}).get('close', [])
-            print(f"✅ {code:15} {len(dates)} 天")
+            print(f" {code:15} {len(dates)} 天")
         else:
-            print(f"❌ {code:15} 无数据")
+            print(f" {code:15} 无数据")
     
     print("\n" + "="*60)
     print("测试完成！如果成功，可以继续完整拉取")

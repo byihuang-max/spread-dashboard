@@ -155,7 +155,7 @@
         <div id="content" style="display:none">
             <!-- 顶部信号栏 -->
             <div class="signal-bar">
-                <div class="signal-main">🎯 HALO 交易看板</div>
+                <div class="signal-main"> HALO 交易看板</div>
                 <div class="signal-tags">
                     <span class="signal-tag">重资产范式转移</span>
                     <span class="signal-tag">全球标的追踪</span>
@@ -168,7 +168,7 @@
             <!-- 场景判断 -->
             <div class="section">
                 <div class="chart-box">
-                    <h3>📊 当前场景判断</h3>
+                    <h3> 当前场景判断</h3>
                     <div style="display:flex;gap:16px;margin-bottom:16px">
                         <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
                             <div style="font-size:18px;font-weight:900" id="scenario-name"></div>
@@ -182,7 +182,7 @@
             
                 <div class="section">
                 <div class="chart-box">
-                    <h3>🚀 CapEx 二阶导趋势（季度）</h3>
+                    <h3> CapEx 二阶导趋势（季度）</h3>
                     <div class="chart-wrap"><div id="capex-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
                         <b>一阶导（细线半透明）：</b>CapEx 同比增速（YoY%），衡量"花钱速度"。<br>
@@ -200,7 +200,7 @@
                     </div>
                 </div>
                 <div class="chart-box">
-                    <h3>⚖️ PE 剪刀差趋势（每日）</h3>
+                    <h3> PE 剪刀差趋势（每日）</h3>
                     <div class="chart-wrap"><div id="pe-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
                         <b>PE 剪刀差：</b>重资产 PE - 轻资产 PE。负值=重资产估值更便宜。<br>
@@ -215,7 +215,7 @@
             
             <!-- 标的表格 -->
             <div class="chart-box">
-                <h3>🏆 标的相对强弱 TOP 10</h3>
+                <h3> 标的相对强弱 TOP 10</h3>
                 <table id="stocks-table">
                     <thead>
                         <tr>
@@ -240,10 +240,10 @@
             <!-- 中国版 HALO：重资产 vs 轻资产 -->
             <div class="section">
                 <div class="chart-box">
-                    <h3>🇨🇳 重资产 vs 轻资产趋势（中美对比）</h3>
+                    <h3>CN 重资产 vs 轻资产趋势（中美对比）</h3>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
                         <div style="background:#f9fafb;border-radius:8px;padding:16px;border:1px solid #e8eaef">
-                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">🇨🇳 中国市场</div>
+                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">CN 中国市场</div>
                             <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="cn-trend"></div>
                             <div style="font-size:11px;color:#64748b" id="cn-signal"></div>
                             <div style="margin-top:12px;font-size:11px;color:#374151">
@@ -252,7 +252,7 @@
                             </div>
                         </div>
                         <div style="background:#f9fafb;border-radius:8px;padding:16px;border:1px solid #e8eaef">
-                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">🇺🇸 美国市场（罗素3000拟合）</div>
+                            <div style="font-size:12px;color:#64748b;margin-bottom:8px">US 美国市场（罗素3000拟合）</div>
                             <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="us-trend"></div>
                             <div style="font-size:11px;color:#64748b">XLE+XLU+XLI+XLB vs XLK+XLV+XLC+XLY</div>
                             <div style="margin-top:12px;font-size:11px;color:#374151">
@@ -297,7 +297,7 @@
                 document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {
-                document.getElementById('loading').innerHTML = `❌ 数据加载失败<br><small style="color:#888">${err.message}</small>`;
+                document.getElementById('loading').innerHTML = ` 数据加载失败<br><small style="color:#888">${err.message}</small>`;
                 console.error('HALO数据加载错误:', err);
             });
         
@@ -593,7 +593,7 @@
                     }
                 },
                 legend: {
-                    data: ['🇨🇳 中国相对强弱', '🇺🇸 美国相对强弱'],
+                    data: ['CN 中国相对强弱', 'US 美国相对强弱'],
                     top: 10,
                     textStyle: { color: '#374151' }
                 },
@@ -615,7 +615,7 @@
                 },
                 series: [
                     {
-                        name: '🇨🇳 中国相对强弱',
+                        name: 'CN 中国相对强弱',
                         type: 'line',
                         data: cnRS,
                         smooth: true,
@@ -625,7 +625,7 @@
                         itemStyle: { color: '#ef4444' }
                     },
                     {
-                        name: '🇺🇸 美国相对强弱',
+                        name: 'US 美国相对强弱',
                         type: 'line',
                         data: usRS,
                         smooth: true,

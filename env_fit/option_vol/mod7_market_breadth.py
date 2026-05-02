@@ -269,4 +269,4 @@ output = {
 with open(BASE / "market_breadth.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成")
+print(f"\n 完成")

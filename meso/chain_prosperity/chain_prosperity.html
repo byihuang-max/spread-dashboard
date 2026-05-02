@@ -51,10 +51,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 </div>
 
 <div class="tabs" id="chainTabs">
-  <div class="tab active" data-chain="tech">🔬 科技芯片</div>
-  <div class="tab" data-chain="pharma">💊 创新药</div>
-  <div class="tab" data-chain="cycle">⛏️ 周期</div>
-  <div class="tab" data-chain="consumer">🛒 消费</div>
+  <div class="tab active" data-chain="tech"> 科技芯片</div>
+  <div class="tab" data-chain="pharma"> 创新药</div>
+  <div class="tab" data-chain="cycle"> 周期</div>
+  <div class="tab" data-chain="consumer"> 消费</div>
 </div>
 
 <div class="tab-page active" id="page-tech"></div>
@@ -75,7 +75,7 @@ function loadData(){
 
 function sigCls(s){
   if(s.indexOf('🟢')>=0)return 'g';if(s.indexOf('🔴')>=0)return 'r';
-  if(s.indexOf('⚠️')>=0||s.indexOf('🟡')>=0)return 'w';if(s.indexOf('🔵')>=0)return 'b';return '';
+  if(s.indexOf('⚠')>=0||s.indexOf('🟡')>=0)return 'w';if(s.indexOf('🔵')>=0)return 'b';return '';
 }
 function fmtChg(v){
   if(v==null)return '<span class="flat">—</span>';
@@ -169,9 +169,9 @@ function renderTech(){
   var c=DATA.chains.tech;if(!c)return;
   var el=document.getElementById('page-tech');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="techTrend"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="techShare"></canvas></div></div>'+
-    '<div class="chart-note"><b>📖 科技芯片链怎么看：</b><br><br>'+
+    '<div class="chart-box"><h3> 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="techTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3> ETF份额日度变化</h3><div class="chart-wrap"><canvas id="techShare"></canvas></div></div>'+
+    '<div class="chart-note"><b> 科技芯片链怎么看：</b><br><br>'+
     '<b>SOXX费城半导体：</b>全球半导体风向标。SOXX涨→国内芯片ETF通常滞后1-3天跟涨，这是正常的传导节奏。<br>'+
     '<b>芯片ETF(512480)：</b>中游代表，跟踪国内半导体设计/封测/制造龙头。<br>'+
     '<b>消费电子ETF + 科创50：</b>下游应用端。消费电子放量=终端需求回暖，利好全链。<br><br>'+
@@ -188,9 +188,9 @@ function renderPharma(){
   var c=DATA.chains.pharma;if(!c)return;
   var el=document.getElementById('page-pharma');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-box"><h3>📈 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="pharmaTrend"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="pharmaShare"></canvas></div></div>'+
-    '<div class="chart-note"><b>📖 创新药链怎么看：</b><br><br>'+
+    '<div class="chart-box"><h3> 上中下游走势叠加（60日归一化）</h3><div class="chart-wrap"><canvas id="pharmaTrend"></canvas></div></div>'+
+    '<div class="chart-box"><h3> ETF份额日度变化</h3><div class="chart-wrap"><canvas id="pharmaShare"></canvas></div></div>'+
+    '<div class="chart-note"><b> 创新药链怎么看：</b><br><br>'+
     '<b>医药生物(申万)：</b>全行业基准指数，包含创新药+仿制药+医疗器械+CRO。走强说明板块整体有资金关注。<br>'+
     '<b>创新药ETF(159992)：</b>聚焦创新药管线公司。跑赢大医药 = 市场愿意给管线溢价，政策环境偏暖。<br>'+
     '<b>医药ETF(512010)：</b>宽基医药，偏防御。集采冲击时仿制药拖累，但创新药相对抗跌。<br><br>'+
@@ -207,16 +207,16 @@ function renderCycle(){
   var c=DATA.chains.cycle;if(!c)return;
   var el=document.getElementById('page-cycle');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-box"><h3>📈 上游原材料价格（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleUp"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📈 中游建材+南华工业品（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleMid"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📈 下游基建/地产ETF走势</h3><div class="chart-wrap"><canvas id="cycleDown"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 下游ETF份额日度变化</h3><div class="chart-wrap"><canvas id="cycleShare"></canvas></div></div>'+
-    '<div class="chart-note"><b>📖 周期链怎么看：</b><br><br>'+
+    '<div class="chart-box"><h3> 上游原材料价格（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3> 中游建材+南华工业品（60日归一化）</h3><div class="chart-wrap"><canvas id="cycleMid"></canvas></div></div>'+
+    '<div class="chart-box"><h3> 下游基建/地产ETF走势</h3><div class="chart-wrap"><canvas id="cycleDown"></canvas></div></div>'+
+    '<div class="chart-box"><h3> 下游ETF份额日度变化</h3><div class="chart-wrap"><canvas id="cycleShare"></canvas></div></div>'+
+    '<div class="chart-note"><b> 周期链怎么看：</b><br><br>'+
     '<b>上游（铜/铝/铁矿/煤炭）：</b>全球定价品种。铜被称为"铜博士"，是经济景气的领先指标。铜铝同涨 = 全球需求回暖；铁矿煤炭涨 = 国内基建发力。<br>'+
     '<b>中游（螺纹/玻璃/纯碱）：</b>国内定价为主。螺纹=基建晴雨表，玻璃纯碱=地产竣工链。南华工业品是综合景气指标。<br>'+
     '<b>下游（基建ETF/房地产ETF）：</b>终端需求验证。ETF份额流入=市场在押注周期反转。<br><br>'+
     '<b>传导信号：</b>上游涨+中游涨+下游ETF流入 = 需求驱动型景气🟢，超配资源类。'+
-    '上游涨+下游跌 = 成本挤压⚠️，回避中游制造（但上游资源股受益）。'+
+    '上游涨+下游跌 = 成本挤压⚠，回避中游制造（但上游资源股受益）。'+
     '下游ETF份额持续流出 = 市场对周期不看好，即使上游价格还在高位也要警惕。<br><br>'+
     '<b>铜铝 vs 铁矿：</b>铜铝涨+铁矿不涨 = 海外需求好但国内差；反过来 = 国内基建强但全球偏弱。</div>';
   lineChart('cycleUp',c.trend_lines_up);
@@ -230,10 +230,10 @@ function renderConsumer(){
   var c=DATA.chains.consumer;if(!c)return;
   var el=document.getElementById('page-consumer');
   el.innerHTML=makeTierCards(c.tiers)+
-    '<div class="chart-box"><h3>📈 上游农产品价格（60日归一化）</h3><div class="chart-wrap"><canvas id="conUp"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📈 中下游消费ETF+食品饮料（60日归一化）</h3><div class="chart-wrap"><canvas id="conMid"></canvas></div></div>'+
-    '<div class="chart-box"><h3>📊 ETF份额日度变化</h3><div class="chart-wrap"><canvas id="conShare"></canvas></div></div>'+
-    '<div class="chart-note"><b>📖 消费链怎么看：</b><br><br>'+
+    '<div class="chart-box"><h3> 上游农产品价格（60日归一化）</h3><div class="chart-wrap"><canvas id="conUp"></canvas></div></div>'+
+    '<div class="chart-box"><h3> 中下游消费ETF+食品饮料（60日归一化）</h3><div class="chart-wrap"><canvas id="conMid"></canvas></div></div>'+
+    '<div class="chart-box"><h3> ETF份额日度变化</h3><div class="chart-wrap"><canvas id="conShare"></canvas></div></div>'+
+    '<div class="chart-note"><b> 消费链怎么看：</b><br><br>'+
     '<b>上游（生猪/大豆/棕榈油）：</b>农产品价格决定CPI食品分项。猪价是中国CPI的核心驱动——猪周期上行→CPI回升→消费板块关注度提升。<br>'+
     '<b>白酒ETF(512690)：</b>消费信心的晴雨表。商务活动频繁+居民消费意愿强时白酒最先受益。白酒跑赢消费ETF = 市场偏好确定性龙头；跑输 = 风格转向性价比消费。<br>'+
     '<b>食品饮料(申万)+消费ETF：</b>大消费基准。消费ETF含可选消费（家电/汽车），食品饮料偏必选。<br><br>'+

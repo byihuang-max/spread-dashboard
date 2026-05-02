@@ -226,7 +226,7 @@ def calc_macro_score(config):
         emoji = "🟡"
     elif total >= t["cautious"]:
         phase = "谨慎"
-        emoji = "🟠"
+        emoji = ""
     else:
         phase = "防守"
         emoji = "🔴"
@@ -322,7 +322,7 @@ def fit_quant_stock(config):
     cro = load("micro_flow/crowding/crowding.json")
     if cro:
         heatmap = cro.get("industry_heatmap", [])
-        hot_count = sum(1 for x in heatmap if x.get("crowd_label") == "🔥拥挤")
+        hot_count = sum(1 for x in heatmap if x.get("crowd_label") == "拥挤")
         if hot_count > 8:
             score -= 10
             signals.append(f"{hot_count}个行业拥挤，回撤风险 🔴")
@@ -715,8 +715,8 @@ def calc_meso_tags():
         
         # 热门行业
         heatmap = cro.get("industry_heatmap", [])
-        hot = [x["name"] for x in heatmap if x.get("crowd_label") == "🔥拥挤"][:3]
-        cold = [x["name"] for x in heatmap if x.get("crowd_label") == "❄️冷清"][:3]
+        hot = [x["name"] for x in heatmap if x.get("crowd_label") == "拥挤"][:3]
+        cold = [x["name"] for x in heatmap if x.get("crowd_label") == "冷清"][:3]
         if hot:
             tags.append(f"拥挤行业: {', '.join(hot)}")
         if cold:
@@ -739,7 +739,7 @@ def main():
     
     # 1. 宏观打分
     macro = calc_macro_score(config)
-    print(f"\n📊 宏观总分: {macro['total']}/100 {macro['emoji']} {macro['phase']}")
+    print(f"\n 宏观总分: {macro['total']}/100 {macro['emoji']} {macro['phase']}")
     print(f"   美林时钟: {macro['merrill_clock'].get('emoji','')} {macro['merrill_clock'].get('phase','')} (PMI={macro['merrill_clock'].get('pmi','')}, CPI={macro['merrill_clock'].get('cpi','')}%)")
     for k, v in macro["detail"].items():
         print(f"   {k}: {v['score']}/100 (权重{v['weight']*100:.0f}%)")
@@ -758,7 +758,7 @@ def main():
                    "commodity_cta":"商品CTA","cb_env":"转债","arbitrage":"套利",
                    "option_vol":"期权卖权"}
     
-    print(f"\n🎯 策略适配度:")
+    print(f"\n 策略适配度:")
     t = config["thresholds"]["strategy"]
     for k, v in strategies.items():
         sc = v["score"]
@@ -774,13 +774,13 @@ def main():
     
     # 3. 中观标签
     meso_tags = calc_meso_tags()
-    print(f"\n🔍 中观观察:")
+    print(f"\n 中观观察:")
     for tag in meso_tags:
         print(f"   • {tag}")
     
     # 4. 配置建议
     alloc = calc_allocation(macro, strategies, config)
-    print(f"\n💼 配置建议:")
+    print(f"\n 配置建议:")
     for k, v in alloc.items():
         delta_str = ""
         if v["delta"] > 0:
@@ -802,7 +802,7 @@ def main():
     out_path = os.path.join(BASE, "macro_score.json")
     with open(out_path, "w") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"\n✅ 输出: {out_path}")
+    print(f"\n 输出: {out_path}")
 
 
 if __name__ == "__main__":

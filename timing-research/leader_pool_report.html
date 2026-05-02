@@ -61,7 +61,7 @@ h2{font-size:17px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-b
 <a href="index.html" class="back">← 返回择时研究</a>
 
 <div class="card hero">
-  <h1>🔍 龙头观察池 · 盘中发现层</h1>
+  <h1> 龙头观察池 · 盘中发现层</h1>
   <div class="muted">角色层 → 龙头观察池 → 龙头确认 ｜ 数据源：Tushare limit_list_d 链路</div>
   <div class="date-badge" id="dateBadge">加载中...</div>
   <div class="toolbar">
@@ -340,7 +340,7 @@ function render(data){
     const isRec=rec.ts_code===r.ts_code, isAmt=amt.ts_code===r.ts_code;
     let badge='';
     if(isRec) badge+='<span class="tag2" style="font-size:13px;font-weight:700">⭐ 辨识度龙头</span> ';
-    if(isAmt) badge+='<span class="tag" style="font-size:13px;font-weight:700">💰 成交额龙头</span> ';
+    if(isAmt) badge+='<span class="tag" style="font-size:13px;font-weight:700"> 成交额龙头</span> ';
     rc.innerHTML+=`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><b style="font-size:15px">${i+1}. ${r.ts_code} ${esc(r.name)}${lianBanTag(r)}</b><span class="muted">${esc(r.industry)}</span>${badge}</div><div style="margin-top:8px">${tags(r.source_types,'pill')}</div><div style="margin-top:10px;line-height:1.8">${(r.reasons||[]).map(x=>'• '+esc(x)).join('<br>')}</div></div>`;
   });
 }

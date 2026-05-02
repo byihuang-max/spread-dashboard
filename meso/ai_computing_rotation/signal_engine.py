@@ -1,8 +1,8 @@
 """AI 算力链轮动监控 — 三层信号计算引擎
 
-信号层 ①：滚动比价 Z-score（6 组比价对）
-信号层 ②：量价状态分类（4 个 A 股篮子）
-信号层 ③：ETF 资金流验证
+信号层 ：滚动比价 Z-score（6 组比价对）
+信号层 ：量价状态分类（4 个 A 股篮子）
+信号层 ：ETF 资金流验证
 综合信号：三层交叉验证
 """
 
@@ -17,7 +17,7 @@ from config import (
 
 
 # ══════════════════════════════════════════════════════════
-#  信号层 ① — 滚动比价 Z-score
+#  信号层  — 滚动比价 Z-score
 # ══════════════════════════════════════════════════════════
 
 def calc_basket_return(prices: pd.DataFrame) -> pd.Series:
@@ -91,7 +91,7 @@ def calc_all_pair_zscores(basket_prices: dict) -> dict:
 
 
 # ══════════════════════════════════════════════════════════
-#  信号层 ② — 量价状态分类
+#  信号层  — 量价状态分类
 # ══════════════════════════════════════════════════════════
 
 VP_STATES = {
@@ -123,7 +123,7 @@ def classify_vol_price(prices: pd.DataFrame, amounts: pd.DataFrame,
     basket_amount = amounts.mean(axis=1).dropna()
 
     if len(basket_price) < long_:
-        return {"state": "数据不足", "emoji": "⚪", "meaning": ""}
+        return {"state": "数据不足", "emoji": "", "meaning": ""}
 
     price_chg = basket_price.iloc[-1] / basket_price.iloc[-short] - 1
     vol_short = basket_amount.iloc[-short:].mean()
@@ -159,7 +159,7 @@ def calc_all_vol_price(basket_prices: dict, basket_amounts: dict) -> dict:
 
 
 # ══════════════════════════════════════════════════════════
-#  信号层 ③ — ETF 资金流
+#  信号层  — ETF 资金流
 # ══════════════════════════════════════════════════════════
 
 def calc_etf_flow(etf_shares: pd.DataFrame, window: int = 5) -> pd.DataFrame:
@@ -241,7 +241,7 @@ def composite_signal(pair_zscores: dict, vol_price: dict,
     elif n == 2:
         level, emoji = "中等信号", "🟡"
     elif n == 1:
-        level, emoji = "关注", "🟠"
+        level, emoji = "关注", ""
     else:
         level, emoji = "均衡", "🟢"
 

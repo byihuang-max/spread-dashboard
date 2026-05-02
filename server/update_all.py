@@ -31,7 +31,7 @@ MODULES = build_update_all_modules()
 
 def log(msg, level='INFO'):
     ts = time.strftime('%H:%M:%S')
-    prefix = {'INFO': '📋', 'OK': '✅', 'ERR': '❌', 'RUN': '🔄'}
+    prefix = {'INFO': '', 'OK': '', 'ERR': '', 'RUN': ''}
     print(f"[{ts}] {prefix.get(level, '  ')} {msg}", flush=True)
 
 def run_script(subdir, script):
@@ -262,7 +262,7 @@ def main():
     log("═══ 汇总 ═══")
     total_time = time.time() - t0
     for k, (ok, t) in results.items():
-        status = '✅' if ok else '❌'
+        status = '' if ok else ''
         log(f"  {status} {MODULES[k]['name']:12s} ({t:.1f}s)")
     log(f"总耗时: {total_time:.1f}s")
 

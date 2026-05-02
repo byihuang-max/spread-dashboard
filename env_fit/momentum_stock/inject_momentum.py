@@ -163,7 +163,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         #   加速日：BIASΔ>0占比90%，平均收益+3.15%，收益<0占比0%
         #   → 情绪周期与涨停指数高度共振，可做交叉验证
         #
-        # 三重信号：① 净值回撤/上行 ② BIAS变化方向 ③ 情绪周期标签
+        # 三重信号： 净值回撤/上行  BIAS变化方向  情绪周期标签
         #   三者一致 = 高置信信号 | 两者一致 = 中置信 | 矛盾 = 分歧/观望
 
         bias_val = li_latest['all_bias']
@@ -220,36 +220,36 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         # ── 三重交叉判定（置信度标注）──
         # 🔵 降温系列
         if li_deep_cooling and cycle_is_cooling:
-            li_signal = '🔵 快速降温 ★★★'
+            li_signal = '🔵 快速降温 '
             li_sig_color = '#3b82f6'
             li_sig_desc = f'三重确认：净值回撤{nav_drawdown:.1f}% + BIAS下行 + 情绪{cycle_label}（{sentiment_val:.0f}）'
         elif li_deep_cooling:
-            li_signal = '🔵 快速降温 ★★'
+            li_signal = '🔵 快速降温 '
             li_sig_color = '#3b82f6'
             li_sig_desc = f'净值回撤{nav_drawdown:.1f}% + BIAS大幅下行，情绪{cycle_label}'
         elif li_cooling and cycle_is_cooling and first_bias_delta < -0.3:
-            li_signal = '🔵 全面降温 ★★★'
+            li_signal = '🔵 全面降温 '
             li_sig_color = '#60a5fa'
             li_sig_desc = f'三重确认：全板+首板BIAS同步下行 + 情绪{cycle_label}（{sentiment_val:.0f}）'
         elif li_cooling and cycle_is_cooling:
-            li_signal = '🔵 降温 ★★★'
+            li_signal = '🔵 降温 '
             li_sig_color = '#60a5fa'
             li_sig_desc = f'三重确认：净值回撤{nav_drawdown:.1f}% + BIAS下行 + 情绪{cycle_label}'
         elif li_cooling:
-            li_signal = '⬇️ 边际降温 ★★'
+            li_signal = '⬇ 边际降温 '
             li_sig_color = '#93c5fd'
             li_sig_desc = f'净值回撤{nav_drawdown:.1f}% + BIAS下行，但情绪{cycle_label}未同步'
         elif cycle_is_cooling and bias_delta < -0.3:
-            li_signal = '⬇️ 情绪降温 ★★'
+            li_signal = '⬇ 情绪降温 '
             li_sig_color = '#93c5fd'
             li_sig_desc = f'情绪{cycle_label}（{sentiment_val:.0f}）+ BIAS下行（Δ{bias_delta:+.1f}），净值回撤{nav_drawdown:.1f}%'
         # 🟡 分歧系列
         elif li_divergence and cycle_is_cooling:
-            li_signal = '🟡 见顶退潮 ★★★'
+            li_signal = '🟡 见顶退潮 '
             li_sig_color = '#f59e0b'
             li_sig_desc = f'BIAS掉头（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}，高位风险加大'
         elif li_divergence:
-            li_signal = '🟡 见顶分歧 ★★'
+            li_signal = '🟡 见顶分歧 '
             li_sig_color = '#f59e0b'
             li_sig_desc = f'净值高位但BIAS掉头（Δ{bias_delta:+.1f}），情绪{cycle_label}'
         elif cycle_is_cooling and li_heating:
@@ -262,43 +262,43 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
             li_sig_desc = f'情绪{cycle_label}但涨停指数回撤{nav_drawdown:.1f}%，信号矛盾观望'
         # 🟢 回暖系列
         elif li_bottoming and cycle_is_heating:
-            li_signal = '🟢 筑底回暖 ★★★'
+            li_signal = '🟢 筑底回暖 '
             li_sig_color = '#10b981'
             li_sig_desc = f'三重确认：净值止跌 + BIAS回升（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}'
         elif li_bottoming:
-            li_signal = '🟢 筑底回暖 ★★'
+            li_signal = '🟢 筑底回暖 '
             li_sig_color = '#10b981'
             li_sig_desc = f'净值止跌 + BIAS回升（Δ{bias_delta:+.1f}），情绪{cycle_label}'
         # 🔴 升温系列
         elif li_strong_heating and cycle_is_heating:
-            li_signal = '🔴 加速升温 ★★★'
+            li_signal = '🔴 加速升温 '
             li_sig_color = '#ef4444'
             li_sig_desc = f'三重确认：净值连涨{nav_trend:.1f}% + BIAS加速 + 情绪{cycle_label}（{sentiment_val:.0f}），警惕过热'
         elif li_strong_heating:
-            li_signal = '🔴 加速升温 ★★'
+            li_signal = '🔴 加速升温 '
             li_sig_color = '#ef4444'
             li_sig_desc = f'净值连涨{nav_trend:.1f}% + BIAS加速上行，情绪{cycle_label}'
         elif li_heating and cycle_is_heating:
-            li_signal = '🟠 持续升温 ★★★'
+            li_signal = ' 持续升温 '
             li_sig_color = '#f97316'
             li_sig_desc = f'三重确认：净值上行 + BIAS上升（Δ{bias_delta:+.1f}）+ 情绪{cycle_label}'
         elif li_heating:
-            li_signal = '🟠 持续升温 ★★'
+            li_signal = ' 持续升温 '
             li_sig_color = '#f97316'
             li_sig_desc = f'净值上行 + BIAS上升（Δ{bias_delta:+.1f}），情绪{cycle_label}'
         elif cycle_is_heating and bias_delta > 0.3:
-            li_signal = '🟠 情绪升温 ★★'
+            li_signal = ' 情绪升温 '
             li_sig_color = '#f97316'
             li_sig_desc = f'情绪{cycle_label}（{sentiment_val:.0f}）+ BIAS上行（Δ{bias_delta:+.1f}）'
-        # ⚪ 中性
+        #  中性
         else:
-            li_signal = '⚪ 中性震荡'
+            li_signal = ' 中性震荡'
             li_sig_color = '#94a3b8'
             li_sig_desc = f'无明显共振信号，情绪{cycle_label}（{sentiment_val:.0f}），观望'
 
         # ── 置信度说明 ──
-        # ★★★ = 涨停指数 + BIAS方向 + 情绪周期 三者一致
-        # ★★  = 两者一致，第三个中性或矛盾
+        #  = 涨停指数 + BIAS方向 + 情绪周期 三者一致
+        #   = 两者一致，第三个中性或矛盾
         # 无星  = 信号矛盾或无方向
 
         bias_color = '#ef4444' if bias_delta > 0.5 else '#3b82f6' if bias_delta < -0.5 else '#64748b'
@@ -334,7 +334,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         <div style="position:relative;height:300px"><canvas id="ms-li-chart"></canvas></div>
         <div style="font-size:10px;color:#94a3b8;margin-top:6px;line-height:1.5">
           灰线=全涨停净值（近60日归一化，左轴） · 灰虚线=首板净值（近60日归一化，左轴） · 紫线=全涨停BIAS（右轴） · 浅紫虚线=首板BIAS<br>
-          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · ★★★=三重确认 · ★★=两重确认
+          信号v3：涨停指数(净值回撤+BIAS方向) × 情绪周期 三重交叉验证 · =三重确认 · =两重确认
         </div>
       </div>'''
 
@@ -353,26 +353,26 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
         # 信号层：列出具体触发项，没有则显示全绿
         if details:
-            signal_items = ''.join(f'<span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠️ {sig}</span>' for sig in details)
+            signal_items = ''.join(f'<span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠ {sig}</span>' for sig in details)
         else:
-            signal_items = '<span style="color:#10b981;font-size:11px">✅ 无异常信号</span>'
+            signal_items = '<span style="color:#10b981;font-size:11px"> 无异常信号</span>'
 
         # 确认层：成交额两个子条件
         confirm_parts = []
         if vol_declining:
-            confirm_parts.append('📉 成交额萎缩（MA5 < MA20 超10%）')
+            confirm_parts.append(' 成交额萎缩（MA5 < MA20 超10%）')
         if vol_cv_high:
-            confirm_parts.append('📊 成交额波动大（CV > 0.15）')
+            confirm_parts.append(' 成交额波动大（CV > 0.15）')
         if confirm_parts:
             confirm_str = ''.join(f'<span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 8px;border-radius:4px;background:#fffbeb;color:#d97706;font-size:11px">{p}</span>' for p in confirm_parts)
         else:
-            confirm_str = '<span style="color:#10b981;font-size:11px">✅ 成交额正常</span>'
+            confirm_str = '<span style="color:#10b981;font-size:11px"> 成交额正常</span>'
 
         # 过滤层：耐心资本
         if has_support:
-            support_str = '<span style="color:#10b981;font-size:11px">✅ 耐心资本持筹成本上移（在托底）</span>'
+            support_str = '<span style="color:#10b981;font-size:11px"> 耐心资本持筹成本上移（在托底）</span>'
         else:
-            support_str = '<span style="display:inline-block;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠️ 无耐心资本支撑</span>'
+            support_str = '<span style="display:inline-block;padding:2px 8px;border-radius:4px;background:#fef2f2;color:#dc2626;font-size:11px">⚠ 无耐心资本支撑</span>'
 
         # 综合判定 badge
         level_labels = {'RED': '🔴 高危预警', 'YELLOW': '🟡 需要警惕', 'WATCH': '🟡 持续关注', 'GREEN': '🟢 环境安全'}
@@ -453,7 +453,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 positions = c.get('positions_active', [])
                 resonance = c.get('resonance', False)
                 pos_str = ' '.join(
-                    f"{'✅' if p in positions else '❌'} {p}"
+                    f"{'' if p in positions else ''} {p}"
                     for p in ['上游', '中游', '下游']
                 )
                 badge = ' <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span>' if resonance else ''
@@ -628,7 +628,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         '''
 
         # 信号标签颜色
-        ss_signal = ss_latest.get('signal', '⚪ 均衡')
+        ss_signal = ss_latest.get('signal', ' 均衡')
         ss_pct = ss_latest.get('spread_pct_1y')
         ss_pct_str = f"{ss_pct*100:.1f}%" if ss_pct is not None else "N/A"
         if '极度恐慌' in ss_signal:
@@ -668,7 +668,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
     # ====== Build full HTML ======
     html = f'''
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px;gap:12px;flex-wrap:wrap">
-        <span style="font-size:13px;color:#888">🔥 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">{date_fmt}</b><span style="color:#94a3b8;font-size:11px">{stale_hint}</span></span>
+        <span style="font-size:13px;color:#888"> 强势股环境诊断 · 主面板截至 <b style="color:#2d3142">{date_fmt}</b><span style="color:#94a3b8;font-size:11px">{stale_hint}</span></span>
       </div>
 
       <!-- 区块一：环境总览 -->
@@ -772,11 +772,11 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
 
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
-        <p>① 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
-        <p>② 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
-        <p>③ 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
-        <p>④ 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
-        <p>⑤ 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
+        <p> 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
+        <p> 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
+        <p> 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
+        <p> 情绪周期：冰点(&lt;20) → 回暖(突破30) → 加速(&gt;60) → 分歧(&gt;50下降) → 退潮(跌破40)</p>
+        <p> 预警信号灯：GREEN=安全 · WATCH=关注 · YELLOW=警惕 · RED=高危</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare · 更新：{meta['generated']} · 区间：{meta['date_range']}</p>
       </div>
 
@@ -996,8 +996,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                       var i=ctx[0].dataIndex;
                       var ret='\\n收益: '+liAllRet[i].toFixed(2)+'%';
                       ret+='\\n高低开: '+liAllGap[i].toFixed(2)+'%';
-                      if(liAllBias[i]>3)ret+='\\n⚠️ BIAS偏高，拥挤警告';
-                      if(liAllBias[i]<-3)ret+='\\n💡 BIAS偏低，关注反转';
+                      if(liAllBias[i]>3)ret+='\\n⚠ BIAS偏高，拥挤警告';
+                      if(liAllBias[i]<-3)ret+='\\n BIAS偏低，关注反转';
                       return ret;
                     }}
                   }}
@@ -1057,8 +1057,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                       if(!navDD[i])return '';
                       var dt=navDatesFull[i];
                       var dc=decompLookup[dt];
-                      if(!dc)return '\\n📉 基准回撤区域';
-                      return '\\n📉 基准回撤区域'
+                      if(!dc)return '\\n 基准回撤区域';
+                      return '\\n 基准回撤区域'
                         +'\\nBeta贡献: '+dc.cum_beta.toFixed(2)+'%'
                         +'\\n情绪贡献: '+dc.cum_sentiment.toFixed(2)+'%'
                         +'\\n管理人Alpha: '+dc.cum_alpha.toFixed(2)+'%'
@@ -1133,7 +1133,7 @@ def inject(html_content):
     end_idx = index.find(end_marker)
 
     if start_idx == -1 or end_idx == -1:
-        print("❌ 找不到注入点")
+        print(" 找不到注入点")
         return False
 
     new_div = start_marker + html_content + '\n      </div>\n      '
@@ -1154,11 +1154,11 @@ def inject(html_content):
 
 
 def main():
-    print("🔥 强势股环境诊断面板注入")
+    print(" 强势股环境诊断面板注入")
 
     sent_data = load_json('momentum_sentiment.json')
     if not sent_data:
-        print("❌ momentum_sentiment.json 不存在")
+        print(" momentum_sentiment.json 不存在")
         return
 
     sector_data = load_json('momentum_sector.json')
@@ -1186,16 +1186,16 @@ def main():
         with open(ss_path, 'r', encoding='utf-8') as f:
             seal_spread_data = json.load(f)
 
-    print(f"📖 情绪: {sent_data['meta']['count']}天 | 板块: {'✅' if sector_data else '❌'} | 预警: {'✅' if warning_data else '❌'} | 归因: {'✅' if decomp_data else '❌'} | 净值: {'✅' if nav_chart_data else '❌'} | 涨停指数: {'✅' if limit_index_data else '❌'} | 封单轧差: {'✅' if seal_spread_data else '❌'}")
+    print(f" 情绪: {sent_data['meta']['count']}天 | 板块: {'' if sector_data else ''} | 预警: {'' if warning_data else ''} | 归因: {'' if decomp_data else ''} | 净值: {'' if nav_chart_data else ''} | 涨停指数: {'' if limit_index_data else ''} | 封单轧差: {'' if seal_spread_data else ''}")
 
     html = build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data, limit_index_data, seal_spread_data)
-    print(f"🎨 生成 {len(html)} 字符")
+    print(f" 生成 {len(html)} 字符")
 
     if inject(html):
         latest = sent_data['daily'][-1]
-        print(f"✅ 注入成功！情绪={latest['sentiment']} 周期={latest['cycle_label']}")
+        print(f" 注入成功！情绪={latest['sentiment']} 周期={latest['cycle_label']}")
     else:
-        print("❌ 注入失败")
+        print(" 注入失败")
 
 
 if __name__ == '__main__':

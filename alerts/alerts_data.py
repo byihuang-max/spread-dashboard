@@ -170,7 +170,7 @@ def main():
     else:
         print(f"  成交额: 无新数据")
 
-    print("\n✅ 数据拉取完成")
+    print("\n 数据拉取完成")
 
 
 if __name__ == '__main__':

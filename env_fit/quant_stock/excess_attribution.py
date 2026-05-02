@@ -271,7 +271,7 @@ def calc_env_at(date_str):
 
 # ═══ Main ═══
 if __name__ == '__main__':
-    print('📊 超额环境回溯归因')
+    print(' 超额环境回溯归因')
     print(f'  产品净值: {len(nav_dates)}个周频点')
     print(f'  截面波动率历史: {len(cv_data)}天')
 
@@ -351,7 +351,7 @@ if __name__ == '__main__':
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f'\n✅ 输出 {len(points)} 个点 → {out_path}')
+    print(f'\n 输出 {len(points)} 个点 → {out_path}')
     print(f'  难做时段: {len(bad_periods)} 段')
     for bp in bad_periods:
         print(f'    {bp["start"]} ~ {bp["end"]} ({bp["weeks"]}周) 超额{bp["drawdown"]:+.4f}')

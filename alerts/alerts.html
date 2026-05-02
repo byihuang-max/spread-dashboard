@@ -68,14 +68,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="header-bar">
   <div class="header-top">
-    <div class="header-title">🚨 红灯预警</div>
+    <div class="header-title"> 红灯预警</div>
     <div style="font-size:11px;color:#7c8598" id="updateTime"></div>
   </div>
 </div>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('cn')">🇨🇳 A股风险</button>
-  <button class="tab-btn" onclick="switchTab('us')">🇺🇸 美股风险</button>
+  <button class="tab-btn active" onclick="switchTab('cn')">CN A股风险</button>
+  <button class="tab-btn" onclick="switchTab('us')">US 美股风险</button>
 </div>
 
 <!-- ===== A股风险 ===== -->
@@ -97,13 +97,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 <div class="detail-grid" id="detailGrid"></div>
 
 <div class="chart-note">
-  <b>📖 红灯预警怎么看：</b><br><br>
+  <b> 红灯预警怎么看：</b><br><br>
   <b>综合风险评分(0-100)：</b>5个维度加权求和。>60=高风险（建议减仓防守），40-60=中高风险（控制仓位），20-40=中低风险（正常操作），<20=低风险（可以进攻）。<br><br>
-  <b>💧流动性风险：</b>DR007和Shibor异常偏高=央行在收紧，资金面紧张时市场容易杀估值。R007-DR007价差走阔=非银机构融资困难。<br>
-  <b>📊估值泡沫：</b>PE分位>90%意味着比过去1年90%的时间都贵。股债性价比(EP-10Y国债)<0=买股票不如买债券。<br>
-  <b>🔥情绪过热：</b>成交额>MA20的1.8倍+涨停>80只=市场太疯了，容易见顶回调。跌停>50只=恐慌蔓延。<br>
-  <b>🌍外部冲击：</b>中美利差恶化+汇率急贬+期权IV飙升=海外风险传导。<br>
-  <b>🏃微观恶化：</b>北向连续净流出+期权PCR极端看空=聪明钱在跑路。
+  <b>流动性风险：</b>DR007和Shibor异常偏高=央行在收紧，资金面紧张时市场容易杀估值。R007-DR007价差走阔=非银机构融资困难。<br>
+  <b>估值泡沫：</b>PE分位>90%意味着比过去1年90%的时间都贵。股债性价比(EP-10Y国债)<0=买股票不如买债券。<br>
+  <b>情绪过热：</b>成交额>MA20的1.8倍+涨停>80只=市场太疯了，容易见顶回调。跌停>50只=恐慌蔓延。<br>
+  <b>外部冲击：</b>中美利差恶化+汇率急贬+期权IV飙升=海外风险传导。<br>
+  <b>微观恶化：</b>北向连续净流出+期权PCR极端看空=聪明钱在跑路。
 </div>
 </div>
 
@@ -112,7 +112,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 <div class="detail-grid" id="usDetailGrid"></div>
 
 <div class="chart-note">
-  <b>📖 美股风险监控说明：</b><br><br>
+  <b> 美股风险监控说明：</b><br><br>
   展示核心指标的历史趋势，不做固定权重打分。你根据当下环境自主判断哪些指标更重要，观察多指标共振信号。<br><br>
   <b>危机事件标注：</b>图表上标注了2008金融危机、2020疫情崩盘、2022加息周期等关键时点，帮助理解指标在历史危机中的表现。
 </div>
@@ -169,7 +169,7 @@ function render(){
   document.getElementById('compLabel').style.color=scoreColor(s);
 
   document.getElementById('alertList').innerHTML=(DATA.alerts||[]).map(function(a){
-    return '<div class="alert-item">⚠️ '+a+'</div>';
+    return '<div class="alert-item">⚠ '+a+'</div>';
   }).join('');
 
   // 5维卡片
@@ -194,23 +194,23 @@ function render(){
   var chartConfigs=[];
 
   if(DATA.dimensions.liquidity&&DATA.dimensions.liquidity.trend&&DATA.dimensions.liquidity.trend.length){
-    html+='<div class="chart-box"><h3>💧 DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div>'+
-      '<div class="indicator-note">💡 DR007上升=资金面收紧。>2.5%=央行在收紧流动性，市场容易杀估值。</div></div>';
+    html+='<div class="chart-box"><h3> DR007走势</h3><div class="chart-wrap"><canvas id="chartLiq"></canvas></div>'+
+      '<div class="indicator-note"> DR007上升=资金面收紧。>2.5%=央行在收紧流动性，市场容易杀估值。</div></div>';
     chartConfigs.push({id:'chartLiq',data:DATA.dimensions.liquidity.trend,label:'DR007 %',color:'#dc2626'});
   }
   if(DATA.dimensions.valuation&&DATA.dimensions.valuation.trend&&DATA.dimensions.valuation.trend.length){
-    html+='<div class="chart-box"><h3>📊 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div>'+
-      '<div class="indicator-note">💡 PE分位>90%=比过去90%的时间都贵。估值越高，未来回报越低。</div></div>';
+    html+='<div class="chart-box"><h3> 上证PE(TTM)走势</h3><div class="chart-wrap"><canvas id="chartVal"></canvas></div>'+
+      '<div class="indicator-note"> PE分位>90%=比过去90%的时间都贵。估值越高，未来回报越低。</div></div>';
     chartConfigs.push({id:'chartVal',data:DATA.dimensions.valuation.trend,label:'PE(TTM)',color:'#6366f1'});
   }
   if(DATA.dimensions.sentiment&&DATA.dimensions.sentiment.trend&&DATA.dimensions.sentiment.trend.length){
-    html+='<div class="chart-box"><h3>🔥 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div>'+
-      '<div class="indicator-note">💡 成交额/MA20>1.8倍=市场过热。放量上涨易见顶，放量下跌易恐慌。</div></div>';
+    html+='<div class="chart-box"><h3> 上证成交额(亿)</h3><div class="chart-wrap"><canvas id="chartSent"></canvas></div>'+
+      '<div class="indicator-note"> 成交额/MA20>1.8倍=市场过热。放量上涨易见顶，放量下跌易恐慌。</div></div>';
     chartConfigs.push({id:'chartSent',data:DATA.dimensions.sentiment.trend,label:'成交额(亿)',color:'#f59e0b'});
   }
   if(DATA.dimensions.external&&DATA.dimensions.external.trend&&DATA.dimensions.external.trend.length){
-    html+='<div class="chart-box"><h3>🌍 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div>'+
-      '<div class="indicator-note">💡 利差<-2%=资金外流压力大。利差收窄=人民币贬值+北向资金流出。</div></div>';
+    html+='<div class="chart-box"><h3> 中美利差走势</h3><div class="chart-wrap"><canvas id="chartExt"></canvas></div>'+
+      '<div class="indicator-note"> 利差<-2%=资金外流压力大。利差收窄=人民币贬值+北向资金流出。</div></div>';
     chartConfigs.push({id:'chartExt',data:DATA.dimensions.external.trend,label:'中美利差 %',color:'#2563eb',fill:true});
   }
 
@@ -256,7 +256,7 @@ function renderUS(){
       '</div>'+
       (changeText?'<div class="us-indicator-change">'+changeText+'</div>':'')+
       '<div class="chart-wrap"><canvas id="'+canvasId+'"></canvas></div>'+
-      (ind.note?'<div class="indicator-note">💡 '+ind.note+'</div>':'')+
+      (ind.note?'<div class="indicator-note"> '+ind.note+'</div>':'')+
     '</div>';
     
     chartConfigs.push({

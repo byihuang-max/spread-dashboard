@@ -103,7 +103,7 @@ def render_html():
             narrative_latest = json.load(f)
         dynamic_themes = narrative_latest.get('dynamic_themes', []) or []
         report_text = narrative_latest.get('report', '') or ''
-        # 从报告第一行里尽量提取日期时间，例如：📊 叙事监控 V2 03-18 08:23 | 分析 186 条新闻
+        # 从报告第一行里尽量提取日期时间，例如： 叙事监控 V2 03-18 08:23 | 分析 186 条新闻
         if '叙事监控 V2' in report_text:
             first_line = report_text.splitlines()[0] if report_text.splitlines() else ''
             parts = first_line.split('叙事监控 V2', 1)
@@ -334,7 +334,7 @@ def render_html():
         meme_section_html = f"""
 <div class="section">
   <div class="chart-box">
-    <h3>🚦 Meme反身性信号 <span style="font-weight:400;color:#8b92a5;font-size:11px">（截至 {meme_date}）</span></h3>
+    <h3> Meme反身性信号 <span style="font-weight:400;color:#8b92a5;font-size:11px">（截至 {meme_date}）</span></h3>
 
     <!-- 当前状态大卡片 -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;align-items:stretch">
@@ -384,7 +384,7 @@ def render_html():
       <b>叙事联动指数(NLI)：</b>相关性矩阵中正相关系数的均值，衡量资产同涨同跌程度。越高=叙事越趋同。<br>
       <b>量能加速度(VA)：</b>近5日均量 / 近30日均量 - 1，多资产加权（{wt_html}）。<br>
       <b>综合信号：</b>两指标各取历史分位后加权平均（各50%）。分位基于过去252个交易日。<br>
-      <b>⚠️ 注意：</b>恐慌暴跌时NLI也会升高（全面崩跌也是联动），需结合价格方向判断是Meme狂欢还是系统性风险。
+      <b>⚠ 注意：</b>恐慌暴跌时NLI也会升高（全面崩跌也是联动），需结合价格方向判断是Meme狂欢还是系统性风险。
     </div>
   </div>
 </div>
@@ -586,7 +586,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 </head><body>
 
 <div class="signal-bar">
-  <div class="signal-main">🌐 反脆弱看板</div>
+  <div class="signal-main"> 反脆弱看板</div>
   <div class="signal-tags">
     <span class="signal-tag">全球风险资产</span>
     <span class="signal-tag">归一净值</span>
@@ -600,7 +600,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="section">
   <div class="chart-box">
-    <h3>📈 全球8大资产归一净值曲线（起点=1）</h3>
+    <h3> 全球8大资产归一净值曲线（起点=1）</h3>
     <div class="chart-wrap"><canvas id="navChart"></canvas></div>
     <div class="chart-note">
       <b>怎么看：</b>全部资产以各自最早数据日期归一为1，便于跨资产涨跌幅对比。<br>
@@ -611,7 +611,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="section">
   <div class="chart-box">
-    <h3>📊 股票指数中位数 vs 黄金 / 原油 / BTC / 美元兑日元 <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
+    <h3> 股票指数中位数 vs 黄金 / 原油 / BTC / 美元兑日元 <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
     <div class="chart-wrap-sm"><canvas id="medianChart"></canvas></div>
   </div>
   <div class="chart-box">
@@ -623,7 +623,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="section">
   <div class="chart-box">
-    <h3>🔥 30天滚动相关性矩阵 — 叙事联动监控 <span style="font-weight:400;color:#8b92a5;font-size:11px">（日期: {latest_date}）</span></h3>
+    <h3> 30天滚动相关性矩阵 — 叙事联动监控 <span style="font-weight:400;color:#8b92a5;font-size:11px">（日期: {latest_date}）</span></h3>
     {corr_table_html}
     <div class="chart-note">
       <b>颜色：</b>红色=正相关（同涨跌），蓝色=负相关（反向）。
@@ -747,7 +747,7 @@ new Chart(document.getElementById('medianChart'),{{
   <!-- 标题 + 说明 -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
     <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">
-      📡 宏观 Meme 叙事生命周期
+       宏观 Meme 叙事生命周期
     </h2>
     <span id="lc-updated" style="font-size:11px;color:#94a3b8;"></span>
   </div>
@@ -762,7 +762,7 @@ new Chart(document.getElementById('medianChart'),{{
 
   <!-- 错误提示区（fetch 失败时显示） -->
   <div id="lc-error" style="display:none;color:#dc2626;font-size:12px;padding:8px 0;">
-    ⚠️ 无法加载生命周期数据，请先运行 macro_lifecycle.py
+    ⚠ 无法加载生命周期数据，请先运行 macro_lifecycle.py
   </div>
 
   <!-- 可排序表格 -->
@@ -788,17 +788,17 @@ new Chart(document.getElementById('medianChart'),{{
 
   <!-- 图例说明 -->
   <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:11px;color:#64748b;">
-    <span><span style="background:#dcfce7;color:#15803d;border-radius:4px;padding:1px 6px;font-weight:600;">🌱新兴</span> 热度从低位升起，最大配置窗口</span>
-    <span><span style="background:#fff7ed;color:#c2410c;border-radius:4px;padding:1px 6px;font-weight:600;">🔥积累</span> 持续升温，窗口收窄中</span>
-    <span><span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:1px 6px;font-weight:600;">⚡共识</span> 高位稳定，市场已定价，慎追</span>
-    <span><span style="background:#fef2f2;color:#991b1b;border-radius:4px;padding:1px 6px;font-weight:600;">📉消退</span> 热度下行，关注反向</span>
-    <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">🔍观察</span> 热度偏低，暂无信号</span>
+    <span><span style="background:#dcfce7;color:#15803d;border-radius:4px;padding:1px 6px;font-weight:600;">新兴</span> 热度从低位升起，最大配置窗口</span>
+    <span><span style="background:#fff7ed;color:#c2410c;border-radius:4px;padding:1px 6px;font-weight:600;">积累</span> 持续升温，窗口收窄中</span>
+    <span><span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:1px 6px;font-weight:600;">共识</span> 高位稳定，市场已定价，慎追</span>
+    <span><span style="background:#fef2f2;color:#991b1b;border-radius:4px;padding:1px 6px;font-weight:600;">消退</span> 热度下行，关注反向</span>
+    <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">观察</span> 热度偏低，暂无信号</span>
   </div>
 
   <!-- 今日新兴主题（LLM动态发现，生成时内嵌） -->
   <div id="dynamic-themes-section" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">🔍 今日新兴主题</h3>
+      <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;"> 今日新兴主题</h3>
       <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新）{(' · ' + dynamic_themes_date) if dynamic_themes_date else ''}</span>
     </div>
     <div id="dynamic-themes-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -912,7 +912,7 @@ new Chart(document.getElementById('medianChart'),{{
         var short = t.length > 28 ? t.slice(0,28)+'…' : t;
         newsHtml += '<div title="' + t.replace(/"/g,'&quot;') + '" ' +
           'style="font-size:10.5px;color:#94a3b8;line-height:1.5;white-space:nowrap;overflow:hidden;' +
-          'text-overflow:ellipsis;max-width:200px;cursor:default;">📌 ' + short + '</div>';
+          'text-overflow:ellipsis;max-width:200px;cursor:default;"> ' + short + '</div>';
       }});
       newsHtml += '</div>';
     }}
@@ -1028,7 +1028,7 @@ new Chart(document.getElementById('medianChart'),{{
 
     with open('antifragile.html', 'w', encoding='utf-8') as f:
         f.write(html)
-    print("✅ HTML已生成: antifragile.html")
+    print(" HTML已生成: antifragile.html")
 
 
 if __name__ == '__main__':

@@ -57,7 +57,7 @@ def calculate_rolling_correlation(window=30):
     with open('rolling_corr.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     
-    print(f"✅ 滚动相关性矩阵已计算")
+    print(f" 滚动相关性矩阵已计算")
     print(f"  - 资产数量: {len(returns.columns)}")
     print(f"  - 时间点数量: {len(corr_matrices)}")
     print(f"  - 窗口: {window}天")

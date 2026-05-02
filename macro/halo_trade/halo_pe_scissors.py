@@ -88,12 +88,12 @@ def collect_group_pe(group_dict: dict[str, str]) -> dict[str, pd.DataFrame]:
         try:
             df = fetch_baidu_us_valuation(symbol)
             if df.empty:
-                print(f"  ⚠️  {name}({symbol}) 无 PE 数据")
+                print(f"  ⚠  {name}({symbol}) 无 PE 数据")
                 continue
             results[symbol] = df
-            print(f"  ✅ {name}({symbol}): {len(df)} 条")
+            print(f"   {name}({symbol}): {len(df)} 条")
         except Exception as e:
-            print(f"  ❌ {name}({symbol}) 拉取失败: {e}")
+            print(f"   {name}({symbol}) 拉取失败: {e}")
     return results
 
 
@@ -166,7 +166,7 @@ def main():
 
     # 空结果保护：如果本次没拉到有效 PE 剪刀差，保留旧文件不覆盖
     if not scissors.get('latest'):
-        print('⚠️ PE 剪刀差数据为空，保留旧文件不覆盖')
+        print('⚠ PE 剪刀差数据为空，保留旧文件不覆盖')
         return
 
     existing['eps_scissors'] = scissors
@@ -177,15 +177,15 @@ def main():
     print('=' * 60)
     if scissors.get('latest'):
         latest = scissors['latest']
-        print('✅ PE剪刀差恢复成功:')
+        print(' PE剪刀差恢复成功:')
         print(f"   日期: {latest['date']}")
         print(f"   重资产PE: {latest['heavy_pe']}")
         print(f"   轻资产PE: {latest['light_pe']}")
         print(f"   差距: {latest['pe_gap']}")
         print(f"   历史点数: {len(scissors['history'])}")
     else:
-        print('⚠️ 未生成有效 PE 剪刀差')
-    print(f'✅ 结果已保存：{OUTPUT_JSON}')
+        print('⚠ 未生成有效 PE 剪刀差')
+    print(f' 结果已保存：{OUTPUT_JSON}')
     print('=' * 60)
 
 

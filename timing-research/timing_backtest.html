@@ -33,26 +33,26 @@ td{padding:7px;text-align:center;border-bottom:1px solid #21262d;font-size:12px}
 <body>
 
 <div class="container">
-<h1>⏱️ 强势股情绪择时回测</h1>
+<h1>⏱ 强势股情绪择时回测</h1>
 <p class="subtitle">数据: 20240102 ~ 20260306 (524天) | 标的: 沪深300 | T+1执行 | 调仓成本0.5% | 最小调仓10%</p>
 
-<h2>📊 方案对比</h2>
+<h2> 方案对比</h2>
 <div class="box" id="compare-table"></div>
 
-<h2>📈 净值曲线</h2>
+<h2> 净值曲线</h2>
 <div class="box"><div id="chart-nav" class="chart"></div></div>
 
-<h2>📊 仓位变化</h2>
+<h2> 仓位变化</h2>
 <div class="box"><div id="chart-pos" class="chart-sm"></div></div>
 
-<h2>🏆 最优方案</h2>
+<h2> 最优方案</h2>
 <div id="best-detail"></div>
 
-<h2>📋 关键发现</h2>
+<h2> 关键发现</h2>
 <div id="insights"></div>
 
 <div style="text-align:center;color:#484f58;margin-top:40px;padding:20px 0;font-size:12px;border-top:1px solid #21262d">
-Timing Model · Musk 🚀 · 2026-03-11 00:46
+Timing Model · Musk  · 2026-03-11 00:46
 </div>
 </div>
 
@@ -130,16 +130,16 @@ const allReverse = Object.values(STATS).every(v => v.excess_return < 0);
 const anyBetter = Object.values(STATS).some(v => v.dd_improvement > 0);
 
 if (allReverse) {
-  ins += '<div class="insight orange"><strong>⚠️ 所有择时方案都跑输满仓</strong><br>这段时间市场总体上涨，择时减仓反而踏空了。但注意看回撤改善——择时的价值在熊市才能体现。数据只有131天且覆盖了924行情，需要更长数据验证。</div>';
+  ins += '<div class="insight orange"><strong>⚠ 所有择时方案都跑输满仓</strong><br>这段时间市场总体上涨，择时减仓反而踏空了。但注意看回撤改善——择时的价值在熊市才能体现。数据只有131天且覆盖了924行情，需要更长数据验证。</div>';
 } else {
-  ins += `<div class="insight green"><strong>✅ 最优方案: ${best.name}</strong><br>超额 ${best.excess_return}%，回撤改善 ${best.dd_improvement}%</div>`;
+  ins += `<div class="insight green"><strong> 最优方案: ${best.name}</strong><br>超额 ${best.excess_return}%，回撤改善 ${best.dd_improvement}%</div>`;
 }
 
 if (anyBetter) {
   ins += '<div class="insight green"><strong>回撤控制有效</strong><br>部分方案的最大回撤明显小于满仓，说明情绪择时在规避风险方面有价值。</div>';
 }
 
-ins += '<div class="insight"><strong>数据局限性</strong><br>⚠️ 只有131天数据，覆盖了2025年8月-2026年3月的单边牛市。择时策略天然在牛市跑输满仓（因为减了仓位）。需要补齐2024年数据（包含下跌期）才能公正评价。</div>';
+ins += '<div class="insight"><strong>数据局限性</strong><br>⚠ 只有131天数据，覆盖了2025年8月-2026年3月的单边牛市。择时策略天然在牛市跑输满仓（因为减了仓位）。需要补齐2024年数据（包含下跌期）才能公正评价。</div>';
 
 ins += '<div class="insight"><strong>下一步</strong><br>1. 补齐2024年数据（含熊市），重新回测<br>2. 叠加非市场化资金（耐心资本）作为修正信号<br>3. 优化仓位映射曲线参数<br>4. 加入更多因子（成交额CV、拥挤度等）</div>';
 

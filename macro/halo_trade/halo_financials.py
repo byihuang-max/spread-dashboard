@@ -29,22 +29,22 @@ def fetch_capex_data():
         try:
             df = ak.stock_financial_us_report_em(stock=ticker, symbol='现金流量表', indicator='单季报')
             if df.empty:
-                print(f"  ⚠️  {name} 无现金流数据")
+                print(f"  ⚠  {name} 无现金流数据")
                 continue
             df = df[df['ITEM_NAME'] == '购买固定资产'].copy()
             if df.empty:
-                print(f"  ⚠️  {name} 无 CapEx 数据")
+                print(f"  ⚠  {name} 无 CapEx 数据")
                 continue
             df['date'] = pd.to_datetime(df['REPORT_DATE'])
             df['capex'] = pd.to_numeric(df['AMOUNT'], errors='coerce').abs()
             df = df[['date', 'capex']].dropna().sort_values('date').drop_duplicates(subset=['date'], keep='first')
             if len(df) < 3:
-                print(f"  ⚠️  {name} CapEx 数据不足")
+                print(f"  ⚠  {name} CapEx 数据不足")
                 continue
             results[ticker] = df.reset_index(drop=True)
-            print(f"  ✅ {name}: {len(df)} 个季度")
+            print(f"   {name}: {len(df)} 个季度")
         except Exception as e:
-            print(f"  ❌ {name} 拉取失败: {e}")
+            print(f"   {name} 拉取失败: {e}")
     return results
 
 
@@ -67,7 +67,7 @@ def calculate_capex_derivatives(capex_data):
             else:
                 trend, signal = '平稳', '🟡'
         else:
-            trend, signal = '数据不足', '⚪'
+            trend, signal = '数据不足', ''
         history = []
         for _, row in df.tail(8).iterrows():
             history.append({
@@ -89,7 +89,7 @@ def calculate_capex_derivatives(capex_data):
             },
             'history': history,
         }
-    print(f"✅ 完成 {len(results)} 家公司")
+    print(f" 完成 {len(results)} 家公司")
     return results
 
 
@@ -109,7 +109,7 @@ def main():
 
     # 空结果保护：如果本次没拉到任何 CapEx 数据，保留旧文件不覆盖
     if not capex_deriv:
-        print('⚠️ 本次 CapEx 数据全部为空，保留旧文件不覆盖')
+        print('⚠ 本次 CapEx 数据全部为空，保留旧文件不覆盖')
         return
 
     output['capex_second_derivative'] = capex_deriv
@@ -118,11 +118,11 @@ def main():
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print('=' * 60)
-    print('✅ CapEx 二阶导:')
+    print(' CapEx 二阶导:')
     for ticker, data in capex_deriv.items():
         latest = data['latest']
         print(f"   {ticker:6} {data['name']:6} CapEx={latest['capex']}B, YoY={latest['yoy_growth']}%, 二阶导={latest['second_derivative']}% {latest['signal']}")
-    print(f"✅ 结果已保存：{FINANCIAL_JSON}")
+    print(f" 结果已保存：{FINANCIAL_JSON}")
     print('=' * 60)
 
 

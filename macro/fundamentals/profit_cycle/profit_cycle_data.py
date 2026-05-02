@@ -34,24 +34,24 @@ def ts_api(api_name, fields='', **kwargs):
                             proxies={'http': None, 'https': None})
             j = r.json()
             if j.get('code') != 0:
-                print(f"  ❌ API错误 {api_name}: {j.get('msg')}")
+                print(f"   API错误 {api_name}: {j.get('msg')}")
                 return pd.DataFrame()
             data = j.get('data', {})
             df = pd.DataFrame(data.get('items', []), columns=data.get('fields', []))
             return df
         except Exception as e:
-            print(f"  ⚠️ 尝试 {attempt+1} 失败: {e}")
+            print(f"  ⚠ 尝试 {attempt+1} 失败: {e}")
             time.sleep(2)
     return pd.DataFrame()
 
 def fetch_ppi_data(start_date, end_date):
     """拉取PPI数据（月度）"""
-    print("📊 拉取PPI数据...")
+    print(" 拉取PPI数据...")
     df = ts_api('cn_ppi', fields='month,ppi_yoy,ppi_mom', 
                  start_month=start_date[:6], end_month=end_date[:6])
     
     if df.empty:
-        print("  ❌ PPI数据为空")
+        print("   PPI数据为空")
         return pd.DataFrame()
     
     df['date'] = pd.to_datetime(df['month'], format='%Y%m') + pd.offsets.MonthEnd(0)
@@ -64,18 +64,18 @@ def fetch_ppi_data(start_date, end_date):
     
     df = df[['date', 'ppi_yoy', 'ppi_mom']]
     
-    print(f"  ✅ PPI数据: {len(df)}条")
+    print(f"   PPI数据: {len(df)}条")
     return df
 
 def fetch_cpi_data(start_date, end_date):
     """拉取CPI数据（月度）"""
-    print("📊 拉取CPI数据...")
+    print(" 拉取CPI数据...")
     
     df = ts_api('cn_cpi', fields='month,nt_yoy,nt_mom',
                  start_month=start_date[:6], end_month=end_date[:6])
     
     if df.empty:
-        print("  ❌ CPI数据为空")
+        print("   CPI数据为空")
         return pd.DataFrame()
     
     df['date'] = pd.to_datetime(df['month'], format='%Y%m') + pd.offsets.MonthEnd(0)
@@ -88,18 +88,18 @@ def fetch_cpi_data(start_date, end_date):
     
     df = df[['date', 'core_cpi_yoy', 'core_cpi_mom']]
     
-    print(f"  ✅ CPI数据: {len(df)}条")
+    print(f"   CPI数据: {len(df)}条")
     return df
 
 def fetch_m1m2_data(start_date, end_date):
     """拉取M1/M2数据（月度）"""
-    print("📊 拉取M1/M2数据...")
+    print(" 拉取M1/M2数据...")
     
     df = ts_api('cn_m', fields='month,m1,m1_yoy,m2,m2_yoy',
                  start_month=start_date[:6], end_month=end_date[:6])
     
     if df.empty:
-        print("  ❌ M1/M2数据为空")
+        print("   M1/M2数据为空")
         return pd.DataFrame()
     
     df['date'] = pd.to_datetime(df['month'], format='%Y%m') + pd.offsets.MonthEnd(0)
@@ -112,7 +112,7 @@ def fetch_m1m2_data(start_date, end_date):
     
     df = df[['date', 'm1_yoy', 'm2_yoy', 'm1_m2_scissors']]
     
-    print(f"  ✅ M1/M2数据: {len(df)}条")
+    print(f"   M1/M2数据: {len(df)}条")
     return df
 
 def calculate_profit_cycle_score(df):
@@ -187,7 +187,7 @@ def main():
     end_date = datetime.now().strftime('%Y%m%d')
     start_date = (datetime.now() - timedelta(days=365*3)).strftime('%Y%m%d')
     
-    print(f"📅 时间范围: {start_date} - {end_date}\n")
+    print(f" 时间范围: {start_date} - {end_date}\n")
     
     # 拉取数据
     ppi_df = fetch_ppi_data(start_date, end_date)
@@ -200,10 +200,10 @@ def main():
     time.sleep(0.5)
     
     # 合并数据
-    print("\n📊 合并数据...")
+    print("\n 合并数据...")
     
     if ppi_df.empty and cpi_df.empty and m1m2_df.empty:
-        print("❌ 所有数据都为空，退出")
+        print(" 所有数据都为空，退出")
         return
     
     # 从非空的df开始
@@ -226,21 +226,21 @@ def main():
     merged_df = merged_df.sort_values('date').reset_index(drop=True)
     
     # 计算得分
-    print("📊 计算利润周期得分...")
+    print(" 计算利润周期得分...")
     merged_df = calculate_profit_cycle_score(merged_df)
     
-    print("📊 计算内需接棒得分...")
+    print(" 计算内需接棒得分...")
     merged_df = calculate_demand_recovery_score(merged_df)
     
     # 填充NaN
     merged_df = merged_df.fillna(0)
     
-    print(f"✅ 合并后数据: {len(merged_df)}条")
+    print(f" 合并后数据: {len(merged_df)}条")
     
     # 保存CSV
     csv_path = os.path.join(SCRIPT_DIR, 'profit_cycle.csv')
     merged_df.to_csv(csv_path, index=False, encoding='utf-8-sig')
-    print(f"✅ CSV已保存: {csv_path}")
+    print(f" CSV已保存: {csv_path}")
     
     # 保存JSON
     json_data = {
@@ -266,11 +266,11 @@ def main():
     json_path = os.path.join(SCRIPT_DIR, 'profit_cycle.json')
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(json_data, f, ensure_ascii=False, indent=2)
-    print(f"✅ JSON已保存: {json_path}")
+    print(f" JSON已保存: {json_path}")
     
     # 打印最新数据
     print("\n" + "=" * 60)
-    print("📊 最新数据")
+    print(" 最新数据")
     print("=" * 60)
     print(f"日期: {json_data['latest']['date']}")
     print(f"利润周期得分: {json_data['latest']['profit_cycle_score']}/4")

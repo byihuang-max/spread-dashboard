@@ -85,7 +85,7 @@ def fetch_monthly_returns():
     all_ids = ','.join(str(i) for i in STRATEGY_BENCHMARKS.keys())
     results = {}  # {strategy_id: {name, months: [{trade_date, mean}]}}
 
-    print(f"📡 拉取 {len(END_DATES)} 个月的策略月度收益...")
+    print(f" 拉取 {len(END_DATES)} 个月的策略月度收益...")
     for ed in END_DATES:
         req = MarketCategory(APP_ID, APP_KEY)
         req.set_params(ids=all_ids, _type=2, end_date=ed)
@@ -241,15 +241,15 @@ def main():
         if bm.get('benchmark'):
             bm_codes.add(bm['benchmark'])
 
-    print(f"\n📡 拉取 {len(bm_codes)} 只基准指数...")
+    print(f"\n 拉取 {len(bm_codes)} 只基准指数...")
     index_cache = {}
     for code in sorted(bm_codes):
         rets = fetch_index_monthly(code, all_dates)
         if rets:
             index_cache[code] = rets
-            print(f"  ✅ {code}: {len(rets)} 个月")
+            print(f"   {code}: {len(rets)} 个月")
         else:
-            print(f"  ⚠️ {code}: 无数据")
+            print(f"  ⚠ {code}: 无数据")
         time.sleep(0.3)
 
     # 3. Build curves
@@ -264,7 +264,7 @@ def main():
     with open(OUTPUT, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False)
 
-    print(f"\n✅ 输出: {OUTPUT}")
+    print(f"\n 输出: {OUTPUT}")
     for sid, c in sorted(curves.items(), key=lambda x: int(x[0])):
         ex = f"超额{c['excess_return']:+.1f}%" if c['excess_return'] is not None else "无基准"
         print(f"  {c['name']:10s} 策略{c['total_return']:+.1f}% {ex} ({len(c['dates'])}点)")

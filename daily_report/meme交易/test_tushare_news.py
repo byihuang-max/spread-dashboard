@@ -27,9 +27,9 @@ for src in sources:
             start_date=start_time.strftime('%Y-%m-%d %H:%M:%S'),
             end_date=end_time.strftime('%Y-%m-%d %H:%M:%S')
         )
-        print(f"✅ {src}: 成功，获取 {len(df)} 条新闻")
+        print(f" {src}: 成功，获取 {len(df)} 条新闻")
         if len(df) > 0:
             print(f"   最新一条: {df.iloc[0]['title'][:50]}...")
     except Exception as e:
-        print(f"❌ {src}: {str(e)}")
+        print(f" {src}: {str(e)}")
     print()

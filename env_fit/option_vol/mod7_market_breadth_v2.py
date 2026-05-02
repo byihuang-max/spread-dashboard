@@ -176,17 +176,17 @@ use_date = today
 opt_all, fut_prices = _fetch_market_data(today)
 
 if not opt_all:
-    print(f"\n  ⚠️ {today} 无数据，尝试回退到上一个交易日...")
+    print(f"\n  ⚠ {today} 无数据，尝试回退到上一个交易日...")
     for offset in range(1, 6):
         fallback = (datetime.date.today() - datetime.timedelta(days=offset)).strftime("%Y%m%d")
         print(f"  尝试 {fallback}...")
         opt_all, fut_prices = _fetch_market_data(fallback)
         if opt_all:
             use_date = fallback
-            print(f"  ✅ 使用 {fallback} 数据")
+            print(f"   使用 {fallback} 数据")
             break
     if not opt_all:
-        print("  ❌ 最近5天均无数据，跳过本次更新")
+        print("   最近5天均无数据，跳过本次更新")
         raise SystemExit(0)
 
 print(f"\n  期权品种: {len(opt_all)}, 期货品种: {len(fut_prices)}, 数据日期: {use_date}")
@@ -240,7 +240,7 @@ for fp, info in opt_all.items():
 
 print(f"  成功: {len(metrics)} 品种")
 if not metrics:
-    print("  ⚠️ 无可用品种，保留上次数据")
+    print("  ⚠ 无可用品种，保留上次数据")
     raise SystemExit(0)
 
 # ── Step 3: 计算 breadth 指标 ──
@@ -289,7 +289,7 @@ if env_index >= 60 and pct_both >= 20:
 elif env_index >= 45 and pct_both >= 10:
     regime, label, desc = "SELECTIVE_SELL", "🟡 精选卖方窗口", "整体环境不差，但仍以精选高赔率合约为主"
 elif env_index >= 30:
-    regime, label, desc = "NEUTRAL", "⚪ 观察期", "部分维度改善，但系统性卖权窗口尚不够厚"
+    regime, label, desc = "NEUTRAL", " 观察期", "部分维度改善，但系统性卖权窗口尚不够厚"
 else:
     regime, label, desc = "AVOID", "🔴 不适合卖权", "卖波环境或成交热度不足，不宜激进做卖方"
 
@@ -313,6 +313,6 @@ output = {
 with open(BASE / "market_breadth.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {label}")
+print(f"\n 完成: {label}")
 print(f"   卖权环境指数={env_index:.1f}, 历史分位={env_pct:.1f}%")
 print(f"   双高品种={both_high}/{total} ({pct_both:.1f}%)")

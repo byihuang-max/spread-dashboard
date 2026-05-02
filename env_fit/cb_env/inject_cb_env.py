@@ -52,7 +52,7 @@ def build_html(env):
 <div style="padding:0 4px">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-  <span style="font-size:13px;color:#888">🔄 转债指增 · 数据截至 <b style="color:#2d3142">{last_date_fmt}</b></span>
+  <span style="font-size:13px;color:#888"> 转债指增 · 数据截至 <b style="color:#2d3142">{last_date_fmt}</b></span>
 </div>
 
 <!-- 总览卡片 -->
@@ -91,7 +91,7 @@ def build_html(env):
 
 <!-- 子分数卡片 -->
 <div class="card" style="padding:14px;margin-bottom:16px">
-  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">📊 分项评分</div>
+  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px"> 分项评分</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
     <div style="text-align:center">
       <div style="font-size:10px;color:var(--text-sub)">活跃度</div>
@@ -138,13 +138,13 @@ def build_html(env):
 
 <!-- 指标说明 -->
 <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
-  <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">📖 指标说明</div>
-  ① <b>转债友好度</b>：活跃度(25%) + 估值(25%) + DELTA(25%) + 债底(25%) 综合评分<br>
-  ② <b>活跃度</b>：转债成交额变化与中证1000/2000涨跌幅的20日滚动相关系数，高相关=小盘活跃带动转债<br>
-  ③ <b>估值水位</b>：成交量前50%转债的平均价格在历史窗口中的分位数 + 平均转股溢价率。低分位+低溢价=便宜且股性强<br>
-  ④ <b>DELTA</b>：成交量前50%转债涨跌幅 vs 正股涨跌幅的20日回归斜率中位数。高DELTA=偏股性，策略空间大<br>
-  ⑤ <b>债底</b>：全市场转债价格中位数 + 破面值(＜100元)占比。破面值少=安全垫厚<br>
-  ⑥ <b>转股溢价率</b> = (转债价格 - 转股价值) / 转股价值 × 100%，转股价值 = 面值/转股价 × 正股价
+  <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 指标说明</div>
+   <b>转债友好度</b>：活跃度(25%) + 估值(25%) + DELTA(25%) + 债底(25%) 综合评分<br>
+   <b>活跃度</b>：转债成交额变化与中证1000/2000涨跌幅的20日滚动相关系数，高相关=小盘活跃带动转债<br>
+   <b>估值水位</b>：成交量前50%转债的平均价格在历史窗口中的分位数 + 平均转股溢价率。低分位+低溢价=便宜且股性强<br>
+   <b>DELTA</b>：成交量前50%转债涨跌幅 vs 正股涨跌幅的20日回归斜率中位数。高DELTA=偏股性，策略空间大<br>
+   <b>债底</b>：全市场转债价格中位数 + 破面值(＜100元)占比。破面值少=安全垫厚<br>
+   <b>转股溢价率</b> = (转债价格 - 转股价值) / 转股价值 × 100%，转股价值 = 面值/转股价 × 正股价
 </div>
 
 </div>
@@ -314,9 +314,9 @@ def main():
 
     ok = inject(html)
     if ok:
-        log("✅ 注入成功")
+        log(" 注入成功")
     else:
-        log("❌ 注入失败")
+        log(" 注入失败")
 
 
 if __name__ == "__main__":

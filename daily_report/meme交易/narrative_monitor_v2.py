@@ -180,12 +180,12 @@ def call_llm(prompt):
         result = resp.json()
         
         if "choices" not in result:
-            print(f"❌ LLM API错误: {result}")
+            print(f" LLM API错误: {result}")
             return None
         
         return result["choices"][0]["message"]["content"]
     except Exception as e:
-        print(f"❌ LLM调用失败: {e}")
+        print(f" LLM调用失败: {e}")
         return None
 
 def discover_dynamic_themes(unmatched_news, top_n=5):
@@ -235,7 +235,7 @@ def discover_dynamic_themes(unmatched_news, top_n=5):
         themes = json.loads(response)
         return themes
     except Exception as e:
-        print(f"❌ 解析LLM响应失败: {e}")
+        print(f" 解析LLM响应失败: {e}")
         return []
 
 # ==================== 历史管理 ====================
@@ -270,27 +270,27 @@ def get_trend(key, days=7):
     dates = sorted(history.keys())[-days:]
     
     if len(dates) < 2:
-        return "➡️", 0
+        return "", 0
     
     scores = [history[d].get(key, 0) for d in dates]
     change = scores[-1] - scores[0]
     
     if change > 2:
-        return "📈", change
+        return "", change
     elif change < -2:
-        return "📉", change
+        return "", change
     else:
-        return "➡️", change
+        return "", change
 
 # ==================== 生成报告 ====================
 def generate_report(fixed_analysis, dynamic_themes, news_count):
     """生成飞书报告"""
     now = datetime.now().strftime("%m-%d %H:%M")
     
-    report = f"📊 叙事监控 V2 {now} | 分析 {news_count} 条新闻\n\n"
+    report = f" 叙事监控 V2 {now} | 分析 {news_count} 条新闻\n\n"
     
     # 固定叙事
-    report += "🔖 固定叙事监控\n"
+    report += " 固定叙事监控\n"
     sorted_fixed = sorted(
         fixed_analysis.items(),
         key=lambda x: x[1]['score'],
@@ -303,16 +303,16 @@ def generate_report(fixed_analysis, dynamic_themes, news_count):
         
         report += f"{key}: {score}/10 {trend_emoji}\n"
         if score >= 5 and data['key_news']:
-            report += f"  📌 {data['key_news'][0]}\n"
+            report += f"   {data['key_news'][0]}\n"
     
     # 动态主题
     if dynamic_themes:
-        report += f"\n🆕 今日新兴主题（LLM发现）\n"
+        report += f"\n[NEW] 今日新兴主题（LLM发现）\n"
         for i, theme in enumerate(dynamic_themes, 1):
             report += f"{i}. {theme['theme']} ({theme['count']}条)\n"
             report += f"   关键词: {', '.join(theme['keywords'][:3])}\n"
             if theme['examples']:
-                report += f"   📌 {theme['examples'][0]}\n"
+                report += f"    {theme['examples'][0]}\n"
     
     return report
 
@@ -353,11 +353,11 @@ def main():
     
     # 1. 拉取新闻
     news = fetch_news(hours=12)
-    print(f"✅ 拉取到 {len(news)} 条新闻（去重后）")
+    print(f" 拉取到 {len(news)} 条新闻（去重后）")
     
     # 2. 分析固定叙事
     fixed_analysis = analyze_fixed_narratives(news)
-    print(f"✅ 完成固定叙事分析")
+    print(f" 完成固定叙事分析")
     
     # 3. 找出未匹配的新闻
     matched_titles = set()
@@ -366,24 +366,24 @@ def main():
             matched_titles.add(n['title'])
     
     unmatched_news = [n for n in news if n['title'] not in matched_titles]
-    print(f"✅ 未匹配新闻: {len(unmatched_news)} 条")
+    print(f" 未匹配新闻: {len(unmatched_news)} 条")
     
     # 4. LLM发现动态主题
-    print(f"🔍 LLM分析中...")
+    print(f" LLM分析中...")
     dynamic_themes = discover_dynamic_themes(unmatched_news, top_n=5)
-    print(f"✅ 发现 {len(dynamic_themes)} 个动态主题")
+    print(f" 发现 {len(dynamic_themes)} 个动态主题")
     
     # 5. 保存历史
     save_history(fixed_analysis)
-    print(f"✅ 保存历史数据")
+    print(f" 保存历史数据")
     
     # 6. 生成报告
     report = generate_report(fixed_analysis, dynamic_themes, len(news))
-    print(f"✅ 生成报告")
+    print(f" 生成报告")
     
     # 7. 推送飞书
     result = send_to_feishu(report)
-    print(f"✅ 推送飞书: {result.get('code')}")
+    print(f" 推送飞书: {result.get('code')}")
     
     # 8. 保存到本地
     cache_file = CACHE_DIR / f"narrative_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
@@ -395,7 +395,7 @@ def main():
             "news_count": len(news)
         }, f, ensure_ascii=False, indent=2)
     
-    print(f"✅ 完成！")
+    print(f" 完成！")
 
 if __name__ == '__main__':
     main()

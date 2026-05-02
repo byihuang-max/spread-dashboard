@@ -75,10 +75,10 @@ def fetch_yfinance_data(ticker, csv_name):
         
         df = df.sort_values('date').reset_index(drop=True)
         df.to_csv(csv_path, index=False)
-        print(f"  ✓ 保存 {len(df_new)} 条新数据")
+        print(f"   保存 {len(df_new)} 条新数据")
     
     except Exception as e:
-        print(f"  ✗ 失败: {e}")
+        print(f"   失败: {e}")
 
 
 def fetch_vix():
@@ -163,10 +163,10 @@ def fetch_fred_data(series_id, csv_name):
         
         df = df.sort_values('date').reset_index(drop=True)
         df.to_csv(csv_path, index=False)
-        print(f"  ✓ 保存 {len(df_new)} 条新数据")
+        print(f"   保存 {len(df_new)} 条新数据")
     
     except Exception as e:
-        print(f"  ✗ 失败: {e}")
+        print(f"   失败: {e}")
 
 
 def fetch_treasury_spread():
@@ -214,10 +214,10 @@ def main():
         fetch_unemployment()
         fetch_ism_pmi()
     else:
-        print("⚠️  未配置 FRED_API_KEY，跳过FRED数据")
+        print("⚠  未配置 FRED_API_KEY，跳过FRED数据")
         print("   获取免费key: https://fred.stlouisfed.org/docs/api/api_key.html")
     
-    print("\n✓ 数据获取完成")
+    print("\n 数据获取完成")
 
 
 if __name__ == '__main__':

@@ -72,8 +72,8 @@ def run():
 
     lines = []
     lines.append(f"{'─'*32}")
-    lines.append(f"📊  FOF 每日市场观察")
-    lines.append(f"📅  {now.strftime('%Y-%m-%d %H:%M')}  生成")
+    lines.append(f"  FOF 每日市场观察")
+    lines.append(f"  {now.strftime('%Y-%m-%d %H:%M')}  生成")
     lines.append(f"{'─'*32}")
     lines.append("")
 
@@ -86,7 +86,7 @@ def run():
         log("  iFind token 获取失败，仅用 Tushare")
 
     # ═══ 1. 全球流动性 ═══
-    lines.append("🌍 一、全球流动性")
+    lines.append(" 一、全球流动性")
     lines.append("─" * 32)
 
     # 美债 (Tushare)
@@ -127,7 +127,7 @@ def run():
                 lines.append(f"USDCNH(iFind) {ifind_cnh:.4f}({cs(chg,'.4f')})")
                 if ts_usdcnh:
                     diff = abs(ts_usdcnh - ifind_cnh)
-                    lines.append(f"  ✅ 交叉校验 差值{diff:.4f}" if diff < 0.05 else f"  ⚠️ 交叉校验 差值{diff:.4f}")
+                    lines.append(f"   交叉校验 差值{diff:.4f}" if diff < 0.05 else f"  ⚠ 交叉校验 差值{diff:.4f}")
 
     # Shibor (Tushare)
     log("拉Shibor...")
@@ -166,7 +166,7 @@ def run():
     lines.append("")
 
     # ═══ 2. 中国基本盘 ═══
-    lines.append("🇨🇳 二、中国宏观基本盘")
+    lines.append("CN 二、中国宏观基本盘")
     lines.append("─" * 32)
 
     log("拉CPI...")
@@ -210,7 +210,7 @@ def run():
     lines.append("")
 
     # ═══ 3. 中观景气 ═══
-    lines.append("🏭 三、中观景气（期货主力合约）")
+    lines.append(" 三、中观景气（期货主力合约）")
     lines.append("─" * 32)
     futs = {'RB.SHF':'螺纹','I.DCE':'铁矿','FG.ZCE':'玻璃','SA.ZCE':'纯碱','AL.SHF':'铝'}
     for code, name in futs.items():
@@ -267,7 +267,7 @@ def run():
     # 回填 A股微观标题日期
     if trade_date:
         td_fmt = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
-        lines[a_stock_header_idx] = f"📈 四、A股微观（{td_fmt}）"
+        lines[a_stock_header_idx] = f" 四、A股微观（{td_fmt}）"
 
     # 沪深300 交叉校验 (iFind)
     if at and '000300.SH' in idx_data:
@@ -278,7 +278,7 @@ def run():
             if ifind_300:
                 ts_300 = idx_data['000300.SH']['close']
                 diff = abs(ts_300 - ifind_300)
-                lines.append(f"  ✅ 沪深300校验 TS={ts_300:.2f} iFind={ifind_300:.2f} 差{diff:.2f}" if diff < 5 else f"  ⚠️ 沪深300校验 TS={ts_300:.2f} iFind={ifind_300:.2f} 差{diff:.2f}")
+                lines.append(f"   沪深300校验 TS={ts_300:.2f} iFind={ifind_300:.2f} 差{diff:.2f}" if diff < 5 else f"  ⚠ 沪深300校验 TS={ts_300:.2f} iFind={ifind_300:.2f} 差{diff:.2f}")
 
     # 全A成交额 (amount单位=千元，除以100000=亿)
     log("拉全A成交额...")
@@ -334,7 +334,7 @@ def run():
     lines.append("")
 
     # ═══ 5. 结论 ═══
-    lines.append("💡 五、综合研判")
+    lines.append(" 五、综合研判")
     lines.append("─" * 32)
     try:
         chg300 = idx_data.get('000300.SH', {}).get('chg', 0)
@@ -392,17 +392,17 @@ def run():
         if chg300 < -2: alerts.append(f"沪深300大跌（{chg300:+.2f}%）")
         if alerts:
             lines.append("")
-            lines.append("🚨 红灯预警: " + " | ".join(alerts))
+            lines.append(" 红灯预警: " + " | ".join(alerts))
         else:
             lines.append("")
-            lines.append("✅ 无红灯事件")
+            lines.append(" 无红灯事件")
     except Exception as e:
         lines.append(f"  结论生成失败: {e}")
 
     # 数据源标注
     lines.append("")
     lines.append(f"{'─'*32}")
-    lines.append(f"📡 数据源: Tushare{'+ iFind' if at else '（iFind不可用）'}")
+    lines.append(f" 数据源: Tushare{'+ iFind' if at else '（iFind不可用）'}")
     lines.append(f"{'─'*32}")
 
     report = '\n'.join(lines)

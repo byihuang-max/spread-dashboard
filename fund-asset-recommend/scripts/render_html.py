@@ -333,7 +333,7 @@ def render():
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         f.write(html)
 
-    print(f"✅ 生成: {OUTPUT_PATH}")
+    print(f" 生成: {OUTPUT_PATH}")
     print(f"   数据日期: {update_date}")
     print(f"   产品数: {len(rows)}")
     print(f"   策略组: {len(strategy_summary)}")

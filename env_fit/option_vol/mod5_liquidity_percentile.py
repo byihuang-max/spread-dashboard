@@ -124,7 +124,7 @@ for exchange, opt_prefix, cn_name in SYMBOLS:
                        for d, v, o in zip(vol_dates, vol_series, oi_series)],
     })
     
-    print(f"  ✅ vol_pct={vol_pct:.1f}%, oi_pct={oi_pct:.1f}%, liq={liq_pct:.1f}%")
+    print(f"   vol_pct={vol_pct:.1f}%, oi_pct={oi_pct:.1f}%, liq={liq_pct:.1f}%")
 
 if results:
     weighted_liq = np.mean([r["liquidity_percentile"] for r in results])
@@ -140,4 +140,4 @@ output = {
 with open(BASE / "liquidity_percentile.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {len(results)} 品种, 全市场流动性分位={weighted_liq:.1f}%")
+print(f"\n 完成: {len(results)} 品种, 全市场流动性分位={weighted_liq:.1f}%")

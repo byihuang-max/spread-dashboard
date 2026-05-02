@@ -12,10 +12,10 @@
   - 核心问题：这个叙事是否正在成为"共识"？共识化 = 机会关闭
 
 四个阶段：
-  🌱 新兴  — 热度刚从低位升起，市场尚未定价，最大配置窗口
-  🔥 积累  — 持续升温，价格开始跟随，窗口收窄中
-  ⚡ 共识  — 热度高位稳定，已成市场共识，慎追
-  📉 消退  — 热度下行，叙事衰退，关注反向机会
+   新兴  — 热度刚从低位升起，市场尚未定价，最大配置窗口
+   积累  — 持续升温，价格开始跟随，窗口收窄中
+   共识  — 热度高位稳定，已成市场共识，慎追
+   消退  — 热度下行，叙事衰退，关注反向机会
 
 增量模式：
   - 读取 lifecycle_output.json 获取上次处理的最新日期
@@ -66,7 +66,7 @@ NARRATIVE_ASSETS = {
 # ==================== 数据加载 ====================
 def load_history() -> dict:
     if not HISTORY_FILE.exists():
-        print(f"⚠️  历史文件不存在: {HISTORY_FILE}")
+        print(f"⚠  历史文件不存在: {HISTORY_FILE}")
         return {}
     with open(HISTORY_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -113,7 +113,7 @@ def load_latest_key_news() -> dict:
             }
         return result
     except Exception as e:
-        print(f"⚠️  读取 key_news 失败: {e}")
+        print(f"⚠  读取 key_news 失败: {e}")
         return {}
 
 
@@ -193,34 +193,34 @@ def determine_stage(hist_pct, momentum, duration, ma7, ma28) -> dict:
     # 消退优先判
     if momentum < -0.3 and hist_pct > 40:
         return {
-            "stage": "消退", "stage_emoji": "📉",
+            "stage": "消退", "stage_emoji": "",
             "action": "叙事降温，关注对应资产反向机会",
             "confidence": "高" if momentum < -0.5 else "中",
         }
     # 共识
     if hist_pct >= 70 and abs(momentum) <= 0.3 and duration >= 10:
         return {
-            "stage": "共识", "stage_emoji": "⚡",
+            "stage": "共识", "stage_emoji": "",
             "action": "市场已定价，慎追；等待消退后反向或等下一波新兴",
             "confidence": "高" if hist_pct >= 80 else "中",
         }
     # 新兴
     if hist_pct < 45 and momentum > 0.1 and duration <= 10:
         return {
-            "stage": "新兴", "stage_emoji": "🌱",
+            "stage": "新兴", "stage_emoji": "",
             "action": "最佳配置窗口，市场尚未充分定价，关注对应资产",
             "confidence": "高" if (momentum > 0.3 and duration <= 5) else "中",
         }
     # 积累
     if momentum >= 0 and ma7 >= ACTIVE_THRESHOLD:
         return {
-            "stage": "积累", "stage_emoji": "🔥",
+            "stage": "积累", "stage_emoji": "",
             "action": "窗口收窄中，仍可参与但需控制仓位",
             "confidence": "中",
         }
     # 低温观察
     return {
-        "stage": "观察", "stage_emoji": "🔍",
+        "stage": "观察", "stage_emoji": "",
         "action": "热度偏低，暂无明确信号",
         "confidence": "低",
     }
@@ -328,7 +328,7 @@ def write_json_snapshot(all_rows: list[dict], history: dict):
 # ==================== 控制台报告 ====================
 def print_report(all_rows: list[dict]):
     if not all_rows:
-        print("⚠️  无数据可展示")
+        print("⚠  无数据可展示")
         return
 
     latest_date = max(r["date"] for r in all_rows)
@@ -359,25 +359,25 @@ def main():
     print("[宏观生命周期·增量] 加载历史数据...")
     history = load_history()
     if not history:
-        print("❌ 无历史数据，请先运行 narrative_monitor.py 或 backfill_history.py")
+        print(" 无历史数据，请先运行 narrative_monitor.py 或 backfill_history.py")
         return
 
     dates = sorted(history.keys())
-    print(f"✅ 历史 {len(history)} 天（{dates[0]} ~ {dates[-1]}）")
+    print(f" 历史 {len(history)} 天（{dates[0]} ~ {dates[-1]}）")
 
     # 计算所有历史行
     print("⏳ 计算生命周期指标...")
     all_rows = compute_all_rows(history)
-    print(f"✅ 计算完成，共 {len(all_rows)} 行数据")
+    print(f" 计算完成，共 {len(all_rows)} 行数据")
 
     # 增量追加 CSV
     existing_pairs = load_existing_csv_dates()
     added = append_new_rows_to_csv(all_rows, existing_pairs)
-    print(f"✅ CSV 新增 {added} 行 → {OUTPUT_CSV}")
+    print(f" CSV 新增 {added} 行 → {OUTPUT_CSV}")
 
     # 写 JSON 快照
     write_json_snapshot(all_rows, history)
-    print(f"✅ JSON 快照已更新 → {OUTPUT_JSON}")
+    print(f" JSON 快照已更新 → {OUTPUT_JSON}")
 
     # 打印报告
     print_report(all_rows)

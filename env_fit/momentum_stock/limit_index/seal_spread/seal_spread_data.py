@@ -58,7 +58,7 @@ MA20 = 20
 SIGNAL_THRESHOLDS = [
     (0.05, '🟢 极度恐慌'),
     (0.20, '🔵 偏空'),
-    (0.80, '⚪ 均衡'),
+    (0.80, ' 均衡'),
     (0.95, '🟡 偏多'),
     (1.01, '🔴 极度亢奋'),
 ]
@@ -71,7 +71,7 @@ def log(msg):
 def get_signal(pct):
     """根据分位数返回信号标签"""
     if pct is None:
-        return '⚪ 均衡'
+        return ' 均衡'
     for threshold, label in SIGNAL_THRESHOLDS:
         if pct < threshold:
             return label
@@ -187,7 +187,7 @@ def main():
 
     # 读取已有数据
     existing_records, existing_dates = read_existing_csv()
-    log(f"📦 已有 CSV: {len(existing_records)} 条记录")
+    log(f" 已有 CSV: {len(existing_records)} 条记录")
 
     # 获取所有有缓存的交易日
     cache_dates = sorted([
@@ -196,22 +196,22 @@ def main():
     ])
 
     if not cache_dates:
-        log("❌ 无涨停缓存数据")
+        log(" 无涨停缓存数据")
         return
 
-    log(f"📊 缓存范围: {cache_dates[0]} ~ {cache_dates[-1]} ({len(cache_dates)}天)")
+    log(f" 缓存范围: {cache_dates[0]} ~ {cache_dates[-1]} ({len(cache_dates)}天)")
 
     # 找出需要新计算的日期
     new_dates = [d for d in cache_dates if d not in existing_dates]
 
     if not new_dates:
-        log("✅ 无新数据，跳过计算")
+        log(" 无新数据，跳过计算")
         if existing_records:
             write_json(existing_records)
-            log("💾 JSON 已更新")
+            log(" JSON 已更新")
         return
 
-    log(f"🆕 需计算 {len(new_dates)} 个新交易日")
+    log(f"[NEW] 需计算 {len(new_dates)} 个新交易日")
 
     # 收集已有的 spread 序列（用于增量计算 MA 和分位数）
     spread_history = [r['seal_spread'] for r in existing_records if r['seal_spread'] is not None]
@@ -269,7 +269,7 @@ def main():
 
     # 如果是全量重算（非纯增量），需要重算所有 MA 和分位数
     if new_count > 20:
-        log("🔄 大量新增，重算全部 MA 和分位数...")
+        log(" 大量新增，重算全部 MA 和分位数...")
         all_spreads = []
         for r in existing_records:
             all_spreads.append(r['seal_spread'])
@@ -284,7 +284,7 @@ def main():
     write_csv(existing_records)
     write_json(existing_records)
 
-    log(f"\n✅ 新增 {new_count} 条，总计 {len(existing_records)} 条")
+    log(f"\n 新增 {new_count} 条，总计 {len(existing_records)} 条")
 
     # 打印最新几天
     log(f"\n最近5天:")
@@ -294,9 +294,9 @@ def main():
             f"跌停{r['down_count']}只 封{r['down_seal_total']:.1f}亿 | "
             f"轧差{r['seal_spread']:+.1f}亿 | 分位{pct_str} | {r['signal']}")
 
-    log(f"\n💾 CSV: {OUTPUT_CSV}")
-    log(f"💾 JSON: {OUTPUT_JSON}")
-    log("\n🎉 完成！")
+    log(f"\n CSV: {OUTPUT_CSV}")
+    log(f" JSON: {OUTPUT_JSON}")
+    log("\n 完成！")
 
 
 if __name__ == '__main__':

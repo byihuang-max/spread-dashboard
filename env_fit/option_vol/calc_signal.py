@@ -140,7 +140,7 @@ with open(BASE / "sell_signal.json", "w", encoding="utf-8") as f:
 # 输出当前信号
 if daily_metrics:
     latest = daily_metrics[-1]
-    print(f"\n✅ 当前信号（{latest['date']}）:")
+    print(f"\n 当前信号（{latest['date']}）:")
     print(f"   卖权环境信号: {latest['sell_signal']:.3f}")
     print(f"   IV 中位数: {latest['iv_median']:.4f} (分位 {latest['iv_median_pct']:.1f}%)")
     print(f"   高 IV 占比: {latest['high_iv_ratio']:.1f}% (分位 {latest['high_iv_ratio_pct']:.1f}%)")
@@ -151,7 +151,7 @@ if daily_metrics:
     elif latest['sell_signal'] >= 0.5:
         regime = "🟡 精选卖方窗口"
     elif latest['sell_signal'] >= 0.3:
-        regime = "⚪ 观察期"
+        regime = " 观察期"
     else:
         regime = "🔴 不适合卖权"
     

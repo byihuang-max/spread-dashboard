@@ -43,14 +43,14 @@ def load_prices():
     df = pd.read_csv(PRICE_CSV, parse_dates=["date"])
     # iFind 数据用 code 列，重命名为 ticker
     df = df.rename(columns={'code': 'ticker'})
-    print(f"✅ 加载价格数据：{len(df)} 行")
+    print(f" 加载价格数据：{len(df)} 行")
     return df
 
 
 def load_narrative_scores():
     """从叙事监控系统读取最新热度分数"""
     if not LIFECYCLE_JSON.exists():
-        print("⚠️  叙事监控数据不存在，跳过")
+        print("⚠  叙事监控数据不存在，跳过")
         return {}
     
     with open(LIFECYCLE_JSON, "r", encoding="utf-8") as f:
@@ -63,7 +63,7 @@ def load_narrative_scores():
         "地缘风险": results.get("地缘风险", {}).get("score", 0),
         "通胀通缩": results.get("通胀通缩", {}).get("score", 0),
     }
-    print(f"✅ 叙事热度：AI={scores['AI_CapEx']}, 再武装={scores['全球再武装']}, 地缘={scores['地缘风险']}, 通胀={scores['通胀通缩']}")
+    print(f" 叙事热度：AI={scores['AI_CapEx']}, 再武装={scores['全球再武装']}, 地缘={scores['地缘风险']}, 通胀={scores['通胀通缩']}")
     return scores
 
 
@@ -116,7 +116,7 @@ def calculate_normalized_nav(df, window=60):
             "excess_nav": [round(float(v), 4) for v in excess_nav],
         }
     
-    print(f"✅ 完成 {len(results)} 只标的")
+    print(f" 完成 {len(results)} 只标的")
     return results
 
 def calculate_relative_strength(df, window=20):
@@ -162,7 +162,7 @@ def calculate_relative_strength(df, window=20):
             "latest_price": round(float(pivot[ticker].iloc[-1]), 2) if pd.notna(pivot[ticker].iloc[-1]) else None,
         })
     
-    print(f"✅ 完成 {len(results)} 只标的")
+    print(f" 完成 {len(results)} 只标的")
     return results
 
 
@@ -254,10 +254,10 @@ def main():
         f.write(output_str)
     
     print("=" * 60)
-    print(f"✅ 场景判断：{judgment['scenario']}")
+    print(f" 场景判断：{judgment['scenario']}")
     print(f"   操作建议：{judgment['action']}")
     print(f"   主线强弱：{judgment['theme_strength']}")
-    print(f"✅ 结果已保存：{OUTPUT_JSON}")
+    print(f" 结果已保存：{OUTPUT_JSON}")
     print("=" * 60)
 
 

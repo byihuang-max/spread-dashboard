@@ -267,7 +267,7 @@ def main():
     fetch_margin()
     fetch_sw_daily()
     fetch_industry_etf()
-    print('\n✅ 数据更新完成')
+    print('\n 数据更新完成')
 
 
 if __name__ == '__main__':

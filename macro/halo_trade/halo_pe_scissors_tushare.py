@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-⚠️ 已废弃 — 2026-04-13
+⚠ 已废弃 — 2026-04-13
 旧版 Tushare 私有地址（已过期）+ iFind refresh token 拼接，不再使用。
 正式版本：halo_pe_scissors.py（百度美股估值接口）
 
@@ -19,9 +19,9 @@ def get_token():
         d = r.json()
         if d.get('errorcode') == 0:
             return d['data']['access_token']
-        print(f"❌ iFind token 错误: {d.get('errmsg', d)}")
+        print(f" iFind token 错误: {d.get('errmsg', d)}")
     except Exception as e:
-        print(f"❌ iFind token 异常: {e}")
+        print(f" iFind token 异常: {e}")
     return None
 import requests
 import json
@@ -98,7 +98,7 @@ def get_prices(codes, days=365):
     
     d = r.json()
     if d.get('errorcode') != 0:
-        print(f"  ❌ iFind错误: {d.get('errmsg')}")
+        print(f"   iFind错误: {d.get('errmsg')}")
         return {}
     
     # 解析数据
@@ -178,14 +178,14 @@ if __name__ == '__main__':
     print("⏳ 拉取EPS数据...")
     heavy_eps = get_eps(HEAVY_ASSETS)
     light_eps = get_eps(LIGHT_ASSETS)
-    print(f"  ✅ 重资产: {len(heavy_eps)}/{len(HEAVY_ASSETS)}")
-    print(f"  ✅ 轻资产: {len(light_eps)}/{len(LIGHT_ASSETS)}")
+    print(f"   重资产: {len(heavy_eps)}/{len(HEAVY_ASSETS)}")
+    print(f"   轻资产: {len(light_eps)}/{len(LIGHT_ASSETS)}")
     
     # 2. 拉取股价
     print("⏳ 拉取股价数据...")
     all_codes = list(heavy_eps.keys()) + list(light_eps.keys())
     prices = get_prices(all_codes)
-    print(f"  ✅ {len(prices)} 只股票")
+    print(f"   {len(prices)} 只股票")
     
     # 3. 计算PE
     print("⏳ 计算PE...")
@@ -212,12 +212,12 @@ if __name__ == '__main__':
     print("="*60)
     if scissors['latest']:
         latest = scissors['latest']
-        print(f"✅ PE剪刀差:")
+        print(f" PE剪刀差:")
         print(f"   日期: {latest['date']}")
         print(f"   重资产PE: {latest['heavy_pe']}")
         print(f"   轻资产PE: {latest['light_pe']}")
         print(f"   剪刀差: {latest['pe_gap']} ({'负值=重资产便宜' if latest['pe_gap'] < 0 else '正值=轻资产便宜'})")
         print(f"   历史点数: {len(scissors['history'])}")
     
-    print(f"✅ 结果已保存：{OUTPUT_JSON}")
+    print(f" 结果已保存：{OUTPUT_JSON}")
     print("="*60)

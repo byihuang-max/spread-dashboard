@@ -178,17 +178,17 @@ def get_trend(key, days=7):
     dates = sorted(history.keys())[-days:]
     
     if len(dates) < 2:
-        return "➡️", 0
+        return "", 0
     
     scores = [history[d].get(key, 0) for d in dates]
     change = scores[-1] - scores[0]
     
     if change > 2:
-        return "📈", change
+        return "", change
     elif change < -2:
-        return "📉", change
+        return "", change
     else:
-        return "➡️", change
+        return "", change
 
 def get_lifecycle(key, current_score):
     """判断叙事生命周期"""
@@ -202,21 +202,21 @@ def get_lifecycle(key, current_score):
     
     # 萌芽：从低位快速上升
     if scores[0] < 4 and current_score >= 5 and (current_score - scores[0]) > 3:
-        return "🌱萌芽"
+        return "萌芽"
     
     # 加速：持续上升
     if all(scores[i] <= scores[i+1] for i in range(len(scores)-1)) and current_score >= 5:
-        return "🚀加速"
+        return "加速"
     
     # 共识：高位震荡
     if current_score >= 7 and max(scores) - min(scores) < 2:
-        return "🔥共识"
+        return "共识"
     
     # 饱和：极高且稳定
     if current_score >= 9 and all(s >= 8 for s in scores[-3:]):
-        return "⚠️饱和"
+        return "⚠饱和"
     
-    return "➡️稳定"
+    return "稳定"
 
 # ==================== 叙事-资产映射 ====================
 NARRATIVE_ASSETS = {
@@ -371,13 +371,13 @@ def get_divergence_signal(narrative_key, score, prices):
 
         # 叙事热但价格没动 → 未price in，潜在机会
         if score >= 7 and w1 < 1.0:
-            signals.append(f"💡{name}1W仅+{w1:.1f}%，叙事未price in")
+            signals.append(f"{name}1W仅+{w1:.1f}%，叙事未price in")
         # 叙事热且价格已大涨 → 追顶风险
         elif score >= 7 and w1 >= 8.0:
-            signals.append(f"⚠️{name}1W已+{w1:.1f}%，追顶风险")
+            signals.append(f"⚠{name}1W已+{w1:.1f}%，追顶风险")
         # 叙事强但资产近月已涨很多 → 小心反转
         elif score >= 6 and w4 >= 15.0:
-            signals.append(f"🔔{name}1M+{w4:.1f}%，注意叙事衰退")
+            signals.append(f"{name}1M+{w4:.1f}%，注意叙事衰退")
 
     return signals if signals else None
 
@@ -505,7 +505,7 @@ def generate_report(analysis, news_count, prices=None):
         reverse=True
     )
     
-    report = f"📊 叙事监控 {now} | 分析 {news_count} 条新闻\n\n"
+    report = f" 叙事监控 {now} | 分析 {news_count} 条新闻\n\n"
     
     for key, data in sorted_narratives:
         score = data['score']
@@ -538,7 +538,7 @@ def generate_report(analysis, news_count, prices=None):
                     sign = "+" if w1 >= 0 else ""
                     price_parts.append(f"{name} 1W:{sign}{w1:.1f}%")
             if price_parts:
-                report += f"   💰 {' | '.join(price_parts)}\n"
+                report += f"    {' | '.join(price_parts)}\n"
             
             # 背离信号
             div_signals = get_divergence_signal(key, score, prices)
@@ -548,7 +548,7 @@ def generate_report(analysis, news_count, prices=None):
         
         # 只显示高分叙事的关键新闻
         if score >= 7 and data['key_news']:
-            report += f"   📌 {data['key_news'][0]}\n"
+            report += f"    {data['key_news'][0]}\n"
         
         report += "\n"
     
@@ -581,34 +581,34 @@ def main():
     
     # 1. 拉取新闻
     news = fetch_news(hours=12)
-    print(f"✅ 拉取到 {len(news)} 条新闻")
+    print(f" 拉取到 {len(news)} 条新闻")
     
     # 2. 分析叙事
     analysis = analyze_narratives(news)
-    print(f"✅ 完成叙事分析")
+    print(f" 完成叙事分析")
     
     # 3. 保存历史
     save_history(analysis)
-    print(f"✅ 保存历史数据")
+    print(f" 保存历史数据")
 
     # 4. 拉取资产价格
     print(f"⏳ 拉取资产价格...")
     prices = fetch_asset_prices()
-    print(f"✅ 获取到 {len(prices)} 个资产价格")
+    print(f" 获取到 {len(prices)} 个资产价格")
     
     # 5. 生成报告
     report = generate_report(analysis, len(news), prices=prices)
-    print(f"✅ 生成报告")
+    print(f" 生成报告")
     
     # 6. 推送飞书
     result = send_to_feishu(report)
-    print(f"✅ 推送飞书: {result.get('code')}")
+    print(f" 推送飞书: {result.get('code')}")
     
     # 7. 保存到本地
     cache_file = CACHE_DIR / f"narrative_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
     with open(cache_file, 'w', encoding='utf-8') as f:
         json.dump({"analysis": analysis, "report": report, "prices": prices}, f, ensure_ascii=False, indent=2)
-    print(f"✅ 保存到 {cache_file}")
+    print(f" 保存到 {cache_file}")
 
 if __name__ == "__main__":
     main()

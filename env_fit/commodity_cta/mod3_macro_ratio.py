@@ -221,7 +221,7 @@ def main():
 
     write_output(results)
 
-    log(f"\n✅ 模块三完成")
+    log(f"\n 模块三完成")
     for key in ['cu_au', 'sc_au', 'ind_agri']:
         r = results.get(key)
         if r:

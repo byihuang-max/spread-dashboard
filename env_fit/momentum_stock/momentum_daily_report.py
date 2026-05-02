@@ -225,7 +225,7 @@ def generate_report(trade_date=None):
 
     # 三、异常信号
     if warn_latest.get('signal_triggered'):
-        narrative = warn_latest['narrative'].replace('🟡', '⚠').replace('🔴', '🚨').replace('🟢', '✓')
+        narrative = warn_latest['narrative'].replace('🟡', '⚠').replace('🔴', '').replace('🟢', '')
         L.append(f'{CN_NUMS[sec_idx]}、异常信号')
         sec_idx += 1
         tail = narrative.split('：')[-1] if '：' in narrative else narrative
@@ -236,7 +236,7 @@ def generate_report(trade_date=None):
     L.append(f'{CN_NUMS[sec_idx]}、产业链共振')
     sec_idx += 1
     L.append('')
-    nums = ['①', '②', '③']
+    nums = ['', '', '']
     for i, (cn, strength, res, lavg, ldata, best) in enumerate(chains[:3]):
         L.append(f'{nums[i]} {cn} {strength:+.2f}% {res}')
         cols_order = ['上游', '中游', '下游']

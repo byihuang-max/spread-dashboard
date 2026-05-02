@@ -32,7 +32,7 @@ def get_token():
     """获取 access_token"""
     refresh = _load_refresh_token()
     if not refresh:
-        print("❌ 未找到 iFind refresh_token")
+        print(" 未找到 iFind refresh_token")
         return None
     try:
         r = requests.post(f'{IFIND_BASE}/get_access_token',
@@ -40,9 +40,9 @@ def get_token():
         d = r.json()
         if d.get('errorcode') == 0:
             return d['data']['access_token']
-        print(f"❌ iFind token 错误: {d.get('errmsg', '未知')}")
+        print(f" iFind token 错误: {d.get('errmsg', '未知')}")
     except Exception as e:
-        print(f"❌ iFind token 连接失败: {e}")
+        print(f" iFind token 连接失败: {e}")
     return None
 
 
@@ -51,26 +51,26 @@ def get_token():
 # 经云端验证 2026-03-11
 IFIND_ASSETS = {
     # 海外指数 / 代理ETF
-    'NDX.GI':       ('纳斯达克100', False),      # ✅ 纳斯达克100指数
-    '513500.SH':    ('标普500', True),           # ✅ 标普500ETF，作为标普500代理
-    'N225.GI':      ('日经225', False),           # ✅ 日经225
-    'KS11.GI':      ('韩国KOSPI', False),         # ✅ 韩国KOSPI
+    'NDX.GI':       ('纳斯达克100', False),      #  纳斯达克100指数
+    '513500.SH':    ('标普500', True),           #  标普500ETF，作为标普500代理
+    'N225.GI':      ('日经225', False),           #  日经225
+    'KS11.GI':      ('韩国KOSPI', False),         #  韩国KOSPI
 
     # 港股 ETF
-    '03033.HK':     ('恒生科技ETF', True),        # ✅ 南方恒生科技ETF
+    '03033.HK':     ('恒生科技ETF', True),        #  南方恒生科技ETF
 
     # A 股 ETF
-    '588000.SH':    ('科创50ETF', True),          # ✅ 科创50ETF
+    '588000.SH':    ('科创50ETF', True),          #  科创50ETF
 
     # 商品（用A股ETF替代，iFind期货代码不可用）
-    '518880.SH':    ('COMEX黄金', True),          # ✅ 黄金ETF（替代 COMEX 黄金期货）
-    '159985.SZ':    ('WTI原油', True),            # ✅ 原油基金LOF（替代 WTI 原油期货）
+    '518880.SH':    ('COMEX黄金', True),          #  黄金ETF（替代 COMEX 黄金期货）
+    '159985.SZ':    ('WTI原油', True),            #  原油基金LOF（替代 WTI 原油期货）
 
     # BTC（用 iShares Bitcoin ETF 替代）
-    'IBIT.O':       ('BTC', True),                # ✅ iShares Bitcoin ETF
+    'IBIT.O':       ('BTC', True),                #  iShares Bitcoin ETF
 
     # 汇率
-    'USDJPY.FX':    ('美元兑日元', False),         # ✅ USD/JPY
+    'USDJPY.FX':    ('美元兑日元', False),         #  USD/JPY
 }
 
 # 纳斯达克ETF QQQ 作为纳指成交量代理
@@ -106,9 +106,9 @@ def ifind_history(access_token, codes, indicators, start_date, end_date):
         if d.get('errorcode') == 0:
             return d.get('tables', [])
         else:
-            print(f"  ⚠️ {codes}: {d.get('errmsg', '未知错误')}")
+            print(f"  ⚠ {codes}: {d.get('errmsg', '未知错误')}")
     except Exception as e:
-        print(f"  ❌ {codes} 失败: {e}")
+        print(f"   {codes} 失败: {e}")
     return []
 
 
@@ -123,7 +123,7 @@ def ifind_realtime(access_token, codes, indicators='latest'):
         if d.get('errorcode') == 0:
             return d.get('tables', [])
     except Exception as e:
-        print(f"  ❌ realtime {codes} 失败: {e}")
+        print(f"   realtime {codes} 失败: {e}")
     return []
 
 
@@ -182,13 +182,13 @@ def _fallback_yfinance():
         print("  → 运行 fetch_data.py (yfinance)...")
         subprocess.run([sys.executable, script], cwd=_DIR)
     else:
-        print("  ❌ fetch_data.py 不存在，无法 fallback")
+        print("   fetch_data.py 不存在，无法 fallback")
 
 
 def main():
     at = get_token()
     if not at:
-        print("⚠️ iFind token 获取失败，fallback 到 yfinance...")
+        print("⚠ iFind token 获取失败，fallback 到 yfinance...")
         _fallback_yfinance()
         return
 
@@ -212,7 +212,7 @@ def main():
     else:
         start_date = (datetime.now() - timedelta(days=400)).strftime('%Y-%m-%d')
 
-    print(f"📅 iFind 增量拉取: {start_date} → {end_date}")
+    print(f" iFind 增量拉取: {start_date} → {end_date}")
     print(f"   品种数: {len(IFIND_ASSETS) + 1} (含QQQ)")
 
     # ── 逐个资产拉取历史日线 ──
@@ -268,7 +268,7 @@ def main():
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False)
 
-    print(f"\n✅ 保存完成")
+    print(f"\n 保存完成")
     print(f"   价格数据：{len(merged_nav)} 个资产")
     print(f"   成交量数据：{len(merged_vol)} 个资产 → {list(merged_vol.keys())}")
 

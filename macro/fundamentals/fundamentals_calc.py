@@ -539,7 +539,7 @@ def calc():
         ppi_trend = trend_label(last_n_values(merged, 'ppi_yoy', 3))
 
         if latest_scissors > 3:
-            result['signals'].append(f"CPI-PPI剪刀差 {latest_scissors:+.1f}%，下游利润承压 ⚠️")
+            result['signals'].append(f"CPI-PPI剪刀差 {latest_scissors:+.1f}%，下游利润承压 ⚠")
         elif latest_scissors < 0:
             result['signals'].append("PPI仍低于CPI，利润修复仍在传导 🟡")
 
@@ -554,19 +554,19 @@ def calc():
 
         if econ_up and not infl_up:
             clock = '复苏期'
-            clock_emoji = '🌱'
+            clock_emoji = ''
             clock_advice = '超配股票，低配债券'
         elif econ_up and infl_up:
             clock = '过热期'
-            clock_emoji = '🔥'
+            clock_emoji = ''
             clock_advice = '超配商品，低配债券'
         elif (not econ_up) and infl_up:
             clock = '滞胀期'
-            clock_emoji = '⚠️'
+            clock_emoji = '⚠'
             clock_advice = '超配现金，低配股票'
         else:
             clock = '衰退期'
-            clock_emoji = '❄️'
+            clock_emoji = ''
             clock_advice = '超配债券，低配商品'
 
         result['merrill_clock'] = {
@@ -588,7 +588,7 @@ def calc():
         if stage == '上行':
             result['signals'].append(f"利润周期: {stage}（{score}/4分），股票策略适配度提升 🟢")
         elif stage == '见顶':
-            result['signals'].append(f"利润周期: {stage}（{score}/4分），修复强但需防过热 ⚠️")
+            result['signals'].append(f"利润周期: {stage}（{score}/4分），修复强但需防过热 ⚠")
         elif stage == '下行':
             result['signals'].append(f"利润周期: {stage}（{score}/4分），防御为主 🔴")
         elif stage == '筑底' and ppi_mom is not None and ppi_mom > -0.5:
@@ -597,9 +597,9 @@ def calc():
         if demand_score is not None:
             if demand_score >= 67:
                 if m1_m2_scissors is None:
-                    result['signals'].append(f"内需接棒: {demand_score}/100分，内需修复较强 🌱")
+                    result['signals'].append(f"内需接棒: {demand_score}/100分，内需修复较强 ")
                 elif m1_m2_scissors > 0:
-                    result['signals'].append(f"内需接棒: {demand_score}/100分，居民/企业内生需求回升 🌱")
+                    result['signals'].append(f"内需接棒: {demand_score}/100分，居民/企业内生需求回升 ")
                 else:
                     result['signals'].append(f"内需接棒: {demand_score}/100分，但信用脉冲仍待确认 🟡")
             elif demand_score >= 34:
@@ -623,7 +623,7 @@ def calc():
         })
 
     if not result['signals']:
-        result['signals'] = ['基本面指标无极端信号 ✅']
+        result['signals'] = ['基本面指标无极端信号 ']
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

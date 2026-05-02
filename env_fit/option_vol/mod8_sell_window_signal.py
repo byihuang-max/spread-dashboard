@@ -20,7 +20,7 @@ def main():
     # 读取现有数据
     regime_path = os.path.join(BASE, 'mod9_composite_score.json')
     if not os.path.exists(regime_path):
-        print("⚠️ mod9_composite_score.json 不存在，跳过")
+        print("⚠ mod9_composite_score.json 不存在，跳过")
         return
     
     with open(regime_path) as f:
@@ -54,7 +54,7 @@ def main():
     elif avg_score >= 40:
         window = '中性观察'
         color = 'gray'
-        emoji = '⚪'
+        emoji = ''
     else:
         window = '不宜开仓'
         color = 'red'
@@ -88,7 +88,7 @@ def main():
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     
-    print(f"✅ 卖权窗口信号: {window} {emoji} (评分 {avg_score:.1f})")
+    print(f" 卖权窗口信号: {window} {emoji} (评分 {avg_score:.1f})")
     print(f"   输出: {OUT}")
 
 

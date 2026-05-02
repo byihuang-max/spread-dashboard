@@ -43,9 +43,9 @@ def trend_color(t):
     return '#94a3b8'
 
 def signal_badge(n):
-    if n >= 3: return '<span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★★</span>'
-    if n >= 2: return '<span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★★</span>'
-    if n >= 1: return '<span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600">★</span>'
+    if n >= 3: return '<span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span>'
+    if n >= 2: return '<span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span>'
+    if n >= 1: return '<span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600"></span>'
     return '<span style="color:#94a3b8;font-size:10px">—</span>'
 
 def fmt_date(d):
@@ -128,13 +128,13 @@ def build_decomp_section():
         beta_note = f'产品对商品有一定beta暴露(β={avg_beta:.2f})'
 
     if alpha_total > 5:
-        alpha_note = '管理人择时择品种创造了显著正alpha ✅'
+        alpha_note = '管理人择时择品种创造了显著正alpha '
     elif alpha_total > 0:
         alpha_note = '管理人alpha为正但幅度有限'
     elif alpha_total > -5:
         alpha_note = '管理人alpha略为负，部分环境下择时有失误'
     else:
-        alpha_note = '管理人alpha明显为负，需关注择时能力 ⚠️'
+        alpha_note = '管理人alpha明显为负，需关注择时能力 ⚠'
 
     # 加载产品净值（南华走势图用）
     nav_dates_js = '[]'
@@ -244,7 +244,7 @@ def build_decomp_section():
     html += f'''
         <!-- 归因解读 -->
         <div style="background:#fefce8;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;line-height:1.7">
-          <div style="font-weight:700;color:#92400e;margin-bottom:2px">💡 归因解读</div>
+          <div style="font-weight:700;color:#92400e;margin-bottom:2px"> 归因解读</div>
           <div style="color:#78716c">• {beta_note}</div>
           <div style="color:#78716c">• {alpha_note}</div>
         </div>
@@ -372,7 +372,7 @@ def build_html(data):
     # ═══════════════════════════════════════════
     html = f'''
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-        <span style="font-size:13px;color:#888">📦 商品CTA · 数据截至 <b style="color:#2d3142">{date_str}</b></span>
+        <span style="font-size:13px;color:#888"> 商品CTA · 数据截至 <b style="color:#2d3142">{date_str}</b></span>
       </div>
 '''
 
@@ -403,42 +403,42 @@ def build_html(data):
         strat_notes = []
         if pc1_r > 0.35:
             pc1_note = '&gt;35% 强共振'
-            strat_notes.append('<span style="color:#10b981">✅ <b>趋势CTA利好</b>：品种高度同步，趋势跟踪容易捕捉共振行情</span>')
+            strat_notes.append('<span style="color:#10b981"> <b>趋势CTA利好</b>：品种高度同步，趋势跟踪容易捕捉共振行情</span>')
         elif pc1_r > 0.25:
             pc1_note = '25-35% 中等共振'
-            strat_notes.append('<span style="color:#f59e0b">⚠️ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span>')
+            strat_notes.append('<span style="color:#f59e0b">⚠ <b>趋势CTA中性</b>：共振一般，需更严格过滤趋势信号</span>')
         elif pc1_r > 0.20:
             pc1_note = '20-25% 偏弱'
-            strat_notes.append('<span style="color:#ef4444">⛔ <b>趋势CTA不利</b>：共振偏弱，方向型策略容易被假突破消耗</span>')
+            strat_notes.append('<span style="color:#ef4444"> <b>趋势CTA不利</b>：共振偏弱，方向型策略容易被假突破消耗</span>')
         else:
             pc1_note = '&lt;20% 散乱'
-            strat_notes.append('<span style="color:#ef4444">⛔ <b>趋势CTA困难</b>：全市场无共同方向，趋势跟踪策略亏损概率高</span>')
+            strat_notes.append('<span style="color:#ef4444"> <b>趋势CTA困难</b>：全市场无共同方向，趋势跟踪策略亏损概率高</span>')
 
         if pc2_r > 0.15:
             pc2_note = '&gt;15% 分化明显'
-            strat_notes.append('<span style="color:#3b82f6">📊 <b>截面/多空策略利好</b>：板块分化大，多空对冲+板块轮动策略有空间</span>')
+            strat_notes.append('<span style="color:#3b82f6"> <b>截面/多空策略利好</b>：板块分化大，多空对冲+板块轮动策略有空间</span>')
         elif pc2_r > 0.10:
             pc2_note = '10-15% 温和分化'
-            strat_notes.append('<span style="color:#94a3b8">📊 <b>截面策略中性</b>：板块有一定差异但不突出</span>')
+            strat_notes.append('<span style="color:#94a3b8"> <b>截面策略中性</b>：板块有一定差异但不突出</span>')
         else:
             pc2_note = '&lt;10% 分化小'
-            strat_notes.append('<span style="color:#94a3b8">📊 <b>截面策略空间有限</b>：品种走势趋同，多空对冲收益薄</span>')
+            strat_notes.append('<span style="color:#94a3b8"> <b>截面策略空间有限</b>：品种走势趋同，多空对冲收益薄</span>')
 
         # 综合判断
         if pc1_r > 0.35 and pc2_r < 0.15:
-            overall_verdict = '🏆 最佳趋势环境：高共振+低分化，方向型CTA的黄金窗口'
+            overall_verdict = ' 最佳趋势环境：高共振+低分化，方向型CTA的黄金窗口'
             ov_color = '#10b981'
         elif pc1_r > 0.35 and pc2_r >= 0.15:
-            overall_verdict = '⚔️ 双线机会：趋势和截面策略都有空间，但需选对板块'
+            overall_verdict = ' 双线机会：趋势和截面策略都有空间，但需选对板块'
             ov_color = '#3b82f6'
         elif pc1_r <= 0.25 and pc2_r > 0.15:
-            overall_verdict = '🔀 截面优于趋势：品种分化大但无共振，多空/轮动优于方向型'
+            overall_verdict = ' 截面优于趋势：品种分化大但无共振，多空/轮动优于方向型'
             ov_color = '#8b5cf6'
         elif pc1_r <= 0.20:
-            overall_verdict = '❄️ 冰冻期：共振和分化都弱，建议降仓等待'
+            overall_verdict = ' 冰冻期：共振和分化都弱，建议降仓等待'
             ov_color = '#ef4444'
         else:
-            overall_verdict = '🌤️ 温和环境：可交易但别重仓，等共振信号加强'
+            overall_verdict = ' 温和环境：可交易但别重仓，等共振信号加强'
             ov_color = '#f59e0b'
 
         strat_html = '<br>'.join(strat_notes)
@@ -924,19 +924,19 @@ def build_html(data):
       <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
         <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
         <p><b style="color:#8b5cf6">PCA核心引擎</b></p>
-        <p>① PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
-        <p>② PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
-        <p>③ 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
-        <p>④ PC1累计值：逐日累加每个滚动窗口最新一天的 PC1 score。持续正/负=同一主轴持续演绎（动量主导），频繁翻转=反转/震荡主导；它更适合判断“趋势 vs 截面/反转”的风格环境，不直接回答做多还是做空</p>
-        <p>⑤ 一句话理解：PCA这套主要看的是最近60日商品市场有没有形成清晰主轴、共振强不强，所以它更偏“中短周期的结构环境判断”，不是传统意义上看单个品种几日均线有没有拐头</p>
-        <p>⑥ Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
-        <p>⑦ 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
+        <p> PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
+        <p> PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
+        <p> 环境类型：PC1高+PC2低=单一趋势主导 | PC1高+PC2高=双阵营对抗 | PC1低=震荡</p>
+        <p> PC1累计值：逐日累加每个滚动窗口最新一天的 PC1 score。持续正/负=同一主轴持续演绎（动量主导），频繁翻转=反转/震荡主导；它更适合判断“趋势 vs 截面/反转”的风格环境，不直接回答做多还是做空</p>
+        <p> 一句话理解：PCA这套主要看的是最近60日商品市场有没有形成清晰主轴、共振强不强，所以它更偏“中短周期的结构环境判断”，不是传统意义上看单个品种几日均线有没有拐头</p>
+        <p> Loading：品种在PC1/PC2上的权重，|loading|越大=对该成分影响越大</p>
+        <p> 板块一致性：同板块品种loading标准差越小=越一致（同涨同跌）</p>
         <p style="margin-top:8px"><b style="color:#64748b">传统指标</b></p>
-        <p>⑧ CTA友好度(传统) = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比</p>
-        <p>⑨ 品种评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²15% + Donchian10%</p>
-        <p>⑩ 传统趋势扫描是混合窗口：主看20日变化，同时结合 5/10/20/60日均线排列、20日波动率、60日波动率分位、20/60日 Donchian 突破、5日持仓变化，所以更像“单品种趋势状态扫描”，不是单一固定天数</p>
-        <p>⑪ 一句话理解：PCA看60日结构共振，传统趋势扫描看20日趋势状态 + 60日确认</p>
-        <p>⑫ 铜金比↑=经济预期改善；油金比↑=通胀/需求强；工业品/农产品比↑=工业品相对强</p>
+        <p> CTA友好度(传统) = 0.40×趋势占比 + 0.30×波动率分位 + 0.30×成交量比</p>
+        <p> 品种评分 = 动量25% + MA排列20% + 波动率分位15% + 量比15% + R²15% + Donchian10%</p>
+        <p> 传统趋势扫描是混合窗口：主看20日变化，同时结合 5/10/20/60日均线排列、20日波动率、60日波动率分位、20/60日 Donchian 突破、5日持仓变化，所以更像“单品种趋势状态扫描”，不是单一固定天数</p>
+        <p> 一句话理解：PCA看60日结构共振，传统趋势扫描看20日趋势状态 + 60日确认</p>
+        <p> 铜金比↑=经济预期改善；油金比↑=通胀/需求强；工业品/农产品比↑=工业品相对强</p>
         <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare fut_daily 连续合约 · PCA窗口60日 · 传统扫描为20日主观察+60日辅助确认 · 更新：''' + date_str + '''</p>
       </div>
 
@@ -966,7 +966,7 @@ def inject(html_content):
     end_idx = index.find(end_marker)
 
     if start_idx == -1 or end_idx == -1:
-        print(f"❌ 找不到注入点 start={start_idx} end={end_idx}")
+        print(f" 找不到注入点 start={start_idx} end={end_idx}")
         return False
 
     new_div = start_marker + html_content + '\n      </div>\n      '
@@ -983,10 +983,10 @@ def inject(html_content):
 
 
 def main():
-    print("📦 商品CTA策略环境 — 注入（v2 含PCA模块）")
+    print(" 商品CTA策略环境 — 注入（v2 含PCA模块）")
 
     if not os.path.exists(JSON_PATH):
-        print(f"❌ 数据文件不存在: {JSON_PATH}")
+        print(f" 数据文件不存在: {JSON_PATH}")
         return
 
     data = load_data()
@@ -995,18 +995,18 @@ def main():
     rolling = data.get('mod1b_pca_engine', {}).get('rolling', [])
     if rolling:
         latest = rolling[-1]
-        print(f"📊 PCA友好度={latest['pca_friendly']} | 环境={latest['env_type']} | 日期={latest['date']}")
+        print(f" PCA友好度={latest['pca_friendly']} | 环境={latest['env_type']} | 日期={latest['date']}")
     env = data.get('mod1_cta_env', {}).get('summary', {})
     if env:
-        print(f"📊 传统友好度={env.get('cta_friendly')} | 日期={env.get('date')}")
+        print(f" 传统友好度={env.get('cta_friendly')} | 日期={env.get('date')}")
 
     html = build_html(data)
-    print(f"🎨 生成 {len(html)} 字符")
+    print(f" 生成 {len(html)} 字符")
 
     if inject(html):
-        print(f"✅ 注入成功！CTA tab 已更新（PCA模块已加入）")
+        print(f" 注入成功！CTA tab 已更新（PCA模块已加入）")
     else:
-        print("❌ 注入失败")
+        print(" 注入失败")
 
 
 if __name__ == '__main__':

@@ -170,7 +170,7 @@ def migrate_from_json():
     write_csv(CB_BASIC_CSV, basic_headers, basic_rows)
     log(f"    cb_basic.csv: {len(basic_rows)} 行")
     
-    log("  ✅ 迁移完成")
+    log("   迁移完成")
     return True
 
 
@@ -207,7 +207,7 @@ def fetch_cb_basic_fresh():
     log("  拉取 cb_basic...")
     fields, items = ts_api("cb_basic", {})
     if not fields:
-        log("  ⚠️ cb_basic 拉取失败，使用已有CSV")
+        log("  ⚠ cb_basic 拉取失败，使用已有CSV")
         return
     records = [dict(zip(fields, it)) for it in items]
     basic_headers = ['ts_code', 'stk_code', 'conv_price', 'maturity_date',
@@ -263,7 +263,7 @@ def fetch_stk_daily_incremental(stk_codes, new_dates):
             try:
                 new_rows.extend(fut.result())
             except Exception as e:
-                log(f"  ⚠️ {futures[fut]}: {e}")
+                log(f"  ⚠ {futures[fut]}: {e}")
             if done % 100 == 0:
                 log(f"  ... {done}/{len(stk_list)}")
     if new_rows:
@@ -407,7 +407,7 @@ def build_json_from_csv(dates):
         json.dump(output, f, ensure_ascii=False, indent=1)
     
     fsize = os.path.getsize(OUTPUT_JSON) / 1024 / 1024
-    log(f"\n✅ 输出: {OUTPUT_JSON} ({fsize:.1f} MB)")
+    log(f"\n 输出: {OUTPUT_JSON} ({fsize:.1f} MB)")
     return output
 
 
@@ -427,7 +427,7 @@ def main():
     dates = get_trade_dates(LOOKBACK_DAYS)
     
     if not dates:
-        log("  ⚠️ Tushare 连不上，使用已有CSV数据")
+        log("  ⚠ Tushare 连不上，使用已有CSV数据")
         # 从 CSV 推断日期
         existing_dates = sorted(get_csv_dates(CB_DAILY_CSV))
         if not existing_dates:

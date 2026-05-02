@@ -117,7 +117,7 @@ def main():
     merged_nav = {k: dict(v) for k, v in existing_nav.items()}
     merged_vol = {k: dict(v) for k, v in existing_vol.items()}
 
-    print(f"📅 增量拉取至: {end_date.strftime('%Y-%m-%d')}")
+    print(f" 增量拉取至: {end_date.strftime('%Y-%m-%d')}")
 
     # 需要补拉成交量的资产（已有价格历史但缺成交量数据）
     VOL_NEEDED = set(VOL_WEIGHTS.keys())  # 来自 calc_meme.py 的权重表
@@ -177,7 +177,7 @@ def main():
     with open('antifragile_nav.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ 保存完成")
+    print(f"\n 保存完成")
     print(f"   价格数据：{len(merged_nav)} 个资产")
     print(f"   成交量数据：{len(merged_vol)} 个资产 → {list(merged_vol.keys())}")
 

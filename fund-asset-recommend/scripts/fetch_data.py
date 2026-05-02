@@ -46,7 +46,7 @@ def api_get(path, params, timeout=15):
     r = requests.get(f'{BASE_URL}{path}', params=params, timeout=timeout, verify=False)
     data = r.json()
     if data.get('error_code') != 0:
-        print(f"  ⚠️ API 错误 {path}: {data.get('msg', data)}")
+        print(f"  ⚠ API 错误 {path}: {data.get('msg', data)}")
         return None
     return data.get('data')
 
@@ -75,7 +75,7 @@ def fetch_fund_nav_history(reg_code, start_date="2025-01-01", source="team"):
 
 def fetch_all_products():
     """批量拉取所有产品净值，计算收益指标"""
-    print(f"📡 拉取 {len(PRODUCTS)} 只产品净值...")
+    print(f" 拉取 {len(PRODUCTS)} 只产品净值...")
     results = []
     for p in PRODUCTS:
         source = 'platform' if p['code'] in PLATFORM_SOURCE_CODES else 'team'
@@ -84,10 +84,10 @@ def fetch_all_products():
         if navs:
             metrics = compute_fund_metrics(navs)
             results.append({**p, **metrics, '_raw_navs': navs, 'source_type': 'fund', 'data_source': 'api', 'status': '正常'})
-            print(f"✅ {len(navs)}条")
+            print(f" {len(navs)}条")
         else:
             results.append({**p, 'source_type': 'fund', 'data_source': 'api', 'status': '无数据'})
-            print("❌")
+            print("")
         time.sleep(0.3)
     return results
 
@@ -105,7 +105,7 @@ def fetch_combi_nav(combi_id):
 
 def fetch_all_combis():
     """批量拉取所有组合净值"""
-    print(f"📡 拉取 {len(COMBIS)} 个组合净值...")
+    print(f" 拉取 {len(COMBIS)} 个组合净值...")
     results = []
     for c in COMBIS:
         print(f"  {c['name']} ({c['id']})...", end=" ", flush=True)
@@ -114,10 +114,10 @@ def fetch_all_combis():
             metrics = compute_fund_metrics(navs)
             results.append({**c, 'code': c['id'], **metrics, '_raw_navs': navs,
                             'source_type': 'combi', 'data_source': 'api', 'status': '正常'})
-            print(f"✅ {len(navs)}条")
+            print(f" {len(navs)}条")
         else:
             results.append({**c, 'code': c['id'], 'source_type': 'combi', 'data_source': 'api', 'status': '无数据'})
-            print("❌")
+            print("")
         time.sleep(0.3)
     return results
 
@@ -141,7 +141,7 @@ def fetch_market_category(type_val):
 
 def fetch_market_data():
     """拉取年度/月度/季度市场策略基准"""
-    print("📡 拉取市场策略基准...")
+    print(" 拉取市场策略基准...")
     annual = fetch_market_category(5)
     print(f"  年度: {len(annual)} 策略")
     time.sleep(0.3)
@@ -170,7 +170,7 @@ def fetch_benchmark_indices():
         if p.get('benchmark'):
             codes.add(p['benchmark'])
 
-    print(f"📡 拉取基准指数净值 ({len(codes)} 只)...")
+    print(f" 拉取基准指数净值 ({len(codes)} 只)...")
     benchmark_navs = {}
     for code in sorted(codes):
         try:
@@ -181,12 +181,12 @@ def fetch_benchmark_indices():
                 # 转成 [[date, nav], ...] 正序
                 series = sorted([[d['price_date'], d['nav']] for d in data], key=lambda x: x[0])
                 benchmark_navs[code] = series
-                print(f"  ✅ {code}: {len(series)} 条")
+                print(f"   {code}: {len(series)} 条")
             else:
-                print(f"  ⚠️ {code}: 无数据")
+                print(f"  ⚠ {code}: 无数据")
             time.sleep(0.2)
         except Exception as e:
-            print(f"  ❌ {code}: {e}")
+            print(f"   {code}: {e}")
 
     return benchmark_navs
 
@@ -510,7 +510,7 @@ def save_csv_incremental(products, combis, update_date):
                 'ytd_return': p.get('ytd_return', ''),
                 'status': p.get('status', ''),
             })
-    print(f"📊 CSV追加: {prod_csv} (+{len(products)} 行)")
+    print(f" CSV追加: {prod_csv} (+{len(products)} 行)")
 
     # --- FOF 组合快照 ---
     fof_csv = os.path.join(DATA_DIR, 'fof_history.csv')
@@ -537,7 +537,7 @@ def save_csv_incremental(products, combis, update_date):
                 'week_ret': c.get('week_return', ''),
                 'month_ret': c.get('month_return', ''),
             })
-    print(f"📊 CSV追加: {fof_csv} (+{len(combis)} 行)")
+    print(f" CSV追加: {fof_csv} (+{len(combis)} 行)")
 
 
 def save_data(products, combis, market_annual, market_monthly, market_quarterly, benchmark_navs=None):
@@ -580,13 +580,13 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly,
     dated_path = os.path.join(RAW_DIR, f'fund_asset_{today}.json')
     with open(dated_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"💾 JSON快照: {dated_path}")
+    print(f" JSON快照: {dated_path}")
 
     # 保存 latest 版本（渲染用，覆盖）
     latest_path = os.path.join(DATA_DIR, 'fund_asset_latest.json')
     with open(latest_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"💾 JSON最新: {latest_path}")
+    print(f" JSON最新: {latest_path}")
 
     # JSONL 增量追加（一行一天，方便程序读取历史）
     jsonl_path = os.path.join(DATA_DIR, 'fund_asset_history.jsonl')
@@ -600,7 +600,7 @@ def save_data(products, combis, market_annual, market_monthly, market_quarterly,
                            for fc in fof_combis],
         }
         f.write(json.dumps(compact, ensure_ascii=False) + '\n')
-    print(f"📝 JSONL追加: {jsonl_path}")
+    print(f" JSONL追加: {jsonl_path}")
 
     # CSV 增量追加
     save_csv_incremental(products, combis, update_date)
@@ -636,7 +636,7 @@ def main():
     # 统计
     ok_count = sum(1 for p in products + combis if p.get('status') == '正常')
     total = len(products) + len(combis)
-    print(f"\n✅ 完成: {ok_count}/{total} 只产品有数据")
+    print(f"\n 完成: {ok_count}/{total} 只产品有数据")
 
     return output
 

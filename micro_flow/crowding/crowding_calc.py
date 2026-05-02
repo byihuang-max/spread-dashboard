@@ -183,22 +183,22 @@ def calc_crowding():
 
             tags = []
             if crowd_label == 'hot':
-                tags.append('🔥拥挤')
+                tags.append('拥挤')
             elif crowd_label == 'cold':
-                tags.append('❄️冷清')
+                tags.append('冷清')
             if etf_dir == 'inflow':
                 tags.append('▲ETF流入')
             elif etf_dir == 'outflow':
                 tags.append('▼ETF流出')
 
             if cum_ret > 3 and crowd_label == 'hot' and etf_dir == 'outflow':
-                signal = '⚠️ 追高风险'
+                signal = '⚠ 追高风险'
             elif cum_ret > 2 and etf_dir == 'inflow' and crowd_label in ('normal', 'warm'):
-                signal = '✅ 资金确认'
+                signal = ' 资金确认'
             elif cum_ret < -2 and crowd_label == 'cold':
-                signal = '👀 超跌冷门'
+                signal = ' 超跌冷门'
             elif cum_ret < -2 and etf_dir == 'inflow':
-                signal = '🔄 逆势吸筹'
+                signal = ' 逆势吸筹'
             else:
                 signal = None
 
@@ -227,9 +227,9 @@ def calc_crowding():
             latest_n = n20.iloc[-1]
             pct = n20.rank(pct=True).iloc[-1]
             if pct > 0.9:
-                signals.append(f'北向单日高位({latest_n:.1f}亿) ⚠️')
+                signals.append(f'北向单日高位({latest_n:.1f}亿) ⚠')
             elif pct < 0.1:
-                signals.append(f'北向单日低位({latest_n:.1f}亿) ⚠️')
+                signals.append(f'北向单日低位({latest_n:.1f}亿) ⚠')
 
     if not north.empty and 'south_net' in north.columns:
         s20 = north['south_net'].tail(20)
@@ -237,9 +237,9 @@ def calc_crowding():
             latest_s = s20.iloc[-1]
             pct = s20.rank(pct=True).iloc[-1]
             if pct > 0.9:
-                signals.append(f'南向单日高位({latest_s:.1f}亿) ⚠️')
+                signals.append(f'南向单日高位({latest_s:.1f}亿) ⚠')
             elif pct < 0.1:
-                signals.append(f'南向单日低位({latest_s:.1f}亿) ⚠️')
+                signals.append(f'南向单日低位({latest_s:.1f}亿) ⚠')
 
     if not margin.empty:
         mb = pd.to_numeric(margin['margin_balance'], errors='coerce').dropna()
@@ -256,7 +256,7 @@ def calc_crowding():
             signals.append(f"{i['name']} {i['signal']}({i['pct_5d']:+.1f}%)")
 
     result['crowding_signal'] = {
-        'signals': signals if signals else ['当前无极端信号 ✅'],
+        'signals': signals if signals else ['当前无极端信号 '],
         'consensus': consensus_label,
     }
 

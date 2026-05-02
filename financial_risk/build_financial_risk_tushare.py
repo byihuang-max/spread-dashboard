@@ -107,7 +107,7 @@ def main():
             time.sleep(2)
 
     save_snapshot(snap)
-    print(f'✅ done. total={len(snap)} stocks in snapshot')
+    print(f' done. total={len(snap)} stocks in snapshot')
 
 if __name__ == '__main__':
     main()

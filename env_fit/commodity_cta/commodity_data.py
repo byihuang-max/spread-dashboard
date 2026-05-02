@@ -286,7 +286,7 @@ def main():
     dates = get_trade_dates(LOOKBACK_DAYS)
 
     if not dates:
-        log("  ⚠️ Tushare 连不上，使用已有CSV数据")
+        log("  ⚠ Tushare 连不上，使用已有CSV数据")
         existing = sorted(read_csv_dates(FUT_CSV))
         if not existing:
             log("  ERROR: 无交易日且无CSV数据")
@@ -308,7 +308,7 @@ def main():
         for i, dt in enumerate(new_dates):
             cached = any(os.path.exists(os.path.join(CACHE_DIR, p))
                         for p in [f'{dt}_all.json', f'fut_daily_{dt}.json'])
-            tag = '📦' if cached else '🌐'
+            tag = '' if cached else ''
             log(f"  [{i+1}/{len(new_dates)}] {dt} {tag}")
             rows = fetch_day(dt)
             all_new_rows.extend(rows)
@@ -322,7 +322,7 @@ def main():
 
     # 3. 统计
     all_dates = sorted(read_csv_dates(FUT_CSV))
-    log(f"\n✅ fut_daily.csv: {len(all_dates)} 天")
+    log(f"\n fut_daily.csv: {len(all_dates)} 天")
     if all_dates:
         log(f"   {all_dates[0]} ~ {all_dates[-1]}")
 

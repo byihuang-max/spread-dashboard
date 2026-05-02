@@ -18,7 +18,7 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
     except Exception as e:
-        print(f"❌ Token 错误: {e}")
+        print(f" Token 错误: {e}")
     return None
 
 def test_edb_formats(token, code):
@@ -85,7 +85,7 @@ def test_edb_formats(token, code):
             print(f"  状态码: {r.status_code}")
             
             if r.status_code == 404:
-                print(f"  ❌ 接口不存在")
+                print(f"   接口不存在")
                 continue
             
             if r.status_code == 200:
@@ -97,28 +97,28 @@ def test_edb_formats(token, code):
                     if d.get('errorcode') == 0:
                         tables = d.get('tables', [])
                         if tables:
-                            print(f"  ✅ 成功！返回数据")
+                            print(f"   成功！返回数据")
                             print(f"  tables: {len(tables)}")
                             if tables[0].get('time'):
                                 print(f"  数据点数: {len(tables[0]['time'])}")
                             return True
                     else:
-                        print(f"  ❌ 错误: {d.get('errmsg')}")
+                        print(f"   错误: {d.get('errmsg')}")
                 except Exception as e:
                     print(f"  响应解析失败: {e}")
                     print(f"  响应文本: {r.text[:200]}")
         except Exception as e:
-            print(f"  ❌ 请求异常: {e}")
+            print(f"   请求异常: {e}")
     
     return False
 
 if __name__ == '__main__':
     token = get_token()
     if not token:
-        print("❌ 无法获取token")
+        print(" 无法获取token")
         exit(1)
     
-    print("✅ Token获取成功\n")
+    print(" Token获取成功\n")
     
     # 测试Roni提供的真实指标ID
     test_edb_formats(token, "M002816448")

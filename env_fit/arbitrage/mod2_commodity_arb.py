@@ -101,7 +101,7 @@ def load_cta_fut_csv():
     """从 commodity_cta/fut_daily.csv 加载期货数据"""
     path = os.path.realpath(CTA_FUT_CSV)
     if not os.path.exists(path):
-        log(f'  ⚠️ {path} 不存在，将从 API 拉取')
+        log(f'  ⚠ {path} 不存在，将从 API 拉取')
         return {}
 
     series = defaultdict(dict)  # {symbol: {date: {close, vol, amount, oi}}}
@@ -285,7 +285,7 @@ def main():
     log('\n[1] 获取交易日...')
     dates = get_trade_dates(LOOKBACK_DAYS)
     if not dates:
-        log('  ⚠️ 无法获取交易日')
+        log('  ⚠ 无法获取交易日')
         return
     start_date = dates[0]
     end_date = dates[-1]
@@ -332,13 +332,13 @@ def main():
     log('\n[4] 输出...')
     write_output(spread_data, dates)
 
-    log(f'\n✅ 模块二完成')
+    log(f'\n 模块二完成')
     log(f'  JSON: {OUT_JSON}')
     log(f'  CSV:  {OUT_CSV}')
 
     # 打印汇总
     log(f'\n{"─"*55}')
-    log(f'📊 商品套利比价汇总 ({end_date})')
+    log(f' 商品套利比价汇总 ({end_date})')
     log(f'{"─"*55}')
     for name, sym_a, sym_b, desc in SPREAD_PAIRS:
         key = f'{sym_a}_{sym_b}'

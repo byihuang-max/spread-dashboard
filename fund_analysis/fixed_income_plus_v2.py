@@ -16,10 +16,10 @@ def query(api_name, **params):
     return pd.DataFrame()
 
 # 1. 获取基金列表
-print("📊 拉取基金列表...")
+print(" 拉取基金列表...")
 df_basic = query('fund_basic')
 df_basic = df_basic[(df_basic['fund_type'].isin(['债券型','混合型'])) & (df_basic['status']=='L')]
-print(f"✅ 筛选出 {len(df_basic)} 只固收+候选基金")
+print(f" 筛选出 {len(df_basic)} 只固收+候选基金")
 
 # 2. 计算日期
 end_date = datetime.now().strftime('%Y%m%d')
@@ -93,6 +93,6 @@ df_out = df_out.sort_values(['易方达/鹏华','90天规模变化(%)'], ascendi
 output = '/Users/apple/Desktop/gamt-dashboard/fund_analysis/fixed_income_plus_analysis.csv'
 df_out.to_csv(output, index=False, encoding='utf-8-sig')
 
-print(f"\n✅ 完成！共 {len(df_out)} 只基金")
-print(f"📁 {output}")
-print(f"🎯 易方达/鹏华: {len(df_out[df_out['易方达/鹏华']=='是'])} 只")
+print(f"\n 完成！共 {len(df_out)} 只基金")
+print(f" {output}")
+print(f" 易方达/鹏华: {len(df_out[df_out['易方达/鹏华']=='是'])} 只")

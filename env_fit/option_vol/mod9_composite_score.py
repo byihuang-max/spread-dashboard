@@ -98,7 +98,7 @@ def signal_label(score):
     if score >= 65:
         return '🟡', '可考虑双卖'
     if score >= 50:
-        return '⚪', '观望'
+        return '', '观望'
     return '🔴', '不宜双卖'
 
 

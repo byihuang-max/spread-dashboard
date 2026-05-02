@@ -116,7 +116,7 @@ def chain_signal(dirs):
     if neg(up) and neg(mid) and neg(down):
         return '全链景气下行', '🔴'
     if pos(up) and neg(down):
-        return '上游涨价挤压下游', '⚠️'
+        return '上游涨价挤压下游', '⚠'
     if neg(up) and pos(down):
         return '成本改善利好下游', '🟢'
     if pos(up) and pos(mid) and not pos(down):
@@ -150,7 +150,7 @@ def calc():
     }
 
     # ═══════ 科技芯片 ═══════
-    tech = {'name': '🔬 科技芯片', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
+    tech = {'name': ' 科技芯片', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
     # 走势线
     d1, v1 = get_etf_ts(etf_price, '512480.SH')
@@ -195,7 +195,7 @@ def calc():
     result['chains']['tech'] = tech
 
     # ═══════ 创新药 ═══════
-    pharma = {'name': '💊 创新药', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
+    pharma = {'name': ' 创新药', 'trend_lines': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
     d_sw, v_sw = get_sw_ts(sw_indices, '801150.SI')
     d_inno, v_inno = get_etf_ts(etf_price, '159992.SZ')
@@ -225,7 +225,7 @@ def calc():
     result['chains']['pharma'] = pharma
 
     # ═══════ 周期 ═══════
-    cycle = {'name': '⛏️ 周期', 'trend_lines_up': [], 'trend_lines_mid': [], 'trend_lines_down': [], 'share_lines': [], 'tiers': [], 'notes': []}
+    cycle = {'name': ' 周期', 'trend_lines_up': [], 'trend_lines_mid': [], 'trend_lines_down': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
     # 上游
     up_chgs = []
@@ -273,7 +273,7 @@ def calc():
     result['chains']['cycle'] = cycle
 
     # ═══════ 消费 ═══════
-    consumer = {'name': '🛒 消费', 'trend_lines_up': [], 'trend_lines_mid': [], 'share_lines': [], 'tiers': [], 'notes': []}
+    consumer = {'name': ' 消费', 'trend_lines_up': [], 'trend_lines_mid': [], 'share_lines': [], 'tiers': [], 'notes': []}
 
     # 上游
     con_up_chgs = []

@@ -174,7 +174,7 @@ async function renderGraph() {
     node.classed('highlighted', n => n.id === d.id || nb.has(n.id)).classed('dimmed', n => n.id !== d.id && !nb.has(n.id));
     link.classed('highlighted', l => { const s = l.source.id || l.source, t = l.target.id || l.target; return s === d.id || t === d.id; });
     link.classed('dimmed', l => { const s = l.source.id || l.source, t = l.target.id || l.target; return s !== d.id && t !== d.id; });
-    const catLabel = { concepts: '💡 概念', sessions: '💬 对话', decisions: '⚖️ 决策' };
+    const catLabel = { concepts: ' 概念', sessions: ' 对话', decisions: ' 决策' };
     tooltip.innerHTML = '<div class="tt-title">' + d.title + '</div><div class="tt-cat">' + (catLabel[d.category]||'') + ' · ' + d.linkCount + ' 关联</div>'
       + (d.tags.length ? '<div class="tt-tags">' + d.tags.slice(0,8).map(t=>'<span class="tt-tag">#'+t+'</span>').join('') + '</div>' : '')
       + (d.keywords.length ? '<div class="tt-links">关键词: ' + d.keywords.slice(0,6).join(', ') + '</div>' : '');

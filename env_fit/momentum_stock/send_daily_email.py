@@ -41,7 +41,7 @@ def report_to_html(text, footer):
         if len(s) > 1 and s[0] in '一二三四五六七' and '、' in s[:3]:
             html_parts.append(f'<h3 style="color:#1e293b;border-bottom:2px solid #e2e8f0;padding-bottom:4px;margin:16px 0 8px">{s}</h3>')
             continue
-        if s and s[0] in '①②③④⑤⑥⑦⑧⑨⑩':
+        if s and s[0] in '':
             html_parts.append(f'<div style="font-weight:bold;color:#4f46e5;margin:12px 0 4px">{s}</div>')
             continue
         if s.startswith('- '):
@@ -71,14 +71,14 @@ def send_to_all(report_text):
     subs = active_subscribers(cfg)
 
     if not subs:
-        print('⚠️ 无活跃订阅者')
+        print('⚠ 无活跃订阅者')
         return
 
     html_body, date_str = report_to_html(report_text, settings.get('footer', ''))
     subject = f'{settings["subject_prefix"]} | {date_str}'
     max_retry = settings.get('max_retry', 2)
 
-    print(f'📧 准备发送给 {len(subs)} 位订阅者...')
+    print(f' 准备发送给 {len(subs)} 位订阅者...')
 
     with smtplib.SMTP_SSL(sender_cfg['smtp_host'], sender_cfg['smtp_port']) as server:
         server.login(sender_cfg['email'], sender_cfg['auth_code'])
@@ -96,16 +96,16 @@ def send_to_all(report_text):
                     msg.attach(MIMEText(report_text, 'plain', 'utf-8'))
                     msg.attach(MIMEText(html_body, 'html', 'utf-8'))
                     server.sendmail(sender_cfg['email'], [email], msg.as_string())
-                    print(f'  ✅ {name} <{email}>')
+                    print(f'   {name} <{email}>')
                     ok = True
                     break
                 except Exception as e:
-                    print(f'  ⚠️ {name} 第{attempt}次失败: {e}')
+                    print(f'  ⚠ {name} 第{attempt}次失败: {e}')
                     time.sleep(2)
             if not ok:
-                print(f'  ❌ {name} <{email}> 发送失败')
+                print(f'   {name} <{email}> 发送失败')
 
-    print(f'📧 发送完毕')
+    print(f' 发送完毕')
 
 
 def main():

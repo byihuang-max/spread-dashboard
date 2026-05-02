@@ -122,8 +122,8 @@ def run_module(mod_key):
     for j, (subdir, script) in enumerate(scripts):
         # 检查取消
         if _cancel_flag.is_set():
-            logs.append("⛔ 任务已取消")
-            _append_log("⛔ 任务已取消")
+            logs.append(" 任务已取消")
+            _append_log(" 任务已取消")
             return False, logs
 
         # 更新进度
@@ -135,12 +135,12 @@ def run_module(mod_key):
         cwd = os.path.join(BASE_DIR, subdir)
 
         if not os.path.exists(path):
-            logs.append(f"⚠️ 跳过不存在: {subdir}/{script}")
-            _append_log(f"⚠️ 跳过: {script}")
+            logs.append(f"⚠ 跳过不存在: {subdir}/{script}")
+            _append_log(f"⚠ 跳过: {script}")
             continue
 
-        _append_log(f"🔄 {mod['name']} → {script}")
-        logs.append(f"🔄 {subdir}/{script}")
+        _append_log(f" {mod['name']} → {script}")
+        logs.append(f" {subdir}/{script}")
 
         try:
             result = subprocess.run(
@@ -151,27 +151,27 @@ def run_module(mod_key):
             elapsed = time.time() - t0
             if result.returncode != 0:
                 err = result.stderr[-300:] if result.stderr else result.stdout[-300:]
-                logs.append(f"❌ 失败 ({elapsed:.1f}s): {err}")
-                _append_log(f"❌ {script} 失败 ({elapsed:.0f}s)")
+                logs.append(f" 失败 ({elapsed:.1f}s): {err}")
+                _append_log(f" {script} 失败 ({elapsed:.0f}s)")
                 state['progress']['completed_scripts'] = j + 1
                 return False, logs
-            logs.append(f"✅ 完成 ({elapsed:.0f}s)")
-            _append_log(f"✅ {script} ({elapsed:.0f}s)")
+            logs.append(f" 完成 ({elapsed:.0f}s)")
+            _append_log(f" {script} ({elapsed:.0f}s)")
         except subprocess.TimeoutExpired:
-            logs.append(f"❌ 超时 (>600s)")
-            _append_log(f"❌ {script} 超时")
+            logs.append(f" 超时 (>600s)")
+            _append_log(f" {script} 超时")
             state['progress']['completed_scripts'] = j + 1
             return False, logs
         except Exception as e:
-            logs.append(f"❌ 异常: {e}")
-            _append_log(f"❌ {script} 异常: {e}")
+            logs.append(f" 异常: {e}")
+            _append_log(f" {script} 异常: {e}")
             state['progress']['completed_scripts'] = j + 1
             return False, logs
 
         state['progress']['completed_scripts'] = j + 1
 
     total = time.time() - t0
-    logs.append(f"🎉 全部完成 ({total:.1f}s)")
+    logs.append(f" 全部完成 ({total:.1f}s)")
     return True, logs
 
 
@@ -185,7 +185,7 @@ def _run_in_background(mod_keys):
 
         for i, mod_key in enumerate(mod_keys):
             if _cancel_flag.is_set():
-                _append_log("⛔ 任务已取消")
+                _append_log(" 任务已取消")
                 break
 
             mod = MODULES[mod_key]
@@ -727,7 +727,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(400, {'error': '当前没有任务在运行'})
                 return
             _cancel_flag.set()
-            _append_log("⛔ 收到取消请求")
+            _append_log(" 收到取消请求")
             self._json(200, {'ok': True, 'message': '已发送取消信号'})
             return
 
@@ -902,7 +902,7 @@ def main():
             print(f"   预压缩 {name}: {len(data)//1024}KB → {len(gz)//1024}KB")
 
     server = ThreadedHTTPServer(('0.0.0.0', port), Handler)
-    print(f"🚀 GAMT 刷新服务启动: http://localhost:{port}")
+    print(f" GAMT 刷新服务启动: http://localhost:{port}")
     print(f"   POST /api/refresh/<tab>  — 刷新单个模块（异步）")
     print(f"   POST /api/refresh-all    — 刷新全部（异步）")
     print(f"   POST /api/cancel         — 取消当前任务")

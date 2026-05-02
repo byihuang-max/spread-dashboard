@@ -79,7 +79,7 @@ def tushare_call(api_name, params, retries=3):
             if attempt < retries - 1:
                 time.sleep(3)
             else:
-                log(f"  ❌ API失败: {e}")
+                log(f"   API失败: {e}")
     return []
 
 
@@ -90,7 +90,7 @@ def get_daily_market(trade_date, needed_codes=None):
         with open(cache_file) as f:
             return json.load(f)
 
-    log(f"  🌐 拉取 {trade_date} 全市场日线...")
+    log(f"   拉取 {trade_date} 全市场日线...")
     rows = tushare_call('daily', {'trade_date': trade_date})
 
     if rows:
@@ -109,7 +109,7 @@ def get_daily_market(trade_date, needed_codes=None):
     if not needed_codes:
         return {}
 
-    log(f"  📦 全市场失败，逐股拉 {len(needed_codes)} 只...")
+    log(f"   全市场失败，逐股拉 {len(needed_codes)} 只...")
     result = {}
     for code in needed_codes:
         rows = tushare_call('daily', {
@@ -284,7 +284,7 @@ def main():
     # 读取已有数据
     existing_records, existing_dates = read_existing_csv()
     existing_records.sort(key=lambda r: r['date'])
-    log(f"📦 已有 CSV: {len(existing_records)} 条记录")
+    log(f" 已有 CSV: {len(existing_records)} 条记录")
 
     # 获取所有有涨停缓存的交易日
     cache_dates = sorted([
@@ -293,10 +293,10 @@ def main():
     ])
 
     if len(cache_dates) < 2:
-        log("❌ 涨停缓存不足，至少需要2个交易日")
+        log(" 涨停缓存不足，至少需要2个交易日")
         return
 
-    log(f"📊 涨停缓存: {cache_dates[0]} ~ {cache_dates[-1]} ({len(cache_dates)}天)")
+    log(f" 涨停缓存: {cache_dates[0]} ~ {cache_dates[-1]} ({len(cache_dates)}天)")
 
     # 找出需要新计算的日期对 (t_minus_1, t_day)
     pairs_to_calc = []
@@ -307,19 +307,19 @@ def main():
 
     rebuild, rebuild_reason = needs_full_rebuild(existing_records, pairs_to_calc)
     if rebuild:
-        log(f"♻️ 检测到历史序列异常，改为全量重算: {rebuild_reason}")
+        log(f" 检测到历史序列异常，改为全量重算: {rebuild_reason}")
         pairs_to_calc = [(cache_dates[i], cache_dates[i + 1]) for i in range(len(cache_dates) - 1)]
         existing_records = []
         existing_dates = set()
 
     if not pairs_to_calc:
-        log("✅ 无新数据，跳过计算")
+        log(" 无新数据，跳过计算")
         if existing_records:
             write_json(existing_records)
-            log(f"💾 JSON 已更新")
+            log(f" JSON 已更新")
         return
 
-    log(f"🆕 需计算 {len(pairs_to_calc)} 个交易日")
+    log(f"[NEW] 需计算 {len(pairs_to_calc)} 个交易日")
 
     if existing_records:
         nav_all = existing_records[-1]['all_nav']
@@ -341,7 +341,7 @@ def main():
         needed = list(set(all_codes))
         daily_market = get_daily_market(t_day, needed_codes=needed)
         if not daily_market:
-            log(f"  ⚠️ {t_day} 无行情数据，跳过")
+            log(f"  ⚠ {t_day} 无行情数据，跳过")
             continue
 
         all_ret, all_gap, all_valid, all_total = calc_group_return(all_codes, daily_market)
@@ -383,9 +383,9 @@ def main():
     write_csv(existing_records)
     write_json(existing_records)
 
-    log(f"\n✅ 新增/重算 {new_count} 条，总计 {len(existing_records)} 条")
-    log(f"📈 全涨停净值: {nav_all:.4f} ({(nav_all-1)*100:+.2f}%)")
-    log(f"📈 首板净值:   {nav_first:.4f} ({(nav_first-1)*100:+.2f}%)")
+    log(f"\n 新增/重算 {new_count} 条，总计 {len(existing_records)} 条")
+    log(f" 全涨停净值: {nav_all:.4f} ({(nav_all-1)*100:+.2f}%)")
+    log(f" 首板净值:   {nav_first:.4f} ({(nav_first-1)*100:+.2f}%)")
 
     latest = existing_records[-1]
     log(f"\n最新 ({latest['date']}):")
@@ -393,9 +393,9 @@ def main():
     if latest['first_return'] is not None:
         log(f"  首板:   收益={latest['first_return']:.2f}%, 高低开={latest['first_gap']:.2f}%, BIAS={latest['first_bias']:.2f}%")
 
-    log(f"\n💾 CSV: {OUTPUT_CSV}")
-    log(f"💾 JSON: {OUTPUT_JSON}")
-    log("\n🎉 完成！")
+    log(f"\n CSV: {OUTPUT_CSV}")
+    log(f" JSON: {OUTPUT_JSON}")
+    log("\n 完成！")
 
 
 if __name__ == '__main__':

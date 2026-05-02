@@ -16,7 +16,7 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
     except Exception as e:
-        print(f"❌ Token 错误: {e}")
+        print(f" Token 错误: {e}")
     return None
 
 def test_realtime(token, name, code):
@@ -37,27 +37,27 @@ def test_realtime(token, name, code):
         if d.get('errorcode') == 0:
             tables = d.get('tables', [])
             if tables:
-                print(f"✅ 成功！tables数量: {len(tables)}")
+                print(f" 成功！tables数量: {len(tables)}")
                 for t in tables:
                     print(f"  thscode: {t.get('thscode')}")
                     print(f"  table: {t.get('table')}")
                 return True
             else:
-                print("❌ tables为空")
+                print(" tables为空")
         else:
-            print(f"❌ 错误: {d.get('errmsg')}")
+            print(f" 错误: {d.get('errmsg')}")
     except Exception as e:
-        print(f"❌ 异常: {e}")
+        print(f" 异常: {e}")
     
     return False
 
 if __name__ == '__main__':
     token = get_token()
     if not token:
-        print("❌ 无法获取token")
+        print(" 无法获取token")
         exit(1)
     
-    print("✅ Token获取成功\n")
+    print(" Token获取成功\n")
     
     # 测试不同的代码格式
     tests = [

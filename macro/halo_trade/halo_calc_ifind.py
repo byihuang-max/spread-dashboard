@@ -92,12 +92,12 @@ if __name__ == '__main__':
     print(f"美股: {len(us_tickers)} 只")
     us_nav = calc_nav_series(df, us_tickers)
     us_nav.to_csv(US_HISTORY, index=False)
-    print(f"✅ {US_HISTORY}")
+    print(f" {US_HISTORY}")
     
     # 计算A股组合
     print(f"A股: {len(cn_tickers)} 只")
     cn_nav = calc_nav_series(df, cn_tickers)
     cn_nav.to_csv(CHINA_HISTORY, index=False)
-    print(f"✅ {CHINA_HISTORY}")
+    print(f" {CHINA_HISTORY}")
     
-    print("✅ 完成")
+    print(" 完成")

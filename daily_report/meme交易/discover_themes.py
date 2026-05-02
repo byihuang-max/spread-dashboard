@@ -129,7 +129,7 @@ def discover_themes(unmatched_news, top_n=5):
         themes = json.loads(response)
         return themes
     except Exception as e:
-        print(f"❌ 解析LLM响应失败: {e}")
+        print(f" 解析LLM响应失败: {e}")
         print(f"原始响应: {response}")
         return []
 
@@ -143,32 +143,32 @@ def main():
     cache_dir = Path(__file__).parent / "cache"
     latest_file = sorted(cache_dir.glob("narrative_*.json"))[-1]
     
-    print(f"📂 读取文件: {latest_file.name}")
+    print(f" 读取文件: {latest_file.name}")
     
     with open(latest_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     # 获取所有新闻
     all_news = data.get("news", [])
-    print(f"📰 总新闻数: {len(all_news)}")
+    print(f" 总新闻数: {len(all_news)}")
     
     # 获取已匹配的新闻（从analysis中统计）
     matched_count = sum(
         v.get("matched_count", 0) 
         for v in data["analysis"].values()
     )
-    print(f"✅ 已匹配: {matched_count} 条")
-    print(f"❓ 未匹配: {len(all_news) - matched_count} 条")
+    print(f" 已匹配: {matched_count} 条")
+    print(f" 未匹配: {len(all_news) - matched_count} 条")
     
     # 简化：假设未匹配的新闻就是all_news（实际应该过滤掉已匹配的）
     # 这里为了演示，直接用all_news
     unmatched = all_news[:200]  # 取前200条
     
-    print(f"\n🔍 开始发现新兴主题...")
+    print(f"\n 开始发现新兴主题...")
     themes = discover_themes(unmatched, top_n=5)
     
     print(f"\n{'='*60}")
-    print(f"🆕 今日新兴主题 ({datetime.now().strftime('%Y-%m-%d %H:%M')})")
+    print(f"[NEW] 今日新兴主题 ({datetime.now().strftime('%Y-%m-%d %H:%M')})")
     print(f"{'='*60}\n")
     
     for i, theme in enumerate(themes, 1):

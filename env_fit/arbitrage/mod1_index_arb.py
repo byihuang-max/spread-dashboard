@@ -196,7 +196,7 @@ def run_incremental():
     log('=' * 50)
 
     if not os.path.exists(CACHE_PATH):
-        log('  ⚠️ arb_cache.json 不存在，请先运行 fetch_incremental.py')
+        log('  ⚠ arb_cache.json 不存在，请先运行 fetch_incremental.py')
         return
 
     with open(CACHE_PATH, 'r', encoding='utf-8') as f:
@@ -204,7 +204,7 @@ def run_incremental():
 
     trade_dates = cache.get('trade_dates', [])
     if not trade_dates:
-        log('  ⚠️ 缓存中无交易日数据')
+        log('  ⚠ 缓存中无交易日数据')
         return
 
     dates = trade_dates[-LOOKBACK_DAYS:]
@@ -220,14 +220,14 @@ def run_incremental():
 
     write_output(all_data, dates)
 
-    log(f'\n✅ 模块一完成（增量模式）')
+    log(f'\n 模块一完成（增量模式）')
     log(f'  JSON: {OUT_JSON}')
     log(f'  CSV:  {OUT_CSV}')
 
     # 打印汇总
     end_date = dates[-1]
     log(f'\n{"─"*50}')
-    log(f'📊 股指套利基差汇总 ({end_date})')
+    log(f' 股指套利基差汇总 ({end_date})')
     log(f'{"─"*50}')
     for prefix, info in CONTRACTS.items():
         series = all_data.get(prefix, [])
@@ -253,7 +253,7 @@ def run_full():
     log('\n[1] 获取交易日...')
     dates = get_trade_dates(LOOKBACK_DAYS)
     if not dates:
-        log('  ⚠️ 无法获取交易日')
+        log('  ⚠ 无法获取交易日')
         return
     start_date = dates[0]
     end_date = dates[-1]
@@ -302,13 +302,13 @@ def run_full():
     log('\n[3] 输出...')
     write_output(all_data, dates)
 
-    log(f'\n✅ 模块一完成（全量模式）')
+    log(f'\n 模块一完成（全量模式）')
     log(f'  JSON: {OUT_JSON}')
     log(f'  CSV:  {OUT_CSV}')
 
     end_date = dates[-1]
     log(f'\n{"─"*50}')
-    log(f'📊 股指套利基差汇总 ({end_date})')
+    log(f' 股指套利基差汇总 ({end_date})')
     log(f'{"─"*50}')
     for prefix, info in CONTRACTS.items():
         series = all_data.get(prefix, [])

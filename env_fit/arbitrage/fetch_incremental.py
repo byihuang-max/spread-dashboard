@@ -193,7 +193,7 @@ def migrate_json_to_csv(cache):
 
     # mod1_fut
     if not os.path.exists(MOD1_FUT_CSV) and cache.get("mod1_fut"):
-        print("  📦 迁移 mod1_fut → arb_mod1_fut.csv...")
+        print("   迁移 mod1_fut → arb_mod1_fut.csv...")
         rows = []
         for prefix, section in cache["mod1_fut"].items():
             for dt, vals in sorted(section.items()):
@@ -210,7 +210,7 @@ def migrate_json_to_csv(cache):
 
     # mod1_spot
     if not os.path.exists(MOD1_SPOT_CSV) and cache.get("mod1_spot"):
-        print("  📦 迁移 mod1_spot → arb_mod1_spot.csv...")
+        print("   迁移 mod1_spot → arb_mod1_spot.csv...")
         rows = []
         for prefix, section in cache["mod1_spot"].items():
             for dt, vals in sorted(section.items()):
@@ -224,7 +224,7 @@ def migrate_json_to_csv(cache):
 
     # mod2_commodity
     if not os.path.exists(MOD2_CSV) and cache.get("mod2_commodity"):
-        print("  📦 迁移 mod2_commodity → arb_mod2_commodity.csv...")
+        print("   迁移 mod2_commodity → arb_mod2_commodity.csv...")
         rows = []
         for sym, section in cache["mod2_commodity"].items():
             for dt, vals in sorted(section.items()):
@@ -241,7 +241,7 @@ def migrate_json_to_csv(cache):
 
     # mod3_opt_daily
     if not os.path.exists(MOD3_OPT_CSV) and cache.get("mod3_opt_daily"):
-        print("  📦 迁移 mod3_opt_daily → arb_mod3_opt.csv...")
+        print("   迁移 mod3_opt_daily → arb_mod3_opt.csv...")
         rows = []
         for dt, vals in sorted(cache["mod3_opt_daily"].items()):
             rows.append({
@@ -260,7 +260,7 @@ def migrate_json_to_csv(cache):
 
     # mod3_hv_index
     if not os.path.exists(MOD3_HV_CSV) and cache.get("mod3_hv_index"):
-        print("  📦 迁移 mod3_hv_index → arb_mod3_hv.csv...")
+        print("   迁移 mod3_hv_index → arb_mod3_hv.csv...")
         rows = []
         for dt, vals in sorted(cache["mod3_hv_index"].items()):
             rows.append({'trade_date': dt, 'close': vals.get('close', '')})
@@ -357,7 +357,7 @@ def fetch_incremental():
         cache["trade_dates"] = merged
         print(f"  交易日: {len(merged)} 天 ({merged[0]} ~ {merged[-1]})")
     else:
-        print("  ⚠️ 无法获取交易日历（API 不可用）")
+        print("  ⚠ 无法获取交易日历（API 不可用）")
         if not cache.get("trade_dates"):
             # fallback: 生成最近 FULL_DAYS 的工作日作为近似交易日历
             from datetime import date
@@ -613,7 +613,7 @@ def fetch_incremental():
             stats["mod3_new"] += 1
 
             if i == 0 or i == len(dates_to_fetch) - 1 or (i + 1) % 10 == 0:
-                print(f"    {d}: {len(rows)} 合约 ✓")
+                print(f"    {d}: {len(rows)} 合约 ")
 
     # === 保存 JSON cache ===
     save_cache(cache)
@@ -649,13 +649,13 @@ def fetch_incremental():
     print(f"  期权日线: {len(cache.get('mod3_opt_daily', {}))}天")
     print(f"  HV指数: {len(cache.get('mod3_hv_index', {}))}条")
 
-    print(f"\n✅ 增量拉取完成（CSV + JSON 双写）")
+    print(f"\n 增量拉取完成（CSV + JSON 双写）")
 
 
 # ============ rebuild: 从 CSV 重建 JSON cache ============
 
 def rebuild_cache_from_csv():
-    print("🔄 从 CSV 重建 JSON cache...")
+    print(" 从 CSV 重建 JSON cache...")
     cache = {
         "last_updated": datetime.today().strftime("%Y%m%d"),
         "trade_dates": [],
@@ -739,7 +739,7 @@ def rebuild_cache_from_csv():
     print(f"  交易日历: {len(cache['trade_dates'])} 天")
 
     save_cache(cache)
-    print(f"  ✅ JSON cache 已重建 ({os.path.getsize(CACHE_PATH)/1024:.1f} KB)")
+    print(f"   JSON cache 已重建 ({os.path.getsize(CACHE_PATH)/1024:.1f} KB)")
 
 
 if __name__ == "__main__":

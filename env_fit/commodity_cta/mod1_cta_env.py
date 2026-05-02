@@ -211,7 +211,7 @@ def main():
     write_output(summary, per_symbol)
 
     s = summary
-    log(f"\n✅ 模块一完成")
+    log(f"\n 模块一完成")
     log(f"  日期: {s['date']}")
     log(f"  活跃品种: {s['n_active']}")
     log(f"  平均20日波动率: {s['avg_vol_20d']:.2%}")

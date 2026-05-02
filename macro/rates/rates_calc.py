@@ -83,10 +83,10 @@ def calc():
             spread = cnh['latest'] - cny['latest']
             result['fx_spread'] = round(spread, 4)
             if abs(spread) > 0.03:
-                result['signals'].append(f"在岸离岸价差 {spread*1000:.0f}点，{'离岸偏弱' if spread > 0 else '离岸偏强'} ⚠️")
+                result['signals'].append(f"在岸离岸价差 {spread*1000:.0f}点，{'离岸偏弱' if spread > 0 else '离岸偏强'} ⚠")
 
     if not result['signals']:
-        result['signals'] = ['利率汇率无极端信号 ✅']
+        result['signals'] = ['利率汇率无极端信号 ']
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

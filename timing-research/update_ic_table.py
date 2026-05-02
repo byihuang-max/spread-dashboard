@@ -42,10 +42,10 @@ for factor in factor_order:
     
     # 方向判断
     if ic_20d > 0.03:
-        direction = '✅ 趋势'
+        direction = ' 趋势'
         color_class = 'green'
     elif ic_20d < -0.03:
-        direction = '⚠️ 反向'
+        direction = '⚠ 反向'
         color_class = 'style="color:#ff7b72"'
     else:
         direction = '—'
@@ -66,7 +66,7 @@ with open('index.html', 'r') as f:
     html = f.read()
 
 # 替换IC表格
-pattern = r'(<h2>🔬 因子 IC 值.*?<table class="tbl">.*?<tr><th.*?</tr>)(.*?)(</table>)'
+pattern = r'(<h2> 因子 IC 值.*?<table class="tbl">.*?<tr><th.*?</tr>)(.*?)(</table>)'
 replacement = r'\1\n' + table_html + r'\n      \3'
 html = re.sub(pattern, replacement, html, flags=re.DOTALL)
 
@@ -74,4 +74,4 @@ html = re.sub(pattern, replacement, html, flags=re.DOTALL)
 with open('index.html', 'w') as f:
     f.write(html)
 
-print("✅ IC表格已更新")
+print(" IC表格已更新")

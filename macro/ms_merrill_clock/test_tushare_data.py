@@ -42,14 +42,14 @@ def test_api(name, api_name, **kwargs):
     df, error = ts_api(api_name, **kwargs)
     
     if error:
-        print(f"❌ 错误: {error}")
+        print(f" 错误: {error}")
         return False
     
     if df is None or df.empty:
-        print(f"❌ 无数据")
+        print(f" 无数据")
         return False
     
-    print(f"✅ 成功！数据行数: {len(df)}")
+    print(f" 成功！数据行数: {len(df)}")
     print(f"字段: {list(df.columns)}")
     print(f"\n前3行:")
     print(df.head(3).to_string())
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     print("="*60)
     
     for name, success in results.items():
-        status = "✅" if success else "❌"
+        status = "" if success else ""
         print(f"{status} {name}")
     
     success_count = sum(results.values())
@@ -145,18 +145,18 @@ if __name__ == '__main__':
     
     # 社融结构
     if results.get('cn_m') or results.get('cn_shrzgm'):
-        print("✅ 社融结构数据：可用")
+        print(" 社融结构数据：可用")
     else:
-        print("❌ 社融结构数据：不可用")
+        print(" 社融结构数据：不可用")
     
     # 利率数据
     if results.get('shibor') and results.get('yc_cb'):
-        print("✅ R007-DR007利差数据：可用（Shibor表有R007和DR007）")
+        print(" R007-DR007利差数据：可用（Shibor表有R007和DR007）")
     else:
-        print("❌ R007-DR007利差数据：不可用")
+        print(" R007-DR007利差数据：不可用")
     
     # 企业债利差
     if results.get('cn_bond_yield') or results.get('cn_bond_spread'):
-        print("✅ 企业债利差数据：可用")
+        print(" 企业债利差数据：可用")
     else:
-        print("❌ 企业债利差数据：不可用")
+        print(" 企业债利差数据：不可用")

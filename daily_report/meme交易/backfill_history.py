@@ -174,7 +174,7 @@ def fetch_chunk(pro, start_dt: datetime, end_dt: datetime) -> dict:
                     "source":  src,
                 })
         except Exception as e:
-            print(f"  ⚠️  {src} 拉取失败: {e}")
+            print(f"  ⚠  {src} 拉取失败: {e}")
 
     return day_news
 
@@ -196,10 +196,10 @@ def backfill(days: int = 365):
     needed = [d for d in all_dates if d not in existing_dates]
 
     if not needed:
-        print("✅ 所有日期已有数据，无需回填")
+        print(" 所有日期已有数据，无需回填")
         return
 
-    print(f"📅 需要回填 {len(needed)} 天（共 {days} 天，已有 {len(existing_dates)} 天）")
+    print(f" 需要回填 {len(needed)} 天（共 {days} 天，已有 {len(existing_dates)} 天）")
 
     # 按 CHUNK_DAYS 分批拉取
     # 将需要的日期倒序排列（从近到远），按 chunk 切割
@@ -215,7 +215,7 @@ def backfill(days: int = 365):
         chunks.append((start, end, chunk_dates))
         i += CHUNK_DAYS
 
-    print(f"🔄 分 {len(chunks)} 批拉取（每批 ≤{CHUNK_DAYS} 天）\n")
+    print(f" 分 {len(chunks)} 批拉取（每批 ≤{CHUNK_DAYS} 天）\n")
 
     total_filled = 0
     for idx, (start_dt, end_dt, chunk_dates) in enumerate(chunks, 1):
@@ -240,7 +240,7 @@ def backfill(days: int = 365):
         if idx < len(chunks):
             time.sleep(SLEEP_SEC)
 
-    print(f"\n✅ 回填完成！新增 {total_filled} 天数据，历史共 {len(history)} 天")
+    print(f"\n 回填完成！新增 {total_filled} 天数据，历史共 {len(history)} 天")
     print(f"   文件: {HISTORY_FILE}")
 
 

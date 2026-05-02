@@ -109,7 +109,7 @@ def calc():
             result['signals'].append(f"M1-M2剪刀差 {scissors:+.1f}%，资金趋于保守 🟡")
 
     if not result['signals']:
-        result['signals'] = ['流动性指标无极端信号 ✅']
+        result['signals'] = ['流动性指标无极端信号 ']
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

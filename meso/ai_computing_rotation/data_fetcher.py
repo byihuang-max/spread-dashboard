@@ -177,7 +177,7 @@ def fetch_all(end_date: str = None, lookback: int = LOOKBACK_DAYS) -> dict:
         basket_amounts["美股锚"] = pd.DataFrame({"SOXX": np.nan}, index=soxx.index)
         print(f"    SOXX: {len(soxx)}条数据")
     else:
-        print("    ⚠️ SOXX 数据拉取失败，美股锚不可用")
+        print("    ⚠ SOXX 数据拉取失败，美股锚不可用")
 
     return {
         "basket_prices": basket_prices,

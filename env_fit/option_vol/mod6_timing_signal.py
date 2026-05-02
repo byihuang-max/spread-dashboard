@@ -33,7 +33,7 @@ elif composite_score >= 60 and market_iv_pct >= 60:
     desc = "波动率高位，需精选流动性好的品种"
 elif composite_score >= 40:
     signal = "WATCH"
-    label = "⚪ 观察期"
+    label = " 观察期"
     desc = "波动率不在极值，等待更好时机"
 else:
     signal = "NO_OPPORTUNITY"
@@ -80,7 +80,7 @@ output = {
 with open(BASE / "timing_signal.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"✅ 市场信号: {label}")
+print(f" 市场信号: {label}")
 print(f"   综合分: {composite_score:.1f} (IV={market_iv_pct}% × 0.7 + Liq={market_liq_pct}% × 0.3)")
 print(f"   机会品种: {len(opportunities)} 个")
 if opportunities:

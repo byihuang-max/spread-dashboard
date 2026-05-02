@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📈 GAMT | 股票择时与敞口输出框架</title>
+<title> GAMT | 股票择时与敞口输出框架</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -73,7 +73,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 <div class="wrapper">
 <div class="header">
   <div class="brand-mark"><div class="brand-gamt">GAMT</div></div>
-  <h1>📈 股票择时与敞口输出框架</h1>
+  <h1> 股票择时与敞口输出框架</h1>
   <div class="sub"><span>GAMT · General Asset Management Team</span><span>总目标：输出股票敞口值</span><span>起点：强势股研究框架</span><span>当前优先命题：冰点</span></div>
   <div class="made-by">Made by the GAMT Team · Research cockpit for stock timing & exposure</div>
 </div>
@@ -81,7 +81,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 <div id="updateBanner" class="card" style="display:none;max-width:1200px;margin:20px auto;background:linear-gradient(135deg,#1e3a5f,#1e293b);border:2px solid #38bdf8;position:relative">
   <button onclick="closeUpdateBanner()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;padding:4px 8px">&times;</button>
   <div style="display:flex;align-items:start;gap:16px">
-    <div style="font-size:32px;line-height:1">🆕</div>
+    <div style="font-size:32px;line-height:1">[NEW]</div>
     <div style="flex:1">
       <h2 style="margin:0 0 8px 0;font-size:16px;color:#38bdf8">最新更新 (2026-03-14)</h2>
       <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:12px">V3 版本上线 — 修正过拟合问题</div>
@@ -128,7 +128,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
   <!-- ======== 因子库 ======== -->
   <div class="card">
-    <h2>📚 因子库（v2：原始日频 / 盘中发现 / 合成因子 / 阶段输出）</h2>
+    <h2> 因子库（v2：原始日频 / 盘中发现 / 合成因子 / 阶段输出）</h2>
     <div class="note">先把口径拆顺：<b>原始日频因子</b>看底层原料，<b>盘中发现因子</b>看当日确认/证伪，<b>合成因子</b>看加工结果，<b>阶段输出</b>看状态判断。</div>
 
     <div class="subtabs" style="margin-top:16px">
@@ -141,30 +141,30 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     <div id="rawfactors" class="tab-pane active">
       <div class="mini-title">广度类</div>
       <div class="grid-2" style="margin-bottom:16px">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌐 ud_market_ratio（涨跌家数比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>先导<br>全市场上涨家数 / 下跌家数。<b>越高说明市场广度越强</b>，是情绪修复的底层起点。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚖️ ud_ratio（涨跌停比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 极值<br>涨停家数 / 跌停家数。<b>越高说明多头占优</b>，极端高值也可能代表过热。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> ud_market_ratio（涨跌家数比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>先导<br>全市场上涨家数 / 下跌家数。<b>越高说明市场广度越强</b>，是情绪修复的底层起点。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> ud_ratio（涨跌停比）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 极值<br>涨停家数 / 跌停家数。<b>越高说明多头占优</b>，极端高值也可能代表过热。</div></div>
       </div>
 
       <div class="mini-title">极值类</div>
       <div class="grid-2" style="margin-bottom:16px">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📈 up_count（涨停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天涨停板股票数量。<b>越多说明做多热情越高</b>，但单独看也容易混入过热噪音。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📉 down_count（跌停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>退潮 / 冰点<br>当天跌停板股票数量。<b>越多说明恐慌越重</b>，也是情绪出清的重要观测量。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> up_count（涨停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天涨停板股票数量。<b>越多说明做多热情越高</b>，但单独看也容易混入过热噪音。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> down_count（跌停家数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>退潮 / 冰点<br>当天跌停板股票数量。<b>越多说明恐慌越重</b>，也是情绪出清的重要观测量。</div></div>
       </div>
 
       <div class="mini-title">接力 / 龙头类</div>
       <div class="grid-2">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🥇 shouban_count（首板数量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>试错启动 / 先导补充<br>当天首板涨停股数量。<b>越多说明资金开始批量试错</b>，是情绪由冰转暖的重要早期信号。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🧱 lianban_count（连板股数量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>接力池厚度 / 强化<br>当天收盘仍在涨停池里且连板数大于1的股票数量。<b>越多说明接力梯队更厚</b>，题材承接面更广。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🪓 duanban_count（断板数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧 / 退潮确认<br>昨日连板股中，今天未继续涨停的数量。<b>越多说明接力链条开始断裂</b>，高值常对应退潮或高位分歧。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚠️ high_duanban_count（高位断板数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>高位风险 / 退潮强化<br>昨日3板及以上中，今天未继续涨停的数量。<b>越多说明高位核心开始松动</b>，对情绪杀伤力更大。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏔️ max_height（连板高度）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天最高连板天数。<b>高度越高说明龙头效应越强</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔄 promotion_rate（晋级率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认<br>昨天涨停中今天继续涨停的比例。<b>越高说明接力顺畅</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1️⃣→2️⃣ rate_1to2（一进二率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 灵敏补充<br>首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">2️⃣→3️⃣ rate_2to3（二进三率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>中位晋级确认<br>昨日2板股中，今天继续涨停并进入3板及以上的比例。<b>越高说明接力开始向中位梯队推进</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">3️⃣→4️⃣ rate_3to4（三进四率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>高阶强化<br>昨日3板股中，今天继续涨停并进入4板及以上的比例。<b>越高说明市场愿意继续抬升龙头高度</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">♻️ refeng_rate（炸板回封率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧质量确认<br>今日最终涨停且盘中开板的家数，占“回封成功 + 炸板未封”总数的比例。<b>越高说明分歧后仍有资金把板封回去</b>。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💥 zha_rate（炸板率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧<br>涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔒 seal_quality（封板质量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化 / 质量确认<br>大市值涨停股占比。<b>越高说明主力资金参与度更高</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> shouban_count（首板数量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>试错启动 / 先导补充<br>当天首板涨停股数量。<b>越多说明资金开始批量试错</b>，是情绪由冰转暖的重要早期信号。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> lianban_count（连板股数量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>接力池厚度 / 强化<br>当天收盘仍在涨停池里且连板数大于1的股票数量。<b>越多说明接力梯队更厚</b>，题材承接面更广。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> duanban_count（断板数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧 / 退潮确认<br>昨日连板股中，今天未继续涨停的数量。<b>越多说明接力链条开始断裂</b>，高值常对应退潮或高位分歧。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚠ high_duanban_count（高位断板数）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>高位风险 / 退潮强化<br>昨日3板及以上中，今天未继续涨停的数量。<b>越多说明高位核心开始松动</b>，对情绪杀伤力更大。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> max_height（连板高度）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化<br>当天最高连板天数。<b>高度越高说明龙头效应越强</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> promotion_rate（晋级率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认<br>昨天涨停中今天继续涨停的比例。<b>越高说明接力顺畅</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1⃣→2⃣ rate_1to2（一进二率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>确认 / 灵敏补充<br>首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">2⃣→3⃣ rate_2to3（二进三率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>中位晋级确认<br>昨日2板股中，今天继续涨停并进入3板及以上的比例。<b>越高说明接力开始向中位梯队推进</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">3⃣→4⃣ rate_3to4（三进四率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>高阶强化<br>昨日3板股中，今天继续涨停并进入4板及以上的比例。<b>越高说明市场愿意继续抬升龙头高度</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> refeng_rate（炸板回封率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧质量确认<br>今日最终涨停且盘中开板的家数，占“回封成功 + 炸板未封”总数的比例。<b>越高说明分歧后仍有资金把板封回去</b>。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> zha_rate（炸板率）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>分歧<br>涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> seal_quality（封板质量）</h2><div class="note"><b>频率：</b>日频 · <b>角色：</b>强化 / 质量确认<br>大市值涨停股占比。<b>越高说明主力资金参与度更高</b>。</div></div>
       </div>
     </div>
 
@@ -176,21 +176,21 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <div class="mini-title">早盘启动 / 龙头确认</div>
       <div class="grid-2" style="margin-bottom:16px">
         <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⏰ leader_first_limit_time（龙头首次封板时间）</h2><div class="note"><b>类型：</b>event · <b>窗口：</b>morning · <b>输出：</b>timestamp<br>龙头越早封板，说明核心票凝聚力越强。<b>对应日频：</b>max_height / promotion_rate。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">♻️ leader_refeng（龙头炸板后回封）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>full_session · <b>输出：</b>binary<br>龙头被砸后还能封回去，说明分歧承接强。<b>对应日频：</b>refeng_rate / max_height。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🚀 shouban_batch_start_time（首板批量启动时间）</h2><div class="note"><b>类型：</b>event · <b>窗口：</b>morning · <b>输出：</b>timestamp<br>首板若在早盘集中出现，说明试错资金开始集体行动。<b>对应日频：</b>shouban_count。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📶 ladder_sync_strength（二板/三板梯队同步加强）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>late_morning · <b>输出：</b>state_label<br>不是单龙头强，而是梯队一起强，说明生态更健康。<b>对应日频：</b>rate_1to2 / rate_2to3 / rate_3to4 / lianban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> leader_refeng（龙头炸板后回封）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>full_session · <b>输出：</b>binary<br>龙头被砸后还能封回去，说明分歧承接强。<b>对应日频：</b>refeng_rate / max_height。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> shouban_batch_start_time（首板批量启动时间）</h2><div class="note"><b>类型：</b>event · <b>窗口：</b>morning · <b>输出：</b>timestamp<br>首板若在早盘集中出现，说明试错资金开始集体行动。<b>对应日频：</b>shouban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> ladder_sync_strength（二板/三板梯队同步加强）</h2><div class="note"><b>类型：</b>confirm · <b>窗口：</b>late_morning · <b>输出：</b>state_label<br>不是单龙头强，而是梯队一起强，说明生态更健康。<b>对应日频：</b>rate_1to2 / rate_2to3 / rate_3to4 / lianban_count。</div></div>
       </div>
 
       <div class="mini-title">午后分歧 / 修复</div>
       <div class="grid-2" style="margin-bottom:16px">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌤️ shouban_afternoon_expand（首板午后继续扩散）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后还能继续扩散，说明资金不是一波流。<b>对应日频：</b>shouban_count / lianban_count。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🩹 afternoon_repair（午后分歧后修复）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后能修回来，比全天硬顶更有质量。<b>对应日频：</b>zha_rate / refeng_rate。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> shouban_afternoon_expand（首板午后继续扩散）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后还能继续扩散，说明资金不是一波流。<b>对应日频：</b>shouban_count / lianban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> afternoon_repair（午后分歧后修复）</h2><div class="note"><b>类型：</b>process · <b>窗口：</b>afternoon · <b>输出：</b>binary<br>午后能修回来，比全天硬顶更有质量。<b>对应日频：</b>zha_rate / refeng_rate。</div></div>
       </div>
 
       <div class="mini-title">高位风险 / 退潮预警</div>
       <div class="grid-2">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💣 high_level_bomb_group（高位股集体炸板）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>afternoon · <b>输出：</b>count<br>高位核心同时松动，杀伤力远大于单票炸板。<b>对应日频：</b>high_duanban_count / duanban_count。</div></div>
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🌆 close_high_fade（尾盘高位回落）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>close_near · <b>输出：</b>binary<br>尾盘高位股顶不住，往往说明次日接力承压。<b>对应日频：</b>high_duanban_count / max_height。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> high_level_bomb_group（高位股集体炸板）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>afternoon · <b>输出：</b>count<br>高位核心同时松动，杀伤力远大于单票炸板。<b>对应日频：</b>high_duanban_count / duanban_count。</div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> close_high_fade（尾盘高位回落）</h2><div class="note"><b>类型：</b>warning · <b>窗口：</b>close_near · <b>输出：</b>binary<br>尾盘高位股顶不住，往往说明次日接力承压。<b>对应日频：</b>high_duanban_count / max_height。</div></div>
       </div>
     </div>
 
@@ -202,7 +202,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
     <div id="stageoutputs" class="tab-pane">
       <div class="grid-2">
-        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏷️ cycle_label（周期标签）</h2><div class="note"><b>定位：</b>阶段输出<br>自动判定市场阶段：冰点 → 回暖 → 加速 → 分歧 → 退潮 → 震荡。<b>它不是原始因子，而是由多因子推导出的阶段判断。</b></div></div>
+        <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> cycle_label（周期标签）</h2><div class="note"><b>定位：</b>阶段输出<br>自动判定市场阶段：冰点 → 回暖 → 加速 → 分歧 → 退潮 → 震荡。<b>它不是原始因子，而是由多因子推导出的阶段判断。</b></div></div>
       </div>
     </div>
   </div>
@@ -217,8 +217,8 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
   <!-- ======== 单因子IC检验 ======== -->
   <div class="card">
-    <h2>🔬 单因子 IC 检验</h2>
-    <div class="note" style="margin-bottom:16px">IC（信息系数）= 因子值和未来收益的相关性。IC > 0 → 趋势型 · IC < 0 → 反转型 · |IC| > 0.03 有参考价值<br>📅 数据更新：<span id="icUpdateDate" style="color:#5ad9c3">加载中...</span> · 样本：<span id="icSampleDays" style="color:#5ad9c3">1742</span>天</div>
+    <h2> 单因子 IC 检验</h2>
+    <div class="note" style="margin-bottom:16px">IC（信息系数）= 因子值和未来收益的相关性。IC > 0 → 趋势型 · IC < 0 → 反转型 · |IC| > 0.03 有参考价值<br> 数据更新：<span id="icUpdateDate" style="color:#5ad9c3">加载中...</span> · 样本：<span id="icSampleDays" style="color:#5ad9c3">1742</span>天</div>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">因子</th><th>5日IC</th><th>10日IC</th><th>20日IC</th><th>20日ICIR</th><th>方向</th></tr>
       <tr><td style="text-align:left">sentiment</td><td>综合情绪</td><td class="green">+0.087</td><td>趋势↗</td><td>0.98% → 3.19%</td><td style="text-align:left">情绪高时沪深300未来涨得更多</td></tr>
@@ -229,31 +229,31 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <tr><td style="text-align:left">up_count</td><td>涨停家数</td><td>+0.016</td><td>无信号→</td><td>1.53% → 0.97%</td><td style="text-align:left">涨停多反而不涨（可能过热）</td></tr>
       <tr><td style="text-align:left">zha_rate</td><td>炸板率</td><td>+0.005</td><td>无信号→</td><td>1.31% → 1.89%</td><td style="text-align:left">基本无预测力</td></tr>
     </table></div>
-    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>✅ 核心发现：情绪是趋势信号，不是逆向信号！</b><br>情绪最高的20%时间段，未来20天沪深300平均涨3.19%；最低的20%只涨0.98%。<br>这意味着：<b>情绪高→加仓，情绪低→减仓</b>，而不是反过来。</div></div>
+    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b> 核心发现：情绪是趋势信号，不是逆向信号！</b><br>情绪最高的20%时间段，未来20天沪深300平均涨3.19%；最低的20%只涨0.98%。<br>这意味着：<b>情绪高→加仓，情绪低→减仓</b>，而不是反过来。</div></div>
   </div>
 
   <!-- ======== 周期标签择时 ======== -->
   <div class="card">
-    <h2>🏷️ 周期标签择时效果</h2>
+    <h2> 周期标签择时效果</h2>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">周期标签</th><th>出现天数</th><th>占比</th><th>未来20天沪深300平均涨跌</th><th style="text-align:left">解读</th></tr>
-      <tr><td style="text-align:left">🔥 加速</td><td>103</td><td>19.6%</td><td class="green">+2.79%</td><td style="text-align:left">强势股加速期，大盘也跟着涨</td></tr>
-      <tr><td style="text-align:left">⚡ 分歧</td><td>59</td><td>11.2%</td><td class="green">+1.91%</td><td style="text-align:left">分歧不是坏事，往往是换手后继续涨</td></tr>
-      <tr><td style="text-align:left">📉 退潮</td><td>168</td><td>31.9%</td><td class="green">+1.40%</td><td style="text-align:left">退潮期竟然也涨--结构性轮动</td></tr>
-      <tr><td style="text-align:left">🌱 回暖</td><td>131</td><td>24.9%</td><td>+0.80%</td><td style="text-align:left">温和修复，表现中性</td></tr>
-      <tr><td style="text-align:left">🔄 震荡</td><td>58</td><td>11.0%</td><td>+1.15%</td><td style="text-align:left">震荡偏中性</td></tr>
-      <tr><td style="text-align:left">🧊 冰点</td><td>5</td><td>1.0%</td><td style="color:#ff7b72">-0.39%</td><td style="text-align:left">冰点反而跌！（仅5天，样本太少）</td></tr>
+      <tr><td style="text-align:left"> 加速</td><td>103</td><td>19.6%</td><td class="green">+2.79%</td><td style="text-align:left">强势股加速期，大盘也跟着涨</td></tr>
+      <tr><td style="text-align:left"> 分歧</td><td>59</td><td>11.2%</td><td class="green">+1.91%</td><td style="text-align:left">分歧不是坏事，往往是换手后继续涨</td></tr>
+      <tr><td style="text-align:left"> 退潮</td><td>168</td><td>31.9%</td><td class="green">+1.40%</td><td style="text-align:left">退潮期竟然也涨--结构性轮动</td></tr>
+      <tr><td style="text-align:left"> 回暖</td><td>131</td><td>24.9%</td><td>+0.80%</td><td style="text-align:left">温和修复，表现中性</td></tr>
+      <tr><td style="text-align:left"> 震荡</td><td>58</td><td>11.0%</td><td>+1.15%</td><td style="text-align:left">震荡偏中性</td></tr>
+      <tr><td style="text-align:left"> 冰点</td><td>5</td><td>1.0%</td><td style="color:#ff7b72">-0.39%</td><td style="text-align:left">冰点反而跌！（仅5天，样本太少）</td></tr>
     </table></div>
-    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>⚠️ 意外发现：冰点≠抄底信号（2年短样本）</b><br>直觉上"冰点→反弹"，但2年数据显示冰点期未来20天微跌（仅5天样本，统计意义弱）。<b>加速期</b>是最强看涨信号。<br>→ 这也是为什么我们在命题研究里用<b>7年全样本</b>重新验证冰点，发现确实有效。</div></div>
+    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>⚠ 意外发现：冰点≠抄底信号（2年短样本）</b><br>直觉上"冰点→反弹"，但2年数据显示冰点期未来20天微跌（仅5天样本，统计意义弱）。<b>加速期</b>是最强看涨信号。<br>→ 这也是为什么我们在命题研究里用<b>7年全样本</b>重新验证冰点，发现确实有效。</div></div>
   </div>
 
   <!-- ======== 多因子组合回测 ======== -->
   <div class="card">
-    <h2>📊 多因子组合仓位回测</h2>
+    <h2> 多因子组合仓位回测</h2>
     <div class="note" style="margin-bottom:16px">6种仓位映射方案 vs 满仓持有 vs 60%固定仓位。所有方案都假设"情绪高→减仓"（反转逻辑），后来发现方向反了。</div>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">方案</th><th>总收益</th><th>年化</th><th>夏普</th><th>最大回撤</th><th>回撤改善</th><th>交易次数</th><th>平均仓位</th></tr>
-      <tr style="border-bottom:2px solid #3a4a6a"><td style="text-align:left;color:#fbbf24;font-weight:700">📌 满仓持有（基准）</td><td class="green">37.6%</td><td class="green">16.5%</td><td class="blue">0.91</td><td style="color:#ff7b72">-15.7%</td><td>-</td><td>-</td><td>100%</td></tr>
+      <tr style="border-bottom:2px solid #3a4a6a"><td style="text-align:left;color:#fbbf24;font-weight:700"> 满仓持有（基准）</td><td class="green">37.6%</td><td class="green">16.5%</td><td class="blue">0.91</td><td style="color:#ff7b72">-15.7%</td><td>-</td><td>-</td><td>100%</td></tr>
       <tr><td style="text-align:left">A1: 现有权重+离散</td><td>7.0%</td><td>3.3%</td><td class="blue">0.91</td><td class="green">-3.2%</td><td class="green">+12.5%</td><td>1</td><td>20.1%</td></tr>
       <tr><td style="text-align:left">A2: 现有权重+sigmoid</td><td style="color:#ff7b72">-8.0%</td><td style="color:#ff7b72">-3.9%</td><td>-0.32</td><td style="color:#ff7b72">-18.4%</td><td style="color:#ff7b72">-2.7%</td><td>326</td><td>59.4%</td></tr>
       <tr><td style="text-align:left">B1: IC加权+离散</td><td>7.0%</td><td>3.3%</td><td class="blue">0.91</td><td class="green">-3.2%</td><td class="green">+12.5%</td><td>1</td><td>20.1%</td></tr>
@@ -266,19 +266,19 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <!-- ======== 归因 & 发现 ======== -->
   <div class="grid-2">
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">✅ 回撤控制是实在的</h2>
+      <h2 style="font-size:15px"> 回撤控制是实在的</h2>
       <div class="note">A1方案最大回撤只有-3.2%（满仓-15.7%），夏普与满仓持平（0.91）。<br><b>虽然收益跑输，但风险调整后表现不差。</b>对FOF来说，回撤控制≈客户留存。</div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">❌ 方向搞反了</h2>
+      <h2 style="font-size:15px"> 方向搞反了</h2>
       <div class="note">所有方案都用"情绪高→减仓"的逻辑，但数据证明情绪高时市场涨得更多。<br><b>下一步：加入"顺势择时"方案（情绪高→加仓），预计会显著改善。</b></div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">🔍 归因：为什么全部跑输？</h2>
+      <h2 style="font-size:15px"> 归因：为什么全部跑输？</h2>
       <div class="note">1. 仓位映射方向反了（应顺势不是逆势）<br>2. 924行情暴涨期，反转逻辑减仓后踏空<br>3. 频繁调仓的交易成本+T+1延迟<br>4. 最强因子IC也只有0.087，信号偏弱</div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">⚠️ 数据局限</h2>
+      <h2 style="font-size:15px">⚠ 数据局限</h2>
       <div class="note">524天（2年）覆盖牛熊但偏短。IC绝对值都在0.1以下，信号偏弱。<br><b>→ 这也是为什么命题研究中我们补齐了7年全样本重新验证。</b></div>
     </div>
   </div>

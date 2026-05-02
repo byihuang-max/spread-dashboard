@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📈 GAMT | 股票择时与敞口输出框架</title>
+<title> GAMT | 股票择时与敞口输出框架</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -72,7 +72,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 <div class="wrapper">
 <div class="header">
   <div class="brand-mark"><div class="brand-gamt">GAMT</div></div>
-  <h1>📈 股票择时与敞口输出框架</h1>
+  <h1> 股票择时与敞口输出框架</h1>
   <div class="sub"><span>GAMT · General Asset Management Team</span><span>总目标：输出股票敞口值</span><span>起点：强势股研究框架</span><span>当前优先命题：冰点</span></div>
   <div class="made-by">Made by the GAMT Team · Research cockpit for stock timing & exposure</div>
 </div>
@@ -80,7 +80,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 <div id="updateBanner" class="card" style="max-width:1200px;margin:20px auto;background:linear-gradient(135deg,#1e3a5f,#1e293b);border:2px solid #38bdf8;position:relative">
   <button onclick="closeUpdateBanner()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;padding:4px 8px">&times;</button>
   <div style="display:flex;align-items:start;gap:16px">
-    <div style="font-size:32px;line-height:1">🆕</div>
+    <div style="font-size:32px;line-height:1">[NEW]</div>
     <div style="flex:1">
       <h2 style="margin:0 0 8px 0;font-size:16px;color:#38bdf8">最新更新 (2026-03-14)</h2>
       <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:12px">V3 版本上线 — 修正过拟合问题</div>
@@ -125,24 +125,24 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
 
   <!-- ======== 因子库 ======== -->
   <div class="card">
-    <h2>📚 因子库（10个强势股情绪因子）</h2>
+    <h2> 因子库（10个强势股情绪因子）</h2>
     <div class="grid-2">
       <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔴 sentiment（综合情绪指数）</h2><div class="note">五个子因子加权合成，0-100分。<b>越高说明强势股生态越火热。</b><br>权重：晋级率25% + 封板质量25% + 连板高度20% + 反炸板率20% + 涨跌停比10%</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📈 up_count（涨停家数）</h2><div class="note">当天涨停板股票数量。<b>越多说明市场做多热情越高</b>，但极端值可能是过热信号。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">📉 down_count（跌停家数）</h2><div class="note">当天跌停板股票数量。<b>越多说明恐慌越重</b>，但恐慌出清后往往反弹。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏔️ max_height（连板高度）</h2><div class="note">当天最高连板天数。<b>高度越高说明市场龙头效应越强。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔄 promotion_rate（晋级率）</h2><div class="note">昨天涨停中今天继续涨停的比例。<b>越高说明强势股延续性好</b>，资金愿意接力。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">💥 zha_rate（炸板率）</h2><div class="note">涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">⚖️ ud_ratio（涨跌停比）</h2><div class="note">涨停家数 / 跌停家数。<b>越高说明多头越占优。</b>极端值（>10）可能过热。</div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🔒 seal_quality（封板质量）</h2><div class="note">大市值（100亿+）涨停股占比。<b>越高说明主力资金参与度越高。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1️⃣→2️⃣ rate_1to2（一进二率）</h2><div class="note">首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应。</b></div></div>
-      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">🏷️ cycle_label（周期标签）</h2><div class="note">自动判定市场阶段：冰点→回暖→加速→分歧→退潮→震荡，<b>对应强势股生态生命周期。</b></div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> up_count（涨停家数）</h2><div class="note">当天涨停板股票数量。<b>越多说明市场做多热情越高</b>，但极端值可能是过热信号。</div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> down_count（跌停家数）</h2><div class="note">当天跌停板股票数量。<b>越多说明恐慌越重</b>，但恐慌出清后往往反弹。</div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> max_height（连板高度）</h2><div class="note">当天最高连板天数。<b>高度越高说明市场龙头效应越强。</b></div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> promotion_rate（晋级率）</h2><div class="note">昨天涨停中今天继续涨停的比例。<b>越高说明强势股延续性好</b>，资金愿意接力。</div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> zha_rate（炸板率）</h2><div class="note">涨停后又打开的比例。<b>越高说明封板意愿弱</b>，资金分歧大。</div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> ud_ratio（涨跌停比）</h2><div class="note">涨停家数 / 跌停家数。<b>越高说明多头越占优。</b>极端值（>10）可能过热。</div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> seal_quality（封板质量）</h2><div class="note">大市值（100亿+）涨停股占比。<b>越高说明主力资金参与度越高。</b></div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px">1⃣→2⃣ rate_1to2（一进二率）</h2><div class="note">首板涨停中次日继续涨停的比例。<b>衡量首板次日溢价效应。</b></div></div>
+      <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:8px"> cycle_label（周期标签）</h2><div class="note">自动判定市场阶段：冰点→回暖→加速→分歧→退潮→震荡，<b>对应强势股生态生命周期。</b></div></div>
     </div>
   </div>
 
   <!-- ======== 单因子IC检验 ======== -->
   <div class="card">
-    <h2>🔬 单因子 IC 检验</h2>
+    <h2> 单因子 IC 检验</h2>
     <div class="note" style="margin-bottom:16px">IC（信息系数）= 因子值和未来收益的相关性。IC > 0 → 趋势型 · IC < 0 → 反转型 · |IC| > 0.03 有参考价值</div>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">因子</th><th>中文名</th><th>20日IC</th><th>方向</th><th>最低档→最高档(20日收益)</th><th>解读</th></tr>
@@ -154,31 +154,31 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
       <tr><td style="text-align:left">up_count</td><td>涨停家数</td><td>+0.016</td><td>无信号→</td><td>1.53% → 0.97%</td><td style="text-align:left">涨停多反而不涨（可能过热）</td></tr>
       <tr><td style="text-align:left">zha_rate</td><td>炸板率</td><td>+0.005</td><td>无信号→</td><td>1.31% → 1.89%</td><td style="text-align:left">基本无预测力</td></tr>
     </table></div>
-    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>✅ 核心发现：情绪是趋势信号，不是逆向信号！</b><br>情绪最高的20%时间段，未来20天沪深300平均涨3.19%；最低的20%只涨0.98%。<br>这意味着：<b>情绪高→加仓，情绪低→减仓</b>，而不是反过来。</div></div>
+    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b> 核心发现：情绪是趋势信号，不是逆向信号！</b><br>情绪最高的20%时间段，未来20天沪深300平均涨3.19%；最低的20%只涨0.98%。<br>这意味着：<b>情绪高→加仓，情绪低→减仓</b>，而不是反过来。</div></div>
   </div>
 
   <!-- ======== 周期标签择时 ======== -->
   <div class="card">
-    <h2>🏷️ 周期标签择时效果</h2>
+    <h2> 周期标签择时效果</h2>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">周期标签</th><th>出现天数</th><th>占比</th><th>未来20天沪深300平均涨跌</th><th style="text-align:left">解读</th></tr>
-      <tr><td style="text-align:left">🔥 加速</td><td>103</td><td>19.6%</td><td class="green">+2.79%</td><td style="text-align:left">强势股加速期，大盘也跟着涨</td></tr>
-      <tr><td style="text-align:left">⚡ 分歧</td><td>59</td><td>11.2%</td><td class="green">+1.91%</td><td style="text-align:left">分歧不是坏事，往往是换手后继续涨</td></tr>
-      <tr><td style="text-align:left">📉 退潮</td><td>168</td><td>31.9%</td><td class="green">+1.40%</td><td style="text-align:left">退潮期竟然也涨--结构性轮动</td></tr>
-      <tr><td style="text-align:left">🌱 回暖</td><td>131</td><td>24.9%</td><td>+0.80%</td><td style="text-align:left">温和修复，表现中性</td></tr>
-      <tr><td style="text-align:left">🔄 震荡</td><td>58</td><td>11.0%</td><td>+1.15%</td><td style="text-align:left">震荡偏中性</td></tr>
-      <tr><td style="text-align:left">🧊 冰点</td><td>5</td><td>1.0%</td><td style="color:#ff7b72">-0.39%</td><td style="text-align:left">冰点反而跌！（仅5天，样本太少）</td></tr>
+      <tr><td style="text-align:left"> 加速</td><td>103</td><td>19.6%</td><td class="green">+2.79%</td><td style="text-align:left">强势股加速期，大盘也跟着涨</td></tr>
+      <tr><td style="text-align:left"> 分歧</td><td>59</td><td>11.2%</td><td class="green">+1.91%</td><td style="text-align:left">分歧不是坏事，往往是换手后继续涨</td></tr>
+      <tr><td style="text-align:left"> 退潮</td><td>168</td><td>31.9%</td><td class="green">+1.40%</td><td style="text-align:left">退潮期竟然也涨--结构性轮动</td></tr>
+      <tr><td style="text-align:left"> 回暖</td><td>131</td><td>24.9%</td><td>+0.80%</td><td style="text-align:left">温和修复，表现中性</td></tr>
+      <tr><td style="text-align:left"> 震荡</td><td>58</td><td>11.0%</td><td>+1.15%</td><td style="text-align:left">震荡偏中性</td></tr>
+      <tr><td style="text-align:left"> 冰点</td><td>5</td><td>1.0%</td><td style="color:#ff7b72">-0.39%</td><td style="text-align:left">冰点反而跌！（仅5天，样本太少）</td></tr>
     </table></div>
-    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>⚠️ 意外发现：冰点≠抄底信号（2年短样本）</b><br>直觉上"冰点→反弹"，但2年数据显示冰点期未来20天微跌（仅5天样本，统计意义弱）。<b>加速期</b>是最强看涨信号。<br>→ 这也是为什么我们在命题研究里用<b>7年全样本</b>重新验证冰点，发现确实有效。</div></div>
+    <div class="card hero" style="margin-top:16px;padding:16px 20px"><div class="note"><b>⚠ 意外发现：冰点≠抄底信号（2年短样本）</b><br>直觉上"冰点→反弹"，但2年数据显示冰点期未来20天微跌（仅5天样本，统计意义弱）。<b>加速期</b>是最强看涨信号。<br>→ 这也是为什么我们在命题研究里用<b>7年全样本</b>重新验证冰点，发现确实有效。</div></div>
   </div>
 
   <!-- ======== 多因子组合回测 ======== -->
   <div class="card">
-    <h2>📊 多因子组合仓位回测</h2>
+    <h2> 多因子组合仓位回测</h2>
     <div class="note" style="margin-bottom:16px">6种仓位映射方案 vs 满仓持有 vs 60%固定仓位。所有方案都假设"情绪高→减仓"（反转逻辑），后来发现方向反了。</div>
     <div style="overflow-x:auto"><table class="tbl">
       <tr><th style="text-align:left">方案</th><th>总收益</th><th>年化</th><th>夏普</th><th>最大回撤</th><th>回撤改善</th><th>交易次数</th><th>平均仓位</th></tr>
-      <tr style="border-bottom:2px solid #3a4a6a"><td style="text-align:left;color:#fbbf24;font-weight:700">📌 满仓持有（基准）</td><td class="green">37.6%</td><td class="green">16.5%</td><td class="blue">0.91</td><td style="color:#ff7b72">-15.7%</td><td>-</td><td>-</td><td>100%</td></tr>
+      <tr style="border-bottom:2px solid #3a4a6a"><td style="text-align:left;color:#fbbf24;font-weight:700"> 满仓持有（基准）</td><td class="green">37.6%</td><td class="green">16.5%</td><td class="blue">0.91</td><td style="color:#ff7b72">-15.7%</td><td>-</td><td>-</td><td>100%</td></tr>
       <tr><td style="text-align:left">A1: 现有权重+离散</td><td>7.0%</td><td>3.3%</td><td class="blue">0.91</td><td class="green">-3.2%</td><td class="green">+12.5%</td><td>1</td><td>20.1%</td></tr>
       <tr><td style="text-align:left">A2: 现有权重+sigmoid</td><td style="color:#ff7b72">-8.0%</td><td style="color:#ff7b72">-3.9%</td><td>-0.32</td><td style="color:#ff7b72">-18.4%</td><td style="color:#ff7b72">-2.7%</td><td>326</td><td>59.4%</td></tr>
       <tr><td style="text-align:left">B1: IC加权+离散</td><td>7.0%</td><td>3.3%</td><td class="blue">0.91</td><td class="green">-3.2%</td><td class="green">+12.5%</td><td>1</td><td>20.1%</td></tr>
@@ -191,19 +191,19 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
   <!-- ======== 归因 & 发现 ======== -->
   <div class="grid-2">
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">✅ 回撤控制是实在的</h2>
+      <h2 style="font-size:15px"> 回撤控制是实在的</h2>
       <div class="note">A1方案最大回撤只有-3.2%（满仓-15.7%），夏普与满仓持平（0.91）。<br><b>虽然收益跑输，但风险调整后表现不差。</b>对FOF来说，回撤控制≈客户留存。</div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">❌ 方向搞反了</h2>
+      <h2 style="font-size:15px"> 方向搞反了</h2>
       <div class="note">所有方案都用"情绪高→减仓"的逻辑，但数据证明情绪高时市场涨得更多。<br><b>下一步：加入"顺势择时"方案（情绪高→加仓），预计会显著改善。</b></div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">🔍 归因：为什么全部跑输？</h2>
+      <h2 style="font-size:15px"> 归因：为什么全部跑输？</h2>
       <div class="note">1. 仓位映射方向反了（应顺势不是逆势）<br>2. 924行情暴涨期，反转逻辑减仓后踏空<br>3. 频繁调仓的交易成本+T+1延迟<br>4. 最强因子IC也只有0.087，信号偏弱</div>
     </div>
     <div class="card hero" style="padding:20px">
-      <h2 style="font-size:15px">⚠️ 数据局限</h2>
+      <h2 style="font-size:15px">⚠ 数据局限</h2>
       <div class="note">524天（2年）覆盖牛熊但偏短。IC绝对值都在0.1以下，信号偏弱。<br><b>→ 这也是为什么命题研究中我们补齐了7年全样本重新验证。</b></div>
     </div>
   </div>
@@ -239,7 +239,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         <button class="subtab-btn" data-tab="v11">V1.1 风格过滤</button>
         <button class="subtab-btn" data-tab="v12">V1.2 增强开关</button>
         <button class="subtab-btn" data-tab="factorstudy">研究结果总览</button>
-        <button class="subtab-btn" data-tab="factorcard">📊 因子回测</button>
+        <button class="subtab-btn" data-tab="factorcard"> 因子回测</button>
       </div>
 
       <div id="v1" class="tab-pane active">
@@ -249,7 +249,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
           <div class="card"><h2>V1 想表达什么</h2><div class="note">不是说"任何恐慌都能抄底"，而是说：<b>极端恐慌本身，是有统计优势的。</b> 所以冰点可以作为择时框架里的第一条主命题。</div></div>
         </div>
         <div class="grid-2">
-          <div class="card"><h2>V1 关键发现</h2><div class="note">- 跌停家数 IC = <b>+0.069</b> (ICIR=0.77，稳定)<br>- 涨停家数 IC = <b>+0.078</b> (ICIR=0.02，<span style="color:#f87171">不稳定，过拟合</span>)<br>- 封单额轧差 IC = <b>+0.057</b> (ICIR=-0.13)<br>- 涨跌停比 IC = <b>-0.043</b>（方向相反）</div><div class="explain">⚠️ <b>重要发现：</b>涨停家数虽然IC高，但ICIR极低，说明信号不稳定。涨停和跌停本质是同一信号的两面（股票总数固定），组合使用会过拟合。</div></div>
+          <div class="card"><h2>V1 关键发现</h2><div class="note">- 跌停家数 IC = <b>+0.069</b> (ICIR=0.77，稳定)<br>- 涨停家数 IC = <b>+0.078</b> (ICIR=0.02，<span style="color:#f87171">不稳定，过拟合</span>)<br>- 封单额轧差 IC = <b>+0.057</b> (ICIR=-0.13)<br>- 涨跌停比 IC = <b>-0.043</b>（方向相反）</div><div class="explain">⚠ <b>重要发现：</b>涨停家数虽然IC高，但ICIR极低，说明信号不稳定。涨停和跌停本质是同一信号的两面（股票总数固定），组合使用会过拟合。</div></div>
           <div class="card"><h2>V1 最优基线策略</h2><div class="stats-row"><div class="stat-box"><div class="val blue">both</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi500</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">73.3%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+4.43%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+86.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">3.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">2.44</div><div class="label">Calmar</div></div></div><div class="explain">这张卡想表达的是：如果只用最基础的冰点定义，不做任何风格过滤，最稳妥的落点先出现在中证500上。</div></div>
         </div>
         <div class="card full-span"><h2>V1 基线净值：最优冰点策略 vs 三个主要指数</h2><div id="v1BaseCurve" class="chart-tall"></div><div class="explain">这张图想表达的是：最优基线并不是只在个别年份碰巧有效，而是在长期里大体能沿着更陡的斜率向上。你重点看：冰点信号后的修复，500整体比300和1000更均衡。</div></div>
@@ -292,33 +292,33 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         <div class="explain">V2 的特点：ud_ratio 单因子在放宽阈值时表现不错（交易次数141次），适合做常态化择时；both 共振在极端阈值时胜率最高（81%），适合做冰点精准打击。</div></div>
 
         <div class="grid-2">
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🔍 V2 的优势</h2><div class="note">1. <b>逻辑更扎实</b>：比值和轧差直接衡量多空力量对比<br>2. <b>交易次数更多</b>：21次 vs V1的15次，样本更充分<br>3. <b>双因子共振胜率更高</b>：76.2% vs 73.3%<br>4. <b>300也能做</b>：V1集中在500，V2在300上也有稳定信号</div></div>
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">⚠️ V2 的不足 & 下一步</h2><div class="note">1. <b>Calmar 下降</b>：最优从2.44降到1.21，回撤控制弱于V1<br>2. <b>封单额数据质量</b>：早期fd_amount可能不完整<br>3. <b>下一步</b>：在V2基础上叠加风格过滤（V2.1），看看相对因子+风格的组合效果</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px"> V2 的优势</h2><div class="note">1. <b>逻辑更扎实</b>：比值和轧差直接衡量多空力量对比<br>2. <b>交易次数更多</b>：21次 vs V1的15次，样本更充分<br>3. <b>双因子共振胜率更高</b>：76.2% vs 73.3%<br>4. <b>300也能做</b>：V1集中在500，V2在300上也有稳定信号</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">⚠ V2 的不足 & 下一步</h2><div class="note">1. <b>Calmar 下降</b>：最优从2.44降到1.21，回撤控制弱于V1<br>2. <b>封单额数据质量</b>：早期fd_amount可能不完整<br>3. <b>下一步</b>：在V2基础上叠加风格过滤（V2.1），看看相对因子+风格的组合效果</div></div>
         </div>
       </div>
 
       <div id="v3" class="tab-pane">
         <div class="card hero"><h2>V3：涨跌停比例 — 消除市场规模影响</h2><div class="note">V1/V2用"涨跌停家数"存在问题：市场规模不同时不可比（3000只股票的30个跌停 vs 5000只股票的30个跌停）。<br><br>V3改为：<b>涨跌停比例（家数/总股票数）</b>，标准化后可跨时期比较。同时发现：<b>封单额轧差单因子表现极强</b>。</div></div>
         
-        <div class="card hero"><h2>🔬 核心发现：封单额轧差是关键信号</h2>
+        <div class="card hero"><h2> 核心发现：封单额轧差是关键信号</h2>
           <div class="note" style="margin-bottom:16px">在测试涨跌停比例时，意外发现<b>封单额轧差单因子</b>表现远超预期：</div>
           <div class="grid-2">
-            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 封单额轧差（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">5%阈值，10天持有，沪深300</div></div>
-            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px">📊 涨停比例（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">15%阈值，15天持有，中证2000</div></div>
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px"> 封单额轧差（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">5%阈值，10天持有，沪深300</div></div>
+            <div class="card" style="margin-bottom:0"><h2 style="font-size:14px;border:none;padding:0;margin-bottom:12px"> 涨停比例（单因子）</h2><div class="stats-row"><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52次</div><div class="label">交易</div></div></div><div class="note" style="margin-top:12px">15%阈值，15天持有，中证2000</div></div>
           </div>
-          <div class="explain" style="margin-top:16px">⚡ <b>关键洞察：</b>封单额轧差刻画的是<b>资金力量对比</b>，比涨跌停家数/比例更直接。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。</div>
+          <div class="explain" style="margin-top:16px"> <b>关键洞察：</b>封单额轧差刻画的是<b>资金力量对比</b>，比涨跌停家数/比例更直接。轧差大幅为负→卖盘压倒性优势→极端恐慌→修复机会。</div>
         </div>
 
-        <div class="card hero"><h2>🥇 V3.1 最优策略（涨停比例，单因子）</h2>
+        <div class="card hero"><h2> V3.1 最优策略（涨停比例，单因子）</h2>
           <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">up_ratio</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">15%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">15天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi2000</div><div class="label">标的</div></div><div class="stat-box"><div class="val amber">53.8%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+1.96%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+101.8%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val amber">14.9%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val amber">0.99</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">52</div><div class="label">交易次数</div></div></div>
         </div>
 
-        <div class="card hero"><h2>🥇 V3.2 最优策略（封单额轧差，单因子）</h2>
+        <div class="card hero"><h2> V3.2 最优策略（封单额轧差，单因子）</h2>
           <div class="stats-row" style="margin-top:16px"><div class="stat-box"><div class="val blue">seal_diff</div><div class="label">信号</div></div><div class="stat-box"><div class="val purple">5%</div><div class="label">阈值</div></div><div class="stat-box"><div class="val blue">10天</div><div class="label">持有期</div></div><div class="stat-box"><div class="val purple">csi300</div><div class="label">标的</div></div><div class="stat-box"><div class="val green">91.7%</div><div class="label">胜率</div></div><div class="stat-box"><div class="val green">+3.20%</div><div class="label">平均收益</div></div><div class="stat-box"><div class="val green">+38.4%</div><div class="label">总收益</div></div><div class="stat-box"><div class="val green">1.0%</div><div class="label">最大回撤</div></div><div class="stat-box"><div class="val green">5.71</div><div class="label">Calmar</div></div><div class="stat-box"><div class="val blue">12</div><div class="label">交易次数</div></div></div>
-          <div class="explain" style="margin-top:16px">⚡ <b>关键改进：</b>胜率从53.8%飙升到91.7%，Calmar从0.99提升到5.71，回撤从14.9%降到1.0%。封单额轧差是真正的核心信号。</div>
+          <div class="explain" style="margin-top:16px"> <b>关键改进：</b>胜率从53.8%飙升到91.7%，Calmar从0.99提升到5.71，回撤从14.9%降到1.0%。封单额轧差是真正的核心信号。</div>
         </div>
 
-        <div class="card"><h2>📊 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
+        <div class="card"><h2> 4指数对比（封单额轧差，5%阈值，10天持有）</h2>
           <div style="overflow-x:auto"><table class="tbl">
             <tr><th>指数</th><th>交易次数</th><th>胜率</th><th>平均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
             <tr class="best-row"><td>沪深300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
@@ -329,7 +329,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
           <div class="explain">封单额轧差在<b>沪深300</b>上表现最优：胜率最高（91.7%），回撤最小（1.0%），Calmar最高（5.71）。越大盘越稳定。</div>
         </div>
 
-        <div class="card"><h2>📊 V3 Top10 策略（封单额轧差主导）</h2>
+        <div class="card"><h2> V3 Top10 策略（封单额轧差主导）</h2>
           <div style="overflow-x:auto"><table class="tbl">
             <tr><th>排名</th><th>信号</th><th>阈值</th><th>持有</th><th>指数</th><th>次数</th><th>胜率</th><th>均收益</th><th>总收益</th><th>最大回撤</th><th>Calmar</th></tr>
             <tr class="best-row"><td>#1</td><td>seal_diff</td><td>5%</td><td>10d</td><td>csi300</td><td>12</td><td>91.7%</td><td class="pos">+3.20%</td><td class="pos">+38.4%</td><td>1.0%</td><td><b>5.71</b></td></tr>
@@ -347,8 +347,8 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
         </div>
 
         <div class="grid-2">
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">✅ 为什么封单额轧差更强</h2><div class="note">1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>4. <b>跨指数稳定</b>：300/500/1000/2000都有效</div></div>
-          <div class="card hero" style="padding:20px"><h2 style="font-size:15px">🎯 V3 核心结论</h2><div class="note">1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>4. <b>最优参数</b>：5%阈值（极端冰点），10天持有</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px"> 为什么封单额轧差更强</h2><div class="note">1. <b>直接刻画资金力量</b>：不只看家数，看资金堆在哪边<br>2. <b>信号质量高</b>：胜率70-90%，远超比例因子的50-60%<br>3. <b>回撤控制好</b>：最大回撤1-6%，风险可控<br>4. <b>跨指数稳定</b>：300/500/1000/2000都有效</div></div>
+          <div class="card hero" style="padding:20px"><h2 style="font-size:15px"> V3 核心结论</h2><div class="note">1. <b>涨跌停比例</b>：标准化后可比，但信号偏弱<br>2. <b>封单额轧差</b>：单因子就很强，是真正的核心信号<br>3. <b>最优标的</b>：沪深300（胜率最高，回撤最小）<br>4. <b>最优参数</b>：5%阈值（极端冰点），10天持有</div></div>
         </div>
       </div>
 

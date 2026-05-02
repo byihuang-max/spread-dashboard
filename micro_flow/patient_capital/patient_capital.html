@@ -223,7 +223,7 @@ h1 {
 </head>
 <body>
 
-<h1>🏛️ 耐心资本持筹成本</h1>
+<h1> 耐心资本持筹成本</h1>
 <div class="subtitle" id="updated"></div>
 
 <!-- 信号摘要栏 -->
@@ -248,7 +248,7 @@ h1 {
 
 <!-- ═══ 方法论说明 ═══ -->
 <div class="methodology">
-    <h3>📐 计算方法论</h3>
+    <h3> 计算方法论</h3>
     <div class="step">
         <div class="step-num">1</div>
         <div class="step-text"><b>数据粒度</b> — 拉取每只ETF的 <b>15分钟K线</b>（开盘、收盘、成交量、成交额），同一指数下多只ETF成交额<b>加总</b>。</div>
@@ -270,7 +270,7 @@ h1 {
         <div class="step-text"><b>浮盈浮亏</b> — PnL = (当前收盘价 - 持仓成本) ÷ 持仓成本 × 100%</div>
     </div>
     <div class="note">
-        ⚠️ <b>异常高亮规则：</b>浮盈超过 50% 标注<span style="color:#b45309;font-weight:700">橙色预警</span>；累计持仓超过 800亿 标注<span style="color:#dc2626;font-weight:700">红色预警</span>。两者同时触发以红色为准。
+        ⚠ <b>异常高亮规则：</b>浮盈超过 50% 标注<span style="color:#b45309;font-weight:700">橙色预警</span>；累计持仓超过 800亿 标注<span style="color:#dc2626;font-weight:700">红色预警</span>。两者同时触发以红色为准。
     </div>
     <div style="margin-top:12px">
         <b>跟踪标的：</b>
@@ -340,12 +340,12 @@ function renderSignalBar() {
     }
     let summary = '';
     if (allProfit && maxPnl > 0) {
-        summary = '<b>📊 结论：</b>全部指数耐心资本浮盈，市场中长期趋势健康。';
+        summary = '<b> 结论：</b>全部指数耐心资本浮盈，市场中长期趋势健康。';
         if (maxPnl > 30) summary += ' ' + maxName + '浮盈最高(' + maxPnl.toFixed(0) + '%)，获利盘丰厚注意回调。';
     } else if (minPnl < -5) {
-        summary = '<b>📊 结论：</b>' + minName + '耐心资本亏损' + minPnl.toFixed(1) + '%，底部筹码松动。';
+        summary = '<b> 结论：</b>' + minName + '耐心资本亏损' + minPnl.toFixed(1) + '%，底部筹码松动。';
     } else {
-        summary = '<b>📊 结论：</b>耐心资本整体浮盈分化。';
+        summary = '<b> 结论：</b>耐心资本整体浮盈分化。';
     }
     bar.innerHTML = summary + '<br>' + sigs.join(' · ');
 }
@@ -396,7 +396,7 @@ function renderStateBoard() {
     if (conc.top?.length) {
         lines.push(`4）持仓结构上，当前最重的是 <b>${conc.top[0].name}</b>（${conc.top[0].share_pct}%），风格偏向 <b>${conc.top[0].bucket}</b>。`);
     }
-    explain.innerHTML = '<b>🧭 国家队状态解读：</b><br>' + lines.join('<br>');
+    explain.innerHTML = '<b> 国家队状态解读：</b><br>' + lines.join('<br>');
 }
 
 function renderCards() {
@@ -421,7 +421,7 @@ function renderCards() {
         const signalMap = {'双重异常':'绝对大单+托盘', '20日异常':'绝对大单', '5日异常':'近期托盘', '无异常':'无明显信号'};
         const signalText = signalMap[signalType] || signalType;
         const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '#9ca3af';
-        const signalBadge = signalType !== '无异常' ? `<div style="font-size:11px;color:${signalColor};font-weight:600;margin-top:2px;">📌 ${signalText}</div>` : '';
+        const signalBadge = signalType !== '无异常' ? `<div style="font-size:11px;color:${signalColor};font-weight:600;margin-top:2px;"> ${signalText}</div>` : '';
 
         card.innerHTML = `
             ${badgeHtml}
@@ -433,7 +433,7 @@ function renderCards() {
                 <span>现价 <b>${L.close.toFixed(3)}</b></span>
                 <span class="${pnlClass}" style="font-weight:700">${pnlSign}${L.pnl.toFixed(1)}%</span>
             </div>
-            ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span>📍 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
+            ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span> 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
             <div class="meta" style="margin-top:2px"><span>状态 <b>${L.intent || '暂无'}</b></span><span>${L.pnl_behavior || ''}</span></div>
             <div class="meta"><span>成交占比 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>偏离20日均值 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
         `;
@@ -455,7 +455,7 @@ function selectIndex(name) {
     const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '';
     const titleEl = document.getElementById('chartTitle');
     if (signalText) {
-        titleEl.innerHTML = `${name} — 耐心资本持仓估算 <span style="font-size:13px;color:${signalColor};font-weight:600;margin-left:8px;">📌 ${signalText}</span>`;
+        titleEl.innerHTML = `${name} — 耐心资本持仓估算 <span style="font-size:13px;color:${signalColor};font-weight:600;margin-left:8px;"> ${signalText}</span>`;
     } else {
         titleEl.textContent = name + ' — 耐心资本持仓估算';
     }
@@ -611,11 +611,11 @@ function renderCharts() {
                             const signalType = daily[idx]?.signal_type || '无异常';
                             const notes = [];
                             // 信号类型 → 投研语言
-                            if (signalType === '20日异常') notes.push('📌 绝对大单');
-                            else if (signalType === '5日异常') notes.push('📌 近期托盘');
-                            else if (signalType === '双重异常') notes.push('📌 绝对大单+托盘');
+                            if (signalType === '20日异常') notes.push(' 绝对大单');
+                            else if (signalType === '5日异常') notes.push(' 近期托盘');
+                            else if (signalType === '双重异常') notes.push(' 绝对大单+托盘');
                             const isHeavy = Math.abs(net) > heavyThreshold;
-                            if (isHeavy) notes.push(net > 0 ? '⚠️ 大幅净买入' : '⚠️ 大幅净卖出');
+                            if (isHeavy) notes.push(net > 0 ? '⚠ 大幅净买入' : '⚠ 大幅净卖出');
                             return notes.join('\n');
                         }
                     }

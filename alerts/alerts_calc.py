@@ -50,7 +50,7 @@ def calc():
     scores = {}  # 每维度0-100 (100=最危险)
 
     # ═══════ 1. 流动性风险 ═══════
-    liq = {'name': '💧 流动性风险', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
+    liq = {'name': ' 流动性风险', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
 
     dr_df = load_csv(LIQUIDITY_CACHE, 'dr007.csv')
     shibor_df = load_csv(LIQUIDITY_CACHE, 'shibor.csv')
@@ -95,13 +95,13 @@ def calc():
     scores['liquidity'] = liq['score']
     if liq['score'] >= 60:
         liq['level'] = '🔴'
-        result['alerts'].append('💧 资金面紧张，DR007显著偏高')
+        result['alerts'].append(' 资金面紧张，DR007显著偏高')
     elif liq['score'] >= 30:
         liq['level'] = '🟡'
     result['dimensions']['liquidity'] = liq
 
     # ═══════ 2. 估值泡沫 ═══════
-    val = {'name': '📊 估值泡沫', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
+    val = {'name': ' 估值泡沫', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
 
     for code, name in [('000001', '上证'), ('000300', '沪深300'), ('399006', '创业板')]:
         df = load_csv(CACHE_DIR, f'valuation_{code}.csv')
@@ -139,7 +139,7 @@ def calc():
             val['items'].append(f"股债性价比(EP-10Y): {equity_bond:.2f}%")
             if equity_bond < 0:
                 val['score'] += 30
-                result['alerts'].append('📊 股债性价比为负，股票相对债券无吸引力')
+                result['alerts'].append(' 股债性价比为负，股票相对债券无吸引力')
             elif equity_bond < 1:
                 val['score'] += 15
 
@@ -147,13 +147,13 @@ def calc():
     scores['valuation'] = val['score']
     if val['score'] >= 60:
         val['level'] = '🔴'
-        result['alerts'].append('📊 市场估值处于历史高位区间')
+        result['alerts'].append(' 市场估值处于历史高位区间')
     elif val['score'] >= 30:
         val['level'] = '🟡'
     result['dimensions']['valuation'] = val
 
     # ═══════ 3. 情绪过热 ═══════
-    senti = {'name': '🔥 情绪过热', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
+    senti = {'name': ' 情绪过热', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
 
     # 成交额
     amt_df = load_csv(CACHE_DIR, 'market_amount.csv')
@@ -184,7 +184,7 @@ def calc():
             senti['score'] += 25
         if latest_down > 50:
             senti['score'] += 20
-            result['alerts'].append(f'🔥 跌停{latest_down}只，恐慌情绪蔓延')
+            result['alerts'].append(f' 跌停{latest_down}只，恐慌情绪蔓延')
 
     # 融资买入占比（复用crowding）
     margin_df = load_csv(os.path.join(BASE, 'micro_flow', 'crowding', 'cache'), 'margin.csv')
@@ -198,13 +198,13 @@ def calc():
     scores['sentiment'] = senti['score']
     if senti['score'] >= 60:
         senti['level'] = '🔴'
-        result['alerts'].append('🔥 市场情绪过热，成交放量+涨停家数异常')
+        result['alerts'].append(' 市场情绪过热，成交放量+涨停家数异常')
     elif senti['score'] >= 30:
         senti['level'] = '🟡'
     result['dimensions']['sentiment'] = senti
 
     # ═══════ 4. 外部冲击 ═══════
-    ext = {'name': '🌍 外部冲击', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
+    ext = {'name': ' 外部冲击', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
 
     # 中美利差
     rates = load_json(RATES_JSON)
@@ -216,7 +216,7 @@ def calc():
 
         if latest_spread < -2.0:
             ext['score'] += 40
-            result['alerts'].append(f'🌍 中美利差{latest_spread:+.2f}%，资金外流压力大')
+            result['alerts'].append(f' 中美利差{latest_spread:+.2f}%，资金外流压力大')
         elif latest_spread < -1.5:
             ext['score'] += 20
 
@@ -235,7 +235,7 @@ def calc():
         ext['items'].append(f"USDCNH: {cnh['latest']:.4f}")
         if cnh.get('change') and abs(cnh['change']) > 0.05:
             ext['score'] += 20
-            result['alerts'].append(f"🌍 USDCNH日波动{cnh['change']:+.4f}，汇率异动")
+            result['alerts'].append(f" USDCNH日波动{cnh['change']:+.4f}，汇率异动")
 
     # A股版VIX：用期权IV分位代替
     opt_data = load_json(OPTION_JSON)
@@ -248,7 +248,7 @@ def calc():
                     ext['items'].append(f"300期权IV分位: {iv_pct:.0f}%")
                     if iv_pct > 80:
                         ext['score'] += 25
-                        result['alerts'].append(f'🌍 300期权IV分位{iv_pct:.0f}%，隐含波动率偏高')
+                        result['alerts'].append(f' 300期权IV分位{iv_pct:.0f}%，隐含波动率偏高')
                 break
 
     ext['score'] = min(ext['score'], 100)
@@ -260,7 +260,7 @@ def calc():
     result['dimensions']['external'] = ext
 
     # ═══════ 5. 微观恶化 ═══════
-    micro = {'name': '🏃 微观恶化', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
+    micro = {'name': ' 微观恶化', 'level': '🟢', 'score': 0, 'items': [], 'trend': []}
 
     # 北向资金
     nb_df = load_csv(os.path.join(BASE, 'micro_flow', 'crowding', 'cache'), 'northbound.csv')
@@ -287,7 +287,7 @@ def calc():
 
             if consecutive_out >= 5:
                 micro['score'] += 40
-                result['alerts'].append(f'🏃 北向连续{consecutive_out}日净流出')
+                result['alerts'].append(f' 北向连续{consecutive_out}日净流出')
             elif consecutive_out >= 3:
                 micro['score'] += 20
 
@@ -301,7 +301,7 @@ def calc():
                     micro['items'].append(f"300期权PCR(OI): {pcr:.2f}")
                     if pcr > 1.3:
                         micro['score'] += 30
-                        result['alerts'].append(f'🏃 300期权PCR {pcr:.2f}，看空力量极重')
+                        result['alerts'].append(f' 300期权PCR {pcr:.2f}，看空力量极重')
                     elif pcr > 1.0:
                         micro['score'] += 15
                 break
@@ -322,21 +322,21 @@ def calc():
     if total >= 60:
         result['composite_level'] = '高风险 🔴'
     elif total >= 40:
-        result['composite_level'] = '中高风险 🟠'
+        result['composite_level'] = '中高风险 '
     elif total >= 20:
         result['composite_level'] = '中低风险 🟡'
     else:
         result['composite_level'] = '低风险 🟢'
 
     if not result['alerts']:
-        result['alerts'] = ['当前无极端风险信号 ✅']
+        result['alerts'] = ['当前无极端风险信号 ']
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     print(f"\n输出: {OUTPUT_JSON}")
     print(f"综合风险: {result['composite_score']:.1f}/100 - {result['composite_level']}")
     for a in result['alerts']:
-        print(f"  ⚠️ {a}")
+        print(f"  ⚠ {a}")
 
 
 if __name__ == '__main__':

@@ -128,7 +128,7 @@ for exchange, prefix, cn_name in SYMBOLS:
         "samples": len(iv_series),
     })
     
-    print(f"  ✅ IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(iv_series)}")
+    print(f"   IV={current_iv:.4f}, 分位={pct:.1f}%, 样本={len(iv_series)}")
 
 output = {
     "update_time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -138,4 +138,4 @@ output = {
 with open(BASE / "iv_percentile.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {len(results)} 品种")
+print(f"\n 完成: {len(results)} 品种")

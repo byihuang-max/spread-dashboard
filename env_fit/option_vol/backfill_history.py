@@ -169,4 +169,4 @@ history["records"] = sorted(history["records"], key=lambda x: x["date"])
 with open(history_file, "w", encoding="utf-8") as f:
     json.dump(history, f, ensure_ascii=False, indent=2)
 
-print(f"\n✅ 完成: {len(history['records'])} 天")
+print(f"\n 完成: {len(history['records'])} 天")

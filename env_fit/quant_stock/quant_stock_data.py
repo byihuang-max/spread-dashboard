@@ -188,7 +188,7 @@ def fetch_index_incremental(new_dates):
                       {'ts_code': code, 'start_date': start_date, 'end_date': end_date},
                       'ts_code,trade_date,close,amount')
         if not rows:
-            log(f'    ⚠️ 无数据')
+            log(f'    ⚠ 无数据')
             continue
         for r in rows:
             if r['trade_date'] in new_dates_set:
@@ -220,7 +220,7 @@ def fetch_fut_incremental(new_dates):
                       {'ts_code': code, 'start_date': start_date, 'end_date': end_date},
                       'ts_code,trade_date,close')
         if not rows:
-            log(f'    ⚠️ 无数据')
+            log(f'    ⚠ 无数据')
             continue
         for r in rows:
             if r['trade_date'] in new_dates_set:
@@ -365,7 +365,7 @@ def build_json_from_csv(dates):
     with open(OUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    log(f'\n✅ 输出: {OUT_JSON}')
+    log(f'\n 输出: {OUT_JSON}')
     log(f'   total_amount: {len(total_amount)} 天')
     log(f'   index_share:  {len(index_share)} 天')
     log(f'   basis:        {len(basis)} 天')
@@ -387,7 +387,7 @@ def main():
     dates = get_trade_dates()
 
     if not dates:
-        log('  ⚠️ Tushare 连不上，使用已有CSV数据')
+        log('  ⚠ Tushare 连不上，使用已有CSV数据')
         idx_rows = read_csv_data(IDX_CSV)
         if not idx_rows:
             log('  ERROR: 无交易日且无CSV数据')

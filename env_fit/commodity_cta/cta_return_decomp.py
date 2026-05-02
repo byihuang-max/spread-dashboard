@@ -69,7 +69,7 @@ def main():
 
     # 1. 加载产品净值
     if not os.path.exists(NAV_PATH):
-        print(f"❌ 产品净值文件不存在: {NAV_PATH}")
+        print(f" 产品净值文件不存在: {NAV_PATH}")
         return
     with open(NAV_PATH) as f:
         nav_data = json.load(f)
@@ -96,7 +96,7 @@ def main():
             }
         print(f"  PCA数据: {len(pca_map)}天")
     else:
-        print(f"  ⚠️ PCA数据不存在，将只做beta归因")
+        print(f"  ⚠ PCA数据不存在，将只做beta归因")
 
     # 2b. 加载全市场波动率时序
     vol_map = {}  # date_compact -> {avg_vol, vol_quantile, vol_regime, delta_vol}
@@ -112,7 +112,7 @@ def main():
             }
         print(f"  波动率数据: {len(vol_map)}天")
     else:
-        print(f"  ⚠️ 波动率数据不存在")
+        print(f"  ⚠ 波动率数据不存在")
 
     # 3. 构建日收益率序列
     records = []
@@ -342,7 +342,7 @@ def main():
 
     # 13. 打印结果
     print(f"\n{'='*60}")
-    print(f"📊 CTA产品收益归因（4因子）")
+    print(f" CTA产品收益归因（4因子）")
     print(f"{'='*60}")
     print(f"  产品总收益:     {total_ret:+.2f}%")
     print(f"  ├─ Beta贡献:    {beta_total:+.2f}%  (南华商品 × β={avg_beta:.2f})")
@@ -360,7 +360,7 @@ def main():
                   f"alpha日均={s['avg_alpha_ret']:+.4f}%  "
                   f"alpha累计={s['total_alpha_ret']:+.2f}%")
 
-    print(f"\n✅ 归因完成")
+    print(f"\n 归因完成")
 
 
 if __name__ == '__main__':

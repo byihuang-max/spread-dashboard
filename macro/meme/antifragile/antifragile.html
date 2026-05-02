@@ -22,7 +22,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 </head><body>
 
 <div class="signal-bar">
-  <div class="signal-main">🌐 反脆弱看板</div>
+  <div class="signal-main"> 反脆弱看板</div>
   <div class="signal-tags">
     <span class="signal-tag">全球风险资产</span>
     <span class="signal-tag">归一净值</span>
@@ -35,13 +35,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="section">
   <div class="chart-box">
-    <h3>🚦 Meme反身性信号 <span style="font-weight:400;color:#8b92a5;font-size:11px">（截至 2026-04-24）</span></h3>
+    <h3> Meme反身性信号 <span style="font-weight:400;color:#8b92a5;font-size:11px">（截至 2026-04-24）</span></h3>
 
     <!-- 当前状态大卡片 -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;align-items:stretch">
       <!-- 主信号 -->
       <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
-        <div style="font-size:36px;margin-bottom:4px">🟠</div>
+        <div style="font-size:36px;margin-bottom:4px"></div>
         <div style="font-size:22px;font-weight:900;color:#ea580c">54</div>
         <div style="font-size:11px;color:#7c8598;margin-top:2px">综合信号 / 100</div>
         <div style="font-size:13px;font-weight:700;color:#ea580c;margin-top:8px">反身性强化期</div>
@@ -85,7 +85,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
       <b>叙事联动指数(NLI)：</b>相关性矩阵中正相关系数的均值，衡量资产同涨同跌程度。越高=叙事越趋同。<br>
       <b>量能加速度(VA)：</b>近5日均量 / 近30日均量 - 1，多资产加权（BTC <b>35%</b> · 纳斯达克ETF(QQQ) <b>25%</b> · 恒生科技ETF <b>20%</b> · 科创50ETF <b>20%</b>）。<br>
       <b>综合信号：</b>两指标各取历史分位后加权平均（各50%）。分位基于过去252个交易日。<br>
-      <b>⚠️ 注意：</b>恐慌暴跌时NLI也会升高（全面崩跌也是联动），需结合价格方向判断是Meme狂欢还是系统性风险。
+      <b>⚠ 注意：</b>恐慌暴跌时NLI也会升高（全面崩跌也是联动），需结合价格方向判断是Meme狂欢还是系统性风险。
     </div>
   </div>
 </div>
@@ -197,7 +197,7 @@ new Chart(document.getElementById('memeVaChart'), {
 
 <div class="section">
   <div class="chart-box">
-    <h3>📈 全球8大资产归一净值曲线（起点=1）</h3>
+    <h3> 全球8大资产归一净值曲线（起点=1）</h3>
     <div class="chart-wrap"><canvas id="navChart"></canvas></div>
     <div class="chart-note">
       <b>怎么看：</b>全部资产以各自最早数据日期归一为1，便于跨资产涨跌幅对比。<br>
@@ -208,7 +208,7 @@ new Chart(document.getElementById('memeVaChart'), {
 
 <div class="section">
   <div class="chart-box">
-    <h3>📊 股票指数中位数 vs 黄金 / 原油 / BTC / 美元兑日元 <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
+    <h3> 股票指数中位数 vs 黄金 / 原油 / BTC / 美元兑日元 <span style="font-weight:400;color:#8b92a5;font-size:11px">（近一年，灰线=6只股指参考）</span></h3>
     <div class="chart-wrap-sm"><canvas id="medianChart"></canvas></div>
   </div>
   <div class="chart-box">
@@ -220,7 +220,7 @@ new Chart(document.getElementById('memeVaChart'), {
 
 <div class="section">
   <div class="chart-box">
-    <h3>🔥 30天滚动相关性矩阵 — 叙事联动监控 <span style="font-weight:400;color:#8b92a5;font-size:11px">（日期: 2026-04-24）</span></h3>
+    <h3> 30天滚动相关性矩阵 — 叙事联动监控 <span style="font-weight:400;color:#8b92a5;font-size:11px">（日期: 2026-04-24）</span></h3>
     <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px;width:100%;table-layout:fixed"><thead><tr><th style="padding:4px 6px;width:120px"></th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">纳斯达克100</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">日经225</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">韩国KOSPI</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">恒生科技ETF</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">科创50ETF</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">COMEX黄金</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">BTC</th><th style="padding:4px 6px;font-size:10px;color:#64748b;font-weight:600;text-align:center;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);height:70px;vertical-align:bottom;width:calc((100% - 120px) / 8)">标普500</th></tr></thead><tbody><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">纳斯达克100</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,218,218);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.17</td><td style="padding:7px 6px;text-align:center;background:rgb(255,234,234);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.10</td><td style="padding:7px 6px;text-align:center;background:rgb(255,188,188);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.31</td><td style="padding:7px 6px;text-align:center;background:rgb(255,204,204);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.23</td><td style="padding:7px 6px;text-align:center;background:rgb(255,229,229);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.12</td><td style="padding:7px 6px;text-align:center;background:rgb(255,92,92);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.75</td><td style="padding:7px 6px;text-align:center;background:rgb(255,203,203);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.24</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">日经225</td><td style="padding:7px 6px;text-align:center;background:rgb(255,218,218);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.17</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,58,58);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.91</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td><td style="padding:7px 6px;text-align:center;background:rgb(255,76,76);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.82</td><td style="padding:7px 6px;text-align:center;background:rgb(255,106,106);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.69</td><td style="padding:7px 6px;text-align:center;background:rgb(255,229,229);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.12</td><td style="padding:7px 6px;text-align:center;background:rgb(255,64,64);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.88</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">韩国KOSPI</td><td style="padding:7px 6px;text-align:center;background:rgb(255,234,234);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.10</td><td style="padding:7px 6px;text-align:center;background:rgb(255,58,58);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.91</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,93,93);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.74</td><td style="padding:7px 6px;text-align:center;background:rgb(255,88,88);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.77</td><td style="padding:7px 6px;text-align:center;background:rgb(255,105,105);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.69</td><td style="padding:7px 6px;text-align:center;background:rgb(255,240,240);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.07</td><td style="padding:7px 6px;text-align:center;background:rgb(255,69,69);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.85</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">恒生科技ETF</td><td style="padding:7px 6px;text-align:center;background:rgb(255,188,188);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.31</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td><td style="padding:7px 6px;text-align:center;background:rgb(255,93,93);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.74</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,82,82);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.79</td><td style="padding:7px 6px;text-align:center;background:rgb(255,102,102);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.71</td><td style="padding:7px 6px;text-align:center;background:rgb(255,219,219);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.16</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">科创50ETF</td><td style="padding:7px 6px;text-align:center;background:rgb(255,204,204);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.23</td><td style="padding:7px 6px;text-align:center;background:rgb(255,76,76);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.82</td><td style="padding:7px 6px;text-align:center;background:rgb(255,88,88);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.77</td><td style="padding:7px 6px;text-align:center;background:rgb(255,82,82);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.79</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,96,96);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.73</td><td style="padding:7px 6px;text-align:center;background:rgb(255,206,206);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.22</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">COMEX黄金</td><td style="padding:7px 6px;text-align:center;background:rgb(255,229,229);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.12</td><td style="padding:7px 6px;text-align:center;background:rgb(255,106,106);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.69</td><td style="padding:7px 6px;text-align:center;background:rgb(255,105,105);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.69</td><td style="padding:7px 6px;text-align:center;background:rgb(255,102,102);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.71</td><td style="padding:7px 6px;text-align:center;background:rgb(255,96,96);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.73</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,222,222);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.15</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">BTC</td><td style="padding:7px 6px;text-align:center;background:rgb(255,92,92);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.75</td><td style="padding:7px 6px;text-align:center;background:rgb(255,229,229);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.12</td><td style="padding:7px 6px;text-align:center;background:rgb(255,240,240);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.07</td><td style="padding:7px 6px;text-align:center;background:rgb(255,219,219);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.16</td><td style="padding:7px 6px;text-align:center;background:rgb(255,206,206);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.22</td><td style="padding:7px 6px;text-align:center;background:rgb(255,222,222);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.15</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td><td style="padding:7px 6px;text-align:center;background:rgb(255,218,218);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.17</td></tr><tr><td style="padding:6px 10px;font-size:11px;font-weight:600;color:#374151;white-space:nowrap;width:120px">标普500</td><td style="padding:7px 6px;text-align:center;background:rgb(255,203,203);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.24</td><td style="padding:7px 6px;text-align:center;background:rgb(255,64,64);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.88</td><td style="padding:7px 6px;text-align:center;background:rgb(255,69,69);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.85</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td><td style="padding:7px 6px;text-align:center;background:rgb(255,81,81);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.80</td><td style="padding:7px 6px;text-align:center;background:rgb(255,218,218);color:#374151;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">0.17</td><td style="padding:7px 6px;text-align:center;background:rgb(255,38,38);color:#fff;font-size:11px;font-weight:600;border:1px solid #f5f5f5;width:calc((100% - 120px) / 8)">1.00</td></tr></tbody></table></div>
     <div class="chart-note">
       <b>颜色：</b>红色=正相关（同涨跌），蓝色=负相关（反向）。
@@ -344,7 +344,7 @@ new Chart(document.getElementById('medianChart'),{
   <!-- 标题 + 说明 -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
     <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">
-      📡 宏观 Meme 叙事生命周期
+       宏观 Meme 叙事生命周期
     </h2>
     <span id="lc-updated" style="font-size:11px;color:#94a3b8;"></span>
   </div>
@@ -359,7 +359,7 @@ new Chart(document.getElementById('medianChart'),{
 
   <!-- 错误提示区（fetch 失败时显示） -->
   <div id="lc-error" style="display:none;color:#dc2626;font-size:12px;padding:8px 0;">
-    ⚠️ 无法加载生命周期数据，请先运行 macro_lifecycle.py
+    ⚠ 无法加载生命周期数据，请先运行 macro_lifecycle.py
   </div>
 
   <!-- 可排序表格 -->
@@ -385,17 +385,17 @@ new Chart(document.getElementById('medianChart'),{
 
   <!-- 图例说明 -->
   <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:11px;color:#64748b;">
-    <span><span style="background:#dcfce7;color:#15803d;border-radius:4px;padding:1px 6px;font-weight:600;">🌱新兴</span> 热度从低位升起，最大配置窗口</span>
-    <span><span style="background:#fff7ed;color:#c2410c;border-radius:4px;padding:1px 6px;font-weight:600;">🔥积累</span> 持续升温，窗口收窄中</span>
-    <span><span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:1px 6px;font-weight:600;">⚡共识</span> 高位稳定，市场已定价，慎追</span>
-    <span><span style="background:#fef2f2;color:#991b1b;border-radius:4px;padding:1px 6px;font-weight:600;">📉消退</span> 热度下行，关注反向</span>
-    <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">🔍观察</span> 热度偏低，暂无信号</span>
+    <span><span style="background:#dcfce7;color:#15803d;border-radius:4px;padding:1px 6px;font-weight:600;">新兴</span> 热度从低位升起，最大配置窗口</span>
+    <span><span style="background:#fff7ed;color:#c2410c;border-radius:4px;padding:1px 6px;font-weight:600;">积累</span> 持续升温，窗口收窄中</span>
+    <span><span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:1px 6px;font-weight:600;">共识</span> 高位稳定，市场已定价，慎追</span>
+    <span><span style="background:#fef2f2;color:#991b1b;border-radius:4px;padding:1px 6px;font-weight:600;">消退</span> 热度下行，关注反向</span>
+    <span><span style="background:#f1f5f9;color:#64748b;border-radius:4px;padding:1px 6px;font-weight:600;">观察</span> 热度偏低，暂无信号</span>
   </div>
 
   <!-- 今日新兴主题（LLM动态发现，生成时内嵌） -->
   <div id="dynamic-themes-section" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">🔍 今日新兴主题</h3>
+      <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;"> 今日新兴主题</h3>
       <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新） · 04-24 08:24</span>
     </div>
     <div id="dynamic-themes-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
@@ -574,7 +574,7 @@ new Chart(document.getElementById('medianChart'),{
         var short = t.length > 28 ? t.slice(0,28)+'…' : t;
         newsHtml += '<div title="' + t.replace(/"/g,'&quot;') + '" ' +
           'style="font-size:10.5px;color:#94a3b8;line-height:1.5;white-space:nowrap;overflow:hidden;' +
-          'text-overflow:ellipsis;max-width:200px;cursor:default;">📌 ' + short + '</div>';
+          'text-overflow:ellipsis;max-width:200px;cursor:default;"> ' + short + '</div>';
       });
       newsHtml += '</div>';
     }

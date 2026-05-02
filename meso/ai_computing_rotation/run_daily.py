@@ -38,8 +38,8 @@ def run(end_date: str = None):
     # 1. 拉数据
     data = fetch_all(end_date=end_date)
 
-    # 2. 信号层 ① — 比价 Z-score
-    print("\n[信号层①] 比价 Z-score")
+    # 2. 信号层  — 比价 Z-score
+    print("\n[信号层] 比价 Z-score")
     pair_zscores = calc_all_pair_zscores(data["basket_prices"])
     zscore_summary = {}
     for label, df in pair_zscores.items():
@@ -48,15 +48,15 @@ def run(end_date: str = None):
         zscore_summary[label] = {"zscore": round(last_z, 3) if last_z else None, "label": lbl}
         print(f"  {label}: Z={last_z:.3f} → {lbl}" if last_z else f"  {label}: 无数据")
 
-    # 3. 信号层 ② — 量价状态
-    print("\n[信号层②] 量价状态分类")
+    # 3. 信号层  — 量价状态
+    print("\n[信号层] 量价状态分类")
     vp = calc_all_vol_price(data["basket_prices"], data["basket_amounts"])
     for name, info in vp.items():
         print(f"  {name}: {info['emoji']} {info['state']} "
               f"(5日涨幅{info.get('price_chg_5d','')}%, 量比{info.get('vol_ratio','')})")
 
-    # 4. 信号层 ③ — ETF 资金流
-    print("\n[信号层③] ETF 资金流")
+    # 4. 信号层  — ETF 资金流
+    print("\n[信号层] ETF 资金流")
     etf_sum = etf_flow_summary(data["etf_shares"])
     for name, info in etf_sum.items():
         print(f"  {name}: {info['direction']} (近5日累计 {info['recent_chg']}亿份)")
@@ -81,7 +81,7 @@ def run(end_date: str = None):
     out_file = OUTPUT_DIR / f"signal_{end_date}.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, default=str)
-    print(f"\n✅ 结果已保存: {out_file}")
+    print(f"\n 结果已保存: {out_file}")
 
     # 同时保存一份 latest
     latest = OUTPUT_DIR / "signal_latest.json"

@@ -1256,7 +1256,7 @@ def main():
         'opportunity_top_stocks': sorted(stocks, key=lambda x: x.get('opportunity_score', 0), reverse=True)[:100],
     }
     OUTPUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(f'✅ wrote {OUTPUT} | industries={len(industries)} stocks={len(stocks)}')
+    print(f' wrote {OUTPUT} | industries={len(industries)} stocks={len(stocks)}')
 
 
 if __name__ == '__main__':

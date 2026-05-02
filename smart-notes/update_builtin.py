@@ -83,6 +83,6 @@ if match:
     new_line = f'const BUILTIN_NOTES = {notes_json};'
     html = html[:match.start()] + new_line + html[match.end():]
     INDEX_HTML.write_text(html, encoding="utf-8")
-    print(f"✅ 更新完成，共 {len(entries)} 条笔记")
+    print(f" 更新完成，共 {len(entries)} 条笔记")
 else:
-    print("❌ 找不到 BUILTIN_NOTES 模式")
+    print(" 找不到 BUILTIN_NOTES 模式")

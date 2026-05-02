@@ -419,7 +419,7 @@ def main():
 
     write_output(result)
 
-    log(f"\n✅ 模块二 v2 完成")
+    log(f"\n 模块二 v2 完成")
     log(f"  扫描日期: {result['scan_date']}")
     log(f"  活跃品种: {result['n_scanned']}")
     log(f"  Top 5:")

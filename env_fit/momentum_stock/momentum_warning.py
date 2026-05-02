@@ -16,7 +16,7 @@ LOOKBACK = 120
 
 def load_json(p, label):
     if not p.exists():
-        print(f"⚠️  {label} 不存在: {p}")
+        print(f"⚠  {label} 不存在: {p}")
         return None
     with open(p) as f:
         return json.load(f)
@@ -157,12 +157,12 @@ def main():
     patient_data = load_json(PATIENT_PATH, "patient_capital.json")
 
     if not sent_data:
-        print("❌ 情绪数据缺失，无法运行")
+        print(" 情绪数据缺失，无法运行")
         return
 
     sent_daily = sent_data.get("daily", [])
     if not sent_daily:
-        print("❌ 情绪 daily 为空"); return
+        print(" 情绪 daily 为空"); return
 
     amount_daily = []
     if amount_data:
@@ -238,7 +238,7 @@ def main():
     with open(JSON_PATH, "w") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ 新增 {len(new_rows)} 天，共 {len(all_rows)} 天，最新: {all_rows[-1]['date'] if all_rows else 'N/A'}")
+    print(f" 新增 {len(new_rows)} 天，共 {len(all_rows)} 天，最新: {all_rows[-1]['date'] if all_rows else 'N/A'}")
 
 if __name__ == "__main__":
     main()

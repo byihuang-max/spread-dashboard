@@ -180,7 +180,7 @@ Promise.all([
     let label = '';
     if(sig >= 0.7) label = '🟢 强卖方窗口';
     else if(sig >= 0.5) label = '🟡 精选窗口';
-    else if(sig >= 0.3) label = '⚪ 观察期';
+    else if(sig >= 0.3) label = ' 观察期';
     else label = '🔴 不适合卖权';
     document.getElementById('signalLabel').textContent = label;
   }

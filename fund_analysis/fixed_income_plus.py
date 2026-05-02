@@ -30,15 +30,15 @@ def tushare_query(api_name, fields='', **kwargs):
             df = pd.DataFrame(result['data']['items'], columns=result['data']['fields'])
             return df
         else:
-            print(f"❌ {api_name} 查询失败: {result.get('msg', 'Unknown error')}")
+            print(f" {api_name} 查询失败: {result.get('msg', 'Unknown error')}")
             return pd.DataFrame()
     except Exception as e:
-        print(f"❌ {api_name} 请求异常: {e}")
+        print(f" {api_name} 请求异常: {e}")
         return pd.DataFrame()
 
 def get_fund_basic():
     """获取基金基本信息，筛选固收+类型"""
-    print("📊 拉取基金列表...")
+    print(" 拉取基金列表...")
     df = tushare_query('fund_basic', fields='ts_code,name,management,fund_type,invest_type')
     
     if df.empty:
@@ -50,7 +50,7 @@ def get_fund_basic():
     fixed_income_types = ['债券型', '混合型']
     df_filtered = df[df['fund_type'].isin(fixed_income_types)].copy()
     
-    print(f"✅ 筛选出 {len(df_filtered)} 只固收+候选基金")
+    print(f" 筛选出 {len(df_filtered)} 只固收+候选基金")
     return df_filtered
 
 def get_fund_nav(ts_code, start_date, end_date):
@@ -135,12 +135,12 @@ def calculate_scale_change(share_df):
     return change_pct
 
 def main():
-    print("🚀 开始固收+基金分析...")
+    print(" 开始固收+基金分析...")
     
     # 1. 获取基金列表
     fund_basic = get_fund_basic()
     if fund_basic.empty:
-        print("❌ 无法获取基金列表")
+        print(" 无法获取基金列表")
         return
     
     # 2. 计算日期范围
@@ -150,7 +150,7 @@ def main():
     results = []
     
     # 3. 遍历基金，获取详细数据
-    print(f"📈 开始分析 {len(fund_basic)} 只基金...")
+    print(f" 开始分析 {len(fund_basic)} 只基金...")
     for idx, row in fund_basic.iterrows():
         ts_code = row['ts_code']
         name = row['name']
@@ -196,7 +196,7 @@ def main():
         
         # 测试阶段：只处理前50只
         if idx >= 49:
-            print("⚠️ 测试模式：只处理前50只基金")
+            print("⚠ 测试模式：只处理前50只基金")
             break
     
     # 4. 输出CSV
@@ -209,10 +209,10 @@ def main():
     output_path = '~/Desktop/gamt-dashboard/fund_analysis/fixed_income_plus_analysis.csv'
     df_result.to_csv(output_path.replace('~', '/Users/apple'), index=False, encoding='utf-8-sig')
     
-    print(f"\n✅ 分析完成！")
-    print(f"📁 输出文件: {output_path}")
-    print(f"📊 共分析 {len(df_result)} 只基金")
-    print(f"🎯 易方达/鹏华基金: {len(df_result[df_result['易方达/鹏华']=='是'])} 只")
+    print(f"\n 分析完成！")
+    print(f" 输出文件: {output_path}")
+    print(f" 共分析 {len(df_result)} 只基金")
+    print(f" 易方达/鹏华基金: {len(df_result[df_result['易方达/鹏华']=='是'])} 只")
 
 if __name__ == '__main__':
     main()

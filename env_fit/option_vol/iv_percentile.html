@@ -30,7 +30,7 @@
   </div>
 
   <div class="card">
-    <div class="title">📊 各品种 IV 历史分位</div>
+    <div class="title"> 各品种 IV 历史分位</div>
     <div class="sub">当前 ATM IV 在过去1年的分位数 · 分位越高，保险费越贵，卖方赔率越好</div>
     <table>
       <thead>
@@ -49,7 +49,7 @@
   </div>
 
   <div class="card">
-    <div class="title">📈 IV 历史走势</div>
+    <div class="title"> IV 历史走势</div>
     <div class="sub">选择品种查看过去1年的 ATM IV 变化</div>
     <select id="symbolSelect" style="padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;margin-top:8px">
       <option value="">-- 选择品种 --</option>
@@ -70,7 +70,7 @@ fetch('iv_percentile.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   if(marketPct >= 80) desc = '🔴 极高位 · 强卖方窗口';
   else if(marketPct >= 60) desc = '🟡 高位 · 精选窗口';
   else if(marketPct >= 40) desc = '🟢 中性';
-  else desc = '⚪ 低位 · 不适合卖权';
+  else desc = ' 低位 · 不适合卖权';
   document.getElementById('marketDesc').textContent = desc;
   
   const symbols = d.symbols || [];

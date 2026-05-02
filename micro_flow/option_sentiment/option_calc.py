@@ -342,7 +342,7 @@ def calc_option_sentiment():
         if s['pcr_oi'] > 1.3:
             global_signals.append(f"{name} PCR(OI) {s['pcr_oi']:.2f}，看空持仓极重 🔴")
         elif s['pcr_oi'] < 0.5:
-            global_signals.append(f"{name} PCR(OI) {s['pcr_oi']:.2f}，看多情绪亢奋 ⚠️")
+            global_signals.append(f"{name} PCR(OI) {s['pcr_oi']:.2f}，看多情绪亢奋 ⚠")
 
         # IV 分位极端
         if s['iv_percentile'] <= 10:
@@ -353,16 +353,16 @@ def calc_option_sentiment():
         # IV 期限结构倒挂
         ts = u.get('term_structure', [])
         if len(ts) >= 2 and ts[0]['iv'] > ts[1]['iv'] * 1.05:
-            global_signals.append(f"{name} IV期限倒挂（近月{ts[0]['iv']:.1f}% > 次月{ts[1]['iv']:.1f}%）⚠️")
+            global_signals.append(f"{name} IV期限倒挂（近月{ts[0]['iv']:.1f}% > 次月{ts[1]['iv']:.1f}%）⚠")
 
         # OI激增的大头
         oi_surges = [a for a in u.get('anomalies', []) if a['type'] == 'oi_surge']
         if oi_surges:
             biggest = max(oi_surges, key=lambda x: x.get('oi', 0))
             ratio = biggest['oi'] / biggest['prev_avg'] if biggest.get('prev_avg', 0) > 0 else 0
-            global_signals.append(f"{name} {biggest['label']} OI激增{ratio:.1f}x，大资金建仓 🔶")
+            global_signals.append(f"{name} {biggest['label']} OI激增{ratio:.1f}x，大资金建仓 ")
 
-    result['global_signals'] = global_signals if global_signals else ['当前期权市场无极端信号 ✅']
+    result['global_signals'] = global_signals if global_signals else ['当前期权市场无极端信号 ']
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

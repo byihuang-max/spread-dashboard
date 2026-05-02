@@ -33,18 +33,18 @@ def tushare_query(api_name, fields, **params):
         resp = requests.post(TUSHARE_API, json=data, timeout=30, proxies={'http': None, 'https': None})
         result = resp.json()
         if result['code'] != 0:
-            print(f"❌ Tushare API 错误: {result.get('msg', 'Unknown')}")
+            print(f" Tushare API 错误: {result.get('msg', 'Unknown')}")
             return pd.DataFrame()
         
         df = pd.DataFrame(result['data']['items'], columns=result['data']['fields'])
         return df
     except Exception as e:
-        print(f"❌ 请求失败: {e}")
+        print(f" 请求失败: {e}")
         return pd.DataFrame()
 
 def fetch_sw_industry_data(days=252):
     """拉取申万一级行业指数数据（近一年）"""
-    print("📊 拉取申万一级行业数据...")
+    print(" 拉取申万一级行业数据...")
     
     end_date = datetime.now().strftime('%Y%m%d')
     start_date = (datetime.now() - timedelta(days=days)).strftime('%Y%m%d')
@@ -85,10 +85,10 @@ def fetch_sw_industry_data(days=252):
                 print(f"    字段: {df.columns.tolist()}")
             df_list.append(df)
         else:
-            print(f"    ⚠️ {code} 无数据")
+            print(f"    ⚠ {code} 无数据")
     
     if not df_list:
-        print("❌ 未获取到数据")
+        print(" 未获取到数据")
         return pd.DataFrame(), heavy_industries, light_industries
     
     all_data = pd.concat(df_list, ignore_index=True)
@@ -96,12 +96,12 @@ def fetch_sw_industry_data(days=252):
     all_data['close'] = pd.to_numeric(all_data['close'], errors='coerce')
     all_data['pct_change'] = pd.to_numeric(all_data['pct_change'], errors='coerce')
     
-    print(f"✅ 获取 {len(all_data)} 条数据")
+    print(f" 获取 {len(all_data)} 条数据")
     return all_data, heavy_industries, light_industries
 
 def fetch_us_sector_data(days=252):
     """拉取美国行业ETF数据（罗素3000拟合）- 改用 AkShare，避免 yfinance rate limit"""
-    print("🇺🇸 拉取美国行业ETF数据（罗素3000拟合）...")
+    print("US 拉取美国行业ETF数据（罗素3000拟合）...")
 
     # 重资产行业ETF
     heavy_etfs = {
@@ -128,13 +128,13 @@ def fetch_us_sector_data(days=252):
         try:
             df = ak.stock_us_daily(symbol=ticker, adjust='qfq')
             if df.empty:
-                print(f"  ⚠️ {ticker} 无数据")
+                print(f"  ⚠ {ticker} 无数据")
                 continue
             df = df.copy()
             df['date'] = pd.to_datetime(df['date'])
             df = df[(df['date'] >= pd.to_datetime(start_date)) & (df['date'] <= pd.to_datetime(end_date))]
             if df.empty:
-                print(f"  ⚠️ {ticker} 近一年无数据")
+                print(f"  ⚠ {ticker} 近一年无数据")
                 continue
             df = df.sort_values('date')
             df['pct_change'] = df['close'].pct_change() * 100
@@ -145,16 +145,16 @@ def fetch_us_sector_data(days=252):
                 'pct_change': df['pct_change'].values
             })
             df_list.append(temp)
-            print(f"  ✅ {ticker}: {len(temp)} 条")
+            print(f"   {ticker}: {len(temp)} 条")
         except Exception as e:
-            print(f"  ❌ {ticker} 拉取失败: {e}")
+            print(f"   {ticker} 拉取失败: {e}")
 
     if not df_list:
-        print("❌ 未获取到美国数据")
+        print(" 未获取到美国数据")
         return pd.DataFrame(), heavy_etfs, light_etfs
 
     all_data = pd.concat(df_list, ignore_index=True)
-    print(f"✅ 获取 {len(all_data)} 条数据")
+    print(f" 获取 {len(all_data)} 条数据")
     return all_data, heavy_etfs, light_etfs
 
 def calculate_us_asset_style_index(df, heavy_dict, light_dict):
@@ -162,7 +162,7 @@ def calculate_us_asset_style_index(df, heavy_dict, light_dict):
     if df.empty:
         return pd.DataFrame()
     
-    print("🧮 计算美国重资产/轻资产指数...")
+    print(" 计算美国重资产/轻资产指数...")
     
     # 透视表：日期 × ticker
     pivot = df.pivot(index='trade_date', columns='ticker', values='pct_change')
@@ -190,12 +190,12 @@ def calculate_us_asset_style_index(df, heavy_dict, light_dict):
         'relative_strength': relative_strength.values
     })
     
-    print(f"✅ 计算完成，{len(result)} 个交易日")
+    print(f" 计算完成，{len(result)} 个交易日")
     return result
 
 def calculate_asset_style_index(df, heavy_dict, light_dict):
     """计算重资产/轻资产组合指数（等权）"""
-    print("🧮 计算重资产/轻资产指数...")
+    print(" 计算重资产/轻资产指数...")
     
     # 透视表：日期 × 行业代码
     pivot = df.pivot(index='trade_date', columns='ts_code', values='pct_change')
@@ -225,12 +225,12 @@ def calculate_asset_style_index(df, heavy_dict, light_dict):
         'light_ret': light_ret.values
     })
     
-    print(f"✅ 计算完成，{len(result)} 个交易日")
+    print(f" 计算完成，{len(result)} 个交易日")
     return result
 
 def generate_signal(result):
     """生成趋势判断信号"""
-    print("🎯 生成趋势信号...")
+    print(" 生成趋势信号...")
     
     latest = result.iloc[-1]
     
@@ -272,18 +272,18 @@ def generate_signal(result):
         'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
     
-    print(f"✅ {trend}")
+    print(f" {trend}")
     return signal_data, result
 
 def main():
     print("=" * 60)
-    print("🇨🇳 中国版 HALO - 重资产 vs 轻资产趋势判断")
+    print("CN 中国版 HALO - 重资产 vs 轻资产趋势判断")
     print("=" * 60)
     
     # 1. 拉取中国数据
     df_cn, heavy_dict_cn, light_dict_cn = fetch_sw_industry_data(days=252)
     if df_cn.empty:
-        print("❌ 中国数据拉取失败")
+        print(" 中国数据拉取失败")
         return
     
     # 2. 计算中国指数
@@ -340,22 +340,22 @@ def main():
     json_path = os.path.join(data_dir, 'china_halo.json')
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
-    print(f"✅ 保存 JSON: {json_path}")
+    print(f" 保存 JSON: {json_path}")
     
     # CSV（中国完整时序）
     csv_path = os.path.join(data_dir, 'china_halo_history.csv')
     result_cn_with_ma.to_csv(csv_path, index=False, encoding='utf-8-sig')
-    print(f"✅ 保存 CSV: {csv_path}")
+    print(f" 保存 CSV: {csv_path}")
     
     # CSV（美国完整时序）
     if not result_us.empty:
         csv_path_us = os.path.join(data_dir, 'us_halo_history.csv')
         result_us.to_csv(csv_path_us, index=False, encoding='utf-8-sig')
-        print(f"✅ 保存 CSV: {csv_path_us}")
+        print(f" 保存 CSV: {csv_path_us}")
     
     # 打印结果
     print("\n" + "=" * 60)
-    print("📊 中国市场")
+    print(" 中国市场")
     print("=" * 60)
     print(f"趋势: {signal_data_cn['trend']}")
     print(f"建议: {signal_data_cn['signal']}")
@@ -365,7 +365,7 @@ def main():
     
     if signal_data_us:
         print("\n" + "=" * 60)
-        print("📊 美国市场（罗素3000拟合）")
+        print(" 美国市场（罗素3000拟合）")
         print("=" * 60)
         print(f"趋势: {signal_data_us['trend']}")
         print(f"相对强弱: {signal_data_us['latest_rs']} (MA20: {signal_data_us['ma20']}, MA60: {signal_data_us['ma60']})")

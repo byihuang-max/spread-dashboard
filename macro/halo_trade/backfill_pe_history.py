@@ -59,7 +59,7 @@ df["yield_gap"] = ((1 / df["heavy_pe"] - 1 / df["light_pe"]) * 100).round(2)
 # 保存
 df.to_csv(PE_HISTORY_CSV, index=False)
 
-print(f"✅ 已生成 {len(df)} 个历史数据点")
+print(f" 已生成 {len(df)} 个历史数据点")
 print(f"   日期范围: {df['date'].iloc[0]} ~ {df['date'].iloc[-1]}")
 print(f"   重资产 PE 范围: {df['heavy_pe'].min():.2f} ~ {df['heavy_pe'].max():.2f}")
 print(f"   轻资产 PE 范围: {df['light_pe'].min():.2f} ~ {df['light_pe'].max():.2f}")

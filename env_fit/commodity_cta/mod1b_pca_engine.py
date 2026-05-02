@@ -405,7 +405,7 @@ def main():
     if rolling_results:
         latest = rolling_results[-1]
         log(f"\n{'='*60}")
-        log(f"📊 最新PCA环境快照 ({latest['date']})")
+        log(f" 最新PCA环境快照 ({latest['date']})")
         log(f"{'='*60}")
         log(f"  PC1 方差解释比: {latest['pc1_ratio']:.1%}")
         log(f"  PC2 方差解释比: {latest['pc2_ratio']:.1%}")
@@ -422,7 +422,7 @@ def main():
             log(f"    {i+1}. {ld['symbol']:>4s} ({ld['sector']})  "
                 f"PC1={sign}{ld['pc1_loading']:.3f}  PC2={ld['pc2_loading']:+.3f}")
 
-    log(f"\n✅ 模块1b完成")
+    log(f"\n 模块1b完成")
 
 
 if __name__ == '__main__':

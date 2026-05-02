@@ -131,7 +131,7 @@ def build_card(report: dict, replay_url: str) -> dict:
             "tag": "div",
             "text": {
                 "tag": "lark_md",
-                "content": f"**📈 盘中涨停因子 · 盘后复盘** {report['trade_date']} vs {report['prev_date']}｜{now}"
+                "content": f"** 盘中涨停因子 · 盘后复盘** {report['trade_date']} vs {report['prev_date']}｜{now}"
             }
         },
         {
@@ -192,7 +192,7 @@ def build_card(report: dict, replay_url: str) -> dict:
     return {
         "config": {"wide_screen_mode": True},
         "header": {
-            "title": {"tag": "plain_text", "content": "📈 盘中涨停因子 · 盘后复盘"},
+            "title": {"tag": "plain_text", "content": " 盘中涨停因子 · 盘后复盘"},
             "template": "turquoise",
         },
         "elements": elements,

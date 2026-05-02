@@ -32,7 +32,7 @@ def get_token():
         if d.get('errorcode') == 0:
             return d['data']['access_token']
     except Exception as e:
-        print(f"❌ Token 错误: {e}")
+        print(f" Token 错误: {e}")
     return None
 
 def ifind_history(token, code, start, end):
@@ -52,7 +52,7 @@ def ifind_history(token, code, start, end):
             if tables:
                 return tables[0]
     except Exception as e:
-        print(f"  ❌ {code} 失败: {e}")
+        print(f"   {code} 失败: {e}")
     return None
 
 if __name__ == '__main__':
@@ -60,10 +60,10 @@ if __name__ == '__main__':
     
     token = get_token()
     if not token:
-        print("❌ Token 获取失败")
+        print(" Token 获取失败")
         exit(1)
     
-    print("✅ Token 获取成功")
+    print(" Token 获取成功")
     
     end = datetime.now().strftime('%Y-%m-%d')
     start = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
@@ -76,12 +76,12 @@ if __name__ == '__main__':
             dates = result.get('time', [])
             closes = result.get('table', {}).get('close', [])
             if dates and closes:
-                print(f"✅ {name:15} {len(dates):2}天, 最新: {closes[-1]:.2f}")
+                print(f" {name:15} {len(dates):2}天, 最新: {closes[-1]:.2f}")
             else:
-                print(f"⚠️  {name:15} 返回但无数据")
+                print(f"⚠  {name:15} 返回但无数据")
         else:
-            print(f"❌ {name:15} 拉取失败")
+            print(f" {name:15} 拉取失败")
         
         time.sleep(0.5)
     
-    print("\n✅ 测试完成")
+    print("\n 测试完成")
