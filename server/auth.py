@@ -405,10 +405,19 @@ def login(username, password, ip=''):
         return False, f'登录失败次数过多，请 {LOGIN_LOCK_MINUTES} 分钟后再试'
 
     # 先按用户名精确匹配（小写）
-    row = c.execute('SELECT * FROM users WHERE username=?', (login_lower,)).fetchone()
-    # 没找到则按姓名匹配（原始大小写）
+    row = c.execute('SELECT * FROM users WHERE LOWER(username)=?', (login_lower,)).fetchone()
+    # 没找到则按姓名匹配（大小写不敏感）
     if not row:
-        row = c.execute('SELECT * FROM users WHERE display_name=?', (login_input,)).fetchone()
+        candidates = c.execute('SELECT * FROM users WHERE LOWER(display_name)=?', (login_lower,)).fetchall()
+        if len(candidates) == 1:
+            row = candidates[0]
+        elif len(candidates) > 1:
+            # 多个同名用户，提示用用户名登录
+            _register_failed_login(c, ip)
+            c.execute('INSERT INTO login_log (username, ip, action, success) VALUES (?,?,?,?)',
+                      (login_input, ip, 'login', 0))
+            c.commit(); c.close()
+            return False, '存在多个同名用户，请使用用户名登录'
 
     if not row:
         _register_failed_login(c, ip)
