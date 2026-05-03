@@ -3723,8 +3723,8 @@ function showApp(user){
       var fund=document.getElementById('navFundResearch');
       if(fund) fund.style.display='';
     }
-    // 仅管理员：显示团队基金优选
-    if(user.is_admin){
+    // 团队+管理员：显示团队基金优选
+    if(user.is_admin || (user.tier && user.tier >= 2)){
       var fa=document.getElementById('navFundAsset');
       if(fa) fa.style.display='';
     }
