@@ -2961,6 +2961,7 @@ function initCbCharts() {
           <div class="strat-tab" data-strat="liquidity"> 境内流动性</div>
           <div class="strat-tab" data-strat="rates">全球利率与汇率</div>
           <div class="strat-tab" data-strat="fundamentals">经济基本面</div>
+          <div class="strat-tab" data-strat="global-calendar">全球金融日历</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
           <button id="refreshBtnMacro" onclick="refreshMacroTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
@@ -2980,6 +2981,9 @@ function initCbCharts() {
       </div>
       <div class="strat-page" id="strat-fundamentals">
         <iframe id="macro-fundamentals-frame" src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+      <div class="strat-page" id="strat-global-calendar">
+        <iframe src="macro/global_calendar/calendar.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-macro -->
 

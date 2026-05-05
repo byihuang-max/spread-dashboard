@@ -193,6 +193,16 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
+    'global_calendar': {
+        'name': '全球金融日历',
+        'scripts': [
+            ('macro/global_calendar', 'calendar_data.py'),
+            ('macro/global_calendar', 'calendar_calc.py'),
+        ],
+        'aliases': ['global-calendar', 'calendar'],
+        'include_in_update_all': True,
+        'include_in_refresh_server': False,
+    },
     'antifragile': {
         'name': '反脆弱看板',
         'scripts': [

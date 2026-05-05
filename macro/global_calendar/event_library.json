@@ -1,0 +1,235 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "全球金融事件库 - 关键字匹配 + 重要性 + 影响资产 + 逻辑",
+    "importance": "3=高(●●●)|2=中(●●)|1=低(●)",
+    "match_rule": "按 keywords 在事件名中逐个匹配，首个命中即采用",
+    "updated": "2026-05-05"
+  },
+  "rules": [
+    {
+      "keywords": ["议息", "利率决议", "基准利率", "FOMC"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "央行利率决议直接影响无风险利率定价基准，加息利空风险资产、利好本币；降息反之。债市对利率变动最敏感，股市估值分母端受冲击。"
+    },
+    {
+      "keywords": ["美联储", "Fed", "鲍威尔", "Powell", "美联储主席"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "美联储任何高层讲话都可能改变市场对加降息路径预期，美债收益率联动全球利率，美股和A股均承压/受益。"
+    },
+    {
+      "keywords": ["欧洲央行", "ECB", "拉加德", "Lagarde"],
+      "importance": 3,
+      "equity": "中",
+      "bond": "高",
+      "logic": "欧央行政策影响欧元区国债收益率及欧元汇率，间接传导至全球利率曲线与风险偏好。"
+    },
+    {
+      "keywords": ["日本央行", "BOJ", "植田", "日本银行"],
+      "importance": 3,
+      "equity": "中",
+      "bond": "高",
+      "logic": "日央行政策牵动日元套息交易规模，YCC 调整会冲击全球债市流动性（日债是全球套息链末端）。"
+    },
+    {
+      "keywords": ["英国央行", "BOE", "英国利率决议"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "英央行政策影响英镑及英债收益率，对全球情绪有边际外溢。"
+    },
+    {
+      "keywords": ["人民银行", "LPR", "MLF", "中国央行"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "国内货币政策直接影响A股流动性和债券定价，LPR/MLF利率是国内信贷市场核心锚。"
+    },
+    {
+      "keywords": ["非农", "就业人数", "Nonfarm", "失业率"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "美国就业数据是Fed货币政策最核心的观察变量，强非农利空债市（加息预期升温），对风险资产先跌后涨（看强度）。"
+    },
+    {
+      "keywords": ["CPI", "消费者物价"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "通胀数据是利率决策的核心输入，CPI超预期利空债、利空估值高的成长股；低于预期反之。"
+    },
+    {
+      "keywords": ["PPI", "生产者物价"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "PPI领先CPI，工业品价格反映企业成本端和需求端，影响上游股票盈利预期与通胀链条。"
+    },
+    {
+      "keywords": ["PCE", "个人消费支出"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "核心PCE是美联储最关注的通胀指标（非CPI），对Fed路径判断权重极高。"
+    },
+    {
+      "keywords": ["GDP"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "中",
+      "logic": "GDP反映经济总量，是企业盈利和税基的宏观锚，强GDP利好股票（盈利预期），利空债券（经济过热风险）。"
+    },
+    {
+      "keywords": ["PMI", "采购经理人"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "PMI是经济景气度的领先指标（枯荣线50），制造业/服务业PMI联动工业金属、周期股。"
+    },
+    {
+      "keywords": ["ISM"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "中",
+      "logic": "ISM制造业/非制造业是美国经济最权威的景气指标，直接影响Fed软着陆判断与风险资产定价。"
+    },
+    {
+      "keywords": ["零售销售", "Retail Sales"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "零售销售反映消费强度，是美国经济约70%的部分，强消费延后衰退、延后降息。"
+    },
+    {
+      "keywords": ["工业产出", "工业增加值"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "工业产出反映实体经济动能，对周期股和商品有直接影响。"
+    },
+    {
+      "keywords": ["耐用品订单"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "耐用品订单（尤其扣除运输后）是企业资本开支的领先指标，反映制造业景气。"
+    },
+    {
+      "keywords": ["新屋销售", "成屋销售", "营建许可", "房屋开工"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "地产数据是利率敏感型指标，房屋销售走弱预示经济降温、利率政策可能转向。"
+    },
+    {
+      "keywords": ["初请失业金", "续请失业金"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "初请失业金是每周高频就业指标，连续上升预示劳动力市场降温，利好债市。"
+    },
+    {
+      "keywords": ["ADP", "小非农"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "ADP是非农的前瞻参考，私营部门就业，历史与非农相关性一般，但能校准预期。"
+    },
+    {
+      "keywords": ["贸易账", "经常账", "贸易差额"],
+      "importance": 1,
+      "equity": "低",
+      "bond": "低",
+      "logic": "贸易数据影响汇率方向，对股债影响较边际，主要看结构变化。"
+    },
+    {
+      "keywords": ["社融", "新增人民币贷款", "M1", "M2"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "国内信贷与货币数据是A股流动性最核心的宏观锚，社融超预期利好股市、中长贷结构改善利好权益。"
+    },
+    {
+      "keywords": ["工业企业利润"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "工业企业利润反映企业盈利状况，对周期股和顺周期板块定价有直接影响。"
+    },
+    {
+      "keywords": ["固定资产投资"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "固投反映实体投资意愿，基建/制造/地产三分项结构变化对对应板块有直接传导。"
+    },
+    {
+      "keywords": ["社零", "社会消费品零售"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "社零反映消费动能，是消费板块（食饮/家电/服装）的核心宏观指标。"
+    },
+    {
+      "keywords": ["进出口", "出口", "进口"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "低",
+      "logic": "中国进出口数据反映外需和内需强度，对出海链、工业品有直接影响。"
+    },
+    {
+      "keywords": ["EIA", "原油库存"],
+      "importance": 2,
+      "equity": "低",
+      "bond": "低",
+      "logic": "原油库存直接驱动油价，影响能源股、通胀预期和航运等板块。"
+    },
+    {
+      "keywords": ["OPEC"],
+      "importance": 3,
+      "equity": "中",
+      "bond": "低",
+      "logic": "OPEC+产量决定油价中枢，直接影响能源股、通胀预期和Fed政策路径。"
+    },
+    {
+      "keywords": ["密歇根", "消费者信心"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "中",
+      "logic": "消费者信心调查是消费动能的前瞻指标，密歇根通胀预期分项也是Fed观察重点。"
+    },
+    {
+      "keywords": ["IFO", "ZEW"],
+      "importance": 1,
+      "equity": "低",
+      "bond": "低",
+      "logic": "德国商业景气/经济景气，对欧元区经济判断有参考价值，对A股影响小。"
+    },
+    {
+      "keywords": ["Jackson Hole", "全球央行年会"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "Jackson Hole是美联储高层集中表态的窗口，常出现政策转向信号，历史上多次引发市场大幅波动。"
+    },
+    {
+      "keywords": ["FOMC会议纪要", "美联储会议纪要", "纪要"],
+      "importance": 2,
+      "equity": "中",
+      "bond": "高",
+      "logic": "会议纪要披露委员鹰鸽分布细节，常对市场利率预期做边际修正。"
+    },
+    {
+      "keywords": ["点阵图"],
+      "importance": 3,
+      "equity": "高",
+      "bond": "高",
+      "logic": "点阵图是FOMC委员对未来利率路径的预测，重大调整会剧烈冲击债市和股市估值。"
+    }
+  ]
+}
