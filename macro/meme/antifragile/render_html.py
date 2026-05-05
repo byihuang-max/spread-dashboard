@@ -618,11 +618,11 @@ new Chart(document.getElementById('memeVaChart'), {{
         overseas_html = f'''
 <div style="background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.08);padding:20px 24px;margin:24px 0 16px;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-    <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">🌍 海外一手要闻 Top 3</h2>
+    <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">🌍 海外一手要闻 Top {len(overseas_digest['top3'])}</h2>
     <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · {short_time} · 当前窗口 {total} 条</span>
   </div>
   <p style="margin:4px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
-    来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛 Top 3 事件，给出一句话归纳 + 风险等级 + 受影响资产。
+    来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛有参考价值的事件（最多 10 条，宁缺毋滥），给出一句话归纳 + 风险等级 + 受影响资产。
   </p>
   {''.join(cards)}
   <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">

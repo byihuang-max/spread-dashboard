@@ -95,7 +95,7 @@ def rule_score(item):
 
     return score
 
-def rule_filter_candidates(news_list, top_n=15):
+def rule_filter_candidates(news_list, top_n=30):
     scored = [(rule_score(n), n) for n in news_list]
     scored.sort(key=lambda x: x[0], reverse=True)
     return [n for _, n in scored[:top_n]]
@@ -137,8 +137,8 @@ def parse_json_output(text):
         text = text[m.start():]
     return json.loads(text)
 
-def llm_pick_top3(candidates, cfg):
-    """让 Opus 4.7 从 15 条候选里选 Top 3"""
+def llm_pick_top10(candidates, cfg):
+    """让 Opus 4.7 从候选里选最多 Top 10（动态数量，只选真正有价值的）"""
     if not candidates:
         return []
 
@@ -150,14 +150,23 @@ def llm_pick_top3(candidates, cfg):
 
     prompt = f"""以下是过去 12 小时的 {len(candidates)} 条海外财经一手新闻（彭博/路透/WSJ 等）。
 
-请从中选出对中国 FOF 基金经理今日配置决策**最重要的 Top 3 事件**。
+请从中选出对中国 FOF 基金经理今日配置决策**有参考价值的事件**，**最多 10 条**。
+
+重要原则：
+- **宁缺毋滥**：如果真正有价值的只有 4 条，就返回 4 条；不要为了凑满 10 条而放低标准
+- **去重合并**：同一事件被多家报道的，合并选最全面的一条
+- **按重要性降序排列**
 
 选择标准（按优先级）：
 1. 对中国资产有直接影响（中美关系、关税、制裁、地缘）
-2. 影响全球流动性（Fed/央行政策、美元、美债）
-3. 影响核心产业叙事（AI 算力链、半导体、能源）
+2. 影响全球流动性（Fed/央行政策、美元、美债、利率）
+3. 影响核心产业叙事（AI 算力链、半导体、能源、汽车出海）
+4. 影响主要资产价格（原油、黄金、美股财报、大宗商品）
 
-过滤掉：单一公司的非核心动态、娱乐/社会新闻、重复同一事件的多条报道（如果有重复，合并选最全面的一条）。
+过滤掉：
+- 单一公司的非核心动态（除非涉及核心产业链如英伟达/台积电）
+- 娱乐/社会新闻
+- 单纯数据发布（除非意外偏离预期）
 
 新闻列表：
 {chr(10).join(lines)}
@@ -173,20 +182,20 @@ def llm_pick_top3(candidates, cfg):
   }}
 ]
 
-只返回 3 个元素的 JSON 数组。"""
+严格按重要性降序，最多 10 条。不够 10 条就少返回。"""
 
     response = call_claude(prompt, cfg)
     try:
-        top3 = parse_json_output(response)
+        picks = parse_json_output(response)
         # 回填原始新闻信息
-        for pick in top3:
+        for pick in picks:
             idx = pick.get("index", 0) - 1
             if 0 <= idx < len(candidates):
                 src = candidates[idx]
                 pick["source"] = src.get("source", "")
                 pick["original_title"] = src.get("title", "")
                 pick["url"] = src.get("url", "")
-        return top3
+        return picks[:10]  # 硬上限 10 条
     except Exception as e:
         print(f"⚠️ LLM 输出解析失败: {e}")
         print(f"原始输出: {response[:500]}")
@@ -209,23 +218,23 @@ def risk_badge(level):
         return "🟢 低"
     return level
 
-def build_card(top3, total_count):
+def build_card(picks, total_count):
     now = datetime.now().strftime("%m-%d %H:%M")
     elements = [
         {"tag": "div", "text": {
             "tag": "lark_md",
-            "content": f"**🌍 海外要闻速递** · {now} · 分析 {total_count} 条"
+            "content": f"**🌍 海外要闻速递** · {now} · 分析 {total_count} 条 · 精选 {len(picks)} 条"
         }},
         {"tag": "hr"},
     ]
 
-    if not top3:
+    if not picks:
         elements.append({"tag": "div", "text": {
             "tag": "lark_md",
             "content": "_今日无重大海外事件_"
         }})
     else:
-        for i, pick in enumerate(top3, 1):
+        for i, pick in enumerate(picks, 1):
             content = (
                 f"**{i}. {pick.get('theme','?')}** · {risk_badge(pick.get('risk_level','?'))}\n"
                 f"{pick.get('summary','')}\n"
@@ -242,13 +251,13 @@ def build_card(top3, total_count):
             elements.append({"tag": "div", "text": {
                 "tag": "lark_md", "content": content
             }})
-            if i < len(top3):
+            if i < len(picks):
                 elements.append({"tag": "hr"})
 
     card = {
         "config": {"wide_screen_mode": True},
         "header": {
-            "title": {"tag": "plain_text", "content": "海外要闻 Top 3"},
+            "title": {"tag": "plain_text", "content": f"海外要闻 Top {len(picks)}"},
             "template": "indigo",
         },
         "elements": elements,
@@ -292,14 +301,14 @@ def run(push=True):
         print("⚠️ 无数据，退出")
         return
 
-    # 3. 规则筛选
-    candidates = rule_filter_candidates(news, top_n=15)
+    # 3. 规则筛选（扩大候选池到 30）
+    candidates = rule_filter_candidates(news, top_n=30)
     print(f"📋 规则筛选候选: {len(candidates)} 条")
 
-    # 4. Claude 精筛
-    top3 = llm_pick_top3(candidates, cfg)
-    print(f"🎯 LLM 选出 Top {len(top3)}")
-    for p in top3:
+    # 4. Claude 精筛（最多 10，允许动态少返）
+    picks = llm_pick_top10(candidates, cfg)
+    print(f"🎯 LLM 选出 Top {len(picks)}")
+    for p in picks:
         print(f"   • [{p.get('risk_level')}] {p.get('theme')}: {p.get('summary')}")
 
     # 5. 落盘
@@ -308,7 +317,8 @@ def run(push=True):
         "lookback_hours": lookback,
         "total_news": len(news),
         "candidates_count": len(candidates),
-        "top3": top3,
+        "top3": picks,  # 字段名保留 top3 以保持前端/历史兼容，实际承载 Top10
+        "picks_count": len(picks),
     }
     latest = CACHE_DIR / "overseas_digest_latest.json"
     snapshot = CACHE_DIR / f"overseas_digest_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
@@ -319,8 +329,8 @@ def run(push=True):
     print(f"💾 已保存: {latest.name}")
 
     # 6. 推飞书
-    if push and top3:
-        card = build_card(top3, len(news))
+    if push and picks:
+        card = build_card(picks, len(news))
         result = send_feishu_card(card)
         print(f"📱 飞书推送: code={result.get('code')} msg={result.get('msg')}")
 
