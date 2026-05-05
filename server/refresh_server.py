@@ -310,7 +310,7 @@ class Handler(BaseHTTPRequestHandler):
             top = parts[0]
             if top in EXCLUDE_TOPS or top.startswith('.') or top.startswith('_'):
                 continue
-            if md_file.name.lower() == 'readme.md':
+            if md_file.name.lower() in ('readme.md', 'audit.md'):
                 continue
 
             # 推断分类
