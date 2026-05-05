@@ -247,7 +247,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .login-overlay.hidden{opacity:0;pointer-events:none}
 .login-overlay canvas{position:absolute;inset:0;z-index:0}
 .login-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(37,99,235,.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(16,185,129,.08) 0%,transparent 60%);z-index:1}
-.login-box{position:relative;z-index:2;background:rgba(15,20,35,.85);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 38px;width:400px;max-width:90vw;box-shadow:0 0 80px rgba(37,99,235,.12),0 0 0 1px rgba(255,255,255,.05) inset}
+.login-box{position:relative;z-index:2;background:rgba(15,20,35,.85);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 38px;width:400px;max-width:90vw;box-shadow:0 0 80px rgba(37,99,235,.12),0 0 0 1px rgba(255,255,255,.05) inset;will-change:transform}
 .login-box .brand{text-align:center;margin-bottom:8px}
 .login-box .brand-logo{font-size:36px;font-weight:800;letter-spacing:6px;background:linear-gradient(135deg,#60a5fa 0%,#34d399 50%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .login-box .brand-full{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px;font-weight:500}
@@ -344,7 +344,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   var ctx=cv.getContext('2d');
   var w,h,pts=[];
   function resize(){w=cv.width=window.innerWidth;h=cv.height=window.innerHeight;pts=[];for(var i=0;i<60;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.5+.5});}
-  resize();window.addEventListener('resize',resize);
+  window.addEventListener('resize',resize);
   function draw(){
     ctx.clearRect(0,0,w,h);
     // grid
@@ -369,7 +369,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     }
     requestAnimationFrame(draw);
   }
-  draw();
+  // 延迟初始化到下一帧，避免与浏览器自动填充/布局稳定冲突
+  requestAnimationFrame(function(){resize();draw();});
 })();
 </script>
 
