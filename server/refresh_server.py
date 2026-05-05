@@ -279,43 +279,69 @@ class Handler(BaseHTTPRequestHandler):
         return user
 
     def _serve_notes_list(self):
-        """返回Smart Notes所有笔记的元数据列表"""
+        """返回Smart Notes所有笔记的元数据列表
+
+        扫描范围：smart-notes/ 根下所有笔记（含 concepts/ conversations/
+        decisions/ sessions/ notes/ 等 10 类分层目录）。
+        排除：intelligence/（智能分类系统代码与索引，不是笔记）
+              以 _ 或 . 开头的隐藏目录 / README.md。
+        """
         from pathlib import Path
-        notes_dir = Path(BASE_DIR) / 'smart-notes' / 'notes'
+        root_dir = Path(BASE_DIR) / 'smart-notes'
         notes = []
-        
-        if not notes_dir.exists():
+
+        if not root_dir.exists():
             self._json(200, notes)
             return
-        
-        # 递归扫描 notes/ 目录
-        for md_file in notes_dir.rglob("*.md"):
-            rel_path = md_file.relative_to(notes_dir.parent)
-            
-            # 推断分类（根据目录结构，research下取两级）
-            parts = md_file.relative_to(notes_dir).parts
-            if len(parts) > 1:
-                if parts[0] == 'research' and len(parts) > 2:
-                    category = parts[0] + '/' + parts[1]
-                else:
-                    category = parts[0]
+
+        # 不作为笔记扫描的顶层目录
+        EXCLUDE_TOPS = {'intelligence', 'node_modules', '.git'}
+
+        for md_file in root_dir.rglob('*.md'):
+            try:
+                rel = md_file.relative_to(root_dir)
+            except ValueError:
+                continue
+            parts = rel.parts
+            if not parts:
+                continue
+
+            # 排除顶层目录 / 隐藏目录 / README
+            top = parts[0]
+            if top in EXCLUDE_TOPS or top.startswith('.') or top.startswith('_'):
+                continue
+            if md_file.name.lower() == 'readme.md':
+                continue
+
+            # 推断分类
+            if len(parts) == 1:
+                # 根目录下的散笔记
+                category = 'uncategorized'
+            elif top == 'notes' and len(parts) > 2:
+                # notes/research/factors/xxx.md → notes/research
+                # notes/engineering/xxx.md → notes/engineering
+                category = f'notes/{parts[1]}'
+            elif top == 'research' and len(parts) > 2:
+                # 兼容根目录下的 research/factors/xxx.md
+                category = f'research/{parts[1]}'
             else:
-                category = "uncategorized"
-            
-            # 读取内容
+                category = top
+
             try:
                 with open(md_file, 'r', encoding='utf-8') as f:
                     content = f.read()
-            except:
-                content = ""
-            
+            except Exception:
+                content = ''
+
             notes.append({
-                "name": md_file.stem,  # 文件名（不含扩展名）
-                "path": str(rel_path),
-                "category": category,
-                "content": content
+                'name': md_file.stem,
+                'path': str(rel),
+                'category': category,
+                'content': content,
             })
-        
+
+        # 固定顺序：按分类 + 文件名，便于前端稳定展示
+        notes.sort(key=lambda n: (n['category'], n['path']))
         self._json(200, notes)
 
     def _serve_narrative_latest(self):
