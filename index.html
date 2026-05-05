@@ -243,11 +243,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .ss-footer b{color:var(--text);font-weight:600}
 
 /* ── 登录遮罩（科技风） ── */
-.login-overlay{position:fixed;inset:0;background:#0a0e1a;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .4s;overflow:hidden}
+.login-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;height:100svh;background:#0a0e1a;z-index:9999;transition:opacity .4s;overflow:hidden}
 .login-overlay.hidden{opacity:0;pointer-events:none}
 .login-overlay canvas{position:absolute;inset:0;z-index:0}
 .login-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(37,99,235,.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(16,185,129,.08) 0%,transparent 60%);z-index:1}
-.login-box{position:relative;z-index:2;background:rgba(15,20,35,.85);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 38px;width:400px;max-width:90vw;box-shadow:0 0 80px rgba(37,99,235,.12),0 0 0 1px rgba(255,255,255,.05) inset;will-change:transform}
+.login-box{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;background:rgba(15,20,35,.85);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 38px;width:400px;max-width:90vw;box-shadow:0 0 80px rgba(37,99,235,.12),0 0 0 1px rgba(255,255,255,.05) inset;contain:layout;will-change:transform}
 .login-box .brand{text-align:center;margin-bottom:8px}
 .login-box .brand-logo{font-size:36px;font-weight:800;letter-spacing:6px;background:linear-gradient(135deg,#60a5fa 0%,#34d399 50%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .login-box .brand-full{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px;font-weight:500}
