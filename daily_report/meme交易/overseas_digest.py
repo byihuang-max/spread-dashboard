@@ -334,6 +334,23 @@ def run(push=True):
         result = send_feishu_card(card)
         print(f"📱 飞书推送: code={result.get('code')} msg={result.get('msg')}")
 
+    # 7. 触发反脆弱看板重新渲染（把海外要闻区块刷到页面）
+    try:
+        import subprocess
+        antifragile_dir = SCRIPT_DIR.parent.parent / "macro" / "meme" / "antifragile"
+        if (antifragile_dir / "render_html.py").exists():
+            r = subprocess.run(
+                ["python3", "render_html.py"],
+                cwd=str(antifragile_dir),
+                capture_output=True, text=True, timeout=60,
+            )
+            if r.returncode == 0:
+                print("🖼️  反脆弱看板已重新渲染")
+            else:
+                print(f"⚠️ 渲染失败: {r.stderr[:200]}")
+    except Exception as e:
+        print(f"⚠️ 触发渲染异常: {e}")
+
     print("✅ 完成")
 
 if __name__ == '__main__':
