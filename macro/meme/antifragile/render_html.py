@@ -112,6 +112,15 @@ def render_html():
     except Exception:
         dynamic_themes = []
         dynamic_themes_date = ''
+
+    # 海外一手要闻（Opus 4.7 归纳，每日 08:30 / 20:30）
+    overseas_digest = None
+    overseas_latest_path = '../../daily_report/meme交易/cache/overseas_digest_latest.json'
+    try:
+        with open(overseas_latest_path, 'r', encoding='utf-8') as f:
+            overseas_digest = json.load(f)
+    except Exception:
+        overseas_digest = None
     nav_data   = nav_data_file['nav_data']
     update_time = nav_data_file['update_time']
 
@@ -552,6 +561,76 @@ new Chart(document.getElementById('memeVaChart'), {{
         dynamic_themes_html = ''.join(cards)
 
     # ─────────────────────────────────────────────
+    # 6.5. 海外一手要闻（Opus 4.7 每日两次归纳）
+    # ─────────────────────────────────────────────
+    overseas_html = ''
+    if overseas_digest and overseas_digest.get('top3'):
+        updated_at = overseas_digest.get('updated_at', '')
+        short_time = ''
+        try:
+            from datetime import datetime as _dt
+            dt = _dt.fromisoformat(updated_at.split('+')[0].split('.')[0])
+            short_time = dt.strftime('%m-%d %H:%M')
+        except Exception:
+            short_time = updated_at[:16].replace('T', ' ')
+
+        total = overseas_digest.get('total_news', 0)
+        cards = []
+        risk_color = {'高': '#dc2626', '中': '#ea580c', '低': '#16a34a'}
+        risk_bg = {'高': '#fef2f2', '中': '#fff7ed', '低': '#f0fdf4'}
+        for i, p in enumerate(overseas_digest['top3'], 1):
+            theme = html_lib.escape(str(p.get('theme', '')))
+            summary = html_lib.escape(str(p.get('summary', '')))
+            risk = str(p.get('risk_level', ''))
+            assets = p.get('affected_assets') or []
+            assets_html = ''
+            if assets:
+                tags = ''.join(
+                    f'<span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">{html_lib.escape(str(a))}</span>'
+                    for a in assets[:6]
+                )
+                assets_html = f'<div style="margin-top:8px;">{tags}</div>'
+            src = html_lib.escape(str(p.get('source', '')))
+            url = html_lib.escape(str(p.get('url', '')))
+            orig = html_lib.escape(str(p.get('original_title', '')))
+            src_line = ''
+            if url:
+                src_line = f'<a href="{url}" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">{src} · 原文 ↗</a>'
+            elif src:
+                src_line = f'<span style="color:#94a3b8;font-size:11px;">{src}</span>'
+            title_line = f'<div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：{orig}</div>' if orig else ''
+
+            color = risk_color.get(risk, '#64748b')
+            bg = risk_bg.get(risk, '#f8fafc')
+            cards.append(f'''
+<div style="background:#fff;border-left:4px solid {color};border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
+    <span style="font-size:12px;font-weight:700;color:#64748b;">{i}.</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">{theme}</span>
+    <span style="background:{bg};color:{color};font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid {color}33;">风险 {risk}</span>
+  </div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">{summary}</div>
+  {assets_html}
+  {title_line}
+  <div style="margin-top:8px;">{src_line}</div>
+</div>''')
+
+        overseas_html = f'''
+<div style="background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.08);padding:20px 24px;margin:24px 0 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+    <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">🌍 海外一手要闻 Top 3</h2>
+    <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · {short_time} · 当前窗口 {total} 条</span>
+  </div>
+  <p style="margin:4px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
+    来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛 Top 3 事件，给出一句话归纳 + 风险等级 + 受影响资产。
+  </p>
+  {''.join(cards)}
+  <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
+    数据源：QQ 邮箱 IMAP → hszxboss@qq.com 转发。更新脚本：<code>daily_report/meme交易/overseas_digest.py</code>
+  </p>
+</div>'''
+
+    # ─────────────────────────────────────────────
     # 序列化到 JSON
     # ─────────────────────────────────────────────
     nav_labels_json    = json.dumps(all_dates)
@@ -813,6 +892,9 @@ new Chart(document.getElementById('medianChart'),{{
     更新脚本：<code>meme/macro_lifecycle.py</code>
   </p>
 </div>
+
+<!-- 海外一手要闻 Top 3（Opus 4.7 归纳，每日 08:30 / 20:30） -->
+{overseas_html}
 
 <style>
 /* 表格样式 */

@@ -213,6 +213,15 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
+    'overseas_digest': {
+        'name': '海外一手要闻',
+        'scripts': [
+            ('daily_report/meme交易', 'overseas_digest.py'),
+        ],
+        'aliases': ['overseas-digest', 'overseas-news'],
+        'include_in_update_all': True,
+        'include_in_refresh_server': False,
+    },
     'narrative_lifecycle': {
         'name': '叙事生命周期',
         'scripts': [
@@ -335,7 +344,9 @@ MODULE_REGISTRY = {
         'name': '宏观Meme叙事',
         'scripts': [
             ('daily_report/meme交易', 'narrative_monitor.py'),
+            ('daily_report/meme交易', 'overseas_digest.py'),
             ('macro/meme', 'macro_lifecycle.py'),
+            ('macro/meme/antifragile', 'render_html.py'),
         ],
         'aliases': ['macro-meme'],
         'include_in_update_all': False,

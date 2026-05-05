@@ -17,10 +17,10 @@ FEISHU_APP_ID = "cli_a91c36caf5785cb2"
 FEISHU_APP_SECRET = "HWhYR833N0xObKumrjNCKdRSHq3jg0zi"
 RONI_OPEN_ID = "ou_4f9c4d14f2e27f4863a5e2743dba3482"
 
-# LLM配置（aicanapi-47 中转 → Claude Opus 4.7，2026-05-05 切换，原 gpt-5.4）
-LLM_API_KEY = "sk-tl1ZnAtaLbLAQVP4m1N6ifvs6ltEtLoXpA5YLZOujMpjHT0j"
-LLM_BASE_URL = "https://aicanapi.com"
-LLM_MODEL = "claude-opus-4-7"
+# LLM配置（aicanapi中转）
+OPENAI_API_KEY = "sk-nPKqBvGbB3I0aewJoZQBLLUDtU6N8pl7JlXn5qxMwt2bbWm0"
+OPENAI_BASE_URL = "https://aicanapi.com/v1"
+OPENAI_MODEL = "gpt-5.4"
 
 # 路径
 SCRIPT_DIR = Path(__file__).parent
@@ -159,29 +159,31 @@ def analyze_fixed_narratives(news_list):
 
 # ==================== LLM动态主题发现 ====================
 def call_llm(prompt):
-    """调用 Claude Opus 4.7（Anthropic Messages API）"""
-    url = f"{LLM_BASE_URL}/v1/messages"
+    """调用LLM"""
+    url = f"{OPENAI_BASE_URL}/chat/completions"
     headers = {
-        "x-api-key": LLM_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
     }
     payload = {
-        "model": LLM_MODEL,
-        "max_tokens": 1500,
-        "system": "你是一个金融新闻分析专家，擅长从大量新闻中提取核心主题。",
-        "messages": [{"role": "user", "content": prompt}],
+        "model": OPENAI_MODEL,
+        "messages": [
+            {"role": "system", "content": "你是一个金融新闻分析专家，擅长从大量新闻中提取核心主题。"},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.3,
+        "max_tokens": 1500
     }
 
     try:
-        resp = requests.post(url, headers=headers, json=payload, timeout=120)
+        resp = requests.post(url, headers=headers, json=payload, timeout=60)
         result = resp.json()
 
-        if "content" not in result or not result["content"]:
+        if "choices" not in result:
             print(f" LLM API错误: {result}")
             return None
 
-        return result["content"][0].get("text", "")
+        return result["choices"][0]["message"]["content"]
     except Exception as e:
         print(f" LLM调用失败: {e}")
         return None
