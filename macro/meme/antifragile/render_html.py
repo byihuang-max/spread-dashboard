@@ -5,6 +5,7 @@
 """
 
 import json
+import os
 import html as html_lib
 import pandas as pd
 import numpy as np
@@ -115,7 +116,11 @@ def render_html():
 
     # 海外一手要闻（Opus 4.7 归纳，每日 08:30 / 20:30）
     overseas_digest = None
-    overseas_latest_path = '../../daily_report/meme交易/cache/overseas_digest_latest.json'
+    # 用脚本所在目录做基准，避免 cwd 差异（antifragile → ../../../daily_report/meme交易/cache）
+    _script_dir = os.path.dirname(os.path.abspath(__file__))
+    overseas_latest_path = os.path.join(
+        _script_dir, '..', '..', '..', 'daily_report', 'meme交易', 'cache', 'overseas_digest_latest.json'
+    )
     try:
         with open(overseas_latest_path, 'r', encoding='utf-8') as f:
             overseas_digest = json.load(f)
@@ -617,17 +622,29 @@ new Chart(document.getElementById('memeVaChart'), {{
 
         overseas_html = f'''
 <div style="background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.08);padding:20px 24px;margin:24px 0 16px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-    <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">🌍 海外一手要闻 Top {len(overseas_digest['top3'])}</h2>
-    <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · {short_time} · 当前窗口 {total} 条</span>
-  </div>
-  <p style="margin:4px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
-    来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛有参考价值的事件（最多 10 条，宁缺毋滥），给出一句话归纳 + 风险等级 + 受影响资产。
-  </p>
-  {''.join(cards)}
-  <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
-    数据源：QQ 邮箱 IMAP → hszxboss@qq.com 转发。更新脚本：<code>daily_report/meme交易/overseas_digest.py</code>
-  </p>
+  <details>
+    <summary style="cursor:pointer;list-style:none;outline:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">
+          <span style="display:inline-block;width:14px;color:#64748b;font-size:12px;transition:transform .2s;" class="oseas-caret">▶</span>
+          🌍 海外一手要闻 Top {len(overseas_digest['top3'])}
+          <span style="font-size:11px;color:#94a3b8;font-weight:400;margin-left:6px;">（点击展开）</span>
+        </h2>
+        <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · {short_time} · 当前窗口 {total} 条</span>
+      </div>
+    </summary>
+    <p style="margin:12px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
+      来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛有参考价值的事件（最多 10 条，宁缺毋滥），给出一句话归纳 + 风险等级 + 受影响资产。
+    </p>
+    {''.join(cards)}
+    <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
+      数据源：QQ 邮箱 IMAP → hszxboss@qq.com 转发。更新脚本：<code>daily_report/meme交易/overseas_digest.py</code>
+    </p>
+  </details>
+  <style>
+    details[open] > summary .oseas-caret {{ transform: rotate(90deg); }}
+    summary::-webkit-details-marker {{ display: none; }}
+  </style>
 </div>'''
 
     # ─────────────────────────────────────────────
