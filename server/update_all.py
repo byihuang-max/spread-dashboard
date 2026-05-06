@@ -20,6 +20,7 @@ GAMT 投研看板 — 一键更新脚本
 
 import subprocess, sys, os, time, argparse, json
 from datetime import datetime
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(BASE_DIR)
