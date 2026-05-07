@@ -222,11 +222,11 @@ def get_feishu_token():
 
 def risk_badge(level):
     if level == "高":
-        return "🔴 高"
+        return "高"
     if level == "中":
-        return "🟡 中"
+        return "中"
     if level == "低":
-        return "🟢 低"
+        return "低"
     return level
 
 def build_card(picks, total_count):
@@ -234,7 +234,7 @@ def build_card(picks, total_count):
     elements = [
         {"tag": "div", "text": {
             "tag": "lark_md",
-            "content": f"**🌍 海外要闻速递** · {now} · 分析 {total_count} 条 · 精选 {len(picks)} 条"
+            "content": f"**海外要闻速递** · {now} · 分析 {total_count} 条 · 精选 {len(picks)} 条"
         }},
         {"tag": "hr"},
     ]
@@ -306,7 +306,7 @@ def run(push=True):
     # 2. 取 12h 内的新闻
     lookback = cfg.get("fetch", {}).get("lookback_hours", 12)
     news = load_recent_news(hours=lookback)
-    print(f"📊 最近 {lookback}h 共 {len(news)} 条新闻")
+    print(f"最近 {lookback}h 共 {len(news)} 条新闻")
 
     if not news:
         print("⚠️ 无数据，退出")
@@ -314,13 +314,13 @@ def run(push=True):
 
     # 3. 规则筛选（扩大候选池到 30）
     candidates = rule_filter_candidates(news, top_n=30)
-    print(f"📋 规则筛选候选: {len(candidates)} 条")
+    print(f"规则筛选候选: {len(candidates)} 条")
 
     # 4. Claude 精筛（最多 10，允许动态少返）
     picks = llm_pick_top10(candidates, cfg)
-    print(f"🎯 LLM 选出 Top {len(picks)}")
+    print(f"LLM 选出 Top {len(picks)}")
     for p in picks:
-        print(f"   • [{p.get('risk_level')}] {p.get('theme')}: {p.get('summary')}")
+        print(f"   - [{p.get('risk_level')}] {p.get('theme')}: {p.get('summary')}")
 
     # 5. 落盘
     out = {
@@ -337,13 +337,13 @@ def run(push=True):
         json.dump(out, f, ensure_ascii=False, indent=2)
     with open(snapshot, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
-    print(f"💾 已保存: {latest.name}")
+    print(f"已保存: {latest.name}")
 
     # 6. 推飞书
     if push and picks:
         card = build_card(picks, len(news))
         result = send_feishu_card(card)
-        print(f"📱 飞书推送: code={result.get('code')} msg={result.get('msg')}")
+        print(f"飞书推送: code={result.get('code')} msg={result.get('msg')}")
 
     # 7. 触发反脆弱看板重新渲染（把海外要闻区块刷到页面）
     try:
@@ -356,13 +356,13 @@ def run(push=True):
                 capture_output=True, text=True, timeout=60,
             )
             if r.returncode == 0:
-                print("🖼️  反脆弱看板已重新渲染")
+                print("反脆弱看板已重新渲染")
             else:
                 print(f"⚠️ 渲染失败: {r.stderr[:200]}")
     except Exception as e:
         print(f"⚠️ 触发渲染异常: {e}")
 
-    print("✅ 完成")
+    print("完成")
 
 if __name__ == '__main__':
     import sys

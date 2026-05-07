@@ -98,7 +98,11 @@ def render_html():
     # 动态主题：直接在生成HTML时内嵌，避免前端二次 fetch 相对路径失效
     dynamic_themes = []
     dynamic_themes_date = ''
-    narrative_latest_path = '../../daily_report/meme交易/cache/narrative_latest.json'
+    # 用脚本所在目录做基准，避免 cwd 差异（antifragile → ../../../daily_report/meme交易/cache）
+    _script_dir_n = os.path.dirname(os.path.abspath(__file__))
+    narrative_latest_path = os.path.join(
+        _script_dir_n, '..', '..', '..', 'daily_report', 'meme交易', 'cache', 'narrative_latest.json'
+    )
     try:
         with open(narrative_latest_path, 'r', encoding='utf-8') as f:
             narrative_latest = json.load(f)
