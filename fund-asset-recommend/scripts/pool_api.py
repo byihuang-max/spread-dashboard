@@ -87,17 +87,20 @@ def verify_product(reg_code, source="team"):
     return False, err or '未找到该产品净值数据'
 
 
-def submit_product(reg_code, group, detail, reason, submitted_by, benchmark=None, benchmark_name=None):
+def submit_product(reg_code, group, detail, reason, submitted_by, name=None, benchmark=None, benchmark_name=None):
     """
     团队成员提交产品到沙盒池。
-    1. 写入 pending 状态
-    2. 异步调火富牛验证
+    1. 写入 pending 状态（产品名由提交者填写，必填）
+    2. 异步调火富牛验证净值可用性
     3. 验证通过 → verified，失败 → failed
     返回 (ok, msg)
     """
     reg_code = reg_code.strip().upper()
+    name = (name or '').strip()
     if not reg_code:
         return False, 'reg_code 不能为空'
+    if not name:
+        return False, '产品名称不能为空'
     if not group:
         return False, '策略分组不能为空'
     if not reason or len(reason.strip()) < 5:
@@ -115,6 +118,7 @@ def submit_product(reg_code, group, detail, reason, submitted_by, benchmark=None
             elif st == 'rejected':
                 # 被拒绝过的可以重新提交：更新信息，重置为 pending
                 p.update({
+                    'name': name,
                     'group': group,
                     'detail': detail or '',
                     'reason': reason.strip(),
@@ -137,6 +141,7 @@ def submit_product(reg_code, group, detail, reason, submitted_by, benchmark=None
             elif st == 'removed':
                 # 下架的也可以重新提交
                 p.update({
+                    'name': name,
                     'group': group,
                     'detail': detail or '',
                     'reason': reason.strip(),
@@ -160,7 +165,7 @@ def submit_product(reg_code, group, detail, reason, submitted_by, benchmark=None
     color = GROUP_COLORS.get(group, '#666666')
     item = {
         'code': reg_code,
-        'name': '',  # 验证后自动填充
+        'name': name,  # 团队提交时必填，不再依赖火富牛回填
         'group': group,
         'detail': detail or '',
         'color': color,
@@ -201,9 +206,6 @@ def _async_verify(reg_code):
                     p['status'] = 'verified'
                     p['verified'] = True
                     p['verify_info'] = info
-                    # 自动填充产品名
-                    if info.get('name') and not p.get('name'):
-                        p['name'] = info['name']
                 else:
                     p['status'] = 'failed'
                     p['verified'] = False

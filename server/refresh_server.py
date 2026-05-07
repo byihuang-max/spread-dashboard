@@ -841,6 +841,7 @@ class Handler(BaseHTTPRequestHandler):
             import pool_api
             ok, msg = pool_api.submit_product(
                 reg_code=body.get('code', ''),
+                name=body.get('name', ''),
                 group=body.get('group', ''),
                 detail=body.get('detail', ''),
                 reason=body.get('reason', ''),

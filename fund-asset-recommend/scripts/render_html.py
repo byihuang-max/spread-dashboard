@@ -80,7 +80,7 @@ def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
             'name': item.get('name', ''),
             'group': GROUP_MAP.get(item.get('id'), '其他策略'),
         }
-        ret = item.get('return', {})
+        ret = item.get('return') or {}  # 容错 None
         flat['count'] = ret.get('count', 0)
         flat['ret_mean'] = ret.get('mean', 0)
         flat['ret_median'] = ret.get('median', 0)
@@ -89,22 +89,22 @@ def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
         flat['ret_75'] = ret.get('sf', 0)
         flat['ret_90'] = ret.get('ninety', 0)
         flat['profit_rate'] = ret.get('profit_rate', 0)
-        sp = item.get('sp_return_data', {})
+        sp = item.get('sp_return_data') or {}
         flat['sp_mean'] = sp.get('mean', 0)
         flat['sp_median'] = sp.get('median', 0)
         flat['sp_10'] = sp.get('ten', 0)
         flat['sp_90'] = sp.get('ninety', 0)
-        md = item.get('md_return_data', {})
+        md = item.get('md_return_data') or {}
         flat['md_mean'] = md.get('mean', 0)
         flat['md_median'] = md.get('median', 0)
         flat['md_10'] = md.get('ten', 0)
         flat['md_90'] = md.get('ninety', 0)
-        vol = item.get('vol_return_data', {})
+        vol = item.get('vol_return_data') or {}
         flat['vol_mean'] = vol.get('mean', 0)
         flat['vol_median'] = vol.get('median', 0)
         flat['vol_10'] = vol.get('ten', 0)
         flat['vol_90'] = vol.get('ninety', 0)
-        cal = item.get('calmar_return_data', {})
+        cal = item.get('calmar_return_data') or {}
         flat['cal_mean'] = cal.get('mean', 0)
         flat['cal_median'] = cal.get('median', 0)
         flat['cal_10'] = cal.get('ten', 0)
@@ -288,12 +288,12 @@ def render():
     annual_raw = market_data.get('annual', [])
     monthly_raw = market_data.get('monthly', [])
     quarterly_raw = market_data.get('quarterly', [])
-    annual_end = annual_raw[0]['return']['trade_date'] if annual_raw else update_date
-    monthly_end = monthly_raw[0]['return']['trade_date'] if monthly_raw else update_date
-    quarterly_end = quarterly_raw[0]['return']['trade_date'] if quarterly_raw else update_date
-    annual_cycle = annual_raw[0]['return'].get('cycle', '') if annual_raw else ''
-    monthly_cycle = monthly_raw[0]['return'].get('cycle', '') if monthly_raw else ''
-    quarterly_cycle = quarterly_raw[0]['return'].get('cycle', '') if quarterly_raw else ''
+    annual_end = annual_raw[0]['return']['trade_date'] if annual_raw and annual_raw[0].get('return') else update_date
+    monthly_end = monthly_raw[0]['return']['trade_date'] if monthly_raw and monthly_raw[0].get('return') else update_date
+    quarterly_end = quarterly_raw[0]['return']['trade_date'] if quarterly_raw and quarterly_raw[0].get('return') else update_date
+    annual_cycle = annual_raw[0]['return'].get('cycle', '') if annual_raw and annual_raw[0].get('return') else ''
+    monthly_cycle = monthly_raw[0]['return'].get('cycle', '') if monthly_raw and monthly_raw[0].get('return') else ''
+    quarterly_cycle = quarterly_raw[0]['return'].get('cycle', '') if quarterly_raw and quarterly_raw[0].get('return') else ''
 
     # 核心资产/FOF 的日期区间用 update_date（产品净值是日频的）
     end_dt = datetime.strptime(update_date, '%Y-%m-%d')

@@ -94,6 +94,7 @@ tr:hover td{background:#1b2230}
         <h3>推荐新产品</h3>
         <div class="form-row">
           <input id="fCode" placeholder="火富牛 reg_code（如 SATW62）" style="width:170px">
+          <input id="fName" placeholder="产品名称（必填）" style="width:200px">
           <select id="fGroup">
             <option value="">选择策略组</option>
             <option value="量选类">量选类</option>
@@ -262,6 +263,7 @@ function loadModules(){
 
 function doSubmit(){
   var code=document.getElementById('fCode').value.trim();
+  var name=document.getElementById('fName').value.trim();
   var group=document.getElementById('fGroup').value;
   var detail=document.getElementById('fDetail').value.trim();
   var reason=document.getElementById('fReason').value.trim();
@@ -269,18 +271,20 @@ function doSubmit(){
   var bmn=document.getElementById('fBenchmarkName').value.trim();
 
   if(!code){showToast('请输入 reg_code');return}
+  if(!name){showToast('请输入产品名称');return}
   if(!group){showToast('请选择策略组');return}
   if(!reason||reason.length<5){showToast('推荐理由至少5个字');return}
 
-  if(!confirm('确认提交 '+code+' 到「'+group+'」？'))return;
+  if(!confirm('确认提交 '+code+'（'+name+'）到「'+group+'」？'))return;
 
   apiCall('POST','/api/admin/fund-asset-pool/submit',{
-    code:code,group:group,detail:detail,reason:reason,
+    code:code,name:name,group:group,detail:detail,reason:reason,
     benchmark:bm||null,benchmark_name:bmn||null
   }).then(function(d){
     if(d.ok){
       showToast(d.msg||'提交成功');
       document.getElementById('fCode').value='';
+      document.getElementById('fName').value='';
       document.getElementById('fDetail').value='';
       document.getElementById('fReason').value='';
       document.getElementById('fBenchmark').value='';
