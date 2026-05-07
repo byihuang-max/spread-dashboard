@@ -61,11 +61,11 @@ def flatten_market_data(raw_list, monthly_list=None, quarterly_list=None):
     # 建立月度/季度索引
     monthly_map = {}
     for item in (monthly_list or []):
-        ret = item.get('return', {})
+        ret = item.get('return') or {}  # 容错：return 可能是 None
         monthly_map[item.get('id')] = {'month_mean': ret.get('mean', 0), 'month_profit': ret.get('profit_rate', 0)}
     quarterly_map = {}
     for item in (quarterly_list or []):
-        ret = item.get('return', {})
+        ret = item.get('return') or {}  # 容错：return 可能是 None
         quarterly_map[item.get('id')] = {'quarter_mean': ret.get('mean', 0), 'quarter_profit': ret.get('profit_rate', 0)}
 
     result = []
