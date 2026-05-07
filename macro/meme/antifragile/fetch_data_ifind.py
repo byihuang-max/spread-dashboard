@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 IFIND_BASE = 'https://quantapi.51ifind.com/api/v1'
 # refresh_token 从 chain_data.py 统一管理
 _DIR = os.path.dirname(os.path.abspath(__file__))
-_PROJECT = os.path.dirname(os.path.dirname(_DIR))
+_PROJECT = os.path.dirname(os.path.dirname(os.path.dirname(_DIR)))
 
 def _load_refresh_token():
     """从 chain_data.py 读取 refresh_token（单一来源）"""
