@@ -18,7 +18,13 @@ RSYNC_EXCLUDE="\
 --exclude=_cache/ \
 --exclude=*.db \
 --exclude=server/update_log.json \
---exclude=timing-research/leader_pool_history/\
+--exclude=timing-research/leader_pool_history/ \
+--exclude=fund-asset-recommend/data/fund_asset_pool.json \
+--exclude=fund-asset-recommend/data/fund_asset_pool.json.bak \
+--exclude=env_fit/momentum_stock/email_subscribers.json \
+--exclude=server/users.db \
+--exclude=server/users.db-shm \
+--exclude=server/users.db-wal \
 "
 
 echo "[$(date '+%H:%M:%S')] 同步到云端..."
