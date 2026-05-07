@@ -278,6 +278,16 @@ def ingest(text: str, dry_run: bool = False) -> dict:
     target_file.write_text(doc, encoding="utf-8")
     decisions.append(f"✓ 已写入 {target_file.relative_to(ROOT)}")
 
+    # Step 8: 同步前端 BUILTIN_NOTES（容错，不影响主流程）
+    try:
+        from update_builtin_notes import update_builtin_notes
+        if update_builtin_notes(str(target_file.relative_to(ROOT)), final_category):
+            decisions.append("✓ 已同步到前端 BUILTIN_NOTES")
+        else:
+            decisions.append("⚠️  前端 BUILTIN_NOTES 同步失败（不影响笔记本身）")
+    except Exception as e:
+        decisions.append(f"⚠️  前端同步异常：{type(e).__name__}: {e}")
+
     return {
         "status": "written",
         "path": str(target_file.relative_to(ROOT)),
