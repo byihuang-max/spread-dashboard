@@ -82,8 +82,14 @@ else:
     history = {"records": []}
     existing_dates = set()
 
-# 需要补的日期
-todo = [td for td in trade_days if td not in existing_dates]
+# 需要补的日期 + 重试空数据的日期（之前拉到空可能是盘中/数据延迟）
+empty_dates = {r["date"] for r in history.get("records", []) if not r.get("symbols")}
+todo = [td for td in trade_days if td not in existing_dates or td in empty_dates]
+if empty_dates:
+    # 移除空记录，让它们重新拉取
+    history["records"] = [r for r in history["records"] if r.get("symbols")]
+    existing_dates -= empty_dates
+    print(f"空数据日期（将重试）: {sorted(empty_dates)}")
 print(f"需要补: {len(todo)} 天")
 
 if not todo:

@@ -1,7 +1,7 @@
 {
   "mod1_rv_regime": {
     "meta": {
-      "generated": "2026-05-08 08:27:14",
+      "generated": "2026-05-08 13:57:37",
       "module": "option_vol.mod1_rv_regime",
       "version": "mvp",
       "top_n": 10,
@@ -262,7 +262,7 @@
   },
   "mod2_iv_spread": {
     "meta": {
-      "generated": "2026-05-08 08:27:22",
+      "generated": "2026-05-08 13:57:45",
       "module": "option_vol.mod2_iv_spread",
       "source": "tushare public + Black76",
       "risk_free_rate": 0.015
@@ -440,7 +440,7 @@
   },
   "mod3_skew_term": {
     "meta": {
-      "generated": "2026-05-08 08:27:34",
+      "generated": "2026-05-08 13:58:00",
       "module": "option_vol.mod3_skew_term",
       "source": "tushare public + Black76"
     },
@@ -574,7 +574,7 @@
     ]
   },
   "iv_percentile": {
-    "update_time": "2026-05-08 08:29:50",
+    "update_time": "2026-05-08 14:00:12",
     "market_iv_percentile": 68.9,
     "symbols": [
       {
@@ -1687,7 +1687,7 @@
     ]
   },
   "liquidity_percentile": {
-    "update_time": "2026-05-08 08:31:37",
+    "update_time": "2026-05-08 14:01:25",
     "market_liquidity_percentile": 52.9,
     "symbols": [
       {
@@ -3233,7 +3233,7 @@
     ]
   },
   "timing_signal": {
-    "update_time": "2026-05-08 08:31:37",
+    "update_time": "2026-05-08 14:01:26",
     "market_signal": {
       "signal": "SELECTIVE_SELL",
       "label": "🟡 精选窗口",
@@ -3261,7 +3261,7 @@
     "opportunity_count": 2
   },
   "market_breadth": {
-    "update_time": "2026-05-08 08:31:47",
+    "update_time": "2026-05-08 14:01:33",
     "market_breadth": {
       "env_index": 37.4,
       "env_percentile": 0.0,
@@ -3664,24 +3664,6 @@
         "samples": 180
       },
       {
-        "symbol": "BC",
-        "cn_name": "国际铜",
-        "exchange": "INE",
-        "fut_price": 91450.0,
-        "atm_price": 2152.98,
-        "iv_proxy": 0.0235,
-        "iv_percentile": 66.7,
-        "total_vol": 327,
-        "total_amount": 268.8,
-        "total_oi": 1179,
-        "vol_percentile": 33.3,
-        "amount_percentile": 33.3,
-        "oi_percentile": 100.0,
-        "liquidity_percentile": 46.7,
-        "sell_env_score": 58.7,
-        "samples": 6
-      },
-      {
         "symbol": "ZN",
         "cn_name": "锌",
         "exchange": "SHFE",
@@ -3824,6 +3806,24 @@
         "liquidity_percentile": 67.4,
         "sell_env_score": 53.6,
         "samples": 180
+      },
+      {
+        "symbol": "NR",
+        "cn_name": "20号胶",
+        "exchange": "INE",
+        "fut_price": 15135.0,
+        "atm_price": 439.15,
+        "iv_proxy": 0.029,
+        "iv_percentile": 45.5,
+        "total_vol": 618,
+        "total_amount": 198.4,
+        "total_oi": 2438,
+        "vol_percentile": 54.5,
+        "amount_percentile": 54.5,
+        "oi_percentile": 100.0,
+        "liquidity_percentile": 63.6,
+        "sell_env_score": 52.7,
+        "samples": 11
       },
       {
         "symbol": "PF",
@@ -4022,6 +4022,24 @@
         "liquidity_percentile": 5.4,
         "sell_env_score": 44.2,
         "samples": 180
+      },
+      {
+        "symbol": "BC",
+        "cn_name": "国际铜",
+        "exchange": "INE",
+        "fut_price": 91450.0,
+        "atm_price": 2152.98,
+        "iv_proxy": 0.0235,
+        "iv_percentile": 45.5,
+        "total_vol": 327,
+        "total_amount": 268.8,
+        "total_oi": 1179,
+        "vol_percentile": 27.3,
+        "amount_percentile": 27.3,
+        "oi_percentile": 100.0,
+        "liquidity_percentile": 41.8,
+        "sell_env_score": 44.0,
+        "samples": 11
       },
       {
         "symbol": "MA",
@@ -4276,24 +4294,6 @@
         "samples": 180
       },
       {
-        "symbol": "NR",
-        "cn_name": "20号胶",
-        "exchange": "INE",
-        "fut_price": 15135.0,
-        "atm_price": 439.15,
-        "iv_proxy": 0.029,
-        "iv_percentile": 16.7,
-        "total_vol": 618,
-        "total_amount": 198.4,
-        "total_oi": 2438,
-        "vol_percentile": 50.0,
-        "amount_percentile": 50.0,
-        "oi_percentile": 100.0,
-        "liquidity_percentile": 60.0,
-        "sell_env_score": 34.0,
-        "samples": 6
-      },
-      {
         "symbol": "SM",
         "cn_name": "锰硅",
         "exchange": "CZCE",
@@ -4445,16 +4445,16 @@
   },
   "sell_window_signal": {
     "meta": {
-      "generated": "2026-05-08 08:31:48",
+      "generated": "2026-05-08 14:01:33",
       "module": "sell_window_signal",
       "version": "v1"
     },
     "current": {
-      "score": 58.8,
+      "score": 57.1,
       "window": "中性观察",
       "color": "gray",
       "emoji": "",
-      "n_sellable": 2,
+      "n_sellable": 1,
       "label": "NEUTRAL"
     },
     "timeseries": {
@@ -4522,67 +4522,67 @@
         "2026-05-08"
       ],
       "scores": [
-        63.8,
-        46.8,
-        43.8,
-        66.8,
-        51.8,
-        50.8,
-        50.8,
-        47.8,
-        66.8,
-        46.8,
-        64.8,
-        66.8,
-        71.8,
-        60.8,
-        45.8,
-        61.8,
-        56.8,
-        44.8,
-        43.8,
-        45.8,
-        49.8,
-        50.8,
-        59.8,
-        62.8,
-        43.8,
-        60.8,
-        49.8,
-        65.8,
-        63.8,
-        65.8,
-        60.8,
-        56.8,
-        50.8,
-        57.8,
-        61.8,
-        51.8,
-        68.8,
-        70.8,
-        43.8,
-        67.8,
-        68.8,
-        48.8,
-        65.8,
-        56.8,
-        53.8,
-        51.8,
-        47.8,
-        49.8,
-        73.8,
-        67.8,
-        53.8,
-        46.8,
-        45.8,
-        55.8,
-        46.8,
-        54.8,
-        70.8,
-        54.8,
-        62.8,
-        51.8,
-        58.8
+        62.1,
+        45.1,
+        42.1,
+        65.1,
+        50.1,
+        49.1,
+        49.1,
+        46.1,
+        65.1,
+        45.1,
+        63.1,
+        65.1,
+        70.1,
+        59.1,
+        44.1,
+        60.1,
+        55.1,
+        43.1,
+        42.1,
+        44.1,
+        48.1,
+        49.1,
+        58.1,
+        61.1,
+        42.1,
+        59.1,
+        48.1,
+        64.1,
+        62.1,
+        64.1,
+        59.1,
+        55.1,
+        49.1,
+        56.1,
+        60.1,
+        50.1,
+        67.1,
+        69.1,
+        42.1,
+        66.1,
+        67.1,
+        47.1,
+        64.1,
+        55.1,
+        52.1,
+        50.1,
+        46.1,
+        48.1,
+        72.1,
+        66.1,
+        52.1,
+        45.1,
+        44.1,
+        54.1,
+        45.1,
+        53.1,
+        69.1,
+        53.1,
+        61.1,
+        50.1,
+        57.1
       ]
     },
     "components": {
@@ -4593,7 +4593,7 @@
   },
   "mod9_composite_score": {
     "meta": {
-      "generated": "2026-05-08 08:31:48",
+      "generated": "2026-05-08 14:01:33",
       "module": "option_vol.mod9_composite_score",
       "formula": "0.30*rv + 0.28*iv + 0.18*skew + 0.12*term + 0.07*liq + 0.05*exp (full); fallback if missing layers"
     },
@@ -4905,7 +4905,7 @@
     ]
   },
   "contract_opportunities": {
-    "update_time": "2026-05-08 08:31:57",
+    "update_time": "2026-05-08 14:01:39",
     "scan_count": 0,
     "top_symbols_scanned": 20,
     "opportunities": []
