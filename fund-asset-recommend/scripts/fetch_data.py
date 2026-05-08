@@ -124,10 +124,11 @@ def fetch_all_combis():
 
 # ========== 3. 市场策略基准 ==========
 
-def fetch_market_category(type_val):
+def fetch_market_category(type_val, end_date=None):
     """拉取市场策略基准数据"""
     ids_encoded = urllib.parse.quote(MARKET_IDS, safe='')
-    end_date = datetime.now().strftime('%Y-%m-%d')
+    if end_date is None:
+        end_date = datetime.now().strftime('%Y-%m-%d')
     # 这个接口签名比较特殊，ids 需要 encode 后参与签名
     tm = str(int(time.time()))
     sign_params = {'app_id': APP_ID, 'end_date': end_date, 'ids': ids_encoded, 'tm': tm, 'type': str(type_val)}
@@ -139,16 +140,36 @@ def fetch_market_category(type_val):
     return r.json().get('data', [])
 
 
+def _fetch_with_fallback(type_val):
+    """先试当前日期，如果 return 全 null 则回退到上月末"""
+    data = fetch_market_category(type_val)
+    if any(d.get('return') is not None for d in data):
+        return data
+    # 回退到上月末
+    last_month_end = (datetime.now().replace(day=1) - timedelta(days=1)).strftime('%Y-%m-%d')
+    fallback = fetch_market_category(type_val, end_date=last_month_end)
+    if any(d.get('return') is not None for d in fallback):
+        print(f"    (回退到 {last_month_end})")
+        return fallback
+    # 再退一个月
+    prev_month_end = (datetime.now().replace(day=1) - timedelta(days=1)).replace(day=1) - timedelta(days=1)
+    fallback2 = fetch_market_category(type_val, end_date=prev_month_end.strftime('%Y-%m-%d'))
+    if any(d.get('return') is not None for d in fallback2):
+        print(f"    (回退到 {prev_month_end.strftime('%Y-%m-%d')})")
+        return fallback2
+    return data
+
+
 def fetch_market_data():
-    """拉取年度/月度/季度市场策略基准"""
+    """拉取年度/月度/季度市场策略基准（带智能回退）"""
     print(" 拉取市场策略基准...")
-    annual = fetch_market_category(5)
+    annual = _fetch_with_fallback(5)
     print(f"  年度: {len(annual)} 策略")
     time.sleep(0.3)
-    monthly = fetch_market_category(2)
+    monthly = _fetch_with_fallback(2)
     print(f"  月度: {len(monthly)} 策略")
     time.sleep(0.3)
-    quarterly = fetch_market_category(3)
+    quarterly = _fetch_with_fallback(3)
     print(f"  季度: {len(quarterly)} 策略")
     return annual, monthly, quarterly
 

@@ -316,10 +316,15 @@ def render():
         'quarterly_range': f'（季度 {quarterly_end}，{quarterly_cycle}）',
     }
     html = html.replace('/*__MARKET_META__*/{}', json.dumps(market_meta, ensure_ascii=False))
+    # 判断月度/季度是否回退
+    today = datetime.now().strftime('%Y-%m-%d')
+    monthly_fallback = '' if monthly_end >= today[:7] else '（数据源延迟，已回退至上月）'
+    quarterly_fallback = '' if quarterly_end >= today[:7] else '（数据源延迟，已回退至上季度）'
+    
     html = html.replace('/*__MARKET_SUBTITLE__*/',
-        f'数据来源：火富牛策略观察 API<br/>年度指标截至 {annual_end}（{annual_cycle}） ｜ 月度收益截至 {monthly_end}（{monthly_cycle}） ｜ 季度收益截至 {quarterly_end}（{quarterly_cycle}）')
+        f'数据来源：火富牛策略观察 API<br/>年度指标截至 {annual_end}（{annual_cycle}） ｜ 月度收益截至 {monthly_end}（{monthly_cycle}）{monthly_fallback} ｜ 季度收益截至 {quarterly_end}（{quarterly_cycle}）{quarterly_fallback}')
     html = html.replace('/*__MARKET_NOTE__*/',
-        f'说明：年度指标统计截至 {annual_end}（{annual_cycle}），月度收益截至 {monthly_end}（{monthly_cycle}），季度收益截至 {quarterly_end}（{quarterly_cycle}）。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。')
+        f'说明：年度指标统计截至 {annual_end}（{annual_cycle}），月度收益截至 {monthly_end}（{monthly_cycle}）{monthly_fallback}，季度收益截至 {quarterly_end}（{quarterly_cycle}）{quarterly_fallback}。<br/>分位数为各策略样本内的分布，10% 表示前10%分位（最优），90% 表示后10%分位（最差）。数据来源：火富牛策略观察 /market/category API。<br/>注：月度/季度数据通常在月末后5-10个工作日发布，当月数据未出时自动回退至上月/上季度。')
     html = html.replace('/*__CORE_SUBTITLE__*/',
         f'生成时间 {update_time} ｜ 各产品净值日期见表格"净值日期"列<br/>近一周/近一月/今年以来 均以各产品最新净值日为基准计算')
     html = html.replace('/*__CORE_NOTE__*/',
