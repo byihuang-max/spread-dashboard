@@ -345,7 +345,7 @@ document.querySelectorAll('.tab').forEach(function(t){
 });
 
 // load data
-fetch('data/fund_research.json?t='+Date.now())
+fetch('../data/fund_research.json?t='+Date.now())
   .then(function(r){return r.json();})
   .then(function(d){
     DATA = d;
