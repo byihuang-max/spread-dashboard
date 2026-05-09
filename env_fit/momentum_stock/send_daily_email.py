@@ -274,7 +274,30 @@ def send_to_all(report_text):
     print(f' 发送完毕')
 
 
+def is_trading_day(dt=None):
+    """判断指定日期是否为 A 股交易日（Tushare trade_cal）"""
+    from momentum_data import tushare_call
+    from datetime import date as _date
+    d = dt or _date.today()
+    ds = d.strftime('%Y%m%d')
+    try:
+        data = tushare_call('trade_cal', {
+            'exchange': 'SSE', 'start_date': ds, 'end_date': ds
+        })
+        if data and len(data) > 0:
+            return data[0].get('is_open') == 1
+    except Exception as e:
+        print(f'  交易日判断失败({e})，默认放行')
+    return True  # 查询失败时不阻断
+
+
 def main():
+    # --force 跳过交易日判断（手动补发用）
+    if '--force' not in sys.argv and '--test' not in sys.argv:
+        if not is_trading_day():
+            print('今日非交易日，跳过发送')
+            return
+
     print('生成日报...')
     report = generate_report()
     send_to_all(report)
