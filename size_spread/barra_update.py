@@ -141,7 +141,7 @@ def generate_json(df):
     indices = list(range(0, n - keep_recent, 5)) + list(range(n - keep_recent, n))
     indices = sorted(set(indices))
     
-    dates_sampled = [df['tradeDate'].iloc[i][4:6] + '/' + df['tradeDate'].iloc[i][6:8] for i in indices]
+    dates_sampled = [df['tradeDate'].iloc[i][:4] + '/' + df['tradeDate'].iloc[i][4:6] + '/' + df['tradeDate'].iloc[i][6:8] for i in indices]
     
     navs_sampled = {}
     recent_20 = {}
