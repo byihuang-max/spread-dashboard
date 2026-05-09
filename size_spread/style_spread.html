@@ -164,11 +164,45 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   </div>
 
   <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 说明</div>
-    <p><b>数据来源：</b>DataYes Barra CNE6 SW21 因子日收益率，累乘得到净值曲线。每条曲线代表一个"纯净风格方向"的历史表现——控制了其他所有因子后的边际贡献。</p>
-    <p><b>净值含义：</b>净值上行 = 该风格在赚钱（多头跑赢空头）；净值下行 = 该风格在亏钱。</p>
-    <p><b>更新频率：</b>每个交易日 18:00 自动更新（DataYes T+1 数据）</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：DataYes Barra CNE6 · 日更</p>
+    <div class="card-title" style="font-size:12px;color:#64748b;cursor:pointer;user-select:none" onclick="var el=document.getElementById('barra-explain');el.style.display=el.style.display==='none'?'block':'none';this.querySelector('.fold-arrow').textContent=el.style.display==='none'?'▶':'▼'">
+      <span class="dot" style="background:#94a3b8"></span> 因子说明（21个） <span class="fold-arrow" style="font-size:10px;margin-left:6px;color:#94a3b8">▶</span>
+    </div>
+    <div id="barra-explain" style="display:none">
+      <p style="margin-bottom:8px"><b>数据来源：</b>DataYes Barra CNE6 SW21 因子日收益率，累乘得到净值曲线。每条曲线代表一个"纯净风格方向"的历史表现——控制了其他所有因子后的边际贡献。</p>
+      <p style="margin-bottom:8px"><b>净值含义：</b>净值上行 = 该风格在赚钱（多头跑赢空头）；净值下行 = 该风格在亏钱。</p>
+      <p style="margin-bottom:8px"><b>更新频率：</b>每个交易日 18:00 自动更新（DataYes T+1 数据）</p>
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px">
+        <thead><tr style="border-bottom:1px solid #e5e7eb;text-align:left">
+          <th style="padding:4px 6px;color:#64748b">因子</th>
+          <th style="padding:4px 6px;color:#64748b">代码</th>
+          <th style="padding:4px 6px;color:#64748b">含义</th>
+          <th style="padding:4px 6px;color:#64748b">描述子/窗口</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#e74c3c;font-weight:600">红利</td><td style="padding:4px 6px">DIVYILD</td><td style="padding:4px 6px">高股息率 vs 低股息率</td><td style="padding:4px 6px">过去12个月股息/市值</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#3498db;font-weight:600">低波动</td><td style="padding:4px 6px">RESVOL</td><td style="padding:4px 6px">低残差波动 vs 高残差波动</td><td style="padding:4px 6px">CAPM残差标准差，252日半衰期</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#2ecc71;font-weight:600">动量</td><td style="padding:4px 6px">MOMENTUM</td><td style="padding:4px 6px">中期赢家 vs 输家</td><td style="padding:4px 6px">504日累计超额收益（跳过近21日）</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#f39c12;font-weight:600">价值(BP)</td><td style="padding:4px 6px">BTOP</td><td style="padding:4px 6px">高账面市值比(低PB) vs 低账面市值比(高PB)</td><td style="padding:4px 6px">最新净资产/总市值</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#9b59b6;font-weight:600">质量(盈利)</td><td style="padding:4px 6px">PROFIT</td><td style="padding:4px 6px">高盈利能力 vs 低盈利能力</td><td style="padding:4px 6px">ROE+毛利率+资产周转率复合</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#1abc9c;font-weight:600">长期反转</td><td style="padding:4px 6px">LTREVRSL</td><td style="padding:4px 6px">3-4年前输家 vs 3-4年前赢家</td><td style="padding:4px 6px">1040~750日前累计收益</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#e91e63;font-weight:600">短期反转</td><td style="padding:4px 6px">STREVRSL</td><td style="padding:4px 6px">近1个月输家 vs 赢家</td><td style="padding:4px 6px">近21日累计收益取反</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#ff9800;font-weight:600">盈利收益率</td><td style="padding:4px 6px">EARNYILD</td><td style="padding:4px 6px">高EP vs 低EP</td><td style="padding:4px 6px">TTM净利润/总市值 + 现金流/市值</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#00bcd4;font-weight:600">盈利质量</td><td style="padding:4px 6px">EARNQLTY</td><td style="padding:4px 6px">利润含金量高 vs 低</td><td style="padding:4px 6px">应计利润/总资产（越低越好）</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#8bc34a;font-weight:600">投资质量</td><td style="padding:4px 6px">INVSQLTY</td><td style="padding:4px 6px">低资本开支 vs 高资本开支</td><td style="padding:4px 6px">总资产增长率取反</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#673ab7;font-weight:600">成长</td><td style="padding:4px 6px">GROWTH</td><td style="padding:4px 6px">高成长预期 vs 低成长预期</td><td style="padding:4px 6px">营收/利润5年增速 + 一致预期增速</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#795548;font-weight:600">规模(小盘)</td><td style="padding:4px 6px">SIZE</td><td style="padding:4px 6px">大盘 vs 小盘（正=大盘赢）</td><td style="padding:4px 6px">ln(总市值)</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#cddc39;font-weight:600">中盘</td><td style="padding:4px 6px">MIDCAP</td><td style="padding:4px 6px">中盘 vs 大小盘两端</td><td style="padding:4px 6px">SIZE的三次方正交化</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#ff5722;font-weight:600">贝塔</td><td style="padding:4px 6px">BETA</td><td style="padding:4px 6px">高贝塔 vs 低贝塔</td><td style="padding:4px 6px">对市场组合回归斜率，252日半衰期</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#607d8b;font-weight:600">流动性</td><td style="padding:4px 6px">LIQUIDTY</td><td style="padding:4px 6px">高换手 vs 低换手</td><td style="padding:4px 6px">月均换手率(1/3/12个月复合)</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#9e9e9e;font-weight:600">杠杆</td><td style="padding:4px 6px">LEVERAGE</td><td style="padding:4px 6px">高杠杆 vs 低杠杆</td><td style="padding:4px 6px">资产负债率 + 市场杠杆</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#00acc1;font-weight:600">盈余稳定</td><td style="padding:4px 6px">EARNVAR</td><td style="padding:4px 6px">盈余波动低 vs 高</td><td style="padding:4px 6px">过去5年ROE标准差</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#d81b60;font-weight:600">分析师情绪</td><td style="padding:4px 6px">ANALSENTI</td><td style="padding:4px 6px">被上调 vs 被下调</td><td style="padding:4px 6px">一致预期EPS变化率(1/3/6个月)</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;color:#43a047;font-weight:600">行业动量</td><td style="padding:4px 6px">INDMOM</td><td style="padding:4px 6px">热门行业 vs 冷门行业</td><td style="padding:4px 6px">所属行业过去6个月收益率</td></tr>
+          <tr><td style="padding:4px 6px;color:#fdd835;font-weight:600">季节性</td><td style="padding:4px 6px">SEASON</td><td style="padding:4px 6px">历史同期强 vs 弱</td><td style="padding:4px 6px">过去5年同月平均收益率</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;color:#94a3b8">注：COUNTRY（市场因子）不属于风格因子，未纳入。以上20个因子覆盖 Barra CNE6 全部风格维度。</p>
+    </div>
   </div>
 </div>
 
