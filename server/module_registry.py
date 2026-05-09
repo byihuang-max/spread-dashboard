@@ -41,6 +41,16 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
+    'barra_style': {
+        'name': 'Barra风格因子',
+        'scripts': [
+            ('size_spread', 'barra_update.py'),
+        ],
+        'aliases': ['barra'],
+        'late_data': True,  # DataYes因子收益率T+1早上可用，盘后批次更稳
+        'include_in_update_all': True,
+        'include_in_refresh_server': True,
+    },
     'quant_stock': {
         'name': '宽基量化股票',
         'scripts': [
