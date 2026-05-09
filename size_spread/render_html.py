@@ -89,6 +89,11 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 .ov-card .ov-sub{{font-size:10px;color:var(--text-sub)}}
 .pos{{color:#e74c3c}} .neg{{color:#2ecc71}}
 
+.barra-time-btn{{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;
+  background:#f8fafc;border:1px solid #e5e7eb;color:#6b7280;transition:all .12s}}
+.barra-time-btn:hover{{color:#333;border-color:#cbd5e1}}
+.barra-time-btn.barra-time-active{{background:#6366f1;color:#fff;border-color:#6366f1}}
+
 .tag-row{{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}}
 .tag{{background:#fff3e0;color:#e65100;padding:3px 10px;border-radius:12px;font-size:12px}}
 .tag.cool{{background:#e3f2fd;color:#1565c0}}
@@ -102,14 +107,36 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
 </head><body>
 
 <div class="ss-tabs">
-  <div class="ss-tab active" data-tab="eco"> 经济敏感轧差</div>
+  <div class="ss-tab active" data-tab="barra"> Barra风格因子</div>
+  <div class="ss-tab" data-tab="eco"> 经济敏感轧差</div>
   <div class="ss-tab" data-tab="crowd"> 拥挤-反身性</div>
   <div class="ss-tab" data-tab="style"> 风格轧差净值</div>
   <div class="ss-tab" data-tab="dual"> 双创等权</div>
 </div>
 
+<!-- Tab 0: Barra 风格因子 -->
+<div class="ss-page active" id="page-barra">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+    <span style="font-size:13px;color:#888" id="barra-header"> Barra CNE6 风格因子</span>
+    <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
+  </div>
+  <div class="overview-grid" id="barra-cards"></div>
+  <div class="card" id="barra-time-controls" style="padding:12px 16px"></div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#6366f1"></span> 风格因子累计净值（区间归一化）</div>
+    <div style="position:relative;height:360px"><canvas id="barraNavChart"></canvas></div>
+  </div>
+  <div class="card" id="barra-checkbox-card">
+    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#6366f1"></span> 因子选择（勾选叠加到图上）</div>
+    <div id="barra-checkboxes" style="display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px"></div>
+  </div>
+  <div class="card" id="barra-status-panel">
+    <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 风格状态面板（多时间窗口）</div>
+  </div>
+</div>
+
 <!-- Tab 1: 经济敏感轧差 -->
-<div class="ss-page active" id="page-eco">
+<div class="ss-page" id="page-eco">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
     <span style="font-size:13px;color:#888"> 经济敏感轧差 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
     <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
@@ -264,12 +291,209 @@ var chartBase = {{
 function lineOpts() {{ return JSON.parse(JSON.stringify(chartBase)); }}
 function barOpts() {{ var o = JSON.parse(JSON.stringify(chartBase)); o.plugins.legend.display = false; return o; }}
 
+// === Barra 风格因子动态加载 ===
+var barraChart = null;
+var barraData = null;
+var barraTimeRange = [0, 0];
+var barraColors = {{
+  DIVYILD:'#e05555',RESVOL:'#3b82f6',MOMENTUM:'#10b981',BTOP:'#f59e0b',
+  PROFIT:'#8b5cf6',LTREVRSL:'#14b8a6',STREVRSL:'#ec4899',EARNYILD:'#f97316',
+  EARNQLTY:'#06b6d4',INVSQLTY:'#84cc16',SIZE:'#78716c',GROWTH:'#6366f1',
+  BETA:'#ef4444',LIQUIDTY:'#64748b',MIDCAP:'#a3a328',LEVERAGE:'#9ca3af',
+  EARNVAR:'#0891b2',ANALSENTI:'#db2777',INDMOM:'#16a34a',SEASON:'#ca8a04'
+}};
+var barraDefaultFactors = ['DIVYILD','RESVOL','MOMENTUM','BTOP','PROFIT','LTREVRSL'];
+
+function loadBarraData() {{
+  if (barraData) {{ renderBarraChart(); return; }}
+  fetch('/size_spread/data/barra_style_nav.json?t=' + Date.now())
+    .then(function(r){{ return r.json(); }})
+    .then(function(data){{
+      barraData = data;
+      barraTimeRange = [0, data.all_dates.length - 1];
+      document.getElementById('barra-header').innerHTML =
+        ' Barra CNE6 风格因子 \\u00b7 数据截至 <b style="color:#2d3142">' + data.update_date + '</b> \\u00b7 ' + data.total_days + '个交易日';
+      renderBarraCards();
+      renderBarraTimeControls();
+      renderBarraCheckboxes();
+      renderBarraStatusPanel();
+      renderBarraChart();
+    }})
+    .catch(function(e){{ document.getElementById('barra-header').textContent = '加载失败: ' + e.message; }});
+}}
+
+function renderBarraCards() {{
+  var core = ['DIVYILD','RESVOL','MOMENTUM','BTOP','PROFIT','LTREVRSL'];
+  var html = '';
+  core.forEach(function(code){{
+    var nav = barraData.all_navs[code][barraData.all_navs[code].length-1];
+    var r20 = barraData.recent_20[code];
+    var dir = r20 >= 0 ? '\\u25b2' : '\\u25bc';
+    var cls = r20 >= 0 ? 'pos' : 'neg';
+    html += '<div class="ov-card" style="border-left-color:'+barraColors[code]+'">' +
+      '<div class="ov-label">'+barraData.names[code]+'</div>' +
+      '<div class="ov-value '+cls+'">'+nav.toFixed(4)+'</div>' +
+      '<div class="ov-sub">近20日 '+dir+Math.abs(r20).toFixed(2)+'%</div></div>';
+  }});
+  document.getElementById('barra-cards').innerHTML = html;
+}}
+
+function renderBarraTimeControls() {{
+  var container = document.getElementById('barra-time-controls');
+  if (!container) return;
+  var total = barraData.all_dates.length;
+  var html = '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+  html += '<span style="font-size:11px;color:#64748b;font-weight:600">时间范围:</span>';
+  var presets = [
+    {{label:'近1月',days:20}},{{label:'近3月',days:60}},{{label:'近半年',days:120}},
+    {{label:'近1年',days:250}},{{label:'近2年',days:500}},{{label:'全部',days:0}}
+  ];
+  presets.forEach(function(p){{
+    var active = (p.days === 0) ? ' barra-time-active' : '';
+    html += '<button class="barra-time-btn'+active+'" onclick="setBarraTimePreset('+p.days+',this)">'+p.label+'</button>';
+  }});
+  html += '</div>';
+  html += '<div style="display:flex;align-items:center;gap:10px;margin-top:8px">';
+  html += '<span style="font-size:11px;color:#94a3b8" id="barra-range-start">'+barraData.all_dates[0]+'</span>';
+  html += '<input type="range" id="barra-slider" min="0" max="'+(total-1)+'" value="0" ' +
+    'style="flex:1;height:4px;accent-color:#6366f1;cursor:pointer" oninput="onBarraSlider(this.value)">';
+  html += '<span style="font-size:11px;color:#94a3b8" id="barra-range-end">'+barraData.all_dates[total-1]+'</span>';
+  html += '</div>';
+  container.innerHTML = html;
+}}
+
+function setBarraTimePreset(days, btn) {{
+  var total = barraData.all_dates.length;
+  if (days === 0) {{ barraTimeRange = [0, total - 1]; }}
+  else {{ barraTimeRange = [Math.max(0, total - days), total - 1]; }}
+  document.getElementById('barra-slider').value = barraTimeRange[0];
+  document.getElementById('barra-range-start').textContent = barraData.all_dates[barraTimeRange[0]];
+  document.querySelectorAll('.barra-time-btn').forEach(function(b){{ b.classList.remove('barra-time-active'); }});
+  if (btn) btn.classList.add('barra-time-active');
+  renderBarraChart();
+}}
+
+function onBarraSlider(val) {{
+  var startIdx = parseInt(val);
+  barraTimeRange[0] = startIdx;
+  document.getElementById('barra-range-start').textContent = barraData.all_dates[startIdx];
+  document.querySelectorAll('.barra-time-btn').forEach(function(b){{ b.classList.remove('barra-time-active'); }});
+  renderBarraChart();
+}}
+
+function renderBarraCheckboxes() {{
+  var container = document.getElementById('barra-checkboxes');
+  var html = '';
+  var groups = barraData.groups;
+  for (var gname in groups) {{
+    html += '<div style="margin-bottom:4px;width:100%"><span style="font-size:11px;color:#94a3b8">'+gname+'</span></div>';
+    groups[gname].forEach(function(code){{
+      var checked = barraDefaultFactors.indexOf(code) >= 0 ? ' checked' : '';
+      html += '<label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;min-width:110px;padding:2px 0;color:#4b5563;font-size:12px">' +
+        '<input type="checkbox" class="barra-cb" value="'+code+'"'+checked+' onchange="renderBarraChart()" style="accent-color:'+barraColors[code]+'">' +
+        '<span style="width:8px;height:8px;border-radius:2px;background:'+barraColors[code]+';display:inline-block"></span> ' +
+        barraData.names[code] + '</label>';
+    }});
+  }}
+  container.innerHTML = html;
+}}
+
+function renderBarraStatusPanel() {{
+  var container = document.getElementById('barra-status-panel');
+  if (!container) return;
+  var windows = [
+    {{key:'recent_5',label:'5日'}},{{key:'recent_20',label:'20日'}},
+    {{key:'recent_60',label:'近1月'}},{{key:'recent_120',label:'近半年'}},
+    {{key:'recent_250',label:'近1年'}}
+  ];
+  var groups = barraData.groups;
+  var html = '<div class="card-title"><span class="dot" style="background:#f59e0b"></span> 风格状态面板（多时间窗口）</div>';
+  html += '<div style="margin-bottom:14px;display:flex;gap:20px;flex-wrap:wrap">';
+  var sorted20 = Object.keys(barraData.recent_20).sort(function(a,b){{ return barraData.recent_20[b]-barraData.recent_20[a]; }});
+  var winners = sorted20.filter(function(c){{ return barraData.recent_20[c] > 0; }});
+  var losers = sorted20.filter(function(c){{ return barraData.recent_20[c] < 0; }}).reverse();
+  html += '<div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:600;color:#e05555;margin-bottom:4px">\\u25b2 近20日赚钱风格</div>';
+  winners.slice(0,6).forEach(function(c){{
+    html += '<div style="font-size:11px;color:#4b5563;padding:1px 0"><span style="color:'+barraColors[c]+'">\\u25cf</span> '+barraData.names[c]+' <span style="color:#e05555;font-weight:500">+'+barraData.recent_20[c].toFixed(2)+'%</span></div>';
+  }});
+  html += '</div>';
+  html += '<div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:600;color:#2ecc71;margin-bottom:4px">\\u25bc 近20日亏钱风格</div>';
+  losers.slice(0,6).forEach(function(c){{
+    html += '<div style="font-size:11px;color:#4b5563;padding:1px 0"><span style="color:'+barraColors[c]+'">\\u25cf</span> '+barraData.names[c]+' <span style="color:#2ecc71;font-weight:500">'+barraData.recent_20[c].toFixed(2)+'%</span></div>';
+  }});
+  html += '</div></div>';
+  for (var gname in groups) {{
+    html += '<div style="margin-bottom:12px">';
+    html += '<div style="font-size:11px;font-weight:600;color:#2d3142;margin-bottom:4px;border-bottom:1px solid #f1f5f9;padding-bottom:3px">'+gname+'</div>';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="text-align:left;padding:3px 4px;color:#94a3b8;font-weight:500">因子</th>';
+    windows.forEach(function(w){{ html += '<th style="text-align:right;padding:3px 4px;color:#94a3b8;font-weight:500">'+w.label+'</th>'; }});
+    html += '<th style="text-align:left;padding:3px 4px;color:#94a3b8;font-weight:500;min-width:160px">状态含义</th></tr></thead><tbody>';
+    groups[gname].forEach(function(code){{
+      html += '<tr style="border-bottom:1px solid #f8fafc"><td style="padding:3px 4px;color:#4b5563;font-weight:500"><span style="color:'+barraColors[code]+'">\\u25cf</span> '+barraData.names[code]+'</td>';
+      windows.forEach(function(w){{
+        var val = barraData[w.key] ? barraData[w.key][code] : 0;
+        var cls = val >= 0 ? 'color:#e05555' : 'color:#2ecc71';
+        var arrow = val >= 0 ? '\\u25b2' : '\\u25bc';
+        html += '<td style="text-align:right;padding:3px 4px;'+cls+';font-weight:500">'+arrow+Math.abs(val).toFixed(2)+'%</td>';
+      }});
+      var meaning = (barraData.meanings && barraData.meanings[code]) || '';
+      var r20 = barraData.recent_20[code] || 0;
+      if (r20 < 0) {{ meaning = meaning.replace(/跑赢/g,'跑输').replace(/有效/g,'失效').replace(/占优/g,'承压').replace(/上升/g,'下降').replace(/延续/g,'衰减'); }}
+      html += '<td style="padding:3px 4px;color:#94a3b8;font-size:10px">'+meaning+'</td></tr>';
+    }});
+    html += '</tbody></table></div>';
+  }}
+  container.innerHTML = html;
+}}
+
+function renderBarraChart() {{
+  var selected = [];
+  document.querySelectorAll('.barra-cb:checked').forEach(function(cb){{ selected.push(cb.value); }});
+  if (selected.length === 0) selected = barraDefaultFactors;
+  var startIdx = barraTimeRange[0];
+  var endIdx = barraTimeRange[1];
+  var totalPts = endIdx - startIdx + 1;
+  var step = totalPts > 300 ? Math.floor(totalPts / 250) : 1;
+  var sampledIndices = [];
+  for (var i = 0; i < totalPts; i += step) sampledIndices.push(i);
+  if (sampledIndices[sampledIndices.length-1] !== totalPts-1) sampledIndices.push(totalPts-1);
+  var dates = barraData.all_dates.slice(startIdx, endIdx + 1);
+  var sampledDates = sampledIndices.map(function(i){{ return dates[i]; }});
+  var datasets = selected.map(function(code){{
+    var fullNav = barraData.all_navs[code];
+    var baseNav = fullNav[startIdx];
+    var sliced = sampledIndices.map(function(i){{ return fullNav[startIdx + i] / baseNav; }});
+    return {{
+      label: barraData.names[code],
+      data: sliced,
+      borderColor: barraColors[code],
+      backgroundColor: 'transparent',
+      tension: 0.3,
+      pointRadius: 0,
+      borderWidth: 2
+    }};
+  }});
+  if (barraChart) {{ barraChart.destroy(); }}
+  var opts = lineOpts();
+  opts.plugins.legend.display = true;
+  opts.plugins.legend.labels = {{boxWidth:10,font:{{size:10}},padding:8}};
+  opts.scales.y.ticks.callback = function(v){{return v.toFixed(2)}};
+  barraChart = new Chart(document.getElementById('barraNavChart'), {{
+    type: 'line',
+    data: {{ labels: sampledDates, datasets: datasets }},
+    options: opts
+  }});
+}}
+
 var inited = {{}};
 function initTab(tab) {{
   if (inited[tab]) return;
   inited[tab] = true;
 
   switch(tab) {{
+    case 'barra':
+      loadBarraData();
+      break;
     case 'eco':
       new Chart(document.getElementById('ecoNavChart'),{{type:'line',data:{{labels:eco_dates,datasets:[
         {{label:'净值',data:eco_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:1.5,pointBackgroundColor:'#e67e22',borderWidth:2}},
@@ -324,7 +548,7 @@ document.querySelectorAll('.ss-tab').forEach(function(tab) {{
   }});
 }});
 
-initTab('eco');
+initTab('barra');
 
 function refreshData(module) {{
   const btn = event.target;

@@ -53,7 +53,7 @@ def compute_style_spread(index_daily):
 
         key_name = f'{long_name}-{short_name}'
         results[key_name] = {
-            'dates': [d[4:6] + '/' + d[-2:] for d in common_dates],  # MM/DD
+            'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],  # YYYY/MM/DD
             'navs': navs,
             'spreads': spreads,
         }
@@ -80,7 +80,7 @@ def compute_dual_innovation(index_daily):
         kc50_chg.append(kc50_data[date]['pct_chg'])
 
     return {
-        'dates': [d[4:6] + '/' + d[-2:] for d in common_dates],  # MM/DD
+        'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],  # YYYY/MM/DD
         'navs': navs,
         'cyb_chg': cyb_chg,
         'kc50_chg': kc50_chg,
@@ -112,7 +112,7 @@ def compute_eco_sensitive(sw_daily):
     return {
         'cycle_names': [sw_daily[code]['name'] for code in cycle_codes],
         'defense_names': [sw_daily[code]['name'] for code in defense_codes],
-        'dates': [d[4:6] + '/' + d[-2:] for d in common_dates],  # MM/DD
+        'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],  # YYYY/MM/DD
         'cycle_chg': cycle_chg,
         'defense_chg': defense_chg,
         'spreads': spreads,
@@ -171,7 +171,7 @@ def compute_crowding(sw_daily):
         bot_names.append([sw_daily[code]['name'] for code in bot_codes])
 
     return {
-        'dates': [d[4:6] + '/' + d[-2:] for d in common_dates[LOOKBACK:]],  # MM/DD
+        'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates[LOOKBACK:]],  # YYYY/MM/DD
         'top_chg': top_chg,
         'bot_chg': bot_chg,
         'spreads': spreads,
