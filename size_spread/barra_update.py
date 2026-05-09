@@ -56,12 +56,45 @@ FACTOR_NAMES = {
 }
 
 FACTOR_GROUPS = {
-    '核心': ['DIVYILD', 'RESVOL', 'MOMENTUM', 'BTOP', 'PROFIT', 'LTREVRSL'],
-    '估值成长': ['EARNYILD', 'GROWTH'],
+    '核心六因子': ['DIVYILD', 'RESVOL', 'MOMENTUM', 'BTOP', 'PROFIT', 'LTREVRSL'],
+    '估值与成长': ['EARNYILD', 'GROWTH'],
     '质量补充': ['EARNQLTY', 'INVSQLTY', 'EARNVAR'],
-    '动量反转': ['STREVRSL', 'INDMOM'],
-    '风险流动性': ['BETA', 'LIQUIDTY', 'SIZE', 'MIDCAP'],
+    '动量与反转': ['STREVRSL', 'INDMOM'],
+    '风险与流动性': ['BETA', 'LIQUIDTY', 'SIZE', 'MIDCAP'],
     '其他': ['LEVERAGE', 'ANALSENTI', 'SEASON'],
+}
+
+# 因子状态含义（正收益时的解读）
+FACTOR_MEANING = {
+    'DIVYILD': '高股息跑赢，市场偏好确定性现金流',
+    'RESVOL': '低波动跑赢，防御风格占优',
+    'MOMENTUM': '中期动量有效，趋势延续',
+    'BTOP': '低估值跑赢高估值，价值回归',
+    'PROFIT': '高盈利质量跑赢，基本面定价有效',
+    'LTREVRSL': '长期反转有效，过去3-4年输家反弹',
+    'STREVRSL': '短期反转有效，近期超跌反弹',
+    'EARNYILD': '高EP跑赢低EP，盈利收益率定价',
+    'EARNQLTY': '高利润含金量跑赢，现金流质量受追捧',
+    'INVSQLTY': '低资本开支跑赢，轻资产模式占优',
+    'EARNVAR': '盈余稳定跑赢，市场厌恶不确定性',
+    'SIZE': '大盘跑赢小盘',
+    'GROWTH': '高成长跑赢低成长，成长风格占优',
+    'BETA': '高贝塔跑赢低贝塔，风险偏好上升',
+    'LIQUIDTY': '高换手跑赢低换手，交易活跃度溢价',
+    'MIDCAP': '中盘跑赢大小盘两端',
+    'LEVERAGE': '高杠杆跑赢低杠杆，加杠杆环境',
+    'ANALSENTI': '被上调个股跑赢被下调，分析师情绪有效',
+    'INDMOM': '热门行业继续跑赢，行业动量延续',
+    'SEASON': '历史同期强势股跑赢，季节性规律有效',
+}
+
+# 多时间窗口定义
+RETURN_WINDOWS = {
+    'recent_5': 5,
+    'recent_20': 20,
+    'recent_60': 60,
+    'recent_120': 120,
+    'recent_250': 250,
 }
 
 
@@ -144,8 +177,12 @@ def generate_json(df):
     dates_sampled = [df['tradeDate'].iloc[i][:4] + '/' + df['tradeDate'].iloc[i][4:6] + '/' + df['tradeDate'].iloc[i][6:8] for i in indices]
     
     navs_sampled = {}
-    recent_20 = {}
     total_return = {}
+    window_returns = {wname: {} for wname in RETURN_WINDOWS}
+    
+    # 全量日期（用于前端时间筛选）
+    all_dates = [df['tradeDate'].iloc[i][:4] + '/' + df['tradeDate'].iloc[i][4:6] + '/' + df['tradeDate'].iloc[i][6:8] for i in range(n)]
+    all_navs = {}
     
     for code in ALL_FACTORS:
         if code not in df.columns:
@@ -158,23 +195,33 @@ def generate_json(df):
             nav_list.append(nav)
         
         navs_sampled[code] = [round(nav_list[i], 6) for i in indices]
+        all_navs[code] = [round(v, 6) for v in nav_list]
         total_return[code] = round((nav_list[-1] - 1) * 100, 2)
         
-        r20 = returns[-20:] if len(returns) >= 20 else returns
-        cum = 1.0
-        for r in r20:
-            cum *= (1 + r)
-        recent_20[code] = round((cum - 1) * 100, 2)
+        # 多时间窗口收益
+        for wname, wdays in RETURN_WINDOWS.items():
+            window = returns[-wdays:] if len(returns) >= wdays else returns
+            cum = 1.0
+            for r in window:
+                cum *= (1 + r)
+            window_returns[wname][code] = round((cum - 1) * 100, 2)
     
     last_date = df['tradeDate'].iloc[-1]
     update_date = f'{last_date[:4]}-{last_date[4:6]}-{last_date[6:8]}'
     
     output = {
         'dates': dates_sampled,
+        'all_dates': all_dates,
         'navs': navs_sampled,
+        'all_navs': all_navs,
         'names': FACTOR_NAMES,
         'groups': FACTOR_GROUPS,
-        'recent_20': recent_20,
+        'meanings': FACTOR_MEANING,
+        'recent_5': window_returns['recent_5'],
+        'recent_20': window_returns['recent_20'],
+        'recent_60': window_returns['recent_60'],
+        'recent_120': window_returns['recent_120'],
+        'recent_250': window_returns['recent_250'],
         'total_return': total_return,
         'update_date': update_date,
         'total_days': n,
