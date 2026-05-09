@@ -192,7 +192,30 @@ function loadData(){
 
 function render(){
   var s = DATA.stats;
-  document.getElementById('updateMeta').textContent = '数据更新 ' + DATA.updated_at + '  |  本周起点 ' + DATA.week_of;
+
+  // 智能回退：thisweek 为空时自动切到 released
+  if(s.thisweek === 0 && s.released > 0 && curPhase === 'thisweek'){
+    curPhase = 'released';
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.classList.remove('active');
+      if(t.getAttribute('data-phase') === 'released') t.classList.add('active');
+    });
+  }
+
+  // 数据截止标注：显示 released 中最新日期
+  var latestDate = '';
+  if(DATA.released && DATA.released.length > 0){
+    latestDate = DATA.released[0].date; // 已按日期倒序
+  }
+  var metaText = '数据更新 ' + DATA.updated_at;
+  if(latestDate){
+    metaText += '  |  数据截止 ' + latestDate;
+  }
+  if(s.thisweek > 0){
+    metaText += '  |  本周起点 ' + DATA.week_of;
+  }
+  document.getElementById('updateMeta').textContent = metaText;
+
   document.getElementById('statTotal').textContent = s.total;
   document.getElementById('statHigh').textContent = s.high_importance;
   document.getElementById('statReleased').textContent = s.released;

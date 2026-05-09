@@ -189,12 +189,19 @@ def main():
     for e in events:
         by_phase[e['phase']].append(e)
 
+    # released 按日期倒序（最新在前），同日按重要性倒序
+    by_phase['released'].sort(key=lambda x: (-x['importance'], x['date'], x['time'] if x['time'] != '-' else '99:99'))
+    by_phase['released'].sort(key=lambda x: x['date'], reverse=True)
+
     # 只展示 ●● 及以上，默认过滤，但 released 段也保留 ● 以看回顾
     # 前端做筛选，这里全部输出
     
-    # 核心事件（●●● 且 today/本周）
+    # 核心事件（●●● 且 today/本周）；若本周为空则从 released 取最近的 ●●● 事件
     today_iso = today.strftime('%Y-%m-%d')
     core = [e for e in events if e['importance'] == 3 and e['phase'] in ('thisweek',) and e['date'] >= today_iso]
+    if not core and by_phase['released']:
+        # 回退：取 released 中最近日期的 ●●● 事件
+        core = [e for e in by_phase['released'] if e['importance'] == 3]
     core = core[:8]
 
     out = {
