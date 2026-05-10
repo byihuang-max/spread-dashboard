@@ -248,7 +248,8 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
     name = stock['name']
     today = datetime.now().strftime('%Y-%m-%d')
     focus_keywords = stock.get('focus', ['减持', '定增', '可转债', '增发', '配股'])
-    capital_keywords = ['减持', '定增', '可转债', '增发', '配股', '回购', '质押']
+    # capital_keywords 合并 focus + 通用关键词
+    capital_keywords = list(set(focus_keywords + ['减持', '定增', '可转债', '增发', '配股', '回购', '质押', '并购', '收购', '重大资产重组', '筹划', '重大事项', '股份转让', '实控人变更', '控制权']))
 
     elements = []
 
