@@ -20,10 +20,10 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .search-bar button:disabled{background:#3a4a5a;cursor:not-allowed}
 .container{max-width:900px;margin:0 auto;padding:0 24px 40px}
 .loading{text-align:center;padding:60px 20px;display:none}
-.loading .spinner{font-size:32px;animation:pulse 1.2s infinite ease-in-out}
-.loading .text{font-size:16px;color:#cbd5e1;margin-top:10px}
-.loading .sub{font-size:13px;color:#64748b;margin-top:6px}
-@keyframes pulse{0%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:.6}}
+.loading .spinner{font-size:14px;color:#5daeff;font-family:'Courier New',monospace;animation:blink 1s steps(1) infinite}
+.loading .text{font-size:16px;color:#cbd5e1;margin-top:12px;font-weight:600}
+.loading .sub{font-size:13px;color:#64748b;margin-top:8px;line-height:1.6}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 .error{display:none;text-align:center;padding:40px;color:#f87171;font-size:15px}
 .result{display:none}
 .stock-header{text-align:center;margin:24px 0 20px}
@@ -92,9 +92,9 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
     <div id="historyList" class="fundamentals-text">暂无查询记录</div>
   </div>
   <div class="loading" id="loading">
-    <div class="spinner">⏳</div>
-    <div class="text">正在查询个股筹码…</div>
-    <div class="sub">预计 10-30 秒，请稍等</div>
+    <div class="spinner">▌QUERYING...</div>
+    <div class="text">正在查询筹码结构</div>
+    <div class="sub">正在连接数据源，分析近60个交易日筹码分布<br>预计 10-30 秒</div>
   </div>
   <div class="error" id="error"></div>
   <div class="result" id="result"></div>
