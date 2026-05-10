@@ -291,9 +291,10 @@ function renderMarkdown(md){
       continue;
     }else if(inTable){ html += '</table>'; inTable=false; }
     // 标题
-    if(line.startsWith('# ')){ html += '<h2 style="font-size:18px;margin:20px 0 10px;color:#e2e8f0">'+line.slice(2)+'</h2>'; continue; }
-    if(line.startsWith('## ')){ html += '<h3 style="font-size:16px;margin:18px 0 8px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px">'+line.slice(3)+'</h3>'; continue; }
     if(line.startsWith('### ')){ html += '<h4 style="font-size:14px;margin:14px 0 6px;color:#cbd5e1;font-weight:700">'+line.slice(4)+'</h4>'; continue; }
+    if(line.startsWith('## ')){ html += '<h3 style="font-size:16px;margin:18px 0 8px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px">'+line.slice(3)+'</h3>'; continue; }
+    if(line.startsWith('# ')){ html += '<h2 style="font-size:18px;margin:20px 0 10px;color:#e2e8f0">'+line.slice(2)+'</h2>'; continue; }
+    if(line.startsWith('#### ')){ html += '<h5 style="font-size:13px;margin:12px 0 4px;color:#94a3b8;font-weight:700">'+line.slice(5)+'</h5>'; continue; }
     // 分隔线
     if(line.trim()==='---'){ html += '<hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:16px 0">'; continue; }
     // 列表

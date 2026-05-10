@@ -338,26 +338,33 @@ def _build_ma_section(analysis_path: str) -> list:
                 pass
 
     # 构建卡片内容
-    ma_lines = ["**▬▬▬ 并购重组进展 ▬▬▬**"]
-    ma_lines.append(f"状态：{status}")
+    ma_lines = ["**▬▬▬▬▬ 并购重组进展 ▬▬▬▬▬**"]
+    ma_lines.append(f"**当前状态：** {status}")
 
     if trade_type:
-        ma_lines.append(f"类型：{trade_type}")
+        ma_lines.append(f"**交易类型：** {trade_type}")
 
     # 收购结构图（文本版）
     if structure_block.strip():
-        ma_lines.append("**【收购结构】**")
+        ma_lines.append("")
+        ma_lines.append("**▎收购结构**")
         for sl in structure_block.strip().split('\n')[:8]:
-            ma_lines.append(sl)
+            # 去掉 markdown # 符号
+            cleaned = sl.lstrip('#').strip()
+            if cleaned:
+                ma_lines.append(cleaned)
     else:
-        ma_lines.append("**【收购结构】**")
+        ma_lines.append("")
+        ma_lines.append("**▎收购结构**")
         ma_lines.append(f"  卖方：{seller or '未知'}")
         ma_lines.append(f"  └─→ 买方：{buyer or '未披露'}")
         if target:
             ma_lines.append(f"  标的：{target}")
 
     if reason:
-        ma_lines.append(f"终止原因：{reason}")
+        ma_lines.append("")
+        ma_lines.append(f"**▎终止原因**")
+        ma_lines.append(reason)
 
     # 提取路径推演（```代码块）
     path_block = ""
@@ -377,9 +384,11 @@ def _build_ma_section(analysis_path: str) -> list:
 
     if path_block.strip():
         ma_lines.append("")
-        ma_lines.append("**【路径推演】**")
-        for pl in path_block.strip().split('\n')[:10]:
-            ma_lines.append(pl)
+        ma_lines.append("**▎路径推演**")
+        for pl in path_block.strip().split('\n')[:12]:
+            cleaned = pl.lstrip('#').strip()
+            if cleaned:
+                ma_lines.append(cleaned)
 
     # 提取估值核心结论
     valuation_conclusion = []
@@ -396,13 +405,18 @@ def _build_ma_section(analysis_path: str) -> list:
 
     if valuation_conclusion:
         ma_lines.append("")
-        ma_lines.append("**【估值判断】**")
+        ma_lines.append("**▎估值判断**")
         for vc in valuation_conclusion[:4]:
-            ma_lines.append(vc)
+            # 去掉开头的 "- " 并清理 #
+            cleaned = vc.lstrip('- ').lstrip('#').strip()
+            ma_lines.append(f"● {cleaned}")
 
     if conclusion:
         ma_lines.append("")
-        ma_lines.append(f"**判断：{conclusion}**")
+        ma_lines.append(f"**▎当前判断**")
+        # 清理 markdown 标记
+        clean_conclusion = conclusion.lstrip('#').replace('**', '').strip()
+        ma_lines.append(clean_conclusion)
 
     return ma_lines
 
