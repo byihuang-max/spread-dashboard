@@ -23,8 +23,44 @@ def _load_provider():
     return cfg["models"]["providers"]["aicanapi-47"]
 
 
+def _load_openai_provider():
+    cfg_path = os.path.expanduser("~/.openclaw/openclaw.json")
+    with open(cfg_path) as f:
+        cfg = json.load(f)
+    return cfg["models"]["providers"]["aicanopenai"]
+
+
 def call_claude(prompt: str, system: str = "", max_tokens: int = 1000, model: str = "claude-opus-4-7") -> str:
-    """调 Claude 中转 API，返回纯文本回复"""
+    """调 LLM API，GPT-5.5 优先，Claude 作为 fallback"""
+    # 先尝试 GPT-5.5（更稳定）
+    try:
+        prov = _load_openai_provider()
+        url = prov["baseUrl"].rstrip("/") + "/chat/completions"
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+        r = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {prov['apiKey']}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "gpt-5.5",
+                "messages": messages,
+                "max_tokens": max_tokens,
+            },
+            timeout=60,
+            verify=certifi.where(),
+        )
+        r.raise_for_status()
+        data = r.json()
+        return data["choices"][0]["message"]["content"]
+    except (requests.exceptions.HTTPError, requests.exceptions.Timeout) as e:
+        print(f"[llm_client] GPT-5.5 失败 ({e})，fallback 到 Claude")
+
+    # Fallback: Claude
     prov = _load_provider()
     url = prov["baseUrl"].rstrip("/") + "/v1/messages"
     body = {
@@ -75,16 +111,23 @@ META_SYSTEM_PROMPT = """你是 Roni（FOF 基金经理）的笔记归档助手�
 
 
 def generate_metadata(text: str) -> dict:
-    """让 Claude 生成笔记元数据"""
+    """让 LLM 生成笔记元数据"""
     prompt = f"原文：\n\n{text[:3000]}\n\n请返回 JSON。"
     raw = call_claude(prompt, system=META_SYSTEM_PROMPT, max_tokens=500)
-    # 尝试解析（兼容代码块）
+    # 清理：去掉 <think>...</think> 标签（GPT-5.5 会带）
     raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+    import re
+    raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL).strip()
+    # 兼容代码块
     if raw.startswith("```"):
         raw = raw.split("```")[1]
         if raw.startswith("json"):
             raw = raw[4:]
         raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     return json.loads(raw)
 
 
@@ -114,11 +157,15 @@ def judge_iteration(new_text: str, old_title: str, old_content: str) -> dict:
 请返回 JSON。"""
     raw = call_claude(prompt, system=ITERATION_SYSTEM_PROMPT, max_tokens=500)
     raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     if raw.startswith("```"):
         raw = raw.split("```")[1]
         if raw.startswith("json"):
             raw = raw[4:]
         raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     return json.loads(raw)
 
 
@@ -168,12 +215,105 @@ embedding 给出的 top 3 分数（仅供参考）：
 请返回 JSON。"""
     raw = call_claude(prompt, system=GRAY_ZONE_SYSTEM_PROMPT, max_tokens=300)
     raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     if raw.startswith("```"):
         raw = raw.split("```")[1]
         if raw.startswith("json"):
             raw = raw[4:]
         raw = raw.strip()
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     return json.loads(raw)
+
+
+# ══════════════════════════════════════════
+# Kimi 联网搜索
+# ══════════════════════════════════════════
+
+KIMI_API_KEY = "sk-AwJmpC5sGDye5P9FdkwSJw3hpw2VbZ1VwxQ03yYWSzjhtrMa"
+KIMI_BASE_URL = "https://api.moonshot.cn/v1/chat/completions"
+
+
+def kimi_search(query: str, max_tokens: int = 1500) -> str:
+    """用 Kimi 联网搜索，返回搜索结果文本"""
+    headers = {
+        "Authorization": f"Bearer {KIMI_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    tools = [{"type": "builtin_function", "function": {"name": "$web_search"}}]
+
+    # 第一轮：触发搜索
+    messages = [{"role": "user", "content": query}]
+    resp1 = requests.post(
+        KIMI_BASE_URL,
+        headers=headers,
+        json={
+            "model": "moonshot-v1-128k",
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "tools": tools,
+        },
+        timeout=120,
+        verify=certifi.where(),
+    )
+    resp1.raise_for_status()
+    data1 = resp1.json()
+    assistant_msg = data1["choices"][0]["message"]
+
+    # 如果没有 tool_calls，直接返回 content
+    if not assistant_msg.get("tool_calls"):
+        return assistant_msg.get("content", "")
+
+    # 第二轮：把搜索结果回传，获取最终答案
+    messages.append(assistant_msg)
+    for tc in assistant_msg["tool_calls"]:
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tc["id"],
+            "content": tc["function"]["arguments"],
+        })
+
+    resp2 = requests.post(
+        KIMI_BASE_URL,
+        headers=headers,
+        json={
+            "model": "moonshot-v1-128k",
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "tools": tools,
+        },
+        timeout=120,
+        verify=certifi.where(),
+    )
+    resp2.raise_for_status()
+    data2 = resp2.json()
+    return data2["choices"][0]["message"].get("content", "")
+
+
+def search_and_analyze(queries: list, system_prompt: str = "") -> str:
+    """批量搜索多个关键词，合并结果后用 GPT-5.5 做结构化分析"""
+    all_results = []
+    for q in queries:
+        try:
+            result = kimi_search(q)
+            if result:
+                all_results.append(f"【搜索：{q}】\n{result}")
+        except Exception as e:
+            all_results.append(f"【搜索：{q}】失败: {e}")
+
+    combined = "\n\n---\n\n".join(all_results)
+
+    if not system_prompt:
+        system_prompt = "你是一个金融分析助手。根据搜索结果，提取关键信息并结构化整理。"
+
+    # 用 GPT-5.5 做结构化分析
+    analysis = call_claude(
+        prompt=f"以下是多个搜索结果，请结构化整理关键信息：\n\n{combined}",
+        system=system_prompt,
+        max_tokens=2000,
+    )
+    return analysis
 
 
 if __name__ == "__main__":

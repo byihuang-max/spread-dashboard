@@ -242,6 +242,76 @@ def get_feishu_token():
     return data.get('tenant_access_token')
 
 
+def _build_ma_section(analysis_path: str) -> list:
+    """从并购重组底稿中提取关键信息，构建卡片区块"""
+    full_path = SCRIPT_DIR / analysis_path
+    if not full_path.exists():
+        return []
+
+    content = full_path.read_text(encoding='utf-8')
+
+    # 提取状态
+    status = "未知"
+    for line in content.split('\n'):
+        if '当前状态' in line:
+            status = line.split('：', 1)[-1].strip() if '：' in line else line.split(':', 1)[-1].strip()
+            break
+
+    # 提取交易结构关键字段
+    fields = {}
+    field_keys = ['交易类型', '卖方', '买方', '终止原因', '标的资产']
+    for line in content.split('\n'):
+        for key in field_keys:
+            if f'**{key}' in line or f'- **{key}' in line:
+                val = line.split('：', 1)[-1].strip() if '：' in line else line.split(':', 1)[-1].strip()
+                val = val.rstrip('*').strip()
+                fields[key] = val
+
+    # 提取当前结论
+    conclusion = ""
+    for line in content.split('\n'):
+        if '当前结论' in line:
+            # 格式: **中性偏关注。** ...
+            after = line.split('当前结论')[1] if '当前结论' in line else ''
+            conclusion = after.strip().lstrip('*').lstrip('\n').strip()
+            # 清理 markdown
+            conclusion = conclusion.replace('**', '').replace('*', '').strip()
+            if not conclusion:
+                conclusion = "见底稿详情"
+            break
+
+    # 构建文本结构图
+    ma_lines = ["**▬▬▬ 并购重组进展 ▬▬▬**"]
+    ma_lines.append(f"状态：{status}")
+
+    if fields.get('交易类型'):
+        ma_lines.append(f"类型：{fields['交易类型']}")
+
+    # 收购结构图（文本版）
+    seller = fields.get('卖方', '未知')
+    buyer = fields.get('买方', '未披露')
+    target = fields.get('标的资产', '')
+
+    structure_lines = [
+        "**【收购结构】**",
+        f"  卖方：{seller}",
+        f"  └─→ 买方：{buyer}",
+    ]
+    if target:
+        structure_lines.append(f"  标的：{target}")
+    ma_lines.extend(structure_lines)
+
+    # 终止原因（如有）
+    if fields.get('终止原因'):
+        ma_lines.append(f"终止原因：{fields['终止原因']}")
+
+    # 结论
+    if conclusion:
+        ma_lines.append(f"**判断：{conclusion}**")
+
+    return ma_lines
+
+
 def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip: dict) -> dict:
     """构建飞书消息卡片"""
     ts_code = stock['ts_code']
@@ -473,6 +543,17 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
             elements.append({
                 "tag": "div",
                 "text": {"tag": "lark_md", "content": "\n".join(big_lines)}
+            })
+
+    # ── 并购重组进展（B类票专属）──
+    analysis_path = stock.get('analysis')
+    if analysis_path:
+        ma_lines = _build_ma_section(analysis_path)
+        if ma_lines:
+            elements.append({"tag": "hr"})
+            elements.append({
+                "tag": "div",
+                "text": {"tag": "lark_md", "content": "\n".join(ma_lines)}
             })
 
     # 构建完整卡片
