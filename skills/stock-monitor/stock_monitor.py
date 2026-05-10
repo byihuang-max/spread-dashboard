@@ -26,7 +26,7 @@ def _truncate_with_link(content: str, stock_name: str, title: str, max_len: int 
     if not content or len(content) <= max_len:
         return content or "（无详细内容）"
     truncated = content[:max_len] + "..."
-    truncated += f"\n\n[▶ 查看完整内容](https://cn.gamtfof.com/skills/stock-monitor/stock_monitor.html)"
+    truncated += f"\n\n[▶ 查看完整内容](https://dashboard.gamtfof.com/skills/stock-monitor/stock_monitor.html)"
     return truncated
 
 # GAMT 项目根目录（环境自适应）
