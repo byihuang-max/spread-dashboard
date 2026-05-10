@@ -381,8 +381,8 @@ def build_fof_combis(combis):
     """构建 FOF 组合详情数据（含净值曲线、回撤曲线、月度收益等），供 v3 HTML FOF 模块使用"""
     from collections import defaultdict
     fof_list = []
-    # 只取 FOF组合 分组的（不含 FOF组合类）
-    fof_items = [c for c in combis if c.get('group') == 'FOF组合' and c.get('_raw_navs') and not c.get('hidden')]
+    # 取 FOF组合 + FOF组合类 分组的
+    fof_items = [c for c in combis if c.get('group', '').startswith('FOF组合') and c.get('_raw_navs') and not c.get('hidden')]
 
     for c in fof_items:
         navs = c['_raw_navs']  # [(date, nav), ...]
