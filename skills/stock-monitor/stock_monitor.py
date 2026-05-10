@@ -764,8 +764,25 @@ def calc_news_days(last_run: dict) -> int:
 # 主流程
 # ══════════════════════════════════════════
 
-def run_monitor(dry_run=False):
+def is_trading_day() -> bool:
+    """检查今天是否为交易日（Tushare trade_cal）"""
+    today = datetime.now().strftime('%Y%m%d')
+    try:
+        data = ts_query('trade_cal', exchange='SSE', start_date=today, end_date=today)
+        if data and len(data) > 0:
+            return data[0].get('is_open') == 1
+    except Exception as e:
+        print(f"[stock-monitor] 交易日历查询失败: {e}，默认当作交易日")
+    return True  # 查询失败时默认执行
+
+
+def run_monitor(dry_run=False, force=False):
     """主入口：遍历 watchlist，拉数据，发卡片"""
+    # 交易日判断（--force 跳过）
+    if not force and not is_trading_day():
+        print(f"[stock-monitor] 今天非交易日，跳过")
+        return
+
     config = load_watchlist()
     stocks = config['stocks']
     settings = config['settings']
@@ -853,5 +870,6 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='个股监控 - 每日飞书推送')
     parser.add_argument('--dry', action='store_true', help='预览模式，不实际发送')
+    parser.add_argument('--force', action='store_true', help='强制执行（跳过交易日判断）')
     args = parser.parse_args()
-    run_monitor(dry_run=args.dry)
+    run_monitor(dry_run=args.dry, force=args.force)
