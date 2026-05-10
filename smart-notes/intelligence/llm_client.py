@@ -30,59 +30,60 @@ def _load_openai_provider():
     return cfg["models"]["providers"]["aicanopenai"]
 
 
-def call_claude(prompt: str, system: str = "", max_tokens: int = 1000, model: str = "claude-opus-4-7") -> str:
-    """调 LLM API，GPT-5.5 优先，Claude 作为 fallback"""
-    # 先尝试 GPT-5.5（更稳定）
+def call_claude(prompt: str, system: str = "", max_tokens: int = 1000, model: str = "claude-opus-4-6") -> str:
+    """调 LLM API，Claude Opus 4.6 优先，GPT-5.5 作为 fallback"""
+    # 先尝试 Claude Opus 4.6（中文理解更好）
     try:
-        prov = _load_openai_provider()
-        url = prov["baseUrl"].rstrip("/") + "/chat/completions"
-        messages = []
+        prov = _load_provider()
+        url = prov["baseUrl"].rstrip("/") + "/v1/messages"
+        body = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "messages": [{"role": "user", "content": prompt}],
+        }
         if system:
-            messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": prompt})
+            body["system"] = system
         r = requests.post(
             url,
             headers={
-                "Authorization": f"Bearer {prov['apiKey']}",
+                "x-api-key": prov["apiKey"],
+                "anthropic-version": "2023-06-01",
                 "Content-Type": "application/json",
             },
-            json={
-                "model": "gpt-5.5",
-                "messages": messages,
-                "max_tokens": max_tokens,
-            },
+            json=body,
             timeout=60,
             verify=certifi.where(),
         )
         r.raise_for_status()
         data = r.json()
-        return data["choices"][0]["message"]["content"]
+        return data["content"][0]["text"]
     except (requests.exceptions.HTTPError, requests.exceptions.Timeout) as e:
-        print(f"[llm_client] GPT-5.5 失败 ({e})，fallback 到 Claude")
+        print(f"[llm_client] Claude 失败 ({e})，fallback 到 GPT-5.5")
 
-    # Fallback: Claude
-    prov = _load_provider()
-    url = prov["baseUrl"].rstrip("/") + "/v1/messages"
-    body = {
-        "model": model,
-        "max_tokens": max_tokens,
-        "messages": [{"role": "user", "content": prompt}],
-    }
+    # Fallback: GPT-5.5
+    prov = _load_openai_provider()
+    url = prov["baseUrl"].rstrip("/") + "/chat/completions"
+    messages = []
     if system:
-        body["system"] = system
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
     r = requests.post(
         url,
         headers={
-            "x-api-key": prov["apiKey"],
-            "anthropic-version": "2023-06-01",
+            "Authorization": f"Bearer {prov['apiKey']}",
             "Content-Type": "application/json",
         },
-        json=body,
+        json={
+            "model": "gpt-5.5",
+            "messages": messages,
+            "max_tokens": max_tokens,
+        },
         timeout=60,
         verify=certifi.where(),
     )
     r.raise_for_status()
     data = r.json()
+    return data["choices"][0]["message"]["content"]
     return data["content"][0]["text"]
 
 

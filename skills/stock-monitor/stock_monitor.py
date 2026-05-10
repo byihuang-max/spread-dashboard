@@ -14,10 +14,24 @@ import json
 import requests
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import quote
 
 # ── 路径 ──
 SCRIPT_DIR = Path(__file__).parent.resolve()
 WATCHLIST_PATH = SCRIPT_DIR / 'watchlist.json'
+
+
+def _truncate_with_link(content: str, stock_name: str, title: str, max_len: int = 300) -> str:
+    """内容超长时截断 + 加巨潮全文链接"""
+    if not content or len(content) <= max_len:
+        return content or "（无详细内容）"
+    # 截断
+    truncated = content[:max_len] + "..."
+    # 巨潮搜索链接
+    search_key = quote(f"{stock_name} {title[:20]}")
+    link = f"http://www.cninfo.com.cn/new/fulltextSearch?searchkey={search_key}"
+    truncated += f"\n\n[▶ 查看全文]({link})"
+    return truncated
 
 # GAMT 项目根目录（环境自适应）
 def _find_gamt_root():
@@ -249,64 +263,149 @@ def _build_ma_section(analysis_path: str) -> list:
         return []
 
     content = full_path.read_text(encoding='utf-8')
+    lines = content.split('\n')
 
     # 提取状态
     status = "未知"
-    for line in content.split('\n'):
-        if '当前状态' in line:
-            status = line.split('：', 1)[-1].strip() if '：' in line else line.split(':', 1)[-1].strip()
+    for line in lines:
+        if '当前状态' in line and '**' in line:
+            # 格式: **当前状态：** ⚠️ 终止...
+            parts = line.split('**')
+            for i, p in enumerate(parts):
+                if '当前状态' in p and i + 1 < len(parts):
+                    status = parts[i + 1].strip()
+                    if not status:
+                        # 值在 ** 之后
+                        status = ''.join(parts[i + 2:]).strip()
+                    break
+            if status == "未知":
+                # fallback: 取冒号后面的内容
+                if '：' in line:
+                    status = line.split('：', 1)[-1].strip().strip('*').strip()
             break
 
-    # 提取交易结构关键字段
-    fields = {}
-    field_keys = ['交易类型', '卖方', '买方', '终止原因', '标的资产']
-    for line in content.split('\n'):
-        for key in field_keys:
-            if f'**{key}' in line or f'- **{key}' in line:
-                val = line.split('：', 1)[-1].strip() if '：' in line else line.split(':', 1)[-1].strip()
-                val = val.rstrip('*').strip()
-                fields[key] = val
+    # 提取表格字段（格式: | **字段名** | 值 |）
+    def extract_table_field(key):
+        for line in lines:
+            if f'**{key}**' in line and '|' in line:
+                cells = [c.strip() for c in line.split('|') if c.strip()]
+                if len(cells) >= 2:
+                    # 第二个 cell 是值
+                    return cells[1].strip()
+            elif f'**{key}' in line and '：' in line and '|' not in line:
+                # 非表格格式: **字段名：** 值
+                val = line.split('：', 1)[-1].strip().rstrip('*').strip()
+                return val
+        return ''
 
-    # 提取当前结论
+    trade_type = extract_table_field('交易类型')
+    seller = extract_table_field('卖方')
+    buyer = extract_table_field('买方')
+    target = extract_table_field('标的资产')
+    reason = extract_table_field('终止原因（公告口径）') or extract_table_field('终止原因')
+
+    # 提取当前结论（第九部分）
     conclusion = ""
-    for line in content.split('\n'):
-        if '当前结论' in line:
-            # 格式: **中性偏关注。** ...
+    in_conclusion = False
+    for line in lines:
+        if '当前结论' in line or '九、当前结论' in line:
+            in_conclusion = True
+            # 同一行可能有内容
             after = line.split('当前结论')[1] if '当前结论' in line else ''
-            conclusion = after.strip().lstrip('*').lstrip('\n').strip()
-            # 清理 markdown
-            conclusion = conclusion.replace('**', '').replace('*', '').strip()
-            if not conclusion:
-                conclusion = "见底稿详情"
+            after = after.strip().strip('*').strip('.').strip()
+            if after:
+                conclusion = after
+                break
+            continue
+        if in_conclusion and line.strip() and not line.startswith('#') and not line.startswith('---'):
+            conclusion = line.strip().strip('*').strip()
             break
 
-    # 构建文本结构图
+    # 提取收购结构图（```代码块内容）
+    structure_block = ""
+    in_code = False
+    for line in lines:
+        if '收购结构图' in line:
+            in_code = True
+            continue
+        if in_code:
+            if line.strip() == '```':
+                if structure_block:
+                    break
+                continue
+            if line.startswith('```'):
+                continue
+            structure_block += line + "\n"
+            if '未披露' in line or '买方' in line:
+                # 读到结构图末尾
+                # 继续读几行
+                pass
+
+    # 构建卡片内容
     ma_lines = ["**▬▬▬ 并购重组进展 ▬▬▬**"]
     ma_lines.append(f"状态：{status}")
 
-    if fields.get('交易类型'):
-        ma_lines.append(f"类型：{fields['交易类型']}")
+    if trade_type:
+        ma_lines.append(f"类型：{trade_type}")
 
     # 收购结构图（文本版）
-    seller = fields.get('卖方', '未知')
-    buyer = fields.get('买方', '未披露')
-    target = fields.get('标的资产', '')
+    if structure_block.strip():
+        ma_lines.append("**【收购结构】**")
+        for sl in structure_block.strip().split('\n')[:8]:
+            ma_lines.append(sl)
+    else:
+        ma_lines.append("**【收购结构】**")
+        ma_lines.append(f"  卖方：{seller or '未知'}")
+        ma_lines.append(f"  └─→ 买方：{buyer or '未披露'}")
+        if target:
+            ma_lines.append(f"  标的：{target}")
 
-    structure_lines = [
-        "**【收购结构】**",
-        f"  卖方：{seller}",
-        f"  └─→ 买方：{buyer}",
-    ]
-    if target:
-        structure_lines.append(f"  标的：{target}")
-    ma_lines.extend(structure_lines)
+    if reason:
+        ma_lines.append(f"终止原因：{reason}")
 
-    # 终止原因（如有）
-    if fields.get('终止原因'):
-        ma_lines.append(f"终止原因：{fields['终止原因']}")
+    # 提取路径推演（```代码块）
+    path_block = ""
+    in_path = False
+    for line in lines:
+        if '最可能路径推演' in line:
+            in_path = True
+            continue
+        if in_path:
+            if line.strip() == '```':
+                if path_block:
+                    break
+                continue
+            if line.startswith('```'):
+                continue
+            path_block += line + "\n"
 
-    # 结论
+    if path_block.strip():
+        ma_lines.append("")
+        ma_lines.append("**【路径推演】**")
+        for pl in path_block.strip().split('\n')[:10]:
+            ma_lines.append(pl)
+
+    # 提取估值核心结论
+    valuation_conclusion = []
+    in_val = False
+    for line in lines:
+        if '### 核心结论' in line:
+            in_val = True
+            continue
+        if in_val:
+            if line.startswith('#') or line.startswith('---'):
+                break
+            if line.strip().startswith('- '):
+                valuation_conclusion.append(line.strip())
+
+    if valuation_conclusion:
+        ma_lines.append("")
+        ma_lines.append("**【估值判断】**")
+        for vc in valuation_conclusion[:4]:
+            ma_lines.append(vc)
+
     if conclusion:
+        ma_lines.append("")
         ma_lines.append(f"**判断：{conclusion}**")
 
     return ma_lines
@@ -375,11 +474,11 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
             date = t.get('ann_date', '-')
             line = f"<font color='red'>**● {holder}** 减持 {vol_str}  均价:{price}元  方式:{method}  ({date})</font>"
             capital_lines.append(line)
-        # 公告中的资本运作
+        # 公告中的资本运作（标题标红）
         for n in capital_notices[:5]:
             title = n.get('公告标题', n.get('title', '')) if isinstance(n, dict) else str(n)[:80]
             capital_lines.append(f"<font color='red'>**● {title}**</font>")
-        # 舆情中的资本运作
+        # 舆情中的资本运作（标题标红）
         for n in capital_news[:3]:
             title = n.get('资讯标题', n.get('title', '')) if isinstance(n, dict) else str(n)[:80]
             capital_lines.append(f"<font color='red'>**● {title}**</font>")
@@ -390,6 +489,33 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
         "tag": "div",
         "text": {"tag": "lark_md", "content": "\n".join(capital_lines)}
     })
+
+    # 重大资本运作的详细内容（可折叠）
+    if has_capital:
+        for n in (capital_notices[:5] + capital_news[:3]):
+            if isinstance(n, dict):
+                title = n.get('公告标题', n.get('资讯标题', n.get('title', '')))
+                date = n.get('日期', n.get('date', ''))
+                content = n.get('公告片段内容', n.get('资讯内容', n.get('content', '')))
+                display_title = f"● {title} ({date})" if date else f"● {title}"
+                if not content:
+                    content = "（无详细内容）"
+                elements.append({
+                    "tag": "collapsible_panel",
+                    "expanded": False,
+                    "header": {
+                        "title": {
+                            "tag": "plain_text",
+                            "content": display_title[:60]
+                        }
+                    },
+                    "border": {"color": "red"},
+                    "elements": [{
+                        "tag": "div",
+                        "text": {"tag": "lark_md", "content": _truncate_with_link(content, stock["name"], title)}
+                    }]
+                })
+
     elements.append({"tag": "hr"})
 
     # ── 当日公告（标题直接展示，内容可折叠）──
@@ -403,9 +529,9 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
                 title = n.get('公告标题', n.get('title', ''))
                 date = n.get('日期', n.get('date', ''))
                 content = n.get('公告片段内容', n.get('content', ''))
-                display_title = f"{title} ({date})" if date else title
+                display_title = f"● {title} ({date})" if date else f"● {title}"
             else:
-                display_title = str(n)[:80]
+                display_title = f"● {str(n)[:80]}"
                 content = ''
             if content:
                 # 标题 + 内容折叠
@@ -415,19 +541,19 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
                     "header": {
                         "title": {
                             "tag": "plain_text",
-                            "content": f"● {display_title}"
+                            "content": display_title[:60]
                         }
                     },
                     "border": {"color": "grey"},
                     "elements": [{
                         "tag": "div",
-                        "text": {"tag": "lark_md", "content": content[:500]}
+                        "text": {"tag": "lark_md", "content": _truncate_with_link(content, stock["name"], title)}
                     }]
                 })
             else:
                 elements.append({
                     "tag": "div",
-                    "text": {"tag": "lark_md", "content": f"● {display_title}"}
+                    "text": {"tag": "lark_md", "content": display_title}
                 })
     else:
         elements.append({
@@ -445,11 +571,13 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
         for n in other_news[:8]:
             if isinstance(n, dict):
                 title = n.get('资讯标题', n.get('新闻标题', n.get('标题', n.get('title', ''))))
+                date = n.get('日期', n.get('date', ''))
                 content = n.get('资讯内容', n.get('新闻内容', n.get('content', '')))
                 if not title:
                     title = str(n)[:80]
+                display_title = f"● {title} ({date})" if date else f"● {title}"
             else:
-                title = str(n)[:80]
+                display_title = f"● {str(n)[:80]}"
                 content = ''
             if content:
                 elements.append({
@@ -458,19 +586,19 @@ def build_card(stock: dict, holder_trades: list, notices: list, news: list, chip
                     "header": {
                         "title": {
                             "tag": "plain_text",
-                            "content": f"● {title}"
+                            "content": display_title[:60]
                         }
                     },
                     "border": {"color": "grey"},
                     "elements": [{
                         "tag": "div",
-                        "text": {"tag": "lark_md", "content": content[:500]}
+                        "text": {"tag": "lark_md", "content": _truncate_with_link(content, stock["name"], title)}
                     }]
                 })
             else:
                 elements.append({
                     "tag": "div",
-                    "text": {"tag": "lark_md", "content": f"● {title}"}
+                    "text": {"tag": "lark_md", "content": display_title}
                 })
     else:
         elements.append({
@@ -684,6 +812,29 @@ def run_monitor(dry_run=False):
 
         # 5. 构建卡片
         card = build_card(stock, holder_trades, notices, news, chip)
+
+        # 6. 生成前端数据 JSON
+        detail_dir = SCRIPT_DIR / 'detail'
+        detail_dir.mkdir(exist_ok=True)
+        code_short = ts_code.split('.')[0]
+        detail_data = {
+            'ts_code': ts_code,
+            'name': name,
+            'date': datetime.now().strftime('%Y-%m-%d'),
+            'type': 'B' if stock.get('analysis') else 'A',
+            'holder_trades': holder_trades,
+            'notices': notices,
+            'news': news,
+            'chip': chip,
+            'analysis': None,
+        }
+        # B类票加载底稿
+        if stock.get('analysis'):
+            analysis_path = SCRIPT_DIR / stock['analysis']
+            if analysis_path.exists():
+                detail_data['analysis'] = analysis_path.read_text(encoding='utf-8')
+        with open(detail_dir / f'{code_short}.json', 'w', encoding='utf-8') as f:
+            json.dump(detail_data, f, ensure_ascii=False, indent=2)
 
         if dry_run:
             print(f"\n[DRY RUN] 卡片内容:")
