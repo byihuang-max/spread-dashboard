@@ -22,15 +22,11 @@ WATCHLIST_PATH = SCRIPT_DIR / 'watchlist.json'
 
 
 def _truncate_with_link(content: str, stock_name: str, title: str, max_len: int = 300) -> str:
-    """内容超长时截断 + 加巨潮全文链接"""
+    """内容超长时截断 + 加看板详情页链接"""
     if not content or len(content) <= max_len:
         return content or "（无详细内容）"
-    # 截断
     truncated = content[:max_len] + "..."
-    # 巨潮搜索链接
-    search_key = quote(f"{stock_name} {title[:20]}")
-    link = f"http://www.cninfo.com.cn/new/fulltextSearch?searchkey={search_key}"
-    truncated += f"\n\n[▶ 查看全文]({link})"
+    truncated += f"\n\n[▶ 查看完整内容](https://cn.gamtfof.com/skills/stock-monitor/stock_monitor.html)"
     return truncated
 
 # GAMT 项目根目录（环境自适应）
