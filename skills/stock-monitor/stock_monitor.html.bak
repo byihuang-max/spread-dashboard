@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个股监控 | GAMT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.header .title{font-size:20px;font-weight:700;color:#e2e8f0}
+.header .back{color:#5daeff;text-decoration:none;font-size:14px;opacity:0.8}
+.header .back:hover{opacity:1}
+.tabs{display:flex;gap:0;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.08);margin-top:8px}
+.tab{padding:12px 20px;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:#94a3b8}
+.tab.active{color:#5daeff;border-bottom-color:#5daeff}
+.container{max-width:1000px;margin:0 auto;padding:20px 24px 40px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.stock-selector{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.stock-btn{padding:8px 16px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:#1a2332;color:#e2e8f0;font-size:13px;cursor:pointer;transition:all .2s}
+.stock-btn:hover{border-color:#5daeff;color:#5daeff}
+.stock-btn.active{background:rgba(93,174,255,0.15);border-color:#5daeff;color:#5daeff}
+.section{background:#1a2332;border-radius:12px;border:1px solid rgba(255,255,255,0.06);padding:18px;margin-bottom:16px}
+.section-title{font-size:15px;font-weight:700;color:#e2e8f0;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title .badge{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-red{background:rgba(248,113,113,0.15);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
+.badge-blue{background:rgba(93,174,255,0.15);color:#5daeff;border:1px solid rgba(93,174,255,0.3)}
+.badge-green{background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3)}
+.item{padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);margin-bottom:8px}
+.item-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.item-title{font-size:13px;font-weight:600;color:#e2e8f0;flex:1}
+.item-date{font-size:12px;color:#64748b;margin-left:10px;white-space:nowrap}
+.item-content{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);font-size:13px;color:#94a3b8;line-height:1.8;white-space:pre-wrap;word-break:break-all}
+.item.expanded .item-content{display:block}
+.item-toggle{color:#5daeff;font-size:11px;cursor:pointer;white-space:nowrap}
+.capital-item{border-left:3px solid #f87171}
+.chip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip-metric{text-align:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.04)}
+.chip-metric .label{font-size:11px;color:#64748b;margin-bottom:6px}
+.chip-metric .value{font-size:16px;font-weight:700;color:#e2e8f0}
+.flow-chart{background:#0f1724;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.8;color:#94a3b8;white-space:pre-wrap;overflow-x:auto}
+.valuation-table{width:100%;border-collapse:collapse;font-size:13px}
+.valuation-table th{text-align:left;padding:10px 12px;background:rgba(255,255,255,0.03);color:#64748b;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08)}
+.valuation-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:#e2e8f0}
+.conclusion-box{background:linear-gradient(135deg,rgba(93,174,255,0.08),rgba(52,211,153,0.05));border:1px solid rgba(93,174,255,0.15);border-radius:10px;padding:16px;font-size:14px;color:#cbd5e1;line-height:1.8}
+.empty{text-align:center;padding:40px;color:#64748b;font-size:14px}
+.loading-msg{text-align:center;padding:40px;color:#94a3b8}
+@media(max-width:640px){
+  .chip-grid{grid-template-columns:repeat(2,1fr)}
+  .tabs{overflow-x:auto}
+  .tab{white-space:nowrap;font-size:13px;padding:10px 14px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="title">个股监控</span>
+  <a href="/index.html" class="back">← 返回看板</a>
+</div>
+<div class="tabs">
+  <div class="tab active" data-tab="chip">筹码查询</div>
+  <div class="tab" data-tab="daily">每日跟踪(A类)</div>
+  <div class="tab" data-tab="ma">并购重组(B类)</div>
+</div>
+<div class="container">
+  <!-- Tab 1: 筹码查询（iframe 嵌入原页面） -->
+  <div class="tab-content active" id="tab-chip">
+    <iframe src="/chip_query/chip_query.html" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:8px"></iframe>
+  </div>
+  <!-- Tab 2: 每日跟踪 A类 -->
+  <div class="tab-content" id="tab-daily">
+    <div class="stock-selector" id="daily-stocks"></div>
+    <div id="daily-content"><div class="empty">选择股票查看每日跟踪</div></div>
+  </div>
+  <!-- Tab 3: 并购重组 B类 -->
+  <div class="tab-content" id="tab-ma">
+    <div class="stock-selector" id="ma-stocks"></div>
+    <div id="ma-content"><div class="empty">选择股票查看并购重组跟踪</div></div>
+  </div>
+</div>
+<script>
+// Tab 切换
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+    document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active')});
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+// 数据加载
+var STOCK_DATA = {};
+var WATCHLIST = null;
+
+async function loadWatchlist(){
+  try{
+    var r = await fetch('/skills/stock-monitor/watchlist.json');
+    WATCHLIST = await r.json();
+    initStockButtons();
+  }catch(e){console.error('加载 watchlist 失败',e)}
+}
+
+async function loadStockDetail(code){
+  var short = code.split('.')[0];
+  if(STOCK_DATA[short]) return STOCK_DATA[short];
+  try{
+    var r = await fetch('/skills/stock-monitor/detail/'+short+'.json');
+    var d = await r.json();
+    STOCK_DATA[short] = d;
+    return d;
+  }catch(e){console.error('加载详情失败',e);return null}
+}
+
+function initStockButtons(){
+  if(!WATCHLIST) return;
+  var dailyBox = document.getElementById('daily-stocks');
+  var maBox = document.getElementById('ma-stocks');
+  WATCHLIST.stocks.forEach(function(s){
+    // A类按钮（所有票都有）
+    var btn = document.createElement('div');
+    btn.className = 'stock-btn';
+    btn.textContent = s.name + ' ' + s.ts_code;
+    btn.onclick = function(){ selectDaily(s.ts_code, btn) };
+    dailyBox.appendChild(btn);
+    // B类按钮（只有有 analysis 的票）
+    if(s.analysis){
+      var btn2 = document.createElement('div');
+      btn2.className = 'stock-btn';
+      btn2.textContent = s.name + ' ' + s.ts_code;
+      btn2.onclick = function(){ selectMA(s.ts_code, btn2) };
+      maBox.appendChild(btn2);
+    }
+  });
+}
+
+function selectDaily(code, btn){
+  document.querySelectorAll('#daily-stocks .stock-btn').forEach(function(x){x.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById('daily-content').innerHTML = '<div class="loading-msg">加载中...</div>';
+  loadStockDetail(code).then(function(d){
+    if(d) renderDaily(d);
+    else document.getElementById('daily-content').innerHTML = '<div class="empty">数据加载失败</div>';
+  });
+}
+
+function selectMA(code, btn){
+  document.querySelectorAll('#ma-stocks .stock-btn').forEach(function(x){x.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById('ma-content').innerHTML = '<div class="loading-msg">加载中...</div>';
+  loadStockDetail(code).then(function(d){
+    if(d) renderMA(d);
+    else document.getElementById('ma-content').innerHTML = '<div class="empty">数据加载失败</div>';
+  });
+}
+
+// 渲染 A类 每日跟踪
+function renderDaily(data){
+  var h = '';
+  h += '<div class="section"><div class="section-title">'+data.name+' ('+data.ts_code+') <span class="badge badge-blue">'+data.date+'</span></div></div>';
+
+  // 重大资本运作
+  var capitalItems = [];
+  var capitalKw = ['减持','定增','可转债','增发','配股','回购','质押','并购','收购','重组','筹划','重大事项','股份转让','实控人变更','控制权'];
+  (data.notices||[]).forEach(function(n){
+    var title = n['公告标题']||n.title||'';
+    if(capitalKw.some(function(k){return title.indexOf(k)>=0})) capitalItems.push(n);
+  });
+  (data.news||[]).forEach(function(n){
+    var title = n['资讯标题']||n['新闻标题']||n.title||'';
+    if(capitalKw.some(function(k){return title.indexOf(k)>=0})) capitalItems.push(n);
+  });
+
+  h += '<div class="section"><div class="section-title"><span class="badge badge-red">重大资本运作</span></div>';
+  if(capitalItems.length){
+    capitalItems.forEach(function(n){
+      var title = n['公告标题']||n['资讯标题']||n.title||'';
+      var date = n['日期']||n.date||'';
+      var content = n['公告片段内容']||n['资讯内容']||n.content||'';
+      h += renderItem(title, date, content, true);
+    });
+  }else{
+    h += '<div style="color:#f87171;font-size:13px;padding:8px 0">当日无重大资本运作公告</div>';
+  }
+  h += '</div>';
+
+  // 公告
+  h += '<div class="section"><div class="section-title">当日公告</div>';
+  if(data.notices && data.notices.length){
+    data.notices.forEach(function(n){
+      var title = n['公告标题']||n.title||'';
+      var date = n['日期']||n.date||'';
+      var content = n['公告片段内容']||n.content||'';
+      h += renderItem(title, date, content, false);
+    });
+  }else{ h += '<div class="empty">暂无公告</div>'; }
+  h += '</div>';
+
+  // 舆情
+  h += '<div class="section"><div class="section-title">舆情动态</div>';
+  if(data.news && data.news.length){
+    data.news.forEach(function(n){
+      var title = n['资讯标题']||n['新闻标题']||n.title||'';
+      var date = n['日期']||n.date||'';
+      var content = n['资讯内容']||n['新闻内容']||n.content||'';
+      h += renderItem(title, date, content, false);
+    });
+  }else{ h += '<div class="empty">暂无舆情</div>'; }
+  h += '</div>';
+
+  // 筹码
+  if(data.chip && data.chip.success){
+    var c = data.chip;
+    h += '<div class="section"><div class="section-title">筹码结构</div>';
+    h += '<div class="chip-grid">';
+    h += chipMetric('现价', c.current_price);
+    h += chipMetric('均成本', c.avg_cost);
+    h += chipMetric('获利盘', c.profit_ratio);
+    h += chipMetric('套牢盘', c.locked_ratio);
+    h += chipMetric('70%集中区', c.range_70);
+    h += chipMetric('筹码峰', c.peak_price);
+    h += '</div></div>';
+  }
+
+  document.getElementById('daily-content').innerHTML = h;
+  bindItemToggle();
+}
+
+function renderItem(title, date, content, isCapital){
+  var cls = isCapital ? 'item capital-item' : 'item';
+  var h = '<div class="'+cls+'">';
+  h += '<div class="item-header" onclick="this.parentElement.classList.toggle(\'expanded\')">';
+  h += '<span class="item-title">'+escHtml(title)+'</span>';
+  if(date) h += '<span class="item-date">'+date+'</span>';
+  h += '<span class="item-toggle">展开</span>';
+  h += '</div>';
+  if(content) h += '<div class="item-content">'+escHtml(content)+'</div>';
+  h += '</div>';
+  return h;
+}
+
+function chipMetric(label, value){
+  if(value===undefined||value===null) value = '-';
+  return '<div class="chip-metric"><div class="label">'+label+'</div><div class="value">'+value+'</div></div>';
+}
+
+// 渲染 B类 并购重组
+function renderMA(data){
+  if(!data.analysis){
+    document.getElementById('ma-content').innerHTML = '<div class="empty">该股票无并购重组底稿</div>';
+    return;
+  }
+  var md = data.analysis;
+  var h = '';
+  h += '<div class="section"><div class="section-title">'+data.name+' ('+data.ts_code+') 并购重组跟踪 <span class="badge badge-red">B类</span></div></div>';
+
+  // 解析 markdown 底稿为 HTML
+  h += '<div class="section">' + renderMarkdown(md) + '</div>';
+
+  document.getElementById('ma-content').innerHTML = h;
+}
+
+function renderMarkdown(md){
+  // 简单 markdown → HTML 转换
+  var lines = md.split('\n');
+  var html = '';
+  var inCode = false;
+  var inTable = false;
+  for(var i=0;i<lines.length;i++){
+    var line = lines[i];
+    // 代码块
+    if(line.trim().startsWith('```')){
+      if(inCode){ html += '</div>'; inCode=false; }
+      else{ html += '<div class="flow-chart">'; inCode=true; }
+      continue;
+    }
+    if(inCode){ html += escHtml(line)+'\n'; continue; }
+    // 表格
+    if(line.trim().startsWith('|') && line.trim().endsWith('|')){
+      if(!inTable){ html += '<table class="valuation-table">'; inTable=true; }
+      var cells = line.split('|').filter(function(c){return c.trim()});
+      if(cells[0] && cells[0].trim().match(/^[-:]+$/)){continue;} // 分隔行
+      var tag = (i>0 && lines[i-1] && lines[i-1].trim().startsWith('|')) ? 'td' : 'th';
+      // 第一个表格行用 th
+      if(inTable && !html.includes('<td')){tag='th';}
+      html += '<tr>';
+      cells.forEach(function(c){html += '<'+tag+'>'+formatBold(escHtml(c.trim()))+'</'+tag+'>';});
+      html += '</tr>';
+      continue;
+    }else if(inTable){ html += '</table>'; inTable=false; }
+    // 标题
+    if(line.startsWith('### ')){ html += '<h4 style="font-size:14px;margin:14px 0 6px;color:#cbd5e1;font-weight:700">'+line.slice(4)+'</h4>'; continue; }
+    if(line.startsWith('## ')){ html += '<h3 style="font-size:16px;margin:18px 0 8px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px">'+line.slice(3)+'</h3>'; continue; }
+    if(line.startsWith('# ')){ html += '<h2 style="font-size:18px;margin:20px 0 10px;color:#e2e8f0">'+line.slice(2)+'</h2>'; continue; }
+    if(line.startsWith('#### ')){ html += '<h5 style="font-size:13px;margin:12px 0 4px;color:#94a3b8;font-weight:700">'+line.slice(5)+'</h5>'; continue; }
+    // 分隔线
+    if(line.trim()==='---'){ html += '<hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:16px 0">'; continue; }
+    // 列表
+    if(line.trim().startsWith('- ')){ html += '<div style="padding:3px 0 3px 16px;font-size:13px;color:#94a3b8;line-height:1.7">'+formatBold(escHtml(line.trim().slice(2)))+'</div>'; continue; }
+    // 普通段落
+    if(line.trim()){ html += '<p style="font-size:13px;color:#94a3b8;line-height:1.8;margin:4px 0">'+formatBold(escHtml(line))+'</p>'; }
+  }
+  if(inTable) html += '</table>';
+  if(inCode) html += '</div>';
+  return html;
+}
+
+function formatBold(text){
+  return text.replace(/\*\*(.+?)\*\*/g,'<strong style="color:#e2e8f0">$1</strong>');
+}
+
+function escHtml(s){
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function bindItemToggle(){
+  document.querySelectorAll('.item-header').forEach(function(h){
+    h.addEventListener('click',function(){
+      var item = h.parentElement;
+      var toggle = h.querySelector('.item-toggle');
+      if(item.classList.contains('expanded')){toggle.textContent='展开';}
+      else{toggle.textContent='收起';}
+    });
+  });
+}
+
+// 初始化
+loadWatchlist();
+</script>
+</body>
+</html>
