@@ -63,6 +63,7 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <div class="tab active" data-tab="chip">筹码查询</div>
   <div class="tab" data-tab="daily">每日跟踪(A类)</div>
   <div class="tab" data-tab="ma">并购重组(B类)</div>
+  <div class="tab" data-tab="scanner">全市场公告</div>
 </div>
 <div class="container">
   <!-- Tab 1: 筹码查询（iframe 嵌入原页面） -->
@@ -78,6 +79,15 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <div class="tab-content" id="tab-ma">
     <div class="stock-selector" id="ma-stocks"></div>
     <div id="ma-content"><div class="empty">选择股票查看并购重组跟踪</div></div>
+  </div>
+  <!-- Tab 4: 全市场公告 -->
+  <div class="tab-content" id="tab-scanner">
+    <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <input type="date" id="scanner-date" style="padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:#1a2332;color:#e2e8f0;font-size:13px">
+      <button id="scanner-load" style="padding:8px 16px;border-radius:6px;border:1px solid rgba(93,174,255,0.3);background:rgba(93,174,255,0.15);color:#5daeff;font-size:13px;cursor:pointer;font-weight:600">加载</button>
+      <span id="scanner-stats" style="color:#64748b;font-size:13px;margin-left:auto"></span>
+    </div>
+    <div id="scanner-content"><div class="loading-msg">选择日期加载公告</div></div>
   </div>
 </div>
 <script>
@@ -329,6 +339,67 @@ function bindItemToggle(){
 
 // 初始化
 loadWatchlist();
+
+// ========== 全市场公告扫描 (Tab 4) ==========
+(function(){
+  var dateInput = document.getElementById('scanner-date');
+  var loadBtn = document.getElementById('scanner-load');
+  var content = document.getElementById('scanner-content');
+  var stats = document.getElementById('scanner-stats');
+  // 默认今天
+  var today = new Date();
+  dateInput.value = today.toISOString().slice(0,10);
+
+  loadBtn.addEventListener('click', loadScanner);
+
+  async function loadScanner(){
+    var date = dateInput.value;
+    if(!date){ content.innerHTML='<div class="empty">请选择日期</div>'; return; }
+    content.innerHTML='<div class="loading-msg">加载中...</div>';
+    stats.textContent='';
+    try{
+      var r = await fetch('/skills/announcement-scanner/detail/'+date+'.json');
+      if(!r.ok) throw new Error('该日期暂无数据');
+      var data = await r.json();
+      renderScanner(data);
+    }catch(e){
+      content.innerHTML='<div class="empty">'+e.message+'</div>';
+    }
+  }
+
+  function renderScanner(data){
+    var results = data.results || {};
+    var totalStocks=0, totalNotices=0;
+    Object.values(results).forEach(function(stockGroups){
+      Object.keys(stockGroups).forEach(function(k){ totalStocks++; });
+      Object.values(stockGroups).forEach(function(items){ totalNotices+=items.length; });
+    });
+    if(totalNotices===0){ content.innerHTML='<div class="empty">该日期无重要公告</div>'; stats.textContent=''; return; }
+    stats.textContent=totalStocks+' 只股票 / '+totalNotices+' 条公告';
+
+    var categories=['并购重组','处罚','增持','减持','定增','ST风险'];
+    var html='';
+    categories.forEach(function(cat){
+      var stockGroups=results[cat]||{};
+      var stockNames=Object.keys(stockGroups);
+      if(!stockNames.length) return;
+      html+='<div class="section"><div class="section-title">'+cat+' <span class="badge badge-blue">'+stockNames.length+'只</span></div>';
+      stockNames.forEach(function(name){
+        var items=stockGroups[name];
+        html+='<div style="margin:10px 0 6px;font-weight:700;color:#5daeff;font-size:13px">'+escHtml(name)+' <span style="color:#64748b;font-weight:400">('+items.length+'条)</span></div>';
+        items.forEach(function(item){
+          var title=item.title||item.raw_title||'';
+          var date=item.pub_date||'';
+          var snippet=item.snippet||'';
+          html+=renderItem(title,date,snippet,cat==='并购重组');
+        });
+      });
+      html+='</div>';
+    });
+    content.innerHTML=html;
+    bindItemToggle();
+  }
+})();
 </script>
 </body>
 </html>
