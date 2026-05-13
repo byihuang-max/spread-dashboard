@@ -398,15 +398,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div class="nav-group-title">工具</div>
       <div class="nav-item" id="navTimingResearch" data-module="timing_factors" style="display:none" onclick="window.open('timing-research/','_blank')">择时研究</div>
       <div class="nav-item" id="navChipQuery" data-module="chip_query" style="display:none" onclick="window.open('chip_query/chip_query.html','_blank')">个股筹码查询</div>
-<<<<<<< Updated upstream
       <div class="nav-item" id="navFinancialRisk" data-module="financial_risk" style="display:none" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">财报预期风险 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundAsset" data-module="fund_asset" style="display:none" onclick="window.open('fund-asset-recommend/fund_asset.html','_blank')">团队基金优选 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_analysis/fund_research.html','_blank')">公募基金研究 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
-=======
-      <div class="nav-item" id="navFinancialRisk" data-module="financial_risk" style="display:none" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">财报预期风险</div>
-      <div class="nav-item" id="navFundAsset" data-module="fund_asset" style="display:none" onclick="window.open('fund-asset-recommend/fund_asset.html','_blank')">团队基金优选</div>
-      <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_analysis/fund_research.html','_blank')">公募基金研究</div>
->>>>>>> Stashed changes
       <div class="nav-item" id="navSmartNotes" style="display:none" onclick="window.open('smart-notes/','_blank')">Smart Notes</div>
       <div class="nav-item" data-module="alerts">红灯预警 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" data-module="update-log" id="navUpdateLog" style="display:none">刷新记录</div>
@@ -3673,11 +3667,7 @@ function applyModuleAccess(list,user){
 }
 function loadAccessibleModules(user){
   if(user&&user.is_admin){applyModuleAccess(null,user);return;}
-<<<<<<< Updated upstream
   apiCall('GET','/api/modules/accessible').then(function(d){if(d.error){applyModuleAccess(null,user);return;}applyModuleAccess(Array.isArray(d)?d:(d.modules||d.accessible||null),user);}).catch(function(){applyModuleAccess(null,user);});
-=======
-  apiCall('GET','/api/modules/accessible').then(function(d){applyModuleAccess(Array.isArray(d)?d:(d.modules||d.accessible||[]),user);}).catch(function(){applyModuleAccess(null,user);});
->>>>>>> Stashed changes
 }
 function showApp(user){
     currentUser=user;
@@ -11341,7 +11331,6 @@ const chartOpts = {
 window.GAMT_ACCESSIBLE_MODULES=[];
 (async function(){try{const t=localStorage.getItem('gamt_token')||localStorage.getItem('token');if(!t)return;const r=await fetch('/api/modules/accessible',{headers:{Authorization:'Bearer '+t}});if(r.ok){const a=await r.json();window.GAMT_ACCESSIBLE_MODULES=a.map(x=>x.module_key).concat(...a.map(x=>x.aliases||[]));document.dispatchEvent(new CustomEvent('gamt:accessible-modules',{detail:a}));}}catch(e){console.warn(e)}})();
 </script>
-<<<<<<< Updated upstream
 
 <script>
 // ===== 策略 tab 切换 =====
@@ -11632,8 +11621,6 @@ const chartOpts = {
   });
 })();
 </script>
-=======
->>>>>>> Stashed changes
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
