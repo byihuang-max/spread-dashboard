@@ -586,7 +586,11 @@ def list_users_by_tier():
 def set_module_permission(module_key, min_tier):
     min_tier=int(min_tier)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     if min_tier not in (0,1,2,3): raise ValueError('min_tier must be 0/1/2/3')
+=======
+    if min_tier not in (0,1,2): raise ValueError('min_tier must be 0/1/2')
+>>>>>>> Stashed changes
 =======
     if min_tier not in (0,1,2): raise ValueError('min_tier must be 0/1/2')
 >>>>>>> Stashed changes
