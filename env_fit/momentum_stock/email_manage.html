@@ -3,20 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>强势股日报 · 订阅管理</title>
+<title>邮件订阅中心 · GAMT</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:-apple-system,system-ui,sans-serif; background:#f1f5f9; color:#1e293b; min-height:100vh; }
-.container { max-width:720px; margin:0 auto; padding:24px 16px; }
+.container { max-width:780px; margin:0 auto; padding:24px 16px; }
 h1 { font-size:20px; font-weight:600; margin-bottom:4px; }
 .subtitle { color:#64748b; font-size:13px; margin-bottom:24px; }
 .card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:20px; margin-bottom:16px; }
+
+/* Tabs */
+.tabs { display:flex; gap:0; border-bottom:2px solid #e2e8f0; margin-bottom:20px; }
+.tab { padding:10px 18px; font-size:14px; font-weight:500; color:#64748b; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:.15s; }
+.tab:hover { color:#4f46e5; }
+.tab.active { color:#4f46e5; border-bottom-color:#4f46e5; }
+.tab .badge { display:inline-block; background:#e0e7ff; color:#4f46e5; font-size:11px; padding:1px 6px; border-radius:10px; margin-left:6px; }
+.tab.disabled { color:#cbd5e1; cursor:not-allowed; }
+
+/* Stats */
 .stats { display:flex; gap:16px; margin-bottom:20px; }
 .stat-box { flex:1; background:#f8fafc; border-radius:8px; padding:12px; text-align:center; }
 .stat-num { font-size:24px; font-weight:700; color:#4f46e5; }
 .stat-label { font-size:12px; color:#94a3b8; margin-top:2px; }
 
-/* 表格 */
+/* Table */
 table { width:100%; border-collapse:collapse; }
 th { text-align:left; font-size:12px; color:#94a3b8; font-weight:500; padding:8px 12px; border-bottom:1px solid #e2e8f0; }
 td { padding:10px 12px; border-bottom:1px solid #f1f5f9; font-size:14px; }
@@ -24,7 +34,7 @@ tr:hover { background:#f8fafc; }
 .email-col { color:#475569; }
 .name-col { font-weight:500; }
 
-/* 状态开关 */
+/* Toggle */
 .toggle { position:relative; width:40px; height:22px; cursor:pointer; }
 .toggle input { opacity:0; width:0; height:0; }
 .toggle .slider { position:absolute; inset:0; background:#cbd5e1; border-radius:11px; transition:.2s; }
@@ -32,7 +42,7 @@ tr:hover { background:#f8fafc; }
 .toggle input:checked + .slider { background:#4f46e5; }
 .toggle input:checked + .slider:before { transform:translateX(18px); }
 
-/* 按钮 */
+/* Buttons */
 .btn { border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:500; cursor:pointer; transition:.15s; }
 .btn-primary { background:#4f46e5; color:#fff; }
 .btn-primary:hover { background:#4338ca; }
@@ -41,8 +51,10 @@ tr:hover { background:#f8fafc; }
 .btn-ghost { background:transparent; color:#64748b; padding:4px 8px; }
 .btn-ghost:hover { background:#f1f5f9; }
 .btn-sm { padding:5px 10px; font-size:12px; }
+.btn-success { background:#dcfce7; color:#16a34a; }
+.btn-success:hover { background:#bbf7d0; }
 
-/* 添加表单 */
+/* Add form */
 .add-form { display:none; gap:8px; align-items:end; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid #e2e8f0; }
 .add-form.show { display:flex; }
 .form-group { flex:1; min-width:140px; }
@@ -50,34 +62,51 @@ tr:hover { background:#f8fafc; }
 .form-group input { width:100%; padding:8px 10px; border:1px solid #e2e8f0; border-radius:6px; font-size:14px; outline:none; }
 .form-group input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,.1); }
 
-/* 空状态 */
-.empty { text-align:center; padding:40px; color:#94a3b8; }
-.empty-icon { font-size:40px; margin-bottom:8px; }
+/* Checkbox group */
+.checkbox-group { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.checkbox-group label { font-size:13px; color:#475569; cursor:pointer; display:flex; align-items:center; gap:4px; }
+.checkbox-group input[type=checkbox] { width:16px; height:16px; accent-color:#4f46e5; }
 
-/* toast */
+/* Empty */
+.empty { text-align:center; padding:40px; color:#94a3b8; }
+
+/* Toast */
 .toast { position:fixed; top:20px; right:20px; background:#065f46; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:99; }
 .toast.show { opacity:1; }
 .toast.error { background:#dc2626; }
 
-/* 操作栏 */
 .actions { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.scene-desc { font-size:12px; color:#94a3b8; margin-bottom:16px; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1> 强势股日报 · 订阅管理</h1>
-  <p class="subtitle">每个工作日 20:15 自动推送 · 此处为唯一添加入口（腾讯云直写，勿通过飞书/本地修改）</p>
+  <h1>邮件订阅中心</h1>
+  <p class="subtitle">多场景日报订阅管理 · 腾讯云直写 · 勿通过飞书/本地修改</p>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-scene="a_stock_momentum">A股强势股<span class="badge" id="badge-a">0</span></div>
+    <div class="tab" data-scene="hk_stock_momentum">港股强势股<span class="badge" id="badge-hk">0</span></div>
+    <div class="tab" data-scene="us_stock_momentum">美股异动<span class="badge" id="badge-us">0</span></div>
+    <div class="tab" data-scene="all">全局管理<span class="badge" id="badge-all">0</span></div>
+  </div>
 
   <div class="stats">
-    <div class="stat-box"><div class="stat-num" id="totalCount">0</div><div class="stat-label">总订阅</div></div>
+    <div class="stat-box"><div class="stat-num" id="totalCount">0</div><div class="stat-label">当前场景订阅</div></div>
     <div class="stat-box"><div class="stat-num" id="activeCount">0</div><div class="stat-label">活跃</div></div>
-    <div class="stat-box"><div class="stat-num" id="pausedCount">0</div><div class="stat-label">已暂停</div></div>
+    <div class="stat-box"><div class="stat-num" id="allTotal">0</div><div class="stat-label">总订阅者</div></div>
   </div>
 
   <div class="card">
     <div class="actions">
-      <span style="font-size:14px;font-weight:500">订阅者列表</span>
-      <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">+ 添加</button>
+      <div>
+        <span style="font-size:14px;font-weight:500" id="sceneTitle">A股强势股日报</span>
+        <p class="scene-desc" id="sceneDesc">每个工作日 18:05 自动推送</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" id="batchBtn" onclick="batchSubscribe()" style="display:none">批量订阅</button>
+        <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">+ 添加</button>
+      </div>
     </div>
 
     <div id="tableWrap"></div>
@@ -91,13 +120,21 @@ tr:hover { background:#f8fafc; }
         <label>备注名</label>
         <input id="newName" type="text" placeholder="客户名称">
       </div>
+      <div class="form-group" style="flex:2;min-width:200px">
+        <label>订阅场景</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="sub_a" checked> A股</label>
+          <label><input type="checkbox" id="sub_hk"> 港股</label>
+          <label><input type="checkbox" id="sub_us"> 美股</label>
+        </div>
+      </div>
       <button class="btn btn-primary" onclick="addSubscriber()">确认添加</button>
       <button class="btn btn-ghost" onclick="toggleAddForm()">取消</button>
     </div>
   </div>
 
   <div class="card" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
-    <span style="font-size:13px;color:#64748b">配置文件：email_subscribers.json</span>
+    <span style="font-size:13px;color:#64748b">配置文件：email_subscribers.json（腾讯云唯一真源）</span>
     <button class="btn btn-ghost btn-sm" onclick="exportJSON()">导出 JSON</button>
   </div>
 </div>
@@ -105,17 +142,20 @@ tr:hover { background:#f8fafc; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 数据层（API + localStorage 缓存）=====
-const STORAGE_KEY = 'email_subscribers';
 const API_BASE = window.location.origin;
+const SCENES = {
+  a_stock_momentum: { name: 'A股强势股日报', desc: '每个工作日 18:05 自动推送' },
+  hk_stock_momentum: { name: '港股强势股日报', desc: '每个工作日 17:30 自动推送' },
+  us_stock_momentum: { name: '美股异动日报', desc: '每个工作日 09:00 自动推送（美股收盘后）' },
+  all: { name: '全局订阅者管理', desc: '查看所有订阅者的订阅状态' }
+};
+let currentScene = 'a_stock_momentum';
 let DATA_CACHE = null;
 
 function getToken() {
-  // 主页面登录后存的 key 是 gamt_token
-  const keys = ['gamt_token', 'auth_token', 'token'];
-  for (const k of keys) {
+  for (const k of ['gamt_token','auth_token','token']) {
     const v = localStorage.getItem(k);
-    if (v) { try { const p = JSON.parse(v); if (p) return p; } catch(e) { return v; } }
+    if (v) { try { return JSON.parse(v); } catch(e) { return v; } }
   }
   return '';
 }
@@ -123,65 +163,109 @@ function getToken() {
 async function loadData() {
   if (DATA_CACHE) return DATA_CACHE;
   const tk = getToken();
-  if (!tk) { toast('未检测到登录态，请先在主页面登录', true); return { subscribers: [] }; }
+  if (!tk) { toast('未检测到登录态，请先在主页面登录', true); return {subscribers:[]}; }
   try {
-    const resp = await fetch(API_BASE + '/api/email-subscribers', {
-      headers: { 'Authorization': 'Bearer ' + tk }
-    });
-    if (resp.ok) { DATA_CACHE = await resp.json(); return DATA_CACHE; }
-    if (resp.status === 401 || resp.status === 403) { toast('权限不足，请用管理员账号登录', true); }
-  } catch(e) { console.warn('API load failed:', e); }
-  // fallback localStorage
-  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
-  return { subscribers: [] };
+    const r = await fetch(API_BASE+'/api/email-subscribers', {headers:{'Authorization':'Bearer '+tk}});
+    if (r.ok) { DATA_CACHE = await r.json(); return DATA_CACHE; }
+    if (r.status===401||r.status===403) toast('权限不足', true);
+  } catch(e) {}
+  return {subscribers:[]};
 }
 
 async function saveData(subs) {
   DATA_CACHE = null;
+  const tk = getToken();
   try {
-    await fetch(API_BASE + '/api/email-subscribers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
-      body: JSON.stringify({ subscribers: subs })
+    await fetch(API_BASE+'/api/email-subscribers', {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},
+      body: JSON.stringify({subscribers:subs})
     });
-  } catch(e) { console.warn('API save failed, using localStorage'); }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ subscribers: subs }, null, 2));
-  await renderAsync();
+  } catch(e) { console.warn('save failed', e); }
+  await render();
 }
 
-// ===== 渲染 =====
-async function renderAsync() {
+function getSceneSubs(subs, scene) {
+  if (scene === 'all') return subs.filter(s => s.status === 'active');
+  return subs.filter(s => s.status === 'active' && (s.subscriptions||{})[scene]);
+}
+
+async function render() {
   const data = await loadData();
   const subs = data.subscribers || [];
-  const active = subs.filter(s => s.enabled !== false);
-  const paused = subs.filter(s => s.enabled === false);
+  const sceneSubs = getSceneSubs(subs, currentScene);
+  const allActive = subs.filter(s => s.status === 'active');
 
-  document.getElementById('totalCount').textContent = subs.length;
-  document.getElementById('activeCount').textContent = active.length;
-  document.getElementById('pausedCount').textContent = paused.length;
+  // Update badges
+  document.getElementById('badge-a').textContent = getSceneSubs(subs,'a_stock_momentum').length;
+  document.getElementById('badge-hk').textContent = getSceneSubs(subs,'hk_stock_momentum').length;
+  document.getElementById('badge-us').textContent = getSceneSubs(subs,'us_stock_momentum').length;
+  document.getElementById('badge-all').textContent = allActive.length;
 
+  // Stats
+  document.getElementById('totalCount').textContent = sceneSubs.length;
+  document.getElementById('activeCount').textContent = sceneSubs.length;
+  document.getElementById('allTotal').textContent = allActive.length;
+
+  // Scene info
+  const info = SCENES[currentScene];
+  document.getElementById('sceneTitle').textContent = info.name;
+  document.getElementById('sceneDesc').textContent = info.desc;
+
+  // Batch button (show for hk/us if they have 0 subs but a_stock has subs)
+  const batchBtn = document.getElementById('batchBtn');
+  if (currentScene !== 'all' && currentScene !== 'a_stock_momentum' && sceneSubs.length === 0 && allActive.length > 0) {
+    batchBtn.style.display = '';
+    batchBtn.textContent = `从A股复制(${getSceneSubs(subs,'a_stock_momentum').length}人)`;
+  } else {
+    batchBtn.style.display = 'none';
+  }
+
+  // Table
   const wrap = document.getElementById('tableWrap');
-  if (!subs.length) {
-    wrap.innerHTML = '<div class="empty"><div class="empty-icon"></div>暂无订阅者<br>点击上方「添加」按钮</div>';
+  if (!sceneSubs.length) {
+    wrap.innerHTML = '<div class="empty">暂无订阅者<br><span style="font-size:12px">点击「添加」或从其他场景批量复制</span></div>';
     return;
   }
 
-  let html = '<table><thead><tr><th>备注</th><th>邮箱</th><th>状态</th><th></th></tr></thead><tbody>';
-  subs.forEach((s, i) => {
-    html += `<tr>
-      <td class="name-col">${esc(s.name || '-')}</td>
-      <td class="email-col">${esc(s.email)}</td>
-      <td><label class="toggle"><input type="checkbox" ${s.enabled !== false ? 'checked' : ''} onchange="toggleEnabled(${i})"><span class="slider"></span></label></td>
-      <td><button class="btn btn-danger btn-sm" onclick="removeSub(${i})">删除</button></td>
-    </tr>`;
+  let html = '<table><thead><tr><th>备注</th><th>邮箱</th>';
+  if (currentScene === 'all') {
+    html += '<th>A股</th><th>港股</th><th>美股</th>';
+  } else {
+    html += '<th>订阅</th>';
+  }
+  html += '<th></th></tr></thead><tbody>';
+
+  const displaySubs = currentScene === 'all' ? allActive : sceneSubs;
+  displaySubs.forEach((s, i) => {
+    const idx = subs.indexOf(s);
+    html += `<tr><td class="name-col">${esc(s.name||'-')}</td><td class="email-col">${esc(s.email)}</td>`;
+    if (currentScene === 'all') {
+      const sub = s.subscriptions || {};
+      html += `<td>${sub.a_stock_momentum?'✓':'-'}</td>`;
+      html += `<td>${sub.hk_stock_momentum?'✓':'-'}</td>`;
+      html += `<td>${sub.us_stock_momentum?'✓':'-'}</td>`;
+    } else {
+      html += `<td><label class="toggle"><input type="checkbox" checked onchange="toggleSub(${idx},'${currentScene}')"><span class="slider"></span></label></td>`;
+    }
+    html += `<td><button class="btn btn-danger btn-sm" onclick="removeSub(${idx})">删除</button></td></tr>`;
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
 }
 
-function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-// ===== 操作 =====
+// Tab switching
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab || tab.classList.contains('disabled')) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentScene = tab.dataset.scene;
+  DATA_CACHE = null;
+  render();
+});
+
 function toggleAddForm() {
   const f = document.getElementById('addForm');
   f.classList.toggle('show');
@@ -197,9 +281,17 @@ async function addSubscriber() {
   if (data.subscribers.some(s => s.email === email)) { toast('该邮箱已存在', true); return; }
 
   const displayName = name || email.split('@')[0];
-  if (!confirm(`确认添加订阅者？\n\n姓名：${displayName}\n邮箱：${email}\n\n添加后将在每个工作日自动收到强势股日报。`)) return;
+  const subscriptions = {
+    a_stock_momentum: document.getElementById('sub_a').checked,
+    hk_stock_momentum: document.getElementById('sub_hk').checked,
+    us_stock_momentum: document.getElementById('sub_us').checked
+  };
 
-  data.subscribers.push({ email, name: displayName, enabled: true });
+  data.subscribers.push({
+    email, name: displayName, status: 'active',
+    subscriptions, added_date: new Date().toISOString().slice(0,10)
+  });
+
   document.getElementById('newEmail').value = '';
   document.getElementById('newName').value = '';
   document.getElementById('addForm').classList.remove('show');
@@ -207,12 +299,13 @@ async function addSubscriber() {
   toast(`已添加 ${displayName}`);
 }
 
-async function toggleEnabled(idx) {
+async function toggleSub(idx, scene) {
   const data = await loadData();
-  data.subscribers[idx].enabled = !data.subscribers[idx].enabled;
   const s = data.subscribers[idx];
+  if (!s.subscriptions) s.subscriptions = {};
+  s.subscriptions[scene] = !s.subscriptions[scene];
   await saveData(data.subscribers);
-  toast(`${s.name}: ${s.enabled ? '已启用' : '已暂停'}`);
+  toast(`${s.name}: ${scene} ${s.subscriptions[scene]?'已订阅':'已取消'}`);
 }
 
 async function removeSub(idx) {
@@ -224,26 +317,39 @@ async function removeSub(idx) {
   toast(`已删除 ${s.name}`);
 }
 
+async function batchSubscribe() {
+  const data = await loadData();
+  const aSubs = getSceneSubs(data.subscribers, 'a_stock_momentum');
+  if (!confirm(`将 A股强势股 的 ${aSubs.length} 位订阅者批量添加到「${SCENES[currentScene].name}」？`)) return;
+  
+  for (const s of data.subscribers) {
+    if (s.status === 'active' && (s.subscriptions||{}).a_stock_momentum) {
+      if (!s.subscriptions) s.subscriptions = {};
+      s.subscriptions[currentScene] = true;
+    }
+  }
+  await saveData(data.subscribers);
+  toast(`已批量添加 ${aSubs.length} 人`);
+}
+
 async function exportJSON() {
   const data = await loadData();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'email_subscribers.json';
   a.click();
-  toast('已导出 JSON');
+  toast('已导出');
 }
 
-// ===== Toast =====
 function toast(msg, isError) {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = 'toast show' + (isError ? ' error' : '');
+  el.className = 'toast show' + (isError?' error':'');
   setTimeout(() => el.className = 'toast', 2000);
 }
 
-// ===== 初始化 =====
-renderAsync();
+render();
 </script>
 </body>
 </html>
