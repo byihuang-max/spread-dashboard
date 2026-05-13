@@ -391,7 +391,7 @@ def main():
     # 发送飞书
     if args.send:
         card = build_feishu_card(results, date_str)
-        chat_id = args.chat_id or "oc_1e941df394190b21d4c4edd83deae4f3"
+        chat_id = args.chat_id or "oc_63ee7ddec4971b0c6064d378effd08ec"
         receive_id_type = "open_id" if chat_id.startswith("ou_") else "chat_id"
         
         success = send_feishu_msg(
