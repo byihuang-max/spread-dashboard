@@ -1,7 +1,7 @@
 {
   "mod1_rv_regime": {
     "meta": {
-      "generated": "2026-05-13 08:24:29",
+      "generated": "2026-05-14 08:26:30",
       "module": "option_vol.mod1_rv_regime",
       "version": "mvp",
       "top_n": 10,
@@ -12,70 +12,92 @@
     "regime": {
       "label": "NEUTRAL",
       "description": "局部有溢价，保持观察",
-      "avg_sell_score": 55.9,
-      "n_sellable": 4,
+      "avg_sell_score": 56.0,
+      "n_sellable": 5,
       "sector_breadth": 2,
       "top3_symbols": [
         {
           "symbol": "FG",
-          "sell_score": 78
+          "sell_score": 76
+        },
+        {
+          "symbol": "RU",
+          "sell_score": 66
         },
         {
           "symbol": "SA",
-          "sell_score": 67
-        },
-        {
-          "symbol": "SC",
           "sell_score": 64
         }
       ]
     },
     "pca_context": {
-      "date": "20260512",
+      "date": "20260513",
       "env_type": "温和趋势",
       "momentum_signal": "动量偏空",
-      "pc1_ratio": 0.2945,
-      "pca_friendly": 43.0
+      "pc1_ratio": 0.3,
+      "pca_friendly": 44.5
     },
     "symbols": [
       {
         "symbol": "FG",
         "cn_name": "玻璃",
         "sector": "能源化工",
-        "avg_amount_wan": 3601528.1,
-        "n_days": 198,
-        "rv_20d": 0.4745,
-        "rv_pctile_120d": 0.9333,
-        "rv_accel": 1.2934,
+        "avg_amount_wan": 3585692.2,
+        "n_days": 200,
+        "rv_20d": 0.4669,
+        "rv_pctile_120d": 0.9,
+        "rv_accel": 1.2179,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.0703,
-        "sell_score": 78,
+        "pc1_loading_abs": 0.0693,
+        "sell_score": 76,
         "signal": "🟡",
         "label": "可考虑双卖",
         "breakdown": {
-          "odds_score": 93,
-          "tail_risk_score": 59,
+          "odds_score": 90,
+          "tail_risk_score": 60,
           "env_score": 65,
           "accel_score": 35,
-          "loading_score": 82
+          "loading_score": 83
+        }
+      },
+      {
+        "symbol": "RU",
+        "cn_name": "橡胶",
+        "sector": "能源化工",
+        "avg_amount_wan": 4590368.9,
+        "n_days": 203,
+        "rv_20d": 0.1689,
+        "rv_pctile_120d": 0.6333,
+        "rv_accel": 1.0087,
+        "pca_env": "温和趋势",
+        "pc1_loading_abs": 0.0089,
+        "sell_score": 66,
+        "signal": "🟡",
+        "label": "可考虑双卖",
+        "breakdown": {
+          "odds_score": 63,
+          "tail_risk_score": 69,
+          "env_score": 65,
+          "accel_score": 55,
+          "loading_score": 98
         }
       },
       {
         "symbol": "SA",
         "cn_name": "纯碱",
         "sector": "能源化工",
-        "avg_amount_wan": 3061178.8,
-        "n_days": 198,
-        "rv_20d": 0.2705,
-        "rv_pctile_120d": 0.6583,
-        "rv_accel": 0.9799,
+        "avg_amount_wan": 3049031.7,
+        "n_days": 200,
+        "rv_20d": 0.2607,
+        "rv_pctile_120d": 0.5917,
+        "rv_accel": 0.9763,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.1251,
-        "sell_score": 67,
+        "pc1_loading_abs": 0.1221,
+        "sell_score": 64,
         "signal": "🟡",
         "label": "可考虑双卖",
         "breakdown": {
-          "odds_score": 66,
+          "odds_score": 59,
           "tail_risk_score": 69,
           "env_score": 65,
           "accel_score": 75,
@@ -86,128 +108,62 @@
         "symbol": "SC",
         "cn_name": "原油",
         "sector": "能源化工",
-        "avg_amount_wan": 5488036.4,
-        "n_days": 201,
-        "rv_20d": 0.3945,
-        "rv_pctile_120d": 0.5917,
-        "rv_accel": 0.6869,
+        "avg_amount_wan": 5452971.7,
+        "n_days": 203,
+        "rv_20d": 0.3758,
+        "rv_pctile_120d": 0.575,
+        "rv_accel": 0.6261,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.2063,
-        "sell_score": 64,
+        "pc1_loading_abs": 0.2037,
+        "sell_score": 62,
         "signal": "🟡",
         "label": "可考虑双卖",
         "breakdown": {
-          "odds_score": 59,
+          "odds_score": 57,
           "tail_risk_score": 69,
           "env_score": 65,
           "accel_score": 90,
-          "loading_score": 48
+          "loading_score": 49
         }
       },
       {
         "symbol": "NI",
         "cn_name": "镍",
         "sector": "有色金属",
-        "avg_amount_wan": 4082374.5,
-        "n_days": 201,
-        "rv_20d": 0.2802,
-        "rv_pctile_120d": 0.6083,
-        "rv_accel": 1.2402,
+        "avg_amount_wan": 4083008.1,
+        "n_days": 203,
+        "rv_20d": 0.2831,
+        "rv_pctile_120d": 0.6167,
+        "rv_accel": 1.2948,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.0095,
+        "pc1_loading_abs": 0.0129,
         "sell_score": 62,
         "signal": "🟡",
         "label": "可考虑双卖",
         "breakdown": {
-          "odds_score": 61,
-          "tail_risk_score": 63,
+          "odds_score": 62,
+          "tail_risk_score": 62,
           "env_score": 65,
           "accel_score": 35,
-          "loading_score": 98
-        }
-      },
-      {
-        "symbol": "RU",
-        "cn_name": "橡胶",
-        "sector": "能源化工",
-        "avg_amount_wan": 4567612.1,
-        "n_days": 201,
-        "rv_20d": 0.1557,
-        "rv_pctile_120d": 0.45,
-        "rv_accel": 0.9799,
-        "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.0175,
-        "sell_score": 58,
-        "signal": "",
-        "label": "观望",
-        "breakdown": {
-          "odds_score": 45,
-          "tail_risk_score": 74,
-          "env_score": 65,
-          "accel_score": 75,
-          "loading_score": 96
-        }
-      },
-      {
-        "symbol": "SN",
-        "cn_name": "锡",
-        "sector": "有色金属",
-        "avg_amount_wan": 6258421.2,
-        "n_days": 201,
-        "rv_20d": 0.3034,
-        "rv_pctile_120d": 0.375,
-        "rv_accel": 0.8575,
-        "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.0988,
-        "sell_score": 54,
-        "signal": "",
-        "label": "观望",
-        "breakdown": {
-          "odds_score": 38,
-          "tail_risk_score": 74,
-          "env_score": 65,
-          "accel_score": 90,
-          "loading_score": 75
-        }
-      },
-      {
-        "symbol": "AG",
-        "cn_name": "白银",
-        "sector": "贵金属",
-        "avg_amount_wan": 21844859.8,
-        "n_days": 201,
-        "rv_20d": 0.41,
-        "rv_pctile_120d": 0.3,
-        "rv_accel": 0.7012,
-        "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.1007,
-        "sell_score": 50,
-        "signal": "",
-        "label": "观望",
-        "breakdown": {
-          "odds_score": 30,
-          "tail_risk_score": 74,
-          "env_score": 65,
-          "accel_score": 90,
-          "loading_score": 75
+          "loading_score": 97
         }
       },
       {
         "symbol": "RB",
         "cn_name": "螺纹钢",
         "sector": "黑色系",
-        "avg_amount_wan": 3324494.4,
-        "n_days": 201,
-        "rv_20d": 0.0837,
-        "rv_pctile_120d": 0.3083,
-        "rv_accel": 1.1068,
+        "avg_amount_wan": 3318834.4,
+        "n_days": 203,
+        "rv_20d": 0.0889,
+        "rv_pctile_120d": 0.425,
+        "rv_accel": 1.1247,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.0518,
-        "sell_score": 47,
+        "pc1_loading_abs": 0.0536,
+        "sell_score": 53,
         "signal": "",
         "label": "观望",
         "breakdown": {
-          "odds_score": 31,
+          "odds_score": 42,
           "tail_risk_score": 66,
           "env_score": 65,
           "accel_score": 55,
@@ -215,21 +171,21 @@
         }
       },
       {
-        "symbol": "CU",
-        "cn_name": "铜",
+        "symbol": "SN",
+        "cn_name": "锡",
         "sector": "有色金属",
-        "avg_amount_wan": 6731046.1,
-        "n_days": 201,
-        "rv_20d": 0.1246,
-        "rv_pctile_120d": 0.1333,
-        "rv_accel": 0.7365,
+        "avg_amount_wan": 6310242.4,
+        "n_days": 203,
+        "rv_20d": 0.2877,
+        "rv_pctile_120d": 0.3417,
+        "rv_accel": 0.8896,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.1088,
-        "sell_score": 40,
+        "pc1_loading_abs": 0.1065,
+        "sell_score": 52,
         "signal": "",
         "label": "观望",
         "breakdown": {
-          "odds_score": 13,
+          "odds_score": 34,
           "tail_risk_score": 74,
           "env_score": 65,
           "accel_score": 90,
@@ -237,32 +193,76 @@
         }
       },
       {
+        "symbol": "AG",
+        "cn_name": "白银",
+        "sector": "贵金属",
+        "avg_amount_wan": 21811147.1,
+        "n_days": 203,
+        "rv_20d": 0.3738,
+        "rv_pctile_120d": 0.2667,
+        "rv_accel": 0.7051,
+        "pca_env": "温和趋势",
+        "pc1_loading_abs": 0.1224,
+        "sell_score": 48,
+        "signal": "",
+        "label": "观望",
+        "breakdown": {
+          "odds_score": 27,
+          "tail_risk_score": 73,
+          "env_score": 65,
+          "accel_score": 90,
+          "loading_score": 69
+        }
+      },
+      {
+        "symbol": "CU",
+        "cn_name": "铜",
+        "sector": "有色金属",
+        "avg_amount_wan": 6742363.1,
+        "n_days": 203,
+        "rv_20d": 0.1304,
+        "rv_pctile_120d": 0.175,
+        "rv_accel": 0.7978,
+        "pca_env": "温和趋势",
+        "pc1_loading_abs": 0.1331,
+        "sell_score": 43,
+        "signal": "",
+        "label": "观望",
+        "breakdown": {
+          "odds_score": 18,
+          "tail_risk_score": 73,
+          "env_score": 65,
+          "accel_score": 90,
+          "loading_score": 67
+        }
+      },
+      {
         "symbol": "AU",
         "cn_name": "黄金",
         "sector": "贵金属",
-        "avg_amount_wan": 27353402.2,
-        "n_days": 201,
-        "rv_20d": 0.1381,
-        "rv_pctile_120d": 0.1,
-        "rv_accel": 0.5325,
+        "avg_amount_wan": 27291835.3,
+        "n_days": 203,
+        "rv_20d": 0.123,
+        "rv_pctile_120d": 0.0333,
+        "rv_accel": 0.5297,
         "pca_env": "温和趋势",
-        "pc1_loading_abs": 0.109,
-        "sell_score": 39,
+        "pc1_loading_abs": 0.131,
+        "sell_score": 34,
         "signal": "🔴",
         "label": "不宜双卖",
         "breakdown": {
-          "odds_score": 10,
-          "tail_risk_score": 74,
+          "odds_score": 3,
+          "tail_risk_score": 73,
           "env_score": 65,
           "accel_score": 90,
-          "loading_score": 73
+          "loading_score": 67
         }
       }
     ]
   },
   "mod2_iv_spread": {
     "meta": {
-      "generated": "2026-05-13 08:24:37",
+      "generated": "2026-05-14 08:26:38",
       "module": "option_vol.mod2_iv_spread",
       "source": "tushare public + Black76",
       "risk_free_rate": 0.015
@@ -284,9 +284,9 @@
         "iv_call": 0.5156,
         "iv_put": 0.5102,
         "atm_iv": 0.5129,
-        "rv_20d": 0.3945,
-        "iv_rv_spread": 0.1184,
-        "odds_score_iv": 97,
+        "rv_20d": 0.3758,
+        "iv_rv_spread": 0.1371,
+        "odds_score_iv": 100,
         "call_vol": 391.0,
         "put_vol": 410.0,
         "call_oi": 521.0,
@@ -308,13 +308,37 @@
         "iv_call": 0.2238,
         "iv_put": 0.2219,
         "atm_iv": 0.2229,
-        "rv_20d": 0.1381,
-        "iv_rv_spread": 0.0848,
-        "odds_score_iv": 84,
+        "rv_20d": 0.123,
+        "iv_rv_spread": 0.0999,
+        "odds_score_iv": 90,
         "call_vol": 393.0,
         "put_vol": 128.0,
         "call_oi": 681.0,
         "put_oi": 610.0
+      },
+      {
+        "symbol": "AG",
+        "cn_name": "白银",
+        "trade_date": "20260506",
+        "fut_code": "AG2606.SHF",
+        "fut_price": 18851.0,
+        "days_to_expiry": 19,
+        "atm_call": "AG2606C18900.SHF",
+        "atm_put": "AG2606P18900.SHF",
+        "call_strike": 18900.0,
+        "put_strike": 18900.0,
+        "call_price": 762.0,
+        "put_price": 810.0,
+        "iv_call": 0.4582,
+        "iv_put": 0.4576,
+        "atm_iv": 0.4579,
+        "rv_20d": 0.3738,
+        "iv_rv_spread": 0.0841,
+        "odds_score_iv": 84,
+        "call_vol": 235.0,
+        "put_vol": 29.0,
+        "call_oi": 202.0,
+        "put_oi": 151.0
       },
       {
         "symbol": "RU",
@@ -332,9 +356,9 @@
         "iv_call": 0.2466,
         "iv_put": 0.2311,
         "atm_iv": 0.2389,
-        "rv_20d": 0.1557,
-        "iv_rv_spread": 0.0832,
-        "odds_score_iv": 83,
+        "rv_20d": 0.1689,
+        "iv_rv_spread": 0.07,
+        "odds_score_iv": 78,
         "call_vol": 23.0,
         "put_vol": 26.0,
         "call_oi": 47.0,
@@ -356,9 +380,9 @@
         "iv_call": 0.3276,
         "iv_put": 0.3311,
         "atm_iv": 0.3293,
-        "rv_20d": 0.2802,
-        "iv_rv_spread": 0.0491,
-        "odds_score_iv": 70,
+        "rv_20d": 0.2831,
+        "iv_rv_spread": 0.0462,
+        "odds_score_iv": 68,
         "call_vol": 1024.0,
         "put_vol": 424.0,
         "call_oi": 511.0,
@@ -380,37 +404,13 @@
         "iv_call": 0.1426,
         "iv_put": 0.1254,
         "atm_iv": 0.134,
-        "rv_20d": 0.0837,
-        "iv_rv_spread": 0.0503,
-        "odds_score_iv": 70,
+        "rv_20d": 0.0889,
+        "iv_rv_spread": 0.0451,
+        "odds_score_iv": 68,
         "call_vol": 454.0,
         "put_vol": 65.0,
         "call_oi": 555.0,
         "put_oi": 36.0
-      },
-      {
-        "symbol": "AG",
-        "cn_name": "白银",
-        "trade_date": "20260506",
-        "fut_code": "AG2606.SHF",
-        "fut_price": 18851.0,
-        "days_to_expiry": 19,
-        "atm_call": "AG2606C18900.SHF",
-        "atm_put": "AG2606P18900.SHF",
-        "call_strike": 18900.0,
-        "put_strike": 18900.0,
-        "call_price": 762.0,
-        "put_price": 810.0,
-        "iv_call": 0.4582,
-        "iv_put": 0.4576,
-        "atm_iv": 0.4579,
-        "rv_20d": 0.41,
-        "iv_rv_spread": 0.0479,
-        "odds_score_iv": 69,
-        "call_vol": 235.0,
-        "put_vol": 29.0,
-        "call_oi": 202.0,
-        "put_oi": 151.0
       },
       {
         "symbol": "CU",
@@ -428,9 +428,9 @@
         "iv_call": 0.1642,
         "iv_put": 0.1628,
         "atm_iv": 0.1635,
-        "rv_20d": 0.1246,
-        "iv_rv_spread": 0.0389,
-        "odds_score_iv": 66,
+        "rv_20d": 0.1304,
+        "iv_rv_spread": 0.0331,
+        "odds_score_iv": 63,
         "call_vol": 8330.0,
         "put_vol": 3834.0,
         "call_oi": 3731.0,
@@ -440,7 +440,7 @@
   },
   "mod3_skew_term": {
     "meta": {
-      "generated": "2026-05-13 08:24:50",
+      "generated": "2026-05-14 08:26:50",
       "module": "option_vol.mod3_skew_term",
       "source": "tushare public + Black76"
     },
@@ -574,119 +574,115 @@
     ]
   },
   "iv_percentile": {
-    "update_time": "2026-05-13 08:27:13",
-    "market_iv_percentile": 75.2,
+    "update_time": "2026-05-14 08:29:08",
+    "market_iv_percentile": 60.7,
     "symbols": [
       {
         "symbol": "AU",
         "cn_name": "黄金",
         "exchange": "SHFE",
-        "current_iv": 0.1527,
-        "iv_1y_mean": 0.1324,
-        "iv_1y_max": 0.3539,
-        "iv_1y_min": 0.0437,
-        "iv_percentile": 80.0,
-        "samples": 25,
+        "current_iv": 0.1491,
+        "iv_1y_mean": 0.1163,
+        "iv_1y_max": 0.2411,
+        "iv_1y_min": 0.0167,
+        "iv_percentile": 79.2,
+        "samples": 24,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.1168
+            "date": "20250514",
+            "iv": 0.105
           },
           {
-            "date": "20250527",
-            "iv": 0.1537
+            "date": "20250528",
+            "iv": 0.1401
           },
           {
-            "date": "20250611",
-            "iv": 0.1001
+            "date": "20250612",
+            "iv": 0.1061
           },
           {
-            "date": "20250625",
-            "iv": 0.1274
+            "date": "20250626",
+            "iv": 0.124
           },
           {
-            "date": "20250709",
-            "iv": 0.0906
+            "date": "20250710",
+            "iv": 0.0846
           },
           {
-            "date": "20250723",
-            "iv": 0.0474
+            "date": "20250724",
+            "iv": 0.0167
           },
           {
-            "date": "20250806",
-            "iv": 0.0763
+            "date": "20250807",
+            "iv": 0.085
           },
           {
-            "date": "20250820",
-            "iv": 0.0437
+            "date": "20250821",
+            "iv": 0.0336
           },
           {
-            "date": "20250903",
-            "iv": 0.1431
+            "date": "20250904",
+            "iv": 0.1375
           },
           {
-            "date": "20250917",
-            "iv": 0.1082
+            "date": "20250918",
+            "iv": 0.0761
           },
           {
-            "date": "20251009",
-            "iv": 0.1228
+            "date": "20251010",
+            "iv": 0.1141
           },
           {
-            "date": "20251023",
-            "iv": 0.1066
+            "date": "20251024",
+            "iv": 0.0801
           },
           {
-            "date": "20251106",
-            "iv": 0.1227
+            "date": "20251107",
+            "iv": 0.1184
           },
           {
-            "date": "20251120",
-            "iv": 0.0907
+            "date": "20251121",
+            "iv": 0.0548
           },
           {
-            "date": "20251204",
-            "iv": 0.1376
+            "date": "20251205",
+            "iv": 0.1345
           },
           {
-            "date": "20251218",
-            "iv": 0.098
+            "date": "20251219",
+            "iv": 0.0819
           },
           {
-            "date": "20260105",
-            "iv": 0.1417
+            "date": "20260106",
+            "iv": 0.1649
           },
           {
-            "date": "20260119",
-            "iv": 0.1178
+            "date": "20260120",
+            "iv": 0.1054
           },
           {
-            "date": "20260202",
-            "iv": 0.3539
+            "date": "20260203",
+            "iv": 0.2061
           },
           {
-            "date": "20260224",
-            "iv": 0.2609
+            "date": "20260225",
+            "iv": 0.2411
           },
           {
-            "date": "20260310",
-            "iv": 0.1946
+            "date": "20260311",
+            "iv": 0.1802
           },
           {
-            "date": "20260324",
-            "iv": 0.1322
+            "date": "20260409",
+            "iv": 0.1938
           },
           {
-            "date": "20260408",
-            "iv": 0.1993
+            "date": "20260423",
+            "iv": 0.0589
           },
           {
-            "date": "20260422",
-            "iv": 0.0701
-          },
-          {
-            "date": "20260511",
-            "iv": 0.1527
+            "date": "20260512",
+            "iv": 0.1491
           }
         ]
       },
@@ -694,112 +690,108 @@
         "symbol": "CU",
         "cn_name": "铜",
         "exchange": "SHFE",
-        "current_iv": 0.1278,
-        "iv_1y_mean": 0.1046,
-        "iv_1y_max": 0.2429,
-        "iv_1y_min": 0.0361,
-        "iv_percentile": 72.0,
-        "samples": 25,
+        "current_iv": 0.1516,
+        "iv_1y_mean": 0.1025,
+        "iv_1y_max": 0.2599,
+        "iv_1y_min": 0.02,
+        "iv_percentile": 83.3,
+        "samples": 24,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.0897
+            "date": "20250514",
+            "iv": 0.0902
           },
           {
-            "date": "20250527",
-            "iv": 0.0765
+            "date": "20250528",
+            "iv": 0.0891
           },
           {
-            "date": "20250611",
-            "iv": 0.0784
+            "date": "20250612",
+            "iv": 0.0717
           },
           {
-            "date": "20250625",
-            "iv": 0.0794
+            "date": "20250626",
+            "iv": 0.0819
           },
           {
-            "date": "20250709",
-            "iv": 0.0892
+            "date": "20250710",
+            "iv": 0.081
           },
           {
-            "date": "20250723",
-            "iv": 0.0451
+            "date": "20250724",
+            "iv": 0.0295
           },
           {
-            "date": "20250806",
-            "iv": 0.0669
+            "date": "20250807",
+            "iv": 0.0666
           },
           {
-            "date": "20250820",
-            "iv": 0.0361
+            "date": "20250821",
+            "iv": 0.0338
           },
           {
-            "date": "20250903",
-            "iv": 0.0857
-          },
-          {
-            "date": "20250917",
-            "iv": 0.0701
-          },
-          {
-            "date": "20251009",
-            "iv": 0.148
-          },
-          {
-            "date": "20251023",
-            "iv": 0.0644
-          },
-          {
-            "date": "20251106",
-            "iv": 0.1011
-          },
-          {
-            "date": "20251120",
-            "iv": 0.0425
-          },
-          {
-            "date": "20251204",
-            "iv": 0.1417
-          },
-          {
-            "date": "20251218",
+            "date": "20250904",
             "iv": 0.0797
           },
           {
-            "date": "20260105",
-            "iv": 0.2429
+            "date": "20250918",
+            "iv": 0.0543
           },
           {
-            "date": "20260119",
-            "iv": 0.1107
+            "date": "20251010",
+            "iv": 0.1476
           },
           {
-            "date": "20260202",
-            "iv": 0.2028
+            "date": "20251024",
+            "iv": 0.0648
           },
           {
-            "date": "20260224",
-            "iv": 0.2199
+            "date": "20251107",
+            "iv": 0.0932
           },
           {
-            "date": "20260310",
-            "iv": 0.158
+            "date": "20251121",
+            "iv": 0.0372
           },
           {
-            "date": "20260324",
-            "iv": 0.0799
+            "date": "20251205",
+            "iv": 0.1559
           },
           {
-            "date": "20260408",
-            "iv": 0.1283
+            "date": "20251219",
+            "iv": 0.096
           },
           {
-            "date": "20260422",
-            "iv": 0.0496
+            "date": "20260106",
+            "iv": 0.2599
           },
           {
-            "date": "20260511",
-            "iv": 0.1278
+            "date": "20260120",
+            "iv": 0.0822
+          },
+          {
+            "date": "20260203",
+            "iv": 0.1983
+          },
+          {
+            "date": "20260225",
+            "iv": 0.2219
+          },
+          {
+            "date": "20260311",
+            "iv": 0.1431
+          },
+          {
+            "date": "20260409",
+            "iv": 0.1105
+          },
+          {
+            "date": "20260423",
+            "iv": 0.02
+          },
+          {
+            "date": "20260512",
+            "iv": 0.1516
           }
         ]
       },
@@ -807,112 +799,112 @@
         "symbol": "AG",
         "cn_name": "白银",
         "exchange": "SHFE",
-        "current_iv": 0.3324,
-        "iv_1y_mean": 0.2429,
-        "iv_1y_max": 0.715,
-        "iv_1y_min": 0.0601,
-        "iv_percentile": 76.0,
+        "current_iv": 0.3972,
+        "iv_1y_mean": 0.228,
+        "iv_1y_max": 0.6533,
+        "iv_1y_min": 0.0398,
+        "iv_percentile": 80.0,
         "samples": 25,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.1417
+            "date": "20250514",
+            "iv": 0.1174
           },
           {
-            "date": "20250527",
-            "iv": 0.1232
+            "date": "20250528",
+            "iv": 0.1255
           },
           {
-            "date": "20250611",
-            "iv": 0.1475
+            "date": "20250612",
+            "iv": 0.1269
           },
           {
-            "date": "20250625",
-            "iv": 0.1627
+            "date": "20250626",
+            "iv": 0.1675
           },
           {
-            "date": "20250709",
-            "iv": 0.1423
+            "date": "20250710",
+            "iv": 0.1376
           },
           {
-            "date": "20250723",
-            "iv": 0.0752
+            "date": "20250724",
+            "iv": 0.0398
           },
           {
-            "date": "20250806",
-            "iv": 0.1142
+            "date": "20250807",
+            "iv": 0.1234
           },
           {
-            "date": "20250820",
-            "iv": 0.0601
+            "date": "20250821",
+            "iv": 0.0503
           },
           {
-            "date": "20250903",
-            "iv": 0.1947
+            "date": "20250904",
+            "iv": 0.1848
           },
           {
-            "date": "20250917",
-            "iv": 0.146
+            "date": "20250918",
+            "iv": 0.0822
           },
           {
-            "date": "20251009",
-            "iv": 0.1899
+            "date": "20251010",
+            "iv": 0.1903
           },
           {
-            "date": "20251023",
-            "iv": 0.12
+            "date": "20251024",
+            "iv": 0.0887
           },
           {
-            "date": "20251106",
-            "iv": 0.1652
+            "date": "20251107",
+            "iv": 0.1635
           },
           {
-            "date": "20251120",
-            "iv": 0.1206
+            "date": "20251121",
+            "iv": 0.0944
           },
           {
-            "date": "20251204",
-            "iv": 0.2751
+            "date": "20251205",
+            "iv": 0.2593
           },
           {
-            "date": "20251218",
-            "iv": 0.2215
+            "date": "20251219",
+            "iv": 0.1916
           },
           {
-            "date": "20260105",
-            "iv": 0.4547
+            "date": "20260106",
+            "iv": 0.4969
           },
           {
-            "date": "20260119",
-            "iv": 0.426
+            "date": "20260120",
+            "iv": 0.3011
           },
           {
-            "date": "20260202",
-            "iv": 0.4032
+            "date": "20260203",
+            "iv": 0.6306
           },
           {
-            "date": "20260224",
-            "iv": 0.715
+            "date": "20260225",
+            "iv": 0.6533
           },
           {
-            "date": "20260310",
-            "iv": 0.5089
+            "date": "20260311",
+            "iv": 0.487
           },
           {
-            "date": "20260324",
-            "iv": 0.2413
+            "date": "20260325",
+            "iv": 0.0496
           },
           {
-            "date": "20260408",
-            "iv": 0.4304
+            "date": "20260409",
+            "iv": 0.4133
           },
           {
-            "date": "20260422",
-            "iv": 0.1605
+            "date": "20260423",
+            "iv": 0.1271
           },
           {
-            "date": "20260511",
-            "iv": 0.3324
+            "date": "20260512",
+            "iv": 0.3972
           }
         ]
       },
@@ -920,112 +912,108 @@
         "symbol": "AL",
         "cn_name": "铝",
         "exchange": "SHFE",
-        "current_iv": 0.0997,
-        "iv_1y_mean": 0.0835,
-        "iv_1y_max": 0.1978,
-        "iv_1y_min": 0.033,
-        "iv_percentile": 80.0,
-        "samples": 25,
+        "current_iv": 0.1053,
+        "iv_1y_mean": 0.0792,
+        "iv_1y_max": 0.2093,
+        "iv_1y_min": 0.0261,
+        "iv_percentile": 79.2,
+        "samples": 24,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.0649
+            "date": "20250514",
+            "iv": 0.0648
           },
           {
-            "date": "20250527",
-            "iv": 0.0752
+            "date": "20250528",
+            "iv": 0.0776
           },
           {
-            "date": "20250611",
-            "iv": 0.0601
+            "date": "20250612",
+            "iv": 0.0665
           },
           {
-            "date": "20250625",
-            "iv": 0.0725
+            "date": "20250626",
+            "iv": 0.0671
           },
           {
-            "date": "20250709",
-            "iv": 0.0586
+            "date": "20250710",
+            "iv": 0.0576
           },
           {
-            "date": "20250723",
-            "iv": 0.0399
+            "date": "20250724",
+            "iv": 0.032
           },
           {
-            "date": "20250806",
-            "iv": 0.0573
+            "date": "20250807",
+            "iv": 0.0568
           },
           {
-            "date": "20250820",
-            "iv": 0.0477
+            "date": "20250821",
+            "iv": 0.0358
           },
           {
-            "date": "20250903",
-            "iv": 0.0705
+            "date": "20250904",
+            "iv": 0.0657
           },
           {
-            "date": "20250917",
-            "iv": 0.0571
+            "date": "20250918",
+            "iv": 0.0401
           },
           {
-            "date": "20251009",
-            "iv": 0.0719
+            "date": "20251010",
+            "iv": 0.0658
           },
           {
-            "date": "20251023",
-            "iv": 0.0412
+            "date": "20251024",
+            "iv": 0.0302
           },
           {
-            "date": "20251106",
-            "iv": 0.0778
+            "date": "20251107",
+            "iv": 0.066
           },
           {
-            "date": "20251120",
-            "iv": 0.0361
+            "date": "20251121",
+            "iv": 0.0281
           },
           {
-            "date": "20251204",
-            "iv": 0.0864
+            "date": "20251205",
+            "iv": 0.1048
           },
           {
-            "date": "20251218",
-            "iv": 0.0504
+            "date": "20251219",
+            "iv": 0.0538
           },
           {
-            "date": "20260105",
-            "iv": 0.1845
+            "date": "20260106",
+            "iv": 0.2093
           },
           {
-            "date": "20260119",
-            "iv": 0.0872
+            "date": "20260120",
+            "iv": 0.0757
           },
           {
-            "date": "20260202",
-            "iv": 0.1978
+            "date": "20260203",
+            "iv": 0.147
           },
           {
-            "date": "20260224",
-            "iv": 0.1546
+            "date": "20260225",
+            "iv": 0.1343
           },
           {
-            "date": "20260310",
-            "iv": 0.1888
+            "date": "20260311",
+            "iv": 0.1855
           },
           {
-            "date": "20260324",
-            "iv": 0.0455
+            "date": "20260409",
+            "iv": 0.1058
           },
           {
-            "date": "20260408",
-            "iv": 0.1285
+            "date": "20260423",
+            "iv": 0.0261
           },
           {
-            "date": "20260422",
-            "iv": 0.033
-          },
-          {
-            "date": "20260511",
-            "iv": 0.0997
+            "date": "20260512",
+            "iv": 0.1053
           }
         ]
       },
@@ -1033,108 +1021,92 @@
         "symbol": "RU",
         "cn_name": "橡胶",
         "exchange": "SHFE",
-        "current_iv": 0.1321,
-        "iv_1y_mean": 0.1076,
-        "iv_1y_max": 0.2211,
-        "iv_1y_min": 0.0176,
-        "iv_percentile": 70.8,
-        "samples": 24,
+        "current_iv": 0.146,
+        "iv_1y_mean": 0.1199,
+        "iv_1y_max": 0.2234,
+        "iv_1y_min": 0.011,
+        "iv_percentile": 70.0,
+        "samples": 20,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.1128
+            "date": "20250514",
+            "iv": 0.0931
           },
           {
-            "date": "20250527",
-            "iv": 0.1147
+            "date": "20250528",
+            "iv": 0.1715
           },
           {
-            "date": "20250611",
-            "iv": 0.1102
+            "date": "20250612",
+            "iv": 0.1369
           },
           {
-            "date": "20250625",
-            "iv": 0.1285
+            "date": "20250626",
+            "iv": 0.1233
           },
           {
-            "date": "20250709",
-            "iv": 0.0966
+            "date": "20250710",
+            "iv": 0.101
           },
           {
-            "date": "20250723",
-            "iv": 0.059
+            "date": "20250724",
+            "iv": 0.0499
           },
           {
-            "date": "20250806",
-            "iv": 0.0296
+            "date": "20250807",
+            "iv": 0.0225
           },
           {
-            "date": "20250820",
-            "iv": 0.0176
+            "date": "20250904",
+            "iv": 0.051
           },
           {
-            "date": "20250903",
-            "iv": 0.0689
+            "date": "20251107",
+            "iv": 0.1526
           },
           {
-            "date": "20250917",
-            "iv": 0.037
+            "date": "20251121",
+            "iv": 0.1551
           },
           {
-            "date": "20251009",
-            "iv": 0.0449
+            "date": "20251205",
+            "iv": 0.1122
           },
           {
-            "date": "20251106",
-            "iv": 0.1531
+            "date": "20251219",
+            "iv": 0.0892
           },
           {
-            "date": "20251120",
-            "iv": 0.1423
+            "date": "20260106",
+            "iv": 0.1702
           },
           {
-            "date": "20251204",
-            "iv": 0.1329
+            "date": "20260120",
+            "iv": 0.116
           },
           {
-            "date": "20251218",
-            "iv": 0.0814
+            "date": "20260203",
+            "iv": 0.128
           },
           {
-            "date": "20260105",
-            "iv": 0.1585
+            "date": "20260225",
+            "iv": 0.2133
           },
           {
-            "date": "20260119",
-            "iv": 0.1285
+            "date": "20260311",
+            "iv": 0.2234
           },
           {
-            "date": "20260202",
-            "iv": 0.1209
+            "date": "20260325",
+            "iv": 0.011
           },
           {
-            "date": "20260224",
-            "iv": 0.2207
+            "date": "20260409",
+            "iv": 0.1309
           },
           {
-            "date": "20260310",
-            "iv": 0.2211
-          },
-          {
-            "date": "20260324",
-            "iv": 0.0705
-          },
-          {
-            "date": "20260408",
-            "iv": 0.1525
-          },
-          {
-            "date": "20260422",
-            "iv": 0.0476
-          },
-          {
-            "date": "20260511",
-            "iv": 0.1321
+            "date": "20260512",
+            "iv": 0.146
           }
         ]
       },
@@ -1142,112 +1114,100 @@
         "symbol": "SC",
         "cn_name": "原油",
         "exchange": "INE",
-        "current_iv": 0.1209,
-        "iv_1y_mean": 0.2001,
-        "iv_1y_max": 0.6904,
-        "iv_1y_min": 0.0534,
-        "iv_percentile": 28.0,
-        "samples": 25,
+        "current_iv": 0.0978,
+        "iv_1y_mean": 0.2021,
+        "iv_1y_max": 0.6141,
+        "iv_1y_min": 0.0908,
+        "iv_percentile": 13.6,
+        "samples": 22,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.0556
+            "date": "20250528",
+            "iv": 0.1889
           },
           {
-            "date": "20250527",
-            "iv": 0.1872
+            "date": "20250626",
+            "iv": 0.187
           },
           {
-            "date": "20250611",
-            "iv": 0.0534
+            "date": "20250710",
+            "iv": 0.0908
           },
           {
-            "date": "20250625",
-            "iv": 0.1979
+            "date": "20250724",
+            "iv": 0.1819
           },
           {
-            "date": "20250709",
-            "iv": 0.1115
+            "date": "20250807",
+            "iv": 0.1235
           },
           {
-            "date": "20250723",
-            "iv": 0.2037
+            "date": "20250821",
+            "iv": 0.1664
           },
           {
-            "date": "20250806",
+            "date": "20250904",
+            "iv": 0.1372
+          },
+          {
+            "date": "20250918",
+            "iv": 0.1785
+          },
+          {
+            "date": "20251010",
+            "iv": 0.1059
+          },
+          {
+            "date": "20251024",
+            "iv": 0.1819
+          },
+          {
+            "date": "20251107",
+            "iv": 0.0913
+          },
+          {
+            "date": "20251121",
+            "iv": 0.1825
+          },
+          {
+            "date": "20251205",
+            "iv": 0.1193
+          },
+          {
+            "date": "20251219",
+            "iv": 0.1731
+          },
+          {
+            "date": "20260106",
             "iv": 0.1329
           },
           {
-            "date": "20250820",
-            "iv": 0.172
+            "date": "20260120",
+            "iv": 0.1555
           },
           {
-            "date": "20250903",
-            "iv": 0.1299
+            "date": "20260225",
+            "iv": 0.3078
           },
           {
-            "date": "20250917",
-            "iv": 0.1865
+            "date": "20260311",
+            "iv": 0.3743
           },
           {
-            "date": "20251009",
-            "iv": 0.1054
+            "date": "20260325",
+            "iv": 0.6141
           },
           {
-            "date": "20251023",
-            "iv": 0.1772
+            "date": "20260409",
+            "iv": 0.2875
           },
           {
-            "date": "20251106",
-            "iv": 0.1027
+            "date": "20260423",
+            "iv": 0.3673
           },
           {
-            "date": "20251120",
-            "iv": 0.172
-          },
-          {
-            "date": "20251204",
-            "iv": 0.1329
-          },
-          {
-            "date": "20251218",
-            "iv": 0.171
-          },
-          {
-            "date": "20260105",
-            "iv": 0.1429
-          },
-          {
-            "date": "20260119",
-            "iv": 0.1732
-          },
-          {
-            "date": "20260202",
-            "iv": 0.0998
-          },
-          {
-            "date": "20260224",
-            "iv": 0.3319
-          },
-          {
-            "date": "20260310",
-            "iv": 0.4813
-          },
-          {
-            "date": "20260324",
-            "iv": 0.6904
-          },
-          {
-            "date": "20260408",
-            "iv": 0.3084
-          },
-          {
-            "date": "20260422",
-            "iv": 0.3611
-          },
-          {
-            "date": "20260511",
-            "iv": 0.1209
+            "date": "20260512",
+            "iv": 0.0978
           }
         ]
       },
@@ -1255,112 +1215,112 @@
         "symbol": "SR",
         "cn_name": "白糖",
         "exchange": "CZCE",
-        "current_iv": 0.0682,
-        "iv_1y_mean": 0.0736,
-        "iv_1y_max": 0.1858,
-        "iv_1y_min": 0.0255,
-        "iv_percentile": 48.0,
+        "current_iv": 0.0617,
+        "iv_1y_mean": 0.0669,
+        "iv_1y_max": 0.1243,
+        "iv_1y_min": 0.0137,
+        "iv_percentile": 40.0,
         "samples": 25,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.1053
+            "date": "20250514",
+            "iv": 0.1034
           },
           {
-            "date": "20250527",
-            "iv": 0.1313
+            "date": "20250528",
+            "iv": 0.1243
           },
           {
-            "date": "20250611",
-            "iv": 0.1858
+            "date": "20250612",
+            "iv": 0.0698
           },
           {
-            "date": "20250625",
-            "iv": 0.0717
+            "date": "20250626",
+            "iv": 0.0658
           },
           {
-            "date": "20250709",
-            "iv": 0.0583
+            "date": "20250710",
+            "iv": 0.0536
           },
           {
-            "date": "20250723",
-            "iv": 0.0559
+            "date": "20250724",
+            "iv": 0.0695
           },
           {
-            "date": "20250806",
-            "iv": 0.0376
+            "date": "20250807",
+            "iv": 0.0339
           },
           {
-            "date": "20250820",
-            "iv": 0.0601
+            "date": "20250821",
+            "iv": 0.0577
           },
           {
-            "date": "20250903",
-            "iv": 0.0714
+            "date": "20250904",
+            "iv": 0.078
           },
           {
-            "date": "20250917",
-            "iv": 0.0622
+            "date": "20250918",
+            "iv": 0.0737
           },
           {
-            "date": "20251009",
-            "iv": 0.0572
+            "date": "20251010",
+            "iv": 0.037
           },
           {
-            "date": "20251023",
-            "iv": 0.0615
+            "date": "20251024",
+            "iv": 0.0598
           },
           {
-            "date": "20251106",
-            "iv": 0.0558
+            "date": "20251107",
+            "iv": 0.0534
           },
           {
-            "date": "20251120",
-            "iv": 0.0561
+            "date": "20251121",
+            "iv": 0.055
           },
           {
-            "date": "20251204",
-            "iv": 0.0395
+            "date": "20251205",
+            "iv": 0.0374
           },
           {
-            "date": "20251218",
-            "iv": 0.0946
+            "date": "20251219",
+            "iv": 0.0925
           },
           {
-            "date": "20260105",
-            "iv": 0.0771
+            "date": "20260106",
+            "iv": 0.0756
           },
           {
-            "date": "20260119",
-            "iv": 0.0693
+            "date": "20260120",
+            "iv": 0.0662
           },
           {
-            "date": "20260202",
-            "iv": 0.0741
+            "date": "20260203",
+            "iv": 0.0652
           },
           {
-            "date": "20260224",
-            "iv": 0.0807
+            "date": "20260225",
+            "iv": 0.0763
           },
           {
-            "date": "20260310",
-            "iv": 0.0897
+            "date": "20260311",
+            "iv": 0.0904
           },
           {
-            "date": "20260324",
+            "date": "20260325",
             "iv": 0.0687
           },
           {
-            "date": "20260408",
-            "iv": 0.0255
+            "date": "20260409",
+            "iv": 0.0137
           },
           {
-            "date": "20260422",
-            "iv": 0.0836
+            "date": "20260423",
+            "iv": 0.0895
           },
           {
-            "date": "20260511",
-            "iv": 0.0682
+            "date": "20260512",
+            "iv": 0.0617
           }
         ]
       },
@@ -1368,108 +1328,112 @@
         "symbol": "CF",
         "cn_name": "棉花",
         "exchange": "CZCE",
-        "current_iv": 0.0988,
-        "iv_1y_mean": 0.0706,
-        "iv_1y_max": 0.147,
-        "iv_1y_min": 0.0273,
-        "iv_percentile": 87.5,
-        "samples": 24,
+        "current_iv": 0.0914,
+        "iv_1y_mean": 0.072,
+        "iv_1y_max": 0.1717,
+        "iv_1y_min": 0.0227,
+        "iv_percentile": 80.0,
+        "samples": 25,
         "iv_history": [
           {
-            "date": "20250513",
-            "iv": 0.0547
+            "date": "20250514",
+            "iv": 0.0371
           },
           {
-            "date": "20250527",
-            "iv": 0.0276
+            "date": "20250528",
+            "iv": 0.0249
           },
           {
-            "date": "20250625",
-            "iv": 0.0764
+            "date": "20250612",
+            "iv": 0.0818
           },
           {
-            "date": "20250709",
-            "iv": 0.0699
+            "date": "20250626",
+            "iv": 0.077
           },
           {
-            "date": "20250723",
-            "iv": 0.0879
+            "date": "20250710",
+            "iv": 0.066
           },
           {
-            "date": "20250806",
-            "iv": 0.0384
+            "date": "20250724",
+            "iv": 0.0895
           },
           {
-            "date": "20250820",
-            "iv": 0.0615
+            "date": "20250807",
+            "iv": 0.0386
           },
           {
-            "date": "20250903",
-            "iv": 0.0591
+            "date": "20250821",
+            "iv": 0.0624
           },
           {
-            "date": "20250917",
-            "iv": 0.0358
+            "date": "20250904",
+            "iv": 0.0582
           },
           {
-            "date": "20251009",
-            "iv": 0.0273
+            "date": "20250918",
+            "iv": 0.0543
           },
           {
-            "date": "20251023",
-            "iv": 0.0576
+            "date": "20251010",
+            "iv": 0.0268
           },
           {
-            "date": "20251106",
-            "iv": 0.0517
+            "date": "20251024",
+            "iv": 0.0595
           },
           {
-            "date": "20251120",
-            "iv": 0.0494
+            "date": "20251107",
+            "iv": 0.0501
           },
           {
-            "date": "20251204",
-            "iv": 0.03
+            "date": "20251121",
+            "iv": 0.0498
           },
           {
-            "date": "20251218",
-            "iv": 0.0739
+            "date": "20251205",
+            "iv": 0.0313
           },
           {
-            "date": "20260105",
-            "iv": 0.0984
+            "date": "20251219",
+            "iv": 0.075
           },
           {
-            "date": "20260119",
-            "iv": 0.0827
+            "date": "20260106",
+            "iv": 0.1139
           },
           {
-            "date": "20260202",
-            "iv": 0.0828
+            "date": "20260120",
+            "iv": 0.0817
           },
           {
-            "date": "20260224",
-            "iv": 0.137
+            "date": "20260203",
+            "iv": 0.0835
           },
           {
-            "date": "20260310",
-            "iv": 0.147
+            "date": "20260225",
+            "iv": 0.1434
           },
           {
-            "date": "20260324",
-            "iv": 0.0847
+            "date": "20260311",
+            "iv": 0.1717
           },
           {
-            "date": "20260408",
-            "iv": 0.0368
+            "date": "20260325",
+            "iv": 0.0965
           },
           {
-            "date": "20260422",
-            "iv": 0.1246
+            "date": "20260409",
+            "iv": 0.0227
           },
           {
-            "date": "20260511",
-            "iv": 0.0988
+            "date": "20260423",
+            "iv": 0.1135
+          },
+          {
+            "date": "20260512",
+            "iv": 0.0914
           }
         ]
       },
@@ -1477,92 +1441,88 @@
         "symbol": "IO",
         "cn_name": "沪深300",
         "exchange": "CFFEX",
-        "current_iv": 0.311,
-        "iv_1y_mean": 0.2154,
-        "iv_1y_max": 0.311,
-        "iv_1y_min": 0.1531,
-        "iv_percentile": 100.0,
-        "samples": 20,
+        "current_iv": 0.2103,
+        "iv_1y_mean": 0.2085,
+        "iv_1y_max": 0.3295,
+        "iv_1y_min": 0.1527,
+        "iv_percentile": 63.2,
+        "samples": 19,
         "iv_history": [
           {
-            "date": "20250527",
-            "iv": 0.1627
+            "date": "20250528",
+            "iv": 0.1565
           },
           {
-            "date": "20250611",
-            "iv": 0.2052
+            "date": "20250626",
+            "iv": 0.1829
           },
           {
-            "date": "20250625",
-            "iv": 0.1969
+            "date": "20250710",
+            "iv": 0.2552
           },
           {
-            "date": "20250709",
-            "iv": 0.2445
+            "date": "20250724",
+            "iv": 0.1857
           },
           {
-            "date": "20250723",
-            "iv": 0.1874
+            "date": "20250807",
+            "iv": 0.1529
           },
           {
-            "date": "20250806",
-            "iv": 0.1531
+            "date": "20250821",
+            "iv": 0.2048
           },
           {
-            "date": "20250820",
-            "iv": 0.2126
+            "date": "20250904",
+            "iv": 0.2329
           },
           {
-            "date": "20250903",
-            "iv": 0.2298
+            "date": "20251010",
+            "iv": 0.2452
           },
           {
-            "date": "20251009",
-            "iv": 0.2109
+            "date": "20251024",
+            "iv": 0.2017
           },
           {
-            "date": "20251023",
-            "iv": 0.2172
+            "date": "20251107",
+            "iv": 0.2168
           },
           {
-            "date": "20251106",
-            "iv": 0.2161
+            "date": "20251205",
+            "iv": 0.1527
           },
           {
-            "date": "20251204",
-            "iv": 0.1581
+            "date": "20260106",
+            "iv": 0.2101
           },
           {
-            "date": "20260105",
-            "iv": 0.1893
+            "date": "20260120",
+            "iv": 0.1692
           },
           {
-            "date": "20260119",
-            "iv": 0.1801
+            "date": "20260203",
+            "iv": 0.2293
           },
           {
-            "date": "20260202",
-            "iv": 0.2835
+            "date": "20260225",
+            "iv": 0.1565
           },
           {
-            "date": "20260310",
-            "iv": 0.1998
+            "date": "20260311",
+            "iv": 0.205
           },
           {
-            "date": "20260324",
-            "iv": 0.2813
+            "date": "20260325",
+            "iv": 0.2638
           },
           {
-            "date": "20260408",
-            "iv": 0.2792
+            "date": "20260409",
+            "iv": 0.3295
           },
           {
-            "date": "20260422",
-            "iv": 0.1895
-          },
-          {
-            "date": "20260511",
-            "iv": 0.311
+            "date": "20260423",
+            "iv": 0.2103
           }
         ]
       },
@@ -1570,92 +1530,88 @@
         "symbol": "MO",
         "cn_name": "中证1000",
         "exchange": "CFFEX",
-        "current_iv": 0.4543,
-        "iv_1y_mean": 0.3549,
-        "iv_1y_max": 0.5575,
-        "iv_1y_min": 0.2133,
-        "iv_percentile": 85.0,
-        "samples": 20,
+        "current_iv": 0.3097,
+        "iv_1y_mean": 0.3565,
+        "iv_1y_max": 0.647,
+        "iv_1y_min": 0.2002,
+        "iv_percentile": 42.1,
+        "samples": 19,
         "iv_history": [
           {
-            "date": "20250527",
-            "iv": 0.2435
+            "date": "20250528",
+            "iv": 0.2461
           },
           {
-            "date": "20250611",
-            "iv": 0.2723
+            "date": "20250626",
+            "iv": 0.3281
           },
           {
-            "date": "20250625",
-            "iv": 0.3427
+            "date": "20250710",
+            "iv": 0.6065
           },
           {
-            "date": "20250709",
-            "iv": 0.5575
+            "date": "20250724",
+            "iv": 0.2657
           },
           {
-            "date": "20250723",
-            "iv": 0.2692
+            "date": "20250807",
+            "iv": 0.3211
           },
           {
-            "date": "20250806",
-            "iv": 0.2631
+            "date": "20250821",
+            "iv": 0.302
           },
           {
-            "date": "20250820",
-            "iv": 0.307
+            "date": "20250904",
+            "iv": 0.3304
           },
           {
-            "date": "20250903",
-            "iv": 0.3081
+            "date": "20251010",
+            "iv": 0.647
           },
           {
-            "date": "20251009",
-            "iv": 0.5572
+            "date": "20251024",
+            "iv": 0.2998
           },
           {
-            "date": "20251023",
-            "iv": 0.3173
+            "date": "20251107",
+            "iv": 0.3727
           },
           {
-            "date": "20251106",
-            "iv": 0.3506
+            "date": "20251205",
+            "iv": 0.2002
           },
           {
-            "date": "20251204",
-            "iv": 0.2133
+            "date": "20260106",
+            "iv": 0.3558
           },
           {
-            "date": "20260105",
-            "iv": 0.3741
+            "date": "20260120",
+            "iv": 0.2543
           },
           {
-            "date": "20260119",
-            "iv": 0.2732
+            "date": "20260203",
+            "iv": 0.3283
           },
           {
-            "date": "20260202",
-            "iv": 0.4469
+            "date": "20260225",
+            "iv": 0.2574
           },
           {
-            "date": "20260310",
-            "iv": 0.3014
+            "date": "20260311",
+            "iv": 0.3183
           },
           {
-            "date": "20260324",
-            "iv": 0.4343
+            "date": "20260325",
+            "iv": 0.4444
           },
           {
-            "date": "20260408",
-            "iv": 0.5088
+            "date": "20260409",
+            "iv": 0.5851
           },
           {
-            "date": "20260422",
-            "iv": 0.304
-          },
-          {
-            "date": "20260511",
-            "iv": 0.4543
+            "date": "20260423",
+            "iv": 0.3097
           }
         ]
       },
@@ -1663,238 +1619,234 @@
         "symbol": "HO",
         "cn_name": "上证50",
         "exchange": "CFFEX",
-        "current_iv": 0.2868,
-        "iv_1y_mean": 0.1922,
-        "iv_1y_max": 0.2868,
-        "iv_1y_min": 0.1281,
-        "iv_percentile": 100.0,
-        "samples": 20,
+        "current_iv": 0.1653,
+        "iv_1y_mean": 0.1848,
+        "iv_1y_max": 0.2676,
+        "iv_1y_min": 0.1239,
+        "iv_percentile": 36.8,
+        "samples": 19,
         "iv_history": [
           {
-            "date": "20250527",
-            "iv": 0.1639
+            "date": "20250528",
+            "iv": 0.1625
           },
           {
-            "date": "20250611",
-            "iv": 0.1966
+            "date": "20250626",
+            "iv": 0.1645
           },
           {
-            "date": "20250625",
-            "iv": 0.1659
+            "date": "20250710",
+            "iv": 0.188
           },
           {
-            "date": "20250709",
-            "iv": 0.2125
+            "date": "20250724",
+            "iv": 0.1676
           },
           {
-            "date": "20250723",
-            "iv": 0.1727
+            "date": "20250807",
+            "iv": 0.1239
           },
           {
-            "date": "20250806",
-            "iv": 0.1281
+            "date": "20250821",
+            "iv": 0.2021
           },
           {
-            "date": "20250820",
+            "date": "20250904",
+            "iv": 0.2417
+          },
+          {
+            "date": "20251010",
+            "iv": 0.192
+          },
+          {
+            "date": "20251024",
+            "iv": 0.18
+          },
+          {
+            "date": "20251107",
+            "iv": 0.1767
+          },
+          {
+            "date": "20251205",
+            "iv": 0.1338
+          },
+          {
+            "date": "20260106",
+            "iv": 0.1934
+          },
+          {
+            "date": "20260120",
+            "iv": 0.1601
+          },
+          {
+            "date": "20260203",
             "iv": 0.2184
           },
           {
-            "date": "20250903",
-            "iv": 0.235
+            "date": "20260225",
+            "iv": 0.1583
           },
           {
-            "date": "20251009",
-            "iv": 0.1677
+            "date": "20260311",
+            "iv": 0.2123
           },
           {
-            "date": "20251023",
-            "iv": 0.1856
+            "date": "20260325",
+            "iv": 0.2034
           },
           {
-            "date": "20251106",
-            "iv": 0.1758
+            "date": "20260409",
+            "iv": 0.2676
           },
           {
-            "date": "20251204",
-            "iv": 0.1356
-          },
-          {
-            "date": "20260105",
-            "iv": 0.1398
-          },
-          {
-            "date": "20260119",
-            "iv": 0.1682
-          },
-          {
-            "date": "20260202",
-            "iv": 0.2802
-          },
-          {
-            "date": "20260310",
-            "iv": 0.2
-          },
-          {
-            "date": "20260324",
-            "iv": 0.2302
-          },
-          {
-            "date": "20260408",
-            "iv": 0.2162
-          },
-          {
-            "date": "20260422",
-            "iv": 0.1643
-          },
-          {
-            "date": "20260511",
-            "iv": 0.2868
+            "date": "20260423",
+            "iv": 0.1653
           }
         ]
       }
     ]
   },
   "liquidity_percentile": {
-    "update_time": "2026-05-13 08:28:31",
-    "market_liquidity_percentile": 69.2,
+    "update_time": "2026-05-14 08:30:27",
+    "market_liquidity_percentile": 65.2,
     "symbols": [
       {
         "symbol": "AU",
         "cn_name": "黄金",
         "exchange": "SHFE",
-        "current_vol": 123255,
-        "current_oi": 107692,
-        "vol_1y_mean": 138432,
-        "oi_1y_mean": 129139,
+        "current_vol": 127573,
+        "current_oi": 108082,
+        "vol_1y_mean": 136825,
+        "oi_1y_mean": 128302,
         "vol_percentile": 56.0,
-        "oi_percentile": 28.0,
-        "liquidity_percentile": 44.8,
+        "oi_percentile": 32.0,
+        "liquidity_percentile": 46.4,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 223653,
-            "oi": 208300
+            "date": "20250514",
+            "vol": 152642,
+            "oi": 209006
           },
           {
-            "date": "20250527",
-            "vol": 62025,
-            "oi": 109862
+            "date": "20250528",
+            "vol": 59291,
+            "oi": 115531
           },
           {
-            "date": "20250611",
-            "vol": 60606,
-            "oi": 138255
+            "date": "20250612",
+            "vol": 93369,
+            "oi": 141527
           },
           {
-            "date": "20250625",
-            "vol": 96416,
-            "oi": 145039
+            "date": "20250626",
+            "vol": 84816,
+            "oi": 146671
           },
           {
-            "date": "20250709",
-            "vol": 148321,
-            "oi": 157488
+            "date": "20250710",
+            "vol": 102448,
+            "oi": 156781
           },
           {
-            "date": "20250723",
-            "vol": 194681,
-            "oi": 148715
+            "date": "20250724",
+            "vol": 202855,
+            "oi": 146178
           },
           {
-            "date": "20250806",
-            "vol": 43747,
-            "oi": 113470
+            "date": "20250807",
+            "vol": 39848,
+            "oi": 116585
           },
           {
-            "date": "20250820",
-            "vol": 71480,
-            "oi": 144747
+            "date": "20250821",
+            "vol": 62121,
+            "oi": 145594
           },
           {
-            "date": "20250903",
-            "vol": 161990,
-            "oi": 147887
+            "date": "20250904",
+            "vol": 160823,
+            "oi": 148565
           },
           {
-            "date": "20250917",
-            "vol": 201418,
-            "oi": 166028
+            "date": "20250918",
+            "vol": 301566,
+            "oi": 166347
           },
           {
-            "date": "20251009",
-            "vol": 83806,
-            "oi": 98382
+            "date": "20251010",
+            "vol": 109101,
+            "oi": 107308
           },
           {
-            "date": "20251023",
-            "vol": 277026,
-            "oi": 175216
+            "date": "20251024",
+            "vol": 192719,
+            "oi": 176288
           },
           {
-            "date": "20251106",
-            "vol": 96509,
-            "oi": 161749
+            "date": "20251107",
+            "vol": 108389,
+            "oi": 160438
           },
           {
-            "date": "20251120",
-            "vol": 284953,
-            "oi": 164947
+            "date": "20251121",
+            "vol": 310597,
+            "oi": 156555
           },
           {
-            "date": "20251204",
-            "vol": 77808,
-            "oi": 104659
+            "date": "20251205",
+            "vol": 55799,
+            "oi": 105671
           },
           {
-            "date": "20251218",
-            "vol": 104222,
-            "oi": 126906
+            "date": "20251219",
+            "vol": 173684,
+            "oi": 129780
           },
           {
-            "date": "20260105",
-            "vol": 49778,
-            "oi": 112411
+            "date": "20260106",
+            "vol": 92250,
+            "oi": 114672
           },
           {
-            "date": "20260119",
-            "vol": 155451,
-            "oi": 113090
+            "date": "20260120",
+            "vol": 153926,
+            "oi": 116437
           },
           {
-            "date": "20260202",
-            "vol": 247773,
-            "oi": 93263
+            "date": "20260203",
+            "vol": 180316,
+            "oi": 99306
           },
           {
-            "date": "20260224",
-            "vol": 45418,
-            "oi": 78849
+            "date": "20260225",
+            "vol": 53620,
+            "oi": 84241
           },
           {
-            "date": "20260310",
-            "vol": 69737,
-            "oi": 99683
+            "date": "20260311",
+            "vol": 72541,
+            "oi": 102116
           },
           {
-            "date": "20260324",
-            "vol": 362871,
-            "oi": 119132
+            "date": "20260325",
+            "vol": 309965,
+            "oi": 56778
           },
           {
-            "date": "20260408",
-            "vol": 80858,
-            "oi": 83370
+            "date": "20260409",
+            "vol": 64211,
+            "oi": 84472
           },
           {
-            "date": "20260422",
-            "vol": 137018,
-            "oi": 109341
+            "date": "20260423",
+            "vol": 156159,
+            "oi": 112625
           },
           {
-            "date": "20260511",
-            "vol": 123255,
-            "oi": 107692
+            "date": "20260512",
+            "vol": 127573,
+            "oi": 108082
           }
         ]
       },
@@ -1902,139 +1854,139 @@
         "symbol": "CU",
         "cn_name": "铜",
         "exchange": "SHFE",
-        "current_vol": 200491,
-        "current_oi": 116654,
-        "vol_1y_mean": 153429,
-        "oi_1y_mean": 127410,
-        "vol_percentile": 80.0,
+        "current_vol": 288028,
+        "current_oi": 115623,
+        "vol_1y_mean": 166657,
+        "oi_1y_mean": 127366,
+        "vol_percentile": 92.0,
         "oi_percentile": 40.0,
-        "liquidity_percentile": 64.0,
+        "liquidity_percentile": 71.2,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 75603,
-            "oi": 96707
+            "date": "20250514",
+            "vol": 114078,
+            "oi": 96593
           },
           {
-            "date": "20250527",
-            "vol": 51910,
-            "oi": 67191
+            "date": "20250528",
+            "vol": 45707,
+            "oi": 72428
           },
           {
-            "date": "20250611",
-            "vol": 56831,
-            "oi": 106164
+            "date": "20250612",
+            "vol": 75579,
+            "oi": 106017
           },
           {
-            "date": "20250625",
-            "vol": 49355,
-            "oi": 69371
+            "date": "20250626",
+            "vol": 48790,
+            "oi": 75986
           },
           {
-            "date": "20250709",
-            "vol": 162697,
-            "oi": 127516
+            "date": "20250710",
+            "vol": 104505,
+            "oi": 127730
           },
           {
-            "date": "20250723",
-            "vol": 138036,
-            "oi": 126047
+            "date": "20250724",
+            "vol": 104788,
+            "oi": 125665
           },
           {
-            "date": "20250806",
-            "vol": 61007,
-            "oi": 101533
+            "date": "20250807",
+            "vol": 50556,
+            "oi": 102795
           },
           {
-            "date": "20250820",
-            "vol": 82636,
-            "oi": 119196
+            "date": "20250821",
+            "vol": 78247,
+            "oi": 118896
           },
           {
-            "date": "20250903",
-            "vol": 147146,
-            "oi": 105071
+            "date": "20250904",
+            "vol": 134414,
+            "oi": 107894
           },
           {
-            "date": "20250917",
-            "vol": 126700,
-            "oi": 132029
+            "date": "20250918",
+            "vol": 205827,
+            "oi": 131203
           },
           {
-            "date": "20251009",
-            "vol": 176584,
-            "oi": 113913
+            "date": "20251010",
+            "vol": 250110,
+            "oi": 127858
           },
           {
-            "date": "20251023",
-            "vol": 179368,
-            "oi": 160527
+            "date": "20251024",
+            "vol": 273393,
+            "oi": 156797
           },
           {
-            "date": "20251106",
-            "vol": 131229,
-            "oi": 147966
+            "date": "20251107",
+            "vol": 109081,
+            "oi": 150281
           },
           {
-            "date": "20251120",
-            "vol": 160806,
-            "oi": 157214
+            "date": "20251121",
+            "vol": 155717,
+            "oi": 152132
           },
           {
-            "date": "20251204",
-            "vol": 320975,
-            "oi": 135913
+            "date": "20251205",
+            "vol": 252452,
+            "oi": 138797
           },
           {
-            "date": "20251218",
-            "vol": 245239,
-            "oi": 172806
+            "date": "20251219",
+            "vol": 263326,
+            "oi": 177798
           },
           {
-            "date": "20260105",
-            "vol": 134052,
-            "oi": 153460
+            "date": "20260106",
+            "vol": 281898,
+            "oi": 157328
           },
           {
-            "date": "20260119",
-            "vol": 273384,
-            "oi": 208782
+            "date": "20260120",
+            "vol": 227525,
+            "oi": 210629
           },
           {
-            "date": "20260202",
-            "vol": 340725,
-            "oi": 153992
+            "date": "20260203",
+            "vol": 330766,
+            "oi": 163908
           },
           {
-            "date": "20260224",
-            "vol": 57480,
-            "oi": 103968
+            "date": "20260225",
+            "vol": 77002,
+            "oi": 109653
           },
           {
-            "date": "20260310",
-            "vol": 111200,
-            "oi": 132879
+            "date": "20260311",
+            "vol": 82173,
+            "oi": 135929
           },
           {
-            "date": "20260324",
-            "vol": 240265,
-            "oi": 138843
+            "date": "20260325",
+            "vol": 162398,
+            "oi": 73437
           },
           {
-            "date": "20260408",
-            "vol": 124215,
-            "oi": 102965
+            "date": "20260409",
+            "vol": 86002,
+            "oi": 105701
           },
           {
-            "date": "20260422",
-            "vol": 187809,
-            "oi": 134544
+            "date": "20260423",
+            "vol": 364076,
+            "oi": 143084
           },
           {
-            "date": "20260511",
-            "vol": 200491,
-            "oi": 116654
+            "date": "20260512",
+            "vol": 288028,
+            "oi": 115623
           }
         ]
       },
@@ -2042,139 +1994,139 @@
         "symbol": "AG",
         "cn_name": "白银",
         "exchange": "SHFE",
-        "current_vol": 416580,
-        "current_oi": 196268,
-        "vol_1y_mean": 491035,
-        "oi_1y_mean": 315723,
+        "current_vol": 620504,
+        "current_oi": 214102,
+        "vol_1y_mean": 568185,
+        "oi_1y_mean": 314499,
         "vol_percentile": 56.0,
-        "oi_percentile": 16.0,
-        "liquidity_percentile": 40.0,
+        "oi_percentile": 20.0,
+        "liquidity_percentile": 41.6,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 259826,
-            "oi": 345425
+            "date": "20250514",
+            "vol": 237921,
+            "oi": 351623
           },
           {
-            "date": "20250527",
-            "vol": 104480,
-            "oi": 152726
+            "date": "20250528",
+            "vol": 85628,
+            "oi": 162626
           },
           {
-            "date": "20250611",
-            "vol": 272762,
-            "oi": 378611
+            "date": "20250612",
+            "vol": 307195,
+            "oi": 388946
           },
           {
-            "date": "20250625",
-            "vol": 243226,
-            "oi": 249518
+            "date": "20250626",
+            "vol": 173680,
+            "oi": 265695
           },
           {
-            "date": "20250709",
-            "vol": 204049,
-            "oi": 317864
+            "date": "20250710",
+            "vol": 165637,
+            "oi": 313469
           },
           {
-            "date": "20250723",
-            "vol": 564825,
-            "oi": 348218
+            "date": "20250724",
+            "vol": 667847,
+            "oi": 333521
           },
           {
-            "date": "20250806",
-            "vol": 166493,
-            "oi": 209176
+            "date": "20250807",
+            "vol": 139062,
+            "oi": 218052
           },
           {
-            "date": "20250820",
-            "vol": 518997,
-            "oi": 291417
+            "date": "20250821",
+            "vol": 389138,
+            "oi": 290315
           },
           {
-            "date": "20250903",
-            "vol": 374806,
-            "oi": 291733
+            "date": "20250904",
+            "vol": 453342,
+            "oi": 301594
           },
           {
-            "date": "20250917",
-            "vol": 664777,
-            "oi": 396063
+            "date": "20250918",
+            "vol": 940982,
+            "oi": 403344
           },
           {
-            "date": "20251009",
-            "vol": 331190,
-            "oi": 299859
+            "date": "20251010",
+            "vol": 677614,
+            "oi": 339354
           },
           {
-            "date": "20251023",
-            "vol": 742892,
-            "oi": 506522
+            "date": "20251024",
+            "vol": 842644,
+            "oi": 502589
           },
           {
-            "date": "20251106",
-            "vol": 325711,
-            "oi": 342420
+            "date": "20251107",
+            "vol": 323737,
+            "oi": 342457
           },
           {
-            "date": "20251120",
-            "vol": 1195309,
-            "oi": 426743
+            "date": "20251121",
+            "vol": 1536962,
+            "oi": 416805
           },
           {
-            "date": "20251204",
-            "vol": 649107,
-            "oi": 374815
+            "date": "20251205",
+            "vol": 710281,
+            "oi": 373045
           },
           {
-            "date": "20251218",
-            "vol": 906196,
-            "oi": 523392
+            "date": "20251219",
+            "vol": 1244052,
+            "oi": 520784
           },
           {
-            "date": "20260105",
-            "vol": 260577,
-            "oi": 406107
+            "date": "20260106",
+            "vol": 600092,
+            "oi": 413359
           },
           {
-            "date": "20260119",
-            "vol": 801883,
-            "oi": 447801
+            "date": "20260120",
+            "vol": 706749,
+            "oi": 447204
           },
           {
-            "date": "20260202",
-            "vol": 776661,
-            "oi": 261403
+            "date": "20260203",
+            "vol": 713155,
+            "oi": 292850
           },
           {
-            "date": "20260224",
-            "vol": 189844,
-            "oi": 190222
+            "date": "20260225",
+            "vol": 331149,
+            "oi": 206448
           },
           {
-            "date": "20260310",
-            "vol": 257952,
-            "oi": 226801
+            "date": "20260311",
+            "vol": 181672,
+            "oi": 229723
           },
           {
-            "date": "20260324",
-            "vol": 1059951,
-            "oi": 285937
+            "date": "20260325",
+            "vol": 1086456,
+            "oi": 99221
           },
           {
-            "date": "20260408",
-            "vol": 316863,
-            "oi": 169757
+            "date": "20260409",
+            "vol": 283751,
+            "oi": 173080
           },
           {
-            "date": "20260422",
-            "vol": 670927,
-            "oi": 254278
+            "date": "20260423",
+            "vol": 785376,
+            "oi": 262290
           },
           {
-            "date": "20260511",
-            "vol": 416580,
-            "oi": 196268
+            "date": "20260512",
+            "vol": 620504,
+            "oi": 214102
           }
         ]
       },
@@ -2182,139 +2134,139 @@
         "symbol": "AL",
         "cn_name": "铝",
         "exchange": "SHFE",
-        "current_vol": 107664,
-        "current_oi": 131100,
-        "vol_1y_mean": 102959,
-        "oi_1y_mean": 110894,
-        "vol_percentile": 68.0,
+        "current_vol": 120719,
+        "current_oi": 136777,
+        "vol_1y_mean": 122114,
+        "oi_1y_mean": 110814,
+        "vol_percentile": 64.0,
         "oi_percentile": 80.0,
-        "liquidity_percentile": 72.8,
+        "liquidity_percentile": 70.4,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 63240,
-            "oi": 95847
+            "date": "20250514",
+            "vol": 83309,
+            "oi": 100259
           },
           {
-            "date": "20250527",
-            "vol": 41991,
-            "oi": 63696
+            "date": "20250528",
+            "vol": 39609,
+            "oi": 69259
           },
           {
-            "date": "20250611",
-            "vol": 85322,
-            "oi": 93758
+            "date": "20250612",
+            "vol": 92514,
+            "oi": 102803
           },
           {
-            "date": "20250625",
-            "vol": 24618,
-            "oi": 58347
+            "date": "20250626",
+            "vol": 40306,
+            "oi": 65351
           },
           {
-            "date": "20250709",
-            "vol": 35220,
-            "oi": 95075
+            "date": "20250710",
+            "vol": 57682,
+            "oi": 98520
           },
           {
-            "date": "20250723",
-            "vol": 78797,
-            "oi": 110464
+            "date": "20250724",
+            "vol": 72324,
+            "oi": 110469
           },
           {
-            "date": "20250806",
-            "vol": 39980,
-            "oi": 77380
+            "date": "20250807",
+            "vol": 56348,
+            "oi": 79530
           },
           {
-            "date": "20250820",
-            "vol": 51627,
-            "oi": 88683
+            "date": "20250821",
+            "vol": 48439,
+            "oi": 87670
           },
           {
-            "date": "20250903",
-            "vol": 41454,
-            "oi": 67583
+            "date": "20250904",
+            "vol": 44320,
+            "oi": 69638
           },
           {
-            "date": "20250917",
-            "vol": 61893,
-            "oi": 93068
+            "date": "20250918",
+            "vol": 118437,
+            "oi": 92045
           },
           {
-            "date": "20251009",
-            "vol": 66211,
-            "oi": 63054
+            "date": "20251010",
+            "vol": 78674,
+            "oi": 65864
           },
           {
-            "date": "20251023",
-            "vol": 94407,
-            "oi": 92765
+            "date": "20251024",
+            "vol": 110600,
+            "oi": 95578
           },
           {
-            "date": "20251106",
-            "vol": 103836,
-            "oi": 94983
+            "date": "20251107",
+            "vol": 100850,
+            "oi": 97991
           },
           {
-            "date": "20251120",
-            "vol": 84393,
-            "oi": 118298
+            "date": "20251121",
+            "vol": 123912,
+            "oi": 117053
           },
           {
-            "date": "20251204",
-            "vol": 173995,
-            "oi": 89928
+            "date": "20251205",
+            "vol": 197689,
+            "oi": 98460
           },
           {
-            "date": "20251218",
-            "vol": 124849,
-            "oi": 127332
+            "date": "20251219",
+            "vol": 161013,
+            "oi": 132890
           },
           {
-            "date": "20260105",
-            "vol": 185012,
-            "oi": 130673
+            "date": "20260106",
+            "vol": 310172,
+            "oi": 144809
           },
           {
-            "date": "20260119",
-            "vol": 165937,
-            "oi": 190967
+            "date": "20260120",
+            "vol": 223500,
+            "oi": 191622
           },
           {
-            "date": "20260202",
-            "vol": 281072,
-            "oi": 155009
+            "date": "20260203",
+            "vol": 206373,
+            "oi": 158923
           },
           {
-            "date": "20260224",
-            "vol": 38538,
-            "oi": 81950
+            "date": "20260225",
+            "vol": 80026,
+            "oi": 95378
           },
           {
-            "date": "20260310",
-            "vol": 187210,
-            "oi": 167104
+            "date": "20260311",
+            "vol": 219795,
+            "oi": 174130
           },
           {
-            "date": "20260324",
-            "vol": 178981,
-            "oi": 176646
+            "date": "20260325",
+            "vol": 171551,
+            "oi": 74877
           },
           {
-            "date": "20260408",
-            "vol": 97768,
-            "oi": 127254
+            "date": "20260409",
+            "vol": 97249,
+            "oi": 129657
           },
           {
-            "date": "20260422",
-            "vol": 159971,
-            "oi": 181395
+            "date": "20260423",
+            "vol": 197448,
+            "oi": 180820
           },
           {
-            "date": "20260511",
-            "vol": 107664,
-            "oi": 131100
+            "date": "20260512",
+            "vol": 120719,
+            "oi": 136777
           }
         ]
       },
@@ -2322,139 +2274,139 @@
         "symbol": "RU",
         "cn_name": "橡胶",
         "exchange": "SHFE",
-        "current_vol": 36282,
-        "current_oi": 54613,
-        "vol_1y_mean": 35153,
-        "oi_1y_mean": 61300,
-        "vol_percentile": 64.0,
+        "current_vol": 29166,
+        "current_oi": 55999,
+        "vol_1y_mean": 42257,
+        "oi_1y_mean": 62277,
+        "vol_percentile": 44.0,
         "oi_percentile": 48.0,
-        "liquidity_percentile": 57.6,
+        "liquidity_percentile": 45.6,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 17335,
-            "oi": 52835
+            "date": "20250514",
+            "vol": 27687,
+            "oi": 54062
           },
           {
-            "date": "20250527",
-            "vol": 19621,
-            "oi": 57982
+            "date": "20250528",
+            "vol": 61298,
+            "oi": 62752
           },
           {
-            "date": "20250611",
-            "vol": 18320,
-            "oi": 78672
+            "date": "20250612",
+            "vol": 34012,
+            "oi": 82004
           },
           {
-            "date": "20250625",
-            "vol": 15061,
-            "oi": 72450
+            "date": "20250626",
+            "vol": 20341,
+            "oi": 73697
           },
           {
-            "date": "20250709",
-            "vol": 13674,
-            "oi": 79997
+            "date": "20250710",
+            "vol": 37637,
+            "oi": 80222
           },
           {
-            "date": "20250723",
-            "vol": 60094,
-            "oi": 86217
+            "date": "20250724",
+            "vol": 79386,
+            "oi": 86983
           },
           {
-            "date": "20250806",
-            "vol": 35361,
-            "oi": 78002
+            "date": "20250807",
+            "vol": 51918,
+            "oi": 76916
           },
           {
-            "date": "20250820",
-            "vol": 96668,
-            "oi": 81455
+            "date": "20250821",
+            "vol": 58654,
+            "oi": 81690
           },
           {
-            "date": "20250903",
-            "vol": 15117,
-            "oi": 35044
+            "date": "20250904",
+            "vol": 14258,
+            "oi": 35501
           },
           {
-            "date": "20250917",
-            "vol": 18257,
-            "oi": 41909
+            "date": "20250918",
+            "vol": 49350,
+            "oi": 45486
           },
           {
-            "date": "20251009",
-            "vol": 10437,
-            "oi": 41754
+            "date": "20251010",
+            "vol": 10852,
+            "oi": 42424
           },
           {
-            "date": "20251023",
-            "vol": 17240,
-            "oi": 48987
+            "date": "20251024",
+            "vol": 23603,
+            "oi": 49311
           },
           {
-            "date": "20251106",
-            "vol": 23040,
-            "oi": 50680
+            "date": "20251107",
+            "vol": 8922,
+            "oi": 51083
           },
           {
-            "date": "20251120",
-            "vol": 18740,
-            "oi": 53838
+            "date": "20251121",
+            "vol": 48762,
+            "oi": 53858
           },
           {
-            "date": "20251204",
-            "vol": 30330,
-            "oi": 54210
+            "date": "20251205",
+            "vol": 21396,
+            "oi": 54327
           },
           {
-            "date": "20251218",
-            "vol": 44153,
-            "oi": 57396
+            "date": "20251219",
+            "vol": 38891,
+            "oi": 58987
           },
           {
-            "date": "20260105",
-            "vol": 12366,
-            "oi": 39047
+            "date": "20260106",
+            "vol": 19238,
+            "oi": 41915
           },
           {
-            "date": "20260119",
-            "vol": 10449,
-            "oi": 49541
+            "date": "20260120",
+            "vol": 15781,
+            "oi": 51757
           },
           {
-            "date": "20260202",
-            "vol": 37337,
-            "oi": 56025
+            "date": "20260203",
+            "vol": 14797,
+            "oi": 55818
           },
           {
-            "date": "20260224",
-            "vol": 42959,
-            "oi": 54152
+            "date": "20260225",
+            "vol": 32214,
+            "oi": 56492
           },
           {
-            "date": "20260310",
-            "vol": 48671,
-            "oi": 73134
+            "date": "20260311",
+            "vol": 31046,
+            "oi": 74224
           },
           {
-            "date": "20260324",
-            "vol": 47311,
-            "oi": 80047
+            "date": "20260325",
+            "vol": 42290,
+            "oi": 73756
           },
           {
-            "date": "20260408",
-            "vol": 62480,
-            "oi": 72224
+            "date": "20260409",
+            "vol": 60732,
+            "oi": 74125
           },
           {
-            "date": "20260422",
-            "vol": 127533,
-            "oi": 82298
+            "date": "20260423",
+            "vol": 224207,
+            "oi": 83549
           },
           {
-            "date": "20260511",
-            "vol": 36282,
-            "oi": 54613
+            "date": "20260512",
+            "vol": 29166,
+            "oi": 55999
           }
         ]
       },
@@ -2462,139 +2414,139 @@
         "symbol": "SC",
         "cn_name": "原油",
         "exchange": "INE",
-        "current_vol": 138901,
-        "current_oi": 76602,
-        "vol_1y_mean": 104507,
-        "oi_1y_mean": 55325,
-        "vol_percentile": 80.0,
-        "oi_percentile": 84.0,
-        "liquidity_percentile": 81.6,
+        "current_vol": 138391,
+        "current_oi": 73983,
+        "vol_1y_mean": 112839,
+        "oi_1y_mean": 51854,
+        "vol_percentile": 76.0,
+        "oi_percentile": 80.0,
+        "liquidity_percentile": 77.6,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 112030,
-            "oi": 65783
+            "date": "20250514",
+            "vol": 228447,
+            "oi": 19406
           },
           {
-            "date": "20250527",
-            "vol": 42798,
-            "oi": 44981
+            "date": "20250528",
+            "vol": 56527,
+            "oi": 47917
           },
           {
-            "date": "20250611",
-            "vol": 108277,
-            "oi": 57242
+            "date": "20250612",
+            "vol": 282193,
+            "oi": 20034
           },
           {
-            "date": "20250625",
-            "vol": 146368,
-            "oi": 89140
+            "date": "20250626",
+            "vol": 160921,
+            "oi": 95082
           },
           {
-            "date": "20250709",
-            "vol": 98584,
-            "oi": 97242
+            "date": "20250710",
+            "vol": 91870,
+            "oi": 92913
           },
           {
-            "date": "20250723",
-            "vol": 50938,
-            "oi": 40123
+            "date": "20250724",
+            "vol": 46144,
+            "oi": 40844
           },
           {
-            "date": "20250806",
-            "vol": 72247,
-            "oi": 50594
+            "date": "20250807",
+            "vol": 121567,
+            "oi": 52600
           },
           {
-            "date": "20250820",
-            "vol": 39495,
-            "oi": 34364
+            "date": "20250821",
+            "vol": 43859,
+            "oi": 35131
           },
           {
-            "date": "20250903",
-            "vol": 72834,
-            "oi": 44236
+            "date": "20250904",
+            "vol": 100263,
+            "oi": 44871
           },
           {
-            "date": "20250917",
-            "vol": 35654,
-            "oi": 20127
+            "date": "20250918",
+            "vol": 32765,
+            "oi": 20004
           },
           {
-            "date": "20251009",
-            "vol": 48928,
-            "oi": 38611
+            "date": "20251010",
+            "vol": 81620,
+            "oi": 45021
           },
           {
-            "date": "20251023",
-            "vol": 74443,
-            "oi": 40028
+            "date": "20251024",
+            "vol": 75978,
+            "oi": 40242
           },
           {
-            "date": "20251106",
-            "vol": 90761,
-            "oi": 52329
+            "date": "20251107",
+            "vol": 111678,
+            "oi": 54381
           },
           {
-            "date": "20251120",
-            "vol": 40551,
-            "oi": 29516
+            "date": "20251121",
+            "vol": 52729,
+            "oi": 30796
           },
           {
-            "date": "20251204",
-            "vol": 51030,
-            "oi": 45284
+            "date": "20251205",
+            "vol": 51935,
+            "oi": 45662
           },
           {
-            "date": "20251218",
-            "vol": 32587,
-            "oi": 33054
+            "date": "20251219",
+            "vol": 27777,
+            "oi": 33977
           },
           {
-            "date": "20260105",
-            "vol": 57523,
-            "oi": 48323
+            "date": "20260106",
+            "vol": 78195,
+            "oi": 52839
           },
           {
-            "date": "20260119",
-            "vol": 40842,
-            "oi": 38885
+            "date": "20260120",
+            "vol": 38797,
+            "oi": 42105
           },
           {
-            "date": "20260202",
-            "vol": 362079,
-            "oi": 70143
+            "date": "20260203",
+            "vol": 239023,
+            "oi": 20427
           },
           {
-            "date": "20260224",
-            "vol": 36207,
-            "oi": 38636
+            "date": "20260225",
+            "vol": 53321,
+            "oi": 43123
           },
           {
-            "date": "20260310",
-            "vol": 373069,
-            "oi": 96000
+            "date": "20260311",
+            "vol": 311998,
+            "oi": 102483
           },
           {
-            "date": "20260324",
-            "vol": 152351,
-            "oi": 68943
+            "date": "20260325",
+            "vol": 119054,
+            "oi": 74724
           },
           {
-            "date": "20260408",
-            "vol": 240096,
-            "oi": 103684
+            "date": "20260409",
+            "vol": 186767,
+            "oi": 106482
           },
           {
-            "date": "20260422",
-            "vol": 94082,
-            "oi": 59276
+            "date": "20260423",
+            "vol": 89169,
+            "oi": 61316
           },
           {
-            "date": "20260511",
-            "vol": 138901,
-            "oi": 76602
+            "date": "20260512",
+            "vol": 138391,
+            "oi": 73983
           }
         ]
       },
@@ -2602,139 +2554,139 @@
         "symbol": "SR",
         "cn_name": "白糖",
         "exchange": "CZCE",
-        "current_vol": 104739,
-        "current_oi": 380493,
-        "vol_1y_mean": 87074,
-        "oi_1y_mean": 261813,
-        "vol_percentile": 72.0,
+        "current_vol": 146022,
+        "current_oi": 388364,
+        "vol_1y_mean": 95856,
+        "oi_1y_mean": 268672,
+        "vol_percentile": 88.0,
         "oi_percentile": 92.0,
-        "liquidity_percentile": 80.0,
+        "liquidity_percentile": 89.6,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 50873,
-            "oi": 183967
+            "date": "20250514",
+            "vol": 72138,
+            "oi": 190593
           },
           {
-            "date": "20250527",
-            "vol": 69514,
-            "oi": 223231
+            "date": "20250528",
+            "vol": 74393,
+            "oi": 229548
           },
           {
-            "date": "20250611",
-            "vol": 82190,
-            "oi": 135482
+            "date": "20250612",
+            "vol": 37781,
+            "oi": 143205
           },
           {
-            "date": "20250625",
-            "vol": 47381,
-            "oi": 187095
+            "date": "20250626",
+            "vol": 61300,
+            "oi": 189197
           },
           {
-            "date": "20250709",
-            "vol": 46780,
-            "oi": 218759
+            "date": "20250710",
+            "vol": 70857,
+            "oi": 220694
           },
           {
-            "date": "20250723",
-            "vol": 128198,
-            "oi": 260648
+            "date": "20250724",
+            "vol": 187063,
+            "oi": 263156
           },
           {
-            "date": "20250806",
-            "vol": 89827,
-            "oi": 299971
+            "date": "20250807",
+            "vol": 100896,
+            "oi": 302284
           },
           {
-            "date": "20250820",
-            "vol": 46962,
-            "oi": 141880
+            "date": "20250821",
+            "vol": 50347,
+            "oi": 147910
           },
           {
-            "date": "20250903",
-            "vol": 51368,
-            "oi": 193051
+            "date": "20250904",
+            "vol": 50029,
+            "oi": 195484
           },
           {
-            "date": "20250917",
-            "vol": 50373,
-            "oi": 238414
+            "date": "20250918",
+            "vol": 120543,
+            "oi": 252264
           },
           {
-            "date": "20251009",
-            "vol": 96008,
-            "oi": 279712
+            "date": "20251010",
+            "vol": 82335,
+            "oi": 288534
           },
           {
-            "date": "20251023",
-            "vol": 54594,
-            "oi": 255653
+            "date": "20251024",
+            "vol": 39980,
+            "oi": 259363
           },
           {
-            "date": "20251106",
-            "vol": 46785,
-            "oi": 287099
+            "date": "20251107",
+            "vol": 39063,
+            "oi": 288933
           },
           {
-            "date": "20251120",
-            "vol": 88012,
-            "oi": 332319
+            "date": "20251121",
+            "vol": 94691,
+            "oi": 335070
           },
           {
-            "date": "20251204",
-            "vol": 158820,
-            "oi": 340832
+            "date": "20251205",
+            "vol": 96961,
+            "oi": 343193
           },
           {
-            "date": "20251218",
-            "vol": 67049,
-            "oi": 149850
+            "date": "20251219",
+            "vol": 81458,
+            "oi": 157757
           },
           {
-            "date": "20260105",
-            "vol": 39990,
-            "oi": 206670
+            "date": "20260106",
+            "vol": 75493,
+            "oi": 216996
           },
           {
-            "date": "20260119",
-            "vol": 63667,
-            "oi": 251490
+            "date": "20260120",
+            "vol": 98877,
+            "oi": 254643
           },
           {
-            "date": "20260202",
-            "vol": 118188,
-            "oi": 290565
+            "date": "20260203",
+            "vol": 109662,
+            "oi": 289059
           },
           {
-            "date": "20260224",
-            "vol": 68902,
-            "oi": 220537
+            "date": "20260225",
+            "vol": 72226,
+            "oi": 238923
           },
           {
-            "date": "20260310",
-            "vol": 155394,
-            "oi": 321205
+            "date": "20260311",
+            "vol": 134410,
+            "oi": 343250
           },
           {
-            "date": "20260324",
-            "vol": 149463,
-            "oi": 447907
+            "date": "20260325",
+            "vol": 139510,
+            "oi": 455255
           },
           {
-            "date": "20260408",
-            "vol": 166172,
-            "oi": 446864
+            "date": "20260409",
+            "vol": 201719,
+            "oi": 451165
           },
           {
-            "date": "20260422",
-            "vol": 135618,
-            "oi": 251645
+            "date": "20260423",
+            "vol": 158647,
+            "oi": 271981
           },
           {
-            "date": "20260511",
-            "vol": 104739,
-            "oi": 380493
+            "date": "20260512",
+            "vol": 146022,
+            "oi": 388364
           }
         ]
       },
@@ -2742,139 +2694,139 @@
         "symbol": "CF",
         "cn_name": "棉花",
         "exchange": "CZCE",
-        "current_vol": 174412,
-        "current_oi": 383932,
-        "vol_1y_mean": 152248,
-        "oi_1y_mean": 424861,
-        "vol_percentile": 76.0,
+        "current_vol": 172276,
+        "current_oi": 391439,
+        "vol_1y_mean": 152220,
+        "oi_1y_mean": 429561,
+        "vol_percentile": 64.0,
         "oi_percentile": 40.0,
-        "liquidity_percentile": 61.6,
+        "liquidity_percentile": 54.4,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 160751,
-            "oi": 331429
+            "date": "20250514",
+            "vol": 157194,
+            "oi": 340094
           },
           {
-            "date": "20250527",
-            "vol": 132142,
-            "oi": 388993
+            "date": "20250528",
+            "vol": 96255,
+            "oi": 392184
           },
           {
-            "date": "20250611",
-            "vol": 168776,
-            "oi": 282261
+            "date": "20250612",
+            "vol": 59807,
+            "oi": 283521
           },
           {
-            "date": "20250625",
-            "vol": 116770,
-            "oi": 316600
+            "date": "20250626",
+            "vol": 104214,
+            "oi": 324681
           },
           {
-            "date": "20250709",
-            "vol": 103059,
-            "oi": 376706
+            "date": "20250710",
+            "vol": 111001,
+            "oi": 374797
           },
           {
-            "date": "20250723",
-            "vol": 167656,
-            "oi": 423380
+            "date": "20250724",
+            "vol": 137025,
+            "oi": 433731
           },
           {
-            "date": "20250806",
-            "vol": 129542,
-            "oi": 482918
+            "date": "20250807",
+            "vol": 93392,
+            "oi": 477096
           },
           {
-            "date": "20250820",
-            "vol": 92128,
-            "oi": 228243
+            "date": "20250821",
+            "vol": 47738,
+            "oi": 231422
           },
           {
-            "date": "20250903",
-            "vol": 81353,
-            "oi": 279719
+            "date": "20250904",
+            "vol": 93311,
+            "oi": 286908
           },
           {
-            "date": "20250917",
-            "vol": 83405,
-            "oi": 337789
+            "date": "20250918",
+            "vol": 126457,
+            "oi": 349049
           },
           {
-            "date": "20251009",
-            "vol": 170233,
-            "oi": 474815
+            "date": "20251010",
+            "vol": 193461,
+            "oi": 490224
           },
           {
-            "date": "20251023",
-            "vol": 87110,
-            "oi": 439067
+            "date": "20251024",
+            "vol": 103526,
+            "oi": 446902
           },
           {
-            "date": "20251106",
-            "vol": 92555,
-            "oi": 497857
+            "date": "20251107",
+            "vol": 82616,
+            "oi": 494188
           },
           {
-            "date": "20251120",
-            "vol": 93389,
-            "oi": 543013
+            "date": "20251121",
+            "vol": 90959,
+            "oi": 545664
           },
           {
-            "date": "20251204",
-            "vol": 151694,
-            "oi": 588983
+            "date": "20251205",
+            "vol": 130107,
+            "oi": 584338
           },
           {
-            "date": "20251218",
-            "vol": 93685,
-            "oi": 305038
+            "date": "20251219",
+            "vol": 121246,
+            "oi": 312919
           },
           {
-            "date": "20260105",
-            "vol": 205224,
-            "oi": 412228
+            "date": "20260106",
+            "vol": 183246,
+            "oi": 418298
           },
           {
-            "date": "20260119",
-            "vol": 138261,
-            "oi": 549556
+            "date": "20260120",
+            "vol": 241440,
+            "oi": 558812
           },
           {
-            "date": "20260202",
-            "vol": 271850,
-            "oi": 580374
+            "date": "20260203",
+            "vol": 199177,
+            "oi": 576173
           },
           {
-            "date": "20260224",
-            "vol": 268399,
-            "oi": 427611
+            "date": "20260225",
+            "vol": 321831,
+            "oi": 443305
           },
           {
-            "date": "20260310",
-            "vol": 184228,
-            "oi": 495026
+            "date": "20260311",
+            "vol": 350722,
+            "oi": 502833
           },
           {
-            "date": "20260324",
-            "vol": 155892,
-            "oi": 585788
+            "date": "20260325",
+            "vol": 204170,
+            "oi": 584529
           },
           {
-            "date": "20260408",
-            "vol": 205559,
-            "oi": 591585
+            "date": "20260409",
+            "vol": 188394,
+            "oi": 591269
           },
           {
-            "date": "20260422",
-            "vol": 278151,
-            "oi": 298616
+            "date": "20260423",
+            "vol": 195938,
+            "oi": 304653
           },
           {
-            "date": "20260511",
-            "vol": 174412,
-            "oi": 383932
+            "date": "20260512",
+            "vol": 172276,
+            "oi": 391439
           }
         ]
       },
@@ -2882,139 +2834,139 @@
         "symbol": "IO",
         "cn_name": "沪深300",
         "exchange": "CFFEX",
-        "current_vol": 173930,
-        "current_oi": 190449,
-        "vol_1y_mean": 126059,
-        "oi_1y_mean": 189140,
-        "vol_percentile": 88.0,
-        "oi_percentile": 60.0,
-        "liquidity_percentile": 76.8,
+        "current_vol": 117951,
+        "current_oi": 194292,
+        "vol_1y_mean": 129648,
+        "oi_1y_mean": 185518,
+        "vol_percentile": 64.0,
+        "oi_percentile": 72.0,
+        "liquidity_percentile": 67.2,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 85001,
-            "oi": 188324
+            "date": "20250514",
+            "vol": 168326,
+            "oi": 188585
           },
           {
-            "date": "20250527",
-            "vol": 45122,
-            "oi": 160855
+            "date": "20250528",
+            "vol": 38902,
+            "oi": 163803
           },
           {
-            "date": "20250611",
-            "vol": 89353,
-            "oi": 187606
+            "date": "20250612",
+            "vol": 60738,
+            "oi": 188728
           },
           {
-            "date": "20250625",
-            "vol": 121675,
-            "oi": 146185
+            "date": "20250626",
+            "vol": 84912,
+            "oi": 153439
           },
           {
-            "date": "20250709",
-            "vol": 92894,
-            "oi": 192827
+            "date": "20250710",
+            "vol": 100741,
+            "oi": 192319
           },
           {
-            "date": "20250723",
-            "vol": 133317,
-            "oi": 167035
+            "date": "20250724",
+            "vol": 87017,
+            "oi": 173462
           },
           {
-            "date": "20250806",
-            "vol": 72785,
-            "oi": 208467
+            "date": "20250807",
+            "vol": 95048,
+            "oi": 209294
           },
           {
-            "date": "20250820",
-            "vol": 109087,
-            "oi": 173598
+            "date": "20250821",
+            "vol": 111850,
+            "oi": 177208
           },
           {
-            "date": "20250903",
-            "vol": 181996,
-            "oi": 226889
+            "date": "20250904",
+            "vol": 228204,
+            "oi": 229431
           },
           {
-            "date": "20250917",
-            "vol": 180794,
-            "oi": 242949
+            "date": "20250918",
+            "vol": 304276,
+            "oi": 238898
           },
           {
-            "date": "20251009",
-            "vol": 190047,
-            "oi": 179020
+            "date": "20251010",
+            "vol": 194049,
+            "oi": 192484
           },
           {
-            "date": "20251023",
-            "vol": 104072,
-            "oi": 154163
+            "date": "20251024",
+            "vol": 104572,
+            "oi": 156310
           },
           {
-            "date": "20251106",
-            "vol": 137438,
-            "oi": 200031
+            "date": "20251107",
+            "vol": 94137,
+            "oi": 200601
           },
           {
-            "date": "20251120",
-            "vol": 172768,
-            "oi": 233386
+            "date": "20251121",
+            "vol": 263005,
+            "oi": 157712
           },
           {
-            "date": "20251204",
-            "vol": 83045,
-            "oi": 183686
+            "date": "20251205",
+            "vol": 125355,
+            "oi": 184421
           },
           {
-            "date": "20251218",
-            "vol": 152308,
-            "oi": 213645
+            "date": "20251219",
+            "vol": 150195,
+            "oi": 133245
           },
           {
-            "date": "20260105",
-            "vol": 153894,
-            "oi": 172681
+            "date": "20260106",
+            "vol": 204282,
+            "oi": 174289
           },
           {
-            "date": "20260119",
-            "vol": 84996,
-            "oi": 153751
+            "date": "20260120",
+            "vol": 109443,
+            "oi": 160797
           },
           {
-            "date": "20260202",
-            "vol": 173548,
-            "oi": 223298
+            "date": "20260203",
+            "vol": 134014,
+            "oi": 227339
           },
           {
-            "date": "20260224",
-            "vol": 139649,
-            "oi": 166530
+            "date": "20260225",
+            "vol": 102672,
+            "oi": 179965
           },
           {
-            "date": "20260310",
-            "vol": 89869,
-            "oi": 216206
+            "date": "20260311",
+            "vol": 82200,
+            "oi": 208979
           },
           {
-            "date": "20260324",
-            "vol": 127742,
-            "oi": 181828
+            "date": "20260325",
+            "vol": 88260,
+            "oi": 181562
           },
           {
-            "date": "20260408",
-            "vol": 172379,
-            "oi": 194379
+            "date": "20260409",
+            "vol": 73773,
+            "oi": 195595
           },
           {
-            "date": "20260422",
-            "vol": 83787,
-            "oi": 170724
+            "date": "20260423",
+            "vol": 117286,
+            "oi": 175215
           },
           {
-            "date": "20260511",
-            "vol": 173930,
-            "oi": 190449
+            "date": "20260512",
+            "vol": 117951,
+            "oi": 194292
           }
         ]
       },
@@ -3022,139 +2974,139 @@
         "symbol": "MO",
         "cn_name": "中证1000",
         "exchange": "CFFEX",
-        "current_vol": 447825,
-        "current_oi": 375282,
-        "vol_1y_mean": 290432,
-        "oi_1y_mean": 297248,
-        "vol_percentile": 100.0,
+        "current_vol": 350188,
+        "current_oi": 382812,
+        "vol_1y_mean": 297552,
+        "oi_1y_mean": 294224,
+        "vol_percentile": 80.0,
         "oi_percentile": 100.0,
-        "liquidity_percentile": 100.0,
+        "liquidity_percentile": 88.0,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 251952,
-            "oi": 267265
+            "date": "20250514",
+            "vol": 352826,
+            "oi": 267687
           },
           {
-            "date": "20250527",
-            "vol": 127104,
-            "oi": 241744
+            "date": "20250528",
+            "vol": 110390,
+            "oi": 247516
           },
           {
-            "date": "20250611",
-            "vol": 177895,
-            "oi": 283736
+            "date": "20250612",
+            "vol": 147074,
+            "oi": 288771
           },
           {
-            "date": "20250625",
-            "vol": 271332,
-            "oi": 215680
+            "date": "20250626",
+            "vol": 212818,
+            "oi": 225618
           },
           {
-            "date": "20250709",
-            "vol": 200516,
-            "oi": 273417
+            "date": "20250710",
+            "vol": 199859,
+            "oi": 274941
           },
           {
-            "date": "20250723",
-            "vol": 225207,
-            "oi": 225443
+            "date": "20250724",
+            "vol": 196037,
+            "oi": 232248
           },
           {
-            "date": "20250806",
-            "vol": 234818,
-            "oi": 284266
+            "date": "20250807",
+            "vol": 239285,
+            "oi": 291771
           },
           {
-            "date": "20250820",
-            "vol": 275149,
-            "oi": 267486
+            "date": "20250821",
+            "vol": 308193,
+            "oi": 280925
           },
           {
-            "date": "20250903",
-            "vol": 378565,
-            "oi": 343416
+            "date": "20250904",
+            "vol": 444299,
+            "oi": 351152
           },
           {
-            "date": "20250917",
-            "vol": 436620,
-            "oi": 355216
+            "date": "20250918",
+            "vol": 708257,
+            "oi": 344711
           },
           {
-            "date": "20251009",
-            "vol": 300480,
-            "oi": 276918
+            "date": "20251010",
+            "vol": 309355,
+            "oi": 290784
           },
           {
-            "date": "20251023",
-            "vol": 239956,
-            "oi": 259885
+            "date": "20251024",
+            "vol": 223666,
+            "oi": 265978
           },
           {
-            "date": "20251106",
-            "vol": 260102,
-            "oi": 310111
+            "date": "20251107",
+            "vol": 231357,
+            "oi": 312914
           },
           {
-            "date": "20251120",
-            "vol": 339237,
-            "oi": 344144
+            "date": "20251121",
+            "vol": 546282,
+            "oi": 267475
           },
           {
-            "date": "20251204",
-            "vol": 189851,
-            "oi": 328006
+            "date": "20251205",
+            "vol": 271161,
+            "oi": 324810
           },
           {
-            "date": "20251218",
-            "vol": 334610,
-            "oi": 360604
+            "date": "20251219",
+            "vol": 328374,
+            "oi": 228190
           },
           {
-            "date": "20260105",
-            "vol": 314066,
-            "oi": 300916
+            "date": "20260106",
+            "vol": 364187,
+            "oi": 313777
           },
           {
-            "date": "20260119",
-            "vol": 227082,
-            "oi": 271039
+            "date": "20260120",
+            "vol": 301696,
+            "oi": 277617
           },
           {
-            "date": "20260202",
-            "vol": 407153,
-            "oi": 332693
+            "date": "20260203",
+            "vol": 335692,
+            "oi": 333999
           },
           {
-            "date": "20260224",
-            "vol": 310642,
-            "oi": 255984
+            "date": "20260225",
+            "vol": 196961,
+            "oi": 269162
           },
           {
-            "date": "20260310",
-            "vol": 250381,
-            "oi": 333338
+            "date": "20260311",
+            "vol": 193464,
+            "oi": 340592
           },
           {
-            "date": "20260324",
-            "vol": 371570,
-            "oi": 285786
+            "date": "20260325",
+            "vol": 285947,
+            "oi": 287176
           },
           {
-            "date": "20260408",
-            "vol": 432056,
-            "oi": 331531
+            "date": "20260409",
+            "vol": 271435,
+            "oi": 336474
           },
           {
-            "date": "20260422",
-            "vol": 256644,
-            "oi": 307300
+            "date": "20260423",
+            "vol": 309997,
+            "oi": 318502
           },
           {
-            "date": "20260511",
-            "vol": 447825,
-            "oi": 375282
+            "date": "20260512",
+            "vol": 350188,
+            "oi": 382812
           }
         ]
       },
@@ -3162,1332 +3114,1312 @@
         "symbol": "HO",
         "cn_name": "上证50",
         "exchange": "CFFEX",
-        "current_vol": 56515,
-        "current_oi": 78712,
-        "vol_1y_mean": 42846,
-        "oi_1y_mean": 71178,
-        "vol_percentile": 84.0,
+        "current_vol": 36830,
+        "current_oi": 78995,
+        "vol_1y_mean": 46507,
+        "oi_1y_mean": 70840,
+        "vol_percentile": 56.0,
         "oi_percentile": 80.0,
-        "liquidity_percentile": 82.4,
+        "liquidity_percentile": 65.6,
         "samples": 25,
         "vol_history": [
           {
-            "date": "20250513",
-            "vol": 24830,
-            "oi": 65388
+            "date": "20250514",
+            "vol": 82014,
+            "oi": 68636
           },
           {
-            "date": "20250527",
-            "vol": 16329,
-            "oi": 57669
+            "date": "20250528",
+            "vol": 11116,
+            "oi": 59038
           },
           {
-            "date": "20250611",
-            "vol": 30263,
-            "oi": 70882
+            "date": "20250612",
+            "vol": 23083,
+            "oi": 71206
           },
           {
-            "date": "20250625",
-            "vol": 54056,
-            "oi": 51299
+            "date": "20250626",
+            "vol": 31535,
+            "oi": 53259
           },
           {
-            "date": "20250709",
-            "vol": 32569,
-            "oi": 70517
+            "date": "20250710",
+            "vol": 54218,
+            "oi": 71424
           },
           {
-            "date": "20250723",
-            "vol": 55427,
-            "oi": 59719
+            "date": "20250724",
+            "vol": 36748,
+            "oi": 62312
           },
           {
-            "date": "20250806",
-            "vol": 28511,
-            "oi": 74986
+            "date": "20250807",
+            "vol": 32374,
+            "oi": 75043
           },
           {
-            "date": "20250820",
-            "vol": 48190,
-            "oi": 71560
+            "date": "20250821",
+            "vol": 52862,
+            "oi": 73231
           },
           {
-            "date": "20250903",
-            "vol": 73159,
-            "oi": 94110
+            "date": "20250904",
+            "vol": 94222,
+            "oi": 100188
           },
           {
-            "date": "20250917",
-            "vol": 57826,
-            "oi": 105477
+            "date": "20250918",
+            "vol": 118589,
+            "oi": 103897
           },
           {
-            "date": "20251009",
-            "vol": 68429,
-            "oi": 70370
+            "date": "20251010",
+            "vol": 56727,
+            "oi": 76469
           },
           {
-            "date": "20251023",
-            "vol": 35981,
-            "oi": 60013
+            "date": "20251024",
+            "vol": 37619,
+            "oi": 61657
           },
           {
-            "date": "20251106",
-            "vol": 40699,
-            "oi": 72925
+            "date": "20251107",
+            "vol": 24469,
+            "oi": 72926
           },
           {
-            "date": "20251120",
-            "vol": 55319,
-            "oi": 76915
+            "date": "20251121",
+            "vol": 90949,
+            "oi": 53939
           },
           {
-            "date": "20251204",
-            "vol": 19955,
-            "oi": 68657
+            "date": "20251205",
+            "vol": 34775,
+            "oi": 65928
           },
           {
-            "date": "20251218",
-            "vol": 42042,
-            "oi": 70535
+            "date": "20251219",
+            "vol": 55763,
+            "oi": 38888
           },
           {
-            "date": "20260105",
-            "vol": 51091,
-            "oi": 53375
+            "date": "20260106",
+            "vol": 81164,
+            "oi": 58455
           },
           {
-            "date": "20260119",
-            "vol": 28393,
-            "oi": 52460
+            "date": "20260120",
+            "vol": 31194,
+            "oi": 57072
           },
           {
-            "date": "20260202",
-            "vol": 66703,
-            "oi": 86719
+            "date": "20260203",
+            "vol": 47737,
+            "oi": 88681
           },
           {
-            "date": "20260224",
-            "vol": 51152,
-            "oi": 54279
+            "date": "20260225",
+            "vol": 31166,
+            "oi": 60293
           },
           {
-            "date": "20260310",
-            "vol": 26553,
-            "oi": 83952
+            "date": "20260311",
+            "vol": 18565,
+            "oi": 85973
           },
           {
-            "date": "20260324",
-            "vol": 41885,
-            "oi": 75958
+            "date": "20260325",
+            "vol": 30200,
+            "oi": 77146
           },
           {
-            "date": "20260408",
-            "vol": 46851,
-            "oi": 81551
+            "date": "20260409",
+            "vol": 19946,
+            "oi": 81659
           },
           {
-            "date": "20260422",
-            "vol": 18434,
-            "oi": 71440
+            "date": "20260423",
+            "vol": 28827,
+            "oi": 74707
           },
           {
-            "date": "20260511",
-            "vol": 56515,
-            "oi": 78712
+            "date": "20260512",
+            "vol": 36830,
+            "oi": 78995
           }
         ]
       }
     ]
   },
   "timing_signal": {
-    "update_time": "2026-05-13 08:28:31",
+    "update_time": "2026-05-14 08:30:27",
     "market_signal": {
       "signal": "SELECTIVE_SELL",
       "label": "🟡 精选窗口",
       "description": "波动率高位，需精选流动性好的品种",
-      "composite_score": 73.4,
-      "iv_percentile": 75.2,
-      "liquidity_percentile": 69.2
+      "composite_score": 62.0,
+      "iv_percentile": 60.7,
+      "liquidity_percentile": 65.2
     },
     "opportunities": [
       {
-        "symbol": "HO",
-        "cn_name": "上证50",
-        "iv_percentile": 100.0,
-        "liquidity_percentile": 82.4,
-        "composite_score": 94.7
-      },
-      {
-        "symbol": "IO",
-        "cn_name": "沪深300",
-        "iv_percentile": 100.0,
-        "liquidity_percentile": 76.8,
-        "composite_score": 93.0
-      },
-      {
-        "symbol": "MO",
-        "cn_name": "中证1000",
-        "iv_percentile": 85.0,
-        "liquidity_percentile": 100.0,
-        "composite_score": 89.5
-      },
-      {
-        "symbol": "CF",
-        "cn_name": "棉花",
-        "iv_percentile": 87.5,
-        "liquidity_percentile": 61.6,
+        "symbol": "CU",
+        "cn_name": "铜",
+        "iv_percentile": 83.3,
+        "liquidity_percentile": 71.2,
         "composite_score": 79.7
       },
       {
         "symbol": "AL",
         "cn_name": "铝",
-        "iv_percentile": 80.0,
-        "liquidity_percentile": 72.8,
-        "composite_score": 77.8
+        "iv_percentile": 79.2,
+        "liquidity_percentile": 70.4,
+        "composite_score": 76.6
       },
       {
-        "symbol": "CU",
-        "cn_name": "铜",
-        "iv_percentile": 72.0,
-        "liquidity_percentile": 64.0,
-        "composite_score": 69.6
+        "symbol": "CF",
+        "cn_name": "棉花",
+        "iv_percentile": 80.0,
+        "liquidity_percentile": 54.4,
+        "composite_score": 72.3
+      }
+    ],
+    "opportunity_count": 3
+  },
+  "market_breadth": {
+    "update_time": "2026-05-14 08:30:36",
+    "market_breadth": {
+      "env_index": 45.0,
+      "env_percentile": 40.0,
+      "regime": "SELECTIVE_SELL",
+      "regime_label": "🟡 精选卖方窗口",
+      "regime_desc": "整体环境不差，但仍以精选高赔率合约为主",
+      "total_symbols": 61,
+      "high_iv_70_count": 25,
+      "high_iv_70_pct": 41.0,
+      "high_iv_85_count": 9,
+      "high_iv_85_pct": 14.8,
+      "high_amount_50_count": 38,
+      "high_amount_50_pct": 62.3,
+      "high_amount_70_count": 26,
+      "high_amount_70_pct": 42.6,
+      "high_liq_50_count": 38,
+      "high_liq_50_pct": 62.3,
+      "high_liq_70_count": 19,
+      "high_liq_70_pct": 31.1,
+      "both_high_count": 21,
+      "both_high_pct": 34.4
+    },
+    "symbols": [
+      {
+        "symbol": "IM",
+        "cn_name": "中证1000",
+        "exchange": "CFFEX",
+        "fut_price": 8870.6,
+        "atm_price": 223.02,
+        "iv_proxy": 0.0251,
+        "iv_percentile": 93.3,
+        "total_vol": 437587,
+        "total_amount": 618425.9,
+        "total_oi": 383679,
+        "vol_percentile": 92.2,
+        "amount_percentile": 92.8,
+        "oi_percentile": 100.0,
+        "liquidity_percentile": 94.1,
+        "sell_env_score": 93.6,
+        "samples": 180
       },
       {
         "symbol": "RU",
         "cn_name": "橡胶",
-        "iv_percentile": 70.8,
-        "liquidity_percentile": 57.6,
-        "composite_score": 66.8
-      }
-    ],
-    "opportunity_count": 7
-  },
-  "market_breadth": {
-    "update_time": "2026-05-13 08:28:38",
-    "market_breadth": {
-      "env_index": 35.7,
-      "env_percentile": 0.0,
-      "regime": "NEUTRAL",
-      "regime_label": " 观察期",
-      "regime_desc": "部分维度改善，但系统性卖权窗口尚不够厚",
-      "total_symbols": 61,
-      "high_iv_70_count": 18,
-      "high_iv_70_pct": 29.5,
-      "high_iv_85_count": 4,
-      "high_iv_85_pct": 6.6,
-      "high_amount_50_count": 37,
-      "high_amount_50_pct": 60.7,
-      "high_amount_70_count": 19,
-      "high_amount_70_pct": 31.1,
-      "high_liq_50_count": 33,
-      "high_liq_50_pct": 54.1,
-      "high_liq_70_count": 17,
-      "high_liq_70_pct": 27.9,
-      "both_high_count": 13,
-      "both_high_pct": 21.3
-    },
-    "symbols": [
-      {
-        "symbol": "JD",
-        "cn_name": "鸡蛋",
-        "exchange": "DCE",
-        "fut_price": 3664.0,
-        "atm_price": 64.1,
-        "iv_proxy": 0.0175,
-        "iv_percentile": 98.9,
-        "total_vol": 515771,
-        "total_amount": 26115.6,
-        "total_oi": 228896,
-        "vol_percentile": 98.9,
-        "amount_percentile": 100.0,
-        "oi_percentile": 81.7,
-        "liquidity_percentile": 96.0,
-        "sell_env_score": 97.7,
-        "samples": 180
-      },
-      {
-        "symbol": "BC",
-        "cn_name": "国际铜",
-        "exchange": "INE",
-        "fut_price": 94500.0,
-        "atm_price": 3296.39,
-        "iv_proxy": 0.0349,
-        "iv_percentile": 100.0,
-        "total_vol": 2250,
-        "total_amount": 2631.0,
-        "total_oi": 1759,
-        "vol_percentile": 100.0,
-        "amount_percentile": 87.5,
-        "oi_percentile": 100.0,
-        "liquidity_percentile": 93.8,
-        "sell_env_score": 97.5,
-        "samples": 16
-      },
-      {
-        "symbol": "SR",
-        "cn_name": "白糖",
-        "exchange": "CZCE",
-        "fut_price": 5504.0,
-        "atm_price": 66.81,
-        "iv_proxy": 0.0121,
-        "iv_percentile": 95.0,
-        "total_vol": 146022,
-        "total_amount": 9220.9,
-        "total_oi": 388364,
-        "vol_percentile": 87.2,
-        "amount_percentile": 95.0,
-        "oi_percentile": 93.9,
-        "liquidity_percentile": 92.4,
-        "sell_env_score": 94.0,
-        "samples": 180
-      },
-      {
-        "symbol": "SN",
-        "cn_name": "锡",
         "exchange": "SHFE",
-        "fut_price": 425060.0,
-        "atm_price": 5215.33,
-        "iv_proxy": 0.0123,
-        "iv_percentile": 75.0,
-        "total_vol": 131614,
-        "total_amount": 82561.5,
-        "total_oi": 35443,
-        "vol_percentile": 84.4,
-        "amount_percentile": 89.4,
-        "oi_percentile": 78.9,
-        "liquidity_percentile": 85.8,
-        "sell_env_score": 79.3,
-        "samples": 180
-      },
-      {
-        "symbol": "CU",
-        "cn_name": "铜",
-        "exchange": "SHFE",
-        "fut_price": 106510.0,
-        "atm_price": 1331.3,
-        "iv_proxy": 0.0125,
-        "iv_percentile": 80.0,
-        "total_vol": 288028,
-        "total_amount": 184649.3,
-        "total_oi": 115623,
+        "fut_price": 18325.0,
+        "atm_price": 468.9,
+        "iv_proxy": 0.0256,
+        "iv_percentile": 93.9,
+        "total_vol": 59710,
+        "total_amount": 20360.6,
+        "total_oi": 59881,
         "vol_percentile": 87.8,
-        "amount_percentile": 89.4,
-        "oi_percentile": 32.2,
-        "liquidity_percentile": 77.5,
-        "sell_env_score": 79.0,
+        "amount_percentile": 98.3,
+        "oi_percentile": 70.0,
+        "liquidity_percentile": 89.5,
+        "sell_env_score": 92.1,
         "samples": 180
       },
       {
         "symbol": "A",
         "cn_name": "豆一",
         "exchange": "DCE",
-        "fut_price": 4777.0,
-        "atm_price": 49.21,
-        "iv_proxy": 0.0103,
-        "iv_percentile": 73.9,
-        "total_vol": 75461,
-        "total_amount": 4185.8,
-        "total_oi": 115838,
-        "vol_percentile": 80.6,
-        "amount_percentile": 86.7,
-        "oi_percentile": 92.2,
-        "liquidity_percentile": 85.9,
-        "sell_env_score": 78.7,
+        "fut_price": 4815.0,
+        "atm_price": 62.31,
+        "iv_proxy": 0.0129,
+        "iv_percentile": 88.9,
+        "total_vol": 102918,
+        "total_amount": 6202.8,
+        "total_oi": 121401,
+        "vol_percentile": 93.3,
+        "amount_percentile": 96.7,
+        "oi_percentile": 94.4,
+        "liquidity_percentile": 95.2,
+        "sell_env_score": 91.4,
         "samples": 180
       },
       {
-        "symbol": "AG",
-        "cn_name": "白银",
-        "exchange": "SHFE",
-        "fut_price": 20779.0,
-        "atm_price": 620.67,
-        "iv_proxy": 0.0299,
-        "iv_percentile": 81.1,
-        "total_vol": 620504,
-        "total_amount": 495603.2,
-        "total_oi": 214102,
-        "vol_percentile": 58.9,
-        "amount_percentile": 86.7,
-        "oi_percentile": 20.6,
-        "liquidity_percentile": 65.1,
-        "sell_env_score": 74.7,
-        "samples": 180
-      },
-      {
-        "symbol": "IM",
-        "cn_name": "中证1000",
-        "exchange": "CFFEX",
-        "fut_price": 8701.8,
-        "atm_price": 170.67,
-        "iv_proxy": 0.0196,
-        "iv_percentile": 67.2,
-        "total_vol": 350188,
-        "total_amount": 495987.4,
-        "total_oi": 382812,
-        "vol_percentile": 73.3,
-        "amount_percentile": 81.7,
-        "oi_percentile": 100.0,
-        "liquidity_percentile": 82.8,
-        "sell_env_score": 73.5,
-        "samples": 180
-      },
-      {
-        "symbol": "NI",
-        "cn_name": "镍",
-        "exchange": "SHFE",
-        "fut_price": 145280.0,
-        "atm_price": 1237.11,
-        "iv_proxy": 0.0085,
-        "iv_percentile": 66.1,
-        "total_vol": 183003,
-        "total_amount": 29907.7,
-        "total_oi": 98799,
-        "vol_percentile": 80.0,
-        "amount_percentile": 77.8,
-        "oi_percentile": 88.9,
-        "liquidity_percentile": 80.7,
-        "sell_env_score": 71.9,
-        "samples": 180
-      },
-      {
-        "symbol": "BU",
-        "cn_name": "沥青",
-        "exchange": "SHFE",
-        "fut_price": 4477.0,
-        "atm_price": 65.88,
-        "iv_proxy": 0.0147,
-        "iv_percentile": 79.2,
-        "total_vol": 36080,
-        "total_amount": 1402.1,
-        "total_oi": 47106,
-        "vol_percentile": 50.7,
-        "amount_percentile": 61.1,
-        "oi_percentile": 72.2,
-        "liquidity_percentile": 60.2,
-        "sell_env_score": 71.6,
-        "samples": 144
-      },
-      {
-        "symbol": "CF",
-        "cn_name": "棉花",
+        "symbol": "SR",
+        "cn_name": "白糖",
         "exchange": "CZCE",
-        "fut_price": 16375.0,
-        "atm_price": 219.43,
-        "iv_proxy": 0.0134,
-        "iv_percentile": 76.1,
-        "total_vol": 172276,
-        "total_amount": 19207.6,
-        "total_oi": 391439,
-        "vol_percentile": 58.9,
-        "amount_percentile": 77.2,
-        "oi_percentile": 34.4,
-        "liquidity_percentile": 63.2,
-        "sell_env_score": 70.9,
-        "samples": 180
-      },
-      {
-        "symbol": "ZN",
-        "cn_name": "锌",
-        "exchange": "SHFE",
-        "fut_price": 24380.0,
-        "atm_price": 157.0,
-        "iv_proxy": 0.0064,
-        "iv_percentile": 68.3,
-        "total_vol": 70072,
-        "total_amount": 5684.7,
-        "total_oi": 32339,
-        "vol_percentile": 82.2,
-        "amount_percentile": 86.7,
-        "oi_percentile": 28.9,
-        "liquidity_percentile": 73.8,
-        "sell_env_score": 70.5,
-        "samples": 180
-      },
-      {
-        "symbol": "PX",
-        "cn_name": "PX",
-        "exchange": "CZCE",
-        "fut_price": 9432.0,
-        "atm_price": 112.92,
-        "iv_proxy": 0.012,
-        "iv_percentile": 75.6,
-        "total_vol": 46668,
-        "total_amount": 2379.6,
-        "total_oi": 62384,
-        "vol_percentile": 52.2,
-        "amount_percentile": 65.0,
-        "oi_percentile": 67.2,
-        "liquidity_percentile": 61.6,
-        "sell_env_score": 70.0,
-        "samples": 180
-      },
-      {
-        "symbol": "RU",
-        "cn_name": "橡胶",
-        "exchange": "SHFE",
-        "fut_price": 17750.0,
-        "atm_price": 306.06,
-        "iv_proxy": 0.0172,
-        "iv_percentile": 68.9,
-        "total_vol": 29166,
-        "total_amount": 8904.3,
-        "total_oi": 55999,
-        "vol_percentile": 54.4,
-        "amount_percentile": 75.0,
-        "oi_percentile": 59.4,
-        "liquidity_percentile": 65.7,
-        "sell_env_score": 67.6,
-        "samples": 180
-      },
-      {
-        "symbol": "C",
-        "cn_name": "玉米",
-        "exchange": "DCE",
-        "fut_price": 2359.0,
-        "atm_price": 22.17,
-        "iv_proxy": 0.0094,
-        "iv_percentile": 78.3,
-        "total_vol": 101923,
-        "total_amount": 2246.5,
-        "total_oi": 441889,
-        "vol_percentile": 31.1,
-        "amount_percentile": 53.3,
-        "oi_percentile": 62.2,
-        "liquidity_percentile": 48.4,
-        "sell_env_score": 66.4,
-        "samples": 180
-      },
-      {
-        "symbol": "BR",
-        "cn_name": "丁二烯",
-        "exchange": "SHFE",
-        "fut_price": 15765.0,
-        "atm_price": 192.02,
-        "iv_proxy": 0.0122,
-        "iv_percentile": 71.7,
-        "total_vol": 52771,
-        "total_amount": 4152.4,
-        "total_oi": 34279,
-        "vol_percentile": 47.8,
-        "amount_percentile": 64.4,
-        "oi_percentile": 58.3,
-        "liquidity_percentile": 58.2,
-        "sell_env_score": 66.3,
-        "samples": 180
-      },
-      {
-        "symbol": "PG",
-        "cn_name": "LPG",
-        "exchange": "DCE",
-        "fut_price": 6156.0,
-        "atm_price": 111.81,
-        "iv_proxy": 0.0182,
-        "iv_percentile": 82.2,
-        "total_vol": 32440,
-        "total_amount": 4226.3,
-        "total_oi": 17480,
-        "vol_percentile": 28.9,
-        "amount_percentile": 59.4,
-        "oi_percentile": 16.7,
-        "liquidity_percentile": 41.7,
-        "sell_env_score": 66.0,
-        "samples": 180
-      },
-      {
-        "symbol": "EG",
-        "cn_name": "乙二醇",
-        "exchange": "DCE",
-        "fut_price": 4836.0,
-        "atm_price": 48.02,
-        "iv_proxy": 0.0099,
-        "iv_percentile": 70.6,
-        "total_vol": 51817,
-        "total_amount": 2546.5,
-        "total_oi": 74528,
-        "vol_percentile": 48.9,
-        "amount_percentile": 65.6,
-        "oi_percentile": 45.6,
-        "liquidity_percentile": 56.6,
-        "sell_env_score": 65.0,
-        "samples": 180
-      },
-      {
-        "symbol": "PP",
-        "cn_name": "聚丙烯",
-        "exchange": "DCE",
-        "fut_price": 8811.0,
-        "atm_price": 102.33,
-        "iv_proxy": 0.0116,
-        "iv_percentile": 79.4,
-        "total_vol": 25902,
-        "total_amount": 1081.9,
-        "total_oi": 32291,
-        "vol_percentile": 20.0,
-        "amount_percentile": 64.4,
-        "oi_percentile": 7.8,
-        "liquidity_percentile": 39.8,
-        "sell_env_score": 63.6,
-        "samples": 180
-      },
-      {
-        "symbol": "IF",
-        "cn_name": "沪深300",
-        "exchange": "CFFEX",
-        "fut_price": 4911.6,
-        "atm_price": 84.79,
-        "iv_proxy": 0.0173,
-        "iv_percentile": 70.0,
-        "total_vol": 117951,
-        "total_amount": 86120.5,
-        "total_oi": 194292,
-        "vol_percentile": 46.7,
-        "amount_percentile": 60.0,
-        "oi_percentile": 50.0,
-        "liquidity_percentile": 54.0,
-        "sell_env_score": 63.6,
-        "samples": 180
-      },
-      {
-        "symbol": "LH",
-        "cn_name": "生猪",
-        "exchange": "DCE",
-        "fut_price": 10815.0,
-        "atm_price": 94.37,
-        "iv_proxy": 0.0087,
-        "iv_percentile": 41.1,
-        "total_vol": 93009,
-        "total_amount": 21821.1,
-        "total_oi": 159920,
-        "vol_percentile": 97.8,
-        "amount_percentile": 96.1,
-        "oi_percentile": 97.2,
-        "liquidity_percentile": 96.8,
-        "sell_env_score": 63.4,
-        "samples": 180
-      },
-      {
-        "symbol": "SP",
-        "cn_name": "纸浆",
-        "exchange": "SHFE",
-        "fut_price": 5138.0,
-        "atm_price": 77.46,
-        "iv_proxy": 0.0151,
-        "iv_percentile": 71.5,
-        "total_vol": 13959,
-        "total_amount": 1060.2,
-        "total_oi": 42474,
-        "vol_percentile": 37.5,
-        "amount_percentile": 47.9,
-        "oi_percentile": 68.1,
-        "liquidity_percentile": 48.8,
-        "sell_env_score": 62.4,
-        "samples": 144
-      },
-      {
-        "symbol": "SC",
-        "cn_name": "原油",
-        "exchange": "INE",
-        "fut_price": 645.6,
-        "atm_price": 7.7,
-        "iv_proxy": 0.0119,
-        "iv_percentile": 49.4,
-        "total_vol": 138391,
-        "total_amount": 64855.4,
-        "total_oi": 73983,
-        "vol_percentile": 82.2,
-        "amount_percentile": 76.1,
-        "oi_percentile": 92.8,
-        "liquidity_percentile": 81.3,
-        "sell_env_score": 62.2,
-        "samples": 180
-      },
-      {
-        "symbol": "IH",
-        "cn_name": "上证50",
-        "exchange": "CFFEX",
-        "fut_price": 3029.2,
-        "atm_price": 52.89,
-        "iv_proxy": 0.0175,
-        "iv_percentile": 64.4,
-        "total_vol": 36830,
-        "total_amount": 17711.6,
-        "total_oi": 78995,
-        "vol_percentile": 47.2,
-        "amount_percentile": 53.9,
-        "oi_percentile": 72.8,
-        "liquidity_percentile": 55.7,
-        "sell_env_score": 60.9,
-        "samples": 180
-      },
-      {
-        "symbol": "PK",
-        "cn_name": "花生",
-        "exchange": "CZCE",
-        "fut_price": 8256.0,
-        "atm_price": 99.77,
-        "iv_proxy": 0.0121,
-        "iv_percentile": 92.2,
-        "total_vol": 10119,
-        "total_amount": 515.4,
-        "total_oi": 46607,
-        "vol_percentile": 1.7,
-        "amount_percentile": 7.2,
-        "oi_percentile": 7.8,
-        "liquidity_percentile": 5.7,
-        "sell_env_score": 57.6,
-        "samples": 180
-      },
-      {
-        "symbol": "FU",
-        "cn_name": "燃油",
-        "exchange": "SHFE",
-        "fut_price": 4489.0,
-        "atm_price": 84.39,
-        "iv_proxy": 0.0188,
-        "iv_percentile": 47.2,
-        "total_vol": 112241,
-        "total_amount": 6212.2,
-        "total_oi": 137192,
-        "vol_percentile": 70.8,
-        "amount_percentile": 69.4,
-        "oi_percentile": 84.7,
-        "liquidity_percentile": 72.9,
-        "sell_env_score": 57.5,
-        "samples": 144
-      },
-      {
-        "symbol": "Y",
-        "cn_name": "豆油",
-        "exchange": "DCE",
-        "fut_price": 8551.0,
-        "atm_price": 75.51,
-        "iv_proxy": 0.0088,
-        "iv_percentile": 51.7,
-        "total_vol": 53048,
-        "total_amount": 3897.3,
-        "total_oi": 83290,
-        "vol_percentile": 66.1,
-        "amount_percentile": 69.4,
-        "oi_percentile": 35.0,
-        "liquidity_percentile": 61.6,
-        "sell_env_score": 55.6,
-        "samples": 180
-      },
-      {
-        "symbol": "EB",
-        "cn_name": "苯乙烯",
-        "exchange": "DCE",
-        "fut_price": 9283.0,
-        "atm_price": 62.61,
-        "iv_proxy": 0.0067,
-        "iv_percentile": 44.4,
-        "total_vol": 252394,
-        "total_amount": 9062.6,
-        "total_oi": 124861,
-        "vol_percentile": 73.9,
-        "amount_percentile": 73.9,
-        "oi_percentile": 64.4,
-        "liquidity_percentile": 72.0,
-        "sell_env_score": 55.5,
-        "samples": 180
-      },
-      {
-        "symbol": "AP",
-        "cn_name": "苹果",
-        "exchange": "CZCE",
-        "fut_price": 7664.0,
-        "atm_price": 116.82,
-        "iv_proxy": 0.0152,
-        "iv_percentile": 65.6,
-        "total_vol": 10350,
-        "total_amount": 1474.8,
-        "total_oi": 26796,
-        "vol_percentile": 31.7,
-        "amount_percentile": 42.8,
-        "oi_percentile": 36.7,
-        "liquidity_percentile": 38.2,
-        "sell_env_score": 54.6,
-        "samples": 180
-      },
-      {
-        "symbol": "AL",
-        "cn_name": "铝",
-        "exchange": "SHFE",
-        "fut_price": 4727.0,
-        "atm_price": 154.91,
-        "iv_proxy": 0.0328,
-        "iv_percentile": 47.8,
-        "total_vol": 120719,
-        "total_amount": 10040.8,
-        "total_oi": 136777,
-        "vol_percentile": 59.4,
-        "amount_percentile": 61.1,
-        "oi_percentile": 73.3,
-        "liquidity_percentile": 63.1,
-        "sell_env_score": 53.9,
-        "samples": 180
-      },
-      {
-        "symbol": "MA",
-        "cn_name": "甲醇",
-        "exchange": "CZCE",
-        "fut_price": 2915.0,
-        "atm_price": 23.78,
-        "iv_proxy": 0.0082,
-        "iv_percentile": 36.1,
-        "total_vol": 539028,
-        "total_amount": 11415.1,
-        "total_oi": 580444,
+        "fut_price": 5479.0,
+        "atm_price": 56.89,
+        "iv_proxy": 0.0104,
+        "iv_percentile": 93.3,
+        "total_vol": 122309,
+        "total_amount": 6854.5,
+        "total_oi": 395944,
         "vol_percentile": 78.9,
-        "amount_percentile": 70.0,
-        "oi_percentile": 88.9,
-        "liquidity_percentile": 76.4,
-        "sell_env_score": 52.2,
-        "samples": 180
-      },
-      {
-        "symbol": "RB",
-        "cn_name": "螺纹",
-        "exchange": "SHFE",
-        "fut_price": 3255.0,
-        "atm_price": 33.46,
-        "iv_proxy": 0.0103,
-        "iv_percentile": 65.0,
-        "total_vol": 64739,
-        "total_amount": 2246.3,
-        "total_oi": 245540,
-        "vol_percentile": 21.1,
-        "amount_percentile": 38.3,
-        "oi_percentile": 24.4,
-        "liquidity_percentile": 30.4,
-        "sell_env_score": 51.2,
-        "samples": 180
-      },
-      {
-        "symbol": "CS",
-        "cn_name": "淀粉",
-        "exchange": "DCE",
-        "fut_price": 2688.0,
-        "atm_price": 15.22,
-        "iv_proxy": 0.0057,
-        "iv_percentile": 26.7,
-        "total_vol": 33567,
-        "total_amount": 604.8,
-        "total_oi": 72510,
-        "vol_percentile": 82.2,
-        "amount_percentile": 78.9,
-        "oi_percentile": 92.8,
-        "liquidity_percentile": 82.7,
-        "sell_env_score": 49.1,
-        "samples": 180
-      },
-      {
-        "symbol": "RM",
-        "cn_name": "菜粕",
-        "exchange": "CZCE",
-        "fut_price": 2376.0,
-        "atm_price": 33.6,
-        "iv_proxy": 0.0141,
-        "iv_percentile": 51.7,
-        "total_vol": 77145,
-        "total_amount": 2653.1,
-        "total_oi": 205334,
-        "vol_percentile": 33.9,
-        "amount_percentile": 42.8,
-        "oi_percentile": 67.2,
-        "liquidity_percentile": 45.0,
-        "sell_env_score": 49.0,
-        "samples": 180
-      },
-      {
-        "symbol": "M",
-        "cn_name": "豆粕",
-        "exchange": "DCE",
-        "fut_price": 3033.0,
-        "atm_price": 37.1,
-        "iv_proxy": 0.0122,
-        "iv_percentile": 63.9,
-        "total_vol": 166662,
-        "total_amount": 5990.3,
-        "total_oi": 525760,
-        "vol_percentile": 21.1,
-        "amount_percentile": 28.3,
-        "oi_percentile": 20.0,
-        "liquidity_percentile": 24.5,
-        "sell_env_score": 48.1,
+        "amount_percentile": 87.2,
+        "oi_percentile": 93.9,
+        "liquidity_percentile": 86.1,
+        "sell_env_score": 90.4,
         "samples": 180
       },
       {
         "symbol": "NR",
         "cn_name": "20号胶",
         "exchange": "INE",
-        "fut_price": 14975.0,
-        "atm_price": 359.26,
-        "iv_proxy": 0.024,
-        "iv_percentile": 12.5,
-        "total_vol": 2624,
-        "total_amount": 1002.8,
-        "total_oi": 2930,
-        "vol_percentile": 100.0,
-        "amount_percentile": 100.0,
+        "fut_price": 15550.0,
+        "atm_price": 555.7,
+        "iv_proxy": 0.0357,
+        "iv_percentile": 94.4,
+        "total_vol": 1111,
+        "total_amount": 465.6,
+        "total_oi": 2979,
+        "vol_percentile": 77.8,
+        "amount_percentile": 77.8,
         "oi_percentile": 100.0,
-        "liquidity_percentile": 100.0,
-        "sell_env_score": 47.5,
-        "samples": 16
+        "liquidity_percentile": 82.2,
+        "sell_env_score": 89.6,
+        "samples": 18
       },
       {
-        "symbol": "CJ",
-        "cn_name": "红枣",
-        "exchange": "CZCE",
-        "fut_price": 9255.0,
-        "atm_price": 111.81,
-        "iv_proxy": 0.0121,
-        "iv_percentile": 50.6,
-        "total_vol": 13032,
-        "total_amount": 768.2,
-        "total_oi": 54996,
-        "vol_percentile": 41.7,
-        "amount_percentile": 30.6,
-        "oi_percentile": 40.6,
-        "liquidity_percentile": 35.9,
-        "sell_env_score": 44.7,
+        "symbol": "JD",
+        "cn_name": "鸡蛋",
+        "exchange": "DCE",
+        "fut_price": 3606.0,
+        "atm_price": 38.34,
+        "iv_proxy": 0.0106,
+        "iv_percentile": 85.0,
+        "total_vol": 326626,
+        "total_amount": 12347.6,
+        "total_oi": 242305,
+        "vol_percentile": 95.0,
+        "amount_percentile": 98.3,
+        "oi_percentile": 82.8,
+        "liquidity_percentile": 94.2,
+        "sell_env_score": 88.7,
+        "samples": 180
+      },
+      {
+        "symbol": "CS",
+        "cn_name": "淀粉",
+        "exchange": "DCE",
+        "fut_price": 2710.0,
+        "atm_price": 24.4,
+        "iv_proxy": 0.009,
+        "iv_percentile": 84.4,
+        "total_vol": 38672,
+        "total_amount": 944.4,
+        "total_oi": 78100,
+        "vol_percentile": 88.9,
+        "amount_percentile": 92.8,
+        "oi_percentile": 95.0,
+        "liquidity_percentile": 92.1,
+        "sell_env_score": 87.5,
+        "samples": 180
+      },
+      {
+        "symbol": "ZN",
+        "cn_name": "锌",
+        "exchange": "SHFE",
+        "fut_price": 24830.0,
+        "atm_price": 247.71,
+        "iv_proxy": 0.01,
+        "iv_percentile": 91.1,
+        "total_vol": 75424,
+        "total_amount": 7076.8,
+        "total_oi": 35987,
+        "vol_percentile": 86.7,
+        "amount_percentile": 90.0,
+        "oi_percentile": 37.2,
+        "liquidity_percentile": 78.4,
+        "sell_env_score": 86.0,
+        "samples": 180
+      },
+      {
+        "symbol": "LH",
+        "cn_name": "生猪",
+        "exchange": "DCE",
+        "fut_price": 10865.0,
+        "atm_price": 121.98,
+        "iv_proxy": 0.0112,
+        "iv_percentile": 75.0,
+        "total_vol": 81785,
+        "total_amount": 19219.0,
+        "total_oi": 161218,
+        "vol_percentile": 95.0,
+        "amount_percentile": 95.0,
+        "oi_percentile": 97.8,
+        "liquidity_percentile": 95.6,
+        "sell_env_score": 83.2,
+        "samples": 180
+      },
+      {
+        "symbol": "SN",
+        "cn_name": "锡",
+        "exchange": "SHFE",
+        "fut_price": 434410.0,
+        "atm_price": 6952.12,
+        "iv_proxy": 0.016,
+        "iv_percentile": 84.4,
+        "total_vol": 112215,
+        "total_amount": 58118.8,
+        "total_oi": 38309,
+        "vol_percentile": 77.8,
+        "amount_percentile": 82.2,
+        "oi_percentile": 83.3,
+        "liquidity_percentile": 81.1,
+        "sell_env_score": 83.1,
+        "samples": 180
+      },
+      {
+        "symbol": "CU",
+        "cn_name": "铜",
+        "exchange": "SHFE",
+        "fut_price": 108510.0,
+        "atm_price": 1608.81,
+        "iv_proxy": 0.0148,
+        "iv_percentile": 83.9,
+        "total_vol": 278386,
+        "total_amount": 185298.2,
+        "total_oi": 121049,
+        "vol_percentile": 86.7,
+        "amount_percentile": 88.9,
+        "oi_percentile": 36.7,
+        "liquidity_percentile": 77.8,
+        "sell_env_score": 81.4,
+        "samples": 180
+      },
+      {
+        "symbol": "IF",
+        "cn_name": "沪深300",
+        "exchange": "CFFEX",
+        "fut_price": 4968.8,
+        "atm_price": 101.21,
+        "iv_proxy": 0.0204,
+        "iv_percentile": 86.1,
+        "total_vol": 148170,
+        "total_amount": 99620.6,
+        "total_oi": 192938,
+        "vol_percentile": 68.3,
+        "amount_percentile": 71.1,
+        "oi_percentile": 48.3,
+        "liquidity_percentile": 65.7,
+        "sell_env_score": 78.0,
+        "samples": 180
+      },
+      {
+        "symbol": "AL",
+        "cn_name": "铝",
+        "exchange": "SHFE",
+        "fut_price": 4749.0,
+        "atm_price": 240.37,
+        "iv_proxy": 0.0506,
+        "iv_percentile": 76.7,
+        "total_vol": 157397,
+        "total_amount": 14461.4,
+        "total_oi": 144661,
+        "vol_percentile": 66.7,
+        "amount_percentile": 72.8,
+        "oi_percentile": 76.1,
+        "liquidity_percentile": 71.6,
+        "sell_env_score": 74.6,
+        "samples": 180
+      },
+      {
+        "symbol": "EG",
+        "cn_name": "乙二醇",
+        "exchange": "DCE",
+        "fut_price": 4829.0,
+        "atm_price": 56.12,
+        "iv_proxy": 0.0116,
+        "iv_percentile": 77.2,
+        "total_vol": 69356,
+        "total_amount": 4455.7,
+        "total_oi": 79259,
+        "vol_percentile": 65.6,
+        "amount_percentile": 77.8,
+        "oi_percentile": 48.3,
+        "liquidity_percentile": 68.2,
+        "sell_env_score": 73.6,
+        "samples": 180
+      },
+      {
+        "symbol": "NI",
+        "cn_name": "镍",
+        "exchange": "SHFE",
+        "fut_price": 147190.0,
+        "atm_price": 1648.39,
+        "iv_proxy": 0.0112,
+        "iv_percentile": 72.8,
+        "total_vol": 136454,
+        "total_amount": 18348.1,
+        "total_oi": 102211,
+        "vol_percentile": 73.9,
+        "amount_percentile": 67.2,
+        "oi_percentile": 91.1,
+        "liquidity_percentile": 74.0,
+        "sell_env_score": 73.3,
         "samples": 180
       },
       {
         "symbol": "V",
         "cn_name": "PVC",
         "exchange": "DCE",
-        "fut_price": 5105.0,
-        "atm_price": 29.89,
-        "iv_proxy": 0.0059,
-        "iv_percentile": 47.2,
-        "total_vol": 125923,
-        "total_amount": 2759.2,
-        "total_oi": 142203,
-        "vol_percentile": 32.8,
-        "amount_percentile": 53.9,
+        "fut_price": 5229.0,
+        "atm_price": 67.2,
+        "iv_proxy": 0.0129,
+        "iv_percentile": 82.2,
+        "total_vol": 251794,
+        "total_amount": 4794.9,
+        "total_oi": 155689,
+        "vol_percentile": 73.9,
+        "amount_percentile": 71.1,
         "oi_percentile": 10.6,
-        "liquidity_percentile": 38.9,
-        "sell_env_score": 43.9,
+        "liquidity_percentile": 59.8,
+        "sell_env_score": 73.3,
         "samples": 180
       },
       {
-        "symbol": "UR",
-        "cn_name": "尿素",
+        "symbol": "M",
+        "cn_name": "豆粕",
+        "exchange": "DCE",
+        "fut_price": 3048.0,
+        "atm_price": 40.72,
+        "iv_proxy": 0.0134,
+        "iv_percentile": 73.9,
+        "total_vol": 372285,
+        "total_amount": 14659.9,
+        "total_oi": 529252,
+        "vol_percentile": 76.7,
+        "amount_percentile": 88.3,
+        "oi_percentile": 18.9,
+        "liquidity_percentile": 70.9,
+        "sell_env_score": 72.7,
+        "samples": 180
+      },
+      {
+        "symbol": "AG",
+        "cn_name": "白银",
+        "exchange": "SHFE",
+        "fut_price": 21297.0,
+        "atm_price": 657.65,
+        "iv_proxy": 0.0309,
+        "iv_percentile": 83.3,
+        "total_vol": 518874,
+        "total_amount": 365999.8,
+        "total_oi": 229700,
+        "vol_percentile": 47.8,
+        "amount_percentile": 73.9,
+        "oi_percentile": 26.1,
+        "liquidity_percentile": 56.5,
+        "sell_env_score": 72.6,
+        "samples": 180
+      },
+      {
+        "symbol": "CF",
+        "cn_name": "棉花",
         "exchange": "CZCE",
-        "fut_price": 1883.0,
-        "atm_price": 11.57,
-        "iv_proxy": 0.0061,
-        "iv_percentile": 17.8,
-        "total_vol": 65610,
-        "total_amount": 1970.3,
-        "total_oi": 157413,
-        "vol_percentile": 81.7,
-        "amount_percentile": 76.7,
+        "fut_price": 16495.0,
+        "atm_price": 250.8,
+        "iv_proxy": 0.0152,
+        "iv_percentile": 80.6,
+        "total_vol": 149910,
+        "total_amount": 17061.8,
+        "total_oi": 398955,
+        "vol_percentile": 47.8,
+        "amount_percentile": 73.3,
+        "oi_percentile": 33.3,
+        "liquidity_percentile": 57.7,
+        "sell_env_score": 71.4,
+        "samples": 180
+      },
+      {
+        "symbol": "BR",
+        "cn_name": "丁二烯",
+        "exchange": "SHFE",
+        "fut_price": 15925.0,
+        "atm_price": 210.8,
+        "iv_proxy": 0.0132,
+        "iv_percentile": 77.2,
+        "total_vol": 54063,
+        "total_amount": 4367.7,
+        "total_oi": 36715,
+        "vol_percentile": 48.9,
+        "amount_percentile": 67.8,
+        "oi_percentile": 65.0,
+        "liquidity_percentile": 61.6,
+        "sell_env_score": 71.0,
+        "samples": 180
+      },
+      {
+        "symbol": "SP",
+        "cn_name": "纸浆",
+        "exchange": "SHFE",
+        "fut_price": 5166.0,
+        "atm_price": 85.14,
+        "iv_proxy": 0.0165,
+        "iv_percentile": 82.1,
+        "total_vol": 15313,
+        "total_amount": 1153.4,
+        "total_oi": 44191,
+        "vol_percentile": 41.4,
+        "amount_percentile": 54.3,
+        "oi_percentile": 70.7,
+        "liquidity_percentile": 53.7,
+        "sell_env_score": 70.8,
+        "samples": 140
+      },
+      {
+        "symbol": "BC",
+        "cn_name": "国际铜",
+        "exchange": "INE",
+        "fut_price": 96420.0,
+        "atm_price": 2565.6,
+        "iv_proxy": 0.0266,
+        "iv_percentile": 55.6,
+        "total_vol": 1779,
+        "total_amount": 1711.8,
+        "total_oi": 1969,
+        "vol_percentile": 88.9,
+        "amount_percentile": 72.2,
         "oi_percentile": 100.0,
         "liquidity_percentile": 82.8,
-        "sell_env_score": 43.8,
+        "sell_env_score": 66.4,
+        "samples": 18
+      },
+      {
+        "symbol": "PK",
+        "cn_name": "花生",
+        "exchange": "CZCE",
+        "fut_price": 8232.0,
+        "atm_price": 101.03,
+        "iv_proxy": 0.0123,
+        "iv_percentile": 96.1,
+        "total_vol": 12315,
+        "total_amount": 653.7,
+        "total_oi": 48981,
+        "vol_percentile": 2.2,
+        "amount_percentile": 18.3,
+        "oi_percentile": 5.0,
+        "liquidity_percentile": 10.8,
+        "sell_env_score": 62.0,
+        "samples": 180
+      },
+      {
+        "symbol": "C",
+        "cn_name": "玉米",
+        "exchange": "DCE",
+        "fut_price": 2378.0,
+        "atm_price": 20.46,
+        "iv_proxy": 0.0086,
+        "iv_percentile": 66.7,
+        "total_vol": 122383,
+        "total_amount": 2334.6,
+        "total_oi": 449369,
+        "vol_percentile": 43.9,
+        "amount_percentile": 55.6,
+        "oi_percentile": 64.4,
+        "liquidity_percentile": 53.8,
+        "sell_env_score": 61.5,
+        "samples": 180
+      },
+      {
+        "symbol": "PP",
+        "cn_name": "聚丙烯",
+        "exchange": "DCE",
+        "fut_price": 8818.0,
+        "atm_price": 98.61,
+        "iv_proxy": 0.0112,
+        "iv_percentile": 81.1,
+        "total_vol": 18894,
+        "total_amount": 711.0,
+        "total_oi": 33889,
+        "vol_percentile": 7.2,
+        "amount_percentile": 39.4,
+        "oi_percentile": 5.0,
+        "liquidity_percentile": 22.9,
+        "sell_env_score": 57.8,
+        "samples": 180
+      },
+      {
+        "symbol": "CJ",
+        "cn_name": "红枣",
+        "exchange": "CZCE",
+        "fut_price": 9385.0,
+        "atm_price": 160.49,
+        "iv_proxy": 0.0171,
+        "iv_percentile": 67.2,
+        "total_vol": 14445,
+        "total_amount": 956.7,
+        "total_oi": 56191,
+        "vol_percentile": 44.4,
+        "amount_percentile": 38.3,
+        "oi_percentile": 40.6,
+        "liquidity_percentile": 40.6,
+        "sell_env_score": 56.6,
         "samples": 180
       },
       {
         "symbol": "AD",
         "cn_name": "氧化铝",
         "exchange": "SHFE",
-        "fut_price": 23225.0,
-        "atm_price": 240.2,
-        "iv_proxy": 0.0103,
-        "iv_percentile": 61.1,
-        "total_vol": 637,
-        "total_amount": 146.0,
-        "total_oi": 1841,
-        "vol_percentile": 8.9,
+        "fut_price": 23480.0,
+        "atm_price": 338.53,
+        "iv_proxy": 0.0144,
+        "iv_percentile": 83.9,
+        "total_vol": 505,
+        "total_amount": 152.6,
+        "total_oi": 1999,
+        "vol_percentile": 5.0,
         "amount_percentile": 21.1,
-        "oi_percentile": 17.2,
-        "liquidity_percentile": 16.7,
-        "sell_env_score": 43.3,
+        "oi_percentile": 16.7,
+        "liquidity_percentile": 15.4,
+        "sell_env_score": 56.5,
         "samples": 180
       },
       {
-        "symbol": "PB",
-        "cn_name": "铅",
-        "exchange": "SHFE",
-        "fut_price": 16580.0,
-        "atm_price": 56.25,
-        "iv_proxy": 0.0034,
-        "iv_percentile": 34.4,
-        "total_vol": 10285,
-        "total_amount": 379.2,
-        "total_oi": 12108,
-        "vol_percentile": 48.9,
-        "amount_percentile": 52.2,
-        "oi_percentile": 43.3,
-        "liquidity_percentile": 49.4,
-        "sell_env_score": 40.4,
-        "samples": 180
-      },
-      {
-        "symbol": "TA",
-        "cn_name": "PTA",
+        "symbol": "AP",
+        "cn_name": "苹果",
         "exchange": "CZCE",
-        "fut_price": 6462.0,
-        "atm_price": 41.59,
-        "iv_proxy": 0.0064,
-        "iv_percentile": 26.7,
-        "total_vol": 530016,
-        "total_amount": 10888.9,
-        "total_oi": 304389,
-        "vol_percentile": 73.9,
-        "amount_percentile": 58.9,
-        "oi_percentile": 46.1,
-        "liquidity_percentile": 60.8,
-        "sell_env_score": 40.3,
-        "samples": 180
-      },
-      {
-        "symbol": "PL",
-        "cn_name": "PL",
-        "exchange": "CZCE",
-        "fut_price": 8568.0,
-        "atm_price": 98.19,
-        "iv_proxy": 0.0115,
-        "iv_percentile": 56.7,
-        "total_vol": 224,
-        "total_amount": 58.5,
-        "total_oi": 1365,
-        "vol_percentile": 6.7,
-        "amount_percentile": 8.3,
-        "oi_percentile": 8.3,
-        "liquidity_percentile": 7.8,
-        "sell_env_score": 37.1,
+        "fut_price": 7617.0,
+        "atm_price": 128.75,
+        "iv_proxy": 0.0169,
+        "iv_percentile": 72.2,
+        "total_vol": 8586,
+        "total_amount": 1198.0,
+        "total_oi": 27416,
+        "vol_percentile": 23.3,
+        "amount_percentile": 33.3,
+        "oi_percentile": 35.6,
+        "liquidity_percentile": 30.8,
+        "sell_env_score": 55.6,
         "samples": 180
       },
       {
         "symbol": "B",
         "cn_name": "豆二",
         "exchange": "DCE",
-        "fut_price": 3645.0,
-        "atm_price": 16.97,
-        "iv_proxy": 0.0047,
-        "iv_percentile": 26.7,
-        "total_vol": 31765,
-        "total_amount": 569.2,
-        "total_oi": 43547,
-        "vol_percentile": 56.7,
-        "amount_percentile": 34.4,
-        "oi_percentile": 61.1,
-        "liquidity_percentile": 46.4,
-        "sell_env_score": 34.6,
+        "fut_price": 3649.0,
+        "atm_price": 18.89,
+        "iv_proxy": 0.0052,
+        "iv_percentile": 32.8,
+        "total_vol": 63360,
+        "total_amount": 1395.1,
+        "total_oi": 46981,
+        "vol_percentile": 82.8,
+        "amount_percentile": 88.9,
+        "oi_percentile": 68.3,
+        "liquidity_percentile": 82.9,
+        "sell_env_score": 52.8,
         "samples": 180
       },
       {
-        "symbol": "P",
-        "cn_name": "棕榈油",
-        "exchange": "DCE",
-        "fut_price": 9565.0,
-        "atm_price": 54.17,
-        "iv_proxy": 0.0057,
-        "iv_percentile": 23.3,
-        "total_vol": 183579,
-        "total_amount": 12846.7,
-        "total_oi": 183966,
-        "vol_percentile": 53.3,
-        "amount_percentile": 46.1,
-        "oi_percentile": 58.9,
-        "liquidity_percentile": 50.8,
-        "sell_env_score": 34.3,
+        "symbol": "IH",
+        "cn_name": "上证50",
+        "exchange": "CFFEX",
+        "fut_price": 3033.0,
+        "atm_price": 47.77,
+        "iv_proxy": 0.0158,
+        "iv_percentile": 50.6,
+        "total_vol": 41137,
+        "total_amount": 16467.5,
+        "total_oi": 80322,
+        "vol_percentile": 53.9,
+        "amount_percentile": 47.8,
+        "oi_percentile": 75.0,
+        "liquidity_percentile": 55.1,
+        "sell_env_score": 52.4,
         "samples": 180
       },
       {
-        "symbol": "AU",
-        "cn_name": "黄金",
+        "symbol": "RM",
+        "cn_name": "菜粕",
+        "exchange": "CZCE",
+        "fut_price": 2378.0,
+        "atm_price": 32.03,
+        "iv_proxy": 0.0135,
+        "iv_percentile": 49.4,
+        "total_vol": 88001,
+        "total_amount": 3019.1,
+        "total_oi": 207461,
+        "vol_percentile": 44.4,
+        "amount_percentile": 53.9,
+        "oi_percentile": 67.2,
+        "liquidity_percentile": 53.7,
+        "sell_env_score": 51.2,
+        "samples": 180
+      },
+      {
+        "symbol": "BU",
+        "cn_name": "沥青",
         "exchange": "SHFE",
-        "fut_price": 1030.12,
-        "atm_price": 8.13,
-        "iv_proxy": 0.0079,
-        "iv_percentile": 23.9,
-        "total_vol": 127573,
-        "total_amount": 116466.7,
-        "total_oi": 108082,
-        "vol_percentile": 55.6,
-        "amount_percentile": 50.6,
-        "oi_percentile": 38.3,
-        "liquidity_percentile": 49.6,
-        "sell_env_score": 34.2,
+        "fut_price": 4395.0,
+        "atm_price": 37.85,
+        "iv_proxy": 0.0086,
+        "iv_percentile": 45.7,
+        "total_vol": 30939,
+        "total_amount": 1238.7,
+        "total_oi": 49701,
+        "vol_percentile": 43.6,
+        "amount_percentile": 60.0,
+        "oi_percentile": 77.1,
+        "liquidity_percentile": 58.5,
+        "sell_env_score": 50.8,
+        "samples": 140
+      },
+      {
+        "symbol": "Y",
+        "cn_name": "豆油",
+        "exchange": "DCE",
+        "fut_price": 8544.0,
+        "atm_price": 69.72,
+        "iv_proxy": 0.0082,
+        "iv_percentile": 48.3,
+        "total_vol": 42681,
+        "total_amount": 3276.8,
+        "total_oi": 83991,
+        "vol_percentile": 49.4,
+        "amount_percentile": 60.6,
+        "oi_percentile": 33.3,
+        "liquidity_percentile": 51.8,
+        "sell_env_score": 49.7,
         "samples": 180
       },
       {
-        "symbol": "PR",
-        "cn_name": "PR",
+        "symbol": "EB",
+        "cn_name": "苯乙烯",
+        "exchange": "DCE",
+        "fut_price": 9164.0,
+        "atm_price": 48.01,
+        "iv_proxy": 0.0052,
+        "iv_percentile": 31.1,
+        "total_vol": 242570,
+        "total_amount": 7851.7,
+        "total_oi": 138544,
+        "vol_percentile": 71.7,
+        "amount_percentile": 72.8,
+        "oi_percentile": 73.3,
+        "liquidity_percentile": 72.6,
+        "sell_env_score": 47.7,
+        "samples": 180
+      },
+      {
+        "symbol": "PG",
+        "cn_name": "LPG",
+        "exchange": "DCE",
+        "fut_price": 6092.0,
+        "atm_price": 41.61,
+        "iv_proxy": 0.0068,
+        "iv_percentile": 46.7,
+        "total_vol": 37952,
+        "total_amount": 5132.8,
+        "total_oi": 18239,
+        "vol_percentile": 30.6,
+        "amount_percentile": 72.2,
+        "oi_percentile": 16.1,
+        "liquidity_percentile": 48.5,
+        "sell_env_score": 47.4,
+        "samples": 180
+      },
+      {
+        "symbol": "PX",
+        "cn_name": "PX",
         "exchange": "CZCE",
-        "fut_price": 8372.0,
-        "atm_price": 34.61,
-        "iv_proxy": 0.0041,
-        "iv_percentile": 23.3,
-        "total_vol": 5633,
-        "total_amount": 267.4,
-        "total_oi": 7366,
-        "vol_percentile": 56.1,
-        "amount_percentile": 50.6,
+        "fut_price": 9248.0,
+        "atm_price": 51.96,
+        "iv_proxy": 0.0056,
+        "iv_percentile": 33.9,
+        "total_vol": 57231,
+        "total_amount": 2254.0,
+        "total_oi": 66812,
+        "vol_percentile": 58.9,
+        "amount_percentile": 66.1,
+        "oi_percentile": 72.8,
+        "liquidity_percentile": 65.3,
+        "sell_env_score": 46.4,
+        "samples": 180
+      },
+      {
+        "symbol": "RB",
+        "cn_name": "螺纹",
+        "exchange": "SHFE",
+        "fut_price": 3257.0,
+        "atm_price": 32.0,
+        "iv_proxy": 0.0098,
+        "iv_percentile": 61.7,
+        "total_vol": 60384,
+        "total_amount": 1959.8,
+        "total_oi": 253727,
+        "vol_percentile": 17.2,
+        "amount_percentile": 23.3,
         "oi_percentile": 25.0,
-        "liquidity_percentile": 47.1,
-        "sell_env_score": 32.8,
+        "liquidity_percentile": 21.8,
+        "sell_env_score": 45.7,
         "samples": 180
       },
       {
-        "symbol": "SF",
-        "cn_name": "硅铁",
-        "exchange": "CZCE",
-        "fut_price": 5762.0,
-        "atm_price": 30.36,
-        "iv_proxy": 0.0053,
-        "iv_percentile": 15.0,
-        "total_vol": 78123,
-        "total_amount": 1333.0,
-        "total_oi": 75654,
-        "vol_percentile": 68.3,
-        "amount_percentile": 49.4,
-        "oi_percentile": 52.8,
-        "liquidity_percentile": 55.8,
-        "sell_env_score": 31.3,
-        "samples": 180
-      },
-      {
-        "symbol": "JM",
-        "cn_name": "焦煤",
-        "exchange": "DCE",
-        "fut_price": 1241.0,
-        "atm_price": 7.06,
-        "iv_proxy": 0.0057,
-        "iv_percentile": 5.4,
-        "total_vol": 249185,
-        "total_amount": 17548.5,
-        "total_oi": 178178,
-        "vol_percentile": 81.1,
-        "amount_percentile": 56.8,
-        "oi_percentile": 77.0,
-        "liquidity_percentile": 68.1,
-        "sell_env_score": 30.5,
-        "samples": 74
-      },
-      {
-        "symbol": "LG",
-        "cn_name": "LG",
-        "exchange": "DCE",
-        "fut_price": 813.0,
-        "atm_price": 5.72,
-        "iv_proxy": 0.007,
-        "iv_percentile": 43.3,
-        "total_vol": 1115,
-        "total_amount": 57.4,
-        "total_oi": 10453,
-        "vol_percentile": 5.0,
-        "amount_percentile": 7.2,
-        "oi_percentile": 25.6,
-        "liquidity_percentile": 10.2,
-        "sell_env_score": 30.1,
-        "samples": 180
-      },
-      {
-        "symbol": "SH",
-        "cn_name": "烧碱",
-        "exchange": "CZCE",
-        "fut_price": 2035.0,
-        "atm_price": 9.19,
-        "iv_proxy": 0.0045,
-        "iv_percentile": 7.8,
-        "total_vol": 199122,
-        "total_amount": 8569.9,
-        "total_oi": 189811,
-        "vol_percentile": 74.4,
-        "amount_percentile": 44.4,
-        "oi_percentile": 91.7,
-        "liquidity_percentile": 62.9,
-        "sell_env_score": 29.8,
+        "symbol": "PB",
+        "cn_name": "铅",
+        "exchange": "SHFE",
+        "fut_price": 16615.0,
+        "atm_price": 57.72,
+        "iv_proxy": 0.0035,
+        "iv_percentile": 37.2,
+        "total_vol": 11653,
+        "total_amount": 287.2,
+        "total_oi": 12344,
+        "vol_percentile": 53.9,
+        "amount_percentile": 36.1,
+        "oi_percentile": 45.6,
+        "liquidity_percentile": 43.3,
+        "sell_env_score": 39.7,
         "samples": 180
       },
       {
         "symbol": "L",
         "cn_name": "塑料",
         "exchange": "DCE",
-        "fut_price": 8255.0,
-        "atm_price": 44.33,
-        "iv_proxy": 0.0054,
-        "iv_percentile": 44.4,
-        "total_vol": 10947,
-        "total_amount": 270.6,
-        "total_oi": 24268,
-        "vol_percentile": 7.8,
-        "amount_percentile": 6.7,
-        "oi_percentile": 8.3,
-        "liquidity_percentile": 7.3,
-        "sell_env_score": 29.6,
+        "fut_price": 8214.0,
+        "atm_price": 50.21,
+        "iv_proxy": 0.0061,
+        "iv_percentile": 56.7,
+        "total_vol": 12555,
+        "total_amount": 355.6,
+        "total_oi": 24687,
+        "vol_percentile": 7.2,
+        "amount_percentile": 17.8,
+        "oi_percentile": 6.1,
+        "liquidity_percentile": 12.3,
+        "sell_env_score": 38.9,
         "samples": 180
       },
       {
-        "symbol": "SM",
-        "cn_name": "锰硅",
+        "symbol": "AU",
+        "cn_name": "黄金",
+        "exchange": "SHFE",
+        "fut_price": 1030.56,
+        "atm_price": 8.82,
+        "iv_proxy": 0.0086,
+        "iv_percentile": 29.4,
+        "total_vol": 114673,
+        "total_amount": 97224.5,
+        "total_oi": 110533,
+        "vol_percentile": 48.3,
+        "amount_percentile": 40.0,
+        "oi_percentile": 40.6,
+        "liquidity_percentile": 42.6,
+        "sell_env_score": 34.7,
+        "samples": 180
+      },
+      {
+        "symbol": "FU",
+        "cn_name": "燃油",
+        "exchange": "SHFE",
+        "fut_price": 4377.0,
+        "atm_price": 35.6,
+        "iv_proxy": 0.0081,
+        "iv_percentile": 7.9,
+        "total_vol": 126891,
+        "total_amount": 6105.5,
+        "total_oi": 143076,
+        "vol_percentile": 75.7,
+        "amount_percentile": 70.0,
+        "oi_percentile": 86.4,
+        "liquidity_percentile": 75.0,
+        "sell_env_score": 34.7,
+        "samples": 140
+      },
+      {
+        "symbol": "UR",
+        "cn_name": "尿素",
         "exchange": "CZCE",
-        "fut_price": 5878.0,
-        "atm_price": 27.88,
-        "iv_proxy": 0.0047,
-        "iv_percentile": 15.6,
-        "total_vol": 78633,
-        "total_amount": 1427.1,
-        "total_oi": 134660,
-        "vol_percentile": 48.9,
-        "amount_percentile": 41.1,
-        "oi_percentile": 51.7,
-        "liquidity_percentile": 45.6,
-        "sell_env_score": 27.6,
+        "fut_price": 1880.0,
+        "atm_price": 7.16,
+        "iv_proxy": 0.0038,
+        "iv_percentile": 2.2,
+        "total_vol": 135141,
+        "total_amount": 2881.9,
+        "total_oi": 79338,
+        "vol_percentile": 98.9,
+        "amount_percentile": 87.8,
+        "oi_percentile": 23.9,
+        "liquidity_percentile": 78.3,
+        "sell_env_score": 32.7,
+        "samples": 180
+      },
+      {
+        "symbol": "LG",
+        "cn_name": "LG",
+        "exchange": "DCE",
+        "fut_price": 819.0,
+        "atm_price": 5.9,
+        "iv_proxy": 0.0072,
+        "iv_percentile": 45.6,
+        "total_vol": 1391,
+        "total_amount": 61.6,
+        "total_oi": 10517,
+        "vol_percentile": 9.4,
+        "amount_percentile": 10.0,
+        "oi_percentile": 22.8,
+        "liquidity_percentile": 12.4,
+        "sell_env_score": 32.3,
         "samples": 180
       },
       {
         "symbol": "I",
         "cn_name": "铁矿",
         "exchange": "DCE",
-        "fut_price": 812.5,
-        "atm_price": 5.15,
-        "iv_proxy": 0.0063,
-        "iv_percentile": 16.1,
-        "total_vol": 154926,
-        "total_amount": 9884.9,
-        "total_oi": 251844,
-        "vol_percentile": 52.2,
-        "amount_percentile": 37.8,
-        "oi_percentile": 30.6,
-        "liquidity_percentile": 40.7,
-        "sell_env_score": 25.9,
+        "fut_price": 820.0,
+        "atm_price": 6.9,
+        "iv_proxy": 0.0084,
+        "iv_percentile": 36.7,
+        "total_vol": 143671,
+        "total_amount": 7924.1,
+        "total_oi": 264816,
+        "vol_percentile": 38.3,
+        "amount_percentile": 16.1,
+        "oi_percentile": 30.0,
+        "liquidity_percentile": 25.6,
+        "sell_env_score": 32.2,
+        "samples": 180
+      },
+      {
+        "symbol": "SC",
+        "cn_name": "原油",
+        "exchange": "INE",
+        "fut_price": 635.3,
+        "atm_price": 2.06,
+        "iv_proxy": 0.0032,
+        "iv_percentile": 3.9,
+        "total_vol": 185539,
+        "total_amount": 80654.7,
+        "total_oi": 26432,
+        "vol_percentile": 91.7,
+        "amount_percentile": 80.0,
+        "oi_percentile": 11.1,
+        "liquidity_percentile": 69.7,
+        "sell_env_score": 30.2,
+        "samples": 180
+      },
+      {
+        "symbol": "JM",
+        "cn_name": "焦煤",
+        "exchange": "DCE",
+        "fut_price": 1244.0,
+        "atm_price": 11.03,
+        "iv_proxy": 0.0089,
+        "iv_percentile": 13.2,
+        "total_vol": 195101,
+        "total_amount": 14633.7,
+        "total_oi": 189087,
+        "vol_percentile": 66.2,
+        "amount_percentile": 39.7,
+        "oi_percentile": 77.9,
+        "liquidity_percentile": 55.3,
+        "sell_env_score": 30.1,
+        "samples": 68
+      },
+      {
+        "symbol": "MA",
+        "cn_name": "甲醇",
+        "exchange": "CZCE",
+        "fut_price": 2906.0,
+        "atm_price": 11.52,
+        "iv_proxy": 0.004,
+        "iv_percentile": 5.6,
+        "total_vol": 776993,
+        "total_amount": 12223.0,
+        "total_oi": 189778,
+        "vol_percentile": 91.7,
+        "amount_percentile": 73.9,
+        "oi_percentile": 12.8,
+        "liquidity_percentile": 67.0,
+        "sell_env_score": 30.1,
+        "samples": 180
+      },
+      {
+        "symbol": "P",
+        "cn_name": "棕榈油",
+        "exchange": "DCE",
+        "fut_price": 9492.0,
+        "atm_price": 47.24,
+        "iv_proxy": 0.005,
+        "iv_percentile": 17.8,
+        "total_vol": 164671,
+        "total_amount": 10968.3,
+        "total_oi": 196278,
+        "vol_percentile": 42.8,
+        "amount_percentile": 36.7,
+        "oi_percentile": 59.4,
+        "liquidity_percentile": 43.1,
+        "sell_env_score": 27.9,
+        "samples": 180
+      },
+      {
+        "symbol": "SH",
+        "cn_name": "烧碱",
+        "exchange": "CZCE",
+        "fut_price": 2058.0,
+        "atm_price": 6.32,
+        "iv_proxy": 0.0031,
+        "iv_percentile": 3.9,
+        "total_vol": 409928,
+        "total_amount": 10821.5,
+        "total_oi": 65802,
+        "vol_percentile": 95.0,
+        "amount_percentile": 60.0,
+        "oi_percentile": 16.7,
+        "liquidity_percentile": 61.8,
+        "sell_env_score": 27.1,
+        "samples": 180
+      },
+      {
+        "symbol": "PL",
+        "cn_name": "PL",
+        "exchange": "CZCE",
+        "fut_price": 8605.0,
+        "atm_price": 71.03,
+        "iv_proxy": 0.0083,
+        "iv_percentile": 38.9,
+        "total_vol": 438,
+        "total_amount": 71.2,
+        "total_oi": 635,
+        "vol_percentile": 12.6,
+        "amount_percentile": 7.4,
+        "oi_percentile": 0.6,
+        "liquidity_percentile": 7.6,
+        "sell_env_score": 26.4,
+        "samples": 175
+      },
+      {
+        "symbol": "SF",
+        "cn_name": "硅铁",
+        "exchange": "CZCE",
+        "fut_price": 5826.0,
+        "atm_price": 17.99,
+        "iv_proxy": 0.0031,
+        "iv_percentile": 5.6,
+        "total_vol": 120908,
+        "total_amount": 1531.4,
+        "total_oi": 43912,
+        "vol_percentile": 85.6,
+        "amount_percentile": 55.0,
+        "oi_percentile": 8.9,
+        "liquidity_percentile": 54.9,
+        "sell_env_score": 25.3,
+        "samples": 180
+      },
+      {
+        "symbol": "TA",
+        "cn_name": "PTA",
+        "exchange": "CZCE",
+        "fut_price": 6364.0,
+        "atm_price": 7.96,
+        "iv_proxy": 0.0013,
+        "iv_percentile": 0.6,
+        "total_vol": 1009142,
+        "total_amount": 12154.2,
+        "total_oi": 112502,
+        "vol_percentile": 97.2,
+        "amount_percentile": 65.6,
+        "oi_percentile": 1.7,
+        "liquidity_percentile": 62.3,
+        "sell_env_score": 25.2,
+        "samples": 180
+      },
+      {
+        "symbol": "SM",
+        "cn_name": "锰硅",
+        "exchange": "CZCE",
+        "fut_price": 5928.0,
+        "atm_price": 24.37,
+        "iv_proxy": 0.0041,
+        "iv_percentile": 6.1,
+        "total_vol": 127319,
+        "total_amount": 1740.7,
+        "total_oi": 76253,
+        "vol_percentile": 71.7,
+        "amount_percentile": 50.0,
+        "oi_percentile": 5.0,
+        "liquidity_percentile": 47.5,
+        "sell_env_score": 22.7,
         "samples": 180
       },
       {
         "symbol": "AO",
         "cn_name": "AO",
         "exchange": "SHFE",
-        "fut_price": 2785.0,
-        "atm_price": 14.63,
-        "iv_proxy": 0.0053,
-        "iv_percentile": 15.0,
-        "total_vol": 111906,
-        "total_amount": 4749.5,
-        "total_oi": 152216,
-        "vol_percentile": 36.7,
-        "amount_percentile": 24.4,
-        "oi_percentile": 42.2,
-        "liquidity_percentile": 31.7,
-        "sell_env_score": 21.7,
+        "fut_price": 2799.0,
+        "atm_price": 17.97,
+        "iv_proxy": 0.0064,
+        "iv_percentile": 27.8,
+        "total_vol": 63208,
+        "total_amount": 2383.8,
+        "total_oi": 159190,
+        "vol_percentile": 7.2,
+        "amount_percentile": 0.6,
+        "oi_percentile": 46.7,
+        "liquidity_percentile": 11.8,
+        "sell_env_score": 21.4,
         "samples": 180
-      },
-      {
-        "symbol": "OP",
-        "cn_name": "OP",
-        "exchange": "SHFE",
-        "fut_price": 4078.0,
-        "atm_price": 22.56,
-        "iv_proxy": 0.0055,
-        "iv_percentile": 19.6,
-        "total_vol": 364,
-        "total_amount": 35.3,
-        "total_oi": 1020,
-        "vol_percentile": 21.0,
-        "amount_percentile": 15.4,
-        "oi_percentile": 21.7,
-        "liquidity_percentile": 18.3,
-        "sell_env_score": 19.1,
-        "samples": 143
       },
       {
         "symbol": "OI",
         "cn_name": "菜油",
         "exchange": "CZCE",
-        "fut_price": 9694.0,
-        "atm_price": 57.34,
-        "iv_proxy": 0.0059,
-        "iv_percentile": 20.0,
-        "total_vol": 7690,
-        "total_amount": 540.6,
-        "total_oi": 17750,
-        "vol_percentile": 5.0,
-        "amount_percentile": 1.1,
-        "oi_percentile": 8.3,
-        "liquidity_percentile": 3.7,
-        "sell_env_score": 13.5,
+        "fut_price": 9665.0,
+        "atm_price": 64.2,
+        "iv_proxy": 0.0066,
+        "iv_percentile": 26.1,
+        "total_vol": 6610,
+        "total_amount": 467.5,
+        "total_oi": 17950,
+        "vol_percentile": 3.3,
+        "amount_percentile": 0.0,
+        "oi_percentile": 5.6,
+        "liquidity_percentile": 2.1,
+        "sell_env_score": 16.5,
         "samples": 180
       },
       {
         "symbol": "FG",
         "cn_name": "玻璃",
         "exchange": "CZCE",
-        "fut_price": 1056.0,
-        "atm_price": 4.88,
-        "iv_proxy": 0.0046,
-        "iv_percentile": 2.8,
-        "total_vol": 454125,
-        "total_amount": 7210.3,
-        "total_oi": 750898,
-        "vol_percentile": 42.2,
-        "amount_percentile": 5.0,
-        "oi_percentile": 62.2,
-        "liquidity_percentile": 27.6,
-        "sell_env_score": 12.7,
+        "fut_price": 1066.0,
+        "atm_price": 6.89,
+        "iv_proxy": 0.0065,
+        "iv_percentile": 7.8,
+        "total_vol": 501243,
+        "total_amount": 8055.9,
+        "total_oi": 356340,
+        "vol_percentile": 48.3,
+        "amount_percentile": 6.7,
+        "oi_percentile": 4.4,
+        "liquidity_percentile": 18.7,
+        "sell_env_score": 12.2,
+        "samples": 180
+      },
+      {
+        "symbol": "PR",
+        "cn_name": "PR",
+        "exchange": "CZCE",
+        "fut_price": 8302.0,
+        "atm_price": 5.07,
+        "iv_proxy": 0.0006,
+        "iv_percentile": 0.0,
+        "total_vol": 5045,
+        "total_amount": 123.2,
+        "total_oi": 1459,
+        "vol_percentile": 48.3,
+        "amount_percentile": 16.1,
+        "oi_percentile": 0.6,
+        "liquidity_percentile": 22.7,
+        "sell_env_score": 9.1,
         "samples": 180
       },
       {
         "symbol": "SA",
         "cn_name": "纯碱",
         "exchange": "CZCE",
-        "fut_price": 1221.0,
-        "atm_price": 7.43,
-        "iv_proxy": 0.0061,
-        "iv_percentile": 5.0,
-        "total_vol": 299241,
-        "total_amount": 5901.4,
-        "total_oi": 438103,
-        "vol_percentile": 32.8,
-        "amount_percentile": 5.0,
-        "oi_percentile": 21.7,
-        "liquidity_percentile": 16.7,
-        "sell_env_score": 9.7,
-        "samples": 180
-      },
-      {
-        "symbol": "PF",
-        "cn_name": "PF",
-        "exchange": "CZCE",
-        "fut_price": 8126.0,
-        "atm_price": 18.09,
-        "iv_proxy": 0.0022,
-        "iv_percentile": 2.2,
-        "total_vol": 16768,
-        "total_amount": 168.8,
-        "total_oi": 27607,
-        "vol_percentile": 27.2,
-        "amount_percentile": 10.0,
-        "oi_percentile": 26.7,
-        "liquidity_percentile": 18.5,
-        "sell_env_score": 8.7,
+        "fut_price": 1222.0,
+        "atm_price": 8.01,
+        "iv_proxy": 0.0066,
+        "iv_percentile": 10.0,
+        "total_vol": 277039,
+        "total_amount": 4822.7,
+        "total_oi": 192936,
+        "vol_percentile": 21.1,
+        "amount_percentile": 1.7,
+        "oi_percentile": 0.6,
+        "liquidity_percentile": 7.3,
+        "sell_env_score": 8.9,
         "samples": 180
       },
       {
         "symbol": "BZ",
         "cn_name": "BZ",
         "exchange": "DCE",
-        "fut_price": 8178.0,
-        "atm_price": 38.93,
-        "iv_proxy": 0.0048,
-        "iv_percentile": 1.7,
-        "total_vol": 401,
-        "total_amount": 99.1,
-        "total_oi": 4299,
-        "vol_percentile": 10.0,
-        "amount_percentile": 3.3,
-        "oi_percentile": 13.3,
-        "liquidity_percentile": 7.3,
-        "sell_env_score": 3.9,
+        "fut_price": 8154.0,
+        "atm_price": 52.35,
+        "iv_proxy": 0.0064,
+        "iv_percentile": 3.9,
+        "total_vol": 814,
+        "total_amount": 102.5,
+        "total_oi": 4269,
+        "vol_percentile": 23.3,
+        "amount_percentile": 4.4,
+        "oi_percentile": 12.2,
+        "liquidity_percentile": 11.7,
+        "sell_env_score": 7.0,
+        "samples": 180
+      },
+      {
+        "symbol": "OP",
+        "cn_name": "OP",
+        "exchange": "SHFE",
+        "fut_price": 4092.0,
+        "atm_price": 14.74,
+        "iv_proxy": 0.0036,
+        "iv_percentile": 3.6,
+        "total_vol": 197,
+        "total_amount": 14.3,
+        "total_oi": 1048,
+        "vol_percentile": 7.9,
+        "amount_percentile": 2.2,
+        "oi_percentile": 23.0,
+        "liquidity_percentile": 8.1,
+        "sell_env_score": 5.4,
+        "samples": 139
+      },
+      {
+        "symbol": "PF",
+        "cn_name": "PF",
+        "exchange": "CZCE",
+        "fut_price": 8060.0,
+        "atm_price": 10.77,
+        "iv_proxy": 0.0013,
+        "iv_percentile": 0.0,
+        "total_vol": 17249,
+        "total_amount": 161.0,
+        "total_oi": 8215,
+        "vol_percentile": 27.2,
+        "amount_percentile": 7.8,
+        "oi_percentile": 0.6,
+        "liquidity_percentile": 12.2,
+        "sell_env_score": 4.9,
         "samples": 180
       }
     ],
     "history": [
+      {
+        "date": "20260331",
+        "env_index": 52.5,
+        "pct_iv70": 47.5,
+        "pct_amt50": 67.8,
+        "pct_liq50": 100.0,
+        "pct_both": 47.5
+      },
       {
         "date": "20260420",
         "env_index": 46.7,
@@ -4495,14 +4427,6 @@
         "pct_amt50": 52.5,
         "pct_liq50": 49.2,
         "pct_both": 18.6
-      },
-      {
-        "date": "20260421",
-        "env_index": 47.7,
-        "pct_iv70": 55.4,
-        "pct_amt50": 51.8,
-        "pct_liq50": 42.9,
-        "pct_both": 21.4
       },
       {
         "date": "20260422",
@@ -4513,98 +4437,66 @@
         "pct_both": 31.1
       },
       {
-        "date": "20260423",
-        "env_index": 49.4,
-        "pct_iv70": 51.7,
-        "pct_amt50": 60.3,
-        "pct_liq50": 58.6,
-        "pct_both": 29.3
-      },
-      {
-        "date": "20260424",
-        "env_index": 47.9,
-        "pct_iv70": 57.9,
-        "pct_amt50": 47.4,
-        "pct_liq50": 28.9,
-        "pct_both": 21.1
-      },
-      {
-        "date": "20260427",
-        "env_index": 48.7,
-        "pct_iv70": 60.7,
-        "pct_amt50": 37.7,
-        "pct_liq50": 32.8,
-        "pct_both": 29.5
-      },
-      {
         "date": "20260428",
-        "env_index": 53.9,
-        "pct_iv70": 59.0,
-        "pct_amt50": 62.3,
+        "env_index": 52.5,
+        "pct_iv70": 55.7,
+        "pct_amt50": 63.9,
         "pct_liq50": 44.3,
         "pct_both": 29.5
       },
       {
-        "date": "20260429",
-        "env_index": 52.2,
-        "pct_iv70": 60.7,
-        "pct_amt50": 49.2,
-        "pct_liq50": 42.6,
-        "pct_both": 32.8
-      },
-      {
         "date": "20260430",
-        "env_index": 51.1,
-        "pct_iv70": 54.1,
-        "pct_amt50": 59.0,
-        "pct_liq50": 47.5,
+        "env_index": 53.3,
+        "pct_iv70": 57.4,
+        "pct_amt50": 60.7,
+        "pct_liq50": 49.2,
         "pct_both": 32.8
       },
       {
         "date": "20260506",
-        "env_index": 49.9,
-        "pct_iv70": 55.7,
-        "pct_amt50": 50.8,
+        "env_index": 51.2,
+        "pct_iv70": 57.4,
+        "pct_amt50": 52.5,
         "pct_liq50": 49.2,
         "pct_both": 32.8
       },
       {
         "date": "20260507",
-        "env_index": 36.1,
-        "pct_iv70": 34.4,
-        "pct_amt50": 54.1,
-        "pct_liq50": 49.2,
+        "env_index": 37.4,
+        "pct_iv70": 36.1,
+        "pct_amt50": 55.7,
+        "pct_liq50": 47.5,
         "pct_both": 18.0
       },
       {
         "date": "20260508",
-        "env_index": 35.9,
-        "pct_iv70": 32.8,
-        "pct_amt50": 55.7,
-        "pct_liq50": 54.1,
-        "pct_both": 19.7
-      },
-      {
-        "date": "20260511",
-        "env_index": 39.8,
-        "pct_iv70": 36.1,
-        "pct_amt50": 59.0,
+        "env_index": 36.3,
+        "pct_iv70": 34.4,
+        "pct_amt50": 52.5,
         "pct_liq50": 52.5,
-        "pct_both": 26.2
+        "pct_both": 21.3
       },
       {
         "date": "20260512",
-        "env_index": 35.7,
-        "pct_iv70": 29.5,
+        "env_index": 36.9,
+        "pct_iv70": 31.1,
         "pct_amt50": 60.7,
         "pct_liq50": 54.1,
-        "pct_both": 21.3
+        "pct_both": 23.0
+      },
+      {
+        "date": "20260513",
+        "env_index": 45.0,
+        "pct_iv70": 41.0,
+        "pct_amt50": 62.3,
+        "pct_liq50": 62.3,
+        "pct_both": 34.4
       }
     ]
   },
   "sell_window_signal": {
     "meta": {
-      "generated": "2026-05-13 08:28:38",
+      "generated": "2026-05-14 08:30:36",
       "module": "sell_window_signal",
       "version": "v1"
     },
@@ -4618,7 +4510,6 @@
     },
     "timeseries": {
       "dates": [
-        "2026-03-14",
         "2026-03-15",
         "2026-03-16",
         "2026-03-17",
@@ -4678,7 +4569,8 @@
         "2026-05-10",
         "2026-05-11",
         "2026-05-12",
-        "2026-05-13"
+        "2026-05-13",
+        "2026-05-14"
       ],
       "scores": [
         64.9,
@@ -4752,7 +4644,7 @@
   },
   "mod9_composite_score": {
     "meta": {
-      "generated": "2026-05-13 08:28:38",
+      "generated": "2026-05-14 08:30:36",
       "module": "option_vol.mod9_composite_score",
       "formula": "0.30*rv + 0.28*iv + 0.18*skew + 0.12*term + 0.07*liq + 0.05*exp (full); fallback if missing layers"
     },
@@ -4771,12 +4663,12 @@
         {
           "symbol": "FG",
           "cn_name": "玻璃",
-          "score": 69
+          "score": 67
         },
         {
-          "symbol": "NI",
-          "cn_name": "镍",
-          "score": 62
+          "symbol": "RU",
+          "cn_name": "橡胶",
+          "score": 61
         }
       ]
     },
@@ -4788,14 +4680,14 @@
         "composite_score": 70,
         "signal": "🟡",
         "label": "可考虑双卖",
-        "rv_score": 64,
-        "iv_score": 97,
+        "rv_score": 62,
+        "iv_score": 100,
         "liquidity_score": 60,
         "expiry_score": 45,
-        "rv_20d": 0.3945,
-        "rv_pctile_120d": 0.5917,
+        "rv_20d": 0.3758,
+        "rv_pctile_120d": 0.575,
         "pca_env": "温和趋势",
-        "iv_rv_spread": 0.1184,
+        "iv_rv_spread": 0.1371,
         "atm_iv": 0.5129,
         "days_to_expiry": 7,
         "call_vol": 391.0,
@@ -4813,71 +4705,15 @@
         "symbol": "FG",
         "cn_name": "玻璃",
         "sector": "能源化工",
-        "composite_score": 69,
+        "composite_score": 67,
         "signal": "🟡",
         "label": "可考虑双卖",
-        "rv_score": 78,
+        "rv_score": 76,
         "iv_score": null,
         "liquidity_score": 35,
         "expiry_score": 50,
-        "rv_20d": 0.4745,
-        "rv_pctile_120d": 0.9333,
-        "pca_env": "温和趋势",
-        "iv_rv_spread": null,
-        "atm_iv": null,
-        "days_to_expiry": null,
-        "call_vol": null,
-        "put_vol": null,
-        "call_oi": null,
-        "put_oi": null,
-        "put_skew": null,
-        "call_skew": null,
-        "term_slope": null,
-        "skew_score": null,
-        "term_score": null,
-        "reason_text": "流动性一般，执行要谨慎"
-      },
-      {
-        "symbol": "NI",
-        "cn_name": "镍",
-        "sector": "有色金属",
-        "composite_score": 62,
-        "signal": "",
-        "label": "观望",
-        "rv_score": 62,
-        "iv_score": 70,
-        "liquidity_score": 72,
-        "expiry_score": 90,
-        "rv_20d": 0.2802,
-        "rv_pctile_120d": 0.6083,
-        "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0491,
-        "atm_iv": 0.3293,
-        "days_to_expiry": 19,
-        "call_vol": 1024.0,
-        "put_vol": 424.0,
-        "call_oi": 511.0,
-        "put_oi": 317.0,
-        "put_skew": -0.0238,
-        "call_skew": 0.0333,
-        "term_slope": 0.0166,
-        "skew_score": 40,
-        "term_score": 55,
-        "reason_text": "IV高于RV，赔率尚可；尾部保险费不够肥；到期结构合适"
-      },
-      {
-        "symbol": "SA",
-        "cn_name": "纯碱",
-        "sector": "能源化工",
-        "composite_score": 60,
-        "signal": "",
-        "label": "观望",
-        "rv_score": 67,
-        "iv_score": null,
-        "liquidity_score": 35,
-        "expiry_score": 50,
-        "rv_20d": 0.2705,
-        "rv_pctile_120d": 0.6583,
+        "rv_20d": 0.4669,
+        "rv_pctile_120d": 0.9,
         "pca_env": "温和趋势",
         "iv_rv_spread": null,
         "atm_iv": null,
@@ -4897,17 +4733,17 @@
         "symbol": "RU",
         "cn_name": "橡胶",
         "sector": "能源化工",
-        "composite_score": 60,
+        "composite_score": 61,
         "signal": "",
         "label": "观望",
-        "rv_score": 58,
-        "iv_score": 83,
+        "rv_score": 66,
+        "iv_score": 78,
         "liquidity_score": 20,
         "expiry_score": 90,
-        "rv_20d": 0.1557,
-        "rv_pctile_120d": 0.45,
+        "rv_20d": 0.1689,
+        "rv_pctile_120d": 0.6333,
         "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0832,
+        "iv_rv_spread": 0.07,
         "atm_iv": 0.2389,
         "days_to_expiry": 19,
         "call_vol": 23.0,
@@ -4919,23 +4755,79 @@
         "term_slope": 0.0153,
         "skew_score": 37,
         "term_score": 55,
-        "reason_text": "IV显著高于RV，保险费偏贵；尾部保险费不够肥；流动性一般，执行要谨慎；到期结构合适"
+        "reason_text": "IV高于RV，赔率尚可；尾部保险费不够肥；流动性一般，执行要谨慎；到期结构合适"
+      },
+      {
+        "symbol": "NI",
+        "cn_name": "镍",
+        "sector": "有色金属",
+        "composite_score": 61,
+        "signal": "",
+        "label": "观望",
+        "rv_score": 62,
+        "iv_score": 68,
+        "liquidity_score": 72,
+        "expiry_score": 90,
+        "rv_20d": 0.2831,
+        "rv_pctile_120d": 0.6167,
+        "pca_env": "温和趋势",
+        "iv_rv_spread": 0.0462,
+        "atm_iv": 0.3293,
+        "days_to_expiry": 19,
+        "call_vol": 1024.0,
+        "put_vol": 424.0,
+        "call_oi": 511.0,
+        "put_oi": 317.0,
+        "put_skew": -0.0238,
+        "call_skew": 0.0333,
+        "term_slope": 0.0166,
+        "skew_score": 40,
+        "term_score": 55,
+        "reason_text": "IV高于RV，赔率尚可；尾部保险费不够肥；到期结构合适"
+      },
+      {
+        "symbol": "AG",
+        "cn_name": "白银",
+        "sector": "贵金属",
+        "composite_score": 60,
+        "signal": "",
+        "label": "观望",
+        "rv_score": 48,
+        "iv_score": 84,
+        "liquidity_score": 60,
+        "expiry_score": 90,
+        "rv_20d": 0.3738,
+        "rv_pctile_120d": 0.2667,
+        "pca_env": "温和趋势",
+        "iv_rv_spread": 0.0841,
+        "atm_iv": 0.4579,
+        "days_to_expiry": 19,
+        "call_vol": 235.0,
+        "put_vol": 29.0,
+        "call_oi": 202.0,
+        "put_oi": 151.0,
+        "put_skew": 0.009,
+        "call_skew": 0.0117,
+        "term_slope": -0.0761,
+        "skew_score": 54,
+        "term_score": 27,
+        "reason_text": "IV显著高于RV，保险费偏贵；期限结构偏平/偏弱，近月溢价一般；到期结构合适"
       },
       {
         "symbol": "RB",
         "cn_name": "螺纹钢",
         "sector": "黑色系",
-        "composite_score": 58,
+        "composite_score": 59,
         "signal": "",
         "label": "观望",
-        "rv_score": 47,
-        "iv_score": 70,
+        "rv_score": 53,
+        "iv_score": 68,
         "liquidity_score": 60,
         "expiry_score": 90,
-        "rv_20d": 0.0837,
-        "rv_pctile_120d": 0.3083,
+        "rv_20d": 0.0889,
+        "rv_pctile_120d": 0.425,
         "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0503,
+        "iv_rv_spread": 0.0451,
         "atm_iv": 0.134,
         "days_to_expiry": 19,
         "call_vol": 454.0,
@@ -4950,76 +4842,48 @@
         "reason_text": "IV高于RV，赔率尚可；到期结构合适"
       },
       {
-        "symbol": "AU",
-        "cn_name": "黄金",
-        "sector": "贵金属",
-        "composite_score": 57,
+        "symbol": "SA",
+        "cn_name": "纯碱",
+        "sector": "能源化工",
+        "composite_score": 58,
         "signal": "",
         "label": "观望",
-        "rv_score": 39,
-        "iv_score": 84,
-        "liquidity_score": 68,
-        "expiry_score": 90,
-        "rv_20d": 0.1381,
-        "rv_pctile_120d": 0.1,
+        "rv_score": 64,
+        "iv_score": null,
+        "liquidity_score": 35,
+        "expiry_score": 50,
+        "rv_20d": 0.2607,
+        "rv_pctile_120d": 0.5917,
         "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0848,
-        "atm_iv": 0.2229,
-        "days_to_expiry": 19,
-        "call_vol": 393.0,
-        "put_vol": 128.0,
-        "call_oi": 681.0,
-        "put_oi": 610.0,
-        "put_skew": 0.0185,
-        "call_skew": 0.0191,
-        "term_slope": -0.0956,
-        "skew_score": 57,
-        "term_score": 21,
-        "reason_text": "IV显著高于RV，保险费偏贵；期限结构偏平/偏弱，近月溢价一般；到期结构合适"
-      },
-      {
-        "symbol": "AG",
-        "cn_name": "白银",
-        "sector": "贵金属",
-        "composite_score": 56,
-        "signal": "",
-        "label": "观望",
-        "rv_score": 50,
-        "iv_score": 69,
-        "liquidity_score": 60,
-        "expiry_score": 90,
-        "rv_20d": 0.41,
-        "rv_pctile_120d": 0.3,
-        "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0479,
-        "atm_iv": 0.4579,
-        "days_to_expiry": 19,
-        "call_vol": 235.0,
-        "put_vol": 29.0,
-        "call_oi": 202.0,
-        "put_oi": 151.0,
-        "put_skew": 0.009,
-        "call_skew": 0.0117,
-        "term_slope": -0.0761,
-        "skew_score": 54,
-        "term_score": 27,
-        "reason_text": "IV高于RV，赔率尚可；期限结构偏平/偏弱，近月溢价一般；到期结构合适"
+        "iv_rv_spread": null,
+        "atm_iv": null,
+        "days_to_expiry": null,
+        "call_vol": null,
+        "put_vol": null,
+        "call_oi": null,
+        "put_oi": null,
+        "put_skew": null,
+        "call_skew": null,
+        "term_slope": null,
+        "skew_score": null,
+        "term_score": null,
+        "reason_text": "流动性一般，执行要谨慎"
       },
       {
         "symbol": "CU",
         "cn_name": "铜",
         "sector": "有色金属",
-        "composite_score": 56,
+        "composite_score": 57,
         "signal": "",
         "label": "观望",
-        "rv_score": 40,
-        "iv_score": 66,
+        "rv_score": 43,
+        "iv_score": 63,
         "liquidity_score": 95,
         "expiry_score": 90,
-        "rv_20d": 0.1246,
-        "rv_pctile_120d": 0.1333,
+        "rv_20d": 0.1304,
+        "rv_pctile_120d": 0.175,
         "pca_env": "温和趋势",
-        "iv_rv_spread": 0.0389,
+        "iv_rv_spread": 0.0331,
         "atm_iv": 0.1635,
         "days_to_expiry": 19,
         "call_vol": 8330.0,
@@ -5034,18 +4898,46 @@
         "reason_text": "IV高于RV，赔率尚可；流动性较好；到期结构合适"
       },
       {
+        "symbol": "AU",
+        "cn_name": "黄金",
+        "sector": "贵金属",
+        "composite_score": 57,
+        "signal": "",
+        "label": "观望",
+        "rv_score": 34,
+        "iv_score": 90,
+        "liquidity_score": 68,
+        "expiry_score": 90,
+        "rv_20d": 0.123,
+        "rv_pctile_120d": 0.0333,
+        "pca_env": "温和趋势",
+        "iv_rv_spread": 0.0999,
+        "atm_iv": 0.2229,
+        "days_to_expiry": 19,
+        "call_vol": 393.0,
+        "put_vol": 128.0,
+        "call_oi": 681.0,
+        "put_oi": 610.0,
+        "put_skew": 0.0185,
+        "call_skew": 0.0191,
+        "term_slope": -0.0956,
+        "skew_score": 57,
+        "term_score": 21,
+        "reason_text": "IV显著高于RV，保险费偏贵；期限结构偏平/偏弱，近月溢价一般；到期结构合适"
+      },
+      {
         "symbol": "SN",
         "cn_name": "锡",
         "sector": "有色金属",
-        "composite_score": 51,
-        "signal": "",
-        "label": "观望",
-        "rv_score": 54,
+        "composite_score": 49,
+        "signal": "🔴",
+        "label": "不宜双卖",
+        "rv_score": 52,
         "iv_score": null,
         "liquidity_score": 35,
         "expiry_score": 50,
-        "rv_20d": 0.3034,
-        "rv_pctile_120d": 0.375,
+        "rv_20d": 0.2877,
+        "rv_pctile_120d": 0.3417,
         "pca_env": "温和趋势",
         "iv_rv_spread": null,
         "atm_iv": null,
@@ -5064,7 +4956,7 @@
     ]
   },
   "contract_opportunities": {
-    "update_time": "2026-05-13 08:28:44",
+    "update_time": "2026-05-14 08:30:43",
     "scan_count": 0,
     "top_symbols_scanned": 20,
     "opportunities": []

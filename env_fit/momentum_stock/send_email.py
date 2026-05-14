@@ -136,7 +136,7 @@ def send_to_all(report_html, scene_key, cfg, test_only=False):
         email = sub['email']
         name = sub.get('name', '')
         msg = MIMEMultipart('alternative')
-        msg['From'] = f'GAMT投研 <{sender_cfg["email"]}>'
+        msg['From'] = sender_cfg['email']
         msg['To'] = email
         msg['Subject'] = subject
         msg.attach(MIMEText(html_body, 'html', 'utf-8'))
