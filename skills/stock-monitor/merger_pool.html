@@ -304,25 +304,25 @@ tbody td {
   <div class="meta">
     <span id="lastUpdate"></span> | 
     <span id="totalCount"></span> 只标的 |
-    数据源: iFinD 公告/新闻
+    数据源: 通联DataYes + iFinD MCP
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
-     三口径 Tab
-     窄口径：审核中+已过会+已注册+已完成（确定在走流程的）
-     中口径：窄 + 方案公布（已出正式预案/草案的）
-     宽口径：全部（含筹划中、已终止）
+     三 Tab 按生命周期分：
+     Tab 1 进行中：方案公布 + 审核中 + 已过会（正在走流程）
+     Tab 2 线索池：筹划中 + 已终止（早期信号 + 可能重新激活）
+     Tab 3 已完成：已完成（尘埃落定）
      ═══════════════════════════════════════════════════ -->
 <div class="scope-tabs">
-  <div class="scope-tab active" data-scope="narrow">
-    并购审核池<span class="tab-count" id="count-narrow"></span>
+  <div class="scope-tab active" data-scope="active">
+    进行中<span class="tab-count" id="count-active"></span>
   </div>
-  <div class="scope-tab" data-scope="medium">
-    并购方案池<span class="tab-count" id="count-medium"></span>
+  <div class="scope-tab" data-scope="pipeline">
+    线索池<span class="tab-count" id="count-pipeline"></span>
   </div>
-  <div class="scope-tab" data-scope="wide">
-    并购线索池<span class="tab-count" id="count-wide"></span>
+  <div class="scope-tab" data-scope="done">
+    已完成<span class="tab-count" id="count-done"></span>
   </div>
 </div>
 
@@ -394,10 +394,10 @@ tbody td {
      底部说明
      ═══════════════════════════════════════════════════ -->
 <div class="disclaimer">
-  ■ 数据来源：iFinD 公告/新闻关键词检索（44组关键字 × 20月度时间段分段扫描）。<br>
-  ■ 阶段判断基于公告标题关键字自动分类，可能存在误判，仅供参考。<br>
-  ■ 置信度分层：标题含"购买资产/收购/重组/合并/控制权"等 → 主表；仅含"定增/融资/质押/减持" → 折叠区。<br>
-  ■ 覆盖时间：2024-09-24 至今。口径从左到右：确定性递减，覆盖面递增。
+  ■ 数据来源：通联 DataYes EquRestructuringGet（主）+ iFinD MCP 公告/新闻关键词检索（补）。<br>
+  ■ 阶段判断基于通联结构化字段 + 公告标题关键字自动分类，可能存在误判，仅供参考。<br>
+  ■ Tab 分类：进行中（方案公布/审核中/已过会）→ 线索池（筹划中/已终止）→ 已完成。<br>
+  ■ 覆盖时间：2024-09-24 至今。标的会随日更自动在 Tab 间流转。
 </div>
 
 <script>
@@ -419,27 +419,27 @@ tbody td {
 
 // ── 全局状态 ──
 let POOL_DATA = [];           // 全量数据
-let currentScope = 'narrow';  // 当前口径
+let currentScope = 'active';  // 当前口径
 let currentSort = { key: 'last_date', dir: 'desc' };
 let currentStage = 'all';     // 阶段筛选（在当前口径内）
 let searchText = '';           // 搜索关键字
 
-// ── 口径定义 ──
+// ── 口径定义（按生命周期分） ──
 const SCOPE_CONFIG = {
-  narrow: {
-    // 并购审核池：已进入正式审核流程的标的
-    stages: ['审核中', '已过会', '已注册', '已完成'],
-    desc: '■ 并购审核池（窄口径）：已正式提交交易所/证监会审核的标的。包含：审核中、已过会、已注册、已完成。这些有明确的审核时间线和结果预期。'
+  active: {
+    // 进行中：正在走审核流程的
+    stages: ['方案公布', '审核中', '已过会', '已注册'],
+    desc: '■ 进行中：已公布正式方案或已进入审核流程的标的。这些有明确的交易结构和审核时间线，是当前最值得关注的并购事件。'
   },
-  medium: {
-    // 并购方案池：已公布正式方案（含审核池）
-    stages: ['方案公布', '审核中', '已过会', '已注册', '已完成'],
-    desc: '■ 并购方案池（中口径）：已公布正式预案/草案的标的。包含审核池全部 + 方案公布阶段。交易结构基本确定，等待提交审核或补充材料。'
+  pipeline: {
+    // 线索池：早期信号 + 可能重新激活的
+    stages: ['筹划中', '已终止'],
+    desc: '■ 线索池：处于早期筹划阶段或曾经终止的标的。筹划中的可能推进也可能无疾而终；已终止的可能重新激活。适合做雷达监控。'
   },
-  wide: {
-    // 并购线索池：全部标的
-    stages: null, // null 表示不过滤
-    desc: '■ 并购线索池（宽口径）：所有有并购相关动作的标的。包含筹划中、已终止、控制权变更等早期信号。覆盖面最广，确定性最低，适合做雷达监控。'
+  done: {
+    // 已完成：尘埃落定
+    stages: ['已完成'],
+    desc: '■ 已完成：交易已完成交割的标的。这些并购已尘埃落定，可作为历史参考。如有新一轮并购动作，会重新进入线索池。'
   }
 };
 
@@ -497,7 +497,7 @@ async function loadData() {
 }
 
 /**
- * 更新三个 Tab 的数量角标（只计主表数据，不含低置信度）
+ * 更新三个 Tab 的数量角标
  */
 function updateTabCounts() {
   for (const [scope, config] of Object.entries(SCOPE_CONFIG)) {
@@ -507,30 +507,24 @@ function updateTabCounts() {
 }
 
 /**
- * 获取指定口径下的数据（主表：排除 low 置信度）
- * @param {string} scope - narrow/medium/wide
+ * 获取指定口径下的数据
+ * @param {string} scope - active/pipeline/done
  * @returns {Array} 过滤后的数据
  */
 function getScopedData(scope) {
   const config = SCOPE_CONFIG[scope];
-  let data = config.stages 
-    ? POOL_DATA.filter(s => config.stages.includes(s.stage))
-    : POOL_DATA;
-  // 主表只显示 confirmed + medium，low 放折叠区
-  return data.filter(s => s.confidence !== 'low');
+  return POOL_DATA.filter(s => config.stages.includes(s.stage));
 }
 
 /**
  * 获取指定口径下的低置信度数据（折叠区）
- * @param {string} scope - narrow/medium/wide
+ * @param {string} scope - active/pipeline/done
  * @returns {Array} 低置信度数据
  */
 function getLowConfData(scope) {
+  // 清洗后已无 low 置信度数据，保留接口兼容
   const config = SCOPE_CONFIG[scope];
-  let data = config.stages 
-    ? POOL_DATA.filter(s => config.stages.includes(s.stage))
-    : POOL_DATA;
-  return data.filter(s => s.confidence === 'low');
+  return POOL_DATA.filter(s => config.stages.includes(s.stage) && s.confidence === 'low');
 }
 
 /**
