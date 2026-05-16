@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>并购线索池 | M&A Watchlist</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 20px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #333;
+}
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.header .meta {
+  font-size: 12px;
+  color: #888;
+}
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.search-box {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #e0e0e0;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  border-radius: 4px;
+  width: 200px;
+}
+.search-box:focus { outline: none; border-color: #4a9eff; }
+.filter-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { border-color: #666; color: #fff; }
+.filter-btn.active { background: #1e3a5f; border-color: #4a9eff; color: #4a9eff; }
+.stats-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #888;
+}
+.stats-bar .stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.stats-bar .stat .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #222;
+  border-radius: 6px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: #141414;
+  color: #999;
+  font-weight: 500;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #333;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+thead th:hover { color: #fff; }
+thead th.sorted-asc::after { content: ' ▲'; color: #4a9eff; }
+thead th.sorted-desc::after { content: ' ▼'; color: #4a9eff; }
+tbody tr {
+  border-bottom: 1px solid #1a1a1a;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+tbody tr:hover { background: #1a1a2a; }
+tbody td {
+  padding: 8px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+.stage-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.stage-筹划中 { background: #1a2a1a; color: #6abf6a; border: 1px solid #2a4a2a; }
+.stage-方案公布 { background: #1a2a3a; color: #6ab0ff; border: 1px solid #2a4a6a; }
+.stage-审核中 { background: #2a2a1a; color: #d4a843; border: 1px solid #4a4a2a; }
+.stage-已过会 { background: #1a1a3a; color: #9b8aff; border: 1px solid #2a2a5a; }
+.stage-已注册 { background: #1a3a2a; color: #4ae0a0; border: 1px solid #2a5a4a; }
+.stage-已完成 { background: #0a2a0a; color: #3adf3a; border: 1px solid #1a4a1a; }
+.stage-已终止 { background: #2a1a1a; color: #ff6b6b; border: 1px solid #4a2a2a; }
+.code-link {
+  color: #4a9eff;
+  text-decoration: none;
+}
+.code-link:hover { text-decoration: underline; }
+/* 展开的历史面板 */
+.history-row { display: none; }
+.history-row.visible { display: table-row; }
+.history-row td {
+  padding: 0 12px 12px 12px;
+  background: #111;
+}
+.history-timeline {
+  padding: 8px 0 4px 16px;
+  border-left: 2px solid #333;
+  margin-left: 8px;
+}
+.history-item {
+  position: relative;
+  padding: 4px 0 8px 16px;
+  font-size: 12px;
+  color: #aaa;
+}
+.history-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4a9eff;
+}
+.history-item .h-date { color: #666; margin-right: 8px; }
+.history-item .h-stage { margin-right: 8px; }
+.disclaimer {
+  margin-top: 20px;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #666;
+  line-height: 1.6;
+}
+.count-display {
+  font-size: 13px;
+  color: #4a9eff;
+  margin-left: auto;
+}
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .controls { gap: 8px; }
+  .search-box { width: 100%; }
+  table { font-size: 12px; }
+  tbody td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>■ 并购线索池 M&A WATCHLIST</h1>
+  <div class="meta">
+    <span id="lastUpdate"></span> | 
+    <span id="totalCount"></span> 只标的 |
+    数据源: iFinD 公告/新闻
+  </div>
+</div>
+
+<div class="controls">
+  <input type="text" class="search-box" id="searchInput" placeholder="搜索名称/代码/公告...">
+  <button class="filter-btn active" data-stage="all">全部</button>
+  <button class="filter-btn" data-stage="筹划中">筹划中</button>
+  <button class="filter-btn" data-stage="方案公布">方案公布</button>
+  <button class="filter-btn" data-stage="审核中">审核中</button>
+  <button class="filter-btn" data-stage="已过会">已过会</button>
+  <button class="filter-btn" data-stage="已注册">已注册</button>
+  <button class="filter-btn" data-stage="已完成">已完成</button>
+  <button class="filter-btn" data-stage="已终止">已终止</button>
+  <span class="count-display" id="filteredCount"></span>
+</div>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th data-sort="name">名称</th>
+        <th data-sort="code">代码</th>
+        <th data-sort="stage">阶段</th>
+        <th data-sort="last_date">最近日期</th>
+        <th data-sort="first_date">首次日期</th>
+        <th>最近公告</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="disclaimer">
+  ■ 数据来源：iFinD 公告/新闻关键词检索（31组关键字，每组最多20条）。本池为高相关度并购线索，非交易所全量事件库。<br>
+  ■ 阶段判断基于公告标题关键字自动分类，可能存在误判，仅供参考。<br>
+  ■ 覆盖时间：2024-09-24 至今。
+</div>
+
+<script>
+// 数据将从 merger_pool.json 加载
+let POOL_DATA = [];
+let currentSort = { key: 'last_date', dir: 'desc' };
+let currentStage = 'all';
+let searchText = '';
+
+async function loadData() {
+  try {
+    const resp = await fetch('merger_pool.json');
+    const pool = await resp.json();
+    POOL_DATA = Object.values(pool.stocks).map(s => ({
+      name: s.name,
+      code: s.code || '',
+      stage: s.stage,
+      first_date: s.first_date || '',
+      last_date: s.last_date || '',
+      last_title: s.last_title || '',
+      type: s.type || '',
+      target: s.target || '',
+      amount: s.amount || '',
+      industry: s.industry || '',
+      history: s.history || [],
+    }));
+    POOL_DATA.sort((a, b) => b.last_date.localeCompare(a.last_date));
+    
+    document.getElementById('lastUpdate').textContent = pool.meta.last_updated || '';
+    document.getElementById('totalCount').textContent = POOL_DATA.length;
+    
+    renderStats();
+    renderTable();
+  } catch (e) {
+    document.getElementById('tableBody').innerHTML = 
+      '<tr><td colspan="6" style="text-align:center;padding:40px;color:#ff6b6b;">加载失败: ' + e.message + '</td></tr>';
+  }
+}
+
+function renderStats() {
+  const stages = {};
+  const colors = {
+    '筹划中': '#6abf6a', '方案公布': '#6ab0ff', '审核中': '#d4a843',
+    '已过会': '#9b8aff', '已注册': '#4ae0a0', '已完成': '#3adf3a', '已终止': '#ff6b6b'
+  };
+  POOL_DATA.forEach(s => { stages[s.stage] = (stages[s.stage] || 0) + 1; });
+  
+  const bar = document.getElementById('statsBar');
+  bar.innerHTML = Object.entries(stages)
+    .sort((a, b) => b[1] - a[1])
+    .map(([stage, count]) => 
+      `<span class="stat"><span class="dot" style="background:${colors[stage] || '#666'}"></span>${stage} ${count}</span>`
+    ).join('');
+}
+
+function getFiltered() {
+  return POOL_DATA.filter(s => {
+    if (currentStage !== 'all' && s.stage !== currentStage) return false;
+    if (searchText) {
+      const q = searchText.toLowerCase();
+      const haystack = (s.name + s.code + s.last_title + s.stage).toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function sortData(data) {
+  const { key, dir } = currentSort;
+  return [...data].sort((a, b) => {
+    let va = a[key] || '', vb = b[key] || '';
+    if (typeof va === 'string') va = va.toLowerCase();
+    if (typeof vb === 'string') vb = vb.toLowerCase();
+    let cmp = va < vb ? -1 : va > vb ? 1 : 0;
+    return dir === 'desc' ? -cmp : cmp;
+  });
+}
+
+function renderTable() {
+  const filtered = sortData(getFiltered());
+  document.getElementById('filteredCount').textContent = `显示 ${filtered.length} / ${POOL_DATA.length}`;
+  
+  const tbody = document.getElementById('tableBody');
+  let html = '';
+  
+  filtered.forEach((s, i) => {
+    const codeClean = s.code.replace('.SH', '').replace('.SZ', '');
+    html += `<tr class="data-row" data-idx="${i}">
+      <td><strong>${s.name}</strong></td>
+      <td><a class="code-link" href="https://quote.eastmoney.com/${s.code.endsWith('.SH') ? 'sh' : 'sz'}${codeClean}.html" target="_blank">${s.code}</a></td>
+      <td><span class="stage-badge stage-${s.stage}">${s.stage}</span></td>
+      <td>${s.last_date}</td>
+      <td>${s.first_date}</td>
+      <td title="${s.last_title}">${s.last_title.length > 40 ? s.last_title.slice(0, 40) + '...' : s.last_title}</td>
+    </tr>`;
+    // 历史展开行
+    if (s.history && s.history.length > 0) {
+      html += `<tr class="history-row" data-idx="${i}"><td colspan="6">
+        <div class="history-timeline">
+          ${s.history.map(h => `<div class="history-item">
+            <span class="h-date">${h.date}</span>
+            <span class="h-stage stage-badge stage-${h.stage}">${h.stage}</span>
+            ${h.title || ''}
+          </div>`).join('')}
+        </div>
+      </td></tr>`;
+    }
+  });
+  
+  tbody.innerHTML = html;
+  
+  // 点击展开
+  tbody.querySelectorAll('.data-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const idx = row.dataset.idx;
+      const histRow = tbody.querySelector(`.history-row[data-idx="${idx}"]`);
+      if (histRow) histRow.classList.toggle('visible');
+    });
+  });
+}
+
+// 筛选按钮
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentStage = btn.dataset.stage;
+    renderTable();
+  });
+});
+
+// 搜索
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchText = e.target.value.trim();
+  renderTable();
+});
+
+// 排序
+document.querySelectorAll('thead th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sort;
+    if (currentSort.key === key) {
+      currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort = { key, dir: 'desc' };
+    }
+    // 更新样式
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted-asc', 'sorted-desc'));
+    th.classList.add(currentSort.dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    renderTable();
+  });
+});
+
+loadData();
+</script>
+</body>
+</html>

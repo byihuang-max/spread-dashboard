@@ -63,6 +63,7 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
   <div class="tab active" data-tab="chip">筹码查询</div>
   <div class="tab" data-tab="daily">每日跟踪(A类)</div>
   <div class="tab" data-tab="ma">并购重组(B类)</div>
+  <div class="tab" data-tab="pool">并购线索池</div>
   <div class="tab" data-tab="scanner">全市场公告</div>
 </div>
 <div class="container">
@@ -80,7 +81,11 @@ body{background:#0f1724;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
     <div class="stock-selector" id="ma-stocks"></div>
     <div id="ma-content"><div class="empty">选择股票查看并购重组跟踪</div></div>
   </div>
-  <!-- Tab 4: 全市场公告 -->
+  <!-- Tab 4: 并购线索池 -->
+  <div class="tab-content" id="tab-pool">
+    <iframe src="/skills/stock-monitor/merger_pool.html" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:8px"></iframe>
+  </div>
+  <!-- Tab 5: 全市场公告 -->
   <div class="tab-content" id="tab-scanner">
     <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <input type="date" id="scanner-date" style="padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:#1a2332;color:#e2e8f0;font-size:13px">
