@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GAMT 并购信息表</title>
 <style>
+/* ═══════════════════════════════════════════════════
+   全局样式 - Bloomberg 终端风格（黑底等宽字体）
+   ═══════════════════════════════════════════════════ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
@@ -13,6 +16,10 @@ body {
   min-height: 100vh;
   padding: 20px;
 }
+
+/* ═══════════════════════════════════════════════════
+   页面头部 - 标题 + 元信息
+   ═══════════════════════════════════════════════════ */
 .header {
   display: flex;
   justify-content: space-between;
@@ -31,6 +38,55 @@ body {
   font-size: 12px;
   color: #888;
 }
+
+/* ═══════════════════════════════════════════════════
+   三口径 Tab 切换
+   - 并购审核池（窄）：已提交审核的确定性标的
+   - 并购方案池（中）：已出正式方案的
+   - 并购线索池（宽）：所有并购相关动作
+   ═══════════════════════════════════════════════════ */
+.scope-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+.scope-tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  position: relative;
+}
+.scope-tab:hover { color: #aaa; }
+.scope-tab.active { color: #4a9eff; border-bottom-color: #4a9eff; }
+/* Tab 右上角的数量角标 */
+.scope-tab .tab-count {
+  font-size: 10px;
+  color: #666;
+  margin-left: 6px;
+  font-weight: 400;
+}
+.scope-tab.active .tab-count { color: #4a9eff; }
+
+/* Tab 下方的口径说明 */
+.scope-desc {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════
+   搜索 + 阶段筛选控件
+   ═══════════════════════════════════════════════════ */
 .controls {
   display: flex;
   gap: 12px;
@@ -62,6 +118,10 @@ body {
 }
 .filter-btn:hover { border-color: #666; color: #fff; }
 .filter-btn.active { background: #1e3a5f; border-color: #4a9eff; color: #4a9eff; }
+
+/* ═══════════════════════════════════════════════════
+   统计条 - 各阶段数量分布
+   ═══════════════════════════════════════════════════ */
 .stats-bar {
   display: flex;
   gap: 16px;
@@ -80,6 +140,10 @@ body {
   border-radius: 50%;
   display: inline-block;
 }
+
+/* ═══════════════════════════════════════════════════
+   数据表格
+   ═══════════════════════════════════════════════════ */
 .table-wrap {
   overflow-x: auto;
   border: 1px solid #222;
@@ -117,6 +181,10 @@ tbody td {
   text-overflow: ellipsis;
   max-width: 300px;
 }
+
+/* ═══════════════════════════════════════════════════
+   阶段标签样式 - 每个阶段对应不同颜色
+   ═══════════════════════════════════════════════════ */
 .stage-badge {
   display: inline-block;
   padding: 2px 8px;
@@ -131,12 +199,17 @@ tbody td {
 .stage-已注册 { background: #1a3a2a; color: #4ae0a0; border: 1px solid #2a5a4a; }
 .stage-已完成 { background: #0a2a0a; color: #3adf3a; border: 1px solid #1a4a1a; }
 .stage-已终止 { background: #2a1a1a; color: #ff6b6b; border: 1px solid #4a2a2a; }
+
+/* 股票代码链接 */
 .code-link {
   color: #4a9eff;
   text-decoration: none;
 }
 .code-link:hover { text-decoration: underline; }
-/* 展开的历史面板 */
+
+/* ═══════════════════════════════════════════════════
+   历史事件展开面板 - 点击行后展开的时间线
+   ═══════════════════════════════════════════════════ */
 .history-row { display: none; }
 .history-row.visible { display: table-row; }
 .history-row td {
@@ -166,6 +239,10 @@ tbody td {
 }
 .history-item .h-date { color: #666; margin-right: 8px; }
 .history-item .h-stage { margin-right: 8px; }
+
+/* ═══════════════════════════════════════════════════
+   底部说明 + 计数显示
+   ═══════════════════════════════════════════════════ */
 .disclaimer {
   margin-top: 20px;
   padding: 12px;
@@ -181,16 +258,26 @@ tbody td {
   color: #4a9eff;
   margin-left: auto;
 }
+
+/* ═══════════════════════════════════════════════════
+   响应式 - 移动端适配
+   ═══════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   body { padding: 10px; }
   .controls { gap: 8px; }
   .search-box { width: 100%; }
+  .scope-tabs { overflow-x: auto; }
+  .scope-tab { white-space: nowrap; padding: 8px 14px; font-size: 12px; }
   table { font-size: 12px; }
   tbody td { padding: 6px 8px; }
 }
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════
+     页面头部
+     ═══════════════════════════════════════════════════ -->
 <div class="header">
   <h1>■ GAMT 并购信息表</h1>
   <div class="meta">
@@ -200,21 +287,45 @@ tbody td {
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     三口径 Tab
+     窄口径：审核中+已过会+已注册+已完成（确定在走流程的）
+     中口径：窄 + 方案公布（已出正式预案/草案的）
+     宽口径：全部（含筹划中、已终止）
+     ═══════════════════════════════════════════════════ -->
+<div class="scope-tabs">
+  <div class="scope-tab active" data-scope="narrow">
+    并购审核池<span class="tab-count" id="count-narrow"></span>
+  </div>
+  <div class="scope-tab" data-scope="medium">
+    并购方案池<span class="tab-count" id="count-medium"></span>
+  </div>
+  <div class="scope-tab" data-scope="wide">
+    并购线索池<span class="tab-count" id="count-wide"></span>
+  </div>
+</div>
+
+<!-- 口径说明（根据当前 Tab 动态切换） -->
+<div class="scope-desc" id="scopeDesc"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     搜索 + 阶段筛选
+     ═══════════════════════════════════════════════════ -->
 <div class="controls">
-  <input type="text" class="search-box" id="searchInput" placeholder="搜索名称/代码/公告...">
-  <button class="filter-btn active" data-stage="all">全部</button>
-  <button class="filter-btn" data-stage="筹划中">筹划中</button>
-  <button class="filter-btn" data-stage="方案公布">方案公布</button>
-  <button class="filter-btn" data-stage="审核中">审核中</button>
-  <button class="filter-btn" data-stage="已过会">已过会</button>
-  <button class="filter-btn" data-stage="已注册">已注册</button>
-  <button class="filter-btn" data-stage="已完成">已完成</button>
-  <button class="filter-btn" data-stage="已终止">已终止</button>
+  <input type="text" class="search-box" id="searchInput" placeholder="搜索名称/代码/公告..." aria-label="搜索并购标的">
+  <!-- 阶段筛选按钮（根据当前口径动态生成） -->
+  <div id="stageFilters"></div>
   <span class="count-display" id="filteredCount"></span>
 </div>
 
+<!-- 统计条 -->
 <div class="stats-bar" id="statsBar"></div>
 
+<!-- ═══════════════════════════════════════════════════
+     数据表格
+     - 点击表头排序
+     - 点击行展开历史事件线
+     ═══════════════════════════════════════════════════ -->
 <div class="table-wrap">
   <table>
     <thead>
@@ -231,23 +342,79 @@ tbody td {
   </table>
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     底部说明
+     ═══════════════════════════════════════════════════ -->
 <div class="disclaimer">
-  ■ 数据来源：iFinD 公告/新闻关键词检索（31组关键字，每组最多20条）。本池为高相关度并购线索，非交易所全量事件库。<br>
+  ■ 数据来源：iFinD 公告/新闻关键词检索（31组关键字 × 7时间段分段扫描）。<br>
   ■ 阶段判断基于公告标题关键字自动分类，可能存在误判，仅供参考。<br>
-  ■ 覆盖时间：2024-09-24 至今。
+  ■ 覆盖时间：2024-09-24 至今。口径从左到右：确定性递减，覆盖面递增。
 </div>
 
 <script>
-// 数据将从 merger_pool.json 加载
-let POOL_DATA = [];
-let currentSort = { key: 'last_date', dir: 'desc' };
-let currentStage = 'all';
-let searchText = '';
+/**
+ * ═══════════════════════════════════════════════════
+ * GAMT 并购信息表 - 前端逻辑
+ * 
+ * 三口径设计：
+ * - narrow（并购审核池）：审核中 + 已过会 + 已注册 + 已完成
+ *   → 已正式提交交易所/证监会审核，有明确时间线和结果预期
+ * 
+ * - medium（并购方案池）：narrow + 方案公布
+ *   → 已出正式预案/草案，交易结构基本确定
+ * 
+ * - wide（并购线索池）：全部标的
+ *   → 雷达层，含筹划中、已终止、控制权变更等早期信号
+ * ═══════════════════════════════════════════════════
+ */
 
+// ── 全局状态 ──
+let POOL_DATA = [];           // 全量数据
+let currentScope = 'narrow';  // 当前口径
+let currentSort = { key: 'last_date', dir: 'desc' };
+let currentStage = 'all';     // 阶段筛选（在当前口径内）
+let searchText = '';           // 搜索关键字
+
+// ── 口径定义 ──
+const SCOPE_CONFIG = {
+  narrow: {
+    // 并购审核池：已进入正式审核流程的标的
+    stages: ['审核中', '已过会', '已注册', '已完成'],
+    desc: '■ 并购审核池（窄口径）：已正式提交交易所/证监会审核的标的。包含：审核中、已过会、已注册、已完成。这些有明确的审核时间线和结果预期。'
+  },
+  medium: {
+    // 并购方案池：已公布正式方案（含审核池）
+    stages: ['方案公布', '审核中', '已过会', '已注册', '已完成'],
+    desc: '■ 并购方案池（中口径）：已公布正式预案/草案的标的。包含审核池全部 + 方案公布阶段。交易结构基本确定，等待提交审核或补充材料。'
+  },
+  wide: {
+    // 并购线索池：全部标的
+    stages: null, // null 表示不过滤
+    desc: '■ 并购线索池（宽口径）：所有有并购相关动作的标的。包含筹划中、已终止、控制权变更等早期信号。覆盖面最广，确定性最低，适合做雷达监控。'
+  }
+};
+
+// ── 阶段颜色映射 ──
+const STAGE_COLORS = {
+  '筹划中': '#6abf6a',
+  '方案公布': '#6ab0ff',
+  '审核中': '#d4a843',
+  '已过会': '#9b8aff',
+  '已注册': '#4ae0a0',
+  '已完成': '#3adf3a',
+  '已终止': '#ff6b6b'
+};
+
+/**
+ * 加载数据
+ * 从同目录下的 merger_pool.json 读取全量并购池数据
+ */
 async function loadData() {
   try {
     const resp = await fetch('merger_pool.json');
     const pool = await resp.json();
+    
+    // 将 stocks 对象转为数组，提取前端需要的字段
     POOL_DATA = Object.values(pool.stocks).map(s => ({
       name: s.name,
       code: s.code || '',
@@ -261,47 +428,136 @@ async function loadData() {
       industry: s.industry || '',
       history: s.history || [],
     }));
+    
+    // 默认按最近日期降序
     POOL_DATA.sort((a, b) => b.last_date.localeCompare(a.last_date));
     
+    // 更新头部元信息
     document.getElementById('lastUpdate').textContent = pool.meta.last_updated || '';
     document.getElementById('totalCount').textContent = POOL_DATA.length;
     
-    renderStats();
-    renderTable();
+    // 更新各口径的数量角标
+    updateTabCounts();
+    // 渲染当前口径
+    switchScope(currentScope);
   } catch (e) {
     document.getElementById('tableBody').innerHTML = 
       '<tr><td colspan="6" style="text-align:center;padding:40px;color:#ff6b6b;">加载失败: ' + e.message + '</td></tr>';
   }
 }
 
+/**
+ * 更新三个 Tab 的数量角标
+ */
+function updateTabCounts() {
+  for (const [scope, config] of Object.entries(SCOPE_CONFIG)) {
+    const count = getScopedData(scope).length;
+    document.getElementById('count-' + scope).textContent = '(' + count + ')';
+  }
+}
+
+/**
+ * 获取指定口径下的数据
+ * @param {string} scope - narrow/medium/wide
+ * @returns {Array} 过滤后的数据
+ */
+function getScopedData(scope) {
+  const config = SCOPE_CONFIG[scope];
+  if (!config.stages) return POOL_DATA; // wide = 全部
+  return POOL_DATA.filter(s => config.stages.includes(s.stage));
+}
+
+/**
+ * 切换口径
+ * @param {string} scope - narrow/medium/wide
+ */
+function switchScope(scope) {
+  currentScope = scope;
+  currentStage = 'all'; // 切换口径时重置阶段筛选
+  searchText = '';
+  document.getElementById('searchInput').value = '';
+  
+  // 更新口径说明
+  document.getElementById('scopeDesc').textContent = SCOPE_CONFIG[scope].desc;
+  
+  // 更新阶段筛选按钮（只显示当前口径包含的阶段）
+  renderStageFilters();
+  
+  // 渲染统计和表格
+  renderStats();
+  renderTable();
+}
+
+/**
+ * 渲染阶段筛选按钮
+ * 根据当前口径，只显示该口径包含的阶段
+ */
+function renderStageFilters() {
+  const config = SCOPE_CONFIG[currentScope];
+  const stages = config.stages || ['筹划中', '方案公布', '审核中', '已过会', '已注册', '已完成', '已终止'];
+  
+  let html = '<button class="filter-btn active" data-stage="all">全部</button>';
+  stages.forEach(stage => {
+    html += `<button class="filter-btn" data-stage="${stage}">${stage}</button>`;
+  });
+  
+  document.getElementById('stageFilters').innerHTML = html;
+  
+  // 绑定事件
+  document.querySelectorAll('#stageFilters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#stageFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentStage = btn.dataset.stage;
+      renderTable();
+    });
+  });
+}
+
+/**
+ * 渲染统计条
+ * 显示当前口径内各阶段的数量分布
+ */
 function renderStats() {
+  const scopedData = getScopedData(currentScope);
   const stages = {};
-  const colors = {
-    '筹划中': '#6abf6a', '方案公布': '#6ab0ff', '审核中': '#d4a843',
-    '已过会': '#9b8aff', '已注册': '#4ae0a0', '已完成': '#3adf3a', '已终止': '#ff6b6b'
-  };
-  POOL_DATA.forEach(s => { stages[s.stage] = (stages[s.stage] || 0) + 1; });
+  scopedData.forEach(s => { stages[s.stage] = (stages[s.stage] || 0) + 1; });
   
   const bar = document.getElementById('statsBar');
   bar.innerHTML = Object.entries(stages)
     .sort((a, b) => b[1] - a[1])
     .map(([stage, count]) => 
-      `<span class="stat"><span class="dot" style="background:${colors[stage] || '#666'}"></span>${stage} ${count}</span>`
+      `<span class="stat"><span class="dot" style="background:${STAGE_COLORS[stage] || '#666'}"></span>${stage} ${count}</span>`
     ).join('');
 }
 
+/**
+ * 获取当前筛选后的数据
+ * 先按口径过滤，再按阶段筛选，再按搜索关键字过滤
+ */
 function getFiltered() {
-  return POOL_DATA.filter(s => {
-    if (currentStage !== 'all' && s.stage !== currentStage) return false;
-    if (searchText) {
-      const q = searchText.toLowerCase();
+  let data = getScopedData(currentScope);
+  
+  // 阶段筛选
+  if (currentStage !== 'all') {
+    data = data.filter(s => s.stage === currentStage);
+  }
+  
+  // 搜索过滤
+  if (searchText) {
+    const q = searchText.toLowerCase();
+    data = data.filter(s => {
       const haystack = (s.name + s.code + s.last_title + s.stage).toLowerCase();
-      if (!haystack.includes(q)) return false;
-    }
-    return true;
-  });
+      return haystack.includes(q);
+    });
+  }
+  
+  return data;
 }
 
+/**
+ * 排序
+ */
 function sortData(data) {
   const { key, dir } = currentSort;
   return [...data].sort((a, b) => {
@@ -313,24 +569,33 @@ function sortData(data) {
   });
 }
 
+/**
+ * 渲染表格
+ * 包含数据行和可展开的历史事件行
+ */
 function renderTable() {
   const filtered = sortData(getFiltered());
-  document.getElementById('filteredCount').textContent = `显示 ${filtered.length} / ${POOL_DATA.length}`;
+  const scopedTotal = getScopedData(currentScope).length;
+  document.getElementById('filteredCount').textContent = `显示 ${filtered.length} / ${scopedTotal}`;
   
   const tbody = document.getElementById('tableBody');
   let html = '';
   
   filtered.forEach((s, i) => {
+    // 生成东方财富行情链接
     const codeClean = s.code.replace('.SH', '').replace('.SZ', '');
+    const market = s.code.endsWith('.SH') ? 'sh' : 'sz';
+    
     html += `<tr class="data-row" data-idx="${i}">
       <td><strong>${s.name}</strong></td>
-      <td><a class="code-link" href="https://quote.eastmoney.com/${s.code.endsWith('.SH') ? 'sh' : 'sz'}${codeClean}.html" target="_blank">${s.code}</a></td>
+      <td><a class="code-link" href="https://quote.eastmoney.com/${market}${codeClean}.html" target="_blank" rel="noopener">${s.code}</a></td>
       <td><span class="stage-badge stage-${s.stage}">${s.stage}</span></td>
       <td>${s.last_date}</td>
       <td>${s.first_date}</td>
       <td title="${s.last_title}">${s.last_title.length > 40 ? s.last_title.slice(0, 40) + '...' : s.last_title}</td>
     </tr>`;
-    // 历史展开行
+    
+    // 历史事件展开行（点击数据行后显示）
     if (s.history && s.history.length > 0) {
       html += `<tr class="history-row" data-idx="${i}"><td colspan="6">
         <div class="history-timeline">
@@ -346,7 +611,7 @@ function renderTable() {
   
   tbody.innerHTML = html;
   
-  // 点击展开
+  // 绑定点击展开事件
   tbody.querySelectorAll('.data-row').forEach(row => {
     row.addEventListener('click', () => {
       const idx = row.dataset.idx;
@@ -356,23 +621,26 @@ function renderTable() {
   });
 }
 
-// 筛选按钮
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentStage = btn.dataset.stage;
-    renderTable();
+// ═══════════════════════════════════════════════════
+// 事件绑定
+// ═══════════════════════════════════════════════════
+
+// 口径 Tab 切换
+document.querySelectorAll('.scope-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.scope-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    switchScope(tab.dataset.scope);
   });
 });
 
-// 搜索
+// 搜索输入
 document.getElementById('searchInput').addEventListener('input', (e) => {
   searchText = e.target.value.trim();
   renderTable();
 });
 
-// 排序
+// 表头排序
 document.querySelectorAll('thead th[data-sort]').forEach(th => {
   th.addEventListener('click', () => {
     const key = th.dataset.sort;
@@ -381,13 +649,16 @@ document.querySelectorAll('thead th[data-sort]').forEach(th => {
     } else {
       currentSort = { key, dir: 'desc' };
     }
-    // 更新样式
+    // 更新排序箭头样式
     document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted-asc', 'sorted-desc'));
     th.classList.add(currentSort.dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
     renderTable();
   });
 });
 
+// ═══════════════════════════════════════════════════
+// 初始化 - 加载数据
+// ═══════════════════════════════════════════════════
 loadData();
 </script>
 </body>
