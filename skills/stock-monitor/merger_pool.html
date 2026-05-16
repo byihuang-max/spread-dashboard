@@ -241,6 +241,27 @@ tbody td {
 .history-item .h-stage { margin-right: 8px; }
 
 /* ═══════════════════════════════════════════════════
+   疑似非并购折叠区样式
+   ═══════════════════════════════════════════════════ */
+.low-conf-section {
+  margin-top: 20px;
+}
+.low-conf-toggle {
+  padding: 10px 14px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.low-conf-toggle:hover { color: #ccc; border-color: #444; }
+.low-conf-toggle.expanded { color: #4a9eff; }
+.low-conf-body { margin-top: 8px; }
+.low-conf-body table { opacity: 0.7; }
+
+/* ═══════════════════════════════════════════════════
    底部说明 + 计数显示
    ═══════════════════════════════════════════════════ */
 .disclaimer {
@@ -322,7 +343,7 @@ tbody td {
 <div class="stats-bar" id="statsBar"></div>
 
 <!-- ═══════════════════════════════════════════════════
-     数据表格
+     主数据表格（confirmed + medium 置信度）
      - 点击表头排序
      - 点击行展开历史事件线
      ═══════════════════════════════════════════════════ -->
@@ -343,11 +364,39 @@ tbody td {
 </div>
 
 <!-- ═══════════════════════════════════════════════════
+     疑似非并购折叠区（low 置信度）
+     这些标的的公告标题不含明确并购关键词，
+     可能是纯融资/公司治理/股东减持等，折叠展示
+     ═══════════════════════════════════════════════════ -->
+<div class="low-conf-section" id="lowConfSection" style="display:none;">
+  <div class="low-conf-toggle" id="lowConfToggle">
+    ▶ 疑似非并购标的（<span id="lowConfCount">0</span> 只）— 点击展开
+  </div>
+  <div class="low-conf-body" id="lowConfBody" style="display:none;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>名称</th>
+            <th>代码</th>
+            <th>阶段</th>
+            <th>最近日期</th>
+            <th>最近公告</th>
+          </tr>
+        </thead>
+        <tbody id="lowConfTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
      底部说明
      ═══════════════════════════════════════════════════ -->
 <div class="disclaimer">
-  ■ 数据来源：iFinD 公告/新闻关键词检索（31组关键字 × 7时间段分段扫描）。<br>
+  ■ 数据来源：iFinD 公告/新闻关键词检索（44组关键字 × 20月度时间段分段扫描）。<br>
   ■ 阶段判断基于公告标题关键字自动分类，可能存在误判，仅供参考。<br>
+  ■ 置信度分层：标题含"购买资产/收购/重组/合并/控制权"等 → 主表；仅含"定增/融资/质押/减持" → 折叠区。<br>
   ■ 覆盖时间：2024-09-24 至今。口径从左到右：确定性递减，覆盖面递增。
 </div>
 
@@ -427,6 +476,7 @@ async function loadData() {
       amount: s.amount || '',
       industry: s.industry || '',
       history: s.history || [],
+      confidence: s.confidence || 'medium', // confirmed/medium/low
     }));
     
     // 默认按最近日期降序
@@ -447,7 +497,7 @@ async function loadData() {
 }
 
 /**
- * 更新三个 Tab 的数量角标
+ * 更新三个 Tab 的数量角标（只计主表数据，不含低置信度）
  */
 function updateTabCounts() {
   for (const [scope, config] of Object.entries(SCOPE_CONFIG)) {
@@ -457,14 +507,30 @@ function updateTabCounts() {
 }
 
 /**
- * 获取指定口径下的数据
+ * 获取指定口径下的数据（主表：排除 low 置信度）
  * @param {string} scope - narrow/medium/wide
  * @returns {Array} 过滤后的数据
  */
 function getScopedData(scope) {
   const config = SCOPE_CONFIG[scope];
-  if (!config.stages) return POOL_DATA; // wide = 全部
-  return POOL_DATA.filter(s => config.stages.includes(s.stage));
+  let data = config.stages 
+    ? POOL_DATA.filter(s => config.stages.includes(s.stage))
+    : POOL_DATA;
+  // 主表只显示 confirmed + medium，low 放折叠区
+  return data.filter(s => s.confidence !== 'low');
+}
+
+/**
+ * 获取指定口径下的低置信度数据（折叠区）
+ * @param {string} scope - narrow/medium/wide
+ * @returns {Array} 低置信度数据
+ */
+function getLowConfData(scope) {
+  const config = SCOPE_CONFIG[scope];
+  let data = config.stages 
+    ? POOL_DATA.filter(s => config.stages.includes(s.stage))
+    : POOL_DATA;
+  return data.filter(s => s.confidence === 'low');
 }
 
 /**
@@ -486,6 +552,7 @@ function switchScope(scope) {
   // 渲染统计和表格
   renderStats();
   renderTable();
+  renderLowConf(); // 渲染折叠区
 }
 
 /**
@@ -621,6 +688,41 @@ function renderTable() {
   });
 }
 
+/**
+ * 渲染低置信度折叠区
+ * 这些标的公告标题不含明确并购关键词，可能是纯融资/治理/减持
+ */
+function renderLowConf() {
+  const lowData = getLowConfData(currentScope);
+  const section = document.getElementById('lowConfSection');
+  const countEl = document.getElementById('lowConfCount');
+  const tableEl = document.getElementById('lowConfTable');
+  
+  if (lowData.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  section.style.display = 'block';
+  countEl.textContent = lowData.length;
+  
+  // 渲染表格
+  let html = '';
+  lowData.sort((a, b) => b.last_date.localeCompare(a.last_date));
+  lowData.forEach(s => {
+    const codeClean = s.code.replace('.SH', '').replace('.SZ', '');
+    const market = s.code.endsWith('.SH') ? 'sh' : 'sz';
+    html += `<tr>
+      <td><strong>${s.name}</strong></td>
+      <td><a class="code-link" href="https://quote.eastmoney.com/${market}${codeClean}.html" target="_blank" rel="noopener">${s.code}</a></td>
+      <td><span class="stage-badge stage-${s.stage}">${s.stage}</span></td>
+      <td>${s.last_date}</td>
+      <td title="${s.last_title}">${s.last_title.length > 40 ? s.last_title.slice(0, 40) + '...' : s.last_title}</td>
+    </tr>`;
+  });
+  tableEl.innerHTML = html;
+}
+
 // ═══════════════════════════════════════════════════
 // 事件绑定
 // ═══════════════════════════════════════════════════
@@ -638,6 +740,21 @@ document.querySelectorAll('.scope-tab').forEach(tab => {
 document.getElementById('searchInput').addEventListener('input', (e) => {
   searchText = e.target.value.trim();
   renderTable();
+});
+
+// 低置信度折叠区展开/收起
+document.getElementById('lowConfToggle').addEventListener('click', () => {
+  const body = document.getElementById('lowConfBody');
+  const toggle = document.getElementById('lowConfToggle');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    toggle.textContent = '▼ 疑似非并购标的（' + document.getElementById('lowConfCount').textContent + ' 只）— 点击收起';
+    toggle.classList.add('expanded');
+  } else {
+    body.style.display = 'none';
+    toggle.innerHTML = '▶ 疑似非并购标的（<span id="lowConfCount">' + document.getElementById('lowConfCount').textContent + '</span> 只）— 点击展开';
+    toggle.classList.remove('expanded');
+  }
 });
 
 // 表头排序
