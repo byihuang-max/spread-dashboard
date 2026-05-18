@@ -382,6 +382,16 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
+    'merger_pool': {
+        'name': '并购池',
+        'scripts': [
+            ('skills/stock-monitor', 'merger_pool.py'),
+        ],
+        'aliases': ['merger-pool'],
+        'late_data': True,
+        'include_in_update_all': True,
+        'include_in_refresh_server': False,
+    },
     'overview': {
         'name': '仪表盘汇总',
         'scripts': [
