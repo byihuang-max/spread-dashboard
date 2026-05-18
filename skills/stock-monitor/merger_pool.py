@@ -35,11 +35,24 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 POOL_PATH = SCRIPT_DIR / 'merger_pool.json'
 IFIND_DIR = Path(os.path.expanduser('~/.openclaw/extensions/ifind-finance-data'))
 
-# UQER SDK 路径（本地 Mac）
-UQER_VENV_PY = Path(os.path.expanduser(
+# UQER SDK 路径（自动检测本地 Mac / 腾讯云）
+_LOCAL_UQER_PY = Path(os.path.expanduser(
     '~/Desktop/quant-backtest/timing_model/.venv_uqer/bin/python'))
-UQER_TOKEN_FILE = Path(os.path.expanduser(
+_LOCAL_UQER_TOKEN = Path(os.path.expanduser(
     '~/Desktop/quant-backtest/timing_model/config/uqer_token.json'))
+_CLOUD_UQER_PY = SCRIPT_DIR / '.venv_uqer' / 'bin' / 'python'
+_CLOUD_UQER_TOKEN = SCRIPT_DIR / 'config' / 'uqer_token.json'
+
+# 优先用本地路径，fallback 到脚本同目录下的 venv
+if _LOCAL_UQER_PY.exists():
+    UQER_VENV_PY = _LOCAL_UQER_PY
+    UQER_TOKEN_FILE = _LOCAL_UQER_TOKEN
+elif _CLOUD_UQER_PY.exists():
+    UQER_VENV_PY = _CLOUD_UQER_PY
+    UQER_TOKEN_FILE = _CLOUD_UQER_TOKEN
+else:
+    UQER_VENV_PY = _LOCAL_UQER_PY  # fallback，运行时会报 warning
+    UQER_TOKEN_FILE = _LOCAL_UQER_TOKEN
 
 # ── 通联增量窗口（天）──
 UQER_WINDOW_DAYS = 14  # 通联入库延迟约7-10天，用14天窗口覆盖
