@@ -457,6 +457,34 @@ tbody td {
       </div>
     </details>
   </div>
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:16px">
+    <details>
+      <summary style="cursor:pointer;font-size:14px;font-weight:600;color:#94a3b8">
+        成分股明细（买入/卖出记录）<span id="holdingCount" style="margin-left:8px;color:#4a9eff;font-size:12px"></span>
+      </summary>
+      <div style="margin-top:12px">
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <button class="holdings-filter active" data-filter="holding" style="background:#1a2a1a;border:1px solid #2a5a2a;color:#34d399;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer">持仓中</button>
+          <button class="holdings-filter" data-filter="exited" style="background:#1a1a2a;border:1px solid #333;color:#94a3b8;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer">已退出</button>
+          <button class="holdings-filter" data-filter="all" style="background:#1a1a2a;border:1px solid #333;color:#94a3b8;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer">全部</button>
+        </div>
+        <div style="overflow-x:auto;max-height:400px;overflow-y:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead style="position:sticky;top:0;background:#0a0a1a">
+              <tr>
+                <th style="padding:8px;border-bottom:1px solid #333;color:#7f8ea8;text-align:left">代码</th>
+                <th style="padding:8px;border-bottom:1px solid #333;color:#7f8ea8;text-align:left">名称</th>
+                <th style="padding:8px;border-bottom:1px solid #333;color:#7f8ea8;text-align:left">买入日期</th>
+                <th style="padding:8px;border-bottom:1px solid #333;color:#7f8ea8;text-align:left">卖出日期</th>
+                <th style="padding:8px;border-bottom:1px solid #333;color:#7f8ea8;text-align:left">状态</th>
+              </tr>
+            </thead>
+            <tbody id="holdingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -1047,19 +1075,24 @@ document.getElementById('deepSearchInput').addEventListener('keydown', (e) => {
 // ═══════════════════════════════════════════════════
 let navChart = null;
 let navData = null;
+let signalsData = null;
 
 async function initNavChart() {
-  if (navData) {
-    renderNavChart(0);
-    return;
+  if (!navData) {
+    try {
+      const [navResp, sigResp] = await Promise.all([
+        fetch('backtest_output/merger_index_nav.json'),
+        fetch('backtest_output/merger_signals.json')
+      ]);
+      navData = await navResp.json();
+      signalsData = await sigResp.json();
+    } catch (e) {
+      document.getElementById('navSubtitle').textContent = '数据加载失败';
+      return;
+    }
   }
-  try {
-    const resp = await fetch('backtest_output/merger_index_nav.json');
-    navData = await resp.json();
-    renderNavChart(0);
-  } catch (e) {
-    document.getElementById('navSubtitle').textContent = '数据加载失败';
-  }
+  renderNavChart(0);
+  renderHoldings('holding');
 }
 
 function renderNavChart(startIdx) {
@@ -1229,6 +1262,58 @@ function renderNavChart(startIdx) {
 
   navChart.setOption(option, true);
 }
+
+// 成分股渲染
+function renderHoldings(filter) {
+  if (!signalsData) return;
+  
+  let data = signalsData;
+  if (filter === 'holding') data = signalsData.filter(s => !s.exit_date);
+  else if (filter === 'exited') data = signalsData.filter(s => s.exit_date);
+  
+  // 按买入日期倒序
+  data.sort((a, b) => (b.entry_date || '').localeCompare(a.entry_date || ''));
+  
+  const holdingCount = signalsData.filter(s => !s.exit_date).length;
+  const exitedCount = signalsData.filter(s => s.exit_date).length;
+  document.getElementById('holdingCount').textContent = `持仓 ${holdingCount} 只 / 已退出 ${exitedCount} 只`;
+  
+  const formatDate = (d) => {
+    if (!d) return '-';
+    return d.slice(0,4) + '-' + d.slice(4,6) + '-' + d.slice(6,8);
+  };
+  
+  const tbody = document.getElementById('holdingsBody');
+  tbody.innerHTML = data.map(s => {
+    const isHolding = !s.exit_date;
+    const statusColor = isHolding ? '#34d399' : '#f87171';
+    const statusText = isHolding ? '持仓中' : (s.exit_reason || '已退出');
+    return `<tr style="border-bottom:1px solid #222">
+      <td style="padding:6px 8px;color:#94a3b8;font-family:monospace">${s.code}</td>
+      <td style="padding:6px 8px;color:#e2e8f0">${s.name}</td>
+      <td style="padding:6px 8px;color:#60a5fa">${formatDate(s.entry_date)}</td>
+      <td style="padding:6px 8px;color:${isHolding ? '#555' : '#f59e0b'}">${formatDate(s.exit_date)}</td>
+      <td style="padding:6px 8px;color:${statusColor};font-weight:600">${statusText}</td>
+    </tr>`;
+  }).join('');
+}
+
+// 成分股筛选按钮
+document.querySelectorAll('.holdings-filter').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.holdings-filter').forEach(b => {
+      b.style.background = '#1a1a2a';
+      b.style.borderColor = '#333';
+      b.style.color = '#94a3b8';
+      b.classList.remove('active');
+    });
+    this.style.background = '#1a2a1a';
+    this.style.borderColor = '#2a5a2a';
+    this.style.color = '#34d399';
+    this.classList.add('active');
+    renderHoldings(this.dataset.filter);
+  });
+});
 
 // Slider 事件
 document.getElementById('navSlider').addEventListener('input', function() {
