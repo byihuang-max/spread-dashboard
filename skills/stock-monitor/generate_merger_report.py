@@ -208,30 +208,81 @@ def claude_generate_report(stock_name: str, code: str, context: str, existing_re
 【最新信息】
 {context}
 
-请输出更新后的完整 markdown 底稿。保持原有模板结构（事件时间线/交易结构/控股股东画像/公司基本面/潜在买方/估值/进度判断/收购路径推演）。"""
+请输出更新后的完整 markdown 底稿。保持原有模板结构。"""
     else:
-        prompt = f"""你是一个并购重组分析师。请根据以下搜索结果，为 {stock_name}（{code}）生成一份完整的并购重组跟踪底稿。
+        prompt = f"""你是一个专业的并购重组分析师。请根据以下搜索结果，为 {stock_name}（{code}）生成一份深度并购重组跟踪底稿。
 
 【搜索结果汇总】
 {context}
 
-请按以下结构输出 markdown 底稿：
-1. 事件时间线（表格）
-2. 交易结构（买方/卖方/标的/对价/支付方式）
-3. 控股股东画像（实控人/持股/质押/减持）
-4. 公司基本面（营收/利润/主营/估值）
-5. 潜在买方分析（如未披露）
-6. 估值参考
-7. 进度判断（当前阶段/成功概率/风险点）
-8. 收购路径推演（最可能路径 + 备选路径）
+请严格按以下结构输出完整 markdown 底稿（每个部分都必须有实质内容，不能只写"待披露"）：
 
-标题格式：# {stock_name}（{code}）并购重组跟踪底稿
-开头加更新日期。未知信息标注"待披露"。"""
+# {stock_name}（{code}）并购重组跟踪底稿
+
+**更新日期：** {datetime.now().strftime('%Y-%m-%d')}
+
+## 一、事件时间线
+用表格列出所有已知事件节点（日期/事件/性质）
+
+## 二、交易结构
+用表格列出：交易类型/买方/卖方/标的资产/交易对价/支付方式/业绩承诺
+如未披露，基于搜索结果推断最可能的结构
+
+## 三、控股股东画像
+实控人信息/持股比例/质押/减持/家族关系
+用【收购结构图】展示股权关系（ASCII 箭头图）：
+```
+实控人
+  ├── 直接持股 XX%
+  ├── 通过XX平台间接持股 XX%
+  └── 合计控制 XX%
+       │
+       ▼ 拟转让/收购
+       │
+  买方/标的
+```
+
+## 四、公司基本面
+营收/净利润/主营业务/毛利率/ROE/行业地位
+
+## 五、潜在买方/标的分析
+用表格列出可能的买方/标的，标注概率（★）和逻辑
+
+## 六、估值参考
+分多情形推演（至少2-3个情形），每个情形给出对应市值和股价区间
+
+## 七、进度判断
+当前阶段/成功概率/风险点/预期时间表
+
+## 八、收购路径推演
+用 ASCII 流程图展示最可能的路径（从当前状态到最终结果的完整链条）：
+```
+当前状态
+  ↓
+下一步动作
+  ↓
+...
+  ↓
+最终结果
+```
+至少给出路径A（最可能）和路径B（备选），每条路径都要有完整的推演逻辑
+
+## 九、信号监控清单
+用表格列出需要监控的信号（信号/数据源/紧急度/触发动作）
+
+## 十、当前结论
+一段话总结：当前判断 + 核心逻辑 + 观察窗口
+
+要求：
+- 信息不足的部分，基于已有信息做合理推断，标注"推断"
+- 路径推演和估值必须有具体数字和逻辑链
+- 收购结构图和路径流程图必须用 ASCII 箭头画出来
+- 语言简洁专业，像卖方研报的风格"""
 
     payload = {
         'model': CLAUDE_MODEL,
         'messages': [{'role': 'user', 'content': prompt}],
-        'max_tokens': 4096,
+        'max_tokens': 8192,
     }
 
     try:
@@ -239,7 +290,7 @@ def claude_generate_report(stock_name: str, code: str, context: str, existing_re
             f'{CLAUDE_BASE_URL}/v1/messages',
             headers=headers,
             json=payload,
-            timeout=120,
+            timeout=180,
         )
         resp.raise_for_status()
         data = resp.json()
@@ -251,6 +302,72 @@ def claude_generate_report(stock_name: str, code: str, context: str, existing_re
     except Exception as e:
         print(f"  [Claude] 生成失败: {e}")
         return None
+
+
+def claude_analyze_round1(stock_name: str, code: str, round1_context: str) -> dict:
+    """
+    Claude 中间分析：读第一轮搜索结果，提炼深挖方向和第二轮关键词
+    返回 {'directions': [...], 'queries': [...]}
+    """
+    if not CLAUDE_API_KEY:
+        return {'directions': [], 'queries': []}
+
+    headers = {
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json',
+    }
+
+    prompt = f"""你是并购重组分析师。以下是关于 {stock_name}（{code}）第一轮搜索的结果。
+
+请分析这些信息，告诉我：
+1. 目前已知的关键事实（2-3句话总结）
+2. 需要深挖的方向（最多4个方向）
+3. 针对每个方向，给出具体的搜索关键词（用于联网搜索引擎）
+
+【第一轮搜索结果】
+{round1_context[:4000]}
+
+请用 JSON 格式输出：
+{{
+  "summary": "已知事实总结",
+  "directions": ["方向1", "方向2", ...],
+  "queries": ["搜索关键词1", "搜索关键词2", ...]
+}}
+
+要求：
+- queries 最多 5 个，每个是一句适合搜索引擎的查询
+- 重点关注：买方是谁/标的值多少/地方政府态度/产业链上下游/同行业案例
+- 如果第一轮已经发现了具体的人名/机构名/基金名，第二轮要针对性验证
+- 关键词要具体，不要太宽泛"""
+
+    payload = {
+        'model': CLAUDE_MODEL,
+        'messages': [{'role': 'user', 'content': prompt}],
+        'max_tokens': 1024,
+    }
+
+    try:
+        resp = requests.post(
+            f'{CLAUDE_BASE_URL}/v1/messages',
+            headers=headers,
+            json=payload,
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        content = data.get('content', [])
+        if content and content[0].get('type') == 'text':
+            text = content[0]['text']
+            # 提取 JSON
+            import re
+            json_match = re.search(r'\{[\s\S]*\}', text)
+            if json_match:
+                return json.loads(json_match.group())
+        return {'directions': [], 'queries': []}
+    except Exception as e:
+        print(f"  [Claude] 中间分析失败: {e}")
+        return {'directions': [], 'queries': []}
 
 
 # ═══════════════════════════════════════════════════
@@ -394,11 +511,13 @@ def generate_report(ts_code: str, chip_only: bool = False, report_only: bool = F
     # ── 检查已有底稿 ──
     report_path = ANALYSIS_DIR / f'{stock_name}_并购重组跟踪.md'
     existing_report = None
+    is_incremental = False
     if report_path.exists():
         existing_report = report_path.read_text()
+        is_incremental = True
         print(f"\n[2] 已有底稿（{len(existing_report)} 字），执行增量更新...")
     else:
-        print(f"\n[2] 无底稿，首次生成...")
+        print(f"\n[2] 无底稿，首次深度生成（两轮搜索）...")
 
     # ── Step 0: iFinD 硬事实 ──
     print("\n[3] iFinD 公告/新闻...")
@@ -407,52 +526,92 @@ def generate_report(ts_code: str, chip_only: bool = False, report_only: bool = F
     news_count = len(ifind_data.get('news', []))
     print(f"  公告 {notice_count} 条, 新闻 {news_count} 条")
 
-    # ── Step 1-3: Kimi 搜索 ──
-    print("\n[4] Kimi 联网搜索...")
-
-    if existing_report:
-        # 增量模式：只搜最近新信息
+    if is_incremental:
+        # ── 增量模式：只搜最近新信息，不做两轮 ──
+        print("\n[4] Kimi 增量搜索（3次）...")
         queries = [
             f'{stock_name} {code.split(".")[0]} 并购重组 最新进展 2026',
             f'{stock_name} 股东变动 实控人 最新公告',
             f'{stock_name} 并购 买方 战略投资者 最新',
         ]
+        results = kimi_search_batch(queries)
+
+        context_parts = []
+        if ifind_data['notices']:
+            context_parts.append("【iFinD 公告】\n" + json.dumps(ifind_data['notices'], ensure_ascii=False, indent=1)[:2000])
+        if ifind_data['news']:
+            context_parts.append("【iFinD 新闻】\n" + json.dumps(ifind_data['news'], ensure_ascii=False, indent=1)[:2000])
+        for i, (q, r) in enumerate(zip(queries, results)):
+            if r:
+                context_parts.append(f"【搜索{i+1}: {q[:30]}】\n{r[:1500]}")
+        context = '\n\n'.join(context_parts)
+        print(f"  汇总: {len(context)} 字")
+
+        print("\n[5] Claude 增量更新底稿...")
+        report_md = claude_generate_report(stock_name, code, context, existing_report)
+
     else:
-        # 首次模式：完整搜索
-        queries = [
-            f'{stock_name} {code.split(".")[0]} 并购重组 公告 实控人变更',
-            f'{stock_name} 控股股东 持股比例 质押 减持',
-            f'{stock_name} 注册地 产业基金 国资 地方政府',
-            f'{stock_name} 主营业务 营收 净利润 行业地位',
-            f'{stock_name} 并购 潜在买方 战略投资者 市场猜测',
-            f'{stock_name} 并购重组 估值 对价 交易结构',
-            f'{stock_name} 并购 审核进度 证监会 交易所',
-            f'{stock_name} 同行业 并购案例 可比交易',
+        # ── 首次深度模式：两轮搜索 ──
+        print("\n[4] Kimi 第一轮搜索（事实层，5次）...")
+
+        round1_queries = [
+            f'{stock_name} {code.split(".")[0]} 并购重组 公告 实控人变更 停牌',
+            f'{stock_name} 控股股东 持股比例 质押 减持 股权结构',
+            f'{stock_name} 注册地 产业基金 国资 地方政府 战略合作',
+            f'{stock_name} 主营业务 营收 净利润 毛利率 行业地位 客户',
+            f'{stock_name} 并购 交易结构 对价 标的资产 买方',
         ]
 
-    kimi_results = kimi_search_batch(queries)
+        round1_results = kimi_search_batch(round1_queries)
 
-    # ── 汇总上下文 ──
-    context_parts = []
+        # 汇总第一轮上下文
+        round1_context_parts = []
+        if ifind_data['notices']:
+            round1_context_parts.append("【iFinD 公告】\n" + json.dumps(ifind_data['notices'], ensure_ascii=False, indent=1)[:2000])
+        if ifind_data['news']:
+            round1_context_parts.append("【iFinD 新闻】\n" + json.dumps(ifind_data['news'], ensure_ascii=False, indent=1)[:2000])
+        for i, (q, r) in enumerate(zip(round1_queries, round1_results)):
+            if r:
+                round1_context_parts.append(f"【搜索{i+1}: {q[:30]}】\n{r[:1500]}")
+        round1_context = '\n\n'.join(round1_context_parts)
+        print(f"  第一轮汇总: {len(round1_context)} 字")
 
-    # iFinD 数据
-    if ifind_data['notices']:
-        context_parts.append("【iFinD 公告】\n" + json.dumps(ifind_data['notices'], ensure_ascii=False, indent=1)[:2000])
-    if ifind_data['news']:
-        context_parts.append("【iFinD 新闻】\n" + json.dumps(ifind_data['news'], ensure_ascii=False, indent=1)[:2000])
+        # ── Step 2: Claude 中间分析（提炼深挖方向）──
+        print("\n[5] Claude 中间分析（提炼第二轮关键词）...")
+        analysis = claude_analyze_round1(stock_name, code, round1_context)
 
-    # Kimi 搜索结果
-    for i, (q, r) in enumerate(zip(queries, kimi_results)):
-        if r:
-            context_parts.append(f"【搜索{i+1}: {q[:30]}】\n{r[:1500]}")
+        if analysis.get('summary'):
+            print(f"  已知事实: {analysis['summary'][:80]}...")
+        if analysis.get('directions'):
+            print(f"  深挖方向: {analysis['directions']}")
 
-    context = '\n\n'.join(context_parts)
-    print(f"  汇总上下文: {len(context)} 字")
+        # ── Step 3: Kimi 第二轮搜索（深挖层）──
+        round2_queries = analysis.get('queries', [])
+        if not round2_queries:
+            # fallback：如果 Claude 没返回，用通用深挖关键词
+            round2_queries = [
+                f'{stock_name} 并购 潜在买方 战略投资者 产业资本',
+                f'{stock_name} 估值 市值 PE 同行业对比',
+                f'{stock_name} 并购 审核进度 证监会 交易所 最新',
+            ]
 
-    # ── Step 4: Claude 生成底稿 ──
-    print("\n[5] Claude 生成底稿...")
-    report_md = claude_generate_report(stock_name, code, context, existing_report)
+        print(f"\n[6] Kimi 第二轮搜索（深挖层，{len(round2_queries)}次）...")
+        round2_results = kimi_search_batch(round2_queries)
 
+        # ── 汇总全部上下文 ──
+        all_context_parts = round1_context_parts.copy()
+        for i, (q, r) in enumerate(zip(round2_queries, round2_results)):
+            if r:
+                all_context_parts.append(f"【深挖{i+1}: {q[:30]}】\n{r[:1500]}")
+
+        context = '\n\n'.join(all_context_parts)
+        print(f"  全部汇总: {len(context)} 字")
+
+        # ── Step 4: Claude 最终生成底稿 ──
+        print("\n[7] Claude 生成深度底稿...")
+        report_md = claude_generate_report(stock_name, code, context, existing_report)
+
+    # ── 统一处理底稿结果 ──
     if report_md:
         # 保存 markdown 底稿
         report_path.write_text(report_md)
