@@ -187,13 +187,14 @@ def kimi_search_batch(queries: list) -> list:
 # ═══════════════════════════════════════════════════
 
 def claude_generate_report(stock_name: str, code: str, context: str, existing_report: str = None) -> str:
-    """调用 Claude 生成/更新底稿"""
+    """调用 Claude 生成/更新底稿（Anthropic Messages API）"""
     if not CLAUDE_API_KEY:
         print("  [Claude] 未配置 API Key，跳过底稿生成")
         return None
 
     headers = {
-        'Authorization': f'Bearer {CLAUDE_API_KEY}',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json',
     }
 
@@ -231,19 +232,22 @@ def claude_generate_report(stock_name: str, code: str, context: str, existing_re
         'model': CLAUDE_MODEL,
         'messages': [{'role': 'user', 'content': prompt}],
         'max_tokens': 4096,
-        'temperature': 0.2,
     }
 
     try:
         resp = requests.post(
-            f'{CLAUDE_BASE_URL}/chat/completions',
+            f'{CLAUDE_BASE_URL}/v1/messages',
             headers=headers,
             json=payload,
             timeout=120,
         )
         resp.raise_for_status()
         data = resp.json()
-        return data['choices'][0]['message']['content']
+        # Anthropic Messages API 格式
+        content = data.get('content', [])
+        if content and content[0].get('type') == 'text':
+            return content[0]['text']
+        return None
     except Exception as e:
         print(f"  [Claude] 生成失败: {e}")
         return None
@@ -490,7 +494,7 @@ def _save_output(code_clean: str, stock_name: str, output: dict):
 
 
 def run_auto():
-    """自动模式：跑异动 Top 8"""
+    """自动模式：跑异动 Top 8（只跑池内的票）"""
     print("=" * 50)
     print("  并购深度分析 - 自动模式（异动 Top 8）")
     print("=" * 50)
@@ -503,18 +507,25 @@ def run_auto():
     with open(REACTIONS_PATH) as f:
         reactions = json.load(f)
 
-    # 筛选最近 60 天入池、5天涨幅 > 5%
+    # 加载池子，确定哪些票在池内
+    with open(POOL_PATH) as f:
+        pool = json.load(f)
+    pool_codes = {v.get('code') for v in pool['stocks'].values() if v.get('code')}
+
+    # 筛选最近 60 天入池、5天涨幅 > 5%、且在池内的票
     cutoff = (datetime.now() - timedelta(days=60)).strftime('%Y%m%d')
     recent = [r for r in reactions
-              if r.get('entry_date', '') >= cutoff and (r.get('ret_5d') or 0) > 5]
+              if r.get('entry_date', '') >= cutoff
+              and (r.get('ret_5d') or 0) > 5
+              and r.get('code') in pool_codes]
     recent.sort(key=lambda x: x.get('ret_5d') or 0, reverse=True)
     top8 = recent[:8]
 
     if not top8:
-        print("[!] 最近 60 天无异动票（5天涨幅 > 5%）")
+        print("[!] 最近 60 天无池内异动票（5天涨幅 > 5%）")
         return
 
-    print(f"\n异动 Top {len(top8)}:")
+    print(f"\n异动 Top {len(top8)}（池内）:")
     for r in top8:
         print(f"  {r['name']:8s} {r['code']:12s} 5d={r.get('ret_5d',0):+.1f}%")
 
@@ -524,11 +535,11 @@ def run_auto():
         code = r['code']
         if i < 3:
             print(f"\n{'─'*40}")
-            print(f"[{i+1}/8] {r['name']} - 完整分析（底稿+筹码）")
+            print(f"[{i+1}/{len(top8)}] {r['name']} - 完整分析（底稿+筹码）")
             generate_report(code, chip_only=False)
         else:
             print(f"\n{'─'*40}")
-            print(f"[{i+1}/8] {r['name']} - 筹码分析")
+            print(f"[{i+1}/{len(top8)}] {r['name']} - 筹码分析")
             generate_report(code, chip_only=True)
 
     print(f"\n{'='*50}")
