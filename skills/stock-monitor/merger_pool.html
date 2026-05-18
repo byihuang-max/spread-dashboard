@@ -291,7 +291,101 @@ tbody td {
   .scope-tab { white-space: nowrap; padding: 8px 14px; font-size: 12px; }
   table { font-size: 12px; }
   tbody td { padding: 6px 8px; }
+  .alert-panel { padding: 12px; }
+  .alert-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════
+   异动提醒面板 - 入池后涨幅异动
+   ═══════════════════════════════════════════════════ */
+.alert-panel {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #0d1117;
+  border: 1px solid #f0883e33;
+  border-left: 3px solid #f0883e;
+  border-radius: 6px;
+}
+.alert-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.alert-panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0883e;
+  letter-spacing: 0.5px;
+}
+.alert-panel-sub {
+  font-size: 11px;
+  color: #666;
+}
+.alert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+.alert-card {
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.15s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.alert-card:hover {
+  border-color: #f0883e;
+}
+.alert-card-info {
+  flex: 1;
+  min-width: 0;
+}
+.alert-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 2px;
+}
+.alert-card-code {
+  font-size: 11px;
+  color: #666;
+}
+.alert-card-date {
+  font-size: 11px;
+  color: #555;
+}
+.alert-card-returns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.alert-ret {
+  text-align: center;
+  min-width: 42px;
+}
+.alert-ret-val {
+  font-size: 13px;
+  font-weight: 700;
+}
+.alert-ret-val.positive { color: #f85149; }
+.alert-ret-val.negative { color: #3fb950; }
+.alert-ret-label {
+  font-size: 9px;
+  color: #555;
+  margin-top: 1px;
+}
+.alert-link-icon {
+  font-size: 14px;
+  color: #444;
+  transition: color 0.15s;
+}
+.alert-card:hover .alert-link-icon { color: #f0883e; }
 </style>
 </head>
 <body>
@@ -328,6 +422,18 @@ tbody td {
 
 <!-- 口径说明（根据当前 Tab 动态切换） -->
 <div class="scope-desc" id="scopeDesc"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     异动提醒面板 - 入池后股价反应最大的标的
+     只在"进行中" Tab 显示
+     ═══════════════════════════════════════════════════ -->
+<div class="alert-panel" id="alertPanel" style="display:none;">
+  <div class="alert-panel-header">
+    <span class="alert-panel-title">▲ 并购异动提醒</span>
+    <span class="alert-panel-sub">入池后股价反应最大的标的（近60天入池）</span>
+  </div>
+  <div class="alert-grid" id="alertGrid"></div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════
      搜索 + 阶段筛选
@@ -547,6 +653,7 @@ function switchScope(scope) {
   renderStats();
   renderTable();
   renderLowConf(); // 渲染折叠区
+  renderAlertPanel(); // 渲染异动面板
 }
 
 /**
@@ -768,9 +875,85 @@ document.querySelectorAll('thead th[data-sort]').forEach(th => {
 });
 
 // ═══════════════════════════════════════════════════
+// 异动提醒面板
+// ═══════════════════════════════════════════════════
+let REACTIONS_DATA = [];
+
+async function loadReactions() {
+  try {
+    const resp = await fetch('backtest_output/merger_reactions.json');
+    REACTIONS_DATA = await resp.json();
+  } catch (e) {
+    REACTIONS_DATA = [];
+  }
+}
+
+function renderAlertPanel() {
+  const panel = document.getElementById('alertPanel');
+  const grid = document.getElementById('alertGrid');
+
+  // 只在"进行中" Tab 显示
+  if (currentScope !== 'active') {
+    panel.style.display = 'none';
+    return;
+  }
+
+  // 筛选最近60天入池的异动票（5天涨幅 > 5%）
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 60);
+  const cutoffStr = cutoff.toISOString().slice(0, 10).replace(/-/g, '');
+
+  const recent = REACTIONS_DATA
+    .filter(r => r.entry_date >= cutoffStr && (r.ret_5d || 0) > 5)
+    .sort((a, b) => (b.ret_5d || 0) - (a.ret_5d || 0))
+    .slice(0, 8);  // 最多显示8个
+
+  if (recent.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  panel.style.display = 'block';
+
+  grid.innerHTML = recent.map(r => {
+    const code = r.code || '';
+    const codeClean = code.replace('.SH', '').replace('.SZ', '');
+    // 链接到个股监控 skill（筹码分析 Tab）
+    const skillLink = `stock_monitor.html?code=${codeClean}`;
+    const entryFormatted = r.entry_date ? 
+      r.entry_date.slice(4,6) + '/' + r.entry_date.slice(6,8) : '';
+
+    function retHtml(val, label) {
+      if (val === null || val === undefined) return `<div class="alert-ret"><div class="alert-ret-val" style="color:#555">-</div><div class="alert-ret-label">${label}</div></div>`;
+      const cls = val >= 0 ? 'positive' : 'negative';
+      const sign = val >= 0 ? '+' : '';
+      return `<div class="alert-ret"><div class="alert-ret-val ${cls}">${sign}${val.toFixed(1)}%</div><div class="alert-ret-label">${label}</div></div>`;
+    }
+
+    return `<a class="alert-card" href="${skillLink}" title="点击查看筹码分析">
+      <div class="alert-card-info">
+        <div class="alert-card-name">${r.name}</div>
+        <div class="alert-card-code">${code}</div>
+        <div class="alert-card-date">入池 ${entryFormatted}</div>
+      </div>
+      <div class="alert-card-returns">
+        ${retHtml(r.ret_1d, '1天')}
+        ${retHtml(r.ret_3d, '3天')}
+        ${retHtml(r.ret_5d, '5天')}
+      </div>
+      <span class="alert-link-icon">→</span>
+    </a>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
 // 初始化 - 加载数据
 // ═══════════════════════════════════════════════════
-loadData();
+async function init() {
+  await Promise.all([loadData(), loadReactions()]);
+  renderAlertPanel();
+}
+init();
 </script>
 </body>
 </html>
