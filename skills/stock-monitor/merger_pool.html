@@ -418,13 +418,46 @@ tbody td {
   <div class="scope-tab" data-scope="done">
     已完成<span class="tab-count" id="count-done"></span>
   </div>
-  <div class="scope-tab" data-scope="nav">
-    策略净值
-  </div>
 </div>
 
 <!-- 口径说明（根据当前 Tab 动态切换） -->
 <div class="scope-desc" id="scopeDesc"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     并购等权指数净值曲线 - 只在"进行中" Tab 显示
+     ═══════════════════════════════════════════════════ -->
+<div id="navSection" style="margin-bottom:16px">
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:12px">
+    <h2 style="font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:6px">并购等权指数 vs 基准</h2>
+    <div style="color:#7f8ea8;font-size:13px;margin-bottom:16px" id="navSubtitle">加载中...</div>
+    <div id="navChart" style="width:100%;height:380px"></div>
+    <div style="margin-top:12px;padding:0 10px">
+      <input type="range" id="navSlider" min="0" max="100" value="0" style="width:100%;accent-color:#4a9eff">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:4px">
+        <span id="navStartDate">-</span>
+        <span id="navEndDate">-</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:12px">
+    <div id="navMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
+  </div>
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:16px">
+    <details>
+      <summary style="cursor:pointer;font-size:14px;font-weight:600;color:#94a3b8">计算说明</summary>
+      <div style="color:#7f8ea8;font-size:12px;line-height:2;margin-top:10px">
+        ■ <b>并购等权指数</b>：从并购池"进行中"标的中，以公告日为入池日（T+1 买入），等权持有，完成/终止后退出。<br>
+        ■ <b>入池逻辑</b>：公告日即入池（炒预期），不等审批通过。<br>
+        ■ <b>退出逻辑</b>：状态变为"已完成"或"已终止"后 T+1 退出。<br>
+        ■ <b>权重</b>：等权（每只票相同权重），每日再平衡。<br>
+        ■ <b>基准</b>：中证2000（并购票偏小盘）+ 沪深300 + 全A等权。<br>
+        ■ <b>起始日</b>：2024-10-08（并购池数据起点）。<br>
+        ■ <b>持仓数</b>：随时间递增（新票不断入池），最新约 300 只。<br>
+        ■ <b>本质</b>：事件驱动策略 baseline，真正 alpha 来自异动筛选和择时。
+      </div>
+    </details>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════
      异动提醒面板 - 入池后股价反应最大的标的
@@ -517,39 +550,6 @@ tbody td {
   ■ 阶段判断基于通联结构化字段 + 公告标题关键字自动分类，可能存在误判，仅供参考。<br>
   ■ Tab 分类：进行中（方案公布/审核中/已过会）→ 线索池（筹划中/已终止）→ 已完成。<br>
   ■ 覆盖时间：2024-09-24 至今。标的会随日更自动在 Tab 间流转。
-</div>
-
-<!-- 策略净值 Tab 内容 -->
-<div id="navSection" style="display:none">
-  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:16px">
-    <h2 style="font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:6px">并购等权指数 vs 基准</h2>
-    <div style="color:#7f8ea8;font-size:13px;margin-bottom:16px" id="navSubtitle">加载中...</div>
-    <div id="navChart" style="width:100%;height:400px"></div>
-    <div style="margin-top:12px;padding:0 10px">
-      <input type="range" id="navSlider" min="0" max="100" value="0" style="width:100%;accent-color:#4a9eff">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:4px">
-        <span id="navStartDate">-</span>
-        <span id="navEndDate">-</span>
-      </div>
-    </div>
-  </div>
-  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:16px">
-    <h2 style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:12px">关键指标</h2>
-    <div id="navMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px"></div>
-  </div>
-  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px">
-    <h2 style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:12px">计算说明</h2>
-    <div style="color:#94a3b8;font-size:13px;line-height:2">
-      ■ <b>并购等权指数</b>：从并购池"进行中"标的中，以公告日为入池日（T+1 买入），等权持有，完成/终止后退出。<br>
-      ■ <b>入池逻辑</b>：公告日即入池（炒预期），不等审批通过。<br>
-      ■ <b>退出逻辑</b>：状态变为"已完成"或"已终止"后 T+1 退出。<br>
-      ■ <b>权重</b>：等权（每只票相同权重），每日再平衡。<br>
-      ■ <b>基准</b>：中证2000（并购票偏小盘）+ 沪深300 + 全A等权。<br>
-      ■ <b>起始日</b>：2024-10-08（并购池数据起点）。<br>
-      ■ <b>持仓数</b>：随时间递增（新票不断入池），最新约 300 只。<br>
-      ■ <b>本质</b>：这是一个事件驱动策略的 baseline，真正的 alpha 来自异动筛选和择时，不是等权本身。
-    </div>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -690,18 +690,13 @@ function switchScope(scope) {
   searchText = '';
   document.getElementById('searchInput').value = '';
 
-  // 净值 Tab 特殊处理
+  // 净值图表只在"进行中"Tab 显示
   const navSection = document.getElementById('navSection');
-  const mainContent = document.querySelectorAll('.scope-desc, #scopeDesc, #stageFilters, #statsRow, #tableWrap, #lowConfSection, #alertPanel, #deepSearchSection');
-
-  if (scope === 'nav') {
+  if (scope === 'active') {
     navSection.style.display = 'block';
-    mainContent.forEach(el => { if (el) el.style.display = 'none'; });
     initNavChart();
-    return;
   } else {
     navSection.style.display = 'none';
-    mainContent.forEach(el => { if (el) el.style.display = ''; });
   }
   
   // 更新口径说明
@@ -1018,6 +1013,7 @@ function renderAlertPanel() {
 async function init() {
   await Promise.all([loadData(), loadReactions()]);
   renderAlertPanel();
+  initNavChart(); // 默认在"进行中"Tab，加载净值图表
 }
 init();
 
