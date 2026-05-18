@@ -52,8 +52,6 @@ def _find_gamt_root():
     return candidates[0]
 
 GAMT_ROOT = _find_gamt_root()
-sys.path.insert(0, str(GAMT_ROOT / 'server'))
-sys.path.insert(0, str(GAMT_ROOT / 'chip_query'))
 
 # ── API 配置（从 config/api_keys.json 读取）──
 def _load_api_config():
@@ -79,8 +77,10 @@ IFIND_DIR = Path(os.path.expanduser('~/.openclaw/extensions/ifind-finance-data')
 # ═══════════════════════════════════════════════════
 
 def run_chip_analysis(ts_code: str) -> dict:
-    """调用 chip_api.analyze_stock 获取筹码数据"""
+    """调用 chip_api.analyze_stock 获取筹码数据（延迟导入）"""
     try:
+        sys.path.insert(0, str(GAMT_ROOT / 'server'))
+        sys.path.insert(0, str(GAMT_ROOT / 'chip_query'))
         from chip_api import analyze_stock
         result = analyze_stock(ts_code, days=120)
         if result.get('success'):
