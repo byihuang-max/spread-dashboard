@@ -918,8 +918,8 @@ function renderAlertPanel() {
   grid.innerHTML = recent.map(r => {
     const code = r.code || '';
     const codeClean = code.replace('.SH', '').replace('.SZ', '');
-    // 链接到个股监控 skill（筹码分析 Tab）
-    const skillLink = `stock_monitor.html?code=${codeClean}`;
+    // 链接到并购深度分析详情页
+    const skillLink = `merger_detail.html?code=${codeClean}&name=${encodeURIComponent(r.name)}`;
     const entryFormatted = r.entry_date ? 
       r.entry_date.slice(4,6) + '/' + r.entry_date.slice(6,8) : '';
 
@@ -930,7 +930,7 @@ function renderAlertPanel() {
       return `<div class="alert-ret"><div class="alert-ret-val ${cls}">${sign}${val.toFixed(1)}%</div><div class="alert-ret-label">${label}</div></div>`;
     }
 
-    return `<a class="alert-card" href="${skillLink}" title="点击查看筹码分析">
+    return `<a class="alert-card" href="${skillLink}" title="点击查看并购深度分析">
       <div class="alert-card-info">
         <div class="alert-card-name">${r.name}</div>
         <div class="alert-card-code">${code}</div>

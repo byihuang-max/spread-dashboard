@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>并购深度分析</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 20px;
+  line-height: 1.7;
+}
+
+/* 头部导航 */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #333;
+}
+.nav-back {
+  color: #4a9eff;
+  text-decoration: none;
+  font-size: 13px;
+}
+.nav-back:hover { text-decoration: underline; }
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+.nav-code {
+  font-size: 13px;
+  color: #888;
+}
+
+/* 状态面板 */
+.status-panel {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.status-card {
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 12px 16px;
+  min-width: 140px;
+}
+.status-card-label {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 4px;
+}
+.status-card-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+.status-card-value.positive { color: #f85149; }
+.status-card-value.negative { color: #3fb950; }
+
+/* 底稿内容区 */
+.report-container {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+/* Markdown 渲染样式 */
+.report-content h1 { font-size: 20px; color: #fff; margin: 24px 0 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+.report-content h2 { font-size: 16px; color: #4a9eff; margin: 20px 0 10px; }
+.report-content h3 { font-size: 14px; color: #8b949e; margin: 16px 0 8px; }
+.report-content p { margin: 8px 0; font-size: 13px; }
+.report-content strong { color: #fff; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+.report-content th { background: #161b22; color: #8b949e; text-align: left; padding: 8px 10px; border: 1px solid #21262d; }
+.report-content td { padding: 8px 10px; border: 1px solid #21262d; }
+.report-content code { background: #161b22; padding: 2px 6px; border-radius: 3px; font-size: 12px; color: #f0883e; }
+.report-content pre { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 14px; margin: 12px 0; overflow-x: auto; font-size: 12px; line-height: 1.5; }
+.report-content pre code { background: none; padding: 0; color: #e0e0e0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 20px; font-size: 13px; }
+.report-content li { margin: 4px 0; }
+.report-content blockquote { border-left: 3px solid #f0883e; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content hr { border: none; border-top: 1px solid #21262d; margin: 20px 0; }
+
+/* 无底稿提示 */
+.no-report {
+  text-align: center;
+  padding: 60px 20px;
+}
+.no-report-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+.no-report-title {
+  font-size: 16px;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+.no-report-desc {
+  font-size: 13px;
+  color: #555;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.no-report-hint {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #666;
+  display: inline-block;
+  text-align: left;
+}
+
+/* 加载状态 */
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 异动数据条 */
+.reaction-bar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.reaction-item {
+  text-align: center;
+}
+.reaction-val {
+  font-size: 16px;
+  font-weight: 700;
+}
+.reaction-label {
+  font-size: 10px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .report-container { padding: 14px; }
+  .status-panel { gap: 8px; }
+  .status-card { min-width: 100px; padding: 8px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a class="nav-back" href="merger_pool.html">← 返回并购信息表</a>
+  <span class="nav-title" id="stockName">加载中...</span>
+  <span class="nav-code" id="stockCode"></span>
+</div>
+
+<!-- 状态面板：阶段 + 异动涨幅 -->
+<div class="status-panel" id="statusPanel"></div>
+
+<!-- 底稿内容 -->
+<div class="report-container">
+  <div class="loading" id="loadingState">加载底稿中...</div>
+  <div class="report-content" id="reportContent" style="display:none;"></div>
+  <div class="no-report" id="noReport" style="display:none;">
+    <div class="no-report-icon">■</div>
+    <div class="no-report-title">暂无深度分析底稿</div>
+    <div class="no-report-desc">
+      该标的尚未生成并购重组跟踪底稿。底稿包含：实控人画像、交易结构、标的资产估值、收购路径推演、筹码结构分析。
+    </div>
+    <div class="no-report-hint">
+      触发方式：在飞书对话中发送<br>
+      <code>"个股监控加票 <span id="hintName"></span>（并购）"</code><br>
+      即可生成 B 类深度跟踪底稿
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * 并购深度分析详情页
+ * 
+ * URL 参数：
+ * - code: 股票代码（如 002176 或 002176.SZ）
+ * - name: 股票名称（可选，用于查找底稿文件）
+ */
+
+// ── 简易 Markdown → HTML 转换 ──
+function md2html(md) {
+  let html = md;
+  
+  // 代码块（先处理，避免内部被其他规则干扰）
+  html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
+    return '<pre><code>' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+  });
+  
+  // 表格
+  html = html.replace(/^\|(.+)\|$/gm, (line) => {
+    const cells = line.split('|').filter(c => c.trim() !== '');
+    return '<tr>' + cells.map(c => {
+      const content = c.trim();
+      if (/^[-:]+$/.test(content)) return null; // 分隔行
+      return '<td>' + content + '</td>';
+    }).filter(Boolean).join('') + '</tr>';
+  });
+  // 包裹连续的 tr 为 table
+  html = html.replace(/((<tr>.*?<\/tr>\n?)+)/g, '<table>$1</table>');
+  // 第一行 tr 改为 th
+  html = html.replace(/<table><tr>(.*?)<\/tr>/, (_, row) => {
+    return '<table><thead><tr>' + row.replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>') + '</tr></thead>';
+  });
+  // 删除分隔行（全是 --- 的行）
+  html = html.replace(/<tr>(<td>[-:]+<\/td>)+<\/tr>/g, '');
+  
+  // 标题
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  
+  // 水平线
+  html = html.replace(/^---+$/gm, '<hr>');
+  
+  // 粗体和行内代码
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // 引用
+  html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+  
+  // 无序列表
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/((<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+  
+  // 段落（非标签开头的行）
+  html = html.replace(/^(?!<[a-z/])((?!^\s*$).+)$/gm, '<p>$1</p>');
+  
+  // 清理多余空行
+  html = html.replace(/\n{3,}/g, '\n\n');
+  
+  return html;
+}
+
+// ── 解析 URL 参数 ──
+const params = new URLSearchParams(window.location.search);
+const codeParam = params.get('code') || '';
+const nameParam = params.get('name') || '';
+
+// 标准化代码
+const codeClean = codeParam.replace('.SH', '').replace('.SZ', '');
+
+// ── 从 merger_pool.json 查找股票信息 ──
+async function findStock() {
+  try {
+    const resp = await fetch('merger_pool.json');
+    const pool = await resp.json();
+    
+    for (const [name, info] of Object.entries(pool.stocks)) {
+      const code = info.code || '';
+      if (code.includes(codeClean) || name === nameParam) {
+        return { name, ...info };
+      }
+    }
+  } catch (e) {}
+  
+  return nameParam ? { name: nameParam, code: codeParam } : { name: '未知', code: codeParam };
+}
+
+// ── 从 reactions 数据查找异动 ──
+async function findReaction() {
+  try {
+    const resp = await fetch('backtest_output/merger_reactions.json');
+    const data = await resp.json();
+    return data.find(r => (r.code || '').includes(codeClean)) || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ── 尝试加载底稿 ──
+async function loadReport(stockName) {
+  // 尝试多种文件名格式
+  const candidates = [
+    `analysis/${stockName}_并购重组跟踪.md`,
+    `analysis/${stockName}_并购跟踪.md`,
+    `analysis/${stockName}.md`,
+  ];
+  
+  for (const path of candidates) {
+    try {
+      const resp = await fetch(path);
+      if (resp.ok) {
+        return await resp.text();
+      }
+    } catch (e) {}
+  }
+  return null;
+}
+
+// ── 渲染状态面板 ──
+function renderStatus(stock, reaction) {
+  const panel = document.getElementById('statusPanel');
+  let cards = '';
+  
+  // 阶段
+  if (stock.stage) {
+    cards += `<div class="status-card">
+      <div class="status-card-label">当前阶段</div>
+      <div class="status-card-value">${stock.stage}</div>
+    </div>`;
+  }
+  
+  // 入池日期
+  if (stock.first_date) {
+    cards += `<div class="status-card">
+      <div class="status-card-label">入池日期</div>
+      <div class="status-card-value">${stock.first_date}</div>
+    </div>`;
+  }
+  
+  // 异动涨幅
+  if (reaction) {
+    function retCard(val, label) {
+      if (val === null || val === undefined) return '';
+      const cls = val >= 0 ? 'positive' : 'negative';
+      const sign = val >= 0 ? '+' : '';
+      return `<div class="status-card">
+        <div class="status-card-label">${label}涨幅</div>
+        <div class="status-card-value ${cls}">${sign}${val.toFixed(1)}%</div>
+      </div>`;
+    }
+    cards += retCard(reaction.ret_1d, '1天');
+    cards += retCard(reaction.ret_3d, '3天');
+    cards += retCard(reaction.ret_5d, '5天');
+  }
+  
+  panel.innerHTML = cards;
+}
+
+// ── 主流程 ──
+async function main() {
+  const [stock, reaction] = await Promise.all([findStock(), findReaction()]);
+  
+  // 更新标题
+  document.getElementById('stockName').textContent = stock.name;
+  document.getElementById('stockCode').textContent = stock.code || codeParam;
+  document.title = `${stock.name} - 并购深度分析`;
+  
+  // 渲染状态
+  renderStatus(stock, reaction);
+  
+  // 加载底稿
+  const report = await loadReport(stock.name);
+  const loading = document.getElementById('loadingState');
+  const content = document.getElementById('reportContent');
+  const noReport = document.getElementById('noReport');
+  
+  loading.style.display = 'none';
+  
+  if (report) {
+    content.style.display = 'block';
+    content.innerHTML = md2html(report);
+  } else {
+    noReport.style.display = 'block';
+    document.getElementById('hintName').textContent = stock.name;
+  }
+}
+
+main();
+</script>
+</body>
+</html>
