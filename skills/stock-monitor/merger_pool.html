@@ -418,6 +418,9 @@ tbody td {
   <div class="scope-tab" data-scope="done">
     已完成<span class="tab-count" id="count-done"></span>
   </div>
+  <div class="scope-tab" data-scope="nav">
+    策略净值
+  </div>
 </div>
 
 <!-- 口径说明（根据当前 Tab 动态切换） -->
@@ -516,6 +519,40 @@ tbody td {
   ■ 覆盖时间：2024-09-24 至今。标的会随日更自动在 Tab 间流转。
 </div>
 
+<!-- 策略净值 Tab 内容 -->
+<div id="navSection" style="display:none">
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:16px">
+    <h2 style="font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:6px">并购等权指数 vs 基准</h2>
+    <div style="color:#7f8ea8;font-size:13px;margin-bottom:16px" id="navSubtitle">加载中...</div>
+    <div id="navChart" style="width:100%;height:400px"></div>
+    <div style="margin-top:12px;padding:0 10px">
+      <input type="range" id="navSlider" min="0" max="100" value="0" style="width:100%;accent-color:#4a9eff">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:4px">
+        <span id="navStartDate">-</span>
+        <span id="navEndDate">-</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:16px">
+    <h2 style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:12px">关键指标</h2>
+    <div id="navMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px"></div>
+  </div>
+  <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px">
+    <h2 style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:12px">计算说明</h2>
+    <div style="color:#94a3b8;font-size:13px;line-height:2">
+      ■ <b>并购等权指数</b>：从并购池"进行中"标的中，以公告日为入池日（T+1 买入），等权持有，完成/终止后退出。<br>
+      ■ <b>入池逻辑</b>：公告日即入池（炒预期），不等审批通过。<br>
+      ■ <b>退出逻辑</b>：状态变为"已完成"或"已终止"后 T+1 退出。<br>
+      ■ <b>权重</b>：等权（每只票相同权重），每日再平衡。<br>
+      ■ <b>基准</b>：中证2000（并购票偏小盘）+ 沪深300 + 全A等权。<br>
+      ■ <b>起始日</b>：2024-10-08（并购池数据起点）。<br>
+      ■ <b>持仓数</b>：随时间递增（新票不断入池），最新约 300 只。<br>
+      ■ <b>本质</b>：这是一个事件驱动策略的 baseline，真正的 alpha 来自异动筛选和择时，不是等权本身。
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <script>
 /**
  * ═══════════════════════════════════════════════════
@@ -652,6 +689,20 @@ function switchScope(scope) {
   currentStage = 'all'; // 切换口径时重置阶段筛选
   searchText = '';
   document.getElementById('searchInput').value = '';
+
+  // 净值 Tab 特殊处理
+  const navSection = document.getElementById('navSection');
+  const mainContent = document.querySelectorAll('.scope-desc, #scopeDesc, #stageFilters, #statsRow, #tableWrap, #lowConfSection, #alertPanel, #deepSearchSection');
+
+  if (scope === 'nav') {
+    navSection.style.display = 'block';
+    mainContent.forEach(el => { if (el) el.style.display = 'none'; });
+    initNavChart();
+    return;
+  } else {
+    navSection.style.display = 'none';
+    mainContent.forEach(el => { if (el) el.style.display = ''; });
+  }
   
   // 更新口径说明
   document.getElementById('scopeDesc').textContent = SCOPE_CONFIG[scope].desc;
@@ -994,6 +1045,205 @@ document.getElementById('deepSearchBtn').addEventListener('click', () => {
 document.getElementById('deepSearchInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('deepSearchBtn').click();
 });
+
+// ═══════════════════════════════════════════════════
+// 策略净值 Tab
+// ═══════════════════════════════════════════════════
+let navChart = null;
+let navData = null;
+
+async function initNavChart() {
+  if (navData) {
+    renderNavChart(0);
+    return;
+  }
+  try {
+    const resp = await fetch('backtest_output/merger_index_nav.json');
+    navData = await resp.json();
+    renderNavChart(0);
+  } catch (e) {
+    document.getElementById('navSubtitle').textContent = '数据加载失败';
+  }
+}
+
+function renderNavChart(startIdx) {
+  const merger = navData.merger;
+  const hs300 = navData.hs300;
+  const zz2000 = navData.zz2000;
+  const allA = navData.all_a;
+
+  if (!merger || merger.length === 0) return;
+
+  // slider 控制起始位置
+  const totalDays = merger.length;
+  const visibleDays = Math.max(30, totalDays - startIdx);
+  const slicedMerger = merger.slice(startIdx);
+  const slicedHs300 = hs300.slice(startIdx);
+  const slicedZz2000 = zz2000.slice(startIdx);
+  const slicedAllA = allA ? allA.slice(startIdx) : [];
+
+  // 归一化（从切片起点=1）
+  const baseM = slicedMerger[0].nav;
+  const baseH = slicedHs300[0].nav;
+  const baseZ = slicedZz2000[0].nav;
+  const baseA = slicedAllA.length > 0 ? slicedAllA[0].nav : 1;
+
+  const dates = slicedMerger.map(d => {
+    const s = d.date;
+    return s.slice(0,4) + '-' + s.slice(4,6) + '-' + s.slice(6,8);
+  });
+
+  // 更新 subtitle
+  const latestNav = slicedMerger[slicedMerger.length - 1].nav;
+  const latestHoldings = slicedMerger[slicedMerger.length - 1].holdings;
+  const totalReturn = ((merger[merger.length-1].nav / merger[0].nav) - 1) * 100;
+  const latestDate = dates[dates.length - 1];
+  document.getElementById('navSubtitle').textContent = 
+    `最新净值 ${latestNav.toFixed(4)} | 累计收益 ${totalReturn >= 0 ? '+' : ''}${totalReturn.toFixed(1)}% | 持仓 ${latestHoldings} 只 | 数据截止 ${latestDate}`;
+
+  // 更新 slider labels
+  document.getElementById('navStartDate').textContent = dates[0];
+  document.getElementById('navEndDate').textContent = dates[dates.length - 1];
+
+  // 计算指标
+  const mergerReturns = totalReturn;
+  const zz2000Returns = ((zz2000[zz2000.length-1].nav / zz2000[0].nav) - 1) * 100;
+  const hs300Returns = ((hs300[hs300.length-1].nav / hs300[0].nav) - 1) * 100;
+  const excess = mergerReturns - zz2000Returns;
+
+  // 最大回撤
+  let maxDD = 0;
+  let peak = merger[0].nav;
+  for (const d of merger) {
+    if (d.nav > peak) peak = d.nav;
+    const dd = (d.nav - peak) / peak;
+    if (dd < maxDD) maxDD = dd;
+  }
+
+  document.getElementById('navMetrics').innerHTML = `
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">并购指数累计</div>
+      <div style="font-size:22px;font-weight:800;color:${mergerReturns>=0?'#34d399':'#f87171'}">${mergerReturns>=0?'+':''}${mergerReturns.toFixed(1)}%</div>
+    </div>
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">中证2000累计</div>
+      <div style="font-size:22px;font-weight:800;color:${zz2000Returns>=0?'#34d399':'#f87171'}">${zz2000Returns>=0?'+':''}${zz2000Returns.toFixed(1)}%</div>
+    </div>
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">超额收益(vs中证2000)</div>
+      <div style="font-size:22px;font-weight:800;color:${excess>=0?'#34d399':'#f87171'}">${excess>=0?'+':''}${excess.toFixed(1)}%</div>
+    </div>
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">最大回撤</div>
+      <div style="font-size:22px;font-weight:800;color:#f87171">${(maxDD*100).toFixed(1)}%</div>
+    </div>
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">沪深300累计</div>
+      <div style="font-size:22px;font-weight:800;color:${hs300Returns>=0?'#34d399':'#f87171'}">${hs300Returns>=0?'+':''}${hs300Returns.toFixed(1)}%</div>
+    </div>
+    <div style="background:#1a1a2e;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:#7f8ea8;margin-bottom:4px">当前持仓数</div>
+      <div style="font-size:22px;font-weight:800;color:#60a5fa">${latestHoldings}</div>
+    </div>
+  `;
+
+  // ECharts
+  if (!navChart) {
+    navChart = echarts.init(document.getElementById('navChart'));
+  }
+
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(20,20,40,0.95)',
+      borderColor: '#333',
+      textStyle: { color: '#e2e8f0', fontSize: 12 },
+      formatter: function(params) {
+        let html = `<div style="font-weight:700;margin-bottom:6px">${params[0].axisValue}</div>`;
+        params.forEach(p => {
+          const val = ((p.value - 1) * 100).toFixed(2);
+          html += `<div>${p.marker} ${p.seriesName}: <b>${val >= 0 ? '+' : ''}${val}%</b></div>`;
+        });
+        if (slicedMerger[params[0].dataIndex]) {
+          html += `<div style="color:#7f8ea8;margin-top:4px;font-size:11px">持仓: ${slicedMerger[params[0].dataIndex].holdings} 只</div>`;
+        }
+        return html;
+      }
+    },
+    legend: {
+      data: ['并购等权', '中证2000', '沪深300', '全A等权'],
+      textStyle: { color: '#94a3b8', fontSize: 12 },
+      top: 0
+    },
+    grid: { left: 60, right: 20, top: 40, bottom: 30 },
+    xAxis: {
+      type: 'category',
+      data: dates,
+      axisLabel: { color: '#666', fontSize: 11, interval: Math.floor(dates.length / 8) },
+      axisLine: { lineStyle: { color: '#333' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#666',
+        formatter: v => ((v - 1) * 100).toFixed(0) + '%'
+      },
+      splitLine: { lineStyle: { color: '#222' } }
+    },
+    series: [
+      {
+        name: '并购等权',
+        type: 'line',
+        data: slicedMerger.map(d => +(d.nav / baseM).toFixed(4)),
+        lineStyle: { width: 2.5, color: '#34d399' },
+        itemStyle: { color: '#34d399' },
+        showSymbol: false,
+        smooth: true
+      },
+      {
+        name: '中证2000',
+        type: 'line',
+        data: slicedZz2000.map(d => +(d.nav / baseZ).toFixed(4)),
+        lineStyle: { width: 1.5, color: '#f59e0b', type: 'dashed' },
+        itemStyle: { color: '#f59e0b' },
+        showSymbol: false,
+        smooth: true
+      },
+      {
+        name: '沪深300',
+        type: 'line',
+        data: slicedHs300.map(d => +(d.nav / baseH).toFixed(4)),
+        lineStyle: { width: 1.5, color: '#60a5fa', type: 'dashed' },
+        itemStyle: { color: '#60a5fa' },
+        showSymbol: false,
+        smooth: true
+      },
+      {
+        name: '全A等权',
+        type: 'line',
+        data: slicedAllA.map(d => +(d.nav / baseA).toFixed(4)),
+        lineStyle: { width: 1.5, color: '#a78bfa', type: 'dotted' },
+        itemStyle: { color: '#a78bfa' },
+        showSymbol: false,
+        smooth: true
+      }
+    ]
+  };
+
+  navChart.setOption(option, true);
+}
+
+// Slider 事件
+document.getElementById('navSlider').addEventListener('input', function() {
+  if (!navData) return;
+  const total = navData.merger.length;
+  const startIdx = Math.floor((this.value / 100) * (total - 30));
+  renderNavChart(Math.max(0, startIdx));
+});
+
+// 窗口 resize
+window.addEventListener('resize', () => { if (navChart) navChart.resize(); });
 </script>
 </body>
 </html>
