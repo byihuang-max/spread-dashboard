@@ -499,6 +499,16 @@ tbody td {
 <!-- ═══════════════════════════════════════════════════
      底部说明
      ═══════════════════════════════════════════════════ -->
+<div class="disclaimer" id="deepSearchSection" style="display:none;">
+  <div style="margin-bottom:8px;color:#f0883e;font-weight:600;font-size:12px;">▲ 深度分析查询</div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <input type="text" id="deepSearchInput" class="search-box" placeholder="输入池内股票名称或代码..." style="width:220px;font-size:12px;" aria-label="深度分析搜索">
+    <button id="deepSearchBtn" class="filter-btn" style="padding:6px 14px;background:#1e3a5f;border-color:#4a9eff;color:#4a9eff;">查看分析 →</button>
+    <span id="deepSearchHint" style="font-size:11px;color:#555;"></span>
+  </div>
+  <div style="margin-top:6px;font-size:11px;color:#555;">仅限"进行中"池内标的。输入后点击查看，将跳转到该票的并购深度分析页面（筹码+底稿）。</div>
+</div>
+
 <div class="disclaimer">
   ■ 数据来源：通联 DataYes EquRestructuringGet（主）+ iFinD MCP 公告/新闻关键词检索（补）。<br>
   ■ 阶段判断基于通联结构化字段 + 公告标题关键字自动分类，可能存在误判，仅供参考。<br>
@@ -891,12 +901,17 @@ async function loadReactions() {
 function renderAlertPanel() {
   const panel = document.getElementById('alertPanel');
   const grid = document.getElementById('alertGrid');
+  const deepSection = document.getElementById('deepSearchSection');
 
   // 只在"进行中" Tab 显示
   if (currentScope !== 'active') {
     panel.style.display = 'none';
+    deepSection.style.display = 'none';
     return;
   }
+
+  // 显示深度搜索区
+  deepSection.style.display = 'block';
 
   // 筛选最近60天入池的异动票（5天涨幅 > 5%）
   const cutoff = new Date();
@@ -954,6 +969,31 @@ async function init() {
   renderAlertPanel();
 }
 init();
+
+// ── 深度分析搜索 ──
+document.getElementById('deepSearchBtn').addEventListener('click', () => {
+  const input = document.getElementById('deepSearchInput').value.trim();
+  const hint = document.getElementById('deepSearchHint');
+  if (!input) { hint.textContent = '请输入股票名称或代码'; return; }
+
+  // 在 Tab 1 数据中搜索
+  const activeData = getScopedData('active');
+  const match = activeData.find(s => {
+    const q = input.toLowerCase();
+    return s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q);
+  });
+
+  if (match) {
+    const codeClean = match.code.replace('.SH', '').replace('.SZ', '');
+    window.location.href = `merger_detail.html?code=${codeClean}&name=${encodeURIComponent(match.name)}`;
+  } else {
+    hint.textContent = '未找到，仅支持"进行中"池内标的';
+  }
+});
+
+document.getElementById('deepSearchInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('deepSearchBtn').click();
+});
 </script>
 </body>
 </html>

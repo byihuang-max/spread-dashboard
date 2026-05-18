@@ -294,7 +294,17 @@ async function findReaction() {
 
 // ── 尝试加载底稿 ──
 async function loadReport(stockName) {
-  // 尝试多种文件名格式
+  // 优先从 detail/{code}.json 加载（包含筹码+底稿）
+  const detailPath = `detail/${codeClean}.json`;
+  try {
+    const resp = await fetch(detailPath);
+    if (resp.ok) {
+      const data = await resp.json();
+      return { type: 'json', data };
+    }
+  } catch (e) {}
+
+  // 回退：直接读 markdown
   const candidates = [
     `analysis/${stockName}_并购重组跟踪.md`,
     `analysis/${stockName}_并购跟踪.md`,
@@ -305,7 +315,8 @@ async function loadReport(stockName) {
     try {
       const resp = await fetch(path);
       if (resp.ok) {
-        return await resp.text();
+        const md = await resp.text();
+        return { type: 'md', data: md };
       }
     } catch (e) {}
   }
@@ -374,7 +385,51 @@ async function main() {
   
   if (report) {
     content.style.display = 'block';
-    content.innerHTML = md2html(report);
+    if (report.type === 'json') {
+      // JSON 格式：包含筹码+底稿
+      const d = report.data;
+      let html = '';
+      
+      // 筹码摘要
+      if (d.chip && d.chip.chip) {
+        const chip = d.chip.chip;
+        html += `<h2>筹码结构</h2>`;
+        html += `<table><thead><tr><th>指标</th><th>数值</th></tr></thead><tbody>`;
+        if (chip.avg_cost) html += `<tr><td>平均成本</td><td>${chip.avg_cost}</td></tr>`;
+        if (chip.profit_ratio !== undefined) html += `<tr><td>获利盘比例</td><td>${(chip.profit_ratio * 100).toFixed(1)}%</td></tr>`;
+        if (chip.concentration) html += `<tr><td>集中度(70%)</td><td>${chip.concentration}</td></tr>`;
+        if (d.chip.stock_name) html += `<tr><td>股票名称</td><td>${d.chip.stock_name}</td></tr>`;
+        if (d.chip.date_range) html += `<tr><td>数据区间</td><td>${d.chip.date_range}</td></tr>`;
+        html += `</tbody></table>`;
+        
+        // 资金流
+        if (d.chip.moneyflow) {
+          const mf = d.chip.moneyflow;
+          html += `<h3>资金流向</h3><table><thead><tr><th>周期</th><th>主力净流入(万)</th></tr></thead><tbody>`;
+          if (mf.main_net_5d !== null) html += `<tr><td>5日</td><td>${(mf.main_net_5d/10000).toFixed(0)}</td></tr>`;
+          if (mf.main_net_10d !== null) html += `<tr><td>10日</td><td>${(mf.main_net_10d/10000).toFixed(0)}</td></tr>`;
+          html += `</tbody></table>`;
+        }
+        html += '<hr>';
+      }
+      
+      // 底稿
+      if (d.report_md) {
+        html += md2html(d.report_md);
+      } else if (d.has_report === false) {
+        html += '<p style="color:#888;">底稿生成中或尚未生成，筹码数据已就绪。</p>';
+      }
+      
+      // 生成时间
+      if (d.generated_at) {
+        html += `<hr><p style="color:#555;font-size:11px;">生成时间: ${d.generated_at}</p>`;
+      }
+      
+      content.innerHTML = html;
+    } else {
+      // 纯 markdown
+      content.innerHTML = md2html(report.data);
+    }
   } else {
     noReport.style.display = 'block';
     document.getElementById('hintName').textContent = stock.name;
