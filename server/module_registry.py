@@ -392,6 +392,16 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
+    'merger_report': {
+        'name': '并购深度分析',
+        'scripts': [
+            ('skills/stock-monitor', 'generate_merger_report.py --auto'),
+        ],
+        'aliases': ['merger-report'],
+        'late_data': True,
+        'include_in_update_all': True,
+        'include_in_refresh_server': False,
+    },
     'overview': {
         'name': '仪表盘汇总',
         'scripts': [

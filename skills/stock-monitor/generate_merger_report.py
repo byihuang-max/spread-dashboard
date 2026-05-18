@@ -55,12 +55,20 @@ GAMT_ROOT = _find_gamt_root()
 sys.path.insert(0, str(GAMT_ROOT / 'server'))
 sys.path.insert(0, str(GAMT_ROOT / 'chip_query'))
 
-# ── API 配置 ──
-KIMI_API_KEY = 'sk-AwJmpC5sGDye5P9FdkwSJw3hpw2VbZ1VwxQ03yYWSzjhtrMa'
-KIMI_BASE_URL = 'https://api.moonshot.cn/v1'
-CLAUDE_API_KEY = os.environ.get('CLAUDE_API_KEY', '')
-CLAUDE_BASE_URL = 'https://api.aicanapi.com/v1'
-CLAUDE_MODEL = 'claude-opus-4-6'
+# ── API 配置（从 config/api_keys.json 读取）──
+def _load_api_config():
+    config_path = SCRIPT_DIR / 'config' / 'api_keys.json'
+    if config_path.exists():
+        with open(config_path) as f:
+            return json.load(f)
+    return {}
+
+_API_CONFIG = _load_api_config()
+KIMI_API_KEY = _API_CONFIG.get('kimi_api_key', '')
+KIMI_BASE_URL = _API_CONFIG.get('kimi_base_url', 'https://api.moonshot.cn/v1')
+CLAUDE_API_KEY = _API_CONFIG.get('claude_api_key', '')
+CLAUDE_BASE_URL = _API_CONFIG.get('claude_base_url', 'https://api.aicanapi.com/v1')
+CLAUDE_MODEL = _API_CONFIG.get('claude_model', 'claude-opus-4-6')
 
 # ── iFinD MCP ──
 IFIND_DIR = Path(os.path.expanduser('~/.openclaw/extensions/ifind-finance-data'))
