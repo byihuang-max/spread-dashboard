@@ -653,43 +653,92 @@ def _save_output(code_clean: str, stock_name: str, output: dict):
 
 
 def run_auto():
-    """自动模式：跑异动 Top 8（只跑池内的票）"""
+    """自动模式：从"进行中"池子（~70只）实时拉涨幅，取 Top 8"""
     print("=" * 50)
-    print("  并购深度分析 - 自动模式（异动 Top 8）")
+    print("  并购深度分析 - 自动模式")
     print("=" * 50)
 
-    # 加载异动数据
-    if not REACTIONS_PATH.exists():
-        print("[!] 无异动数据，请先跑回测")
-        return
-
-    with open(REACTIONS_PATH) as f:
-        reactions = json.load(f)
-
-    # 加载池子，确定哪些票在池内
+    # 加载池子，筛选"进行中"的票（方案公布 + 审核中 + 已过会 + 已注册）
     with open(POOL_PATH) as f:
         pool = json.load(f)
-    pool_codes = {v.get('code') for v in pool['stocks'].values() if v.get('code')}
 
-    # 筛选最近 60 天入池、5天涨幅 > 5%、且在池内的票
-    cutoff = (datetime.now() - timedelta(days=60)).strftime('%Y%m%d')
-    recent = [r for r in reactions
-              if r.get('entry_date', '') >= cutoff
-              and (r.get('ret_5d') or 0) > 5
-              and r.get('code') in pool_codes]
-    recent.sort(key=lambda x: x.get('ret_5d') or 0, reverse=True)
-    top8 = recent[:8]
+    active_stages = {'方案公布', '审核中', '已过会', '已注册'}
+    active_stocks = []
+    for name, v in pool['stocks'].items():
+        if v.get('stage') in active_stages and v.get('code'):
+            active_stocks.append({'name': name, 'code': v['code'], 'stage': v['stage']})
 
-    if not top8:
-        print("[!] 最近 60 天无池内异动票（5天涨幅 > 5%）")
+    if not active_stocks:
+        print("[!] 无进行中的票")
         return
 
-    print(f"\n异动 Top {len(top8)}（池内）:")
-    for r in top8:
-        print(f"  {r['name']:8s} {r['code']:12s} 5d={r.get('ret_5d',0):+.1f}%")
+    print(f"\n进行中池子: {len(active_stocks)} 只")
+    print("正在拉取实时涨幅...")
 
-    # 逐个生成
-    # Top 3 跑完整（底稿+筹码），4-8 只跑筹码
+    # 用 Tushare 拉最近 10 个交易日行情，算 1/3/5 日涨幅
+    sys.path.insert(0, str(GAMT_ROOT / 'server'))
+    sys.path.insert(0, str(GAMT_ROOT / 'chip_query'))
+    from data_source import get_daily
+
+    today = datetime.now().strftime('%Y%m%d')
+    results = []
+
+    for stock in active_stocks:
+        try:
+            df = get_daily(stock['code'], days=10)
+            if df is None or len(df) < 2:
+                continue
+
+            # df 按日期降序（最新在前）
+            df = df.sort_values('trade_date', ascending=False).reset_index(drop=True)
+            latest_close = float(df.iloc[0]['close'])
+            latest_date = str(df.iloc[0]['trade_date'])[:10].replace('-', '')
+
+            ret_1d = ((latest_close / float(df.iloc[1]['close'])) - 1) * 100 if len(df) >= 2 else 0
+            ret_3d = ((latest_close / float(df.iloc[3]['close'])) - 1) * 100 if len(df) >= 4 else 0
+            ret_5d = ((latest_close / float(df.iloc[5]['close'])) - 1) * 100 if len(df) >= 6 else 0
+
+            results.append({
+                'name': stock['name'],
+                'code': stock['code'],
+                'stage': stock['stage'],
+                'close': latest_close,
+                'data_date': latest_date,
+                'ret_1d': round(ret_1d, 2),
+                'ret_3d': round(ret_3d, 2),
+                'ret_5d': round(ret_5d, 2),
+            })
+        except Exception as e:
+            continue
+
+    if not results:
+        print("[!] 无法获取行情数据")
+        return
+
+    # 按 5 日涨幅排序，取 Top 8
+    results.sort(key=lambda x: x['ret_5d'], reverse=True)
+    # 过滤：至少有一个周期涨幅 > 5%
+    top_candidates = [r for r in results if r['ret_5d'] > 5 or r['ret_3d'] > 5 or r['ret_1d'] > 5]
+
+    if not top_candidates:
+        print("[!] 进行中池子无异动票（1/3/5日涨幅均 < 5%）")
+        # 仍然输出 anomaly JSON 供前端用（空列表）
+        _save_anomaly_json([], results[0]['data_date'] if results else today)
+        return
+
+    top8 = top_candidates[:8]
+    data_date = top8[0]['data_date']
+
+    print(f"\n异动 Top {len(top8)}（数据截止: {data_date}）:")
+    print(f"  {'名称':8s} {'代码':12s} {'阶段':6s} {'1日':>6s} {'3日':>6s} {'5日':>6s}")
+    print(f"  {'─'*50}")
+    for r in top8:
+        print(f"  {r['name']:8s} {r['code']:12s} {r['stage']:6s} {r['ret_1d']:+5.1f}% {r['ret_3d']:+5.1f}% {r['ret_5d']:+5.1f}%")
+
+    # 保存异动 JSON（供前端异动面板读取）
+    _save_anomaly_json(top8, data_date)
+
+    # 逐个生成：Top 3 完整底稿+筹码，4-8 只跑筹码
     for i, r in enumerate(top8):
         code = r['code']
         if i < 3:
@@ -704,6 +753,19 @@ def run_auto():
     print(f"\n{'='*50}")
     print(f"  完成！Top 3 完整底稿 + Top 4-8 筹码")
     print(f"{'='*50}")
+
+
+def _save_anomaly_json(top_list: list, data_date: str):
+    """保存异动数据供前端读取"""
+    out = {
+        'update_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'data_date': data_date,
+        'anomalies': top_list,
+    }
+    out_path = SCRIPT_DIR / 'anomaly_top.json'
+    with open(out_path, 'w') as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+    print(f"\n  异动数据已保存: anomaly_top.json（{len(top_list)} 只，截止 {data_date}）")
 
 
 # ═══════════════════════════════════════════════════

@@ -887,14 +887,14 @@ document.querySelectorAll('thead th[data-sort]').forEach(th => {
 // ═══════════════════════════════════════════════════
 // 异动提醒面板
 // ═══════════════════════════════════════════════════
-let REACTIONS_DATA = [];
+let ANOMALY_DATA = null;
 
 async function loadReactions() {
   try {
-    const resp = await fetch('backtest_output/merger_reactions.json');
-    REACTIONS_DATA = await resp.json();
+    const resp = await fetch('anomaly_top.json');
+    ANOMALY_DATA = await resp.json();
   } catch (e) {
-    REACTIONS_DATA = [];
+    ANOMALY_DATA = null;
   }
 }
 
@@ -913,30 +913,30 @@ function renderAlertPanel() {
   // 显示深度搜索区
   deepSection.style.display = 'block';
 
-  // 筛选最近60天入池的异动票（5天涨幅 > 5%）
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 60);
-  const cutoffStr = cutoff.toISOString().slice(0, 10).replace(/-/g, '');
-
-  const recent = REACTIONS_DATA
-    .filter(r => r.entry_date >= cutoffStr && (r.ret_5d || 0) > 5)
-    .sort((a, b) => (b.ret_5d || 0) - (a.ret_5d || 0))
-    .slice(0, 8);  // 最多显示8个
-
-  if (recent.length === 0) {
+  if (!ANOMALY_DATA || !ANOMALY_DATA.anomalies || ANOMALY_DATA.anomalies.length === 0) {
     panel.style.display = 'none';
     return;
   }
 
   panel.style.display = 'block';
 
+  // 显示数据日期
+  const dataDate = ANOMALY_DATA.data_date || '';
+  const dateFormatted = dataDate ? dataDate.slice(0,4) + '-' + dataDate.slice(4,6) + '-' + dataDate.slice(6,8) : '';
+  const updateTime = ANOMALY_DATA.update_time || '';
+
+  const recent = ANOMALY_DATA.anomalies;
+
+  // 更新面板标题，加上数据日期
+  const titleEl = panel.querySelector('.alert-panel-title');
+  if (titleEl) {
+    titleEl.innerHTML = `▲ 并购异动提醒 <span style="font-size:12px;color:#888;font-weight:normal">数据截止 ${dateFormatted} | 更新于 ${updateTime}</span>`;
+  }
+
   grid.innerHTML = recent.map(r => {
     const code = r.code || '';
     const codeClean = code.replace('.SH', '').replace('.SZ', '');
-    // 链接到并购深度分析详情页
     const skillLink = `merger_detail.html?code=${codeClean}&name=${encodeURIComponent(r.name)}`;
-    const entryFormatted = r.entry_date ? 
-      r.entry_date.slice(4,6) + '/' + r.entry_date.slice(6,8) : '';
 
     function retHtml(val, label) {
       if (val === null || val === undefined) return `<div class="alert-ret"><div class="alert-ret-val" style="color:#555">-</div><div class="alert-ret-label">${label}</div></div>`;
@@ -949,12 +949,12 @@ function renderAlertPanel() {
       <div class="alert-card-info">
         <div class="alert-card-name">${r.name}</div>
         <div class="alert-card-code">${code}</div>
-        <div class="alert-card-date">入池 ${entryFormatted}</div>
+        <div class="alert-card-date">${r.stage || ''}</div>
       </div>
       <div class="alert-card-returns">
-        ${retHtml(r.ret_1d, '1天')}
-        ${retHtml(r.ret_3d, '3天')}
-        ${retHtml(r.ret_5d, '5天')}
+        ${retHtml(r.ret_1d, '1日')}
+        ${retHtml(r.ret_3d, '3日')}
+        ${retHtml(r.ret_5d, '5日')}
       </div>
       <span class="alert-link-icon">→</span>
     </a>`;
