@@ -59,14 +59,17 @@ def compute_style_spread(index_daily):
         }
     return results
 
-# Sheet2: 双创等权
+# Sheet2: 双创等权 + 杠铃指数（背对图）
 def compute_dual_innovation(index_daily):
     cyb_code = '399006.SZ'
     kc50_code = '000688.SH'
+    dividend_code = '000922.CSI'
+    micro_code = '884143.TI'  # 同花顺微盘股指数
 
     cyb_data = index_daily[cyb_code]['data']
     kc50_data = index_daily[kc50_code]['data']
 
+    # 双创等权
     common_dates = set(cyb_data.keys()).intersection(set(kc50_data.keys()))
     common_dates = sorted(common_dates)
 
@@ -79,12 +82,52 @@ def compute_dual_innovation(index_daily):
         cyb_chg.append(cyb_data[date]['pct_chg'])
         kc50_chg.append(kc50_data[date]['pct_chg'])
 
-    return {
-        'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],  # YYYY/MM/DD
+    result = {
+        'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],
         'navs': navs,
         'cyb_chg': cyb_chg,
         'kc50_chg': kc50_chg,
     }
+
+    # 杠铃指数 = 中证红利 + 同花顺微盘 各50%等权
+    if dividend_code in index_daily and micro_code in index_daily:
+        div_data = index_daily[dividend_code]['data']
+        mic_data = index_daily[micro_code]['data']
+        barbell_dates = set(div_data.keys()).intersection(set(mic_data.keys()))
+        # 取与双创共同的日期范围
+        barbell_dates = sorted(barbell_dates.intersection(set(common_dates)))
+
+        barbell_navs = []
+        barbell_nav = 1.0
+        barbell_div_chg = []
+        barbell_mic_chg = []
+        for date in barbell_dates:
+            d_chg = div_data[date]['pct_chg']
+            m_chg = mic_data[date]['pct_chg']
+            avg = (d_chg + m_chg) / 2
+            barbell_nav *= (1 + avg / 100)
+            barbell_navs.append(barbell_nav)
+            barbell_div_chg.append(d_chg)
+            barbell_mic_chg.append(m_chg)
+
+        # 双创在杠铃日期范围内的净值（重新归一化）
+        dual_navs_aligned = []
+        dual_nav = 1.0
+        for date in barbell_dates:
+            idx = common_dates.index(date)
+            chg = (cyb_data[date]['pct_chg'] + kc50_data[date]['pct_chg']) / 2
+            dual_nav *= (1 + chg / 100)
+            dual_navs_aligned.append(dual_nav)
+
+        result['barbell'] = {
+            'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in barbell_dates],
+            'navs': barbell_navs,
+            'dual_navs': dual_navs_aligned,
+            'div_chg': barbell_div_chg,
+            'mic_chg': barbell_mic_chg,
+        }
+
+    return result
 
 # Sheet3: 经济敏感轧差
 def compute_eco_sensitive(sw_daily):

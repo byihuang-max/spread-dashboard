@@ -303,6 +303,87 @@ def fetch_incremental():
         stats["sw_new"] += count
 
     # --- 保存 JSON cache ---
+    # --- iFinD 微盘股指数（884143.TI）---
+    print()
+    print("=" * 50)
+    print("拉取 iFinD 微盘股指数（884143.TI）")
+    print("=" * 50)
+    ifind_code = '884143.TI'
+    ifind_name = '同花顺微盘股'
+    ifind_last = None
+    if ifind_code in cache.get("index_daily", {}):
+        dates_in_cache = sorted(cache["index_daily"][ifind_code].get("data", {}).keys())
+        if dates_in_cache:
+            ifind_last = dates_in_cache[-1]
+
+    if ifind_last and ifind_last >= today:
+        print(f"  {ifind_name}({ifind_code}): 已是最新 ({ifind_last})，跳过")
+    else:
+        start = next_day(ifind_last) if ifind_last else full_start()
+        start_fmt = f"{start[:4]}-{start[4:6]}-{start[6:]}"
+        today_fmt = f"{today[:4]}-{today[4:6]}-{today[6:]}"
+        print(f"  {ifind_name}({ifind_code}): 从 {start} 拉取 iFinD...", end='', flush=True)
+
+        try:
+            IFIND_BASE = 'https://quantapi.51ifind.com/api/v1'
+            IFIND_REFRESH = 'eyJzaWduX3RpbWUiOiIyMDI2LTA0LTEyIDE2OjU1OjAzIn0=.eyJ1aWQiOiI4NTAzMDMzMDIiLCJ1c2VyIjp7InJlZnJlc2hUb2tlbkV4cGlyZWRUaW1lIjoiMjAyNi0wNS0yNyAxOTowNDoxMiIsInVzZXJJZCI6Ijg1MDMwMzMwMiJ9fQ==.B196D7D08D4DD409D2DF46092AF4EECABC774987317390F4D126DE1EF493F421'
+
+            # 获取 access_token
+            r = requests.post(f'{IFIND_BASE}/get_access_token',
+                json={'refresh_token': IFIND_REFRESH}, timeout=15,
+                proxies={'http': None, 'https': None})
+            token = r.json().get('data', {}).get('access_token')
+
+            if token:
+                r2 = requests.post(f'{IFIND_BASE}/cmd_history_quotation',
+                    json={
+                        'codes': ifind_code,
+                        'indicators': 'close,changeRatio',
+                        'startdate': start_fmt,
+                        'enddate': today_fmt
+                    },
+                    headers={'Content-Type': 'application/json', 'access_token': token},
+                    timeout=30,
+                    proxies={'http': None, 'https': None})
+                resp = r2.json()
+                tables = resp.get('tables', [])
+                if tables and tables[0].get('time'):
+                    t = tables[0]
+                    dates = t['time']
+                    close_vals = t['table'].get('close', [])
+                    pct_vals = t['table'].get('changeRatio', [])
+
+                    if ifind_code not in cache.setdefault("index_daily", {}):
+                        cache["index_daily"][ifind_code] = {"name": ifind_name, "data": {}}
+
+                    count = 0
+                    csv_rows = []
+                    for i, d in enumerate(dates):
+                        dt = d.replace('-', '')
+                        cache["index_daily"][ifind_code]["data"][dt] = {
+                            "close": close_vals[i] if i < len(close_vals) else None,
+                            "pct_chg": pct_vals[i] if i < len(pct_vals) else None,
+                        }
+                        csv_rows.append({
+                            'trade_date': dt,
+                            'ts_code': ifind_code,
+                            'close': close_vals[i] if i < len(close_vals) else '',
+                            'pct_chg': pct_vals[i] if i < len(pct_vals) else '',
+                        })
+                        count += 1
+
+                    if csv_rows:
+                        append_csv(IDX_CSV, IDX_HEADERS, csv_rows)
+
+                    total = len(cache["index_daily"][ifind_code]["data"])
+                    print(f" +{count}条 (总{total}条)")
+                else:
+                    print(f" iFinD 返回空 (errorcode={resp.get('errorcode')})")
+            else:
+                print(" iFinD token 获取失败")
+        except Exception as e:
+            print(f" iFinD 异常: {e}")
+
     save_cache(cache)
 
     # --- 统计 ---

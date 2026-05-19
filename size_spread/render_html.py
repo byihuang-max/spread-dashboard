@@ -48,10 +48,20 @@ bot_tags = ''.join(f'<span class="tag cool">{n}</span>' for n in last_bot.split(
 style = data["style_spread"]["data"]
 style_json = json.dumps(style, ensure_ascii=False)
 
-# --- 双创等权 ---
+# --- 双创 vs 杠铃 ---
 di = data["dual_innovation"]
 di_d = json.dumps(di["dates"])
 di_n = json.dumps(di["navs"])
+# 杠铃数据（如果有）
+if "barbell" in di:
+    bb = di["barbell"]
+    bb_d = json.dumps(bb["dates"])
+    bb_n = json.dumps(bb["navs"])
+    bb_dual_n = json.dumps(bb["dual_navs"])
+else:
+    bb_d = "[]"
+    bb_n = "[]"
+    bb_dual_n = "[]"
 
 html = f'''<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -111,7 +121,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
   <div class="ss-tab" data-tab="eco"> 经济敏感轧差</div>
   <div class="ss-tab" data-tab="crowd"> 拥挤-反身性</div>
   <div class="ss-tab" data-tab="style"> 风格轧差净值</div>
-  <div class="ss-tab" data-tab="dual"> 双创等权</div>
+  <div class="ss-tab" data-tab="dual"> 双创 vs 杠铃</div>
 </div>
 
 <!-- Tab 0: Barra 风格因子 -->
@@ -243,21 +253,22 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei'
   </div>
 </div>
 
-<!-- Tab 4: 双创等权 -->
+<!-- Tab 4: 双创 vs 杠铃 -->
 <div class="ss-page" id="page-dual">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
-    <span style="font-size:13px;color:#888"> 双创等权 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
+    <span style="font-size:13px;color:#888"> 双创 vs 杠铃 · 数据截至 <b style="color:#2d3142">{update_date}</b></span>
     <button onclick="refreshData('style_spread')" style="padding:6px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;font-size:12px;color:#6b7280"> 刷新当前</button>
   </div>
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权净值</div>
-    <div style="position:relative;height:280px"><canvas id="dualChart"></canvas></div>
+    <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权 vs 杠铃组合（归1净值）</div>
+    <div style="position:relative;height:320px"><canvas id="dualChart"></canvas></div>
   </div>
   <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
     <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
-    <p><b>策略逻辑：</b>创业板指 + 科创50 各50%等权配置，跟踪双创板块整体走势。</p>
-    <p><b>信号意义：</b>净值趋势性上行 → 成长风格占优，科技板块资金流入；急跌后企稳 → 关注成长股反弹机会。可作为成长风格的β基准。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: {update_time}</p>
+    <p><b>双创等权：</b>创业板指(399006) + 科创50(000688) 各50%等权，代表成长/科技风格。</p>
+    <p><b>杠铃组合：</b>中证红利(000922) + 同花顺微盘股(884143.TI) 各50%等权，代表"高股息+微盘"的防御+弹性组合。</p>
+    <p><b>背对逻辑：</b>两条线呈现跷跷板效应。双创强势期（成交量>3万亿、科技虹吸）杠铃跑输；流动性退潮期（成交量<2.5万亿）杠铃回归。2025年以来轮动周期约1.5-3个月。</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare（双创/红利） + iFinD（同花顺微盘股指数） · 最后更新: {update_time}</p>
   </div>
 </div>
 
@@ -271,6 +282,9 @@ const cr_spreads = {cr_s};
 const style_data = {style_json};
 const di_dates = {di_d};
 const di_navs = {di_n};
+const bb_dates = {bb_d};
+const bb_navs = {bb_n};
+const bb_dual_navs = {bb_dual_n};
 
 // MA20 计算
 function calcMA(arr, n) {{
@@ -529,10 +543,17 @@ function initTab(tab) {{
       break;
 
     case 'dual':
-      new Chart(document.getElementById('dualChart'),{{type:'line',data:{{labels:di_dates,datasets:[
-        {{label:'净值',data:di_navs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.08)',fill:true,tension:0.3,pointRadius:1.5,pointBackgroundColor:'#9b59b6',borderWidth:2}},
-        {{label:'MA20',data:calcMA(di_navs,20),borderColor:'#94a3b8',borderWidth:1,borderDash:[2,2],pointRadius:0,tension:0.3}}
-      ]}},options:lineOpts()}});
+      var dualDates = bb_dates.length > 0 ? bb_dates : di_dates;
+      var dualNavs = bb_dual_navs.length > 0 ? bb_dual_navs : di_navs;
+      var dOpts = lineOpts();
+      dOpts.plugins.legend.display = true;
+      var dualDs = [
+        {{label:'双创等权',data:dualNavs,borderColor:'#9b59b6',backgroundColor:'rgba(155,89,182,0.06)',fill:true,tension:0.3,pointRadius:0,borderWidth:2.5}}
+      ];
+      if (bb_navs.length > 0) {{
+        dualDs.push({{label:'杠铃组合(红利+微盘)',data:bb_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.06)',fill:true,tension:0.3,pointRadius:0,borderWidth:2.5}});
+      }}
+      new Chart(document.getElementById('dualChart'),{{type:'line',data:{{labels:dualDates,datasets:dualDs}},options:dOpts}});
       break;
   }}
 }}
