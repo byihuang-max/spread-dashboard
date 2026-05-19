@@ -120,6 +120,10 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
   <h1>GAMT 尽调库</h1>
   <div class="sub">Due Diligence Database</div>
   <nav id="navList"></nav>
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)">
+    <div style="font-size:11px;color:var(--sidebar-text);margin-bottom:8px;padding:0 12px">按阶段筛选</div>
+    <div id="stageNav"></div>
+  </div>
   <button class="btn-new" onclick="openNewFundModal()">+ 新增基金</button>
 </aside>
 <main class="main">
@@ -185,6 +189,7 @@ const STAGE_ORDER = ['initial','communicating','diligenced','approved','invested
 let allFunds = [];
 let filteredFunds = [];
 let currentStage = '';
+let currentGroup = '';
 let currentView = 'grid';
 let currentFund = null;
 
@@ -211,25 +216,74 @@ async function init(){
   }
 }
 
+// ═══ 策略大类映射 ═══
+const STRATEGY_GROUPS = {
+  '指数增强':['指数增强'],
+  '量化多头':['量化多头','量化选股','股票多头','股票短线','量化择时','主观择时多头'],
+  '市场中性':['市场中性','市场中性/多空'],
+  'CTA':['量化CTA','主观CTA','主观CTA+宏观','量化CTA+宏观','主观+量化CTA'],
+  '可转债':['可转债','可转债多头','可转债指数增强'],
+  '套利/期权':['期权套利','期权策略'],
+  '固收+':['固收+'],
+  '多策略/宏观':['多策略','宏观策略','宏观策略/衍生品','大类资产配置','多资产'],
+  '其他':['其他','黄金主题','黄金增强']
+};
+const GROUP_ORDER = ['指数增强','量化多头','市场中性','CTA','可转债','套利/期权','固收+','多策略/宏观','其他'];
+
+function getFundGroup(fund){
+  for(const s of (fund.strategies||[])){
+    for(const [group, types] of Object.entries(STRATEGY_GROUPS)){
+      if(types.includes(s.type)) return group;
+    }
+  }
+  return '其他';
+}
+
+let currentGroup = '';
+
 // ═══ 导航 ═══
 function renderNav(stats){
+  // 策略分类导航
   const nav = document.getElementById('navList');
-  let html = `<div class="nav-item ${!currentStage?'active':''}" onclick="filterStage('')">
-    <span>全部</span><span class="badge">${stats.total}</span></div>`;
-  for(const key of STAGE_ORDER){
-    const s = stats.byStage[key];
-    html += `<div class="nav-item ${currentStage===key?'active':''}" onclick="filterStage('${key}')">
-      <span>${s.label}</span><span class="badge">${s.count}</span></div>`;
+  const groupCounts = {};
+  GROUP_ORDER.forEach(g=>groupCounts[g]=0);
+  allFunds.forEach(f=>{const g=getFundGroup(f);groupCounts[g]=(groupCounts[g]||0)+1;});
+  
+  let html = `<div class="nav-item ${!currentGroup&&!currentStage?'active':''}" onclick="filterGroup('')">
+    <span>全部</span><span class="badge">${allFunds.length}</span></div>`;
+  for(const g of GROUP_ORDER){
+    if(groupCounts[g]>0){
+      html += `<div class="nav-item ${currentGroup===g?'active':''}" onclick="filterGroup('${g}')">
+        <span>${g}</span><span class="badge">${groupCounts[g]}</span></div>`;
+    }
   }
   nav.innerHTML = html;
+
+  // 阶段筛选（次级）
+  const stageNav = document.getElementById('stageNav');
+  if(stageNav){
+    let shtml = `<div class="nav-item ${!currentStage?'active':''}" onclick="filterStage('')" style="font-size:12px;padding:6px 12px">
+      <span>全部阶段</span></div>`;
+    for(const key of STAGE_ORDER){
+      const count = allFunds.filter(f=>f.stage===key).length;
+      if(count>0) shtml += `<div class="nav-item ${currentStage===key?'active':''}" onclick="filterStage('${key}')" style="font-size:12px;padding:6px 12px">
+        <span>${STAGES[key].label}</span><span class="badge" style="font-size:10px">${count}</span></div>`;
+    }
+    stageNav.innerHTML = shtml;
+  }
+}
+
+function filterGroup(group){
+  currentGroup = group;
+  currentStage = '';
+  document.getElementById('pageTitle').textContent = group || '全部基金';
+  renderNav({});
+  applyFilters();
 }
 
 function filterStage(stage){
   currentStage = stage;
-  document.getElementById('pageTitle').textContent = stage ? STAGES[stage].label : '全部基金';
-  document.querySelectorAll('.nav-item').forEach((el,i)=>{
-    el.classList.toggle('active', i===0?!stage:STAGE_ORDER[i-1]===stage);
-  });
+  renderNav({});
   applyFilters();
 }
 
@@ -256,6 +310,7 @@ function applyFilters(){
   const search = document.getElementById('searchInput').value.toLowerCase();
   const strategy = document.getElementById('filterStrategy').value;
   filteredFunds = allFunds.filter(f=>{
+    if(currentGroup && getFundGroup(f) !== currentGroup) return false;
     if(currentStage && f.stage !== currentStage) return false;
     if(search){
       const text = [f.company?.name,f.company?.shortName,...(f.tags||[]),
