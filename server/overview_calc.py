@@ -1,10 +1,29 @@
 #!/usr/bin/env python3
 """仪表盘概览 - 汇总各模块信号生成 overview.json（分组版）"""
 import os, json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT = os.path.join(BASE, "server", "overview.json")
+NEW_MODULES_FILE = os.path.join(BASE, "server", "new_modules.json")
+
+# 30天内上线的模块自动标NEW
+NEW_WINDOW_DAYS = 30
+
+
+def _load_new_module_set():
+    """读取 new_modules.json，返回30天内上线的模块名称集合"""
+    try:
+        data = json.load(open(NEW_MODULES_FILE, encoding='utf-8'))
+        cutoff = datetime.now() - timedelta(days=NEW_WINDOW_DAYS)
+        result = set()
+        for m in data.get('modules', []):
+            d = datetime.strptime(m['date'], '%Y-%m-%d')
+            if d >= cutoff:
+                result.add(m['name'])
+        return result
+    except:
+        return set()
 
 
 def read_json(path):
@@ -222,6 +241,48 @@ def _alerts_signal():
     return sigs[:2], updated, True
 
 
+def _timing_signal():
+    """择时研究：实盘净值 + 敞口输出"""
+    nav_path = f'{BASE}/timing-research/data/live_exposure_nav.json'
+    score_path = f'{BASE}/timing-research/data/ml_exposure_score.json'
+    d = read_json(nav_path)
+    s = read_json(score_path)
+    sigs = []
+    if d and d.get('base_strategy_nav'):
+        latest_nav = d['base_strategy_nav'][-1]
+        sigs.append(f"策略净值 {latest_nav:.4f}")
+    if s and s.get('scores'):
+        latest_score = s['scores'][-1]
+        sigs.append(f"敞口评分 {latest_score:.1f}")
+    updated = get_mtime(nav_path) if os.path.exists(nav_path) else '-'
+    return sigs[:2], updated, bool(d)
+
+
+def _tools_signal():
+    """工具与研究：个股监控 / 并购信息表 / 尽调看板"""
+    sigs = []
+    # 个股监控
+    lr = read_json(f'{BASE}/skills/stock-monitor/last_run.json')
+    if lr and lr.get('run_time'):
+        sigs.append(f"监控 {lr['run_time'][:10]}")
+    # 并购池
+    mp_path = f'{BASE}/skills/stock-monitor/merger_pool.json'
+    if os.path.exists(mp_path):
+        try:
+            mp = json.load(open(mp_path, encoding='utf-8'))
+            if isinstance(mp, dict) and 'stocks' in mp:
+                count = len(mp['stocks'])
+            elif isinstance(mp, list):
+                count = len(mp)
+            else:
+                count = '?'
+            sigs.append(f"并购池 {count}只")
+        except:
+            pass
+    updated = get_mtime(mp_path) if os.path.exists(mp_path) else '-'
+    return sigs[:2], updated, True
+
+
 def main():
     result = {
         'update_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
@@ -240,43 +301,50 @@ def main():
             'alerts': alerts.get('alerts', []),
         }
 
+    # ── 动态加载NEW模块集合 ──
+    _new_set = _load_new_module_set()
+
     # ── 分组定义 ──
     groups = [
         {
             'name': '风格轧差',
             'subs': ['经济敏感轧差', '拥挤-反身性', '风格轧差净值', '双创等权'],
-            'new_subs': [],
             'signal_fn': _style_spread_signal,
         },
         {
             'name': '策略环境适配度',
             'subs': ['宽基量化', '强势股', 'CTA', '转债', '套利', '期权卖权'],
-            'new_subs': ['期权卖权'],
             'signal_fn': _env_fit_signal,
         },
         {
             'name': '资金流与微观结构',
             'subs': ['耐心资本持筹', '拥挤度监控', '期权异常值监控'],
-            'new_subs': [],
             'signal_fn': _fund_flow_signal,
         },
         {
             'name': '宏观与流动性',
-            'subs': ['境内流动性', '全球利率与汇率', '经济基本面', '利润周期', '内需接棒', '反脆弱看板', 'HALO交易'],
-            'new_subs': ['利润周期', '内需接棒'],
+            'subs': ['境内流动性', '全球利率与汇率', '经济基本面', '利润周期', '内需接棒', '反脆弱看板', 'HALO交易', '全球金融日历'],
             'signal_fn': _macro_signal,
         },
         {
             'name': '中观景气',
             'subs': ['产业链景气'],
-            'new_subs': [],
             'signal_fn': _meso_signal,
         },
         {
             'name': '红灯预警',
             'subs': ['A股风险', '美股风险'],
-            'new_subs': [],
             'signal_fn': _alerts_signal,
+        },
+        {
+            'name': '择时研究',
+            'subs': ['实盘净值', '敞口输出'],
+            'signal_fn': _timing_signal,
+        },
+        {
+            'name': '工具与研究',
+            'subs': ['个股监控', '并购信息表', '尽调看板'],
+            'signal_fn': _tools_signal,
         },
     ]
 
@@ -286,10 +354,13 @@ def main():
         except Exception as e:
             signals, updated, is_on = [f'信号提取失败: {e}'], '-', False
 
+        # 动态计算：subs中在30天内上线的标NEW
+        new_subs = [s for s in g['subs'] if s in _new_set]
+
         result['module_groups'].append({
             'name': g['name'],
             'subs': g['subs'],
-            'new_subs': g['new_subs'],
+            'new_subs': new_subs,
             'status': 'on' if is_on else 'off',
             'updated': updated,
             'signals': signals,
