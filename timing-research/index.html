@@ -1092,13 +1092,14 @@ fetch('data/factor_ic.json')
               silent: true,
               symbol: 'none',
               lineStyle: { color: '#f87171', width: 1, type: 'dashed', opacity: 0.6 },
-              label: { show: false },
-              emphasis: { lineStyle: { width: 2, opacity: 1 }, label: { show: true, formatter: p => p.name, color: '#f87171', fontSize: 10, position: 'start' } },
+              label: { show: true, position: 'start', formatter: p => p.name, color: '#94a3b8', fontSize: 9 },
               data: data.trades.map(t => {
                 const ed = t.entry_date;
                 const dateLabel = ed.slice(0,4)+'-'+ed.slice(4,6)+'-'+ed.slice(6);
                 const idx = dates.indexOf(dateLabel);
-                return idx >= 0 ? { name: dateLabel, xAxis: dateLabel } : null;
+                const ret = t.return;
+                const sign = ret >= 0 ? '+' : '';
+                return idx >= 0 ? { name: `${sign}${ret}%`, xAxis: dateLabel } : null;
               }).filter(Boolean)
             }
           },
