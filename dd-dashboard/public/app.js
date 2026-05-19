@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadFunds() {
   try {
-    const res = await fetch('/api/funds');
+    const res = await fetch('api/funds');
     allFunds = await res.json();
     filteredFunds = allFunds;
     renderCurrentView();
@@ -218,7 +218,7 @@ function renderDashboard() {
 // ===== 待办提醒 =====
 async function loadPendingReminders() {
   try {
-    const res = await fetch('/api/reminders/pending');
+    const res = await fetch('api/reminders/pending');
     pendingReminders = await res.json();
     renderRemindersPanel();
     // Re-render current view to update dots
@@ -295,7 +295,7 @@ function toggleRemindersPanel() {
 
 async function completeReminder(fundId, reminderId) {
   try {
-    const res = await fetch(`/api/funds/${fundId}/reminders/${reminderId}`, {
+    const res = await fetch(`api/funds/${fundId}/reminders/${reminderId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'done' })
@@ -820,7 +820,7 @@ async function showDetail(id) {
       files.forEach(a => {
         const isObj = typeof a === 'object';
         const displayName = isObj ? a.originalName : a;
-        const filePath = isObj ? a.path : `/uploads/${a}`;
+        const filePath = isObj ? a.path : `uploads/${a}`;
         const ext = displayName.split('.').pop().toLowerCase();
         const icon = ['pdf'].includes(ext) ? '📄' : ['doc','docx'].includes(ext) ? '📝' : ['xls','xlsx'].includes(ext) ? '📊' : ['ppt','pptx'].includes(ext) ? '📽️' : '📎';
         html += `<a class="attachment-link" href="${filePath}" target="_blank" title="点击打开: ${displayName}">
@@ -1048,7 +1048,7 @@ function closeTagEditor() {
 
 async function saveTagsFromEditor(fundId) {
   try {
-    const res = await fetch(`/api/funds/${fundId}`, {
+    const res = await fetch(`api/funds/${fundId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tags: editorTags })
@@ -1141,7 +1141,7 @@ async function submitStrategyTypes(e, fundId) {
   });
 
   try {
-    const res = await fetch(`/api/funds/${fundId}`, {
+    const res = await fetch(`api/funds/${fundId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ strategies: updatedStrategies })
@@ -1232,7 +1232,7 @@ async function submitRating(e, fundId) {
   rating.grade = grade;
 
   try {
-    const res = await fetch(`/api/funds/${fundId}/rating`, {
+    const res = await fetch(`api/funds/${fundId}/rating`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rating)
@@ -1305,7 +1305,7 @@ async function submitStageTransition(e, fundId) {
   const fromStage = fund.stage;
 
   try {
-    const res = await fetch(`/api/funds/${fundId}`, {
+    const res = await fetch(`api/funds/${fundId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1397,7 +1397,7 @@ async function submitReminder(e, fundId) {
   const reminders = [...(fund.reminders || []), newReminder];
 
   try {
-    const res = await fetch(`/api/funds/${fundId}`, {
+    const res = await fetch(`api/funds/${fundId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reminders })
@@ -1427,7 +1427,7 @@ async function completeReminder(fundId, reminderId) {
   });
 
   try {
-    const res = await fetch(`/api/funds/${fundId}`, {
+    const res = await fetch(`api/funds/${fundId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reminders })
@@ -1451,7 +1451,7 @@ async function changeStage(id, newStage) {
   if (!confirm(`确认将「${fund.company.shortName || fund.company.name}」转为「${stageInfo.label}」？`)) return;
 
   try {
-    const res = await fetch(`/api/funds/${id}`, {
+    const res = await fetch(`api/funds/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ stage: newStage })
@@ -1658,7 +1658,7 @@ async function submitForm(e) {
   }
 
   try {
-    const res = await fetch('/api/funds', {
+    const res = await fetch('api/funds', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -1682,7 +1682,7 @@ async function handleFileUpload(e) {
   const formData = new FormData();
   for (let file of files) formData.append('files', file);
   try {
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const res = await fetch('api/upload', { method: 'POST', body: formData });
     const result = await res.json();
     if (result.success) {
       uploadedFiles.push(...result.files);
@@ -1701,7 +1701,7 @@ async function deleteFund(id) {
   if (!confirm(`确认删除「${fund.company.shortName || fund.company.name}」？此操作不可恢复。`)) return;
 
   try {
-    const res = await fetch(`/api/funds/${id}`, { method: 'DELETE' });
+    const res = await fetch(`api/funds/${id}`, { method: 'DELETE' });
     const result = await res.json();
     if (result.success !== false) {
       closeDetail();
@@ -1728,7 +1728,7 @@ function showQuickAddModal() {
     const formData = new FormData();
     for (let file of files) formData.append('files', file);
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const res = await fetch('api/upload', { method: 'POST', body: formData });
       const result = await res.json();
       if (result.success) {
         uploadedFiles.push(...result.files);
@@ -1780,7 +1780,7 @@ async function submitQuickAdd(e) {
   }
 
   try {
-    const res = await fetch('/api/funds', {
+    const res = await fetch('api/funds', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -1871,7 +1871,7 @@ async function startSmartParse() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await fetch('/api/parse-file', { method: 'POST', body: formData });
+      const res = await fetch('api/parse-file', { method: 'POST', body: formData });
       const result = await res.json();
       if (result.success) {
         smartParsedFiles.push(result.file);
@@ -2038,7 +2038,7 @@ async function submitSmartResult(e) {
   Object.keys(data.company).forEach(k => { if (data.company[k] === undefined) delete data.company[k]; });
 
   try {
-    const res = await fetch('/api/funds', {
+    const res = await fetch('api/funds', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
