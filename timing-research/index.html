@@ -317,17 +317,23 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="iceFactors"></div>
   </div>
 
-  <div class="card hero">
-    <div class="kicker">冰点研究摘要</div>
-    <h2>先把一句人话讲清楚：冰点不是孤立抄底技巧，而是股票择时框架里第一条已经跑通的命题</h2>
-    <div class="explain">当市场进入极端恐慌时，顺着修复去加股票敞口，是一条可以被数据验证的路径，而不是拍脑袋。详细回测、参数对比与最新页面，统一以独立报告为准。</div>
-    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
-      <a href="ice_point_report.html" target="_blank" style="display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,#245cff,#4f7dff 55%,#3ecfbf);color:#fff;text-decoration:none;font-weight:700">打开独立冰点报告</a>
+  <!-- ══ 冰点策略净值曲线 ══ -->
+  <div class="card" style="padding:20px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#e2e8f0">冰点策略净值</div>
+        <div style="font-size:12px;color:#64748b;margin-top:4px" id="iceNavMeta">2019-2026 | 双因子共振冰点 → 持有5天</div>
+      </div>
+      <div style="text-align:right" id="iceNavStats">-</div>
     </div>
+    <div id="iceNavChart" style="width:100%;height:320px"></div>
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-size:13px;color:#64748b;font-weight:600">交易记录</summary>
+      <div id="iceTradesTable" style="margin-top:8px;max-height:300px;overflow-y:auto"></div>
+    </details>
   </div>
 
-  <div class="card" style="padding:18px 20px">
-    <div class="note">首页这里先不再内嵌旧版冰点明细，避免和独立报告口径分叉。后续如果要重新接回首页，只接动态摘要，不再手拷一整块静态内容。</div>
+    </div>
   </div>
 
     </div>
@@ -1028,6 +1034,81 @@ fetch('data/factor_ic.json')
     .catch(e => {
       document.getElementById('iceStatus').textContent = '数据加载失败';
       document.getElementById('iceStatus').style.color = '#64748b';
+    });
+
+  // ══ 冰点净值曲线 ══
+  fetch('data/ice_nav.json')
+    .then(r => r.json())
+    .then(data => {
+      const dates = data.dates.map(d => d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8));
+      const iceNav = data.ice_nav;
+      const buyHold = data.buy_hold;
+
+      // 统计
+      const latestIce = iceNav[iceNav.length-1];
+      const latestBH = buyHold[buyHold.length-1];
+      const iceRet = ((latestIce - 1) * 100).toFixed(1);
+      const bhRet = ((latestBH - 1) * 100).toFixed(1);
+      document.getElementById('iceNavStats').innerHTML = `
+        <div style="font-size:12px;color:#64748b">策略 <span style="color:${iceRet>=0?'#4ade80':'#f87171'};font-weight:700">+${iceRet}%</span></div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">买入持有 +${bhRet}%</div>
+      `;
+      document.getElementById('iceNavMeta').textContent = `${dates[0]} ~ ${dates[dates.length-1]} | 共${data.trades.length}笔交易 | 双因子共振冰点 → 持有5天`;
+
+      // ECharts
+      const chart = echarts.init(document.getElementById('iceNavChart'));
+      chart.setOption({
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#1e293b',
+          borderColor: '#334155',
+          textStyle: { color: '#e2e8f0', fontSize: 12 },
+          formatter: function(params) {
+            let s = params[0].axisValue + '<br/>';
+            params.forEach(p => {
+              s += `${p.marker} ${p.seriesName}: ${p.value.toFixed(4)}<br/>`;
+            });
+            return s;
+          }
+        },
+        legend: { data: ['冰点策略', '买入持有'], textStyle: { color: '#94a3b8' }, top: 0 },
+        grid: { left: 50, right: 20, top: 36, bottom: 30 },
+        xAxis: {
+          type: 'category',
+          data: dates,
+          axisLabel: { color: '#64748b', fontSize: 10, formatter: v => v.slice(0,7) },
+          axisLine: { lineStyle: { color: '#334155' } },
+          splitLine: { show: false }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: { color: '#64748b', fontSize: 11 },
+          axisLine: { show: false },
+          splitLine: { lineStyle: { color: '#1e293b' } }
+        },
+        series: [
+          { name: '冰点策略', type: 'line', data: iceNav, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#4a9eff' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{offset:0,color:'rgba(74,158,255,0.15)'},{offset:1,color:'rgba(74,158,255,0)'}] } } },
+          { name: '买入持有', type: 'line', data: buyHold, smooth: true, symbol: 'none', lineStyle: { width: 1.5, color: '#64748b', type: 'dashed' } }
+        ]
+      });
+      window.addEventListener('resize', () => chart.resize());
+
+      // 交易记录表
+      if (data.trades && data.trades.length > 0) {
+        let thtml = '<table style="width:100%;font-size:12px;color:#94a3b8;border-collapse:collapse">';
+        thtml += '<tr style="border-bottom:1px solid #1e293b"><th style="text-align:left;padding:6px;color:#64748b">买入</th><th style="text-align:left;padding:6px;color:#64748b">卖出</th><th style="text-align:right;padding:6px;color:#64748b">收益</th></tr>';
+        data.trades.forEach(t => {
+          const ed = t.entry_date, xd = t.exit_date;
+          const ret = t.return;
+          const color = ret >= 0 ? '#4ade80' : '#f87171';
+          thtml += `<tr style="border-bottom:1px solid #0f172a"><td style="padding:6px">${ed.slice(0,4)}-${ed.slice(4,6)}-${ed.slice(6)}</td><td style="padding:6px">${xd.slice(0,4)}-${xd.slice(4,6)}-${xd.slice(6)}</td><td style="text-align:right;padding:6px;color:${color};font-weight:600">${ret>=0?'+':''}${ret}%</td></tr>`;
+        });
+        thtml += '</table>';
+        document.getElementById('iceTradesTable').innerHTML = thtml;
+      }
+    })
+    .catch(e => {
+      document.getElementById('iceNavStats').textContent = '净值数据加载失败';
     });
 })();
 </script>
