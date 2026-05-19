@@ -1098,7 +1098,7 @@ fetch('data/factor_ic.json')
                 const ed = t.entry_date;
                 const dateLabel = ed.slice(0,4)+'-'+ed.slice(4,6)+'-'+ed.slice(6);
                 const idx = dates.indexOf(dateLabel);
-                return idx >= 0 ? { name: dateLabel, xAxis: idx, yAxis: iceNav[idx] } : null;
+                return idx >= 0 ? { name: dateLabel, coord: [dateLabel, iceNav[idx]] } : null;
               }).filter(Boolean)
             }
           },
