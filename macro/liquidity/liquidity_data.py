@@ -47,7 +47,11 @@ def get_last_date(csv_path, date_col):
     df = read_csv(csv_path)
     if df.empty:
         return None
-    return str(df[date_col].max())
+    df[date_col] = df[date_col].astype(str).str.replace('.0', '', regex=False)
+    df = df[df[date_col].str.match(r'^\d{8}$', na=False)]
+    if df.empty:
+        return None
+    return df[date_col].max()
 
 
 def save_incremental(csv_path, new_data, date_col):
@@ -56,7 +60,8 @@ def save_incremental(csv_path, new_data, date_col):
         return
     old = read_csv(csv_path)
     combined = pd.concat([old, new_data])
-    combined[date_col] = combined[date_col].astype(str)
+    combined[date_col] = combined[date_col].astype(str).str.replace('.0', '', regex=False)
+    combined = combined[combined[date_col].str.match(r'^\d{8}$', na=False)]
     combined = combined.drop_duplicates(subset=[date_col]).sort_values(date_col)
     combined.to_csv(csv_path, index=False)
     print(f"  保存 {len(combined)} 条 (新增 {len(combined) - len(old)})")

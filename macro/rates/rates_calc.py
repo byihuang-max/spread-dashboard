@@ -33,8 +33,12 @@ def calc():
 
     # ── 中国10Y ──
     if not cn10y.empty:
+        # cn10y 列优先，fallback 到 yield 列
         cn10y['cn10y'] = pd.to_numeric(cn10y['cn10y'], errors='coerce')
-        cn10y = cn10y.dropna().sort_values('trade_date')
+        if 'yield' in cn10y.columns:
+            cn10y['yield'] = pd.to_numeric(cn10y['yield'], errors='coerce')
+            cn10y['cn10y'] = cn10y['cn10y'].fillna(cn10y['yield'])
+        cn10y = cn10y.dropna(subset=['cn10y']).sort_values('trade_date')
         result['cn10y'] = [{'date': fmt_date(int(r['trade_date'])), 'value': round(float(r['cn10y']), 4)}
                            for _, r in cn10y.iterrows()]
 
@@ -53,7 +57,7 @@ def calc():
             d = str(int(r['date']))
             us_val = float(r['y10'])
             cn_val = cn_dict.get(d)
-            if cn_val is not None:
+            if cn_val is not None and pd.notna(cn_val):
                 spread_data.append({'date': fmt_date(d), 'spread': round(float(cn_val) - us_val, 4)})
         result['spread'] = spread_data
 

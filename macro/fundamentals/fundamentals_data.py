@@ -10,7 +10,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 TUSHARE_TOKEN = '8a2c71af4fbc6faf83da2ad4404c1c47f41983562cc9fb2fa6dd4fae'
 TUSHARE_URL = 'https://api.tushare.pro'
-MCP_CONFIG = '/Users/apple/.openclaw/extensions/ifind-finance-data/mcp_config.json'
+MCP_CONFIG = os.path.expanduser('~/.openclaw/extensions/ifind-finance-data/mcp_config.json')
 MCP_BASE = 'https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-edb-mcp'
 
 MCP_FIELDS = {
