@@ -150,6 +150,7 @@ MODULE_REGISTRY = {
             ('alerts', 'us_alerts_calc.py'),
         ],
         'aliases': ['us-alerts'],
+        'am_early': True,  # 隔夜美股数据，盘前需要
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
@@ -200,6 +201,7 @@ MODULE_REGISTRY = {
             ('macro/fundamentals', 'fundamentals_calc.py'),
         ],
         'aliases': ['fundamentals'],
+        'am_early': True,  # 宏观月频数据，月初早上发布
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
@@ -210,6 +212,7 @@ MODULE_REGISTRY = {
             ('macro/global_calendar', 'calendar_calc.py'),
         ],
         'aliases': ['global-calendar', 'calendar'],
+        'am_early': True,  # 当天事件日历
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
@@ -222,6 +225,7 @@ MODULE_REGISTRY = {
             ('macro/meme/antifragile', 'render_html.py'),
         ],
         'aliases': ['antifragile'],
+        'am_early': True,  # 含海外资产（SOXX/VIX/黄金/原油），隔夜数据
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
@@ -230,6 +234,7 @@ MODULE_REGISTRY = {
         'scripts': [
             ('daily_report/meme交易', 'narrative_monitor.py'),
         ],
+        'am_early': True,  # 含海外叙事，盘前需要
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
@@ -239,6 +244,7 @@ MODULE_REGISTRY = {
             ('daily_report/meme交易', 'overseas_digest.py'),
         ],
         'aliases': ['overseas-digest', 'overseas-news'],
+        'am_early': True,  # 隔夜海外要闻
         'include_in_update_all': True,
         'include_in_refresh_server': False,
     },
@@ -316,6 +322,7 @@ MODULE_REGISTRY = {
             ('macro/halo_trade', 'china_halo.py'),
         ],
         'aliases': ['halo'],
+        'am_early': True,  # 含海外市场（高盛HALO+重资产范式），隔夜数据
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },

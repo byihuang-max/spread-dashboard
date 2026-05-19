@@ -4,15 +4,17 @@ GAMT 投研看板 — 一键更新脚本
 跑一次完成：数据拉取(CSV+JSON) → 指标计算 → 注入HTML → git push
 
 用法：
-  python3 update_all.py                     # 早间主更新（默认，只跑常规模块）
-  python3 update_all.py --phase am          # 同上：早间主更新
-  python3 update_all.py --phase pm          # 晚间全量更新（先常规，后晚到数据）
-  python3 update_all.py --late-only         # 只跑晚到数据（强势股+耐心资本+择时因子）
+  python3 update_all.py                     # 盘前模式（默认，只跑海外/宏观等 am_early 模块）
+  python3 update_all.py --phase am          # 同上：盘前模式
+  python3 update_all.py --phase close       # 收盘后模式（跑全部常规模块）
+  python3 update_all.py --phase pm          # 全量模式（常规+晚到数据）
+  python3 update_all.py --late-only         # 只跑晚到数据（耐心资本→强势股→择时因子→并购）
   python3 update_all.py --module quant_stock  # 只更新某个模块（不受分层影响）
   python3 update_all.py --no-push           # 只更新数据，不推送
 
 分层逻辑：
-  - 默认 / --phase am：只跑常规模块，跳过 late_data=True
+  - --phase am（默认）：只跑 am_early=True 的模块（海外/宏观/日历/叙事，7个）
+  - --phase close：跑全部常规模块（收盘后 A 股数据已入库）
   - --phase pm：先跑常规模块，再顺序跑晚到数据模块
   - --late-only：只跑 late_data=True 的模块
   - --module：指定模块，不受分层影响
@@ -215,6 +217,7 @@ def resolve_modules(args):
 
     normal_modules = [k for k in MODULES.keys() if not MODULE_REGISTRY.get(k, {}).get('late_data')]
     late_modules = [k for k, v in MODULE_REGISTRY.items() if v.get('late_data') and v.get('include_in_update_all')]
+    am_early_modules = [k for k in normal_modules if MODULE_REGISTRY.get(k, {}).get('am_early')]
 
     if args.module:
         log(f"单模块模式：只更新 {args.module}")
@@ -230,15 +233,20 @@ def resolve_modules(args):
         log(f"晚间全量模式：先常规后晚到，共 {len(modules_to_run)} 个模块")
         return modules_to_run, 'pm'
 
-    log(f"早间主更新模式：跳过晚到数据模块")
-    return normal_modules, 'am'
+    if phase == 'am':
+        log(f"盘前模式：只跑海外/宏观等盘前模块（{len(am_early_modules)} 个）")
+        return am_early_modules, 'am'
+
+    # phase == 'close': 收盘后跑全部常规模块
+    log(f"收盘后模式：跑全部常规模块（{len(normal_modules)} 个）")
+    return normal_modules, 'close'
 
 def main():
     parser = argparse.ArgumentParser(description='GAMT 投研看板一键更新')
     parser.add_argument('--no-push', action='store_true', help='只更新数据，不推送')
     parser.add_argument('--module', '-m', type=str, help='只更新指定模块')
     parser.add_argument('--late-only', action='store_true', help='只更新晚到数据模块（momentum_stock + patient_capital + timing_factors）')
-    parser.add_argument('--phase', choices=['am', 'pm'], default='am', help='am=早间主更新（默认），pm=晚间全量更新（先常规后晚到）')
+    parser.add_argument('--phase', choices=['am', 'close', 'pm'], default='am', help='am=盘前（海外/宏观），close=收盘后（全部常规），pm=全量（常规+晚到）')
     parser.add_argument('--list', action='store_true', help='列出所有模块')
     args = parser.parse_args()
 
