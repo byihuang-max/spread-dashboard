@@ -39,7 +39,7 @@ rsync -az --delete $RSYNC_EXCLUDE \
 
 if [ $? -eq 0 ]; then
   echo "[$(date '+%H:%M:%S')] ✅ 同步完成"
-  ssh -o ConnectTimeout=5 "$REMOTE" 'sudo systemctl restart gamt' 2>/dev/null
+  ssh -o ConnectTimeout=5 "$REMOTE" 'sudo systemctl restart gamt && chmod -R o+rX ~/gamt-dashboard/' 2>/dev/null
   echo "[$(date '+%H:%M:%S')] ✅ 后端已重启"
   exit 0
 fi
@@ -52,7 +52,7 @@ rsync -az --delete $RSYNC_EXCLUDE \
 
 if [ $? -eq 0 ]; then
   echo "[$(date '+%H:%M:%S')] ✅ 同步完成（端口2222）"
-  ssh -p 2222 -o ConnectTimeout=5 "$REMOTE" 'sudo systemctl restart gamt' 2>/dev/null
+  ssh -p 2222 -o ConnectTimeout=5 "$REMOTE" 'sudo systemctl restart gamt && chmod -R o+rX ~/gamt-dashboard/' 2>/dev/null
   echo "[$(date '+%H:%M:%S')] ✅ 后端已重启"
   exit 0
 fi
