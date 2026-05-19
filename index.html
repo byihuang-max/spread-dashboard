@@ -397,7 +397,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
       <div class="nav-item" id="navTimingResearch" data-module="timing_factors" style="display:none" onclick="window.open('timing-research/','_blank')">择时研究</div>
-      <div class="nav-item" id="navChipQuery" data-module="chip_query" style="display:none" onclick="window.open('chip_query/chip_query.html','_blank')">个股筹码查询</div>
+      <div class="nav-item" id="navChipQuery" data-module="chip_query" style="display:none" onclick="window.open('skills/stock-monitor/merger_pool.html','_blank')">并购舆情监控</div>
       <div class="nav-item" id="navFinancialRisk" data-module="financial_risk" style="display:none" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">财报预期风险 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundAsset" data-module="fund_asset" style="display:none" onclick="window.open('fund-asset-recommend/fund_asset.html','_blank')">团队基金优选 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundResearch" style="display:none" onclick="window.open('fund_analysis/fund_research.html','_blank')">公募基金研究 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
@@ -3024,35 +3024,11 @@ function initCbCharts() {
       </div>
     </div><!-- /page-update-log -->
 
-    <!-- ══ 个股筹码查询 ══ -->
-    <div class="module-page" id="page-chip-query">
-      <div style="max-width:1000px;margin:0 auto">
-        <div class="card" style="margin-bottom:24px">
-          <h2 style="font-size:20px;margin-bottom:16px">个股筹码分布查询</h2>
-          <p style="color:#8b92a5;font-size:14px;margin-bottom:20px">输入股票代码，查询近3个月筹码成本分布、获利盘/套牢盘结构、资金异动和基本面标签</p>
-          <div style="display:flex;gap:12px;max-width:500px">
-            <input type="text" id="chipCodeInput" placeholder="如 600519.SH 或 300750.SZ" style="flex:1;background:#0e1a2f;border:1px solid #2a3a58;color:#e2e8f0;padding:12px 16px;border-radius:10px;font-size:14px" />
-            <button id="chipSearchBtn" onclick="chipSearch()" style="background:linear-gradient(135deg,#245cff,#4f7dff);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">查询</button>
-          </div>
-        </div>
-        <div id="chipLoading" style="display:none;text-align:center;padding:40px;color:#8b92a5"><div style="font-size:28px;margin-bottom:10px;animation:chipPulse 1.2s infinite ease-in-out">⏳</div><div style="font-size:16px;color:#e2e8f0;margin-bottom:6px">正在查询个股筹码…</div><div style="font-size:13px;color:#8b92a5">预计 10–30 秒，请稍等</div></div>
-        <div id="chipError" style="display:none;background:#7f1d1d;border:1px solid #991b1b;color:#fecaca;padding:16px;border-radius:12px;text-align:center;margin-bottom:20px"></div>
-        <div id="chipResult" style="display:none"></div>
-      </div>
-      <div style="max-width:1000px;margin:24px auto 0">
-        <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;border:1px solid rgba(255,127,134,.25);background:rgba(127,29,29,.12)" onclick="window.open('financial_risk/financial_risk_factor.html','_blank')">
-          <div>
-            <div style="font-size:16px;font-weight:700;color:#ffd5d8;margin-bottom:6px">⚠ 财报预期风险看板</div>
-            <div style="font-size:13px;color:#9ca3af;line-height:1.7">行业财报风险因子地图 · 8个行业 · 257只剔除项 · 季度频率<br>不是垃圾股榜单，而是行业风险如何被定义的因子化解释</div>
-          </div>
-          <div style="font-size:22px;color:#ff7f86;flex-shrink:0">→</div>
-        </div>
-      </div>
-    </div><!-- /page-chip-query -->
+    <!-- ══ 并购舆情监控（跳转外部页面，无内嵌内容） ══ -->
 
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style_spread':'风格轧差','quant_stock':'策略环境适配度','crowding':'资金流与微观结构','macro_liquidity':'宏观与流动性','chain_prosperity':'中观景气','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'个股筹码查询','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选'};
+  var titles={'overview':'仪表盘','style_spread':'风格轧差','quant_stock':'策略环境适配度','crowding':'资金流与微观结构','macro_liquidity':'宏观与流动性','chain_prosperity':'中观景气','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'并购舆情监控','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -3072,8 +3048,7 @@ function initCbCharts() {
     'macro_liquidity':'page-macro',
     'chain_prosperity':'page-meso',
     'alerts':'page-alerts',
-    'update-log':'page-update-log',
-    'chip_query':'page-chip-query'
+    'update-log':'page-update-log'
   };
 
   function activateModuleTab(mod,strat){
@@ -3713,7 +3688,7 @@ function showApp(user){
       var tr=document.getElementById('navTimingResearch');
       if(tr) tr.style.display='';
     }
-    // 仅管理员：显示个股筹码查询
+    // 仅管理员：显示并购舆情监控
     if(user.is_admin){
       var cq=document.getElementById('navChipQuery');
       if(cq) cq.style.display='';
@@ -7178,94 +7153,6 @@ const chartOpts = {
     }
   });
 })();
-
-// ═══ 个股筹码查询 ═══
-function chipFmtMoney(v){if(v===null||v===undefined)return'N/A';v=parseFloat(v);if(Math.abs(v)>=1e8)return(v/1e8).toFixed(2)+'亿';if(Math.abs(v)>=1e4)return(v/1e4).toFixed(2)+'万';return v.toFixed(2)}
-function chipFmtPct(v){if(v===null||v===undefined)return'N/A';return(v*100).toFixed(1)+'%'}
-function chipSearch(){
-  console.log('[chipSearch] 开始查询');
-  var code=document.getElementById('chipCodeInput').value.trim().toUpperCase();
-  console.log('[chipSearch] 输入代码:', code);
-  if(!code){console.log('[chipSearch] 代码为空，退出');return;}
-  // 自动补后缀
-  if(/^\d{6}$/.test(code)){
-    if(code.startsWith('6'))code+='.SH';
-    else if(code.startsWith('0')||code.startsWith('3'))code+='.SZ';
-    else if(code.startsWith('8')||code.startsWith('4'))code+='.BJ';
-    document.getElementById('chipCodeInput').value=code;
-    console.log('[chipSearch] 自动补后缀:', code);
-  }
-  console.log('[chipSearch] 显示 loading');
-  document.getElementById('chipLoading').style.display='block';
-  document.getElementById('chipError').style.display='none';
-  document.getElementById('chipResult').style.display='none';
-  document.getElementById('chipSearchBtn').disabled=true;document.getElementById('chipSearchBtn').textContent='查询中…';
-  var url='/api/chip_query?code='+encodeURIComponent(code);
-  console.log('[chipSearch] 请求 URL:', url);
-  fetch(url,{headers:typeof getAuthHeaders==='function'?getAuthHeaders():{}})
-    .then(function(r){console.log('[chipSearch] 收到响应:', r.status);return r.json()})
-    .then(function(d){
-      console.log('[chipSearch] 解析数据:', d);
-      document.getElementById('chipLoading').style.display='none';
-      document.getElementById('chipSearchBtn').disabled=false;document.getElementById('chipSearchBtn').textContent='查询';
-      if(!d.success){chipShowErr(d.error||'查询失败');return}
-      chipShowRes(d);
-    })
-    .catch(function(e){
-      console.error('[chipSearch] 错误:', e);
-      document.getElementById('chipLoading').style.display='none';
-      document.getElementById('chipSearchBtn').disabled=false;document.getElementById('chipSearchBtn').textContent='查询';
-      chipShowErr('网络错误: '+e.message);
-    });
-}
-function chipShowErr(msg){
-  document.getElementById('chipError').textContent=msg;
-  document.getElementById('chipError').style.display='block';
-  document.getElementById('chipResult').style.display='none';
-}
-function chipShowRes(d){
-  var c=d.chip,mf=d.moneyflow,b=d.basics,f=d.fundamentals||{};
-  var html='<div style="text-align:center;margin-bottom:20px"><span style="font-size:22px;font-weight:700;color:#e2e8f0">'+d.stock_name+'（'+d.ts_code+'）</span><span style="font-size:13px;color:#70809a;margin-left:12px">'+d.date_range+'</span></div>';
-  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">';
-  html+='<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:#8b92a5;margin-bottom:6px">当前价</div><div style="font-size:24px;font-weight:700;color:#5daeff">'+c.current_price+'</div></div>';
-  html+='<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:#8b92a5;margin-bottom:6px">平均成本</div><div style="font-size:24px;font-weight:700;color:#59e0c5">'+c.avg_cost+'</div></div>';
-  html+='<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:#8b92a5;margin-bottom:6px">50%成本位</div><div style="font-size:24px;font-weight:700;color:#9f8bff">'+c.median_cost+'</div></div>';
-  html+='<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:#8b92a5;margin-bottom:6px">主筹码峰</div><div style="font-size:24px;font-weight:700;color:#fbbf24">'+c.peak_price+'</div></div>';
-  html+='</div>';
-  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">';
-  html+='<div class="card" style="padding:20px"><div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px">筹码结构</div>';
-  html+=chipRow('70%筹码区间',c.range_70?c.range_70[0]+' ~ '+c.range_70[1]:'N/A');
-  html+=chipRow('90%筹码区间',c.range_90?c.range_90[0]+' ~ '+c.range_90[1]:'N/A');
-  html+=chipRow('获利盘',chipFmtPct(c.profit_ratio),'#59e0c5');
-  html+=chipRow('套牢盘',chipFmtPct(c.locked_ratio),'#f87171');
-  html+=chipRow('偏离主峰',c.peak_distance+'%');
-  html+='</div>';
-  html+='<div>';
-  html+='<div class="card" style="padding:20px;margin-bottom:16px"><div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px">资金异动</div>';
-  html+=chipRow('近5日主力净流入',chipFmtMoney(mf.main_net_5d),mf.main_net_5d>0?'#59e0c5':'#f87171');
-  html+=chipRow('近10日主力净流入',chipFmtMoney(mf.main_net_10d),mf.main_net_10d>0?'#59e0c5':'#f87171');
-  html+='</div>';
-  html+='<div class="card" style="padding:20px"><div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px">基本面</div>';
-  html+=chipRow('PE(TTM)',b.pe_ttm||'N/A');
-  html+=chipRow('PB',b.pb||'N/A');
-  html+=chipRow('总市值',chipFmtMoney(b.total_mv?b.total_mv*10000:null));
-  html+='</div></div></div>';
-  html+='<div class="card" style="margin-top:20px;padding:20px"><div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px">iFind 基本面增强</div>';
-  html+=chipRow('公司摘要', f.summary_text ? '已获取' : '暂无');
-  html+=chipRow('财务指标', f.financials_text ? '已获取' : '暂无');
-  html+=chipRow('股票信息', f.info_text ? '已获取' : '暂无');
-  if(f.summary_text) html+='<div style="margin-top:12px;color:#cbd5e1;font-size:13px;line-height:1.8;white-space:pre-wrap">'+String(f.summary_text).slice(0,300)+'</div>';
-  if(f.info_text) html+='<div style="margin-top:12px;color:#94a3b8;font-size:12px;line-height:1.8;white-space:pre-wrap">'+String(f.info_text).slice(0,300)+'</div>';
-  html+='</div>';
-  html+='<div class="card" style="margin-top:20px;padding:14px;color:#8b92a5;font-size:13px;line-height:1.8"><b>口径说明：</b>近3个月日线数据，按每日换手率对历史筹码做衰减，新增成交按当日价格区间分布。输出为筹码迁移近似结果，非交易所级逐笔持仓重建。主力净流入为超大单+大单净额口径。</div>';
-  document.getElementById('chipResult').innerHTML=html;
-  document.getElementById('chipResult').style.display='block';
-}
-function chipRow(label,val,color){
-  return '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span style="color:#8b92a5;font-size:13px">'+label+'</span><span style="color:'+(color||'#e2e8f0')+';font-weight:600;font-size:14px">'+val+'</span></div>';
-}
-(function(){var inp=document.getElementById('chipCodeInput');if(inp)inp.addEventListener('keypress',function(e){if(e.key==='Enter')chipSearch()})})();
-</script>
 
 <script>
 // ===== 策略 tab 切换 =====
