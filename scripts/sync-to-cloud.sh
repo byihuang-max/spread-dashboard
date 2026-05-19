@@ -25,6 +25,9 @@ RSYNC_EXCLUDE="\
 --exclude=server/users.db \
 --exclude=server/users.db-shm \
 --exclude=server/users.db-wal \
+--exclude=dd-dashboard/data/funds.json \
+--exclude=dd-dashboard/uploads/ \
+--exclude=dd-dashboard/node_modules/ \
 "
 
 echo "[$(date '+%H:%M:%S')] 同步到云端..."

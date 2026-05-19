@@ -1,0 +1,15 @@
+[Unit]
+Description=GAMT DD Dashboard (Due Diligence)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/gamt-dashboard/dd-dashboard
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

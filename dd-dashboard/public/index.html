@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAMT 尽调看板</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">📋</span>
+      <span class="logo-text">GAMT尽调库</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">总览</div>
+        <a class="nav-item active" data-view="pipeline" onclick="switchView('pipeline')">
+          <span class="nav-icon">🔄</span>管线看板
+        </a>
+        <a class="nav-item" data-view="dashboard" onclick="switchView('dashboard')">
+          <span class="nav-icon">📊</span>仪表盘
+        </a>
+        <a class="nav-item" data-view="list" onclick="switchView('list')">
+          <span class="nav-icon">📁</span>全部管理人
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">策略分类</div>
+        <a class="nav-item" onclick="filterByStrategy('指数增强')">
+          <span class="nav-icon">⚡</span>指数增强
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('量化选股')">
+          <span class="nav-icon">📈</span>量化选股/多头
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('市场中性')">
+          <span class="nav-icon">🛡️</span>市场中性/对冲
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('CTA')">
+          <span class="nav-icon">🌾</span>CTA
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('主观多头')">
+          <span class="nav-icon">🧠</span>主观多头/择时
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('期权')">
+          <span class="nav-icon">🎯</span>期权策略
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('可转债')">
+          <span class="nav-icon">🔄</span>可转债
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('黄金')">
+          <span class="nav-icon">🥇</span>黄金/贵金属
+        </a>
+        <a class="nav-item" onclick="filterByStrategy('宏观')">
+          <span class="nav-icon">🌐</span>宏观/大类资产
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">管理</div>
+        <a class="nav-item" onclick="showSmartUpload()">
+          <span class="nav-icon">🤖</span>智能录入
+        </a>
+        <a class="nav-item" onclick="showQuickAddModal()">
+          <span class="nav-icon">⚡</span>快速录入
+        </a>
+        <a class="nav-item" onclick="showAddForm()">
+          <span class="nav-icon">➕</span>完整录入
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <span>GAMT Team</span>
+      <span class="version">v2.0</span>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <!-- 顶部栏 -->
+    <header class="topbar">
+      <div class="topbar-title" id="pageTitle">管线看板</div>
+      <div class="topbar-right">
+        <input type="text" id="searchInput" class="search-box" placeholder="搜索管理人、策略、基金经理..." />
+        <div class="topbar-user">
+          <span class="user-avatar">梦</span>
+          <span class="user-name">黄晴梦</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 管线看板视图 (Pipeline/Kanban) -->
+    <div id="view-pipeline" class="view active">
+      <div class="pipeline-container" id="pipelineContainer"></div>
+    </div>
+
+    <!-- 仪表盘视图 -->
+    <div id="view-dashboard" class="view">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="section-title">最近尽调</div>
+      <div class="funds-table-wrap">
+        <table class="funds-table" id="fundsTable">
+          <thead>
+            <tr>
+              <th>管理人</th>
+              <th>核心策略</th>
+              <th>管理规模</th>
+              <th>风险等级</th>
+              <th>阶段</th>
+              <th>最近更新</th>
+            </tr>
+          </thead>
+          <tbody id="fundsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 列表视图 -->
+    <div id="view-list" class="view">
+      <div class="filters-bar">
+        <select id="filterStrategy" onchange="applyFilters()">
+          <option value="">全部策略</option>
+          <option value="指数增强">指数增强</option>
+          <option value="量化选股">量化选股/多头</option>
+          <option value="市场中性">市场中性/对冲</option>
+          <option value="CTA">CTA（量化+主观）</option>
+          <option value="主观多头">主观多头/择时</option>
+          <option value="期权">期权策略</option>
+          <option value="可转债">可转债</option>
+          <option value="黄金">黄金/贵金属</option>
+          <option value="宏观">宏观/大类资产</option>
+          <option value="固收">固收+</option>
+        </select>
+        <select id="filterStage" onchange="applyFilters()">
+          <option value="">全部阶段</option>
+          <option value="initial">初步接触</option>
+          <option value="communicating">沟通中</option>
+          <option value="diligenced">已尽调</option>
+          <option value="approved">已入库</option>
+          <option value="invested">已投资</option>
+          <option value="rejected">已否决</option>
+        </select>
+        <select id="filterRisk" onchange="applyFilters()">
+          <option value="">全部风险</option>
+          <option value="高">高风险项</option>
+          <option value="中">中风险项</option>
+        </select>
+        <button class="btn-ghost" onclick="resetFilters()">重置</button>
+      </div>
+      <div class="funds-grid" id="fundsGrid"></div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div id="detailModal" class="modal">
+      <div class="modal-overlay" onclick="closeDetail()"></div>
+      <div class="modal-panel modal-panel-wide">
+        <div class="modal-header">
+          <div class="modal-header-left">
+            <h2 id="detailTitle"></h2>
+            <span class="stage-badge" id="detailStage"></span>
+          </div>
+          <div class="modal-header-right">
+            <button class="btn-ghost btn-sm" id="btnEditStage" onclick="showStageEditor()">切换阶段</button>
+            <button class="modal-close" onclick="closeDetail()">✕</button>
+          </div>
+        </div>
+        <div class="modal-body" id="detailContent"></div>
+      </div>
+    </div>
+
+    <!-- 快速录入弹窗 -->
+    <div id="quickAddModal" class="modal">
+      <div class="modal-overlay" onclick="closeQuickAdd()"></div>
+      <div class="modal-panel modal-panel-sm">
+        <div class="modal-header">
+          <h2>⚡ 快速录入</h2>
+          <button class="modal-close" onclick="closeQuickAdd()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="form-hint">只需填写基本信息，其他内容后续随时补充。</p>
+          <form id="quickAddForm" onsubmit="submitQuickAdd(event)">
+            <div class="form-group">
+              <label>管理人名称 *</label>
+              <input type="text" name="name" required placeholder="如：京盈智投" />
+            </div>
+            <div class="form-group">
+              <label>策略方向 *</label>
+              <select name="strategyType" required>
+                <option value="">选择策略类型</option>
+                <option value="市场中性">市场中性</option>
+                <option value="量化多头">量化多头</option>
+                <option value="量化CTA">量化CTA</option>
+                <option value="指数增强">指数增强</option>
+                <option value="主观多头">主观多头</option>
+                <option value="多策略">多策略</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>当前阶段</label>
+              <select name="stage">
+                <option value="initial">初步接触（收到材料）</option>
+                <option value="communicating">沟通中（已电话/线上）</option>
+                <option value="diligenced">已尽调（现场完成）</option>
+                <option value="approved">已入库</option>
+                <option value="invested">已投资</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>信息来源 / 备注</label>
+              <textarea name="note" rows="3" placeholder="如：朋友推荐 / 路演认识 / 渠道介绍..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>标签（逗号分隔）</label>
+              <input type="text" name="tags" placeholder="量化CTA, 北京, Jump背景" />
+            </div>
+            <div class="form-group">
+              <label>附件</label>
+              <input type="file" id="quickFileUpload" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+              <div id="quickUploadedFiles" class="uploaded-list"></div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-ghost" onclick="closeQuickAdd()">取消</button>
+              <button type="submit" class="btn-primary">录入</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 完整录入弹窗 -->
+    <div id="addModal" class="modal">
+      <div class="modal-overlay" onclick="closeAddForm()"></div>
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h2>完整录入尽调记录</h2>
+          <button class="modal-close" onclick="closeAddForm()">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="addForm" onsubmit="submitForm(event)">
+            <div class="form-section-title">公司信息</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>管理人全称 *</label>
+                <input type="text" name="company.name" required />
+              </div>
+              <div class="form-group">
+                <label>简称</label>
+                <input type="text" name="company.shortName" />
+              </div>
+              <div class="form-group">
+                <label>成立时间</label>
+                <input type="text" name="company.established" placeholder="2012" />
+              </div>
+              <div class="form-group">
+                <label>实控人</label>
+                <input type="text" name="company.controller" />
+              </div>
+              <div class="form-group">
+                <label>管理规模</label>
+                <input type="text" name="company.actualScale" placeholder="10亿" />
+              </div>
+              <div class="form-group">
+                <label>团队人数</label>
+                <input type="number" name="company.teamSize" />
+              </div>
+              <div class="form-group">
+                <label>注册资本</label>
+                <input type="text" name="company.registeredCapital" placeholder="1000万" />
+              </div>
+              <div class="form-group">
+                <label>办公地址</label>
+                <input type="text" name="company.location" />
+              </div>
+            </div>
+
+            <div class="form-section-title">尽调信息</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>尽调日期</label>
+                <input type="date" name="dueDiligence.date" />
+              </div>
+              <div class="form-group">
+                <label>尽调方式</label>
+                <input type="text" name="dueDiligence.method" placeholder="现场路演 / 电话 / 材料初审" />
+              </div>
+              <div class="form-group">
+                <label>尽调人</label>
+                <input type="text" name="dueDiligence.analyst" value="GAMT团队-黄晴梦" />
+              </div>
+              <div class="form-group">
+                <label>当前阶段</label>
+                <select name="stage">
+                  <option value="initial">初步接触</option>
+                  <option value="communicating">沟通中</option>
+                  <option value="diligenced" selected>已尽调</option>
+                  <option value="approved">已入库</option>
+                  <option value="invested">已投资</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section-title">策略与业绩</div>
+            <div class="form-group full">
+              <label>核心策略类型</label>
+              <select name="strategyType">
+                <option value="">选择策略类型</option>
+                <option value="市场中性">市场中性</option>
+                <option value="量化多头">量化多头</option>
+                <option value="量化CTA">量化CTA</option>
+                <option value="指数增强">指数增强</option>
+                <option value="主观多头">主观多头</option>
+                <option value="多策略">多策略</option>
+              </select>
+            </div>
+
+            <div class="form-section-title">评价</div>
+            <div class="form-group full">
+              <label>投资亮点（每行一个）</label>
+              <textarea name="highlights" rows="4" placeholder="独特的Alpha来源&#10;优异的持有体验"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>风险点（格式：高|内容 或 中|内容，每行一个）</label>
+              <textarea name="risks" rows="4" placeholder="高|关键人风险&#10;中|业绩可持续性"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>标签（逗号分隔）</label>
+              <input type="text" name="tags" placeholder="量化中性, 低相关, 小规模红利期" />
+            </div>
+            <div class="form-group full">
+              <label>附件上传</label>
+              <input type="file" id="fileUpload" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+              <div id="uploadedFiles" class="uploaded-list"></div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-ghost" onclick="closeAddForm()">取消</button>
+              <button type="submit" class="btn-primary">保存</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 阶段切换弹窗 -->
+    <div id="stageModal" class="modal">
+      <div class="modal-overlay" onclick="closeStageEditor()"></div>
+      <div class="modal-panel modal-panel-xs">
+        <div class="modal-header">
+          <h2>切换阶段</h2>
+          <button class="modal-close" onclick="closeStageEditor()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="stage-options" id="stageOptions"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 智能录入弹窗 -->
+    <div id="smartUploadModal" class="modal">
+      <div class="modal-overlay" onclick="closeSmartUpload()"></div>
+      <div class="modal-panel modal-panel-wide">
+        <div class="modal-header">
+          <h2>🤖 智能录入</h2>
+          <button class="modal-close" onclick="closeSmartUpload()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="smartUploadStep1">
+            <p class="form-hint">上传尽调纪要、路演PPT、产品说明书等材料，系统自动提取关键信息并填充表单。</p>
+            <div class="smart-upload-zone" id="smartDropZone">
+              <div class="upload-icon">📂</div>
+              <div class="upload-text">拖拽文件到此处，或点击选择</div>
+              <div class="upload-hint">支持 PDF、Word、Excel、PPT</div>
+              <input type="file" id="smartFileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.md" style="display:none" />
+            </div>
+            <div id="smartFileList" class="smart-file-list"></div>
+            <div class="form-actions" id="smartParseActions" style="display:none;">
+              <button type="button" class="btn-primary" onclick="startSmartParse()">🤖 开始解析</button>
+            </div>
+          </div>
+          <div id="smartUploadStep2" style="display:none;">
+            <div class="smart-parsing-status" id="smartParsingStatus">
+              <div class="parsing-spinner"></div>
+              <span>正在解析文件内容...</span>
+            </div>
+          </div>
+          <div id="smartUploadStep3" style="display:none;">
+            <p class="form-hint">✅ 解析完成！请确认以下信息是否正确，可以直接修改。</p>
+            <form id="smartResultForm" onsubmit="submitSmartResult(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>管理人名称 *</label>
+                  <input type="text" name="name" id="smart_name" required />
+                </div>
+                <div class="form-group">
+                  <label>简称</label>
+                  <input type="text" name="shortName" id="smart_shortName" />
+                </div>
+                <div class="form-group">
+                  <label>策略类型</label>
+                  <select name="strategyType" id="smart_strategyType">
+                    <option value="">选择策略</option>
+                    <option value="市场中性">市场中性</option>
+                    <option value="量化多头">量化多头</option>
+                    <option value="量化CTA">量化CTA</option>
+                    <option value="指数增强">指数增强</option>
+                    <option value="主观多头">主观多头</option>
+                    <option value="多策略">多策略</option>
+                    <option value="其他">其他</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>管理规模</label>
+                  <input type="text" name="scale" id="smart_scale" />
+                </div>
+                <div class="form-group">
+                  <label>成立时间</label>
+                  <input type="text" name="established" id="smart_established" />
+                </div>
+                <div class="form-group">
+                  <label>实控人/基金经理</label>
+                  <input type="text" name="controller" id="smart_controller" />
+                </div>
+                <div class="form-group">
+                  <label>团队人数</label>
+                  <input type="number" name="teamSize" id="smart_teamSize" />
+                </div>
+                <div class="form-group">
+                  <label>办公地址</label>
+                  <input type="text" name="location" id="smart_location" />
+                </div>
+              </div>
+              <div class="form-group full">
+                <label>投资亮点</label>
+                <textarea name="highlights" id="smart_highlights" rows="3" placeholder="每行一个亮点"></textarea>
+              </div>
+              <div class="form-group full">
+                <label>风险点</label>
+                <textarea name="risks" id="smart_risks" rows="3" placeholder="格式：高|内容 或 中|内容，每行一个"></textarea>
+              </div>
+              <div class="form-group full">
+                <label>标签</label>
+                <input type="text" name="tags" id="smart_tags" placeholder="逗号分隔" />
+              </div>
+              <div class="form-group full">
+                <label>备注/摘要</label>
+                <textarea name="summary" id="smart_summary" rows="3"></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-ghost" onclick="closeSmartUpload()">取消</button>
+                <button type="submit" class="btn-primary">确认录入</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
