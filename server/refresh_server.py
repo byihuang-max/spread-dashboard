@@ -62,6 +62,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 POOL_SCRIPTS_DIR = os.path.join(BASE_DIR, 'fund-asset-recommend', 'scripts')
 if POOL_SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, POOL_SCRIPTS_DIR)
+# 尽调库 API
+DD_DIR = os.path.join(BASE_DIR, 'dd-dashboard')
+if DD_DIR not in sys.path:
+    sys.path.insert(0, DD_DIR)
 import auth
 
 # ═══ 模块配置（单一注册表生成）═══
@@ -608,6 +612,22 @@ class Handler(BaseHTTPRequestHandler):
                     ]
                 self._json(200, {'pool': pool, 'stats': stats})
 
+        # ═══ 尽调库 GET API ═══
+        elif self.path == '/api/dd/funds':
+            import dd_api
+            self._json(200, dd_api.get_all())
+        elif self.path == '/api/dd/stats':
+            import dd_api
+            self._json(200, dd_api.get_stats())
+        elif self.path.startswith('/api/dd/funds/'):
+            import dd_api
+            fund_id = self.path.split('/api/dd/funds/')[1].split('?')[0]
+            fund = dd_api.get_by_id(fund_id)
+            if fund:
+                self._json(200, fund)
+            else:
+                self._json(404, {'error': '基金不存在'})
+
         elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
         else:
@@ -925,6 +945,121 @@ class Handler(BaseHTTPRequestHandler):
             t = threading.Thread(target=_run_in_background, args=(mod_keys,), daemon=True)
             t.start()
             self._json(202, {'ok': True, 'message': '已启动全部刷新'})
+
+        # ═══ 尽调库 POST API ═══
+        elif self.path == '/api/dd/funds':
+            # 创建新基金
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            body = self._read_body()
+            import dd_api
+            created_by = user.get('display_name') or user.get('username', 'system')
+            ok, result = dd_api.create_fund(body, created_by=created_by)
+            self._json(200 if ok else 400, {'ok': ok, 'data': result} if ok else {'ok': ok, 'error': result})
+
+        elif self.path.startswith('/api/dd/funds/') and '/stage' in self.path:
+            # 阶段变更: POST /api/dd/funds/<id>/stage
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            fund_id = self.path.split('/api/dd/funds/')[1].split('/stage')[0]
+            body = self._read_body()
+            import dd_api
+            changed_by = user.get('display_name') or user.get('username', 'system')
+            ok, result = dd_api.change_stage(fund_id, body.get('stage', ''), changed_by=changed_by, note=body.get('note', ''))
+            if ok:
+                self._json(200, {'ok': True, 'data': result})
+            else:
+                self._json(400, {'ok': False, 'error': result})
+
+        elif self.path.startswith('/api/dd/funds/') and '/rating' in self.path:
+            # 评分: POST /api/dd/funds/<id>/rating
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            fund_id = self.path.split('/api/dd/funds/')[1].split('/rating')[0]
+            body = self._read_body()
+            import dd_api
+            rated_by = user.get('display_name') or user.get('username', 'system')
+            ok, result = dd_api.rate_fund(fund_id, body, rated_by=rated_by)
+            if ok:
+                self._json(200, {'ok': True, 'data': result})
+            else:
+                self._json(400, {'ok': False, 'error': result})
+
+        elif self.path.startswith('/api/dd/funds/') and '/update' in self.path:
+            # 更新: POST /api/dd/funds/<id>/update
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            fund_id = self.path.split('/api/dd/funds/')[1].split('/update')[0]
+            body = self._read_body()
+            import dd_api
+            updated_by = user.get('display_name') or user.get('username', 'system')
+            ok, result = dd_api.update_fund(fund_id, body, updated_by=updated_by)
+            if ok:
+                self._json(200, {'ok': True, 'data': result})
+            else:
+                self._json(400, {'ok': False, 'error': result})
+
+        elif self.path.startswith('/api/dd/funds/') and '/delete' in self.path:
+            # 删除: POST /api/dd/funds/<id>/delete (admin only)
+            admin = self._require_admin()
+            if not admin: return
+            fund_id = self.path.split('/api/dd/funds/')[1].split('/delete')[0]
+            import dd_api
+            deleted_by = admin.get('display_name') or admin.get('username', 'system')
+            ok, result = dd_api.delete_fund(fund_id, deleted_by=deleted_by)
+            self._json(200 if ok else 400, {'ok': ok, 'msg': result})
+
+        elif self.path == '/api/dd/upload':
+            # 文件上传
+            user = self._get_user()
+            if not user:
+                self._json(401, {'error': '未登录'}); return
+            content_type = self.headers.get('Content-Type', '')
+            if 'multipart/form-data' not in content_type:
+                self._json(400, {'error': '需要 multipart/form-data'})
+                return
+            import dd_api
+            # 简单 multipart 解析
+            content_length = int(self.headers.get('Content-Length', 0))
+            body_bytes = self.rfile.read(content_length)
+            boundary = content_type.split('boundary=')[1].strip() if 'boundary=' in content_type else ''
+            if not boundary:
+                self._json(400, {'error': '无法解析 boundary'}); return
+            parts = body_bytes.split(f'--{boundary}'.encode())
+            filename = None
+            file_data = None
+            fund_id = None
+            for part in parts:
+                if b'Content-Disposition' not in part:
+                    continue
+                header_end = part.find(b'\r\n\r\n')
+                if header_end < 0:
+                    continue
+                header = part[:header_end].decode('utf-8', errors='ignore')
+                data = part[header_end+4:]
+                if data.endswith(b'\r\n'):
+                    data = data[:-2]
+                if 'name="file"' in header or 'name="attachment"' in header:
+                    # Extract filename
+                    if 'filename="' in header:
+                        fn_start = header.index('filename="') + 10
+                        fn_end = header.index('"', fn_start)
+                        filename = header[fn_start:fn_end]
+                    file_data = data
+                elif 'name="fund_id"' in header:
+                    fund_id = data.decode('utf-8').strip()
+            if not filename or not file_data:
+                self._json(400, {'error': '未找到文件'}); return
+            filepath = dd_api.save_upload(filename, file_data)
+            if fund_id:
+                uploaded_by = user.get('display_name') or user.get('username', 'system')
+                dd_api.add_attachment(fund_id, filename, filepath, uploaded_by=uploaded_by)
+            self._json(200, {'ok': True, 'path': filepath, 'name': filename})
+
         else:
             self._json(404, {'error': 'not found'})
 

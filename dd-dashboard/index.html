@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GAMT 尽调库</title>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--sidebar:#0f172a;--sidebar-text:#94a3b8;--sidebar-active:#fff;--primary:#3b82f6;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+.sidebar{width:240px;background:var(--sidebar);color:var(--sidebar-text);padding:24px 16px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100}
+.sidebar h1{color:#fff;font-size:18px;font-weight:700;margin-bottom:8px}
+.sidebar .sub{font-size:12px;color:var(--sidebar-text);margin-bottom:24px}
+.sidebar .nav-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:4px;font-size:14px;transition:all .15s}
+.sidebar .nav-item:hover{background:rgba(255,255,255,.08)}
+.sidebar .nav-item.active{background:rgba(255,255,255,.12);color:var(--sidebar-active)}
+.sidebar .nav-item .badge{background:rgba(255,255,255,.15);padding:2px 8px;border-radius:10px;font-size:12px}
+.sidebar .nav-item.active .badge{background:var(--primary);color:#fff}
+.sidebar .btn-new{display:block;width:100%;padding:10px;margin-top:20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;text-align:center}
+.sidebar .btn-new:hover{opacity:.9}
+.main{margin-left:240px;flex:1;padding:24px;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.topbar h2{font-size:22px;font-weight:700}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);min-width:120px}
+.stat-card .num{font-size:24px;font-weight:700}
+.stat-card .label{font-size:12px;color:var(--text-muted);margin-top:4px}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.toolbar input[type="text"]{padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;width:240px;outline:none}
+.toolbar input[type="text"]:focus{border-color:var(--primary)}
+.toolbar select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none;background:#fff}
+.view-btns{display:flex;gap:4px;margin-left:auto}
+.view-btns button{padding:6px 14px;border:1px solid var(--border);background:#fff;border-radius:6px;font-size:13px;cursor:pointer}
+.view-btns button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.fund-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.fund-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.fund-card .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.fund-card h3{font-size:16px;font-weight:600}
+.fund-card .company{font-size:12px;color:var(--text-muted);margin-top:2px}
+.stage-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500}
+.stage-initial{background:#f1f5f9;color:#64748b}
+.stage-communicating{background:#dbeafe;color:#2563eb}
+.stage-diligenced{background:#d1fae5;color:#059669}
+.stage-approved{background:#ede9fe;color:#7c3aed}
+.stage-invested{background:#fef3c7;color:#d97706}
+.stage-rejected{background:#fee2e2;color:#dc2626}
+.fund-card .meta{display:flex;gap:12px;font-size:12px;color:var(--text-muted);margin:10px 0}
+.fund-card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.fund-card .tag{background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:11px;color:var(--text-muted)}
+.fund-card .rating-badge{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.grade-A{background:#059669}.grade-B{background:#3b82f6}.grade-C{background:#f59e0b}.grade-D{background:#ef4444}
+.table-wrap{overflow-x:auto;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:13px}
+.table-wrap th{background:#f8fafc;padding:12px 16px;text-align:left;font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
+.table-wrap td{padding:10px 16px;border-bottom:1px solid #f1f5f9}
+.table-wrap tr:hover td{background:#f8fafc}
+.pipeline{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px}
+.pipeline-col{min-width:260px;max-width:300px;flex-shrink:0}
+.pipeline-col .col-header{padding:10px 14px;border-radius:8px 8px 0 0;font-size:13px;font-weight:600;display:flex;justify-content:space-between}
+.pipeline-col .col-body{background:var(--card);border-radius:0 0 8px 8px;padding:8px;min-height:200px;box-shadow:var(--shadow)}
+.pipeline-card{padding:10px 12px;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);cursor:pointer;transition:background .1s}
+.pipeline-card:hover{background:#f8fafc}
+.pipeline-card .name{font-size:13px;font-weight:500}
+.pipeline-card .sub{font-size:11px;color:var(--text-muted);margin-top:3px}
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;width:92%;max-width:900px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:1;border-radius:16px 16px 0 0}
+.modal-header h2{font-size:20px;font-weight:700}
+.modal-close{border:none;background:#f1f5f9;color:#64748b;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:24px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tabs button{padding:10px 16px;border:none;background:none;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text-muted);white-space:nowrap}
+.tabs button.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.tab-content{display:none}.tab-content.active{display:block}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.info-item{padding:12px;background:#f8fafc;border-radius:8px}
+.info-item .label{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+.info-item .value{font-size:14px;font-weight:500}
+.risk-item{padding:10px 14px;border-radius:8px;margin-bottom:8px;border-left:3px solid}
+.risk-high{border-color:#ef4444;background:#fef2f2}
+.risk-mid{border-color:#f59e0b;background:#fffbeb}
+.risk-low{border-color:#22c55e;background:#f0fdf4}
+.highlight-item{padding:8px 12px;background:#f0fdf4;border-radius:6px;margin-bottom:6px;font-size:13px;position:relative;padding-left:20px}
+.highlight-item::before{content:"●";position:absolute;left:8px;color:#059669;font-size:8px;top:12px}
+.comm-item{padding:12px;border-left:2px solid var(--primary);margin-bottom:12px;margin-left:8px}
+.comm-item .date{font-size:11px;color:var(--text-muted)}
+.comm-item .content{font-size:13px;margin-top:4px}
+.strategy-card{background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:12px}
+.strategy-card h4{font-size:14px;font-weight:600;margin-bottom:8px}
+.strategy-card .perf{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.strategy-card .perf-item{font-size:12px}
+.strategy-card .perf-item .val{font-weight:600;font-size:14px}
+.empty{text-align:center;padding:60px;color:var(--text-muted)}
+.loading{text-align:center;padding:40px;color:var(--text-muted)}
+/* Stage change dropdown */
+.stage-select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none}
+/* Rating */
+.rating-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.rating-dim{background:#f8fafc;border-radius:8px;padding:12px;text-align:center}
+.rating-dim .dim-label{font-size:12px;color:var(--text-muted);margin-bottom:6px}
+.rating-dim .dim-score{font-size:24px;font-weight:700}
+/* Mobile */
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:150;background:var(--sidebar);color:#fff;border:none;width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer}
+@media(max-width:768px){
+.sidebar{transform:translateX(-100%);transition:transform .2s}
+.sidebar.open{transform:translateX(0)}
+.hamburger{display:flex;align-items:center;justify-content:center}
+.main{margin-left:0;padding:16px;padding-top:56px}
+.grid{grid-template-columns:1fr}
+.info-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+<aside class="sidebar" id="sidebar">
+  <h1>GAMT 尽调库</h1>
+  <div class="sub">Due Diligence Database</div>
+  <nav id="navList"></nav>
+  <button class="btn-new" onclick="openNewFundModal()">+ 新增基金</button>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <h2 id="pageTitle">全部基金</h2>
+  </div>
+  <div class="stats-row" id="statsRow"></div>
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="搜索公司/策略/标签..." oninput="applyFilters()">
+    <select id="filterStrategy" onchange="applyFilters()"><option value="">全部策略</option></select>
+    <div class="view-btns">
+      <button class="active" data-view="grid" onclick="switchView('grid')">卡片</button>
+      <button data-view="pipeline" onclick="switchView('pipeline')">管线</button>
+      <button data-view="table" onclick="switchView('table')">表格</button>
+    </div>
+  </div>
+  <div id="gridView" class="grid"></div>
+  <div id="pipelineView" class="pipeline" style="display:none"></div>
+  <div id="tableView" class="table-wrap" style="display:none"></div>
+</main>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="stage-select" id="modalStageSelect" onchange="handleStageChange(this.value)"></select>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" id="modalTabs"></div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- New Fund Modal -->
+<div class="modal-overlay" id="newFundModal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h2>新增基金</h2>
+      <button class="modal-close" onclick="closeNewFundModal()">×</button>
+    </div>
+    <div class="modal-body" id="newFundForm"></div>
+  </div>
+</div>
+
+<script>
+// ═══ 常量 ═══
+const STAGES = {
+  initial: {label:'初步接触',color:'#94a3b8',bg:'#f1f5f9'},
+  communicating: {label:'沟通中',color:'#2563eb',bg:'#dbeafe'},
+  diligenced: {label:'已尽调',color:'#059669',bg:'#d1fae5'},
+  approved: {label:'已入库',color:'#7c3aed',bg:'#ede9fe'},
+  invested: {label:'已投资',color:'#d97706',bg:'#fef3c7'},
+  rejected: {label:'已否决',color:'#dc2626',bg:'#fee2e2'}
+};
+const STAGE_ORDER = ['initial','communicating','diligenced','approved','invested','rejected'];
+
+// ═══ 状态 ═══
+let allFunds = [];
+let filteredFunds = [];
+let currentStage = '';
+let currentView = 'grid';
+let currentFund = null;
+
+// ═══ API ═══
+async function api(path, opts={}){
+  const res = await fetch('/api/dd'+path, {
+    headers:{'Content-Type':'application/json',...(opts.headers||{})},
+    ...opts
+  });
+  return res.json();
+}
+
+// ═══ 初始化 ═══
+async function init(){
+  try{
+    const [funds, stats] = await Promise.all([api('/funds'), api('/stats')]);
+    allFunds = Array.isArray(funds) ? funds : (funds.funds || []);
+    renderNav(stats);
+    renderStats(stats);
+    buildStrategyFilter();
+    applyFilters();
+  }catch(e){
+    document.getElementById('gridView').innerHTML='<div class="empty">加载失败: '+e.message+'</div>';
+  }
+}
+
+// ═══ 导航 ═══
+function renderNav(stats){
+  const nav = document.getElementById('navList');
+  let html = `<div class="nav-item ${!currentStage?'active':''}" onclick="filterStage('')">
+    <span>全部</span><span class="badge">${stats.total}</span></div>`;
+  for(const key of STAGE_ORDER){
+    const s = stats.byStage[key];
+    html += `<div class="nav-item ${currentStage===key?'active':''}" onclick="filterStage('${key}')">
+      <span>${s.label}</span><span class="badge">${s.count}</span></div>`;
+  }
+  nav.innerHTML = html;
+}
+
+function filterStage(stage){
+  currentStage = stage;
+  document.getElementById('pageTitle').textContent = stage ? STAGES[stage].label : '全部基金';
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active', i===0?!stage:STAGE_ORDER[i-1]===stage);
+  });
+  applyFilters();
+}
+
+// ═══ 统计 ═══
+function renderStats(stats){
+  const row = document.getElementById('statsRow');
+  let html = `<div class="stat-card"><div class="num">${stats.total}</div><div class="label">总计</div></div>`;
+  for(const key of STAGE_ORDER){
+    const s = stats.byStage[key];
+    if(s.count>0) html += `<div class="stat-card"><div class="num" style="color:${STAGES[key].color}">${s.count}</div><div class="label">${s.label}</div></div>`;
+  }
+  row.innerHTML = html;
+}
+
+// ═══ 筛选 ═══
+function buildStrategyFilter(){
+  const types = new Set();
+  allFunds.forEach(f=>(f.strategies||[]).forEach(s=>{if(s.type)types.add(s.type)}));
+  const sel = document.getElementById('filterStrategy');
+  types.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o)});
+}
+
+function applyFilters(){
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const strategy = document.getElementById('filterStrategy').value;
+  filteredFunds = allFunds.filter(f=>{
+    if(currentStage && f.stage !== currentStage) return false;
+    if(search){
+      const text = [f.company?.name,f.company?.shortName,...(f.tags||[]),
+        ...(f.strategies||[]).map(s=>s.type+' '+s.name)].join(' ').toLowerCase();
+      if(!text.includes(search)) return false;
+    }
+    if(strategy){
+      if(!(f.strategies||[]).some(s=>s.type===strategy)) return false;
+    }
+    return true;
+  });
+  renderCurrentView();
+}
+
+// ═══ 视图切换 ═══
+function switchView(view){
+  currentView = view;
+  document.querySelectorAll('.view-btns button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  document.getElementById('gridView').style.display = view==='grid'?'grid':'none';
+  document.getElementById('pipelineView').style.display = view==='pipeline'?'flex':'none';
+  document.getElementById('tableView').style.display = view==='table'?'block':'none';
+  renderCurrentView();
+}
+
+function renderCurrentView(){
+  if(currentView==='grid') renderGrid();
+  else if(currentView==='pipeline') renderPipeline();
+  else renderTable();
+}
+
+// ═══ 卡片视图 ═══
+function renderGrid(){
+  const el = document.getElementById('gridView');
+  if(!filteredFunds.length){el.innerHTML='<div class="empty">暂无数据</div>';return;}
+  el.innerHTML = filteredFunds.map(f=>{
+    const stage = STAGES[f.stage]||STAGES.initial;
+    const rating = f.rating?.grade;
+    return `<div class="fund-card" onclick="showDetail('${f.id}')">
+      ${rating?`<div class="rating-badge grade-${rating}">${rating}</div>`:''}
+      <div class="header"><div><h3>${f.company?.shortName||f.company?.name||'未命名'}</h3>
+      <div class="company">${f.company?.name||''}</div></div>
+      <span class="stage-badge stage-${f.stage}">${stage.label}</span></div>
+      <div class="meta"><span>${f.company?.established||'-'}年</span><span>${f.company?.actualScale||'-'}</span><span>${f.company?.teamSize||'-'}人</span></div>
+      <div class="tags">${(f.tags||[]).slice(0,4).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ 管线视图 ═══
+function renderPipeline(){
+  const el = document.getElementById('pipelineView');
+  el.innerHTML = STAGE_ORDER.map(key=>{
+    const stage = STAGES[key];
+    const funds = filteredFunds.filter(f=>f.stage===key);
+    return `<div class="pipeline-col">
+      <div class="col-header" style="background:${stage.bg};color:${stage.color}">
+        <span>${stage.label}</span><span>${funds.length}</span></div>
+      <div class="col-body">${funds.map(f=>`<div class="pipeline-card" onclick="showDetail('${f.id}')">
+        <div class="name">${f.company?.shortName||f.company?.name||''}</div>
+        <div class="sub">${(f.strategies||[])[0]?.type||''} · ${f.company?.actualScale||''}</div>
+      </div>`).join('')||'<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px">暂无</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ 表格视图 ═══
+function renderTable(){
+  const el = document.getElementById('tableView');
+  el.innerHTML = `<table><thead><tr><th>公司</th><th>阶段</th><th>策略类型</th><th>规模</th><th>团队</th><th>评级</th></tr></thead>
+  <tbody>${filteredFunds.map(f=>{
+    const stage = STAGES[f.stage]||STAGES.initial;
+    return `<tr style="cursor:pointer" onclick="showDetail('${f.id}')">
+      <td><strong>${f.company?.shortName||''}</strong><br><span style="font-size:11px;color:var(--text-muted)">${f.company?.name||''}</span></td>
+      <td><span class="stage-badge stage-${f.stage}">${stage.label}</span></td>
+      <td>${(f.strategies||[]).map(s=>s.type).join(', ')||'-'}</td>
+      <td>${f.company?.actualScale||'-'}</td>
+      <td>${f.company?.teamSize||'-'}人</td>
+      <td>${f.rating?.grade||'-'}</td></tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ═══ 详情弹窗 ═══
+async function showDetail(id){
+  const fund = allFunds.find(f=>f.id===id);
+  if(!fund) return;
+  currentFund = fund;
+  document.getElementById('modalTitle').textContent = fund.company?.shortName||fund.company?.name||'';
+  // Stage select
+  const sel = document.getElementById('modalStageSelect');
+  sel.innerHTML = STAGE_ORDER.map(k=>`<option value="${k}" ${fund.stage===k?'selected':''}>${STAGES[k].label}</option>`).join('');
+  // Tabs
+  const tabs = ['基本信息','策略详情','亮点与风险','沟通记录','附件','评分'];
+  document.getElementById('modalTabs').innerHTML = tabs.map((t,i)=>`<button class="${i===0?'active':''}" onclick="switchTab(${i})">${t}</button>`).join('');
+  renderTab(0);
+  document.getElementById('detailModal').classList.add('show');
+}
+
+function closeModal(){document.getElementById('detailModal').classList.remove('show');currentFund=null;}
+
+function switchTab(idx){
+  document.querySelectorAll('#modalTabs button').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  renderTab(idx);
+}
+
+function renderTab(idx){
+  const f = currentFund;
+  const el = document.getElementById('modalContent');
+  if(idx===0) el.innerHTML = renderInfoTab(f);
+  else if(idx===1) el.innerHTML = renderStrategyTab(f);
+  else if(idx===2) el.innerHTML = renderRiskTab(f);
+  else if(idx===3) el.innerHTML = renderCommTab(f);
+  else if(idx===4) el.innerHTML = renderAttachTab(f);
+  else if(idx===5) el.innerHTML = renderRatingTab(f);
+}
+
+function renderInfoTab(f){
+  const c = f.company||{};
+  const dd = f.dueDiligence||{};
+  const kp = f.keyPersonnel||[];
+  return `<h4 style="margin-bottom:12px">公司信息</h4>
+  <div class="info-grid">
+    <div class="info-item"><div class="label">全称</div><div class="value">${c.name||'-'}</div></div>
+    <div class="info-item"><div class="label">简称</div><div class="value">${c.shortName||'-'}</div></div>
+    <div class="info-item"><div class="label">成立年份</div><div class="value">${c.established||'-'}</div></div>
+    <div class="info-item"><div class="label">注册资本</div><div class="value">${c.registeredCapital||'-'}</div></div>
+    <div class="info-item"><div class="label">实控人</div><div class="value">${c.controller||'-'}</div></div>
+    <div class="info-item"><div class="label">管理规模</div><div class="value">${c.actualScale||'-'}</div></div>
+    <div class="info-item"><div class="label">团队人数</div><div class="value">${c.teamSize||'-'}人</div></div>
+    <div class="info-item"><div class="label">办公地点</div><div class="value">${c.location||'-'}</div></div>
+    <div class="info-item"><div class="label">联系方式</div><div class="value">${c.contact||'-'}</div></div>
+  </div>
+  <h4 style="margin:20px 0 12px">尽调信息</h4>
+  <div class="info-grid">
+    <div class="info-item"><div class="label">尽调日期</div><div class="value">${dd.date||'-'}</div></div>
+    <div class="info-item"><div class="label">方式</div><div class="value">${dd.method||'-'}</div></div>
+    <div class="info-item"><div class="label">地点</div><div class="value">${dd.location||'-'}</div></div>
+    <div class="info-item"><div class="label">分析师</div><div class="value">${dd.analyst||'-'}</div></div>
+    <div class="info-item"><div class="label">状态</div><div class="value">${dd.status||'-'}</div></div>
+  </div>
+  ${dd.nextSteps?.length?`<h4 style="margin:20px 0 12px">后续跟进</h4><ul style="padding-left:20px;font-size:13px">${dd.nextSteps.map(s=>`<li style="margin-bottom:4px">${s}</li>`).join('')}</ul>`:''}
+  ${kp.length?`<h4 style="margin:20px 0 12px">核心人员</h4>${kp.map(p=>`<div style="padding:10px;background:#f8fafc;border-radius:8px;margin-bottom:8px">
+    <strong>${p.name||''}</strong> <span style="color:var(--text-muted);font-size:12px">${p.role||''}</span>
+    <div style="font-size:12px;margin-top:4px;color:var(--text-muted)">${p.background||''}</div>
+    ${p.note?`<div style="font-size:12px;margin-top:4px;color:#059669">${p.note}</div>`:''}</div>`).join('')}`:''}`;
+}
+
+function renderStrategyTab(f){
+  const strategies = f.strategies||[];
+  if(!strategies.length) return '<div class="empty">暂无策略信息</div>';
+  return strategies.map(s=>{
+    const perf = s.performance||{};
+    return `<div class="strategy-card"><h4>${s.name||''} <span style="font-size:12px;color:var(--text-muted)">${s.type||''}</span></h4>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">产品: ${s.product||'-'} | 规模: ${s.scale||'-'} | 容量: ${s.capacity||'-'} | 起始: ${s.startDate||'-'}</div>
+    ${s.framework?`<div style="font-size:13px;margin-bottom:8px;padding:8px;background:#fff;border-radius:6px">${s.framework}</div>`:''}
+    <div class="perf">
+      ${perf.cumulative?`<div class="perf-item"><div class="val">${perf.cumulative}</div>累计收益</div>`:''}
+      ${perf.ytd2026?`<div class="perf-item"><div class="val">${perf.ytd2026}</div>今年以来</div>`:''}
+      ${perf.maxDrawdown?`<div class="perf-item"><div class="val">${perf.maxDrawdown}</div>最大回撤</div>`:''}
+      ${perf.monthlyWinRate?`<div class="perf-item"><div class="val">${perf.monthlyWinRate}</div>月胜率</div>`:''}
+      ${perf.excessReturn?`<div class="perf-item"><div class="val">${perf.excessReturn}</div>超额收益</div>`:''}
+    </div></div>`;
+  }).join('');
+}
+
+function renderRiskTab(f){
+  const highlights = f.highlights||[];
+  const risks = f.risks||[];
+  let html = '';
+  if(highlights.length){
+    html += '<h4 style="margin-bottom:12px">投资亮点</h4>';
+    html += highlights.map(h=>`<div class="highlight-item">${h}</div>`).join('');
+  }
+  if(risks.length){
+    html += '<h4 style="margin:20px 0 12px">风险提示</h4>';
+    html += risks.map(r=>{
+      const cls = r.level==='高'?'risk-high':r.level==='中'?'risk-mid':'risk-low';
+      return `<div class="risk-item ${cls}"><strong>[${r.level}]</strong> ${r.content}</div>`;
+    }).join('');
+  }
+  return html||'<div class="empty">暂无信息</div>';
+}
+
+function renderCommTab(f){
+  const comms = f.communications||[];
+  if(!comms.length) return '<div class="empty">暂无沟通记录</div>';
+  return comms.map(c=>`<div class="comm-item">
+    <div class="date">${c.date||''} · ${c.type||''} · ${c.by||''}</div>
+    <div class="content">${c.content||''}</div>
+  </div>`).join('');
+}
+
+function renderAttachTab(f){
+  const atts = f.attachments||[];
+  let html = '<div style="margin-bottom:16px"><button onclick="uploadFile()" style="padding:8px 16px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">上传附件</button></div>';
+  if(!atts.length) html += '<div class="empty">暂无附件</div>';
+  else html += atts.map(a=>`<div style="padding:10px;background:#f8fafc;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:13px">${a.name||a}</span>
+    <a href="${typeof a==='object'?a.path:'uploads/'+a}" target="_blank" style="font-size:12px;color:var(--primary)">下载</a>
+  </div>`).join('');
+  return html;
+}
+
+function renderRatingTab(f){
+  const r = f.rating||{};
+  const dims = [
+    {key:'strategyClarity',label:'策略清晰度'},
+    {key:'performanceStability',label:'业绩稳定性'},
+    {key:'teamStability',label:'团队稳定性'},
+    {key:'riskControl',label:'风控能力'},
+    {key:'scaleCapacityFit',label:'规模容量匹配'}
+  ];
+  return `<div style="text-align:center;margin-bottom:20px">
+    <div style="font-size:48px;font-weight:700;color:${r.grade==='A'?'#059669':r.grade==='B'?'#3b82f6':r.grade==='C'?'#f59e0b':'#64748b'}">${r.grade||'-'}</div>
+    <div style="font-size:14px;color:var(--text-muted)">综合评分 ${r.overall||'-'}/5</div>
+  </div>
+  <div class="rating-grid">${dims.map(d=>`<div class="rating-dim">
+    <div class="dim-label">${d.label}</div>
+    <div class="dim-score" style="color:${(r[d.key]||0)>=4?'#059669':(r[d.key]||0)>=3?'#3b82f6':'#64748b'}">${r[d.key]||'-'}</div>
+  </div>`).join('')}</div>
+  <div style="margin-top:20px;text-align:center">
+    <button onclick="openRatingForm()" style="padding:8px 20px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">评分</button>
+  </div>`;
+}
+
+// ═══ 阶段变更 ═══
+async function handleStageChange(newStage){
+  if(!currentFund||currentFund.stage===newStage) return;
+  const note = prompt('变更备注（可选）:','');
+  if(note===null){
+    document.getElementById('modalStageSelect').value=currentFund.stage;
+    return;
+  }
+  const res = await api(`/funds/${currentFund.id}/stage`,{method:'POST',body:JSON.stringify({stage:newStage,note})});
+  if(res.ok){
+    currentFund.stage=newStage;
+    const idx=allFunds.findIndex(f=>f.id===currentFund.id);
+    if(idx>=0)allFunds[idx].stage=newStage;
+    applyFilters();
+    init(); // refresh stats
+  }else{alert(res.error||'操作失败');}
+}
+
+// ═══ 评分 ═══
+function openRatingForm(){
+  const dims=['strategyClarity','performanceStability','teamStability','riskControl','scaleCapacityFit'];
+  const labels=['策略清晰度','业绩稳定性','团队稳定性','风控能力','规模容量匹配'];
+  const r=currentFund.rating||{};
+  let html='<div style="padding:20px">';
+  dims.forEach((d,i)=>{
+    html+=`<div style="margin-bottom:12px"><label style="font-size:13px">${labels[i]}</label>
+    <select id="rate_${d}" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:4px">
+    <option value="">-</option>${[1,2,3,4,5].map(v=>`<option value="${v}" ${r[d]===v?'selected':''}>${v}</option>`).join('')}</select></div>`;
+  });
+  html+=`<button onclick="submitRating()" style="padding:8px 20px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:12px">提交评分</button></div>`;
+  document.getElementById('modalContent').innerHTML=html;
+}
+
+async function submitRating(){
+  const dims=['strategyClarity','performanceStability','teamStability','riskControl','scaleCapacityFit'];
+  const data={};
+  dims.forEach(d=>{const v=document.getElementById('rate_'+d).value;if(v)data[d]=parseInt(v);});
+  const res=await api(`/funds/${currentFund.id}/rating`,{method:'POST',body:JSON.stringify(data)});
+  if(res.ok){
+    const idx=allFunds.findIndex(f=>f.id===currentFund.id);
+    if(idx>=0){allFunds[idx].rating=res.data.rating;currentFund=allFunds[idx];}
+    renderTab(5);
+    applyFilters();
+  }else{alert(res.error||'评分失败');}
+}
+
+// ═══ 文件上传 ═══
+function uploadFile(){
+  const input=document.createElement('input');
+  input.type='file';
+  input.onchange=async()=>{
+    const file=input.files[0];if(!file)return;
+    const form=new FormData();
+    form.append('file',file);
+    form.append('fund_id',currentFund.id);
+    const res=await fetch('/api/dd/upload',{method:'POST',body:form});
+    const data=await res.json();
+    if(data.ok){
+      currentFund.attachments=currentFund.attachments||[];
+      currentFund.attachments.push({name:data.name,path:data.path,uploadedAt:new Date().toISOString()});
+      renderTab(4);
+    }else{alert(data.error||'上传失败');}
+  };
+  input.click();
+}
+
+// ═══ 新增基金 ═══
+function openNewFundModal(){
+  const el=document.getElementById('newFundForm');
+  el.innerHTML=`<div style="display:grid;gap:16px">
+    <div><label style="font-size:13px;font-weight:500">公司全称 *</label><input type="text" id="nf_name" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    <div><label style="font-size:13px;font-weight:500">公司简称 *</label><input type="text" id="nf_short" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div><label style="font-size:13px">成立年份</label><input type="text" id="nf_year" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+      <div><label style="font-size:13px">团队人数</label><input type="number" id="nf_team" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    </div>
+    <div><label style="font-size:13px">管理规模</label><input type="text" id="nf_scale" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    <div><label style="font-size:13px">策略类型</label><input type="text" id="nf_strategy" placeholder="如: 市场中性, 量化多头" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    <div><label style="font-size:13px">标签（逗号分隔）</label><input type="text" id="nf_tags" placeholder="量化中性, 低相关" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
+    <div><label style="font-size:13px">初始阶段</label><select id="nf_stage" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px">
+      ${STAGE_ORDER.map(k=>`<option value="${k}" ${k==='initial'?'selected':''}>${STAGES[k].label}</option>`).join('')}</select></div>
+    <button onclick="submitNewFund()" style="padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500">创建</button>
+  </div>`;
+  document.getElementById('newFundModal').classList.add('show');
+}
+
+function closeNewFundModal(){document.getElementById('newFundModal').classList.remove('show');}
+
+async function submitNewFund(){
+  const name=document.getElementById('nf_name').value.trim();
+  const short=document.getElementById('nf_short').value.trim();
+  if(!name||!short){alert('请填写公司全称和简称');return;}
+  const data={
+    company:{name,shortName:short,established:document.getElementById('nf_year').value.trim(),
+      teamSize:parseInt(document.getElementById('nf_team').value)||null,
+      actualScale:document.getElementById('nf_scale').value.trim()},
+    strategies:document.getElementById('nf_strategy').value.trim()?
+      [{type:document.getElementById('nf_strategy').value.trim(),name:document.getElementById('nf_strategy').value.trim()}]:[],
+    tags:document.getElementById('nf_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    stage:document.getElementById('nf_stage').value
+  };
+  const res=await api('/funds',{method:'POST',body:JSON.stringify(data)});
+  if(res.ok){
+    closeNewFundModal();
+    init();
+  }else{alert(res.error||'创建失败');}
+}
+
+// ═══ 启动 ═══
+document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
+document.getElementById('newFundModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeNewFundModal();});
+init();
+</script>
+</body>
+</html>
