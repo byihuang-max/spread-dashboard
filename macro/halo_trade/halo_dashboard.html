@@ -209,9 +209,6 @@
                     </div>
                 </div>
             </div>
-            </div>
-
-            </div>
             
             <!-- 标的表格 -->
             <div class="chart-box">
@@ -639,6 +636,34 @@
             
             window.addEventListener('resize', () => chart.resize());
         }
+
+        // Fix: ECharts in hidden iframe (display:none) initializes with 0 size.
+        // When tab switches and iframe becomes visible, trigger resize on all charts.
+        (function() {
+            const chartIds = ['capex-chart', 'pe-chart', 'asset-style-chart'];
+            function resizeAll() {
+                chartIds.forEach(id => {
+                    const dom = document.getElementById(id);
+                    if (dom) {
+                        const instance = echarts.getInstanceByDom(dom);
+                        if (instance) instance.resize();
+                    }
+                });
+            }
+            // ResizeObserver catches the moment container goes from 0 to real size
+            const observer = new ResizeObserver(() => resizeAll());
+            observer.observe(document.body);
+            // Also handle visibility change (tab switch in parent)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) setTimeout(resizeAll, 100);
+            });
+            // Fallback: periodic check for first 5 seconds
+            let checks = 0;
+            const interval = setInterval(() => {
+                resizeAll();
+                if (++checks >= 10) clearInterval(interval);
+            }, 500);
+        })();
     </script>
 </body>
 </html>
