@@ -1087,7 +1087,21 @@ fetch('data/factor_ic.json')
           splitLine: { lineStyle: { color: '#1e293b' } }
         },
         series: [
-          { name: '冰点策略', type: 'line', data: iceNav, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#4a9eff' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{offset:0,color:'rgba(74,158,255,0.15)'},{offset:1,color:'rgba(74,158,255,0)'}] } } },
+          { name: '冰点策略', type: 'line', data: iceNav, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#4a9eff' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{offset:0,color:'rgba(74,158,255,0.15)'},{offset:1,color:'rgba(74,158,255,0)'}] } },
+            markPoint: {
+              symbol: 'circle',
+              symbolSize: 8,
+              itemStyle: { color: '#f87171', borderColor: '#fff', borderWidth: 1 },
+              label: { show: false },
+              emphasis: { label: { show: true, formatter: p => p.name, color: '#f87171', fontSize: 11, position: 'top' } },
+              data: data.trades.map(t => {
+                const ed = t.entry_date;
+                const dateLabel = ed.slice(0,4)+'-'+ed.slice(4,6)+'-'+ed.slice(6);
+                const idx = dates.indexOf(dateLabel);
+                return idx >= 0 ? { name: dateLabel, xAxis: idx, yAxis: iceNav[idx] } : null;
+              }).filter(Boolean)
+            }
+          },
           { name: '买入持有', type: 'line', data: buyHold, smooth: true, symbol: 'none', lineStyle: { width: 1.5, color: '#64748b', type: 'dashed' } }
         ]
       });
