@@ -28,7 +28,7 @@ sw_daily = cache_data.get('sw_daily', {})
 def compute_style_spread(index_daily):
     pairs = [
         ('000922.CSI', '000688.SH', '中证红利', '科创50'),
-        ('399303.SZ', '000985.CSI', '微盘股', '中证全指'),
+        ('884143.TI', '000985.CSI', '微盘股', '中证全指'),
         ('932000.CSI', '000300.SH', '中证2000', '沪深300'),
     ]
 
