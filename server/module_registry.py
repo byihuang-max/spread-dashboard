@@ -64,6 +64,17 @@ MODULE_REGISTRY = {
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
+    'patient_capital': {
+        'name': '耐心资本',
+        'scripts': [
+            ('micro_flow/patient_capital', 'patient_data.py'),
+            ('micro_flow/patient_capital', 'patient_calc.py'),
+        ],
+        'aliases': ['patient-capital'],
+        'late_data': True,  # 15min成交明细晚到，需21:00后才稳定入库
+        'include_in_update_all': True,
+        'include_in_refresh_server': True,
+    },
     'momentum_stock': {
         'name': '强势股情绪',
         'scripts': [
@@ -159,17 +170,6 @@ MODULE_REGISTRY = {
             ('micro_flow/option_sentiment', 'option_calc.py'),
         ],
         'aliases': ['option-sentiment'],
-        'include_in_update_all': True,
-        'include_in_refresh_server': True,
-    },
-    'patient_capital': {
-        'name': '耐心资本',
-        'scripts': [
-            ('micro_flow/patient_capital', 'patient_data.py'),
-            ('micro_flow/patient_capital', 'patient_calc.py'),
-        ],
-        'aliases': ['patient-capital'],
-        'late_data': True,  # 15min成交明细晚到，T+1才出全
         'include_in_update_all': True,
         'include_in_refresh_server': True,
     },
