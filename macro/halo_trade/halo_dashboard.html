@@ -284,7 +284,7 @@
                 if (!res.ok) throw new Error(`财务数据加载失败: ${res.status}`);
                 return res.json();
             }),
-            fetch('data/china_halo.json').then(res => {
+            fetch('data/china_halo.json?t=' + Date.now()).then(res => {
                 if (!res.ok) throw new Error(`中国HALO数据加载失败: ${res.status}`);
                 return res.json();
             })
@@ -553,8 +553,8 @@
             
             // 绘制图表
             Promise.all([
-                fetch('data/china_halo_history.csv').then(r => r.text()),
-                fetch('data/us_halo_history.csv').then(r => r.text())
+                fetch('data/china_halo_history.csv?t=' + Date.now()).then(r => r.text()),
+                fetch('data/us_halo_history.csv?t=' + Date.now()).then(r => r.text())
             ]).then(([cnCsv, usCsv]) => {
                 const cnData = parseCsv(cnCsv);
                 const usData = parseCsv(usCsv);
