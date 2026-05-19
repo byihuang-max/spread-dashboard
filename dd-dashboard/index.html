@@ -203,19 +203,6 @@ async function api(path, opts={}){
 }
 
 // ═══ 初始化 ═══
-async function init(){
-  try{
-    const [funds, stats] = await Promise.all([api('/funds'), api('/stats')]);
-    allFunds = Array.isArray(funds) ? funds : (funds.funds || []);
-    renderNav(stats);
-    renderStats(stats);
-    buildStrategyFilter();
-    applyFilters();
-  }catch(e){
-    document.getElementById('gridView').innerHTML='<div class="empty">加载失败: '+e.message+'</div>';
-  }
-}
-
 // ═══ 策略大类映射 ═══
 const STRATEGY_GROUPS = {
   '指数增强':['指数增强'],
@@ -239,7 +226,19 @@ function getFundGroup(fund){
   return '其他';
 }
 
-let currentGroup = '';
+async function init(){
+  try{
+    const [funds, stats] = await Promise.all([api('/funds'), api('/stats')]);
+    allFunds = Array.isArray(funds) ? funds : (funds.funds || []);
+    renderNav(stats);
+    renderStats(stats);
+    buildStrategyFilter();
+    applyFilters();
+  }catch(e){
+    document.getElementById('gridView').innerHTML='<div class="empty">加载失败: '+e.message+'</div>';
+  }
+}
+
 
 // ═══ 导航 ═══
 function renderNav(stats){
