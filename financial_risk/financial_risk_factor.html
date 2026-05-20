@@ -1580,7 +1580,7 @@ function downloadValidationSamplesCsv(){
   ]);
   const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  downloadCsv(csv, `财报验证_全量样本_${today}.csv`);
+  downloadCsv(csv, `财报验证_全量样本_.csv`);
 }
 
 // 加载验证层数据
@@ -1650,12 +1650,12 @@ async function boot(){
     state.stockCode = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score)[0].ts_code;
     document.getElementById("downloadFilteredCsv").onclick = () => {
       const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-      downloadCsv(stocksToCsv(filteredStocks()), \`财报风险_筛选结果_\${today}.csv\`);
+      downloadCsv(stocksToCsv(filteredStocks()), `财报风险_筛选结果_${today}.csv`);
     };
     document.getElementById("downloadAllCsv").onclick = () => {
       const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
       const all = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score);
-      downloadCsv(stocksToCsv(all), \`财报风险_全量_\${today}.csv\`);
+      downloadCsv(stocksToCsv(all), `财报风险_全量_${today}.csv`);
     };
   }
   renderOverview();
