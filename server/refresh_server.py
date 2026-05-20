@@ -240,6 +240,8 @@ class Handler(BaseHTTPRequestHandler):
         body = json.dumps(data, ensure_ascii=False).encode()
         self.send_response(code)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
         accept_enc = self.headers.get('Accept-Encoding', '')
         if 'gzip' in accept_enc and len(body) > 256:
             body = gzip.compress(body)
