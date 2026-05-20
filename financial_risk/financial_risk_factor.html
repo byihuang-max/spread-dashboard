@@ -1128,6 +1128,7 @@ function renderSpecialIndustryList(){
 // industryMode='primary' 时展示主行业完整画像
 // industryMode='special' 时只展示特例行业规则逻辑，不伪造统计
 function renderIndustrySection(){
+  if (!INDUSTRIES.length) return;
   if(industryMode === 'special'){
     const ind = currentSpecialIndustry();
     if(!ind) return;
@@ -1215,6 +1216,7 @@ function renderIndustrySection(){
 }
 
 function filteredStocks(){
+  if (!DATA.stocks || !DATA.stocks.length) return [];
   const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
   const industry = document.getElementById("industryFilter").value;
   const exclude = document.getElementById("excludeFilter").value;
@@ -1278,7 +1280,9 @@ function explainStock(s){
 }
 
 function renderDetail(){
+  if (!DATA.stocks || !DATA.stocks.length) return;
   const s = DATA.stocks.find(x => x.ts_code === state.stockCode) || DATA.stocks[0];
+  if (!s) return;
   document.getElementById("detailName").textContent = s.name;
   const sourceText = s.industry_source === 'wind_sw' ? 'Wind申万映射' : (s.industry_source === 'stock_industry_json' ? '全量行业底座' : '原始快照');
   const windText = [s.wind_industry_l2, s.wind_industry_l3, s.wind_industry_l4].filter(Boolean).join(' / ') || '-';
@@ -1396,6 +1400,7 @@ function initOpportunityFilters(){
 }
 
 function renderOpportunityTable(){
+  if (!DATA.stocks || !DATA.stocks.length) return;
   const rows = opportunityRows();
   if(!rows.find(r => r.ts_code === state.opportunityStockCode) && rows[0]) state.opportunityStockCode = rows[0].ts_code;
   document.getElementById('opportunityTableBody').innerHTML = rows.slice(0,100).map(s=>`
