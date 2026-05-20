@@ -857,6 +857,23 @@ function mapIndustryName(name){
 }
 
 function buildIndustryStats(){
+  // 精简版：DATA.stocks 为空但 DATA.industries 有预计算数据，直接用
+  if ((!DATA.stocks || !DATA.stocks.length) && DATA.industries && DATA.industries.length) {
+    return DATA.industries.map(ind => ({
+      name: ind.name,
+      stocks: ind.stocks || [],
+      count: ind.count || 0,
+      highRiskCount: ind.highRiskCount || ind.high_risk_count || 0,
+      excludeCount: ind.excludeCount || ind.exclude_count || 0,
+      avgRisk: ind.avgRisk || ind.avg_risk || 0,
+      avgOpportunity: ind.avgOpportunity || ind.avg_opportunity || 0,
+      factorMeans: ind.factorMeans || ind.factor_means || {},
+      primary: ind.primary || ind.primary_factor || '',
+      rule: ind.rule || {},
+      secondaryExample: ind.secondary_example || ''
+    })).sort((a,b) => b.count - a.count || b.avgRisk - a.avgRisk);
+  }
+  // 全量版：从 stocks 聚合
   const grouped = {};
   DATA.stocks.forEach(s => {
     const group = mapIndustryName(s.industry1);
@@ -889,10 +906,10 @@ function buildIndustryStats(){
 }
 
 function renderOverview(){
-  const total = DATA.stocks.length;
-  const excludeCount = DATA.stocks.filter(s => s.exclude_flag).length;
-  const avg = mean(DATA.stocks.map(s => s.landmine_score));
-  const high = DATA.stocks.filter(s => s.landmine_score >= 0.7).length;
+  const total = DATA.stocks && DATA.stocks.length ? DATA.stocks.length : (DATA.stock_count || INDUSTRIES.reduce((a,b)=>a+b.count,0));
+  const excludeCount = DATA.stocks && DATA.stocks.length ? DATA.stocks.filter(s => s.exclude_flag).length : INDUSTRIES.reduce((a,b)=>a+(b.excludeCount||0),0);
+  const avg = DATA.stocks && DATA.stocks.length ? mean(DATA.stocks.map(s => s.landmine_score)) : (INDUSTRIES.length ? mean(INDUSTRIES.map(i=>i.avgRisk)) : 0);
+  const high = DATA.stocks && DATA.stocks.length ? DATA.stocks.filter(s => s.landmine_score >= 0.7).length : INDUSTRIES.reduce((a,b)=>a+(b.highRiskCount||0),0);
   const cards = [
     {label:"覆盖股票数",value:total,cls:"blue",sub:"完整表应该覆盖全部 A 股；当前是原型示例数据"},
     {label:"剔除项数量",value:excludeCount,cls:"red",sub:"按行业框架与子因子共同判定，不是单一利润差"},
@@ -1608,38 +1625,52 @@ function initFilters(){
 
 async function boot(){
   try {
-    const res = await fetch('../data/financial_risk_factor.json?_=' + Date.now());
-    if (res.ok) DATA = await res.json();
+    // 优先加载精简版（32KB），热力图秒开；全量版（62MB）后台异步加载
+    const liteRes = await fetch('../data/financial_risk_factor_lite.json?_=' + Date.now());
+    if (liteRes.ok) DATA = await liteRes.json();
   } catch (e) {
-    console.warn('load json failed, fallback to demo', e);
+    console.warn('load lite json failed, trying full', e);
+  }
+  if (!DATA || !DATA.industries || !DATA.industries.length) {
+    try {
+      const res = await fetch('../data/financial_risk_factor.json?_=' + Date.now());
+      if (res.ok) DATA = await res.json();
+    } catch (e) {
+      console.warn('load full json also failed', e);
+    }
   }
   INDUSTRIES = buildIndustryStats();
-  if (!INDUSTRIES.length || !DATA.stocks.length) {
+  if (!INDUSTRIES.length) {
     document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;right:16px;bottom:16px;background:#3b0d14;color:#ffd5d8;padding:10px 14px;border:1px solid #7f1d1d;border-radius:12px;z-index:99">未加载到真实数据，请先运行 build_financial_risk_json.py</div>');
     return;
   }
   state.industry = INDUSTRIES[0].name;
-  state.stockCode = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score)[0].ts_code;
-  document.getElementById("downloadFilteredCsv").onclick = () => {
-    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    downloadCsv(stocksToCsv(filteredStocks()), `财报风险_筛选结果_${today}.csv`);
-  };
-  document.getElementById("downloadAllCsv").onclick = () => {
-    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    const all = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score);
-    downloadCsv(stocksToCsv(all), `财报风险_全量_${today}.csv`);
-  };
+  const isLite = !DATA.stocks || !DATA.stocks.length;
+  if (!isLite) {
+    state.stockCode = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score)[0].ts_code;
+    document.getElementById("downloadFilteredCsv").onclick = () => {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      downloadCsv(stocksToCsv(filteredStocks()), \`财报风险_筛选结果_\${today}.csv\`);
+    };
+    document.getElementById("downloadAllCsv").onclick = () => {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      const all = DATA.stocks.slice().sort((a,b)=>b.landmine_score-a.landmine_score);
+      downloadCsv(stocksToCsv(all), \`财报风险_全量_\${today}.csv\`);
+    };
+  }
   renderOverview();
   renderHeatmap();
   renderIndustryRank();
   renderIndustryList();
   initIndustryModeTabs();
-  renderIndustrySection();
-  renderOpportunityOverview();
-  renderOpportunityIndustryRank();
-  initOpportunityFilters();
-  state.opportunityStockCode = (DATA.opportunity_top_stocks || DATA.stocks || [])[0]?.ts_code || null;
-  renderOpportunityTable();
+  if (!isLite) {
+    renderIndustrySection();
+    renderOpportunityOverview();
+    renderOpportunityIndustryRank();
+    initOpportunityFilters();
+    state.opportunityStockCode = (DATA.opportunity_top_stocks || DATA.stocks || [])[0]?.ts_code || null;
+    renderOpportunityTable();
+  }
   initPageTabs();
   initFilters();
   renderTable();

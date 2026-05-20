@@ -3511,10 +3511,9 @@ function initCbCharts() {
       // 优先同源（通过 tunnel 访问时，API 就在同域）
       fetch('/api/status').then(function(r){
         if(!r.ok) throw new Error('status '+r.status);
-        var ct=r.headers.get('content-type')||'';
-        if(ct.indexOf('application/json')<0) throw new Error('not json: '+ct);
-        return r.json();
-      }).then(function(d){
+        return r.text();
+      }).then(function(t){
+        try{JSON.parse(t)}catch(e){throw new Error('not json')}
         AUTH_API='';console.log('[auth] using same-origin');cb();
       }).catch(function(e){
         console.log('[auth] same-origin failed:',e.message||e);
@@ -3533,7 +3532,9 @@ function initCbCharts() {
               console.log('[auth] retrying in 2s...');
               setTimeout(tryDiscover,2000);
             }else{
-              console.log('[auth] all attempts failed, readonly mode');
+              // fallback: 假设同源可用（避免 AUTH_API=null 导致 /null/api/... 路径）
+              console.log('[auth] all attempts failed, fallback same-origin');
+              AUTH_API='';
               cb();
             }
           });
