@@ -213,3 +213,25 @@ if __name__ == '__main__':
 
     data = fetch_all(force_recent_days=args.force_recent)
     print(f"\n完成，缓存文件数: {len(list(CACHE_DIR.glob('*.json')))}")
+
+    # ═══ 数据完整性自检（防止静默失败） ═══
+    # 如果今天/最近一个交易日是交易日且已收盘 (≥16:00)，
+    # 但 raw_15min 缓存里没有这一天的文件 → exit 1 让 update_all 报错
+    from datetime import datetime as _dt
+    now = _dt.now()
+    today_str = now.strftime('%Y%m%d')
+
+    # 找最近一个 ≤ 今天 的交易日
+    trade_dates = get_trade_dates('20260101', today_str)
+    if trade_dates:
+        last_td = trade_dates[-1]
+        # 如果最近交易日就是今天，且当前时间 < 16:00，跳过校验（盘还没收）
+        skip_check = (last_td == today_str and now.hour < 16)
+        if not skip_check:
+            cached_file = CACHE_DIR / f"{last_td}.json"
+            if not cached_file.exists():
+                print(f"\n[FATAL] 最近交易日 {last_td} 的 raw_15min 缓存缺失！", file=sys.stderr)
+                print(f"        可能是 Tushare API 限频或返回空，请检查。", file=sys.stderr)
+                sys.exit(1)
+            else:
+                print(f"\n[CHECK] 最近交易日 {last_td} 缓存已就绪")
