@@ -912,7 +912,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},stacked:true}},
                 y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
           }});
@@ -944,7 +944,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
             y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
-            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
+            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
           }}}})
         }});
 
@@ -958,7 +958,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
             y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'连板高度',font:{{size:9}},color:'#94a3b8'}}}},
-            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
+            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
           }}}})
         }});
 
@@ -1013,7 +1013,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
                 y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
           }});
@@ -1070,7 +1070,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
                 y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(2)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return (v*100).toFixed(1)+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'累计超额',font:{{size:9}},color:'#f59e0b'}}}}
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return (v*100).toFixed(1)+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'累计超额',font:{{size:9}},color:'#f59e0b'}}}}
               }}
             }}
           }});

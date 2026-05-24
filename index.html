@@ -1227,7 +1227,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false},stacked:true},
                 y:{position:'left',stacked:true,ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'},title:{display:true,text:'封单额(亿)',font:{size:9},color:'#94a3b8'}},
-                y1:{position:'right',ticks:{font:{size:9},color:'#6366f1'},grid:{color:'#2a2a2a'},title:{display:true,text:'轧差(亿)',font:{size:9},color:'#6366f1'}}
+                y1:{position:'right',ticks:{font:{size:9},color:'#6366f1'},grid:{drawOnChartArea:false},title:{display:true,text:'轧差(亿)',font:{size:9},color:'#6366f1'}}
               }
             }
           });
@@ -1259,7 +1259,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           options:Object.assign({},msB,{scales:{
             x:msB.scales.x,
             y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
-            y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{color:'#2a2a2a'},title:{display:true,text:'高低开 %',font:{size:9},color:'#6366f1'}}
+            y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'高低开 %',font:{size:9},color:'#6366f1'}}
           }})
         });
 
@@ -1273,7 +1273,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           options:Object.assign({},msB,{scales:{
             x:msB.scales.x,
             y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'},title:{display:true,text:'连板高度',font:{size:9},color:'#94a3b8'}},
-            y1:{position:'right',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{color:'#2a2a2a'},title:{display:true,text:'晋级率',font:{size:9},color:'#94a3b8'}}
+            y1:{position:'right',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'晋级率',font:{size:9},color:'#94a3b8'}}
           }})
         });
 
@@ -1328,7 +1328,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)}},grid:{color:'#2a2a2a'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
-                y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{color:'#2a2a2a'},title:{display:true,text:'BIAS %',font:{size:9},color:'#6366f1'}}
+                y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'BIAS %',font:{size:9},color:'#6366f1'}}
               }
             }
           });
@@ -1392,7 +1392,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(2)}},grid:{color:'#2a2a2a'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
-                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return (v*100).toFixed(1)+'%'}},grid:{color:'#2a2a2a'},title:{display:true,text:'累计超额',font:{size:9},color:'#f59e0b'}}
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return (v*100).toFixed(1)+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'累计超额',font:{size:9},color:'#f59e0b'}}
               }
             }
           });
@@ -1592,7 +1592,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               scales:{
                 x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
-                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{color:'#2a2a2a'}}
+                y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{drawOnChartArea:false}}
               }
             }
           });
@@ -1633,7 +1633,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               scales:{
                 x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y:{position:'left',title:{display:true,text:'年化波动率%',font:{size:10},color:'#94a3b8'},ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
-                y1:{position:'right',min:0,max:100,title:{display:true,text:'分位%',font:{size:10},color:'#f59e0b'},ticks:{font:{size:9},color:'#f59e0b'},grid:{color:'#2a2a2a'}}
+                y1:{position:'right',min:0,max:100,title:{display:true,text:'分位%',font:{size:10},color:'#f59e0b'},ticks:{font:{size:9},color:'#f59e0b'},grid:{drawOnChartArea:false}}
               }
             }
           });
