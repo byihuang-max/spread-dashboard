@@ -300,7 +300,7 @@ var chartBase = {{
   responsive:true,maintainAspectRatio:false,
   interaction:{{mode:'index',intersect:false}},
   plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}}}},
-  scales:{{x:{{ticks:{{maxTicksLimit:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}}}}}}
+  scales:{{x:{{ticks:{{maxTicksLimit:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}}}}
 }};
 function lineOpts() {{ return JSON.parse(JSON.stringify(chartBase)); }}
 function barOpts() {{ var o = JSON.parse(JSON.stringify(chartBase)); o.plugins.legend.display = false; return o; }}

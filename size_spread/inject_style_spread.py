@@ -281,7 +281,7 @@ function ssChartOpts(titleText, yLabel, yFmt, showLegend) {
     },
     scales: {
       x: {ticks: {maxTicksToShow: 12, font: {size: 9}, color: '#94a3b8', maxRotation: 0}, grid: {display: false}},
-      y: {title: {display: true, text: yLabel, font: {size: 10}, color: '#94a3b8'}, ticks: {font: {size: 9}, color: '#94a3b8', callback: yFmt || function(v) { return v.toFixed(2); }}, grid: {color: '#f1f5f9'}}
+      y: {title: {display: true, text: yLabel, font: {size: 10}, color: '#94a3b8'}, ticks: {font: {size: 9}, color: '#94a3b8', callback: yFmt || function(v) { return v.toFixed(2); }}, grid:{color:'#2a2a2a'}}
     }
   };
 }

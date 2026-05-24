@@ -66,8 +66,8 @@ new_module = '''    <!-- ========== 策略环境适配度 ========== -->
         </div>
 
         <!-- 计算说明 -->
-        <div class="card" style="font-size:12px;color:#999;line-height:1.8">
-          <div class="card-title" style="font-size:13px;color:#666"><span class="dot" style="background:#999"></span>  指标说明</div>
+        <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 指标说明</div>
           <p><b style="color:#555"> 全市场成交额：</b>中证全指(000985.CSI)日成交额，单位亿元，反映市场整体流动性水平</p>
           <p><b style="color:#555"> 宽基占比：</b>沪深300/中证500/1000/2000/科创50+创业板指 各自成交额占中证全指比例，观察资金主战场迁移</p>
           <p><b style="color:#555"> 年化基差：</b>(主力合约收盘-现货指数收盘)/现货 × 12 × 100，负值=贴水（对冲成本），正值=升水</p>
@@ -144,7 +144,7 @@ const chartOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
   plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}
+  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}}}
 };
 
 // ===== 图1: 全市场成交额 =====
@@ -162,7 +162,7 @@ const chartOpts = {
         {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
       ]
     },
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{color:'#2a2a2a'}}}}
   });
 })();
 
@@ -185,7 +185,7 @@ const chartOpts = {
   new Chart(document.getElementById('chartShare'), {
     type:'line',
     data:{labels, datasets},
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]},min:0}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'},min:0}}}
   });
 })();
 
@@ -211,7 +211,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}
+        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'}}
       },
       plugins:{
         ...chartOpts.plugins,
@@ -248,7 +248,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}
+        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{color:'#2a2a2a'}}
       },
       plugins:{
         ...chartOpts.plugins,

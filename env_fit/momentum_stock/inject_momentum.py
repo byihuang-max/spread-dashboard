@@ -770,8 +770,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
         <div style="font-size:10px;color:#94a3b8;margin-top:4px">柱状=涨跌停/炸板家数（左轴） · 实线=全涨停次日高低开 · 虚线=首板次日高低开（右轴,%）</div>
       </div>
 
-      <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-        <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
+      <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 指标说明</div>
         <p> 合成情绪指数 v2 = 0.20*空间高度 + 0.25*晋级率 + 0.20*(1-炸板率) + 0.10*涨跌停比 + 0.25*封板质量，120日分位数排名 + 交互修正</p>
         <p> 封板质量 = (100亿+涨停 + 2×300亿+涨停) / 总涨停数，反映大资金参与度（旧版为一字板占比）</p>
         <p> 交互修正：连板高但全小票→打折 · 晋级率高但炸板也高→打折</p>
@@ -801,7 +801,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           responsive:true,maintainAspectRatio:false,
           interaction:{{mode:'index',intersect:false}},
           plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}}}},
-          scales:{{x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}
+          scales:{{x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}}}}
         }};
 
         function msMA(a,n){{var r=[];for(var i=0;i<a.length;i++){{if(i<n-1)r.push(null);else{{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}}}return r;}}
@@ -825,7 +825,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 }}
               }}
             }},
-            scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',stepSize:20}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},min:0,max:100}}}}
+            scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',stepSize:20}},grid:{{color:'#2a2a2a'}},min:0,max:100}}}}
           }})
         }});
 
@@ -875,7 +875,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               {{label:'涨跌停比(0.15)',data:msUN,borderColor:'#f59e0b',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2}},
               {{label:'封板质量(0.15)',data:msSN,borderColor:'#8b5cf6',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2}}
             ]}},
-            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},min:0,max:100}}}}}})
+            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},min:0,max:100}}}}}})
           }});
         }});}}
 
@@ -910,9 +910,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 }}
               }},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},stacked:true}},
-                y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
+                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},stacked:true}},
+                y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
           }});
@@ -943,8 +943,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           }},
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
-            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
+            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
           }}}})
         }});
 
@@ -957,8 +957,8 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           ]}},
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
-            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'连板高度',font:{{size:9}},color:'#94a3b8'}}}},
-            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
+            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'连板高度',font:{{size:9}},color:'#94a3b8'}}}},
+            y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
           }}}})
         }});
 
@@ -1011,9 +1011,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 }}
               }},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
+                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
           }});
@@ -1068,9 +1068,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 }}
               }},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(2)}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return (v*100).toFixed(1)+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}},title:{{display:true,text:'累计超额',font:{{size:9}},color:'#f59e0b'}}}}
+                x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(2)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return (v*100).toFixed(1)+'%'}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'累计超额',font:{{size:9}},color:'#f59e0b'}}}}
               }}
             }}
           }});
@@ -1103,7 +1103,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               {{label:'情绪贡献',data:dcS,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}},
               {{label:'管理人Alpha',data:dcA,borderColor:'#ec4899',backgroundColor:'rgba(236,72,153,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}}
             ]}},
-            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}}})
+            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}}}}}}}})
           }})}}
 
           // 收益拆解周期色带

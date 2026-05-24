@@ -296,9 +296,9 @@ def build_decomp_section():
                   return c.dataset.yAxisID==='y1'?c.dataset.label+': '+v.toFixed(2)+'%':c.dataset.label+': '+v.toFixed(4);
                 }}}}}}}},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}
+                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#2a2a2a'}}}}
               }}
             }}
           }});
@@ -318,8 +318,8 @@ def build_decomp_section():
             interaction:{{mode:'index',intersect:false}},
             plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
               tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}}}}}},
-            scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}
+            scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#2a2a2a'}}}}}}
           }}
         }});
 
@@ -337,9 +337,9 @@ def build_decomp_section():
               plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
                 tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}}}}}}},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-                y1:{{position:'right',min:0,max:100,title:{{display:true,text:'分位%',font:{{size:10}},color:'#f59e0b'}},ticks:{{font:{{size:9}},color:'#f59e0b'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}
+                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y1:{{position:'right',min:0,max:100,title:{{display:true,text:'分位%',font:{{size:10}},color:'#f59e0b'}},ticks:{{font:{{size:9}},color:'#f59e0b'}},grid:{{color:'#2a2a2a'}}}}
               }}
             }}
           }});
@@ -520,8 +520,8 @@ def build_html(data):
           interaction:{{mode:'index',intersect:false}},
           plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
             tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)}}}}}}}},
-          scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
-            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}
+          scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}}}}
         }};
 
         // 方差解释比
@@ -892,8 +892,8 @@ def build_html(data):
           interaction:{mode:'index',intersect:false},
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
-          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}},
-            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}}}
+          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}}}
         };
         new Chart(document.getElementById('cta-cu-au'),{
           type:'line',
@@ -912,7 +912,7 @@ def build_html(data):
           data:{labels:''' + basket_dates_js + ''',datasets:[
             {label:'工业品篮子',data:''' + ind_nav_js + ''',borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
             {label:'农产品篮子',data:''' + agri_nav_js + ''',borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
-          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}}}})
+          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#2a2a2a'}}}})
         });
       }
       </script>
@@ -921,8 +921,8 @@ def build_html(data):
     # ─── Section 7: 指标说明 ───
     html += '''
       <!-- ═══ 指标说明 ═══ -->
-      <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-        <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 指标说明</div>
+      <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 指标说明</div>
         <p><b style="color:#8b5cf6">PCA核心引擎</b></p>
         <p> PCA友好度：基于60日滚动窗口，对全部活跃品种日收益率做主成分分析（PCA），核心由 PC1 方差解释比驱动；PC1 明显强于 PC2 时，通常说明市场更偏共振，趋势 CTA 相对更友好</p>
         <p> PC1方差解释比 = 品种共振强度。&gt;35%=强共振（趋势跟踪友好），&lt;20%=全市场震荡</p>
