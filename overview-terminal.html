@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>GAMT Terminal — Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#000;--surface:#0a0a0a;--surface-2:#141414;
+  --border:#2a2a2a;--border-light:#333;
+  --text:#fff;--text-dim:#999;--text-muted:#666;
+  --orange:#ff8c00;
+  --mono:'JetBrains Mono','SF Mono','Fira Code',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12px;line-height:1.4;padding:12px}
+.c-orange{color:var(--orange)}
+.c-dim{color:var(--text-dim)}
+.c-muted{color:var(--text-muted)}
+
+.alert-bar{background:#1a0f00;border:1px solid var(--orange);padding:6px 10px;margin-bottom:10px;font-size:11px;display:flex;gap:10px;align-items:center}
+
+.panel{background:var(--surface);border:1px solid var(--border);margin-bottom:10px}
+.panel-header{background:#141414;padding:5px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--orange);text-transform:uppercase}
+.panel-body{padding:10px}
+
+.data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.data-cell{padding:8px 10px;background:var(--surface-2);border:1px solid var(--border)}
+.data-cell .label{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:3px}
+.data-cell .value{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2;color:var(--text)}
+.data-cell .sub{font-size:10px;color:var(--text-dim);margin-top:2px}
+
+.strat-table{width:100%;border-collapse:collapse;font-size:11px}
+.strat-table th{background:#141414;padding:6px 10px;text-align:left;color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
+.strat-table td{padding:7px 10px;border-bottom:1px solid #1a1a1a;color:var(--text-dim)}
+.strat-table tr:hover td{background:#0f0f0f}
+.score-cell{font-weight:700;font-variant-numeric:tabular-nums;font-size:13px;color:var(--text)}
+.score-bar{display:inline-block;width:60px;height:5px;background:#1a1a1a;position:relative;vertical-align:middle}
+.score-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--orange)}
+
+.macro-hero{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.score-big{font-size:48px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;color:var(--text)}
+.score-label{font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.phase-text{font-size:13px;font-weight:600;margin-top:4px;color:var(--text-dim)}
+
+.tag{display:inline-block;padding:2px 8px;font-size:10px;margin:2px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim)}
+
+.alloc-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;border-bottom:1px solid #1a1a1a}
+.alloc-row:last-child{border-bottom:0}
+.alloc-bar{flex:1;height:5px;background:#1a1a1a;position:relative}
+.alloc-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--orange);opacity:.7}
+.alloc-name{width:90px;color:var(--text-dim)}
+.alloc-pct{width:50px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--text)}
+.alloc-delta{width:55px;text-align:right;font-size:10px;font-variant-numeric:tabular-nums;color:var(--text-muted)}
+
+.signal-line{font-size:11px;padding:2px 0;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.loading{text-align:center;padding:60px;color:var(--text-muted)}
+
+.mod-table{width:100%;border-collapse:collapse;font-size:11px}
+.mod-table th{background:#141414;padding:6px 10px;text-align:left;color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
+.mod-table td{padding:7px 10px;border-bottom:1px solid #1a1a1a;color:var(--text-dim);vertical-align:top}
+.mod-table tr:hover td{background:#0f0f0f}
+.mod-name{font-weight:700;color:var(--text);white-space:nowrap}
+.mod-status-on{color:var(--orange);font-size:10px;font-weight:600}
+.mod-status-off{color:var(--text-muted);font-size:10px;font-weight:600}
+
+.bloomberg-tagline{color:var(--text-muted);font-size:10px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<div id="loading" class="loading">LOADING DATA...</div>
+<div id="content" style="display:none">
+
+  <!-- Alert Bar -->
+  <div class="alert-bar">
+    <span class="c-orange">▲ ALERT</span>
+    <span id="alert-text" class="c-dim">--</span>
+    <span style="margin-left:auto;color:var(--text-muted);font-size:10px" id="update-time">--</span>
+  </div>
+
+  <!-- Macro Panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>MACRO ENVIRONMENT</span>
+      <span id="macro-date" class="c-muted" style="font-weight:400;letter-spacing:0">--</span>
+    </div>
+    <div class="panel-body">
+      <div class="macro-hero" style="margin-bottom:14px">
+        <div>
+          <div class="score-label">MACRO SCORE</div>
+          <div id="macro-score" class="score-big">--</div>
+          <div id="macro-phase" class="phase-text">--</div>
+        </div>
+        <div>
+          <div class="score-label" style="margin-bottom:6px">RAW SIGNALS</div>
+          <div id="macro-signals"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="score-label">MERRILL CLOCK</div>
+          <div id="macro-merrill" class="c-dim" style="font-size:11px;line-height:1.5">--</div>
+        </div>
+      </div>
+      <div class="data-grid" id="macro-detail"></div>
+    </div>
+  </div>
+
+  <!-- Strategy Fitness -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>STRATEGY FITNESS · 策略适配度</span>
+      <span class="c-muted" style="font-weight:400;letter-spacing:0">6 STRATEGIES</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table class="strat-table">
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th style="width:60px">Score</th>
+            <th style="width:90px">Level</th>
+            <th style="width:80px">Bar</th>
+            <th>Key Signal</th>
+          </tr>
+        </thead>
+        <tbody id="strat-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Module Status + Allocation -->
+  <div class="row-2">
+    <!-- Module Status -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>MODULE STATUS · 模块状态</span>
+        <span class="c-muted" style="font-weight:400;letter-spacing:0" id="mod-count">--</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table class="mod-table">
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th style="width:50px">Status</th>
+              <th style="width:80px">Updated</th>
+            </tr>
+          </thead>
+          <tbody id="mod-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Allocation -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>ALLOCATION · 配置建议</span>
+        <span class="c-muted" style="font-weight:400;letter-spacing:0">SUGGESTED</span>
+      </div>
+      <div class="panel-body" id="alloc-body"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:8px;padding:6px;text-align:center" class="bloomberg-tagline">
+    GAMT TERMINAL · POWERED BY GAMT FOF · DATA: TUSHARE / IFIND / FOF99
+  </div>
+
+</div>
+
+<script>
+const STRAT_LABEL = {
+  quant_stock:'Quant Stock 量化股票',
+  momentum_stock:'Momentum 强势股',
+  commodity_cta:'Commodity CTA 商品',
+  cb_env:'CB Enhanced 转债',
+  arbitrage:'Arbitrage 套利',
+  option_vol:'Option Sell 期权'
+};
+
+const MACRO_DETAIL_LABEL = {
+  liquidity:'LIQUIDITY 流动性',
+  fundamentals:'FUNDAMENTALS 基本面',
+  rates_fx:'RATES & FX 利率汇率',
+  option_sentiment:'OPT SENTIMENT 期权情绪',
+  crowding_flow:'CROWDING FLOW 资金面'
+};
+
+function levelByScore(s){
+  if(s>=70)return 'FRIENDLY';
+  if(s>=55)return 'NEUTRAL';
+  if(s>=40)return 'CAUTIOUS';
+  return 'UNFRIENDLY';
+}
+
+function loadAll(){
+  return Promise.all([
+    fetch('macro/score/macro_score.json?t='+Date.now()).then(r=>r.json()),
+    fetch('server/overview.json?t='+Date.now()).then(r=>r.json()).catch(()=>null)
+  ]);
+}
+
+loadAll().then(([S, D])=>{
+  // ===== Macro =====
+  const sc = S.macro.total;
+  document.getElementById('macro-score').textContent = Math.round(sc);
+  document.getElementById('macro-phase').textContent = (S.macro.emoji||'') + ' ' + (S.macro.phase||'');
+  document.getElementById('macro-date').textContent = S.update_time || '--';
+  document.getElementById('update-time').textContent = 'UPDATED ' + (S.update_time || '--');
+
+  const sigs = S.macro.raw_signals || [];
+  const topSig = sigs.find(s => /🔴|⚠/.test(s)) || sigs[0] || '宏观环境观察中';
+  document.getElementById('alert-text').textContent = topSig.replace(/[🔴🟢🟡⚠️▲]/g,'').trim();
+
+  document.getElementById('macro-signals').innerHTML = sigs.slice(0,4).map(s=>
+    '<div class="signal-line">' + s.replace(/[🔴🟢🟡⚠️▲]/g,'').trim() + '</div>'
+  ).join('');
+
+  const mc = S.macro.merrill_clock||{};
+  document.getElementById('macro-merrill').textContent =
+    (mc.phase||'--') +
+    (mc.pmi?' / PMI '+mc.pmi:'') +
+    (mc.cpi?' / CPI '+mc.cpi+'%':'');
+
+  const detail = S.macro.detail || {};
+  document.getElementById('macro-detail').innerHTML =
+    Object.keys(MACRO_DETAIL_LABEL).map(k=>{
+      const d = detail[k] || {};
+      const v = Math.round(d.score||0);
+      return '<div class="data-cell">' +
+        '<div class="label">' + MACRO_DETAIL_LABEL[k] + '</div>' +
+        '<div class="value">' + v + '</div>' +
+        '<div class="sub">' + (d.summary || levelByScore(v)) + '</div>' +
+      '</div>';
+    }).join('');
+
+  // ===== Strategy =====
+  const stratOrder = ['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
+  document.getElementById('strat-tbody').innerHTML = stratOrder.map(k=>{
+    const st = S.strategies[k] || {};
+    const sc2 = st.score || 0;
+    const sigShow = (st.signals||[])[0] || '--';
+    return '<tr>' +
+      '<td class="mod-name">' + (st.label || STRAT_LABEL[k] || k) + '</td>' +
+      '<td class="score-cell">' + sc2 + '</td>' +
+      '<td>' + levelByScore(sc2) + '</td>' +
+      '<td><span class="score-bar"><span class="score-bar-fill" style="width:' + sc2 + '%"></span></span></td>' +
+      '<td>' + sigShow.replace(/[🔴🟢🟡⚠️▲]/g,'').trim() + '</td>' +
+    '</tr>';
+  }).join('');
+
+  // ===== Module Status =====
+  const groups = (D && D.module_groups) || [];
+  document.getElementById('mod-count').textContent = groups.length + ' MODULES';
+  document.getElementById('mod-tbody').innerHTML = groups.map(g=>{
+    const stTxt = g.status==='on'
+      ? '<span class="mod-status-on">● ON</span>'
+      : '<span class="mod-status-off">○ OFF</span>';
+    return '<tr>' +
+      '<td class="mod-name">' + g.name + '</td>' +
+      '<td>' + stTxt + '</td>' +
+      '<td class="c-muted">' + (g.updated || '--') + '</td>' +
+    '</tr>';
+  }).join('') || '<tr><td colspan="3" class="c-muted" style="text-align:center;padding:20px">无数据</td></tr>';
+
+  // ===== Allocation =====
+  const alloc = S.allocation || {};
+  const allocOrder = ['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol','cash'];
+  document.getElementById('alloc-body').innerHTML = allocOrder.map(k=>{
+    const v = alloc[k] || {};
+    const pct = v.pct || 0;
+    const delta = v.delta || 0;
+    let dStr;
+    if(delta>0)dStr='↑'+delta.toFixed(1)+'%';
+    else if(delta<0)dStr='↓'+Math.abs(delta).toFixed(1)+'%';
+    else dStr='--';
+    return '<div class="alloc-row">' +
+      '<span class="alloc-name">' + (v.label || k) + '</span>' +
+      '<span class="alloc-bar"><span class="alloc-bar-fill" style="width:' + pct + '%"></span></span>' +
+      '<span class="alloc-pct">' + pct.toFixed(1) + '%</span>' +
+      '<span class="alloc-delta">' + dStr + '</span>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = '';
+}).catch(e=>{
+  console.error('Load failed:', e);
+  document.getElementById('loading').innerHTML =
+    '<div class="c-orange">FAILED TO LOAD DATA</div>' +
+    '<div class="c-muted" style="margin-top:8px">' + e.message + '</div>';
+});
+</script>
+</body>
+</html>

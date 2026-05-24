@@ -463,7 +463,20 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
     <!-- ══ 总览 ══ -->
     <div class="module-page active" id="page-overview">
+      <iframe id="ov-terminal-frame" src="overview-terminal.html" style="display:none;width:100%;height:calc(100vh - var(--header-h) - 40px);border:0;background:#000"></iframe>
       <div id="ov-loading" style="text-align:center;padding:40px;color:#8b92a5">加载中...</div>
+      <script>
+      (function(){
+        if(location.search.includes("theme=bloomberg")){
+          var frame=document.getElementById("ov-terminal-frame");
+          if(frame)frame.style.display="block";
+          var loading=document.getElementById("ov-loading");
+          if(loading)loading.style.display="none";
+          var content=document.getElementById("ov-content");
+          if(content)content.style.display="none";
+        }
+      })();
+      </script>
       <div id="ov-content" style="display:none">
 
         <!-- ═══ 宏观总控 Hero ═══ -->
@@ -553,6 +566,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <script>
       (function(){
+        if(location.search.includes('theme=bloomberg')){return;}
         /* ── 加载 macro_score.json ── */
         fetch('macro/score/macro_score.json?t='+Date.now()).then(function(r){return r.json()}).then(function(S){
           // Score colors
@@ -720,6 +734,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         });
 
         /* ── 原有 overview.json ── */
+        if(location.search.includes('theme=bloomberg')){return;}
         fetch('server/overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
           document.getElementById('ov-loading').style.display='none';
           document.getElementById('ov-content').style.display='';
