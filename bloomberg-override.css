@@ -351,11 +351,11 @@ canvas {
 
 /* ========== Force override inline styles ========== */
 /* Kill ALL white/light backgrounds in content area */
-.content [style*="background"],
-.content [style*="Background"],
-.content div[style],
+.content [style*="background"]:not(.heatmap-cell):not(.mega-chip):not(.tag):not(.ov-tag):not(.status-badge),
+.content [style*="Background"]:not(.heatmap-cell):not(.mega-chip),
+.content div[style]:not(.heatmap-cell):not(.mega-chip),
 .content section[style],
-.content span[style*="background"],
+.content span[style*="background"]:not(.heatmap-cell):not(.mega-chip):not(.tag):not(.ov-tag):not(.status-badge),
 .content td[style*="background"],
 .content th[style*="background"] {
   background: #0a0a0a !important;
