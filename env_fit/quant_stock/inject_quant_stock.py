@@ -144,7 +144,7 @@ const chartOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
   plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10}}}}
+  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}
 };
 
 // ===== 图1: 全市场成交额 =====
@@ -162,7 +162,7 @@ const chartOpts = {
         {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
       ]
     },
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'}}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}}
   });
 })();
 
@@ -170,7 +170,7 @@ const chartOpts = {
 (function(){
   const d = QS_DATA.index_share;
   const labels = d.map(r=>fmtDate(r.date));
-  const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+  const colors = ['#ff8c00','#00bcd4','#4caf50','#ffc107','#ab47bc'];
   const names = ['沪深300','中证500','中证1000','中证2000','科创+创业板'];
   const datasets = names.map((n,i)=>({
     label:n,
@@ -179,12 +179,13 @@ const chartOpts = {
     borderWidth:1.5,
     pointRadius:0,
     tension:0.1,
-    fill:false
+    fill:false,
+    borderDash:[4,3]
   }));
   new Chart(document.getElementById('chartShare'), {
     type:'line',
     data:{labels, datasets},
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%'},min:0}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]},min:0}}}
   });
 })();
 
@@ -200,7 +201,8 @@ const chartOpts = {
     borderWidth:1.5,
     pointRadius:0,
     tension:0.1,
-    fill:false
+    fill:false,
+    borderDash:[4,3]
   }));
   new Chart(document.getElementById('chartBasis'), {
     type:'line',
@@ -209,13 +211,13 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v+'%'}}
+        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}
       },
       plugins:{
         ...chartOpts.plugins,
         annotation:{
           annotations:{
-            zero:{type:'line',yMin:0,yMax:0,borderColor:'rgba(0,0,0,0.2)',borderWidth:1,borderDash:[3,3]}
+            zero:{type:'line',yMin:0,yMax:0,borderColor:'rgba(0,0,0,0.2)',borderWidth:1,tickBorderDash:[3,3]}
           }
         }
       }
@@ -228,7 +230,7 @@ const chartOpts = {
   const d = QS_DATA.factor;
   const names = QS_DATA.factor_names;
   const labels = d.map(r=>fmtDate(r.date));
-  const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6'];
+  const colors = ['#ff8c00','#00bcd4','#4caf50','#ffc107','#ab47bc'];
   const datasets = names.map((n,i)=>({
     label:n,
     data:d.map(r=>r[n]||null),
@@ -236,7 +238,8 @@ const chartOpts = {
     borderWidth:1.5,
     pointRadius:0,
     tension:0.1,
-    fill:false
+    fill:false,
+    borderDash:[4,3]
   }));
   new Chart(document.getElementById('chartFactor'), {
     type:'line',
@@ -245,13 +248,13 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v.toFixed(2)}}
+        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}
       },
       plugins:{
         ...chartOpts.plugins,
         annotation:{
           annotations:{
-            one:{type:'line',yMin:1,yMax:1,borderColor:'rgba(0,0,0,0.2)',borderWidth:1,borderDash:[3,3]}
+            one:{type:'line',yMin:1,yMax:1,borderColor:'rgba(0,0,0,0.2)',borderWidth:1,tickBorderDash:[3,3]}
           }
         }
       }

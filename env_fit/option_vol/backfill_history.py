@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """
 backfill_history.py
-回补期权历史数据（2年）
+期权历史数据增量更新
+
+日更模式（默认）：只补最近 5 个交易日的缺失数据
+全量模式（--full）：补全 2024-04-01 至今所有缺失日期
 
 目标：
-- 拉 2024-04-01 至今的全市场期权日线数据
+- 拉全市场期权日线数据
 - 按品种汇总：每天每个品种的 vol/amount/oi/ATM价格
 - 存入 _cache/history_breadth.json
 """
-import re, json, datetime, requests, time
+import re, json, datetime, requests, time, sys
 import numpy as np
 from pathlib import Path
 
@@ -31,17 +34,24 @@ OPT_TO_FUT = {
     "PB2": "PB", "BR2": "BR", "SC2": "SC",
 }
 
+# 日更模式只补最近 N 个交易日
+INCREMENTAL_DAYS = 5
+FULL_MODE = '--full' in sys.argv
+
+
 def ts_api(api_name, **kwargs):
     for attempt in range(3):
         try:
             r = requests.post(TS_URL, json={"api_name": api_name, "token": TS_TOKEN,
-                                            "params": kwargs, "fields": ""}, timeout=30)
+                                            "params": kwargs, "fields": ""},
+                              timeout=30, proxies={'http': None, 'https': None})
             d = r.json()
             if d.get("code") != 0: return None, d.get("msg")
             return [dict(zip(d["data"]["fields"], row)) for row in d["data"]["items"]], None
         except Exception as e:
             if attempt < 2: time.sleep(1)
             else: return None, str(e)
+
 
 def parse_opt_prefix(ts_code):
     code = ts_code.split(".")[0]
@@ -50,26 +60,39 @@ def parse_opt_prefix(ts_code):
         if m: return m.group(1), m.group(3)
     return None, None
 
+
 def get_fut_prefix(opt_prefix):
     return OPT_TO_FUT.get(opt_prefix, opt_prefix)
+
 
 def parse_fut_prefix(ts_code):
     code = ts_code.split(".")[0]
     m = re.match(r'([A-Z]+)', code)
     return m.group(1) if m else None
 
+
 print("=" * 60)
-print("回补期权历史数据（2年）")
+mode_str = "全量回补" if FULL_MODE else f"增量更新（最近 {INCREMENTAL_DAYS} 个交易日）"
+print(f"期权历史数据 — {mode_str}")
 print("=" * 60)
 
 # 拉交易日历
-start_date = datetime.date(2024, 4, 1)
+if FULL_MODE:
+    start_date = datetime.date(2024, 4, 1)
+else:
+    start_date = datetime.date.today() - datetime.timedelta(days=15)
+
 end_date = datetime.date.today()
 cal, _ = ts_api("trade_cal", exchange="SSE",
                 start_date=start_date.strftime("%Y%m%d"),
                 end_date=end_date.strftime("%Y%m%d"), is_open="1")
 trade_days = sorted([c["cal_date"] for c in cal]) if cal else []
-print(f"交易日: {len(trade_days)} 天 ({start_date} ~ {end_date})")
+
+if not FULL_MODE:
+    # 日更模式：只取最近 N 个交易日
+    trade_days = trade_days[-INCREMENTAL_DAYS:]
+
+print(f"目标交易日: {len(trade_days)} 天 ({trade_days[0] if trade_days else '?'} ~ {trade_days[-1] if trade_days else '?'})")
 
 # 读已有缓存
 history_file = CACHE_DIR / "history_breadth.json"
@@ -82,14 +105,19 @@ else:
     history = {"records": []}
     existing_dates = set()
 
-# 需要补的日期 + 重试空数据的日期（之前拉到空可能是盘中/数据延迟）
-empty_dates = {r["date"] for r in history.get("records", []) if not r.get("symbols")}
-todo = [td for td in trade_days if td not in existing_dates or td in empty_dates]
-if empty_dates:
-    # 移除空记录，让它们重新拉取
-    history["records"] = [r for r in history["records"] if r.get("symbols")]
-    existing_dates -= empty_dates
-    print(f"空数据日期（将重试）: {sorted(empty_dates)}")
+# 需要补的日期
+if FULL_MODE:
+    # 全量模式：补所有缺失 + 重试空数据
+    empty_dates = {r["date"] for r in history.get("records", []) if not r.get("symbols")}
+    todo = [td for td in trade_days if td not in existing_dates or td in empty_dates]
+    if empty_dates:
+        history["records"] = [r for r in history["records"] if r.get("symbols")]
+        existing_dates -= empty_dates
+        print(f"空数据日期（将重试）: {len(empty_dates)} 天")
+else:
+    # 增量模式：只补缺失的，不重试空数据
+    todo = [td for td in trade_days if td not in existing_dates]
+
 print(f"需要补: {len(todo)} 天")
 
 if not todo:
@@ -99,12 +127,12 @@ if not todo:
 print(f"\n开始回补...")
 for i, td in enumerate(todo, 1):
     print(f"[{i}/{len(todo)}] {td}...", end=" ", flush=True)
-    
+
     # 拉期权数据
     opt_all = {}
     for ex in EXCHANGES:
         data, err = ts_api("opt_daily", exchange=ex, trade_date=td,
-                          fields="ts_code,close,vol,amount,oi")
+                           fields="ts_code,close,vol,amount,oi")
         if not data: continue
         for d in data:
             opt_prefix, cp = parse_opt_prefix(d["ts_code"])
@@ -122,7 +150,7 @@ for i, td in enumerate(todo, 1):
                     row["call_prices"].append(p)
                     row["call_vols"].append(float(d.get("vol", 0) or 0))
         time.sleep(0.15)
-    
+
     # 拉期货价格
     fut_prices = {}
     for ex in EXCHANGES:
@@ -139,7 +167,7 @@ for i, td in enumerate(todo, 1):
         for fp, (c, _) in by_prefix.items():
             fut_prices[fp] = c
         time.sleep(0.15)
-    
+
     # 汇总
     symbols = []
     for fp, info in opt_all.items():
@@ -160,10 +188,10 @@ for i, td in enumerate(todo, 1):
             "amount": round(info["amount"], 2),
             "oi": round(info["oi"], 2),
         })
-    
+
     history["records"].append({"date": td, "symbols": symbols})
     print(f"{len(symbols)} 品种")
-    
+
     # 每10天保存一次
     if i % 10 == 0:
         with open(history_file, "w", encoding="utf-8") as f:
@@ -175,4 +203,4 @@ history["records"] = sorted(history["records"], key=lambda x: x["date"])
 with open(history_file, "w", encoding="utf-8") as f:
     json.dump(history, f, ensure_ascii=False, indent=2)
 
-print(f"\n 完成: {len(history['records'])} 天")
+print(f"\n✅ 完成: {len(history['records'])} 天")

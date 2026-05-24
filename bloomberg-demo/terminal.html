@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMT Terminal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+:root{--bg:#000;--surface:#0a0a0a;--surface-2:#141414;--border:#2a2a2a;--text:#fff;--text-dim:#999;--text-muted:#666;--orange:#ff8c00;--green:#00d26a;--red:#ff3b3b;--blue:#4da6ff;--yellow:#ffd700;--mono:'JetBrains Mono','SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12px;line-height:1.4;min-height:100vh}
+.top-bar{display:flex;align-items:center;height:28px;background:#1a1a1a;border-bottom:1px solid var(--border);padding:0 8px;gap:8px}
+.top-bar .brand{color:var(--orange);font-weight:700;font-size:11px;letter-spacing:1px}
+.top-bar .info{color:var(--text-muted);font-size:10px}
+.top-bar .spacer{flex:1}
+.top-bar .status{color:var(--green);font-size:10px}
+.top-bar .clock{color:var(--text-muted);font-size:10px}
+.ticker-strip{display:flex;gap:12px;padding:4px 8px;background:#050505;border-bottom:1px solid var(--border);overflow-x:auto;font-size:10px}
+.ticker-item{white-space:nowrap;display:flex;gap:4px}
+.ticker-item .sym{color:var(--text-dim)}
+.layout{display:grid;grid-template-columns:170px 1fr;height:calc(100vh - 56px)}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:4px 0}
+.nav-group-label{padding:8px 10px 3px;font-size:9px;color:var(--orange);font-weight:700;letter-spacing:1.5px}
+.nav-btn{display:block;width:100%;padding:5px 10px;font-size:11px;font-family:var(--mono);color:var(--text-dim);background:none;border:none;text-align:left;cursor:pointer;border-left:2px solid transparent}
+.nav-btn:hover{color:var(--text);background:#1a1a1a}
+.nav-btn.active{color:var(--orange);border-left-color:var(--orange);background:#111}
+.main-content{overflow-y:auto;padding:8px}
+.panel{border:1px solid var(--border);margin-bottom:6px;background:var(--surface)}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:#111;border-bottom:1px solid var(--border);font-size:10px;color:var(--orange);font-weight:600;letter-spacing:.5px}
+.panel-body{padding:8px}
+.data-grid{display:grid;gap:1px;background:var(--border)}
+.data-cell{background:var(--surface);padding:6px 8px}
+.data-cell .label{font-size:9px;color:var(--text-muted);letter-spacing:.5px}
+.data-cell .value{font-size:15px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.data-cell .sub{font-size:9px;color:var(--text-muted);margin-top:1px}
+.strat-table{width:100%;border-collapse:collapse;font-size:11px}
+.strat-table th{text-align:left;padding:4px 8px;font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.strat-table td{padding:5px 8px;border-bottom:1px solid #1a1a1a;font-variant-numeric:tabular-nums}
+.strat-table tr:hover td{background:#111}
+.score-bar{display:inline-block;width:60px;height:4px;background:#222;vertical-align:middle;margin-left:6px}
+.score-bar-fill{height:100%;display:block}
+.c-green{color:var(--green)}.c-red{color:var(--red)}.c-orange{color:var(--orange)}.c-yellow{color:var(--yellow)}.c-blue{color:var(--blue)}.c-dim{color:var(--text-dim)}.c-muted{color:var(--text-muted)}
+.alert-bar{padding:4px 8px;font-size:10px;border-left:3px solid var(--orange);background:rgba(255,140,0,.05);margin-bottom:6px}
+.risk-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px}
+.risk-dot{width:6px;height:6px;border-radius:1px}
+.mod-page{display:none}.mod-page.active{display:block}
+.signal-list{list-style:none;font-size:11px;color:var(--text-dim);line-height:1.8}
+.signal-list li{padding:2px 0}
+.alloc-bar{display:flex;height:20px;border-radius:2px;overflow:hidden;margin:8px 0}
+.alloc-seg{display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;min-width:20px}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+<span class="brand">GAMT</span><span class="info">Terminal v0.3</span><span class="spacer"></span><span class="status">● 在线</span><span class="clock" id="clock"></span>
+</div>
+<div class="ticker-strip" id="ticker-strip"><div class="ticker-item"><span class="sym">加载中...</span></div></div>
+<div class="layout">
+<div class="sidebar">
+<div class="nav-group-label">总览</div>
+<button class="nav-btn active" data-mod="overview">仪表盘</button>
+<button class="nav-btn" data-mod="decision">决策台</button>
+<div class="nav-group-label">分析</div>
+<button class="nav-btn" data-mod="strat">策略环境</button>
+<button class="nav-btn" data-mod="style">风格轧差</button>
+<button class="nav-btn" data-mod="flow">资金流与微观</button>
+<button class="nav-btn" data-mod="macro">宏观与流动性</button>
+<div class="nav-group-label">工具</div>
+<button class="nav-btn" data-mod="timing">择时研究</button>
+<button class="nav-btn" data-mod="merger">并购池</button>
+<button class="nav-btn" data-mod="stock">个股监控</button>
+<button class="nav-btn" data-mod="fund">基金优选</button>
+<button class="nav-btn" data-mod="dd">尽调库</button>
+<button class="nav-btn" data-mod="notes">智能笔记</button>
+<button class="nav-btn" data-mod="alerts">红灯预警</button>
+<div class="nav-group-label">系统</div>
+<button class="nav-btn" data-mod="admin">管理后台</button>
+<button class="nav-btn" data-mod="log">刷新记录</button>
+</div>
+<div class="main-content">
+<div class="mod-page active" id="page-overview"><div id="ov-loading" style="color:var(--text-muted);padding:20px;text-align:center">正在加载数据...</div><div id="ov-content" style="display:none"></div></div>
+<div class="mod-page" id="page-decision"><div id="decision-content"></div></div>
+<div class="mod-page" id="page-strat"><div id="strat-content"></div></div>
+<div class="mod-page" id="page-style"><div id="style-content"></div></div>
+<div class="mod-page" id="page-flow"><div id="flow-content"></div></div>
+<div class="mod-page" id="page-macro"><div id="macro-content"></div></div>
+<div class="mod-page" id="page-timing"><div class="panel"><div class="panel-header">择时研究</div><div class="panel-body"><a href="../timing-research/" style="color:var(--blue)">打开择时研究面板 →</a></div></div></div>
+<div class="mod-page" id="page-merger"><div class="panel"><div class="panel-header">并购池</div><div class="panel-body"><a href="../skills/stock-monitor/merger_pool.html" style="color:var(--blue)">打开并购信息表 →</a></div></div></div>
+<div class="mod-page" id="page-stock"><div class="panel"><div class="panel-header">个股监控</div><div class="panel-body"><a href="../skills/stock-monitor/stock_monitor.html" style="color:var(--blue)">打开个股监控面板 →</a></div></div></div>
+<div class="mod-page" id="page-fund"><div class="panel"><div class="panel-header">团队基金优选</div><div class="panel-body"><a href="../fund-asset-recommend/fund_asset.html" style="color:var(--blue)">打开基金优选 →</a></div></div></div>
+<div class="mod-page" id="page-dd"><div class="panel"><div class="panel-header">尽调库</div><div class="panel-body"><a href="../dd-dashboard/" style="color:var(--blue)">打开尽调库 →</a></div></div></div>
+<div class="mod-page" id="page-notes"><div class="panel"><div class="panel-header">智能笔记</div><div class="panel-body"><a href="../smart-notes/" style="color:var(--blue)">打开 Smart Notes →</a></div></div></div>
+<div class="mod-page" id="page-alerts"><div id="alerts-content"></div></div>
+<div class="mod-page" id="page-admin"><div class="panel"><div class="panel-header">管理后台</div><div class="panel-body"><a href="../admin.html" style="color:var(--blue)">打开管理后台 →</a></div></div></div>
+<div class="mod-page" id="page-log"><div id="log-content"></div></div>
+</div>
+</div>
+<script>
+const BASE='..';
+const PATHS={
+  macroScore:`${BASE}/macro/score/macro_score.json`,
+  liquidity:`${BASE}/macro/liquidity/liquidity.json`,
+  momentum:`${BASE}/env_fit/momentum_stock/momentum_sentiment.json`,
+  cta:`${BASE}/env_fit/commodity_cta/commodity_cta.json`,
+  cb:`${BASE}/env_fit/cb_env/cb_env.json`,
+  option:`${BASE}/env_fit/option_vol/option_vol.json`,
+  quant:`${BASE}/env_fit/quant_stock/quant_stock_data.json`,
+  arb:`${BASE}/env_fit/arbitrage/mod1_index_arb.json`,
+  signals:`${BASE}/env_fit/env_fit_signals.json`,
+  crowding:`${BASE}/micro_flow/crowding/crowding.json`,
+  patient:`${BASE}/micro_flow/patient_capital/patient_capital.json`,
+  styleSignals:`${BASE}/size_spread/style_spread_signals.json`
+};
+
+async function loadAll(){
+  const r={};
+  for(const[k,url]of Object.entries(PATHS)){
+    try{const resp=await fetch(url);if(resp.ok)r[k]=await resp.json();}catch(e){console.warn(k,e);}
+  }
+  return r;
+}
+
+function sc(s){return s>=65?'c-green':s>=45?'c-yellow':'c-red';}
+function sl(s){return s>=65?'友好':s>=45?'中性':'不友好';}
+function barColor(s){return s>=65?'var(--green)':s>=45?'var(--yellow)':'var(--red)';}
+
+function renderOverview(data){
+  const ms=data.macroScore||{};
+  const macro=ms.macro||{};
+  const strats=ms.strategies||{};
+  const alloc=ms.allocation||{};
+  const meso=ms.meso_tags||[];
+  const liq=data.liquidity||{};
+  const dr=liq.dr007||[];
+  const lastDr=dr[dr.length-1]||{};
+  const momDaily=data.momentum?.daily||[];
+  const momLast=momDaily[momDaily.length-1]||{};
+  const ctaM1=data.cta?.mod1_cta_env?.summary||{};
+  const patient=data.patient||{};
+  const patientState=patient.state_summary||'';
+
+  // Strategy table
+  const stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
+  const stratNames={quant_stock:'量化股票',momentum_stock:'强势股',commodity_cta:'商品CTA',cb_env:'转债指增',arbitrage:'套利',option_vol:'期权卖权'};
+  let stratRows='';
+  for(const k of stratOrder){
+    const s=strats[k];
+    if(!s)continue;
+    const score=Math.round(s.score||0);
+    const cc=sc(score);
+    const sigs=(s.signals||[]).slice(0,2).join(' | ').replace(/[🟢🟡🔴⚠🔥]/g,'');
+    const a=alloc[k];
+    const delta=a?`${a.delta>0?'+':''}${a.delta.toFixed(1)}%`:'';
+    stratRows+=`<tr><td>${stratNames[k]||k}</td><td class="${cc}" style="font-weight:700;font-size:13px">${score}</td><td class="${cc}">${sl(score)}</td><td><span class="score-bar"><span class="score-bar-fill" style="width:${score}%;background:${barColor(score)}"></span></span></td><td class="c-dim" style="font-size:10px">${sigs}</td><td class="${a&&a.delta>0?'c-green':a&&a.delta<0?'c-red':'c-dim'}">${delta}</td></tr>`;
+  }
+
+  // Allocation bar
+  const allocColors={quant_stock:'#3b82f6',momentum_stock:'#f59e0b',commodity_cta:'#10b981',cb_env:'#8b5cf6',arbitrage:'#06b6d4',option_vol:'#ec4899'};
+  let allocBar='';
+  for(const k of stratOrder){
+    const a=alloc[k];
+    if(!a)continue;
+    allocBar+=`<div class="alloc-seg" style="width:${a.pct}%;background:${allocColors[k]||'#666'}">${a.pct.toFixed(0)}%</div>`;
+  }
+
+  // Alert
+  let alertHtml='';
+  if(momLast.cycle_label==='退潮'||momLast.sentiment<40){
+    alertHtml=`<div class="alert-bar"><span class="c-orange">▲ 预警</span> 强势股${momLast.cycle_label||'异常'} · 情绪${(momLast.sentiment||0).toFixed(1)} · 炸板率${momLast.zha_rate||0}%</div>`;
+  }
+
+  // Merrill
+  const merrill=macro.merrill_clock||{};
+
+  document.getElementById('ov-content').innerHTML=`
+    ${alertHtml}
+    <div class="panel"><div class="panel-header"><span>宏观环境</span><span style="color:var(--text-muted)">${ms.update_time||''}</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(6,1fr)">
+      <div class="data-cell"><div class="label">宏观评分</div><div class="value ${sc(macro.total||0)}">${(macro.total||0).toFixed(1)}</div><div class="sub">${macro.phase||'--'}</div></div>
+      <div class="data-cell"><div class="label">美林时钟</div><div class="value c-dim">${merrill.phase||'--'}</div><div class="sub">${merrill.advice||''}</div></div>
+      <div class="data-cell"><div class="label">DR007</div><div class="value ${(lastDr.dr007||2)<1.5?'c-green':'c-dim'}">${lastDr.dr007||'--'}%</div><div class="sub">${lastDr.date||''}</div></div>
+      <div class="data-cell"><div class="label">强势股情绪</div><div class="value ${sc(momLast.sentiment||50)}">${(momLast.sentiment||0).toFixed(1)}</div><div class="sub">${momLast.cycle_label||'--'}</div></div>
+      <div class="data-cell"><div class="label">CTA友好度</div><div class="value ${sc(ctaM1.cta_friendly||0)}">${(ctaM1.cta_friendly||0).toFixed(1)}</div><div class="sub">${ctaM1.trend_count||0}/${ctaM1.n_active||0}趋势</div></div>
+      <div class="data-cell"><div class="label">耐心资本</div><div class="value c-dim">${typeof patientState==='string'?patientState.slice(0,20):'--'}</div><div class="sub">${patient.updated||''}</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>策略适配度</span><span style="color:var(--text-muted)">${stratOrder.length}个策略</span></div>
+    <div class="panel-body" style="padding:0"><table class="strat-table">
+    <thead><tr><th>策略</th><th>评分</th><th>状态</th><th>条形</th><th>核心信号</th><th>配置变化</th></tr></thead>
+    <tbody>${stratRows}</tbody></table></div></div>
+
+    <div class="panel"><div class="panel-header"><span>建议配置</span></div>
+    <div class="panel-body"><div class="alloc-bar">${allocBar}</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text-dim)">${stratOrder.map(k=>{const a=alloc[k];return a?`<span><span style="display:inline-block;width:8px;height:8px;background:${allocColors[k]};margin-right:3px"></span>${stratNames[k]} ${a.pct.toFixed(0)}%</span>`:''}).join('')}</div>
+    </div></div>
+
+    ${meso.length?`<div class="panel"><div class="panel-header"><span>中观标签</span></div><div class="panel-body" style="font-size:11px;color:var(--text-dim)">${meso.join(' · ')}</div></div>`:''}
+  `;
+
+  // Ticker
+  const tickers=[];
+  const qAmt=data.quant?.total_amount;
+  if(qAmt&&qAmt.length)tickers.push(`<div class="ticker-item"><span class="sym">全A成交</span><span>${(qAmt[qAmt.length-1].amount_yi/10000).toFixed(2)}万亿</span></div>`);
+  const qBasis=data.quant?.basis;
+  if(qBasis&&qBasis.length){const b=qBasis[qBasis.length-1];tickers.push(`<div class="ticker-item"><span class="sym">IF</span><span class="${b.IF<-8?'c-red':'c-dim'}">${b.IF.toFixed(1)}%</span></div>`);tickers.push(`<div class="ticker-item"><span class="sym">IC</span><span class="${b.IC<-8?'c-red':'c-dim'}">${b.IC.toFixed(1)}%</span></div>`);tickers.push(`<div class="ticker-item"><span class="sym">IM</span><span class="${b.IM<-8?'c-red':'c-dim'}">${b.IM.toFixed(1)}%</span></div>`);}
+  tickers.push(`<div class="ticker-item"><span class="sym">DR007</span><span>${lastDr.dr007||'--'}%</span></div>`);
+  tickers.push(`<div class="ticker-item"><span class="sym">情绪</span><span class="${momLast.sentiment<40?'c-red':'c-green'}">${(momLast.sentiment||0).toFixed(1)}</span></div>`);
+  tickers.push(`<div class="ticker-item"><span class="sym">CTA</span><span class="${sc(ctaM1.cta_friendly||0)}">${(ctaM1.cta_friendly||0).toFixed(1)}</span></div>`);
+  tickers.push(`<div class="ticker-item"><span class="sym">转债</span><span>${data.cb?.score||'--'}</span></div>`);
+  tickers.push(`<div class="ticker-item"><span class="sym">宏观</span><span class="${sc(macro.total||0)}">${(macro.total||0).toFixed(1)}</span></div>`);
+  document.getElementById('ticker-strip').innerHTML=tickers.join('');
+
+  document.getElementById('ov-loading').style.display='none';
+  document.getElementById('ov-content').style.display='block';
+}
+
+function renderDecision(data){
+  const ms=data.macroScore||{};
+  const strats=ms.strategies||{};
+  const stratOrder=['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
+  const stratNames={quant_stock:'量化股票',momentum_stock:'强势股',commodity_cta:'商品CTA',cb_env:'转债指增',arbitrage:'套利',option_vol:'期权卖权'};
+  let rows='';
+  for(const k of stratOrder){
+    const s=strats[k];if(!s)continue;
+    const score=Math.round(s.score||0);
+    const sigs=(s.signals||[]).map(x=>x.replace(/[🟢🟡🔴⚠🔥]/g,'')).join('<br>');
+    rows+=`<tr><td>${stratNames[k]}</td><td class="${sc(score)}" style="font-weight:700;font-size:13px">${score}</td><td class="c-dim" style="font-size:10px;line-height:1.6">${sigs}</td></tr>`;
+  }
+  const macro=ms.macro||{};
+  const hyp=macro.macro_hypothesis||{};
+  document.getElementById('decision-content').innerHTML=`
+    <div class="alert-bar"><span class="c-orange">■ 决策台</span> 宏观${(macro.total||0).toFixed(1)}分 ${macro.phase||''} | ${hyp.title||''}</div>
+    <div class="panel"><div class="panel-header"><span>策略评分 + 信号明细</span></div>
+    <div class="panel-body" style="padding:0"><table class="strat-table">
+    <thead><tr><th>策略</th><th>评分</th><th>信号明细</th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div>
+    ${hyp.summary?`<div class="panel"><div class="panel-header"><span>宏观假说</span></div><div class="panel-body" style="font-size:11px;color:var(--text-dim);line-height:1.7">${hyp.title}: ${hyp.summary}</div></div>`:''}
+  `;
+}
+
+function renderStrat(data){
+  const momDaily=data.momentum?.daily||[];
+  const momLast=momDaily[momDaily.length-1]||{};
+  const ctaM1=data.cta?.mod1_cta_env?.summary||{};
+  const cbDetails=data.cb?.score_details||[];
+  const optRegime=data.option?.mod1_rv_regime?.regime||{};
+  const optPca=data.option?.mod1_rv_regime?.pca_context||{};
+  const qBasis=data.quant?.basis||[];
+  const lastBasis=qBasis[qBasis.length-1]||{};
+  const arbSummary=data.arb?.summary||{};
+
+  document.getElementById('strat-content').innerHTML=`
+    <div class="panel"><div class="panel-header"><span>强势股 — 情绪</span><span style="color:var(--text-muted)">${momLast.date||''}</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(6,1fr)">
+      <div class="data-cell"><div class="label">情绪指数</div><div class="value ${sc(momLast.sentiment||50)}">${(momLast.sentiment||0).toFixed(1)}</div></div>
+      <div class="data-cell"><div class="label">周期</div><div class="value ${momLast.cycle_label==='退潮'?'c-red':''}">${momLast.cycle_label||'--'}</div></div>
+      <div class="data-cell"><div class="label">炸板率</div><div class="value ${(momLast.zha_rate||0)>50?'c-red':''}">${momLast.zha_rate||'--'}%</div></div>
+      <div class="data-cell"><div class="label">最高连板</div><div class="value">${momLast.max_height||'--'}</div></div>
+      <div class="data-cell"><div class="label">晋级率</div><div class="value ${(momLast.promotion_rate||0)<15?'c-red':''}">${(momLast.promotion_rate||0).toFixed(1)}%</div></div>
+      <div class="data-cell"><div class="label">封板质量</div><div class="value">${(momLast.seal_quality||0).toFixed(1)}</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>商品CTA — 环境</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(6,1fr)">
+      <div class="data-cell"><div class="label">CTA友好度</div><div class="value ${sc(ctaM1.cta_friendly||0)}">${(ctaM1.cta_friendly||0).toFixed(1)}</div></div>
+      <div class="data-cell"><div class="label">趋势品种</div><div class="value ${(ctaM1.trend_count||0)<8?'c-red':''}">${ctaM1.trend_count||0}/${ctaM1.n_active||0}</div></div>
+      <div class="data-cell"><div class="label">平均波动率</div><div class="value">${((ctaM1.avg_vol_20d||0)*100).toFixed(1)}%</div></div>
+      <div class="data-cell"><div class="label">波动率分位</div><div class="value">${((ctaM1.vol_percentile_60d||0)*100).toFixed(0)}%</div></div>
+      <div class="data-cell"><div class="label">成交量比</div><div class="value">${(ctaM1.avg_volume_ratio||0).toFixed(2)}</div></div>
+      <div class="data-cell"><div class="label">PCA友好度</div><div class="value">${optPca.pca_friendly||'--'}</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>转债指增 — 四维</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(4,1fr)">
+      ${cbDetails.map(d=>`<div class="data-cell"><div class="label">${d[0]}</div><div class="value ${sc(d[1])}">${d[1].toFixed(1)}</div></div>`).join('')}
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>期权卖权 — 窗口</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(5,1fr)">
+      <div class="data-cell"><div class="label">窗口</div><div class="value c-yellow">${optRegime.label||'--'}</div></div>
+      <div class="data-cell"><div class="label">平均卖权分</div><div class="value">${optRegime.avg_sell_score||'--'}</div></div>
+      <div class="data-cell"><div class="label">可卖品种</div><div class="value">${optRegime.n_sellable||0}</div></div>
+      <div class="data-cell"><div class="label">板块数</div><div class="value">${optRegime.sector_breadth||0}</div></div>
+      <div class="data-cell"><div class="label">前三</div><div class="value c-dim">${(optRegime.top3_symbols||[]).map(x=>x.symbol).join('/')}</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>套利 — 股指基差</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(4,1fr)">
+      ${Object.entries(arbSummary).map(([k,v])=>`<div class="data-cell"><div class="label">${v.name||k}</div><div class="value ${Math.abs(v.latest_annual_pct||0)>10?'c-red':'c-dim'}">${(v.latest_annual_pct||0).toFixed(1)}%</div><div class="sub">年化基差</div></div>`).join('')}
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>量化股票 — 基差</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="data-cell"><div class="label">IF年化</div><div class="value ${(lastBasis.IF||0)<-8?'c-red':'c-dim'}">${(lastBasis.IF||0).toFixed(1)}%</div></div>
+      <div class="data-cell"><div class="label">IC年化</div><div class="value ${(lastBasis.IC||0)<-8?'c-red':'c-dim'}">${(lastBasis.IC||0).toFixed(1)}%</div></div>
+      <div class="data-cell"><div class="label">IM年化</div><div class="value ${(lastBasis.IM||0)<-8?'c-red':'c-dim'}">${(lastBasis.IM||0).toFixed(1)}%</div></div>
+    </div></div></div>
+  `;
+}
+
+function renderStyle(data){
+  const ss=data.styleSignals||{};
+  const sigs=ss.signals||[];
+  const tabs=ss.tab_signals||{};
+  let html='';
+  if(sigs.length){
+    html+=`<div class="alert-bar"><span class="c-orange">■</span> ${sigs.join(' | ')}</div>`;
+  }
+  for(const[tab,items]of Object.entries(tabs)){
+    const tabNames={eco:'经济敏感',crowd:'拥挤度',style:'风格因子',size:'大小盘',fund_nav:'基金净值'};
+    html+=`<div class="panel"><div class="panel-header"><span>${tabNames[tab]||tab}</span></div><div class="panel-body"><ul class="signal-list">${(items||[]).map(x=>`<li>${x.replace(/[🟢🟡🔴⚠🔥↗↘]/g,'')}</li>`).join('')}</ul></div></div>`;
+  }
+  document.getElementById('style-content').innerHTML=html||'<div style="color:var(--text-muted);padding:20px">无数据</div>';
+}
+
+function renderFlow(data){
+  const crowd=data.crowding||{};
+  const csig=crowd.crowding_signal||{};
+  const sigs=csig.signals||[];
+  const patient=data.patient||{};
+  let html='';
+  if(sigs.length){
+    html+=`<div class="panel"><div class="panel-header"><span>拥挤度信号</span></div><div class="panel-body"><ul class="signal-list">${sigs.slice(0,15).map(x=>`<li>${x.replace(/[🟢🟡🔴⚠🔥]/g,'')}</li>`).join('')}</ul></div></div>`;
+  }
+  // Patient capital
+  html+=`<div class="panel"><div class="panel-header"><span>耐心资本(ETF大单)</span><span style="color:var(--text-muted)">${patient.updated||''}</span></div>
+  <div class="panel-body" style="font-size:11px;color:var(--text-dim)">${typeof patient.state_summary==='string'?patient.state_summary:'无数据'}</div></div>`;
+  document.getElementById('flow-content').innerHTML=html;
+}
+
+function renderMacro(data){
+  const liq=data.liquidity||{};
+  const dr=liq.dr007||[];
+  const lastDr=dr[dr.length-1]||{};
+  const shibor=liq.shibor_term||{};
+  const ms=data.macroScore||{};
+  const macro=ms.macro||{};
+  const detail=macro.detail||{};
+  const merrill=macro.merrill_clock||{};
+
+  let dimRows='';
+  for(const[k,v]of Object.entries(detail)){
+    const names={liquidity:'流动性',fundamentals:'基本面',rates_fx:'利率汇率',option_sentiment:'期权情绪',crowding_flow:'拥挤资金'};
+    dimRows+=`<div class="data-cell"><div class="label">${names[k]||k} (${(v.weight*100).toFixed(0)}%)</div><div class="value ${sc(v.score)}">${v.score}</div></div>`;
+  }
+
+  document.getElementById('macro-content').innerHTML=`
+    <div class="panel"><div class="panel-header"><span>宏观评分拆解</span><span style="color:var(--text-muted)">总分 ${(macro.total||0).toFixed(1)}</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(5,1fr)">${dimRows}</div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>美林时钟</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="data-cell"><div class="label">阶段</div><div class="value c-dim">${merrill.phase||'--'}</div></div>
+      <div class="data-cell"><div class="label">建议</div><div class="value c-dim" style="font-size:11px">${merrill.advice||'--'}</div></div>
+      <div class="data-cell"><div class="label">PMI</div><div class="value ${(merrill.pmi||50)>=50?'c-green':'c-red'}">${merrill.pmi||'--'}</div></div>
+      <div class="data-cell"><div class="label">CPI</div><div class="value">${merrill.cpi||'--'}</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>流动性</span></div>
+    <div class="panel-body"><div class="data-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="data-cell"><div class="label">DR007</div><div class="value">${lastDr.dr007||'--'}%</div></div>
+      <div class="data-cell"><div class="label">R007</div><div class="value">${lastDr.r007||'--'}%</div></div>
+      <div class="data-cell"><div class="label">SHIBOR O/N</div><div class="value">${shibor.today?shibor.today[0]:'--'}%</div></div>
+      <div class="data-cell"><div class="label">SHIBOR 1M</div><div class="value">${shibor.today?shibor.today[3]:'--'}%</div></div>
+    </div></div></div>
+
+    <div class="panel"><div class="panel-header"><span>流动性信号</span></div>
+    <div class="panel-body" style="font-size:11px;color:var(--text-dim)">${(liq.signals||[]).join(' | ')||'无极端信号'}</div></div>
+  `;
+}
+
+function renderAlerts(data){
+  const momLast=(data.momentum?.daily||[]).slice(-1)[0]||{};
+  const ctaM1=data.cta?.mod1_cta_env?.summary||{};
+  const crowd=data.crowding?.crowding_signal?.signals||[];
+  let html='<div class="panel"><div class="panel-header"><span>风险预警</span></div><div class="panel-body">';
+  if(momLast.sentiment<40)html+=`<div class="risk-row"><div class="risk-dot" style="background:var(--red)"></div><span class="c-red">高</span><span class="c-dim" style="margin-left:8px">强势股${momLast.cycle_label} 情绪${(momLast.sentiment||0).toFixed(1)} 炸板率${momLast.zha_rate}%</span></div>`;
+  if((ctaM1.trend_count||0)<8)html+=`<div class="risk-row"><div class="risk-dot" style="background:var(--orange)"></div><span class="c-orange">中</span><span class="c-dim" style="margin-left:8px">CTA趋势品种极少(${ctaM1.trend_count}/${ctaM1.n_active}) 趋势策略可能止损</span></div>`;
+  const highCrowd=crowd.filter(x=>x.includes('高位')||x.includes('高拥挤'));
+  if(highCrowd.length)html+=`<div class="risk-row"><div class="risk-dot" style="background:var(--yellow)"></div><span class="c-yellow">低</span><span class="c-dim" style="margin-left:8px">${highCrowd[0].replace(/[🟢🟡🔴⚠🔥]/g,'')}</span></div>`;
+  html+='</div></div>';
+  document.getElementById('alerts-content').innerHTML=html;
+}
+
+// NAV
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.mod-page').forEach(p=>p.classList.remove('active'));
+    const page=document.getElementById('page-'+btn.dataset.mod);
+    if(page)page.classList.add('active');
+  });
+});
+
+// Clock
+function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false});}
+setInterval(updateClock,1000);updateClock();
+
+// INIT
+(async function(){
+  const data=await loadAll();
+  renderOverview(data);
+  renderDecision(data);
+  renderStrat(data);
+  renderStyle(data);
+  renderFlow(data);
+  renderMacro(data);
+  renderAlerts(data);
+})();
+</script>
+</body>
+</html>

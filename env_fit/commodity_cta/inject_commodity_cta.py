@@ -296,9 +296,9 @@ def build_decomp_section():
                   return c.dataset.yAxisID==='y1'?c.dataset.label+': '+v.toFixed(2)+'%':c.dataset.label+': '+v.toFixed(4);
                 }}}}}}}},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}}}},
-                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{display:false}}}}
+                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+                y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}
               }}
             }}
           }});
@@ -308,7 +308,7 @@ def build_decomp_section():
         new Chart(document.getElementById('cta-decomp'),{{
           type:'line',
           data:{{labels:{dc_dates_js},datasets:[
-            {{label:'产品总收益(%)',data:{dc_fund_js},borderColor:'#1e293b',borderWidth:2.5,pointRadius:0,tension:.3}},
+            {{label:'产品总收益(%)',data:{dc_fund_js},borderColor:'#ff8c00',borderWidth:2.5,pointRadius:0,tension:.3}},
             {{label:'Beta贡献(%)',data:{dc_beta_js},borderColor:'#3b82f6',borderWidth:1.5,pointRadius:0,borderDash:[4,3],tension:.3}},
             {{label:'PCA环境(%)',data:{dc_pca_js},borderColor:'#8b5cf6',borderWidth:1.5,pointRadius:0,borderDash:[4,3],tension:.3}},
             {{label:'波动率环境(%)',data:{dc_vol_js},borderColor:'#ef4444',borderWidth:1.5,pointRadius:0,borderDash:[2,2],tension:.3}},
@@ -318,8 +318,8 @@ def build_decomp_section():
             interaction:{{mode:'index',intersect:false}},
             plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
               tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}}}}}},
-            scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#f1f5f9'}}}}}}
+            scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}
           }}
         }});
 
@@ -337,9 +337,9 @@ def build_decomp_section():
               plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
                 tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}}}}}}},
               scales:{{
-                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}}}},
-                y1:{{position:'right',min:0,max:100,title:{{display:true,text:'分位%',font:{{size:10}},color:'#f59e0b'}},ticks:{{font:{{size:9}},color:'#f59e0b'}},grid:{{display:false}}}}
+                x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+                y1:{{position:'right',min:0,max:100,title:{{display:true,text:'分位%',font:{{size:10}},color:'#f59e0b'}},ticks:{{font:{{size:9}},color:'#f59e0b'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}
               }}
             }}
           }});
@@ -520,8 +520,8 @@ def build_html(data):
           interaction:{{mode:'index',intersect:false}},
           plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
             tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)}}}}}}}},
-          scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#f1f5f9'}}}}}}
+          scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}},
+            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#1a1a1a',tickBorderDash:[3,3]}}}}}}
         }};
 
         // 方差解释比
@@ -892,8 +892,8 @@ def build_html(data):
           interaction:{mode:'index',intersect:false},
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
-          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#f1f5f9'}}}
+          scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}},
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}}}
         };
         new Chart(document.getElementById('cta-cu-au'),{
           type:'line',
@@ -912,7 +912,7 @@ def build_html(data):
           data:{labels:''' + basket_dates_js + ''',datasets:[
             {label:'工业品篮子',data:''' + ind_nav_js + ''',borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
             {label:'农产品篮子',data:''' + agri_nav_js + ''',borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
-          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#f1f5f9'}}}})
+          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}}}})
         });
       }
       </script>

@@ -59,16 +59,16 @@ DATA_CHECKS = {
         'extract': 'crowding_date',
     },
     'style_spread': {
-        'file': 'size_spread/spread_data.json',
-        'extract': 'generic_update_time',
+        'file': 'size_spread/style_spread_cache.json',
+        'extract': 'cache_last_updated',
     },
     'option_sentiment': {
         'file': 'micro_flow/option_sentiment/option_sentiment.json',
         'extract': 'generic_update_time',
     },
     'timing_factors': {
-        'file': 'timing-research/timing_factors.json',
-        'extract': 'generic_update_time',
+        'file': 'timing-research/leader_pool_latest.json',
+        'extract': 'leader_pool_date',
     },
 }
 
@@ -147,11 +147,33 @@ def extract_generic_update_time(filepath):
     return None
 
 
+def extract_cache_last_updated(filepath):
+    """从 style_spread_cache.json 提取 last_updated (格式: 20260521)"""
+    try:
+        with open(filepath) as f:
+            d = json.load(f)
+        return d.get('last_updated', '')
+    except Exception:
+        return None
+
+
+def extract_leader_pool_date(filepath):
+    """从 leader_pool_latest.json 提取 trade_date (格式: 20260521)"""
+    try:
+        with open(filepath) as f:
+            d = json.load(f)
+        return d.get('trade_date', '')
+    except Exception:
+        return None
+
+
 EXTRACTORS = {
     'momentum_date': extract_momentum_date,
     'patient_date': extract_patient_date,
     'crowding_date': extract_crowding_date,
     'generic_update_time': extract_generic_update_time,
+    'cache_last_updated': extract_cache_last_updated,
+    'leader_pool_date': extract_leader_pool_date,
 }
 
 

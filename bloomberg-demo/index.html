@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMT Terminal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --border: #2a2a2a;
+  --border-light: #333;
+  --text: #ffffff;
+  --text-dim: #999999;
+  --text-muted: #666666;
+  --orange: #ff8c00;
+  --green: #00d26a;
+  --red: #ff3b3b;
+  --blue: #4da6ff;
+  --yellow: #ffd700;
+  --white: #ffffff;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --sans: 'Inter', -apple-system, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.4;
+  min-height: 100vh;
+}
+
+/* Top Bar - Bloomberg style function keys */
+.top-bar {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  background: #1a1a1a;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  gap: 2px;
+}
+.top-bar .brand {
+  color: var(--orange);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-right: 12px;
+}
+.top-bar .fn-key {
+  padding: 2px 8px;
+  font-size: 10px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.top-bar .fn-key:hover { background: #333; color: var(--text); }
+.top-bar .fn-key.active { background: var(--orange); color: #000; font-weight: 600; }
+.top-bar .spacer { flex: 1; }
+.top-bar .clock { color: var(--text-muted); font-size: 10px; }
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  height: calc(100vh - 28px);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.nav-group-label {
+  padding: 8px 10px 3px;
+  font-size: 9px;
+  color: var(--orange);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.nav-btn {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.nav-btn:hover { color: var(--text); background: #1a1a1a; }
+.nav-btn.active { color: var(--orange); border-left-color: var(--orange); background: #111; }
+
+/* Main content */
+.main-content {
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* Panel system */
+.panel {
+  border: 1px solid var(--border);
+  margin-bottom: 6px;
+  background: var(--surface);
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: #111;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--orange);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.panel-body { padding: 8px; }
+
+/* Data grid */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+.data-cell {
+  background: var(--surface);
+  padding: 6px 8px;
+}
+.data-cell .label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.data-cell .value {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.data-cell .sub {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* Strategy table */
+.strat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.strat-table th {
+  text-align: left;
+  padding: 4px 8px;
+  font-size: 9px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.strat-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  font-variant-numeric: tabular-nums;
+}
+.strat-table tr:hover td { background: #111; }
+.strat-table .score-cell {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Colors */
+.c-green { color: var(--green); }
+.c-red { color: var(--red); }
+.c-orange { color: var(--orange); }
+.c-yellow { color: var(--yellow); }
+.c-blue { color: var(--blue); }
+.c-dim { color: var(--text-dim); }
+.c-muted { color: var(--text-muted); }
+
+/* Score bar (inline) */
+.score-bar {
+  display: inline-block;
+  width: 60px;
+  height: 4px;
+  background: #222;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+.score-bar-fill {
+  height: 100%;
+  display: block;
+}
+
+/* Ticker strip */
+.ticker-strip {
+  display: flex;
+  gap: 12px;
+  padding: 4px 8px;
+  background: #0a0a0a;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  font-size: 10px;
+}
+.ticker-item {
+  white-space: nowrap;
+  display: flex;
+  gap: 4px;
+}
+.ticker-item .sym { color: var(--text-dim); }
+
+/* Alert bar */
+.alert-bar {
+  padding: 4px 8px;
+  font-size: 10px;
+  border-left: 3px solid var(--orange);
+  background: rgba(255,140,0,0.05);
+  margin-bottom: 6px;
+}
+
+/* Module pages */
+.mod-page { display: none; }
+.mod-page.active { display: block; }
+
+/* Macro table */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 6px;
+}
+
+/* Risk matrix */
+.risk-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 11px;
+}
+.risk-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .macro-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <span class="brand">GAMT</span>
+  <span class="fn-key active">OVRVW</span>
+  <span class="fn-key">STRAT</span>
+  <span class="fn-key">MACRO</span>
+  <span class="fn-key">FLOW</span>
+  <span class="fn-key">EVENT</span>
+  <span class="fn-key">FUND</span>
+  <span class="fn-key">ALERT</span>
+  <span class="spacer"></span>
+  <span class="clock" id="clock">2026-05-21 17:30 CST</span>
+</div>
+
+<!-- Ticker Strip -->
+<div class="ticker-strip">
+  <div class="ticker-item"><span class="sym">CSI2000</span> <span class="c-green">+0.82%</span></div>
+  <div class="ticker-item"><span class="sym">CSI1000</span> <span class="c-green">+0.45%</span></div>
+  <div class="ticker-item"><span class="sym">CSI500</span> <span class="c-green">+0.31%</span></div>
+  <div class="ticker-item"><span class="sym">HS300</span> <span class="c-red">-0.12%</span></div>
+  <div class="ticker-item"><span class="sym">IC.CFX</span> <span class="c-dim">-4.2%ann</span></div>
+  <div class="ticker-item"><span class="sym">DR007</span> <span class="c-dim">1.65%</span></div>
+  <div class="ticker-item"><span class="sym">SHIBOR</span> <span class="c-dim">1.72%</span></div>
+  <div class="ticker-item"><span class="sym">VIX.A</span> <span class="c-yellow">18.2</span></div>
+  <div class="ticker-item"><span class="sym">AU</span> <span class="c-green">+0.6%</span></div>
+  <div class="ticker-item"><span class="sym">CU</span> <span class="c-red">-0.3%</span></div>
+</div>
+
+<div class="layout">
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="nav-group-label">OVERVIEW</div>
+  <button class="nav-btn active" data-mod="overview">Dashboard</button>
+  <button class="nav-btn" data-mod="decision">Decision Desk</button>
+
+  <div class="nav-group-label">ANALYSIS</div>
+  <button class="nav-btn" data-mod="strat">Strategy Env</button>
+  <button class="nav-btn" data-mod="style">Style Spread</button>
+  <button class="nav-btn" data-mod="flow">Fund Flow</button>
+  <button class="nav-btn" data-mod="macro">Macro & Liq</button>
+  <button class="nav-btn" data-mod="meso">Sector Cycle</button>
+
+  <div class="nav-group-label">TOOLS</div>
+  <button class="nav-btn" data-mod="timing">Timing Research</button>
+  <button class="nav-btn" data-mod="merger">M&A Pool</button>
+  <button class="nav-btn" data-mod="stock">Stock Monitor</button>
+  <button class="nav-btn" data-mod="fund">Fund Select</button>
+  <button class="nav-btn" data-mod="dd">DD Library</button>
+  <button class="nav-btn" data-mod="notes">Smart Notes</button>
+  <button class="nav-btn" data-mod="alerts">Risk Alerts</button>
+
+  <div class="nav-group-label">SYSTEM</div>
+  <button class="nav-btn" data-mod="admin">Admin</button>
+  <button class="nav-btn" data-mod="log">Update Log</button>
+</div>
+
+<!-- Main -->
+<div class="main-content">
+
+  <!-- ===== OVERVIEW PAGE ===== -->
+  <div class="mod-page active" id="page-overview">
+
+    <!-- Alert -->
+    <div class="alert-bar">
+      <span class="c-orange">▲ ALERT</span> 强势股进入退潮期 · 炸板率66% · 高位断板5只 · 晋级率9.8%
+    </div>
+
+    <!-- Macro Score Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>MACRO ENVIRONMENT</span>
+        <span style="color:var(--text-muted)">2026-05-21</span>
+      </div>
+      <div class="panel-body">
+        <div class="data-grid">
+          <div class="data-cell">
+            <div class="label">ENV SCORE</div>
+            <div class="value c-yellow">52</div>
+            <div class="sub">NEUTRAL-CAUTIOUS</div>
+          </div>
+          <div class="data-cell">
+            <div class="label">LIQUIDITY</div>
+            <div class="value c-green">DR007 1.65%</div>
+            <div class="sub">Below policy rate ▼</div>
+          </div>
+          <div class="data-cell">
+            <div class="label">VOLATILITY</div>
+            <div class="value">18.2%</div>
+            <div class="sub">45th pctile / 60d</div>
+          </div>
+          <div class="data-cell">
+            <div class="label">TURNOVER</div>
+            <div class="value">9,200B</div>
+            <div class="sub">All-A daily avg</div>
+          </div>
+          <div class="data-cell">
+            <div class="label">PATIENT CAP</div>
+            <div class="value c-green">+12B</div>
+            <div class="sub">ETF large orders 3d</div>
+          </div>
+          <div class="data-cell">
+            <div class="label">NORTHBOUND</div>
+            <div class="value c-green">+35B</div>
+            <div class="sub">Net inflow today</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strategy Fitness -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>STRATEGY FITNESS</span>
+        <span style="color:var(--text-muted)">6 STRATEGIES</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table class="strat-table">
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Score</th>
+              <th>Level</th>
+              <th>Bar</th>
+              <th>Key Signal</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Quant Stock</td>
+              <td class="score-cell c-yellow">58</td>
+              <td class="c-yellow">NEUTRAL</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:58%;background:var(--yellow)"></span></span></td>
+              <td class="c-dim">Small-cap leading +0.8%/5d</td>
+              <td class="c-dim">-2</td>
+            </tr>
+            <tr>
+              <td>Momentum</td>
+              <td class="score-cell c-red">37</td>
+              <td class="c-red">UNFRIENDLY</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:37%;background:var(--red)"></span></span></td>
+              <td class="c-dim">Sentiment 36.9, ebb phase</td>
+              <td class="c-red">-18</td>
+            </tr>
+            <tr>
+              <td>Commodity CTA</td>
+              <td class="score-cell c-yellow">45</td>
+              <td class="c-yellow">WEAK</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:45%;background:var(--yellow)"></span></span></td>
+              <td class="c-dim">4/58 trending, PCA mild</td>
+              <td class="c-dim">+1</td>
+            </tr>
+            <tr>
+              <td>CB Enhanced</td>
+              <td class="score-cell c-yellow">59</td>
+              <td class="c-yellow">NEUTRAL</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:59%;background:var(--yellow)"></span></span></td>
+              <td class="c-dim">All dimensions neutral</td>
+              <td class="c-dim">0</td>
+            </tr>
+            <tr>
+              <td>Arbitrage</td>
+              <td class="score-cell c-yellow">55</td>
+              <td class="c-yellow">NEUTRAL</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:55%;background:var(--yellow)"></span></span></td>
+              <td class="c-dim">High vol but directionless</td>
+              <td class="c-green">+3</td>
+            </tr>
+            <tr>
+              <td>Option Sell</td>
+              <td class="score-cell c-yellow">50</td>
+              <td class="c-yellow">NEUTRAL</td>
+              <td><span class="score-bar"><span class="score-bar-fill" style="width:50%;background:var(--yellow)"></span></span></td>
+              <td class="c-dim">Selective, FG/RU/SC</td>
+              <td class="c-dim">-1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Risk Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>RISK MONITOR</span>
+        <span style="color:var(--text-muted)">3 FLAGS</span>
+      </div>
+      <div class="panel-body">
+        <div class="risk-row"><div class="risk-dot" style="background:var(--red)"></div><span class="c-red">HIGH</span><span class="c-dim" style="margin-left:8px">Momentum ebb — high-level stocks face selloff risk</span></div>
+        <div class="risk-row"><div class="risk-dot" style="background:var(--orange)"></div><span class="c-orange">MED</span><span class="c-dim" style="margin-left:8px">CTA trend count at extreme low (4/58) — consecutive stops likely</span></div>
+        <div class="risk-row"><div class="risk-dot" style="background:var(--yellow)"></div><span class="c-yellow">LOW</span><span class="c-dim" style="margin-left:8px">Style concentration elevated — quant alpha may compress</span></div>
+      </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>RECOMMENDED ACTIONS</span>
+      </div>
+      <div class="panel-body" style="font-size:11px;color:var(--text-dim);line-height:1.8">
+        <div>● Reduce momentum exposure — wait for sentiment ice-point signal</div>
+        <div>● CTA: maintain underweight — wait for trend count >15</div>
+        <div>● Option sell: selective only (FG, RU) — no systematic opening</div>
+        <div>● CB: hold neutral — watch for DELTA recovery</div>
+      </div>
+    </div>
+
+    <!-- Module Status -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>MODULE STATUS</span>
+        <span style="color:var(--text-muted)">LAST UPDATE 17:02</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table class="strat-table">
+          <thead><tr><th>Module</th><th>Status</th><th>Data Date</th><th>Latency</th></tr></thead>
+          <tbody>
+            <tr><td>macro_liquidity</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">12s</td></tr>
+            <tr><td>momentum_stock</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">8s</td></tr>
+            <tr><td>commodity_cta</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">45s</td></tr>
+            <tr><td>cb_env</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">15s</td></tr>
+            <tr><td>option_vol</td><td class="c-green">OK</td><td>2026-05-19</td><td class="c-dim">28s</td></tr>
+            <tr><td>arbitrage</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">22s</td></tr>
+            <tr><td>style_spread</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">6s</td></tr>
+            <tr><td>patient_capital</td><td class="c-green">OK</td><td>2026-05-21</td><td class="c-dim">35s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== DECISION DESK PAGE ===== -->
+  <div class="mod-page" id="page-decision">
+    <div class="alert-bar">
+      <span class="c-orange">■ CONCLUSION</span> 中性偏谨慎 — 强势股退潮，CTA极弱，量化/转债/套利中性，期权精选
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><span>STRATEGY SCORE BREAKDOWN</span></div>
+      <div class="panel-body" style="padding:0">
+        <table class="strat-table">
+          <thead><tr><th>Strategy</th><th>Score</th><th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Quant Stock</td><td class="score-cell c-yellow">58</td>
+              <td class="c-dim">Turnover 65</td><td class="c-dim">StyleConc 42</td><td class="c-dim">FactorDev 55</td><td class="c-dim">Basis 68</td><td></td>
+            </tr>
+            <tr>
+              <td>Momentum</td><td class="score-cell c-red">37</td>
+              <td class="c-dim">Height 83</td><td class="c-red">Promo 10</td><td class="c-red">AntiZha 2</td><td class="c-dim">UD 10</td><td class="c-dim">Seal 68</td>
+            </tr>
+            <tr>
+              <td>CTA</td><td class="score-cell c-yellow">45</td>
+              <td class="c-red">Trend% 7</td><td class="c-dim">PCA 45</td><td class="c-green">Vol 100</td><td class="c-dim">VolRatio 42</td><td></td>
+            </tr>
+            <tr>
+              <td>CB Enhanced</td><td class="score-cell c-yellow">59</td>
+              <td class="c-dim">Activity 55</td><td class="c-dim">Valuation 60</td><td class="c-dim">Delta 58</td><td class="c-dim">Floor 63</td><td></td>
+            </tr>
+            <tr>
+              <td>Arbitrage</td><td class="score-cell c-yellow">55</td>
+              <td class="c-dim">BasisVol 48</td><td class="c-green">CmdtyVol 75</td><td class="c-dim">IV-HV 45</td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>Option Sell</td><td class="score-cell c-yellow">50</td>
+              <td class="c-dim">AvgSell 60</td><td class="c-dim">Breadth 50</td><td class="c-dim">Sector 40</td><td class="c-dim">PCA 45</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STRATEGY ENV PAGE ===== -->
+  <div class="mod-page" id="page-strat">
+    <div class="panel">
+      <div class="panel-header"><span>MOMENTUM STOCK — SENTIMENT DETAIL</span></div>
+      <div class="panel-body">
+        <div class="data-grid" style="grid-template-columns:repeat(6,1fr)">
+          <div class="data-cell"><div class="label">SENTIMENT</div><div class="value c-red">36.9</div></div>
+          <div class="data-cell"><div class="label">CYCLE</div><div class="value c-red">EBB</div></div>
+          <div class="data-cell"><div class="label">ZHA RATE</div><div class="value c-red">66%</div></div>
+          <div class="data-cell"><div class="label">MAX HEIGHT</div><div class="value">7</div></div>
+          <div class="data-cell"><div class="label">PROMO RATE</div><div class="value c-red">9.8%</div></div>
+          <div class="data-cell"><div class="label">SEAL QUAL</div><div class="value c-yellow">61.8</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span>COMMODITY CTA — ENVIRONMENT</span></div>
+      <div class="panel-body">
+        <div class="data-grid" style="grid-template-columns:repeat(6,1fr)">
+          <div class="data-cell"><div class="label">CTA FRIENDLY</div><div class="value c-yellow">45.3</div></div>
+          <div class="data-cell"><div class="label">TREND COUNT</div><div class="value c-red">4/58</div></div>
+          <div class="data-cell"><div class="label">AVG VOL</div><div class="value">88.9%</div></div>
+          <div class="data-cell"><div class="label">PCA ENV</div><div class="value c-dim">MILD</div></div>
+          <div class="data-cell"><div class="label">PC1 RATIO</div><div class="value">30.1%</div></div>
+          <div class="data-cell"><div class="label">MOMENTUM</div><div class="value c-red">BEARISH</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span>OPTION VOL — SELL REGIME</span></div>
+      <div class="panel-body">
+        <div class="data-grid" style="grid-template-columns:repeat(5,1fr)">
+          <div class="data-cell"><div class="label">REGIME</div><div class="value c-yellow">NEUTRAL</div></div>
+          <div class="data-cell"><div class="label">AVG SCORE</div><div class="value">59.5</div></div>
+          <div class="data-cell"><div class="label">SELLABLE</div><div class="value">5</div></div>
+          <div class="data-cell"><div class="label">SECTORS</div><div class="value">2</div></div>
+          <div class="data-cell"><div class="label">TOP3</div><div class="value c-dim">FG/RU/SC</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MACRO PAGE ===== -->
+  <div class="mod-page" id="page-macro">
+    <div class="panel">
+      <div class="panel-header"><span>LIQUIDITY & RATES</span></div>
+      <div class="panel-body">
+        <div class="macro-grid">
+          <div class="data-cell"><div class="label">DR007</div><div class="value c-green">1.65%</div><div class="sub">▼ -3bp</div></div>
+          <div class="data-cell"><div class="label">SHIBOR 1M</div><div class="value">1.72%</div><div class="sub">→ flat</div></div>
+          <div class="data-cell"><div class="label">CN 10Y</div><div class="value">2.31%</div><div class="sub">▼ -2bp</div></div>
+          <div class="data-cell"><div class="label">US 10Y</div><div class="value c-red">4.52%</div><div class="sub">▲ +5bp</div></div>
+          <div class="data-cell"><div class="label">M1 YoY</div><div class="value">1.2%</div><div class="sub">improving</div></div>
+          <div class="data-cell"><div class="label">M2 YoY</div><div class="value">7.0%</div><div class="sub">stable</div></div>
+          <div class="data-cell"><div class="label">USDCNY</div><div class="value">7.21</div><div class="sub">→ flat</div></div>
+          <div class="data-cell"><div class="label">CU/AU RATIO</div><div class="value c-dim">0.142</div><div class="sub">▼ risk-off</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span>PMI & CYCLE</span></div>
+      <div class="panel-body">
+        <div class="macro-grid">
+          <div class="data-cell"><div class="label">MFG PMI</div><div class="value c-green">50.4</div><div class="sub">expansion</div></div>
+          <div class="data-cell"><div class="label">SVC PMI</div><div class="value c-green">51.2</div><div class="sub">expansion</div></div>
+          <div class="data-cell"><div class="label">CPI YoY</div><div class="value">0.3%</div><div class="sub">low inflation</div></div>
+          <div class="data-cell"><div class="label">PPI YoY</div><div class="value c-red">-2.7%</div><div class="sub">deflation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+</div><!-- /layout -->
+
+<script>
+// Nav switching
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mod = btn.dataset.mod;
+    document.querySelectorAll('.mod-page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById('page-' + mod);
+    if (page) page.classList.add('active');
+  });
+});
+
+// Top bar fn-key switching
+document.querySelectorAll('.fn-key').forEach(key => {
+  key.addEventListener('click', () => {
+    document.querySelectorAll('.fn-key').forEach(k => k.classList.remove('active'));
+    key.classList.add('active');
+    const map = {
+      'OVRVW': 'overview', 'STRAT': 'strat', 'MACRO': 'macro',
+      'FLOW': 'flow', 'EVENT': 'merger', 'FUND': 'fund', 'ALERT': 'alerts'
+    };
+    const mod = map[key.textContent];
+    if (mod) {
+      document.querySelectorAll('.mod-page').forEach(p => p.classList.remove('active'));
+      const page = document.getElementById('page-' + mod);
+      if (page) page.classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mod === mod);
+      });
+    }
+  });
+});
+
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleString('sv-SE', {timeZone:'Asia/Shanghai'}).replace('T',' ') + ' CST';
+}
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>

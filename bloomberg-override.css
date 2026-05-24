@@ -1,0 +1,467 @@
+/* ========== GAMT Bloomberg Override ========== */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --sidebar-w: 180px !important;
+  --header-h: 36px !important;
+  --bg: #000000 !important;
+  --sidebar-bg: #0a0a0a !important;
+  --sidebar-text: #888 !important;
+  --accent: #ff8c00 !important;
+  --accent-light: rgba(255,140,0,0.08) !important;
+  --accent-glow: rgba(255,140,0,0.15) !important;
+  --card-bg: #0a0a0a !important;
+  --text: #e8e8e8 !important;
+  --text-sub: #888 !important;
+  --border: #2a2a2a !important;
+}
+
+/* Force monospace everywhere */
+body, .nav-item, .strat-tab, .s-table, .ov-value, .ov-label, .card-title,
+.ss-val, .ss-label, button, input, select, textarea {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace !important;
+}
+
+body {
+  background: #000 !important;
+  color: #e8e8e8 !important;
+  font-size: 12px !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background: #0a0a0a !important;
+  border-right: 1px solid #2a2a2a !important;
+  width: 180px !important;
+}
+.sidebar .logo {
+  border-bottom: 1px solid #2a2a2a !important;
+  font-size: 13px !important;
+  padding: 12px 14px !important;
+}
+.sidebar .logo em {
+  color: #ff8c00 !important;
+}
+.nav-group-title {
+  color: #ff8c00 !important;
+  font-size: 9px !important;
+  letter-spacing: 1.5px !important;
+  padding: 8px 14px 3px !important;
+}
+.nav-item {
+  font-size: 11px !important;
+  padding: 5px 14px !important;
+  border-radius: 0 !important;
+  color: #888 !important;
+  border-left: 2px solid transparent !important;
+}
+.nav-item:hover {
+  background: #1a1a1a !important;
+  color: #ccc !important;
+}
+.nav-item.active {
+  color: #ff8c00 !important;
+  background: #111 !important;
+  border-left-color: #ff8c00 !important;
+}
+.nav-item .badge, .nav-item span[style*="background:#ff9800"] {
+  display: none !important;
+}
+.user-info {
+  border-top: 1px solid #2a2a2a !important;
+  color: #555 !important;
+}
+
+/* Header */
+.header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  height: 36px !important;
+}
+.header .title {
+  font-size: 12px !important;
+  color: #ff8c00 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+.header .meta {
+  font-size: 10px !important;
+  color: #666 !important;
+}
+.refresh-btn {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #888 !important;
+  border-radius: 2px !important;
+  font-size: 10px !important;
+}
+.refresh-btn:hover {
+  background: #ff8c00 !important;
+  color: #000 !important;
+  border-color: #ff8c00 !important;
+}
+
+/* Content area */
+.content {
+  background: #000 !important;
+  padding: 8px !important;
+}
+
+/* Cards → Panels */
+.card {
+  background: #0a0a0a !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin-bottom: 6px !important;
+  box-shadow: none !important;
+}
+.card-title {
+  font-size: 10px !important;
+  color: #ff8c00 !important;
+  padding: 4px 8px !important;
+  background: #111 !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  margin-bottom: 0 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+.card-title .dot {
+  display: none !important;
+}
+
+/* Overview cards */
+.overview-grid {
+  gap: 1px !important;
+  background: #2a2a2a !important;
+}
+.ov-card {
+  background: #0a0a0a !important;
+  border: none !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  padding: 6px 8px !important;
+}
+.ov-card.blue, .ov-card.green, .ov-card.amber, .ov-card.slate {
+  border-left: none !important;
+}
+.ov-label {
+  font-size: 9px !important;
+  color: #666 !important;
+  letter-spacing: 0.5px !important;
+}
+.ov-value {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+}
+.ov-sub {
+  font-size: 9px !important;
+  color: #555 !important;
+}
+.ov-tag {
+  border-radius: 1px !important;
+  font-size: 9px !important;
+}
+.ov-tag.on { background: rgba(255,140,0,0.15) !important; color: #ff8c00 !important; }
+.ov-tag.off { background: rgba(0,210,106,0.15) !important; color: #00d26a !important; }
+.ov-tag.warn { background: rgba(255,59,59,0.15) !important; color: #ff3b3b !important; }
+
+/* Tables */
+.s-table {
+  font-size: 11px !important;
+}
+.s-table th {
+  background: #111 !important;
+  color: #666 !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  font-size: 9px !important;
+  letter-spacing: 0.5px !important;
+  padding: 4px 8px !important;
+}
+.s-table td {
+  border-bottom: 1px solid #1a1a1a !important;
+  padding: 4px 8px !important;
+  color: #ccc !important;
+}
+.s-table tr:hover td {
+  background: #111 !important;
+}
+.tag { border-radius: 1px !important; }
+.tag-green { background: rgba(0,210,106,0.15) !important; color: #00d26a !important; }
+.tag-amber { background: rgba(255,140,0,0.15) !important; color: #ff8c00 !important; }
+.tag-slate { background: rgba(150,150,150,0.15) !important; color: #999 !important; }
+
+/* Strategy tabs */
+.strat-tabs {
+  gap: 2px !important;
+  margin-bottom: 8px !important;
+}
+.strat-tab {
+  border-radius: 0 !important;
+  font-size: 10px !important;
+  padding: 4px 10px !important;
+  background: #111 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #888 !important;
+  font-weight: 500 !important;
+}
+.strat-tab:hover {
+  color: #ccc !important;
+  border-color: #444 !important;
+}
+.strat-tab.active {
+  background: #ff8c00 !important;
+  color: #000 !important;
+  border-color: #ff8c00 !important;
+}
+
+/* Hero section override */
+#ms-hero {
+  background: #0a0a0a !important;
+  border-radius: 0 !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+  padding: 16px !important;
+}
+#ms-hero::before, #ms-hero::after {
+  display: none !important;
+}
+
+/* Strategy cards in overview */
+.ms-strat-card {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  background: #0a0a0a !important;
+  border: 1px solid #2a2a2a !important;
+}
+.ms-strat-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: #ff8c00 !important;
+}
+
+/* Bottom cards */
+.ms-bottom-card {
+  background: #0a0a0a !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+}
+
+/* Risk banner */
+#ov-risk-banner {
+  background: #0a0a0a !important;
+  border-radius: 0 !important;
+  border: 1px solid #2a2a2a !important;
+  border-left: 3px solid #ff8c00 !important;
+  box-shadow: none !important;
+}
+
+/* Meso tags */
+.ms-meso-tag {
+  border-radius: 1px !important;
+  font-size: 10px !important;
+}
+.ms-meso-tag:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Allocation bar */
+.ms-alloc-bar-seg:first-child { border-radius: 0 !important; }
+.ms-alloc-bar-seg:last-child { border-radius: 0 !important; }
+
+/* Module status table */
+.module-status-table th {
+  background: #111 !important;
+  color: #666 !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+.module-status-table td {
+  border-bottom: 1px solid #1a1a1a !important;
+  color: #ccc !important;
+}
+.module-status-table tr:hover td {
+  background: #111 !important;
+}
+.module-status-table .status-badge {
+  border-radius: 1px !important;
+}
+.module-status-table .status-running { background: rgba(0,210,106,0.15) !important; color: #00d26a !important; }
+.module-status-table .status-error { background: rgba(255,59,59,0.15) !important; color: #ff3b3b !important; }
+.module-status-table .status-stale { background: rgba(255,140,0,0.15) !important; color: #ff8c00 !important; }
+
+/* New badge */
+.new-badge {
+  background: #ff8c00 !important;
+  border-radius: 1px !important;
+  box-shadow: none !important;
+}
+
+/* Style spread stats */
+.ss-stat {
+  background: #0a0a0a !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+}
+.ss-val.pos { color: #ff3b3b !important; }
+.ss-val.neg { color: #00d26a !important; }
+
+/* Animations - disable all */
+@keyframes fadeUp { from{opacity:1;transform:none} to{opacity:1;transform:none} }
+@keyframes scoreIn { from{opacity:1;transform:none} to{opacity:1;transform:none} }
+@keyframes shimmer { 0%{background-position:0} 100%{background-position:0} }
+.ms-gauge-ring { animation: none !important; }
+.ms-score-num { animation: none !important; }
+
+/* Hamburger menu */
+.menu-toggle {
+  background: #1a1a1a !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+}
+
+/* iframe */
+.embed-frame {
+  border-radius: 0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Chart.js canvas containers - ensure dark bg */
+canvas {
+  filter: none !important;
+}
+
+/* Force hide login overlay */
+.login-overlay, #loginOverlay {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ========== Force override inline styles ========== */
+/* Kill ALL white/light backgrounds in content area */
+.content [style*="background"],
+.content [style*="Background"],
+.content div[style],
+.content section[style],
+.content span[style*="background"],
+.content td[style*="background"],
+.content th[style*="background"] {
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  background-image: none !important;
+}
+/* Preserve colored indicator dots/badges */
+.content [style*="background"][style*="width:8px"],
+.content [style*="background"][style*="width:6px"],
+.content [style*="background"][style*="width:10px"],
+.content [style*="background"][style*="height:4px"],
+.content .tag, .content .ov-tag, .content .status-badge {
+  background: revert !important;
+}
+
+/* Kill all border-radius */
+.content [style*="border-radius"],
+.content [style*="borderRadius"] {
+  border-radius: 0 !important;
+}
+
+/* Force text color on inline styled elements */
+.content [style*="color:#333"],
+.content [style*="color:#666"],
+.content [style*="color:#555"],
+.content [style*="color:#444"],
+.content [style*="color: #333"],
+.content [style*="color: #666"],
+.content [style*="color: #555"],
+.content [style*="color:black"],
+.content [style*="color:#000"] {
+  color: #ccc !important;
+}
+
+/* Force borders to dark */
+.content [style*="border"] {
+  border-color: #2a2a2a !important;
+}
+
+/* Chart containers */
+.content [style*="background:#fff"],
+.content [style*="background: #fff"],
+.content [style*="background:white"],
+.content [style*="background: white"],
+.content [style*="background:#ffffff"],
+.content [style*="background-color:#fff"],
+.content [style*="background-color: #fff"],
+.content [style*="background-color:white"] {
+  background: #0a0a0a !important;
+}
+
+/* Gradient kills */
+.content [style*="linear-gradient"] {
+  background: #0a0a0a !important;
+  background-image: none !important;
+}
+
+/* Box shadow kills */
+.content [style*="box-shadow"] {
+  box-shadow: none !important;
+}
+
+/* Buttons in Bloomberg mode */
+button, .refresh-btn, [onclick*="refresh"] {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+  color: #ccc !important;
+  border-radius: 0 !important;
+}
+button:hover, .refresh-btn:hover {
+  border-color: #ff8c00 !important;
+  color: #ff8c00 !important;
+}
+
+/* iframe embed frames */
+.embed-frame {
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+}
+
+/* Force all inline white backgrounds */
+[style*="background:#fff"],
+[style*="background: #fff"],
+[style*="background:white"],
+[style*="background-color:#fff"],
+[style*="background-color: #fff"] {
+  background: #0a0a0a !important;
+}
+
+[style*="border-radius"] {
+  border-radius: 0 !important;
+}
+
+[style*="color:#555"],
+[style*="color: #555"],
+[style*="color:#333"],
+[style*="color: #333"] {
+  color: #ccc !important;
+}
+
+/* ========== iframe 内嵌页面铺满修复 ========== */
+body { max-width: none !important; padding: 12px !important; }
+.card { background: #0a0a0a !important; border: 1px solid #2a2a2a !important; }
+
+/* style_spread 修复 */
+body[class*="ss-"], body { max-width: none !important; }
+
+/* 通用：取消任何 iframe 内部页面的宽度限制 */
+.container, .wrapper, main, [class*="container"] { max-width: none !important; }

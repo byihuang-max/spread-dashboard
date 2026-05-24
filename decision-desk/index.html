@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMT Decision Desk</title>
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface-2: #1a2332;
+  --surface-3: #0d1520;
+  --border: #1e2d3d;
+  --text: #e2e8f0;
+  --text-muted: #8892a4;
+  --accent: #3b82f6;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --orange: #f97316;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.header .date {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Conclusion Card */
+.conclusion-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+
+.conclusion-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.env-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.env-badge.positive { background: rgba(16,185,129,0.12); color: var(--green); }
+.env-badge.neutral { background: rgba(245,158,11,0.12); color: var(--yellow); }
+.env-badge.defensive { background: rgba(239,68,68,0.12); color: var(--red); }
+
+.conclusion-text {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.key-change {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+.key-change .label {
+  color: var(--yellow);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Strategy Section */
+.strategy-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+/* Strategy Grid */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.strategy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+  position: relative;
+}
+
+.strategy-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.strategy-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.strategy-card .name {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.strategy-card .score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.strategy-card .score {
+  font-size: 28px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.strategy-card .level {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.strategy-card .bar {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.strategy-card .bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.strategy-card .detail {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.strategy-card .tap-hint {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.strategy-card:hover .tap-hint {
+  opacity: 1;
+}
+
+/* Expand Panel (below card) */
+.expand-panel {
+  grid-column: 1 / -1;
+  background: var(--surface-3);
+  border: 1px solid var(--accent);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
+  padding: 0 24px;
+}
+
+.expand-panel.open {
+  max-height: 600px;
+  opacity: 1;
+  padding: 20px 24px 24px;
+}
+
+.expand-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.expand-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.expand-score-badge {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.expand-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Factor breakdown */
+.factor-breakdown .fb-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.factor-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.factor-row .f-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.factor-row .f-bar-bg {
+  flex: 1;
+  height: 5px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.factor-row .f-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.factor-row .f-score {
+  font-size: 11px;
+  font-weight: 500;
+  width: 26px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.factor-row .f-weight {
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 26px;
+  text-align: right;
+}
+
+/* Metrics grid in expand */
+.expand-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.expand-metric {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.expand-metric .em-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.expand-metric .em-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Expand link */
+.expand-link {
+  grid-column: 1 / -1;
+  display: block;
+  text-align: center;
+  padding: 9px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.expand-link:hover {
+  background: var(--surface-2);
+}
+
+/* Color coding */
+.score-high { color: var(--green); }
+.score-mid { color: var(--yellow); }
+.score-low { color: var(--red); }
+.fill-high { background: var(--green); }
+.fill-mid { background: var(--yellow); }
+.fill-low { background: var(--red); }
+
+/* Risk Section */
+.risk-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.risk-section .title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+
+.risk-list {
+  list-style: none;
+}
+
+.risk-list li {
+  font-size: 13px;
+  color: var(--text);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.risk-list li::before {
+  content: "▲";
+  font-size: 9px;
+  color: var(--orange);
+}
+
+/* Action Section */
+.action-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.action-section .title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.action-list {
+  list-style: none;
+}
+
+.action-list li {
+  font-size: 13px;
+  color: var(--text);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-list li::before {
+  content: "●";
+  font-size: 8px;
+  color: var(--accent);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .strategy-grid { grid-template-columns: repeat(2, 1fr); }
+  .expand-body { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 16px 12px; }
+  .strategy-grid { grid-template-columns: 1fr 1fr; }
+  .conclusion-card { padding: 18px 16px; }
+  .expand-panel.open { padding: 16px 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>GAMT Decision Desk</h1>
+    <span class="date">2026-05-21 盘后</span>
+  </div>
+
+  <!-- 今日结论 -->
+  <div class="conclusion-card">
+    <div class="conclusion-header">
+      <span class="env-badge neutral">
+        <span>■</span> 市场环境：中性偏谨慎
+      </span>
+    </div>
+    <div class="conclusion-text">
+      强势股情绪进入退潮期（36.9分），炸板率飙升至66%，短线赚钱效应收缩。CTA环境偏弱（45.3分），仅4/58品种有趋势。转债环境中性（59分）。期权卖权处于中性观察窗口，局部品种有溢价但非系统性机会。量化股票小盘因子领跑，风格偏集中。
+    </div>
+    <div class="key-change">
+      <span class="label">关键变化</span>
+      <span>强势股从震荡转入退潮，炸板率从前日42%跳升至66%；高位断板5只，连板晋级率仅9.8%</span>
+    </div>
+  </div>
+
+  <!-- 策略适配度 -->
+  <div class="strategy-section">
+    <div class="section-title">策略适配度评分</div>
+    <div class="strategy-grid" id="strategy-grid">
+      <!-- JS renders cards + expand panels here -->
+    </div>
+  </div>
+
+  <!-- 风险提示 -->
+  <div class="risk-section">
+    <div class="title">风险提示</div>
+    <ul class="risk-list">
+      <li>强势股退潮期，高位股补跌风险加大</li>
+      <li>CTA趋势品种极少（4只），趋势策略可能连续止损</li>
+      <li>小盘因子领跑但风格集中度偏高，量化超额可能收窄</li>
+    </ul>
+  </div>
+
+  <!-- 动作建议 -->
+  <div class="action-section">
+    <div class="title">动作建议</div>
+    <ul class="action-list">
+      <li>强势股敞口建议降低，等待情绪冰点信号再加回</li>
+      <li>CTA维持低配，等待趋势品种数回升至15+</li>
+      <li>期权卖权可精选个别品种（玻璃FG、橡胶RU），不宜系统性开仓</li>
+      <li>转债维持中性配置，关注DELTA回升信号</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    GAMT Decision Desk · 数据截至 2026-05-21 · 规则引擎 v0.1
+  </div>
+
+</div>
+
+<script>
+// ========== 策略数据 ==========
+const strategies = [
+  {
+    id: 'quant_stock',
+    name: '量化股票',
+    score: 58,
+    level: '中性',
+    detail: '小盘因子领跑+0.8%/5日，风格偏集中',
+    factors: [
+      { name: '成交额(流动性)', weight: 0.35, score: 65, note: '全A日均成交偏中性' },
+      { name: '风格集中度', weight: 0.25, score: 42, note: '小盘占比偏高，超额空间受压' },
+      { name: '因子偏离度', weight: 0.20, score: 55, note: '风格轧差在1σ内' },
+      { name: '基差成本', weight: 0.20, score: 68, note: 'IC贴水收窄，对冲成本下降' }
+    ],
+    metrics: [
+      { label: '领跑因子', value: '小盘+0.8%' },
+      { label: '全A成交额', value: '9,200亿' },
+      { label: 'IC年化基差', value: '-4.2%' },
+      { label: '风格偏离', value: '+0.8σ' }
+    ],
+    link: '../env_fit/quant_stock/quant_stock.html'
+  },
+  {
+    id: 'momentum',
+    name: '强势股',
+    score: 37,
+    level: '不友好',
+    detail: '情绪36.9分，退潮期，炸板率66%',
+    factors: [
+      { name: '连板高度', weight: 0.20, score: 83, note: '最高7板，空间尚可' },
+      { name: '晋级率', weight: 0.25, score: 10, note: '仅9.8%，接力极难' },
+      { name: '1-炸板率', weight: 0.20, score: 2, note: '炸板率66%，极端恶劣' },
+      { name: '涨跌停比', weight: 0.10, score: 10, note: '34涨/25跌，几乎持平' },
+      { name: '封板质量', weight: 0.25, score: 68, note: '大市值参与尚可' }
+    ],
+    metrics: [
+      { label: '情绪指数', value: '36.9' },
+      { label: '周期阶段', value: '退潮' },
+      { label: '炸板率', value: '66%' },
+      { label: '最高连板', value: '7板' },
+      { label: '晋级率', value: '9.8%' },
+      { label: '高位断板', value: '5只' }
+    ],
+    link: '../env_fit/momentum_stock/momentum_stock.html'
+  },
+  {
+    id: 'cta',
+    name: '商品CTA',
+    score: 45,
+    level: '偏弱',
+    detail: '友好度45.3，仅4品种有趋势，PCA温和',
+    factors: [
+      { name: '趋势品种占比', weight: 0.30, score: 7, note: '4/58=6.9%，极低' },
+      { name: 'PCA友好度', weight: 0.25, score: 45, note: '温和趋势，动量偏空' },
+      { name: '波动率分位', weight: 0.25, score: 100, note: '波动率处于极高分位' },
+      { name: '成交量比', weight: 0.20, score: 42, note: 'MA20/MA60=0.95，略缩量' }
+    ],
+    metrics: [
+      { label: 'CTA友好度', value: '45.3' },
+      { label: '趋势品种', value: '4/58' },
+      { label: '平均波动率', value: '88.9%' },
+      { label: 'PCA环境', value: '温和趋势' },
+      { label: 'PC1解释力', value: '30.1%' },
+      { label: '动量信号', value: '偏空' }
+    ],
+    link: '../env_fit/commodity_cta/commodity_cta.html'
+  },
+  {
+    id: 'cb',
+    name: '转债指增',
+    score: 59,
+    level: '中性',
+    detail: '综合59分，活跃度/估值/DELTA均中性',
+    factors: [
+      { name: '市场活跃度', weight: 0.25, score: 55, note: '转债成交与正股相关性中等' },
+      { name: '估值水位', weight: 0.25, score: 60, note: '均价分位适中，溢价率不极端' },
+      { name: 'DELTA股性', weight: 0.25, score: 58, note: '转债跟涨能力中性' },
+      { name: '债底安全', weight: 0.25, score: 63, note: '破面值占比可控' }
+    ],
+    metrics: [
+      { label: '转债友好度', value: '59' },
+      { label: '活跃转债数', value: '~380只' },
+      { label: 'DELTA中位数', value: '0.58' },
+      { label: '均价分位', value: '55%' }
+    ],
+    link: '../env_fit/cb_env/cb_env.html'
+  },
+  {
+    id: 'arbitrage',
+    name: '套利',
+    score: 55,
+    level: '中性',
+    detail: '波动率高但无序，基差平稳，期权IV中性',
+    factors: [
+      { name: '股指基差波动', weight: 0.35, score: 48, note: '基差窄幅震荡，套利空间有限' },
+      { name: '商品波动率', weight: 0.30, score: 75, note: '整体波动率高，价差活跃' },
+      { name: '期权IV-HV价差', weight: 0.35, score: 45, note: 'IV略高于HV，空间不大' }
+    ],
+    metrics: [
+      { label: '股指基差波动', value: '中等' },
+      { label: '商品avg波动率', value: '88.9%' },
+      { label: 'IV-HV状态', value: '略有溢价' },
+      { label: '机会信号数', value: '3个' }
+    ],
+    link: '../env_fit/arbitrage/arbitrage.html'
+  },
+  {
+    id: 'option_sell',
+    name: '期权卖权',
+    score: 50,
+    level: '中性',
+    detail: '局部溢价，5品种可卖，非系统性窗口',
+    factors: [
+      { name: '平均卖权得分', weight: 0.35, score: 60, note: 'avg=59.5，中等偏上' },
+      { name: '可卖品种广度', weight: 0.25, score: 50, note: '5/10品种达标' },
+      { name: '板块分散度', weight: 0.20, score: 40, note: '仅2个板块，集中度高' },
+      { name: 'PCA环境配合', weight: 0.20, score: 45, note: 'PCA友好度44.8，中性' }
+    ],
+    metrics: [
+      { label: 'Regime', value: 'NEUTRAL' },
+      { label: '平均卖权分', value: '59.5' },
+      { label: '可卖品种', value: '5个' },
+      { label: 'Top3', value: 'FG/RU/SC' },
+      { label: 'PCA友好度', value: '44.8' },
+      { label: '板块覆盖', value: '2个' }
+    ],
+    link: '../env_fit/option_vol/option_vol.html'
+  }
+];
+
+// ========== Helpers ==========
+function getColorClass(score) {
+  return score >= 65 ? 'high' : score >= 45 ? 'mid' : 'low';
+}
+
+// ========== Render ==========
+let activeId = null;
+
+function renderGrid() {
+  const grid = document.getElementById('strategy-grid');
+  let html = '';
+
+  // 按行排列（每行3个卡片），展开面板插在对应行后面
+  const perRow = 3;
+  const rows = [];
+  for (let i = 0; i < strategies.length; i += perRow) {
+    rows.push(strategies.slice(i, i + perRow));
+  }
+
+  rows.forEach((row, rowIdx) => {
+    // 渲染这一行的卡片
+    row.forEach(s => {
+      const cc = getColorClass(s.score);
+      const isActive = s.id === activeId;
+      html += `
+        <div class="strategy-card ${isActive ? 'active' : ''}" data-id="${s.id}">
+          <span class="tap-hint">展开 ▼</span>
+          <div class="name">${s.name}</div>
+          <div class="score-row">
+            <span class="score score-${cc}">${s.score}</span>
+            <span class="level score-${cc}">${s.level}</span>
+          </div>
+          <div class="bar"><div class="bar-fill fill-${cc}" style="width:${s.score}%"></div></div>
+          <div class="detail">${s.detail}</div>
+        </div>
+      `;
+    });
+
+    // 如果这一行有展开的卡片，插入展开面板
+    const activeInRow = row.find(s => s.id === activeId);
+    if (activeInRow) {
+      html += buildExpandPanel(activeInRow);
+    }
+  });
+
+  grid.innerHTML = html;
+}
+
+function buildExpandPanel(s) {
+  const cc = getColorClass(s.score);
+  const weighted = s.factors.reduce((sum, f) => sum + f.score * f.weight, 0).toFixed(1);
+
+  const factorsHtml = s.factors.map(f => {
+    const fcc = getColorClass(f.score);
+    return `
+      <div class="factor-row">
+        <span class="f-name">${f.name}</span>
+        <div class="f-bar-bg">
+          <div class="f-bar fill-${fcc}" style="width:${f.score}%"></div>
+        </div>
+        <span class="f-score score-${fcc}">${f.score}</span>
+        <span class="f-weight">${(f.weight*100).toFixed(0)}%</span>
+      </div>
+    `;
+  }).join('');
+
+  const metricsHtml = s.metrics.map(m => `
+    <div class="expand-metric">
+      <div class="em-label">${m.label}</div>
+      <div class="em-value">${m.value}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="expand-panel open">
+      <div class="expand-header">
+        <span class="expand-title">${s.name} · 评分拆解</span>
+        <span class="expand-score-badge score-${cc}">${s.score}</span>
+      </div>
+      <div class="expand-body">
+        <div class="factor-breakdown">
+          <div class="fb-title">因子权重（加权=${weighted}）</div>
+          ${factorsHtml}
+        </div>
+        <div>
+          <div class="factor-breakdown">
+            <div class="fb-title">核心指标</div>
+            <div class="expand-metrics">
+              ${metricsHtml}
+            </div>
+          </div>
+        </div>
+        <a class="expand-link" href="../index.html">查看完整模块 →</a>
+      </div>
+    </div>
+  `;
+}
+
+// ========== Events ==========
+document.getElementById('strategy-grid').addEventListener('click', (e) => {
+  const card = e.target.closest('.strategy-card');
+  if (!card) return;
+
+  const id = card.dataset.id;
+  // Toggle: 点同一个关闭，点不同的切换
+  activeId = (activeId === id) ? null : id;
+  renderGrid();
+});
+
+// 初始化
+renderGrid();
+</script>
+</body>
+</html>

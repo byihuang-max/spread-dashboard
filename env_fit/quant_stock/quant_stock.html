@@ -67,6 +67,79 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .neutral-divider{width:1px;height:36px;background:#e2e8f0}
 .neutral-verdict{font-size:13px;font-weight:700;margin-left:auto;padding:4px 12px;border-radius:8px}
 </style>
+<style id="bb-override" media="not all">
+/* === BLOOMBERG TERMINAL OVERRIDE === */
+[style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
+:root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
+html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
+.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
+p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
+table{border-collapse:collapse!important}
+table,th,td{border-color:#2a2a2a!important;color:#ccc!important}
+th{background:#111!important;color:#ff8c00!important}
+tr:nth-child(even) td{background:#0f0f0f!important}
+tr:hover td{background:#1a1a1a!important}
+button,.btn,.refresh-btn,.tab,.ss-tab,.strat-tab,.nav-tab{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
+button:hover,.btn:hover,.tab.active,.ss-tab.active,.strat-tab.active,.nav-tab.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
+.dot{display:none!important}
+canvas{background:transparent!important}
+input,select,textarea{background:#1a1a1a!important;border:1px solid #333!important;color:#ccc!important;border-radius:0!important}
+a{color:#ff8c00!important}
+hr{border-color:#2a2a2a!important}
+code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!important}
+.badge,.tag,.chip,.label-tag{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#333;border-radius:0}
+</style>
+
+
+
+
+<script>
+(function(){
+  function isBloomberg(){
+    try{return window.parent.location.search.includes("theme=bloomberg")}catch(e){return false}
+  }
+  function registerPlugin(){
+    if(typeof Chart==="undefined")return false;
+    if(!isBloomberg())return true;
+    Chart.defaults.color="#888";
+    Chart.defaults.borderColor="#2a2a2a";
+    Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
+    Chart.defaults.plugins.legend.labels.color="#888";
+    Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
+    Chart.defaults.plugins.tooltip.borderColor="#333";
+    Chart.register({
+      id:"bloombergGrid",
+      afterLayout(chart){
+        Object.values(chart.scales).forEach(function(scale){
+          if(scale.options.grid){
+            scale.options.grid.color="rgba(255,140,0,0.07)";
+            scale.options.grid.tickColor="#2a2a2a";
+            scale.options.grid.lineWidth=1;
+            scale.options.grid.display=true;
+          }
+          if(scale.options.ticks){
+            scale.options.ticks.color="#888";
+          }
+        });
+      }
+    });
+    return true;
+  }
+  if(!registerPlugin()){
+    var tries=0;
+    var iv=setInterval(function(){
+      tries++;
+      if(registerPlugin()||tries>50)clearInterval(iv);
+    },50);
+  }
+})();
+</script>
+<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var l=document.createElement("link");l.rel="stylesheet";l.href="../../bloomberg-override.css";document.head.appendChild(l);}}catch(e){}})();</script>
 </head><body>
 
 <div class="header-bar">
@@ -81,7 +154,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <!-- ═══ 超额净值归因曲线 ═══ -->
 <div class="card" id="excess-card" style="display:none">
   <div class="card-title"><span class="dot" style="background:#6366f1"></span> 产品净值 × 超额归因</div>
-  <div style="position:relative;height:380px"><canvas id="chartExcess"></canvas></div>
+  <div style="position:relative;height:280px"><canvas id="chartExcess"></canvas></div>
   <div id="excess-tooltip" style="display:none;position:absolute;z-index:99;background:rgba(15,23,42,0.95);color:#e2e8f0;border-radius:10px;padding:14px 18px;font-size:12px;line-height:1.7;pointer-events:none;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);backdrop-filter:blur(8px)"></div>
   <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:#94a3b8;justify-content:center">
     <span> 产品净值</span>
@@ -103,14 +176,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
 <div class="card">
   <div class="card-title"><span class="dot" style="background:#3498db"></span> 宽基成交额占全A比例（%）</div>
-  <div style="position:relative;height:320px"><canvas id="chartShare"></canvas></div>
+  <div style="position:relative;height:280px"><canvas id="chartShare"></canvas></div>
 </div>
 
 <!-- ═══ 风格迁移速度子模块 ═══ -->
 <div class="card" id="migration-card" style="display:none">
   <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 风格占比变化率（5日 vs 20日均值 Δpp）</div>
   <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
-    <div style="flex:1;min-width:300px;position:relative;height:220px"><canvas id="chartMigration"></canvas></div>
+    <div style="flex:1;min-width:300px;position:relative;height:280px"><canvas id="chartMigration"></canvas></div>
     <div id="migration-summary" style="flex:0 0 220px;font-size:12px;line-height:1.8;padding:8px 0"></div>
   </div>
 </div>
@@ -258,8 +331,8 @@ fetch(diagBase+'quant_env_diag.json?t='+Date.now()).then(function(r){return r.js
         indexAxis:'y',
         plugins:{legend:{display:false}},
         scales:{
-          x:{grid:{color:'#f1f5f9'},ticks:{callback:function(v){return (v>0?'+':'')+v+'pp'},font:{size:11}}},
-          y:{grid:{display:false},ticks:{font:{size:11,weight:600}}}
+          x:{grid:{color:'#1a1a1a',tickBorderDash:[3,3]},ticks:{callback:function(v){return (v>0?'+':'')+v+'pp'},font:{size:11}}},
+          y:{grid:{color:'#1a1a1a',tickBorderDash:[3,3]},ticks:{font:{size:11,weight:600}}}
         }
       }
     });
@@ -438,8 +511,8 @@ Promise.all([
         }}
       },
       scales:{
-        x:{ticks:{maxTicksToShow:12,font:{size:10}},grid:{display:false}},
-        y:{position:'left',ticks:{font:{size:10},callback:function(v){return v+'%'}},grid:{color:'rgba(0,0,0,.04)'},title:{display:true,text:'累计收益%',font:{size:10},color:'#8b5cf6'}},
+        x:{ticks:{maxTicksToShow:12,font:{size:10}},grid:{color:'#1a1a1a',tickBorderDash:[3,3]}},
+        y:{position:'left',ticks:{font:{size:10},callback:function(v){return v+'%'}},grid:{color:'#1a1a1a',tickBorderDash:[3,3]},title:{display:true,text:'累计收益%',font:{size:10},color:'#8b5cf6'}},
         y1:{position:'right',ticks:{font:{size:10},callback:function(v){return v+'%'},color:'#f59e0b'},grid:{drawOnChartArea:false},title:{display:true,text:'超额%',font:{size:10},color:'#f59e0b'}},
         yHidden:{display:false}
       }
@@ -461,7 +534,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
   var lastDate=QS.total_amount[QS.total_amount.length-1].date;
   document.getElementById('dateLabel').innerHTML=' 宽基量化股票 · 数据截至 <b>'+fmtDate(lastDate)+'</b>';
 
-  var baseScales={x:{ticks:{maxTicksToShow:12,font:{size:10}}}};
+  var baseScales={x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}};
 
   // 图1: 全市场成交额
   var d1=QS.total_amount;
@@ -475,7 +548,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'}}}}}
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿'},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}}
   });
 
   // 图2: 宽基成交额占比
@@ -491,7 +564,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
     }})},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'}},min:0}}}
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]},min:0}}}
   });
 
   // 图3: 年化基差
@@ -507,7 +580,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
     }})},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'}}}}}
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v+'%'},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}}
   });
 
   // 图4: 因子超额收益
@@ -523,7 +596,7 @@ fetch(jsonUrl).then(function(r){return r.json()}).then(function(QS){
     }})},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v.toFixed(2)}}}}}
+      scales:{x:baseScales.x,y:{ticks:{callback:function(v){return v.toFixed(2)},color:'#888'},grid:{color:'#333',tickBorderDash:[3,3]}}}}
   });
 
 }).catch(function(e){document.body.innerHTML='<p style="color:red;padding:40px">数据加载失败: '+e.message+'</p>'});

@@ -38,12 +38,17 @@ def log(msg, level='INFO'):
     print(f"[{ts}] {prefix.get(level, '  ')} {msg}", flush=True)
 
 def run_script(subdir, script):
-    """运行一个 Python 脚本，返回 (成功, 耗时秒)"""
+    """运行一个 Python 脚本，返回 (成功, 耗时秒)。支持 'script.py --arg' 格式"""
+    # 分离脚本名和参数
+    parts = script.split()
+    script_name = parts[0]
+    script_args = parts[1:]
+
     if subdir:
-        path = os.path.join(BASE_DIR, subdir, script)
+        path = os.path.join(BASE_DIR, subdir, script_name)
         cwd = os.path.join(BASE_DIR, subdir)
     else:
-        path = os.path.join(BASE_DIR, script)
+        path = os.path.join(BASE_DIR, script_name)
         cwd = BASE_DIR
 
     if not os.path.exists(path):
@@ -54,7 +59,7 @@ def run_script(subdir, script):
     t0 = time.time()
     try:
         result = subprocess.run(
-            [sys.executable, path],
+            [sys.executable, path] + script_args,
             cwd=cwd,
             capture_output=True, text=True, timeout=600
         )

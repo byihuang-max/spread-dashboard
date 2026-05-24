@@ -94,6 +94,79 @@ h2{font-size:14px;font-weight:700;margin-bottom:10px;color:#e7eaf0;letter-spacin
   .hero-stats{gap:10px}
 }
 </style>
+<style id="bb-override" media="not all">
+/* === BLOOMBERG TERMINAL OVERRIDE === */
+[style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
+:root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
+html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
+.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
+p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
+table{border-collapse:collapse!important}
+table,th,td{border-color:#2a2a2a!important;color:#ccc!important}
+th{background:#111!important;color:#ff8c00!important}
+tr:nth-child(even) td{background:#0f0f0f!important}
+tr:hover td{background:#1a1a1a!important}
+button,.btn,.refresh-btn,.tab,.ss-tab,.strat-tab,.nav-tab{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
+button:hover,.btn:hover,.tab.active,.ss-tab.active,.strat-tab.active,.nav-tab.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
+.dot{display:none!important}
+canvas{background:transparent!important}
+input,select,textarea{background:#1a1a1a!important;border:1px solid #333!important;color:#ccc!important;border-radius:0!important}
+a{color:#ff8c00!important}
+hr{border-color:#2a2a2a!important}
+code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!important}
+.badge,.tag,.chip,.label-tag{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#333;border-radius:0}
+</style>
+
+
+
+
+<script>
+(function(){
+  function isBloomberg(){
+    try{return window.parent.location.search.includes("theme=bloomberg")}catch(e){return false}
+  }
+  function registerPlugin(){
+    if(typeof Chart==="undefined")return false;
+    if(!isBloomberg())return true;
+    Chart.defaults.color="#888";
+    Chart.defaults.borderColor="#2a2a2a";
+    Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
+    Chart.defaults.plugins.legend.labels.color="#888";
+    Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
+    Chart.defaults.plugins.tooltip.borderColor="#333";
+    Chart.register({
+      id:"bloombergGrid",
+      afterLayout(chart){
+        Object.values(chart.scales).forEach(function(scale){
+          if(scale.options.grid){
+            scale.options.grid.color="rgba(255,140,0,0.07)";
+            scale.options.grid.tickColor="#2a2a2a";
+            scale.options.grid.lineWidth=1;
+            scale.options.grid.display=true;
+          }
+          if(scale.options.ticks){
+            scale.options.ticks.color="#888";
+          }
+        });
+      }
+    });
+    return true;
+  }
+  if(!registerPlugin()){
+    var tries=0;
+    var iv=setInterval(function(){
+      tries++;
+      if(registerPlugin()||tries>50)clearInterval(iv);
+    },50);
+  }
+})();
+</script>
+<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var l=document.createElement("link");l.rel="stylesheet";l.href="../../bloomberg-override.css";document.head.appendChild(l);}}catch(e){}})();</script>
 </head>
 <body>
 <div class="loading" id="loadingMsg">加载中...</div>
