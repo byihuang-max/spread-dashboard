@@ -288,9 +288,17 @@ pattern = r'    <!-- ========== 策略环境适配度 ========== -->.*?(?=    <!
 html = re.sub(pattern, new_module + '\n\n', html, flags=re.DOTALL)
 
 # 3. 注入 Chart.js 脚本（在 </body> 前，现有 <script> 后）
-# 先移除旧的 chart script（如果有）
-html = re.sub(r'<script src="https://cdn\.jsdelivr\.net/npm/chart\.js.*?</script>\s*', '', html, flags=re.DOTALL)
-html = html.replace('</body></html>', chart_script + '\n</body></html>')
+# 用 marker 包裹避免重复注入
+INJECT_START = '<!-- ===== quant_stock chart inject START ===== -->'
+INJECT_END = '<!-- ===== quant_stock chart inject END ===== -->'
+wrapped_script = INJECT_START + chart_script + INJECT_END
+
+# 先移除旧注入（如有）
+html = re.sub(re.escape(INJECT_START) + r'.*?' + re.escape(INJECT_END), '', html, flags=re.DOTALL)
+# 同时清掉所有遗留的旧版 chart.js CDN script 标签
+html = re.sub(r'<script src="https://cdn\.jsdelivr\.net/npm/chart\.js[^"]*"></script>\s*', '', html, flags=re.DOTALL)
+# 在 </body></html> 前注入
+html = html.replace('</body></html>', wrapped_script + '\n</body></html>')
 
 # 4. 更新最后更新时间
 html = html.replace("v0.1 · 2026-02-22", f"v0.2 · {data['total_amount'][-1]['date'][:4]}-{data['total_amount'][-1]['date'][4:6]}-{data['total_amount'][-1]['date'][6:]}")

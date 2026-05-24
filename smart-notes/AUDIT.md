@@ -1,18 +1,20 @@
 # Smart Notes 审计报告
 
-> 生成时间: 2026-05-17 20:00
-> 笔记总数: 77
-> 看板模块数: 33
+> 生成时间: 2026-05-24 20:00
+> 笔记总数: 83
+> 看板模块数: 35
 
 ## 1. 模块覆盖检查
 
-以下 **3** 个看板模块在 Smart Notes 中没有对应笔记:
+以下 **5** 个看板模块在 Smart Notes 中没有对应笔记:
 
 - [ ] **海外一手要闻** (`overseas_digest`)
 - [ ] **全球利率与汇率** (`rates`)
 - [ ] **宏观Meme叙事** (`macro_meme`)
+- [ ] **并购池** (`merger_pool`)
+- [ ] **并购深度分析** (`merger_report`)
 
-覆盖率: 30/33 (90%)
+覆盖率: 30/35 (85%)
 
 ## 2. 元数据完整性
 
@@ -28,16 +30,21 @@
 - [ ] `smart-notes/notes/engineering/025_数据源地图_四条数据线与分工_2026-04-06.md` — 数据源地图：四条数据线与分工（2026-04-06）
 - [ ] `smart-notes/notes/research/narrative/026_PPI_CPI_流动性回流实体观察框架_2026-04-06.md` — PPI / CPI / 流动性回流实体观察框架（2026-04-06）
 
-### 缺少看板关联 (72 篇)
+### 缺少看板关联 (78 篇)
 
+- [ ] `smart-notes/notes/engineering/2026-05-24_Chart.js_主题适配：覆盖优先级与_afterLayout_兜底.md` — Chart.js 主题适配：覆盖优先级与 afterLayout 兜底
 - [ ] `smart-notes/notes/engineering/2026-04-12_经济基本面模块MCP落地说明.md` — 2026-04-12 经济基本面模块 MCP 落地说明
 - [ ] `smart-notes/notes/engineering/2026-05-06_GAMT登录框自动登录前抖动修复.md` — GAMT登录框自动登录前抖动修复
 - [ ] `smart-notes/notes/engineering/2026-03-08_API密钥配置检查.md` — 2026-03-08 API 密钥配置全面检查
 - [ ] `smart-notes/notes/engineering/telegram-multi-bots.md` — 配置多个 Telegram AI 员工
 - [ ] `smart-notes/notes/engineering/004_腾讯云服务器git配置丢失导致定时任务无法推送.md` — 腾讯云服务器git配置丢失导致定时任务无法推送
 - [ ] `smart-notes/notes/engineering/stock_monitor_skill_design.md` — 个股监控 Skill 完整设计记录（2026-05-10）
+- [ ] `smart-notes/notes/engineering/2026-05-24_Git_rebase_中_ourstheirs_语义反转踩坑记录.md` — Git rebase 中 ours/theirs 语义反转踩坑记录
+- [ ] `smart-notes/notes/engineering/2026-05-19_Git_仓库瘦身与三端同步架构.md` — Git 仓库瘦身与三端同步架构
+- [ ] `smart-notes/notes/engineering/2026-04-25_GAMT模块产品化路径_v2.md` — GAMT 商业化修正方向与产品化路径
 - [ ] `smart-notes/notes/engineering/腾讯云自动部署机制.md` — 腾讯云自动部署机制
 - [ ] `smart-notes/notes/engineering/024_数据token与权限补全_通联DataYes_UQER_iFind_Tushare_2026-04-06.md` — 数据 token 与权限补全（通联 DataYes / UQER / iFind / Tushare）
+- [ ] `smart-notes/notes/engineering/2026-05-23_Nova_Demo_8问题_GAMT_10改进方向.md` — Nova Demo 8问题 + GAMT 10改进方向（大白话版）
 - [ ] `smart-notes/notes/engineering/2026-03-11_腾讯云部署踩坑实录.md` — 腾讯云部署 — 踩坑实录与最终方案
 - [ ] `smart-notes/notes/engineering/Smart_Notes架构改造_动态加载方案.md` — Smart Notes架构改造：动态加载方案
 - [ ] `smart-notes/notes/engineering/GAMT看板工作流与Git操作指南.md` — GAMT 看板工作流与 Git 操作指南
@@ -47,6 +54,7 @@
 - [ ] `smart-notes/notes/engineering/2026-05-12_Git_冲突标记潜伏导致的连环故障.md` — Git 冲突标记潜伏导致的连环故障
 - [ ] `smart-notes/notes/engineering/2026-05-10_邮件订阅者管理规则v3-事故驱动最终版.md` — 邮件订阅者管理规则v3-事故驱动最终版
 - [ ] `smart-notes/notes/engineering/2026-04-12_自选股跟踪器模块数据源清单.md` — 自选股跟踪器：模块数据源清单（2026-04-12）
+- [ ] `smart-notes/notes/engineering/2026-05-19_Nginx_文件权限_404_问题修复记录.md` — Nginx 文件权限 404 问题修复记录
 - [ ] `smart-notes/notes/engineering/2026-04-25_GAMT模块产品化路径.md` — 2026-04-25_GAMT模块产品化路径
 - [ ] `smart-notes/notes/engineering/2026-05-10_源码打包前必须确认_admin_权限模块.md` — 2026-05-10_源码打包前必须确认_admin_权限模块
 - [ ] `smart-notes/notes/engineering/2026-05-08_业务数据保护与三端对齐口径.md` — 业务数据保护与三端对齐口径
@@ -113,33 +121,21 @@
 
 ## 5. 近14天对话中可能未沉淀的决策
 
-共 **20** 条疑似未沉淀:
+共 **8** 条疑似未沉淀:
 
-- [ ] `2026-05-05-github-backup-policy.md` L14: ## 最终方案（Roni 选 A+C）
-- [ ] `2026-05-05.md` L96: ## 3. GAMT 架构 xmind v2 重写 + 对客逻辑缺口诊断（~12:14-13:00）
-- [ ] `2026-05-05.md` L336: ## 10. write-then-verify skill 设计方案出炉（~17:07-17:14）
-- [ ] `2026-05-05.md` L607: ### 长期设计语言更新（覆盖之前深蓝渐变研报风）
-- [ ] `2026-05-05.md` L638: ### 新的设计家族宪章（覆盖之前所有版本）
-- [ ] `2026-05-05.md` L798: ## 20:56-21:16 · v8 终极方案（Python 叠字 + 三张统一）
-- [ ] `2026-05-05.md` L800: ### Roni 最终决策（这批就定稿了）
-- [ ] `2026-05-05.md` L834: ### 使用说明 v8 设计点
-- [ ] `2026-05-05.md` L993: ## 22:00-22:12 · V10 三图重设计阻塞 · API key 分组切回「CodeX专属」
-- [ ] `2026-05-05.md` L1020: ## 22:20 · 设计语言再迭代：罗马数字也否决
-- [ ] `2026-05-05.md` L1031: ### 候选替代方案（给 Roni 选）
-- [ ] `2026-05-05.md` L1122: ### V10 方案被否 → V11 重做
-- [ ] `2026-05-05.md` L1143: ### 核心设计决策（三张海报通用）
-- [ ] `2026-05-06.md` L54: ### Coming Soon 海报（Roni 23:27 新增）
-- [ ] `2026-05-08.md` L118: ## 01:04-01:20 · size_spread / Smart Beta 风格轧差重构思路
-- [ ] `2026-05-09.md` L56: ## 强势股日报：新增订阅者 + 交易日判断（16:04-18:52）
-- [ ] `2026-05-10.md` L65: ## 12:25 FOF 组合新增"大方向之低波思源365"
-- [ ] `2026-05-10.md` L304: ## 23:15-23:28 B类底稿搜索流程设计 + API/Kimi/Claude 分工确认
-- [ ] `2026-05-10.md` L622: ## 00:36 并购池顶层架构讨论（与 Roni 共创）
 - [ ] `2026-05-11.md` L3: ## 00:36-00:45 并购池顶层架构讨论 + 性格观察
+- [ ] `2026-05-14.md` L53: ## 出差期间 Mac mini / MacBook / 腾讯云协同方案讨论
+- [ ] `2026-05-16.md` L15: ### 2. 新增"尽调库"模块
+- [ ] `2026-05-18.md` L370: ### 关键设计决策
+- [ ] `2026-05-18.md` L410: ### 23:36 并购池前端新增"策略净值"Tab
+- [ ] `2026-05-18.md` L441: ### 23:47-23:51 并购池前端重构：净值图表移到"进行中"Tab 顶部
+- [ ] `2026-05-19.md` L242: ### Cron 三批次重构（重要架构变更）
+- [ ] `2026-05-21.md` L80: ## 关键架构认知更新
 
 *注: 模糊匹配，可能有误报。标记为已处理的可忽略。*
 
 ---
 
-**待处理项总计: 100**
+**待处理项总计: 96**
 
 待补项较多，建议优先处理模块覆盖和缺日期的笔记。
