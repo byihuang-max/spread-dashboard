@@ -127,9 +127,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
             if '[' in it and ']' in it:
                 name = it.split('[')[0].strip()
                 ind = it[it.index('[')+1:it.index(']')].strip()
-                chips.append(f'<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;line-height:1.4;white-space:nowrap"><b style="color:#be185d">{name}</b><span style="color:#94a3b8;font-size:10px">{ind}</span></span>')
+                chips.append(f'<span class="mega-chip" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;line-height:1.4;white-space:nowrap"><b style="color:#be185d">{name}</b><span style="color:#94a3b8;font-size:10px">{ind}</span></span>')
             else:
-                chips.append(f'<span style="display:inline-flex;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;color:#be185d;font-weight:600;white-space:nowrap">{it}</span>')
+                chips.append(f'<span class="mega-chip" style="display:inline-flex;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;color:#be185d;font-weight:600;white-space:nowrap">{it}</span>')
         mega_chip_html = f'''
       <div class="card" style="padding:14px 18px;border-left:3px solid #ec4899">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
@@ -505,7 +505,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 else: bg = 'rgba(5,150,105,0.85)'
                 tc = '#fff' if abs(avg_pct) > 1 else '#333'
                 star = '⭐' if has_zt else ''
-                cells += f'<div style="background:{bg};color:{tc};padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="{name} {avg_pct:+.2f}% 成交{amt:.0f}亿 涨跌比{ud}">{name[:2]}{star}</div>'
+                cells += f'<div class="heatmap-cell" style="background:{bg};color:{tc};padding:4px 2px;border-radius:4px;font-size:10px;text-align:center;cursor:default;position:relative" title="{name} {avg_pct:+.2f}% 成交{amt:.0f}亿 涨跌比{ud}">{name[:2]}{star}</div>'
             heatmap_html = f'''
             <div class="card">
               <div class="card-title"><span class="dot" style="background:#f59e0b"></span> 行业热力图 · {date_fmt}</div>
