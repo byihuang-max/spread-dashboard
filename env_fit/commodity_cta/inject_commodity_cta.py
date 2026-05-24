@@ -297,7 +297,7 @@ def build_decomp_section():
                 }}}}}}}},
               scales:{{
                 x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
                 y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{drawOnChartArea:false}}}}
               }}
             }}
@@ -319,7 +319,7 @@ def build_decomp_section():
             plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
               tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}}}}}},
             scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{color:'#2a2a2a'}}}}}}
+              y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)+'%'}}}},grid:{{display:false}}}}}}
           }}
         }});
 
@@ -338,7 +338,7 @@ def build_decomp_section():
                 tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}}}}}}},
               scales:{{
                 x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+                y:{{position:'left',title:{{display:true,text:'年化波动率%',font:{{size:10}},color:'#94a3b8'}},ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
                 y1:{{position:'right',min:0,max:100,title:{{display:true,text:'分位%',font:{{size:10}},color:'#f59e0b'}},ticks:{{font:{{size:9}},color:'#f59e0b'}},grid:{{drawOnChartArea:false}}}}
               }}
             }}
@@ -521,7 +521,7 @@ def build_html(data):
           plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}},
             tooltip:{{callbacks:{{label:function(c){{return c.dataset.label+': '+c.parsed.y.toFixed(1)}}}}}}}},
           scales:{{x:{{ticks:{{maxTicksToShow:10,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}}}}
+            y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}}}}
         }};
 
         // 方差解释比
@@ -893,7 +893,7 @@ def build_html(data):
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
           scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}}}
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}}}
         };
         new Chart(document.getElementById('cta-cu-au'),{
           type:'line',
@@ -912,7 +912,7 @@ def build_html(data):
           data:{labels:''' + basket_dates_js + ''',datasets:[
             {label:'工业品篮子',data:''' + ind_nav_js + ''',borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
             {label:'农产品篮子',data:''' + agri_nav_js + ''',borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
-          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#2a2a2a'}}}})
+          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{display:false}}}})
         });
       }
       </script>

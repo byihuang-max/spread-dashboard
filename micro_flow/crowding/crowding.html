@@ -138,9 +138,7 @@ h2,h3{color:#ff8c00!important;letter-spacing:.5px}
       id:"bloombergGrid",
       afterLayout(chart){
         Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){
-            if(scale.axis==="x"){scale.options.grid.display=false;}else{scale.options.grid.color="#2a2a2a";scale.options.grid.lineWidth=1;scale.options.grid.drawTicks=false;scale.options.grid.display=true;}
-          }
+          if(scale.options.grid){scale.options.grid.display=false;}
           if(scale.options.ticks){
             scale.options.ticks.color="#888";
           }

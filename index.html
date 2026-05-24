@@ -296,16 +296,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       afterLayout:function(chart){
         try{
           Object.values(chart.scales||{}).forEach(function(scale){
-            if(scale.options&&scale.options.grid&&scale.options.grid.display!==false){
-              // 横向网格保留浅灰实线，纵向（x轴）隐藏
-              if(scale.axis==="x"){
-                scale.options.grid.display=false;
-              }else{
-                scale.options.grid.color="#2a2a2a";
-                scale.options.grid.tickColor="#2a2a2a";
-                scale.options.grid.lineWidth=1;
-                scale.options.grid.drawTicks=false;
-              }
+            if(scale.options&&scale.options.grid){
+              // 全部隐藏网格（彻底无线）
+              scale.options.grid.display=false;
             }
             if(scale.options&&scale.options.border)scale.options.border.display=false;
             if(scale.options&&scale.options.ticks)scale.options.ticks.color="#888";
@@ -1102,7 +1095,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           responsive:true,maintainAspectRatio:false,
           interaction:{mode:'index',intersect:false},
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}}},
-          scales:{x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}}}
+          scales:{x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}}}
         };
 
         function msMA(a,n){var r=[];for(var i=0;i<a.length;i++){if(i<n-1)r.push(null);else{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}return r;}
@@ -1126,7 +1119,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                 }
               }
             },
-            scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',stepSize:20},grid:{color:'#2a2a2a'},min:0,max:100}}
+            scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',stepSize:20},grid:{display:false},min:0,max:100}}
           })
         });
 
@@ -1176,7 +1169,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               {label:'涨跌停比(0.15)',data:msUN,borderColor:'#f59e0b',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2},
               {label:'封板质量(0.15)',data:msSN,borderColor:'#8b5cf6',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2}
             ]},
-            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'},min:0,max:100}}})
+            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false},min:0,max:100}}})
           });
         });}
 
@@ -1230,7 +1223,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               },
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false},stacked:true},
-                y:{position:'left',stacked:true,ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'},title:{display:true,text:'封单额(亿)',font:{size:9},color:'#94a3b8'}},
+                y:{position:'left',stacked:true,ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false},title:{display:true,text:'封单额(亿)',font:{size:9},color:'#94a3b8'}},
                 y1:{position:'right',ticks:{font:{size:9},color:'#6366f1'},grid:{drawOnChartArea:false},title:{display:true,text:'轧差(亿)',font:{size:9},color:'#6366f1'}}
               }
             }
@@ -1262,7 +1255,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           },
           options:Object.assign({},msB,{scales:{
             x:msB.scales.x,
-            y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
+            y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}},
             y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'高低开 %',font:{size:9},color:'#6366f1'}}
           }})
         });
@@ -1276,7 +1269,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           ]},
           options:Object.assign({},msB,{scales:{
             x:msB.scales.x,
-            y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'},title:{display:true,text:'连板高度',font:{size:9},color:'#94a3b8'}},
+            y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false},title:{display:true,text:'连板高度',font:{size:9},color:'#94a3b8'}},
             y1:{position:'right',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'晋级率',font:{size:9},color:'#94a3b8'}}
           }})
         });
@@ -1331,7 +1324,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               },
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)}},grid:{color:'#2a2a2a'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)}},grid:{display:false},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
                 y1:{position:'right',ticks:{font:{size:9},color:'#6366f1',callback:function(v){return v+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'BIAS %',font:{size:9},color:'#6366f1'}}
               }
             }
@@ -1395,7 +1388,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               },
               scales:{
                 x:{ticks:{maxTicksToShow:12,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(2)}},grid:{color:'#2a2a2a'},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(2)}},grid:{display:false},title:{display:true,text:'净值',font:{size:9},color:'#94a3b8'}},
                 y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return (v*100).toFixed(1)+'%'}},grid:{drawOnChartArea:false},title:{display:true,text:'累计超额',font:{size:9},color:'#f59e0b'}}
               }
             }
@@ -1429,7 +1422,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
               {label:'情绪贡献',data:dcS,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true},
               {label:'管理人Alpha',data:dcA,borderColor:'#ec4899',backgroundColor:'rgba(236,72,153,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}
             ]},
-            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{color:'#2a2a2a'}}}})
+            options:Object.assign({},msB,{scales:{x:msB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v+'%'}},grid:{display:false}}}})
           })}
 
           // 收益拆解周期色带
@@ -1595,7 +1588,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                 }}}},
               scales:{
                 x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
+                y:{position:'left',ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y1:{position:'right',ticks:{font:{size:9},color:'#f59e0b',callback:function(v){return v.toFixed(1)+'%'}},grid:{drawOnChartArea:false}}
               }
             }
@@ -1617,7 +1610,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
             plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
               tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}},
             scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-              y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)+'%'}},grid:{color:'#2a2a2a'}}}
+              y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(1)+'%'}},grid:{display:false}}}
           }
         });
 
@@ -1636,7 +1629,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
                 tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}}},
               scales:{
                 x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-                y:{position:'left',title:{display:true,text:'年化波动率%',font:{size:10},color:'#94a3b8'},ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}},
+                y:{position:'left',title:{display:true,text:'年化波动率%',font:{size:10},color:'#94a3b8'},ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}},
                 y1:{position:'right',min:0,max:100,title:{display:true,text:'分位%',font:{size:10},color:'#f59e0b'},ticks:{font:{size:9},color:'#f59e0b'},grid:{drawOnChartArea:false}}
               }
             }
@@ -1675,7 +1668,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(1)}}}},
           scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}}}
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}}}
         };
 
         // 方差解释比
@@ -2471,7 +2464,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:12}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(4)}}}},
           scales:{x:{ticks:{maxTicksToShow:10,font:{size:9},color:'#94a3b8'},grid:{display:false}},
-            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{color:'#2a2a2a'}}}
+            y:{ticks:{font:{size:9},color:'#94a3b8'},grid:{display:false}}}
         };
         new Chart(document.getElementById('cta-cu-au'),{
           type:'line',
@@ -2490,7 +2483,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           data:{labels:["07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/01", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/29", "09/30", "10/09", "10/10", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/24", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/25", "12/26", "12/29", "12/30", "12/31", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/12", "02/13", "02/24", "02/25", "02/26", "02/27", "03/02", "03/03", "03/04", "03/05", "03/06", "03/09", "03/10", "03/11", "03/12", "03/13", "03/16", "03/17", "03/18", "03/19", "03/20", "03/23", "03/24", "03/25", "03/26", "03/27", "03/30", "03/31", "04/01", "04/02", "04/03", "04/07", "04/08", "04/09", "04/10", "04/13", "04/14", "04/15", "04/16", "04/17", "04/20", "04/21", "04/22", "04/23", "04/24", "04/27", "05/06", "05/07", "05/08", "05/11", "05/12", "05/13", "05/14", "05/15", "05/18", "05/19", "05/20", "05/21", "05/22"],datasets:[
             {label:'工业品篮子',data:[1.0, 1.009502, 1.005403, 1.008628, 1.003189, 1.003038, 1.005216, 1.008626, 1.024061, 1.03422, 1.027256, 1.037853, 1.047824, 1.023886, 1.032903, 1.030545, 1.01787, 1.015096, 1.012654, 1.015313, 1.017484, 1.015988, 1.013618, 1.019201, 1.021463, 1.017447, 1.0083, 1.016928, 1.012612, 1.011179, 1.018354, 1.020827, 1.020289, 1.027104, 1.021725, 1.018811, 1.017086, 1.01482, 1.01602, 1.011632, 1.011457, 1.008505, 1.014537, 1.013044, 1.010622, 1.011723, 1.01011, 1.012445, 1.014591, 1.014187, 1.015027, 1.005991, 1.006426, 1.004986, 0.999864, 1.004583, 1.013698, 1.007678, 1.007376, 1.002149, 1.009045, 1.003988, 1.002715, 0.99045, 0.993018, 0.996994, 0.98566, 0.986914, 0.988805, 0.994573, 1.001977, 1.002471, 1.012375, 1.003769, 1.013863, 1.001705, 0.998221, 0.995225, 0.984577, 0.985251, 0.99134, 0.989313, 0.99267, 0.984737, 0.990973, 0.994754, 0.989819, 0.988778, 0.98292, 0.983417, 0.978427, 0.973862, 0.9863, 0.986751, 0.990399, 0.989958, 0.997116, 1.006017, 1.004751, 1.003985, 1.007321, 1.002845, 1.001413, 0.987874, 0.990059, 0.988112, 0.991428, 0.989524, 0.996491, 1.00409, 1.010308, 1.014246, 1.022846, 1.018446, 1.03463, 1.035078, 1.04556, 1.041233, 1.046831, 1.045829, 1.0503, 1.077404, 1.078601, 1.062418, 1.070945, 1.079741, 1.071632, 1.080239, 1.070349, 1.058975, 1.056014, 1.053168, 1.056392, 1.071575, 1.090507, 1.094378, 1.083422, 1.102033, 1.113576, 1.088418, 1.048278, 1.066307, 1.075011, 1.054287, 1.053028, 1.05671, 1.057145, 1.062446, 1.057486, 1.045251, 1.063753, 1.066784, 1.059418, 1.059055, 1.099404, 1.113932, 1.124865, 1.128365, 1.152586, 1.190272, 1.155453, 1.192716, 1.211432, 1.21652, 1.227823, 1.22198, 1.220229, 1.241953, 1.236941, 1.267182, 1.228006, 1.222894, 1.235066, 1.25589, 1.264778, 1.250045, 1.213912, 1.254268, 1.269035, 1.296847, 1.237336, 1.246651, 1.227449, 1.235303, 1.238813, 1.082161, 1.091021, 1.066, 1.059144, 1.057359, 1.067007, 1.073836, 1.066869, 1.079786, 1.103031, 1.072915, 1.065127, 1.075264, 1.076398, 1.077178, 1.06404, 1.067834, 1.074257, 1.073786, 1.794434, 1.788198, 1.768806],borderColor:'#ef4444',borderWidth:2,pointRadius:1.5,tension:.3},
             {label:'农产品篮子',data:[1.0, 1.000135, 1.001093, 1.002785, 0.999644, 1.002736, 1.010444, 1.019265, 1.018364, 1.018243, 1.019365, 1.01872, 1.014633, 1.010734, 1.009936, 1.010841, 1.003445, 1.002566, 1.002033, 1.004109, 1.002379, 1.001007, 0.99969, 1.006833, 1.018823, 1.033175, 1.028509, 1.020549, 1.024249, 1.024806, 1.022754, 1.018356, 1.020521, 1.021947, 1.015715, 1.014099, 1.012519, 1.01387, 1.013009, 1.013347, 1.010276, 1.010558, 1.016056, 1.015321, 1.013449, 1.006725, 1.012378, 1.010094, 1.009365, 1.012964, 1.007861, 1.003027, 1.004188, 1.004097, 0.990105, 0.99254, 0.999464, 0.99761, 0.994116, 0.990442, 1.002198, 0.994275, 0.989232, 0.983355, 0.984487, 0.985349, 0.982626, 0.988995, 0.989016, 0.98471, 0.987829, 0.986141, 0.984125, 0.985667, 0.980201, 0.980106, 0.980299, 0.980919, 0.977178, 0.978896, 0.98567, 0.982835, 0.986282, 0.991432, 0.991702, 0.996173, 0.992561, 0.98926, 0.986371, 0.987892, 0.981984, 0.982096, 0.984087, 0.985301, 0.986001, 0.99061, 0.99267, 0.993163, 0.994602, 0.994718, 0.981323, 0.981923, 0.974885, 0.969329, 0.968061, 0.970948, 0.964871, 0.961146, 0.954905, 0.949384, 0.947383, 0.942044, 0.948642, 0.951387, 0.957073, 0.960524, 0.969954, 0.967737, 0.971744, 0.968459, 0.966998, 0.972161, 0.979302, 0.974119, 0.976577, 0.977778, 0.977854, 0.976601, 0.970167, 0.972917, 0.968618, 0.969681, 0.969673, 0.978724, 0.977566, 0.987129, 0.987459, 0.993245, 1.000547, 0.991425, 0.978982, 0.980495, 0.982949, 0.979686, 0.980147, 0.979831, 0.980939, 0.986056, 0.983674, 0.980635, 0.992276, 0.998828, 0.99627, 1.000457, 1.005957, 1.009044, 1.008632, 1.012335, 1.024941, 1.04612, 1.034504, 1.045988, 1.048109, 1.053596, 1.058049, 1.052618, 1.04044, 1.045819, 1.04575, 1.053045, 1.038839, 1.033781, 1.041179, 1.042968, 1.043565, 1.038997, 1.030251, 1.035835, 1.031006, 1.02987, 1.016837, 1.029924, 1.036409, 1.03113, 1.029102, 1.027864, 1.033995, 1.037023, 1.038994, 1.048066, 1.057644, 1.054774, 1.053467, 1.05846, 1.065322, 1.06012, 1.052874, 1.055557, 1.053694, 1.054601, 1.051253, 1.039559, 1.043155, 1.053509, 1.05229, 1.039892, 1.036771],borderColor:'#10b981',borderWidth:2,pointRadius:1.5,tension:.3}
-          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{color:'#2a2a2a'}}}})
+          ]},options:Object.assign({},ctaB,{scales:{x:ctaB.scales.x,y:{ticks:{font:{size:9},color:'#94a3b8',callback:function(v){return v.toFixed(3)}},grid:{display:false}}}})
         });
       }
       </script>
@@ -2652,7 +2645,7 @@ function initCbCharts() {
     plugins: { legend: { labels: { color:'#94a3b8', font:{size:10} } } },
     scales: {
       x: { ticks: { color:'#64748b', font:{size:9}, maxRotation:45 } },
-      y: { ticks: { color:'#64748b', font:{size:9} }, grid:{color:'#2a2a2a'} }
+      y: { ticks: { color:'#64748b', font:{size:9} }, grid:{display:false} }
     }
   };
 
@@ -2669,7 +2662,7 @@ function initCbCharts() {
     },
     options: { ...baseOpts, scales: {
       ...baseOpts.scales,
-      y: { position:'left', ticks:{color:'#64748b',font:{size:9}}, grid:{color:'#2a2a2a'} },
+      y: { position:'left', ticks:{color:'#64748b',font:{size:9}}, grid:{display:false} },
       y1: { position:'right', min:-1, max:1, ticks:{color:'#64748b',font:{size:9}}, grid:{drawOnChartArea:false} }
     } }
   });
@@ -2686,7 +2679,7 @@ function initCbCharts() {
     },
     options: { ...baseOpts, scales: {
       ...baseOpts.scales,
-      y: { position:'left', min:0, max:100, ticks:{color:'#64748b',font:{size:9}}, grid:{color:'#2a2a2a'} },
+      y: { position:'left', min:0, max:100, ticks:{color:'#64748b',font:{size:9}}, grid:{display:false} },
       y1: { position:'right', ticks:{color:'#64748b',font:{size:9}}, grid:{drawOnChartArea:false} }
     } }
   });
@@ -2702,7 +2695,7 @@ function initCbCharts() {
     },
     options: { ...baseOpts, scales: {
       ...baseOpts.scales,
-      y: { min:0, max:1, ticks:{color:'#64748b',font:{size:9}}, grid:{color:'#2a2a2a'} }
+      y: { min:0, max:1, ticks:{color:'#64748b',font:{size:9}}, grid:{display:false} }
     } }
   });
 
@@ -2718,7 +2711,7 @@ function initCbCharts() {
     },
     options: { ...baseOpts, scales: {
       ...baseOpts.scales,
-      y: { position:'left', ticks:{color:'#64748b',font:{size:9}}, grid:{color:'#2a2a2a'} },
+      y: { position:'left', ticks:{color:'#64748b',font:{size:9}}, grid:{display:false} },
       y1: { position:'right', min:0, ticks:{color:'#64748b',font:{size:9}}, grid:{drawOnChartArea:false} }
     } }
   });
@@ -3904,6 +3897,7 @@ window.GAMT_ACCESSIBLE_MODULES=[];
 
 
 
+
 <!-- ===== quant_stock chart inject START ===== -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
@@ -3935,7 +3929,7 @@ const chartOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
   plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}}}
+  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888'},grid:{display:false}}}
 };
 
 // ===== 图1: 全市场成交额 =====
@@ -3953,7 +3947,7 @@ const chartOpts = {
         {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
       ]
     },
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{color:'#2a2a2a'}}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{display:false}}}}
   });
 })();
 
@@ -3976,7 +3970,7 @@ const chartOpts = {
   new Chart(document.getElementById('chartShare'), {
     type:'line',
     data:{labels, datasets},
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'},min:0}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{display:false},min:0}}}
   });
 })();
 
@@ -4002,7 +3996,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'}}
+        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{display:false}}
       },
       plugins:{
         ...chartOpts.plugins,
@@ -4039,7 +4033,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{color:'#2a2a2a'}}
+        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{display:false}}
       },
       plugins:{
         ...chartOpts.plugins,

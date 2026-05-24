@@ -172,7 +172,7 @@ function initCbCharts() {{
     plugins: {{ legend: {{ labels: {{ color:'#94a3b8', font:{{size:10}} }} }} }},
     scales: {{
       x: {{ ticks: {{ color:'#64748b', font:{{size:9}}, maxRotation:45 }} }},
-      y: {{ ticks: {{ color:'#64748b', font:{{size:9}} }}, grid:{{color:'#2a2a2a'}} }}
+      y: {{ ticks: {{ color:'#64748b', font:{{size:9}} }}, grid:{{display:false}} }}
     }}
   }};
 
@@ -189,7 +189,7 @@ function initCbCharts() {{
     }},
     options: {{ ...baseOpts, scales: {{
       ...baseOpts.scales,
-      y: {{ position:'left', ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{color:'#2a2a2a'}} }},
+      y: {{ position:'left', ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{display:false}} }},
       y1: {{ position:'right', min:-1, max:1, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{drawOnChartArea:false}} }}
     }} }}
   }});
@@ -206,7 +206,7 @@ function initCbCharts() {{
     }},
     options: {{ ...baseOpts, scales: {{
       ...baseOpts.scales,
-      y: {{ position:'left', min:0, max:100, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{color:'#2a2a2a'}} }},
+      y: {{ position:'left', min:0, max:100, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{display:false}} }},
       y1: {{ position:'right', ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{drawOnChartArea:false}} }}
     }} }}
   }});
@@ -222,7 +222,7 @@ function initCbCharts() {{
     }},
     options: {{ ...baseOpts, scales: {{
       ...baseOpts.scales,
-      y: {{ min:0, max:1, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{color:'#2a2a2a'}} }}
+      y: {{ min:0, max:1, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{display:false}} }}
     }} }}
   }});
 
@@ -238,7 +238,7 @@ function initCbCharts() {{
     }},
     options: {{ ...baseOpts, scales: {{
       ...baseOpts.scales,
-      y: {{ position:'left', ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{color:'#2a2a2a'}} }},
+      y: {{ position:'left', ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{display:false}} }},
       y1: {{ position:'right', min:0, ticks:{{color:'#64748b',font:{{size:9}}}}, grid:{{drawOnChartArea:false}} }}
     }} }}
   }});

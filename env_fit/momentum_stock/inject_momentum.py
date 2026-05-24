@@ -820,7 +820,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           responsive:true,maintainAspectRatio:false,
           interaction:{{mode:'index',intersect:false}},
           plugins:{{legend:{{position:'bottom',labels:{{boxWidth:10,font:{{size:10}},padding:12}}}}}},
-          scales:{{x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}}}}
+          scales:{{x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}}}}
         }};
 
         function msMA(a,n){{var r=[];for(var i=0;i<a.length;i++){{if(i<n-1)r.push(null);else{{var s=0;for(var j=i-n+1;j<=i;j++)s+=a[j];r.push(s/n)}}}}return r;}}
@@ -844,7 +844,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 }}
               }}
             }},
-            scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',stepSize:20}},grid:{{color:'#2a2a2a'}},min:0,max:100}}}}
+            scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',stepSize:20}},grid:{{display:false}},min:0,max:100}}}}
           }})
         }});
 
@@ -894,7 +894,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               {{label:'涨跌停比(0.15)',data:msUN,borderColor:'#f59e0b',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2}},
               {{label:'封板质量(0.15)',data:msSN,borderColor:'#8b5cf6',borderWidth:1.3,borderDash:[4,3],pointRadius:0,tension:.2}}
             ]}},
-            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},min:0,max:100}}}}}})
+            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},min:0,max:100}}}}}})
           }});
         }});}}
 
@@ -930,7 +930,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               }},
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},stacked:true}},
-                y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
+                y:{{position:'left',stacked:true,ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},title:{{display:true,text:'封单额(亿)',font:{{size:9}},color:'#94a3b8'}}}},
                 y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1'}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'轧差(亿)',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
@@ -962,7 +962,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           }},
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
-            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}}}},
+            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
             y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'高低开 %',font:{{size:9}},color:'#6366f1'}}}}
           }}}})
         }});
@@ -976,7 +976,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           ]}},
           options:Object.assign({{}},msB,{{scales:{{
             x:msB.scales.x,
-            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'连板高度',font:{{size:9}},color:'#94a3b8'}}}},
+            y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}},title:{{display:true,text:'连板高度',font:{{size:9}},color:'#94a3b8'}}}},
             y1:{{position:'right',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'晋级率',font:{{size:9}},color:'#94a3b8'}}}}
           }}}})
         }});
@@ -1031,7 +1031,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               }},
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(1)}}}},grid:{{display:false}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
                 y1:{{position:'right',ticks:{{font:{{size:9}},color:'#6366f1',callback:function(v){{return v+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'BIAS %',font:{{size:9}},color:'#6366f1'}}}}
               }}
             }}
@@ -1088,7 +1088,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               }},
               scales:{{
                 x:{{ticks:{{maxTicksToShow:12,font:{{size:9}},color:'#94a3b8'}},grid:{{display:false}}}},
-                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(2)}}}},grid:{{color:'#2a2a2a'}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
+                y:{{position:'left',ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v.toFixed(2)}}}},grid:{{display:false}},title:{{display:true,text:'净值',font:{{size:9}},color:'#94a3b8'}}}},
                 y1:{{position:'right',ticks:{{font:{{size:9}},color:'#f59e0b',callback:function(v){{return (v*100).toFixed(1)+'%'}}}},grid:{{drawOnChartArea:false}},title:{{display:true,text:'累计超额',font:{{size:9}},color:'#f59e0b'}}}}
               }}
             }}
@@ -1122,7 +1122,7 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
               {{label:'情绪贡献',data:dcS,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}},
               {{label:'管理人Alpha',data:dcA,borderColor:'#ec4899',backgroundColor:'rgba(236,72,153,0.12)',borderWidth:1.5,pointRadius:0,tension:.2,fill:true}}
             ]}},
-            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{color:'#2a2a2a'}}}}}}}})
+            options:Object.assign({{}},msB,{{scales:{{x:msB.scales.x,y:{{ticks:{{font:{{size:9}},color:'#94a3b8',callback:function(v){{return v+'%'}}}},grid:{{display:false}}}}}}}})
           }})}}
 
           // 收益拆解周期色带

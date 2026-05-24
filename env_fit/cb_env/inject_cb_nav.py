@@ -91,7 +91,7 @@ def inject_cb_nav():
         }},
         scales: {{
           x: {{ ticks:{{ color:'#64748b', font:{{size:9}}, maxRotation:45, maxTicksLimit:12 }} }},
-          y: {{ position:'left', ticks:{{ color:'#64748b', font:{{size:9}}, callback:function(v){{return v+'%'}} }}, grid:{{color:'#2a2a2a'}} }},
+          y: {{ position:'left', ticks:{{ color:'#64748b', font:{{size:9}}, callback:function(v){{return v+'%'}} }}, grid:{{display:false}} }},
           y1: {{ position:'right', ticks:{{ color:'#f59e0b', font:{{size:9}}, callback:function(v){{return v+'%'}} }}, grid:{{drawOnChartArea:false}} }},
           y2: {{ display:false, min:0, max:100 }},
           yHidden: {{ display:false }}

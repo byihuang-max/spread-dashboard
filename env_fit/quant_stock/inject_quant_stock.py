@@ -144,7 +144,7 @@ const chartOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
   plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}}}
+  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888'},grid:{display:false}}}
 };
 
 // ===== 图1: 全市场成交额 =====
@@ -162,7 +162,7 @@ const chartOpts = {
         {label:'MA20',data:ma20,borderColor:'#f39c12',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:0.1}
       ]
     },
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{color:'#2a2a2a'}}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1)+'万亿':v+'亿',color:'#888'},grid:{display:false}}}}
   });
 })();
 
@@ -185,7 +185,7 @@ const chartOpts = {
   new Chart(document.getElementById('chartShare'), {
     type:'line',
     data:{labels, datasets},
-    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'},min:0}}}
+    options:{...chartOpts,scales:{...chartOpts.scales,y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{display:false},min:0}}}
   });
 })();
 
@@ -211,7 +211,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{color:'#2a2a2a'}}
+        y:{ticks:{callback:v=>v+'%',color:'#888'},grid:{display:false}}
       },
       plugins:{
         ...chartOpts.plugins,
@@ -248,7 +248,7 @@ const chartOpts = {
       ...chartOpts,
       scales:{
         ...chartOpts.scales,
-        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{color:'#2a2a2a'}}
+        y:{ticks:{callback:v=>v.toFixed(2),color:'#888'},grid:{display:false}}
       },
       plugins:{
         ...chartOpts.plugins,
