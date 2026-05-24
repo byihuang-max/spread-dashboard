@@ -373,6 +373,17 @@ canvas {
   background: revert !important;
 }
 
+/* Heatmap cell colors - explicit override (highest specificity) */
+.content .card .heatmap-cell[style*="rgba(220,38,38"] { background: rgba(220,38,38,0.85) !important; color: #fff !important; }
+.content .card .heatmap-cell[style*="rgba(239,68,68"] { background: rgba(239,68,68,0.6) !important; color: #fff !important; }
+.content .card .heatmap-cell[style*="rgba(252,165,165"] { background: rgba(252,165,165,0.5) !important; color: #333 !important; }
+.content .card .heatmap-cell[style*="rgba(167,243,208"] { background: rgba(167,243,208,0.5) !important; color: #333 !important; }
+.content .card .heatmap-cell[style*="rgba(52,211,153"] { background: rgba(52,211,153,0.6) !important; color: #333 !important; }
+.content .card .heatmap-cell[style*="rgba(5,150,105"] { background: rgba(5,150,105,0.85) !important; color: #fff !important; }
+
+/* Mega chip - 粉色背景 */
+.content .card .mega-chip { background: rgba(236,72,153,0.08) !important; border-color: rgba(236,72,153,0.3) !important; }
+
 /* Kill all border-radius */
 .content [style*="border-radius"],
 .content [style*="borderRadius"] {
