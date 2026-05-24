@@ -475,11 +475,11 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
                 positions = c.get('positions_active', [])
                 resonance = c.get('resonance', False)
                 pos_str = ' '.join(
-                    f"{'' if p in positions else ''} {p}"
+                    f'<span style="color:{"#10b981" if p in positions else "#cbd5e1"};font-weight:{"700" if p in positions else "400"}">●</span> <span style="color:{"#1e293b" if p in positions else "#94a3b8"}">{p}</span>'
                     for p in ['上游', '中游', '下游']
                 )
-                badge = ' <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">全链共振</span>' if resonance else ''
-                chain_items += f'<div style="margin-bottom:4px">{name}：{pos_str}{badge}</div>'
+                badge = ' <span style="background:#10b981;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px">● 全链共振</span>' if resonance else ''
+                chain_items += f'<div style="margin-bottom:4px"><b style="color:#475569;display:inline-block;min-width:60px">{name}</b>：{pos_str}{badge}</div>'
             chain_html = f'''
             <div class="card">
               <div class="card-title"><span class="dot" style="background:#8b5cf6"></span> 产业链传导 · {date_fmt}</div>
