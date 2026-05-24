@@ -144,7 +144,7 @@ const chartOpts = {
   responsive:true, maintainAspectRatio:false,
   interaction:{mode:'index',intersect:false},
   plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}}}
+  scales:{x:{ticks:{maxTicksToShow:12,font:{size:10},color:'#888'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888'},grid:{color:'#2a2a2a'}}}
 };
 
 // ===== 图1: 全市场成交额 =====
