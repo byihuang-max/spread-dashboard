@@ -136,19 +136,228 @@ h2,h3{color:#ff8c00!important;letter-spacing:.5px}
       afterLayout(chart){
         Object.values(chart.scales).forEach(function(scale){
           if(scale.options.grid){
-            if(scale.axis==="x"){
-              scale.options.grid.display=false;
-            }else{
-              scale.options.grid.color="#2a2a2a";
-              scale.options.grid.lineWidth=1;
-              scale.options.grid.drawTicks=false;
-              scale.options.grid.display=true;
-            }
+            scale.options.grid.color="rgba(255,140,0,0.07)";
+            scale.options.grid.tickColor="#2a2a2a";
+            scale.options.grid.lineWidth=1;
+            scale.options.grid.display=true;
           }
           if(scale.options.ticks){
             scale.options.ticks.color="#888";
           }
         });
+      }
+    });
+    return true;
+  }
+  if(!registerPlugin()){
+    var tries=0;
+    var iv=setInterval(function(){
+      tries++;
+      if(registerPlugin()||tries>50)clearInterval(iv);
+    },50);
+  }
+})();
+</script>
+<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var l=document.createElement("link");l.rel="stylesheet";l.href="../../bloomberg-override.css";document.head.appendChild(l);}}catch(e){}})();</script>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<!-- 全局信号栏 -->
+<div class="signal-bar" id="signalBar">
+  <div class="signal-main" id="signalMain">--</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="und-tabs" id="undTabs"></div>
+<div class="summary-cards" id="summaryCards"></div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3> IV期限结构（平值）</h3>
+    <div class="chart-wrap"><canvas id="termChart"></canvas></div>
+    <div class="chart-note">
+      <b>怎么看：</b>横轴是不同到期月份，纵轴是平值期权的隐含波动率(IV)。<br>
+      <b>正常形态：</b>远月IV > 近月IV（向右上倾斜），反映时间溢价。<br>
+      <b>异常信号：</b>近月IV > 远月IV = <b>期限倒挂</b>，说明市场预期短期内有大事发生（如重大政策、财报季），恐慌情绪集中在近期。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3> PCR（持仓量 & 成交量）</h3>
+    <div class="chart-wrap"><canvas id="pcrChart"></canvas></div>
+    <div class="chart-note">
+      <b>PCR = 认沽持仓 ÷ 认购持仓。</b><br>
+      <b>PCR > 1：</b>看跌合约持仓超过看涨，市场偏空。极端高值(>1.5)可能是反向指标——过度恐慌后容易反弹。<br>
+      <b>PCR < 0.5：</b>看涨情绪亢奋，需警惕回调。<br>
+      <b>实线=持仓量PCR</b>（反映中长期持仓结构），<b>虚线=成交量PCR</b>（反映短期交易情绪）。
+    </div>
+  </div>
+</div>
+
+<div class="chart-row section">
+  <div class="chart-box">
+    <h3> ATM隐含波动率（近月）+ 20日分位</h3>
+    <div class="chart-wrap"><canvas id="ivChart"></canvas></div>
+    <div class="chart-note">
+      <b>紫线 = ATM IV：</b>平值期权的隐含波动率，代表市场对未来波动的定价。IV上升=不确定性增大/恐慌升温。<br>
+      <b>绿虚线 = 20日分位：</b>当前IV在过去20个交易日中的排名百分位。<br>
+      <b>> 80%：</b>波动率处于高位，对冲成本贵，但也意味着市场可能已经price in了风险。<br>
+      <b>< 20%：</b>波动率低位，买保险便宜，适合建立对冲头寸。
+    </div>
+  </div>
+  <div class="chart-box">
+    <h3> 持仓量按行权价分布（近月）</h3>
+    <div class="chart-wrap"><canvas id="oiChart"></canvas></div>
+    <div class="chart-note">
+      <b>红色柱(朝上) = Call OI：</b>认购期权各行权价的持仓量。Call OI 密集处 = 潜在<b>压力位</b>（卖方在此对冲）。<br>
+      <b>绿色柱(朝下) = Put OI：</b>认沽期权各行权价的持仓量。Put OI 密集处 = 潜在<b>支撑位</b>（卖方在此对冲）。<br>
+      <b>异常关注：</b>某个行权价OI突然激增（如深度虚值Put），说明有大资金在该价位"买保险"防大跌。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>⚠ 异常信号</h2>
+  <table class="anomaly-table" id="anomalyTable">
+    <thead><tr><th>类型</th><th>标签</th><th>详情</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- 注释 -->
+<div style="margin-top:20px;padding:20px;background:#fff;border-radius:10px;border:1px solid #e8eaef;font-size:12px;color:#6b7280;line-height:1.8">
+  <div style="font-weight:700;color:#374151;margin-bottom:8px;font-size:13px"> 指标说明</div>
+  <div><b>IV（隐含波动率）：</b>通过BS模型从期权结算价反推，代表市场对未来波动的预期。IV上升=市场恐慌/不确定性增大。</div>
+  <div><b>IV 20日分位：</b>当前IV在过去20个交易日中的历史百分位。>80%=波动率偏高（对冲成本贵），<20%=波动率偏低（买保险便宜）。</div>
+  <div><b>IV期限结构：</b>不同到期月的平值IV曲线。正常远月>近月（期限溢价），近月>远月=倒挂（市场预期短期有大事）。</div>
+  <div><b>PCR（Put-Call Ratio）：</b>认沽/认购持仓量之比。PCR上升=看空情绪增加。极端高值可能是反向指标（过度恐慌后反弹）。</div>
+  <div><b>OI分布：</b>按行权价的持仓量分布。Call OI 集中处=潜在压力位，Put OI 集中处=潜在支撑位。</div>
+  <div><b>OI激增：</b>某合约持仓量超过前5日均值2倍以上，说明大资金在该行权价建仓。深度虚值Put OI激增=有人买尾部保险。</div>
+  <div><b>IV异常：</b>当日IV偏离前5日均值超过2个标准差，标记为波动率异常放大/缩小。</div>
+  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据来源：Tushare（opt_basic + opt_daily + fund_daily），IV通过欧式BS模型反算，无风险利率1.5%</div>
+</div>
+
+</div>
+
+<script>
+var DATA, charts={};
+function loadData(){
+  fetch('option_sentiment.json?t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(d){DATA=d;renderTabs();selectUnd(0)})
+    .catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message})
+}
+
+function renderTabs(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+
+  // 全局信号栏
+  var sigs=DATA.global_signals||[];
+  var totalAnomalies=0;
+  (DATA.underlyings||[]).forEach(function(u){totalAnomalies+=u.summary.anomaly_count});
+  document.getElementById('signalMain').textContent='期权异常值监控';
+  document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
+  var tagsHtml='';
+  sigs.forEach(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🔴')>=0) cls+=' risk';
+    else if(s.indexOf('🟢')>=0||s.indexOf('')>=0) cls+=' good';
+    else if(s.indexOf('⚠')>=0||s.indexOf('')>=0) cls+=' warn';
+    else cls+=' info';
+    tagsHtml+='<span class="'+cls+'">'+s+'</span>';
+  });
+  document.getElementById('signalTags').innerHTML=tagsHtml;
+
+  var html='';
+  (DATA.underlyings||[]).forEach(function(u,i){
+    html+='<div class="und-tab'+(i===0?' active':'')+'" onclick="selectUnd('+i+')">'+u.name+'</div>';
+  });
+  document.getElementById('undTabs').innerHTML=html;
+}
+
+function selectUnd(idx){
+  var tabs=document.querySelectorAll('.und-tab');
+  tabs.forEach(function(t,i){t.classList.toggle('active',i===idx)});
+  var u=DATA.underlyings[idx];
+  if(!u)return;
+  renderSummary(u);
+  renderTermChart(u);
+  renderPCRChart(u);
+  renderIVChart(u);
+  renderOIChart(u);
+  renderAnomalies(u);
+}
+
+function renderSummary(u){
+  var s=u.summary||{};
+  var ivColor=s.iv_percentile>80?'#dc2626':s.iv_percentile<20?'#16a34a':'#2563eb';
+  var pctColor=s.iv_percentile>80?'#dc2626':s.iv_percentile<20?'#16a34a':'#6366f1';
+  var pctBg=s.iv_percentile>80?'#fca5a5':s.iv_percentile<20?'#86efac':'#a5b4fc';
+  var html='';
+  html+='<div class="s-card"><div class="s-label">现价</div><div class="s-value">'+s.spot.toFixed(3)+'</div></div>';
+  html+='<div class="s-card"><div class="s-label">ATM IV</div><div class="s-value" style="color:'+ivColor+'">'+s.atm_iv.toFixed(1)+'%</div></div>';
+  html+='<div class="s-card"><div class="s-label">IV 20日分位</div><div class="s-value" style="color:'+pctColor+'">'+s.iv_percentile.toFixed(0)+'%</div><div class="pct-bar"><div class="pct-fill" style="width:'+s.iv_percentile+'%;background:'+pctBg+'"></div></div></div>';
+  html+='<div class="s-card"><div class="s-label">PCR (OI)</div><div class="s-value">'+s.pcr_oi.toFixed(3)+'</div></div>';
+  html+='<div class="s-card"><div class="s-label">PCR (Vol)</div><div class="s-value">'+s.pcr_vol.toFixed(3)+'</div></div>';
+  html+='<div class="s-card"><div class="s-label">异常信号</div><div class="s-value" style="color:'+(s.anomaly_count>0?'#dc2626':'#16a34a')+'">'+s.anomaly_count+'</div></div>';
+  document.getElementById('summaryCards').innerHTML=html;
+}
+
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
+
+function renderTermChart(u){
+  destroyChart('termChart');
+  var ts=u.term_structure||[];
+  if(!ts.length)return;
+  charts['termChart']=new Chart(document.getElementById('termChart'),{
+    type:'line',
+    data:{labels:ts.map(function(d){return d.maturity}),
+      datasets:[{label:'IV %',data:ts.map(function(d){return d.iv}),
+        borderColor:'#6366f1',backgroundColor:'#6366f118',fill:true,tension:0.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#6366f1'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{title:{display:true,text:'IV %',font:{size:11}},grid:{color:'#f0f0f0'}},
+              x:{title:{display:true,text:'到期月',font:{size:11}}}}}
+  });
+}
+
+function renderPCRChart(u){
+  destroyChart('pcrChart');
+  var pcr=u.pcr_history||[];
+  if(!pcr.length)return;
+  charts['pcrChart']=new Chart(document.getElementById('pcrChart'),{
+    type:'line',
+    data:{labels:pcr.map(function(d){return d.date}),
+      datasets:[
+        {label:'PCR(OI)',data:pcr.map(function(d){return d.pcr_oi}),borderColor:'#dc2626',borderWidth:2,tension:0.3,pointRadius:0},
+        {label:'PCR(Vol)',data:pcr.map(function(d){return d.pcr_vol}),borderColor:'#f59e0b',borderWidth:2,tension:0.3,pointRadius:0,borderDash:[4,4]}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+  });
+}
+
+function renderIVChart(u){
+  destroyChart('ivChart');
+  var iv=u.iv_history||[];
+  if(!iv.length)return;
+  charts['ivChart']=new Chart(document.getElementById('ivChart'),{
+    type:'line',
+    data:{labels:iv.map(function(d){return d.date}),
+      datasets:[
+        {label:'ATM IV %',data:iv.map(function(d){return d.iv}),borderColor:'#6366f1',borderWidth:2,tension:0.3,pointRadius:0,yAxisID:'y'},
+        {label:'20日分位 %',data:iv.map(function(d){return d.percentile}),borderColor:'#10b981',borderWidth:2,tension:0.3,pointRadius:0,borderDash:[4,4],yAxisID:'y1'}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{
+        y:{position:'left',title:{display:true,text:'IV %',font:{size:10}},grid:{color:'#f0f0f0'}},
+        y1:{position:'right',title:{display:true,text:'分位 %',font:{size:10}},min:0,max:100,grid:{display:false}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}
       }}
   });
 }
