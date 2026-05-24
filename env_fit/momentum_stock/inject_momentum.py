@@ -117,6 +117,28 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
     mega_names = latest.get('mega_cap_names', '')
     mega_display = mega_names if mega_names else '无'
 
+    # 把 mega_names 拆成 chip：原格式 "南玻A[玻璃玻纤] | 飞亚达[饰品] | ..."
+    mega_chip_html = ''
+    if mega_names and mega_cap_up > 0:
+        items = [x.strip() for x in mega_names.split('|') if x.strip()]
+        chips = []
+        for it in items:
+            # 提取股票名 + 行业（[xxx]）
+            if '[' in it and ']' in it:
+                name = it.split('[')[0].strip()
+                ind = it[it.index('[')+1:it.index(']')].strip()
+                chips.append(f'<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;line-height:1.4;white-space:nowrap"><b style="color:#be185d">{name}</b><span style="color:#94a3b8;font-size:10px">{ind}</span></span>')
+            else:
+                chips.append(f'<span style="display:inline-flex;padding:4px 10px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:14px;font-size:11px;color:#be185d;font-weight:600;white-space:nowrap">{it}</span>')
+        mega_chip_html = f'''
+      <div class="card" style="padding:14px 18px;border-left:3px solid #ec4899">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+          <div style="font-size:12px;font-weight:600;color:var(--text)"><span class="dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ec4899;margin-right:6px"></span>大象起舞 · 300亿+涨停名单 <span style="color:#94a3b8;font-weight:400">({mega_cap_up}只)</span></div>
+          <div style="font-size:10px;color:#94a3b8">机构资金参与信号</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">{''.join(chips)}</div>
+      </div>'''
+
     # Sector data
     sector_latest = None
     if sector_data and sector_data.get('daily'):
@@ -714,12 +736,9 @@ def build_html(sent_data, sector_data, warning_data, decomp_data, nav_chart_data
           <div class="ov-value">100亿+ {big_cap_up}个 / 300亿+ {mega_cap_up}个</div>
           <div class="ov-sub">机构资金参与度</div>
         </div>
-        <div class="ov-card" style="border-left-color:#ec4899">
-          <div class="ov-label">300亿+涨停股</div>
-          <div class="ov-value" style="font-size:{12 if len(mega_display) > 10 else 16}px">{mega_display}</div>
-          <div class="ov-sub">大象起舞信号</div>
-        </div>
       </div>
+
+      {mega_chip_html}
 
       <!-- 区块二：预警条件链 + 产品净值 + 赚钱效应趋势 -->
       {signal_html}
