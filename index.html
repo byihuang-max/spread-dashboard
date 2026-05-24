@@ -279,6 +279,42 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .user-bar .admin-btn{padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:var(--accent)}
 .user-bar .admin-btn:hover{background:var(--accent-light)}
 </style>
+<script>
+// Bloomberg theme bootstrap (?theme=bloomberg)
+(function(){
+  if(!location.search.includes("theme=bloomberg"))return;
+  // 1) inject CSS override
+  var l=document.createElement("link");l.rel="stylesheet";l.href="bloomberg-override.css";document.head.appendChild(l);
+  // 2) hook chart.js after it loads
+  function tryHook(){
+    if(typeof Chart==="undefined")return false;
+    Chart.defaults.color="#888";
+    Chart.defaults.borderColor="#2a2a2a";
+    if(Chart.defaults.font)Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
+    Chart.register({
+      id:"bbGridLate",
+      afterLayout:function(chart){
+        try{
+          Object.values(chart.scales||{}).forEach(function(scale){
+            if(scale.options&&scale.options.grid&&scale.options.grid.display!==false){
+              scale.options.grid.color="rgba(255,140,0,0.07)";
+              scale.options.grid.tickColor="#2a2a2a";
+              scale.options.grid.lineWidth=1;
+            }
+            if(scale.options&&scale.options.border)scale.options.border.display=false;
+            if(scale.options&&scale.options.ticks)scale.options.ticks.color="#888";
+            if(scale.options&&scale.options.title&&scale.options.title.display)scale.options.title.color="#ff8c00";
+          });
+        }catch(_e){}
+      }
+    });
+    return true;
+  }
+  if(!tryHook()){
+    var t=0;var iv=setInterval(function(){t++;if(tryHook()||t>50)clearInterval(iv);},50);
+  }
+})();
+</script>
 </head><body>
 
 <!-- ═══ 登录遮罩 ═══ -->
