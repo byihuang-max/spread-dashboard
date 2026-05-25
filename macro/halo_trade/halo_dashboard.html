@@ -61,6 +61,11 @@
         .signal-badge.warn{background:rgba(245,158,11,.18);color:#fbbf24}
         .signal-badge.risk{background:rgba(239,68,68,.18);color:#f87171}
         .signal-badge.neutral{background:rgba(148,163,184,.15);color:#94a3b8}
+        .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+        .s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
+        .s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
+        .s-card .s-value{font-size:22px;font-weight:800}
+        .s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
         
         .section {
             margin-bottom: 24px;
@@ -157,7 +162,9 @@
 [style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
 :root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
 html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card,.s-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.s-card .s-label{color:#888!important}
+.s-card .s-sub{color:#888!important}
 .card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
 p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
 table{border-collapse:collapse!important}
@@ -229,8 +236,13 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
             <!-- 顶部信号栏 -->
             <div class="signal-bar">
                 <div class="signal-main"> HALO 交易看板</div>
-                <div class="signal-badges" id="halo-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin-left:auto"></div>
+                <div class="signal-tags">
+                    <span class="signal-tag">重资产范式转移</span>
+                    <span class="signal-tag">全球标的追踪</span>
+                    <span class="signal-tag">CapEx二阶导</span>
+                </div>
             </div>
+            <div class="summary-cards" id="halo-summary"></div>
             
             <!-- 场景判断 -->
             <div class="section">
@@ -358,24 +370,24 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
                 document.getElementById('content').style.display = 'block';
                 renderDashboard(analysisData, financialData);
                 renderChinaHalo(chinaHaloData);
-                // 表头 badge
-                var el = document.getElementById('halo-badges');
+                // 表头 summary cards
+                var el = document.getElementById('halo-summary');
                 if(el){
                   var china = chinaHaloData.china || {};
                   var trend = china.trend || '';
-                  var trendCls = trend.includes('重资产') ? 'risk' : (trend.includes('轻资产') ? 'good' : 'neutral');
                   var trendLabel = trend.replace(/🟢|🔴|🟡/g,'').trim();
+                  var trendColor = trend.includes('重资产') ? '#dc2626' : (trend.includes('轻资产') ? '#16a34a' : '#8b92a5');
                   var scenario = analysisData.scenario || '--';
-                  var scenCls = scenario.includes('充分') ? 'warn' : (scenario.includes('低估') ? 'good' : 'neutral');
+                  var scenColor = scenario.includes('充分') ? '#f59e0b' : (scenario.includes('低估') ? '#16a34a' : '#8b92a5');
+                  var action = analysisData.action || '';
                   var ts = analysisData.theme_strength || {};
                   var tsVals = Object.values(ts);
                   var avgTs = tsVals.length ? (tsVals.reduce(function(a,b){return a+b},0)/tsVals.length) : 0;
-                  var tsCls = avgTs > 1 ? 'good' : (avgTs < -1 ? 'risk' : 'neutral');
-                  el.innerHTML = '<span class="signal-badge '+trendCls+'">'+trendLabel+'</span>'
-                    + '<span class="signal-badge '+scenCls+'">估值 '+scenario+'</span>'
-                    + '<span class="signal-badge '+tsCls+'">二阶导 '+(avgTs>=0?'+':'')+avgTs.toFixed(1)+'</span>';
+                  var tsColor = avgTs > 1 ? '#16a34a' : (avgTs < -1 ? '#dc2626' : '#f59e0b');
+                  el.innerHTML = '<div class="s-card"><div class="s-label">轻重资产</div><div class="s-value" style="font-size:14px;color:'+trendColor+'">'+trendLabel+'</div></div>'
+                    + '<div class="s-card"><div class="s-label">估值状态</div><div class="s-value" style="font-size:18px;color:'+scenColor+'">'+scenario+'</div><div class="s-sub">'+action+'</div></div>'
+                    + '<div class="s-card"><div class="s-label">二阶导</div><div class="s-value" style="color:'+tsColor+'">'+(avgTs>=0?'+':'')+avgTs.toFixed(1)+'</div></div>';
                 }
-                document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {
                 document.getElementById('loading').innerHTML = ` 数据加载失败<br><small style="color:#888">${err.message}</small>`;

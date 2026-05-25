@@ -15,6 +15,11 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
 .signal-tag.good{background:rgba(34,197,94,0.18);color:#4ade80}
 .signal-tag.risk{background:rgba(239,68,68,0.18);color:#f87171}
 .signal-tag.warn{background:rgba(245,158,11,0.18);color:#fbbf24}
+.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
+.s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
+.s-card .s-value{font-size:22px;font-weight:800}
+.s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
 .chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
 .chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
 .chart-wrap{position:relative;height:280px}
@@ -29,7 +34,9 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
 [style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
 :root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
 html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card,.s-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.s-card .s-label{color:#888!important}
+.s-card .s-sub{color:#888!important}
 .card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
 p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
 table{border-collapse:collapse!important}
@@ -102,6 +109,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   <div class="signal-tags" id="signalTags"></div>
   <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
 </div>
+<div class="summary-cards" id="liquiditySummary"></div>
 
 <div class="chart-row section">
   <div class="chart-box">
@@ -161,36 +169,37 @@ function render(){
   document.getElementById('app').style.display='';
   document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
   var sigs=DATA.signals||[];
-  // 构建带数值的 badge
-  var badgeHtml = '';
+  // signal-tags: 只显示信号
+  var tagHtml = sigs.map(function(s){
+    var cls='signal-tag';
+    if(s.indexOf('🟢')>=0) cls+=' good';
+    else if(s.indexOf('🔴')>=0) cls+=' risk';
+    else if(s.indexOf('🟡')>=0) cls+=' warn';
+    return '<span class="'+cls+'">'+s+'</span>';
+  }).join('');
+  document.getElementById('signalTags').innerHTML=tagHtml;
+  // summary-cards: 具体数值
+  var sumEl = document.getElementById('liquiditySummary');
   var shiborOn = DATA.shibor_on || [];
   var dr = DATA.dr007 || [];
+  var cards = '';
   if(shiborOn.length){
     var lastS = shiborOn[shiborOn.length-1];
     var sVal = (lastS.value||0).toFixed(3);
-    badgeHtml += '<span class="signal-tag">Shibor O/N '+sVal+'%</span>';
+    cards += '<div class="s-card"><div class="s-label">Shibor O/N</div><div class="s-value">'+sVal+'%</div></div>';
   }
   if(dr.length){
     var lastD = dr[dr.length-1];
     var drVal = (lastD.dr007||0).toFixed(3);
     var rVal = (lastD.r007||0).toFixed(3);
     var spread = ((lastD.r007||0)-(lastD.dr007||0)).toFixed(2);
-    var drCls = (lastD.dr007||0) > 2.0 ? 'warn' : ((lastD.dr007||0) < 1.5 ? 'good' : '');
-    var rCls = (lastD.r007||0) > 2.5 ? 'risk' : ((lastD.r007||0) > 2.0 ? 'warn' : '');
-    badgeHtml += '<span class="signal-tag '+drCls+'">DR007 '+drVal+'%</span>';
-    badgeHtml += '<span class="signal-tag '+rCls+'">R007 '+rVal+'%</span>';
-    if(parseFloat(spread) > 0.5) badgeHtml += '<span class="signal-tag risk">价差 '+spread+'%</span>';
+    var drColor = (lastD.dr007||0) > 2.0 ? '#dc2626' : '#16a34a';
+    var rColor = (lastD.r007||0) > 2.5 ? '#dc2626' : ((lastD.r007||0) > 2.0 ? '#f59e0b' : '#16a34a');
+    cards += '<div class="s-card"><div class="s-label">DR007</div><div class="s-value" style="color:'+drColor+'">'+drVal+'%</div></div>';
+    cards += '<div class="s-card"><div class="s-label">R007</div><div class="s-value" style="color:'+rColor+'">'+rVal+'%</div></div>';
+    cards += '<div class="s-card"><div class="s-label">R-DR价差</div><div class="s-value" style="color:'+(parseFloat(spread)>0.5?'#dc2626':'#16a34a')+'">'+spread+'%</div></div>';
   }
-  if(sigs.length && sigs[0].indexOf('极端')>=0){
-    badgeHtml += sigs.map(function(s){
-      var cls='signal-tag';
-      if(s.indexOf('🟢')>=0) cls+=' good';
-      else if(s.indexOf('🔴')>=0) cls+=' risk';
-      else if(s.indexOf('🟡')>=0) cls+=' warn';
-      return '<span class="'+cls+'">'+s+'</span>';
-    }).join('');
-  }
-  document.getElementById('signalTags').innerHTML=badgeHtml;
+  sumEl.innerHTML = cards;
   renderShiborTerm();
   renderShiborOn();
   renderDR();

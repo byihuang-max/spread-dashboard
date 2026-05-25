@@ -663,11 +663,11 @@ new Chart(document.getElementById('memeVaChart'), {{
     _cur = meme_data.get('current', {}) if meme_data else {}
     _phase = _cur.get('phase', {})
     badge_murmur = _cur.get('meme_score', '--')
-    badge_murmur_cls = 'risk' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 60 else ('warn' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 40 else 'neutral')
-    badge_nli = f"{_cur.get('nli_percentile', '--')}%ile" if _cur.get('nli_percentile') is not None else '--'
-    badge_nli_cls = 'risk' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 70 else ('warn' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 50 else 'neutral')
+    badge_murmur_color = '#dc2626' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 60 else ('#f59e0b' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 40 else '#16a34a')
+    badge_nli = f"{_cur.get('nli_percentile', '--'):.0f}" if isinstance(_cur.get('nli_percentile'), (int,float)) else '--'
+    badge_nli_color = '#dc2626' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 70 else ('#f59e0b' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 50 else '#16a34a')
     badge_va = f"{_cur.get('va', '--'):.1f}" if isinstance(_cur.get('va'), (int,float)) else '--'
-    badge_va_cls = 'good' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] > 0 else ('risk' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] < -10 else 'neutral')
+    badge_va_color = '#16a34a' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] > 0 else ('#dc2626' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] < -10 else '#f59e0b')
     # 30天平均相关性
     try:
         _corr_matrices = corr_data.get('corr_matrices', {})
@@ -676,10 +676,10 @@ new Chart(document.getElementById('memeVaChart'), {{
         _assets = list(_m.keys())
         _corr_vals = [_m[a][b] for i,a in enumerate(_assets) for b in _assets[i+1:]]
         badge_corr = f"{sum(_corr_vals)/len(_corr_vals):.2f}" if _corr_vals else '--'
-        badge_corr_cls = 'risk' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.5 else ('warn' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.3 else 'good')
+        badge_corr_color = '#dc2626' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.5 else ('#f59e0b' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.3 else '#16a34a')
     except:
         badge_corr = '--'
-        badge_corr_cls = 'neutral'
+        badge_corr_color = '#8b92a5'
 
     # ─────────────────────────────────────────────
     # HTML 输出
@@ -696,12 +696,16 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 .section{{margin-bottom:24px}}
 .signal-bar{{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}}
 .signal-main{{font-size:18px;font-weight:800}}
-.signal-badges{{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}}
-.signal-badge{{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px}}
-.signal-badge.good{{background:rgba(34,197,94,.18);color:#4ade80}}
-.signal-badge.warn{{background:rgba(245,158,11,.18);color:#fbbf24}}
-.signal-badge.risk{{background:rgba(239,68,68,.18);color:#f87171}}
-.signal-badge.neutral{{background:rgba(148,163,184,.15);color:#94a3b8}}
+.signal-tags{{display:flex;gap:8px;flex-wrap:wrap}}
+.signal-tag{{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}}
+.signal-tag.good{{background:rgba(34,197,94,0.2);color:#4ade80}}
+.signal-tag.risk{{background:rgba(239,68,68,0.2);color:#f87171}}
+.signal-tag.warn{{background:rgba(245,158,11,0.25);color:#fbbf24}}
+.summary-cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}}
+.s-card{{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}}
+.s-card .s-label{{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}}
+.s-card .s-value{{font-size:22px;font-weight:800}}
+.s-card .s-sub{{font-size:11px;color:#8b92a5;margin-top:4px}}
 .chart-box{{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;overflow:hidden}}
 .chart-box h3{{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}}
 .chart-wrap{{position:relative;height:380px}}
@@ -713,13 +717,19 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="signal-bar">
   <div class="signal-main"> 反脆弱看板</div>
-  <div class="signal-badges">
-    <span class="signal-badge {badge_murmur_cls}">反身性 {badge_murmur}</span>
-    <span class="signal-badge {badge_nli_cls}">联动 {badge_nli}</span>
-    <span class="signal-badge {badge_va_cls}">量能 {badge_va}</span>
-    <span class="signal-badge {badge_corr_cls}">相关性 {badge_corr}</span>
+  <div class="signal-tags">
+    <span class="signal-tag">全球风险资产</span>
+    <span class="signal-tag">归一净值</span>
+    <span class="signal-tag">30天相关性</span>
+    <span class="signal-tag">Meme反身性信号</span>
   </div>
 </div>
+
+<div class="summary-cards">
+  <div class="s-card"><div class="s-label">反身性信号</div><div class="s-value" style="color:{badge_murmur_color}">{badge_murmur}</div><div class="s-sub">{_phase.get('label','')}</div></div>
+  <div class="s-card"><div class="s-label">联动指数分位</div><div class="s-value" style="color:{badge_nli_color}">{badge_nli}</div></div>
+  <div class="s-card"><div class="s-label">量能加速度</div><div class="s-value" style="color:{badge_va_color}">{badge_va}</div></div>
+  <div class="s-card"><div class="s-label">30天相关性</div><div class="s-value" style="color:{badge_corr_color}">{badge_corr}</div></div>
 </div>
 
 {meme_section_html}
@@ -1165,6 +1175,9 @@ new Chart(document.getElementById('medianChart'),{{
   var s = document.createElement('style');
   s.textContent = `
     body{{background:#0a0a0a!important;color:#ccc!important}}
+    .s-card{{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important}}
+    .s-card .s-label{{color:#888!important}}
+    .s-card .s-sub{{color:#888!important}}
     .chart-box{{background:#111!important;border:1px solid #2a2a2a!important}}
     .chart-box h3{{color:#ff8c00!important}}
     .chart-note{{background:#111!important;color:#888!important;border-color:#2a2a2a!important}}
