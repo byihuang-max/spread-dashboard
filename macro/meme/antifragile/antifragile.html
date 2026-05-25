@@ -824,4 +824,81 @@ new Chart(document.getElementById('medianChart'),{
 
 })();
 </script>
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var isBloomberg = params.get('theme')==='bloomberg';
+  if(!isBloomberg && window.parent !== window){
+    try{ isBloomberg = window.parent.location.search.includes('theme=bloomberg'); }catch(e){}
+  }
+  if(!isBloomberg) return;
+
+  // 1. 注入暗色 CSS
+  var s = document.createElement('style');
+  s.textContent = `
+    body{background:#0a0a0a!important;color:#ccc!important}
+    .chart-box{background:#111!important;border:1px solid #2a2a2a!important}
+    .chart-box h3{color:#ff8c00!important}
+    .chart-note{background:#111!important;color:#888!important;border-color:#2a2a2a!important}
+    table{color:#ccc!important}
+    thead tr{background:#1a1a1a!important}
+    thead th{color:#ff8c00!important;border-color:#2a2a2a!important}
+    tbody td{border-color:#1a1a1a!important}
+    tbody tr:nth-child(odd){background:#0f0f0f!important}
+    tbody tr:nth-child(even){background:#0a0a0a!important}
+    [style*="background:#f8fafc"],[style*="background:#f1f5f9"],[style*="background:#fff"]{background:#111!important}
+    [style*="border-top:2px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    [style*="border-bottom:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    [style*="border:1px solid #f5f5f5"]{border-color:#1a1a1a!important}
+    td[style*="background:rgb("]{opacity:0.7!important;border-color:#1a1a1a!important}
+    [style*="color:#374151"],[style*="color:#2d3142"]{color:#ccc!important}
+    [style*="color:#64748b"],[style*="color:#8b92a5"]{color:#888!important}
+    [style*="border-left:3px solid"]{background:#111!important}
+    [style*="border-top:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    h3{color:#ff8c00!important}
+    b{color:#e8e8e8!important}
+    #dynamic-themes-section{border-color:#2a2a2a!important}
+  `;
+  document.head.appendChild(s);
+
+  // 2. Chart.js afterLayout 钩子 - 网格线暗色
+  function hookCharts(){
+    if(typeof Chart==='undefined')return false;
+    Chart.register({
+      id:'bbGridAntifragile',
+      afterLayout:function(chart){
+        Object.values(chart.scales).forEach(function(scale){
+          if(scale.options.grid){
+            scale.options.grid.color='#2a2a2a';
+            scale.options.grid.lineWidth=0.6;
+          }
+          if(scale.options.ticks){
+            scale.options.ticks.color='#888';
+          }
+        });
+      }
+    });
+    Chart.defaults.color='#888';
+    Chart.defaults.borderColor='#2a2a2a';
+    return true;
+  }
+  if(!hookCharts()){var i=setInterval(function(){if(hookCharts())clearInterval(i)},200);}
+
+  // 3. 中位数图表隐藏灰色参考线
+  var hideLabels = ['纳斯达克100','标普500','恒生科技ETF','科创50ETF','日经225','韩国KOSPI'];
+  function hideGrayInMedChart(){
+    if(typeof Chart==='undefined' || !Chart.instances) return false;
+    var instances = Object.values(Chart.instances);
+    if(instances.length < 2) return false;
+    var medChart = instances[1];
+    if(!medChart || !medChart.data || !medChart.data.datasets) return false;
+    medChart.data.datasets.forEach(function(ds){
+      if(hideLabels.indexOf(ds.label)>=0) ds.hidden = true;
+    });
+    medChart.update('none');
+    return true;
+  }
+  setTimeout(function(){if(!hideGrayInMedChart()){var j=setInterval(function(){if(hideGrayInMedChart())clearInterval(j)},500);}},1000);
+})();
+</script>
 </body></html>
