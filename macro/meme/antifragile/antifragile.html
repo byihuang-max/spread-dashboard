@@ -889,9 +889,11 @@ new Chart(document.getElementById('medianChart'),{
   function hideGrayInMedChart(){
     if(typeof Chart==='undefined' || !Chart.instances) return false;
     var instances = Object.values(Chart.instances);
-    if(instances.length < 2) return false;
-    var medChart = instances[1];
-    if(!medChart || !medChart.data || !medChart.data.datasets) return false;
+    var medChart = null;
+    for(var k=0;k<instances.length;k++){
+      if(instances[k].canvas && instances[k].canvas.id==='medianChart'){medChart=instances[k];break;}
+    }
+    if(!medChart) return false;
     medChart.data.datasets.forEach(function(ds){
       if(hideLabels.indexOf(ds.label)>=0) ds.hidden = true;
     });
