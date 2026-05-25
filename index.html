@@ -298,7 +298,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   // 3) light 模式追加亮色叠加层 + body class
   if(mode==="light"){
     var l2=document.createElement("link");l2.rel="stylesheet";l2.href="bloomberg-light.css";document.head.appendChild(l2);
-    function addLightClass(){if(document.body)document.body.classList.add("bb-light");}
+    function addLightClass(){if(document.body){document.body.classList.add("bb-light");document.body.classList.add("bb-light-shell");}}
     if(document.body)addLightClass();else document.addEventListener("DOMContentLoaded",addLightClass);
   }
   // 4) hook chart.js after it loads

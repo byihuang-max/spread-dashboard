@@ -1,295 +1,269 @@
-/* ========== GAMT Bloomberg LIGHT 配色叠加层 ==========
- * 依赖：bloomberg-override.css 已加载（提供 Bloomberg 紧凑布局/字体/卡片密度）
- * 本文件只翻转配色，不动布局
- * 激活方式：body.bb-light（由 bootstrap 根据 localStorage 决定）
- * 优先级：所有规则用 body.bb-light 前缀，特异度高于 bloomberg-override.css 顶层选择器
+/* ========== GAMT Bloomberg LIGHT 配色叠加层（v2 - 仅内容区）==========
+ * 设计：外框架保持 Bloomberg 暗色，只把内容区 + iframe 子页面变白底
+ *
+ * - .sidebar / .header / .user-bar：保持原暗色不动
+ * - .content 内的卡片/图表/表格/iframe 容器：白底
+ * - iframe 子页面（金融日历/汇率/基本面 等）：整页白底
+ *
+ * 激活方式：
+ *   主页面 body：bb-light + bb-light-shell（shell = 含 sidebar 的母页）
+ *   iframe body：bb-light（不含 sidebar）
+ * 由 bootstrap / theme.js 根据 localStorage 决定
  */
 
-/* ---------- 配色变量 ---------- */
-body.bb-light {
-  --bg: #ffffff !important;
-  --sidebar-bg: #f8fafc !important;
-  --sidebar-text: #475569 !important;
-  --accent: #ff8c00 !important;
-  --accent-light: rgba(255,140,0,0.12) !important;
-  --accent-glow: rgba(255,140,0,0.20) !important;
-  --card-bg: #ffffff !important;
-  --text: #1e293b !important;
-  --text-sub: #64748b !important;
-  --border: #e2e8f0 !important;
-}
+/* ============================================================
+ * 主页面（含 sidebar）：只翻里面的内容区
+ * ============================================================ */
 
-/* ---------- 全局 ---------- */
-body.bb-light {
-  background: #ffffff !important;
-  color: #1e293b !important;
-}
-
-/* ---------- 侧边栏 ---------- */
-body.bb-light .sidebar {
-  background: #f8fafc !important;
-  border-right: 1px solid #e2e8f0 !important;
-}
-body.bb-light .sidebar .logo {
-  border-bottom: 1px solid #e2e8f0 !important;
-  color: #1e293b !important;
-}
-body.bb-light .nav-item {
-  color: #64748b !important;
-  border-left-color: transparent !important;
-}
-body.bb-light .nav-item:hover {
-  background: #f1f5f9 !important;
-  color: #1e293b !important;
-}
-body.bb-light .nav-item.active {
-  color: #ff8c00 !important;
-  background: rgba(255,140,0,0.08) !important;
-  border-left-color: #ff8c00 !important;
-}
-body.bb-light .user-info {
-  border-top: 1px solid #e2e8f0 !important;
-  color: #94a3b8 !important;
-}
-
-/* ---------- 顶部 Header ---------- */
-body.bb-light .header {
-  background: #ffffff !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-}
-body.bb-light .header .title {
-  color: #ff8c00 !important;
-}
-body.bb-light .header .meta {
-  color: #64748b !important;
-}
-body.bb-light .refresh-btn {
-  background: #f1f5f9 !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #475569 !important;
-}
-body.bb-light .refresh-btn:hover {
-  background: #ff8c00 !important;
-  color: #ffffff !important;
-  border-color: #ff8c00 !important;
-}
-
-/* ---------- 内容区 ---------- */
-body.bb-light .content {
+/* 内容区背景：从黑变浅 */
+body.bb-light-shell .content {
   background: #f8fafc !important;
 }
 
-/* ---------- 卡片/面板 ---------- */
-body.bb-light .card {
+/* 内容区卡片 */
+body.bb-light-shell .content .card {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
 }
-body.bb-light .card-title {
-  color: #ff8c00 !important;
+body.bb-light-shell .content .card-title {
+  color: #0f172a !important;
   background: #f8fafc !important;
   border-bottom: 1px solid #e2e8f0 !important;
 }
 
-/* ---------- Overview cards ---------- */
-body.bb-light .overview-grid {
+/* Overview cards（总览那 4 个数字卡） */
+body.bb-light-shell .content .overview-grid {
   background: #e2e8f0 !important;
 }
-body.bb-light .ov-card {
+body.bb-light-shell .content .ov-card {
   background: #ffffff !important;
 }
-body.bb-light .ov-label {
-  color: #94a3b8 !important;
+body.bb-light-shell .content .ov-label { color: #64748b !important; }
+body.bb-light-shell .content .ov-value { color: #0f172a !important; }
+body.bb-light-shell .content .ov-sub { color: #94a3b8 !important; }
+body.bb-light-shell .content .ov-tag.on { background: rgba(255,140,0,0.12) !important; color: #d97706 !important; }
+body.bb-light-shell .content .ov-tag.off { background: rgba(0,210,106,0.12) !important; color: #059669 !important; }
+body.bb-light-shell .content .ov-tag.warn { background: rgba(255,59,59,0.12) !important; color: #dc2626 !important; }
+
+/* 表格 */
+body.bb-light-shell .content .s-table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
-body.bb-light .ov-value {
+body.bb-light-shell .content .s-table td {
+  border-bottom: 1px solid #f1f5f9 !important;
   color: #1e293b !important;
 }
-body.bb-light .ov-sub {
-  color: #94a3b8 !important;
+body.bb-light-shell .content .s-table tr:hover td {
+  background: #f8fafc !important;
 }
-body.bb-light .ov-tag.on { background: rgba(255,140,0,0.12) !important; color: #d97706 !important; }
-body.bb-light .ov-tag.off { background: rgba(0,210,106,0.12) !important; color: #059669 !important; }
-body.bb-light .ov-tag.warn { background: rgba(255,59,59,0.12) !important; color: #dc2626 !important; }
+body.bb-light-shell .content .tag-green { background: rgba(0,210,106,0.12) !important; color: #059669 !important; }
+body.bb-light-shell .content .tag-amber { background: rgba(255,140,0,0.12) !important; color: #d97706 !important; }
+body.bb-light-shell .content .tag-slate { background: rgba(100,116,139,0.12) !important; color: #64748b !important; }
 
-/* ---------- 表格 ---------- */
-body.bb-light .s-table th {
+/* 总览页主区块 */
+body.bb-light-shell .content #ms-hero,
+body.bb-light-shell .content .ms-strat-card,
+body.bb-light-shell .content .ms-bottom-card,
+body.bb-light-shell .content #ov-risk-banner {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+body.bb-light-shell .content .ms-strat-card:hover { border-color: #ff8c00 !important; }
+body.bb-light-shell .content #ov-risk-banner { border-left: 3px solid #ff8c00 !important; }
+
+/* 模块状态表 */
+body.bb-light-shell .content .module-status-table th {
   background: #f8fafc !important;
   color: #64748b !important;
   border-bottom: 1px solid #e2e8f0 !important;
 }
-body.bb-light .s-table td {
+body.bb-light-shell .content .module-status-table td {
   border-bottom: 1px solid #f1f5f9 !important;
-  color: #334155 !important;
-}
-body.bb-light .s-table tr:hover td {
-  background: #f8fafc !important;
-}
-body.bb-light .tag-green { background: rgba(0,210,106,0.12) !important; color: #059669 !important; }
-body.bb-light .tag-amber { background: rgba(255,140,0,0.12) !important; color: #d97706 !important; }
-body.bb-light .tag-slate { background: rgba(100,116,139,0.12) !important; color: #64748b !important; }
-
-/* ---------- 策略 tabs ---------- */
-body.bb-light .strat-tab {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #64748b !important;
-}
-body.bb-light .strat-tab:hover {
   color: #1e293b !important;
-  border-color: #cbd5e1 !important;
 }
-body.bb-light .strat-tab.active {
-  background: #ff8c00 !important;
-  color: #ffffff !important;
-  border-color: #ff8c00 !important;
-}
-
-/* ---------- Hero/总览主区块 ---------- */
-body.bb-light #ms-hero,
-body.bb-light .ms-strat-card,
-body.bb-light .ms-bottom-card,
-body.bb-light #ov-risk-banner {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-}
-body.bb-light .ms-strat-card:hover {
-  border-color: #ff8c00 !important;
-}
-body.bb-light #ov-risk-banner {
-  border-left: 3px solid #ff8c00 !important;
-}
-
-/* ---------- 模块状态表 ---------- */
-body.bb-light .module-status-table th {
-  background: #f8fafc !important;
-  color: #64748b !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-}
-body.bb-light .module-status-table td {
-  border-bottom: 1px solid #f1f5f9 !important;
-  color: #334155 !important;
-}
-body.bb-light .module-status-table tr:hover td {
+body.bb-light-shell .content .module-status-table tr:hover td {
   background: #f8fafc !important;
 }
 
-/* ---------- Style spread stats ---------- */
-body.bb-light .ss-stat {
+body.bb-light-shell .content .ss-stat {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
 }
 
-/* ---------- 滚动条 ---------- */
-body.bb-light ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
-body.bb-light ::-webkit-scrollbar-thumb { background: #cbd5e1 !important; }
-body.bb-light ::-webkit-scrollbar-thumb:hover { background: #94a3b8 !important; }
-
-/* ---------- 反向覆盖：bloomberg-override.css 里的 inline catch-all ---------- */
-/* 暗色模式把所有 inline 浅底改成 #0a0a0a，亮色模式要还原回来 */
-body.bb-light .content [style*="background"]:not(.heatmap-cell):not(.mega-chip):not(.tag):not(.ov-tag):not(.status-badge),
-body.bb-light .content div[style]:not(.heatmap-cell):not(.mega-chip),
-body.bb-light .content section[style] {
+/* 反向覆盖 bloomberg-override.css 里的 inline catch-all */
+body.bb-light-shell .content [style*="background"]:not(.heatmap-cell):not(.mega-chip):not(.tag):not(.ov-tag):not(.status-badge),
+body.bb-light-shell .content div[style]:not(.heatmap-cell):not(.mega-chip),
+body.bb-light-shell .content section[style] {
   background: revert !important;
   background-color: revert !important;
   background-image: revert !important;
 }
-/* 但保留我们想要的纯白卡片背景 */
-body.bb-light .content [style*="background:#fff"],
-body.bb-light .content [style*="background: #fff"],
-body.bb-light .content [style*="background:white"],
-body.bb-light .content [style*="background:#ffffff"] {
+body.bb-light-shell .content [style*="background:#fff"],
+body.bb-light-shell .content [style*="background: #fff"],
+body.bb-light-shell .content [style*="background:white"],
+body.bb-light-shell .content [style*="background:#ffffff"] {
   background: #ffffff !important;
 }
-/* 浅色 inline 文字色还原 */
-body.bb-light .content [style*="color:#333"],
-body.bb-light .content [style*="color:#666"],
-body.bb-light .content [style*="color:#555"],
-body.bb-light .content [style*="color:#444"],
-body.bb-light .content [style*="color:#1e293b"],
-body.bb-light .content [style*="color:#374151"] {
+body.bb-light-shell .content [style*="color:#333"],
+body.bb-light-shell .content [style*="color:#666"],
+body.bb-light-shell .content [style*="color:#555"],
+body.bb-light-shell .content [style*="color:#444"],
+body.bb-light-shell .content [style*="color:#1e293b"],
+body.bb-light-shell .content [style*="color:#374151"] {
   color: revert !important;
 }
-body.bb-light .content [style*="border"] {
+body.bb-light-shell .content [style*="border"] {
   border-color: revert !important;
 }
 
-/* ---------- 关键 chart 容器还原 ---------- */
-body.bb-light canvas { filter: none !important; }
+body.bb-light-shell .content canvas { filter: none !important; }
 
-/* ---------- macro/liquidity 等模块专用 ---------- */
-body.bb-light .signal-bar {
+/* macro 模块通用容器 */
+body.bb-light-shell .content .signal-bar {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
   border-left: 3px solid #ff8c00 !important;
   color: #1e293b !important;
 }
-body.bb-light .signal-tag {
+body.bb-light-shell .content .signal-tag {
   background: #f1f5f9 !important;
   border: 1px solid #e2e8f0 !important;
   color: #64748b !important;
 }
-body.bb-light .signal-tag.good { color: #059669 !important; border-color: rgba(5,150,105,0.4) !important; background: rgba(5,150,105,0.08) !important; }
-body.bb-light .signal-tag.risk { color: #dc2626 !important; border-color: rgba(220,38,38,0.4) !important; background: rgba(220,38,38,0.08) !important; }
-body.bb-light .signal-tag.warn { color: #d97706 !important; border-color: rgba(217,119,6,0.4) !important; background: rgba(217,119,6,0.08) !important; }
+body.bb-light-shell .content .signal-tag.good { color: #059669 !important; border-color: rgba(5,150,105,0.4) !important; background: rgba(5,150,105,0.08) !important; }
+body.bb-light-shell .content .signal-tag.risk { color: #dc2626 !important; border-color: rgba(220,38,38,0.4) !important; background: rgba(220,38,38,0.08) !important; }
+body.bb-light-shell .content .signal-tag.warn { color: #d97706 !important; border-color: rgba(217,119,6,0.4) !important; background: rgba(217,119,6,0.08) !important; }
 
-body.bb-light .chart-box {
+body.bb-light-shell .content .chart-box {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
 }
-body.bb-light .chart-box h3 { color: #ff8c00 !important; }
+body.bb-light-shell .content .chart-box h3 { color: #ff8c00 !important; }
 
-body.bb-light .chart-note {
+body.bb-light-shell .content .chart-note {
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
   color: #475569 !important;
 }
-body.bb-light .chart-note b { color: #1e293b !important; }
+body.bb-light-shell .content .chart-note b { color: #1e293b !important; }
 
-body.bb-light .module-page h2 { color: #ff8c00 !important; }
+body.bb-light-shell .content .module-page h2 { color: #ff8c00 !important; }
 
-body.bb-light .facet-card,
-body.bb-light .industry-card,
-body.bb-light .prosperity-card {
+body.bb-light-shell .content .facet-card,
+body.bb-light-shell .content .industry-card,
+body.bb-light-shell .content .prosperity-card,
+body.bb-light-shell .content .narrative-box,
+body.bb-light-shell .content .neutral-box,
+body.bb-light-shell .content .factor-card {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
 }
+body.bb-light-shell .content .narrative-text,
+body.bb-light-shell .content .narrative-text span { color: #1e293b !important; }
+body.bb-light-shell .content .narrative-text .sep { color: #cbd5e1 !important; }
+body.bb-light-shell .content .neutral-title { color: #64748b !important; }
+body.bb-light-shell .content .neutral-metric .val { color: #1e293b !important; }
+body.bb-light-shell .content .neutral-metric .lab { color: #94a3b8 !important; }
+body.bb-light-shell .content .neutral-divider { background: #e2e8f0 !important; }
+body.bb-light-shell .content .factor-label { color: #64748b !important; }
+body.bb-light-shell .content .factor-sig { color: #1e293b !important; }
+body.bb-light-shell .content .factor-bar { background: #f1f5f9 !important; }
 
-body.bb-light .narrative-box,
-body.bb-light .neutral-box,
-body.bb-light .factor-card {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-}
-body.bb-light .narrative-text { color: #1e293b !important; }
-body.bb-light .narrative-text .sep { color: #cbd5e1 !important; }
-body.bb-light .narrative-text span { color: #1e293b !important; }
-body.bb-light .neutral-title { color: #64748b !important; }
-body.bb-light .neutral-metric .val { color: #1e293b !important; }
-body.bb-light .neutral-metric .lab { color: #94a3b8 !important; }
-body.bb-light .neutral-divider { background: #e2e8f0 !important; }
-body.bb-light .factor-label { color: #64748b !important; }
-body.bb-light .factor-sig { color: #1e293b !important; }
-body.bb-light .factor-bar { background: #f1f5f9 !important; }
 
-/* ---------- iframe 嵌入子页面（无 .content 前缀）---------- */
-body.bb-light [style*="background:#0a0a0a"],
-body.bb-light [style*="background: #0a0a0a"],
-body.bb-light [style*="background:#0f0f0f"],
-body.bb-light [style*="background: #0f0f0f"] {
+/* ============================================================
+ * iframe 子页面（不含 sidebar）：整页白底
+ * ============================================================ */
+
+body.bb-light:not(.bb-light-shell) {
   background: #ffffff !important;
-}
-body.bb-light [style*="color:#888"],
-body.bb-light [style*="color: #888"],
-body.bb-light [style*="color:#999"],
-body.bb-light [style*="color: #999"] {
-  color: #64748b !important;
-}
-body.bb-light [style*="color:#ccc"],
-body.bb-light [style*="color: #ccc"],
-body.bb-light [style*="color:#e8e8e8"] {
   color: #1e293b !important;
 }
 
-/* ---------- toggle 按钮自身样式 ---------- */
+/* iframe 内 inline 暗色背景反转 */
+body.bb-light:not(.bb-light-shell) [style*="background:#0a0a0a"],
+body.bb-light:not(.bb-light-shell) [style*="background: #0a0a0a"],
+body.bb-light:not(.bb-light-shell) [style*="background:#0f0f0f"],
+body.bb-light:not(.bb-light-shell) [style*="background: #0f0f0f"],
+body.bb-light:not(.bb-light-shell) [style*="background:#111"],
+body.bb-light:not(.bb-light-shell) [style*="background: #111"],
+body.bb-light:not(.bb-light-shell) [style*="background:#1a1a1a"],
+body.bb-light:not(.bb-light-shell) [style*="background: #1a1a1a"] {
+  background: #ffffff !important;
+}
+
+/* iframe 内 inline 浅文字色 → 深 */
+body.bb-light:not(.bb-light-shell) [style*="color:#888"],
+body.bb-light:not(.bb-light-shell) [style*="color: #888"],
+body.bb-light:not(.bb-light-shell) [style*="color:#999"],
+body.bb-light:not(.bb-light-shell) [style*="color: #999"] {
+  color: #64748b !important;
+}
+body.bb-light:not(.bb-light-shell) [style*="color:#ccc"],
+body.bb-light:not(.bb-light-shell) [style*="color: #ccc"],
+body.bb-light:not(.bb-light-shell) [style*="color:#e8e8e8"],
+body.bb-light:not(.bb-light-shell) [style*="color: #e8e8e8"] {
+  color: #1e293b !important;
+}
+
+/* iframe 内通用容器 */
+body.bb-light:not(.bb-light-shell) .card,
+body.bb-light:not(.bb-light-shell) .chart-box,
+body.bb-light:not(.bb-light-shell) .signal-bar,
+body.bb-light:not(.bb-light-shell) .narrative-box,
+body.bb-light:not(.bb-light-shell) .neutral-box,
+body.bb-light:not(.bb-light-shell) .factor-card,
+body.bb-light:not(.bb-light-shell) .facet-card,
+body.bb-light:not(.bb-light-shell) .industry-card,
+body.bb-light:not(.bb-light-shell) .prosperity-card,
+body.bb-light:not(.bb-light-shell) .ss-stat,
+body.bb-light:not(.bb-light-shell) .ov-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+body.bb-light:not(.bb-light-shell) .chart-box h3,
+body.bb-light:not(.bb-light-shell) .module-page h2,
+body.bb-light:not(.bb-light-shell) .card-title { color: #ff8c00 !important; }
+
+body.bb-light:not(.bb-light-shell) .chart-note {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+}
+body.bb-light:not(.bb-light-shell) .chart-note b { color: #1e293b !important; }
+
+/* iframe 内表格 */
+body.bb-light:not(.bb-light-shell) th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+body.bb-light:not(.bb-light-shell) td {
+  color: #1e293b !important;
+  border-bottom-color: #f1f5f9 !important;
+}
+body.bb-light:not(.bb-light-shell) tr:hover td {
+  background: #f8fafc !important;
+}
+
+/* signal-tag */
+body.bb-light:not(.bb-light-shell) .signal-tag {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border-color: #e2e8f0 !important;
+}
+body.bb-light:not(.bb-light-shell) .signal-tag.good { color: #059669 !important; background: rgba(5,150,105,0.08) !important; border-color: rgba(5,150,105,0.4) !important; }
+body.bb-light:not(.bb-light-shell) .signal-tag.risk { color: #dc2626 !important; background: rgba(220,38,38,0.08) !important; border-color: rgba(220,38,38,0.4) !important; }
+body.bb-light:not(.bb-light-shell) .signal-tag.warn { color: #d97706 !important; background: rgba(217,119,6,0.08) !important; border-color: rgba(217,119,6,0.4) !important; }
+
+/* iframe 内 Chart canvas */
+body.bb-light:not(.bb-light-shell) canvas { filter: none !important; }
+
+/* ---------- toggle 按钮自身样式（在主页面 user-bar 里，外框架仍是暗色）---------- */
 .theme-toggle-btn {
   padding: 4px 8px !important;
   border: 1px solid #2a2a2a !important;
@@ -304,14 +278,4 @@ body.bb-light [style*="color:#e8e8e8"] {
 .theme-toggle-btn:hover {
   border-color: #ff8c00 !important;
   color: #ff8c00 !important;
-}
-body.bb-light .theme-toggle-btn {
-  border: 1px solid #e2e8f0 !important;
-  background: #ffffff !important;
-  color: #475569 !important;
-}
-body.bb-light .theme-toggle-btn:hover {
-  border-color: #ff8c00 !important;
-  color: #ff8c00 !important;
-  background: rgba(255,140,0,0.08) !important;
 }
