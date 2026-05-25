@@ -691,6 +691,21 @@ new Chart(document.getElementById('medianChart'),{
   }
   if(!isBloomberg) return;
 
+  // 检测 light/dark mode
+  var mode="dark";
+  try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  window.__bbMode=mode;
+  // light 模式：注入 light CSS + body class，跳过下面这段暗色 inline style
+  if(mode==="light"){
+    var ll=document.createElement("link");ll.rel="stylesheet";
+    ll.href="../../../bloomberg-override.css?v="+Date.now();document.head.appendChild(ll);
+    var ll2=document.createElement("link");ll2.rel="stylesheet";
+    ll2.href="../../../bloomberg-light.css?v="+Date.now();document.head.appendChild(ll2);
+    function _addLight(){if(document.body)document.body.classList.add("bb-light");}
+    if(document.body)_addLight();else document.addEventListener("DOMContentLoaded",_addLight);
+    return;
+  }
+
   // 1. 注入暗色 CSS
   var s = document.createElement('style');
   s.textContent = `
