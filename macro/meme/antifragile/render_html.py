@@ -723,6 +723,7 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
     <span class="signal-tag">30天相关性</span>
     <span class="signal-tag">Meme反身性信号</span>
   </div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: {update_time}</div>
 </div>
 
 <div class="summary-cards">

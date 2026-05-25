@@ -241,6 +241,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
                     <span class="signal-tag">全球标的追踪</span>
                     <span class="signal-tag">CapEx二阶导</span>
                 </div>
+                <div style="margin-left:auto;font-size:11px;color:#7c8598" id="halo-update-time"></div>
             </div>
             <div class="summary-cards" id="halo-summary"></div>
             
@@ -388,6 +389,8 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
                     + '<div class="s-card"><div class="s-label">估值状态</div><div class="s-value" style="font-size:18px;color:'+scenColor+'">'+scenario+'</div><div class="s-sub">'+action+'</div></div>'
                     + '<div class="s-card"><div class="s-label">二阶导</div><div class="s-value" style="color:'+tsColor+'">'+(avgTs>=0?'+':'')+avgTs.toFixed(1)+'</div></div>';
                 }
+                var utEl = document.getElementById('halo-update-time');
+                if(utEl) utEl.textContent = '更新: ' + (analysisData.generated_at || '');
             })
             .catch(err => {
                 document.getElementById('loading').innerHTML = ` 数据加载失败<br><small style="color:#888">${err.message}</small>`;
