@@ -297,10 +297,10 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
     if(!isBloomberg())return true;
-    Chart.defaults.color="#888";
-    Chart.defaults.borderColor="#2a2a2a";
+    Chart.defaults.color=(window.__bbMode==="light"?"#475569":"#888");
+    Chart.defaults.borderColor=(window.__bbMode==="light"?"#e2e8f0":"#2a2a2a");
     Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
-    Chart.defaults.plugins.legend.labels.color="#888";
+    Chart.defaults.plugins.legend.labels.color=(window.__bbMode==="light"?"#475569":"#888");
     Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
     Chart.defaults.plugins.tooltip.borderColor="#333";
     Chart.register({
@@ -309,7 +309,7 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
         Object.values(chart.scales).forEach(function(scale){
           if(scale.options.grid){scale.options.grid.display=false;}
           if(scale.options.ticks){
-            scale.options.ticks.color="#888";
+            scale.options.ticks.color=(window.__bbMode==="light"?"#475569":"#888");
           }
         });
       }
@@ -325,7 +325,7 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
   }
 })();
 </script>
-<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var l=document.createElement("link");l.rel="stylesheet";l.href="../../bloomberg-override.css";document.head.appendChild(l);}}catch(e){}})();</script>
+<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";var mode="dark";try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light"){var l2=document.createElement("link");l2.rel="stylesheet";l2.href=pre+"bloomberg-light.css"+v;document.head.appendChild(l2);function addLight(){if(document.body)document.body.classList.add("bb-light");}if(document.body)addLight();else document.addEventListener("DOMContentLoaded",addLight);}}}catch(e){}})();</script>
 </head>
 <body>
 
