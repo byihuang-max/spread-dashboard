@@ -56,6 +56,11 @@
             font-size: 12px;
             color: #b8bfce;
         }
+        .signal-badge{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+        .signal-badge.good{background:rgba(34,197,94,.18);color:#4ade80}
+        .signal-badge.warn{background:rgba(245,158,11,.18);color:#fbbf24}
+        .signal-badge.risk{background:rgba(239,68,68,.18);color:#f87171}
+        .signal-badge.neutral{background:rgba(148,163,184,.15);color:#94a3b8}
         
         .section {
             margin-bottom: 24px;
@@ -224,13 +229,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
             <!-- 顶部信号栏 -->
             <div class="signal-bar">
                 <div class="signal-main"> HALO 交易看板</div>
-                <div class="signal-tags">
-                    <span class="signal-tag">重资产范式转移</span>
-                    <span class="signal-tag">全球标的追踪</span>
-                    <span class="signal-tag">CapEx二阶导</span>
-                    <span class="signal-tag">PE剪刀差</span>
-                </div>
-                <div style="margin-left:auto;font-size:11px;color:#7c8598" id="update-time"></div>
+                <div class="signal-badges" id="halo-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin-left:auto"></div>
             </div>
             
             <!-- 场景判断 -->
@@ -359,6 +358,23 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
                 document.getElementById('content').style.display = 'block';
                 renderDashboard(analysisData, financialData);
                 renderChinaHalo(chinaHaloData);
+                // 表头 badge
+                var el = document.getElementById('halo-badges');
+                if(el){
+                  var china = chinaHaloData.china || {};
+                  var trend = china.trend || '';
+                  var trendCls = trend.includes('重资产') ? 'risk' : (trend.includes('轻资产') ? 'good' : 'neutral');
+                  var trendLabel = trend.replace(/🟢|🔴|🟡/g,'').trim();
+                  var scenario = analysisData.scenario || '--';
+                  var scenCls = scenario.includes('充分') ? 'warn' : (scenario.includes('低估') ? 'good' : 'neutral');
+                  var ts = analysisData.theme_strength || {};
+                  var tsVals = Object.values(ts);
+                  var avgTs = tsVals.length ? (tsVals.reduce(function(a,b){return a+b},0)/tsVals.length) : 0;
+                  var tsCls = avgTs > 1 ? 'good' : (avgTs < -1 ? 'risk' : 'neutral');
+                  el.innerHTML = '<span class="signal-badge '+trendCls+'">'+trendLabel+'</span>'
+                    + '<span class="signal-badge '+scenCls+'">估值 '+scenario+'</span>'
+                    + '<span class="signal-badge '+tsCls+'">二阶导 '+(avgTs>=0?'+':'')+avgTs.toFixed(1)+'</span>';
+                }
                 document.getElementById('update-time').textContent = '更新: ' + analysisData.generated_at;
             })
             .catch(err => {

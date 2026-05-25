@@ -659,6 +659,28 @@ new Chart(document.getElementById('memeVaChart'), {{
     med_labels_json    = json.dumps(median_dates)
     med_datasets_json  = json.dumps(median_datasets)
 
+    # ─── 表头 badge 数据 ───
+    _cur = meme_data.get('current', {}) if meme_data else {}
+    _phase = _cur.get('phase', {})
+    badge_murmur = _cur.get('meme_score', '--')
+    badge_murmur_cls = 'risk' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 60 else ('warn' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 40 else 'neutral')
+    badge_nli = f"{_cur.get('nli_percentile', '--')}%ile" if _cur.get('nli_percentile') is not None else '--'
+    badge_nli_cls = 'risk' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 70 else ('warn' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 50 else 'neutral')
+    badge_va = f"{_cur.get('va', '--'):.1f}" if isinstance(_cur.get('va'), (int,float)) else '--'
+    badge_va_cls = 'good' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] > 0 else ('risk' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] < -10 else 'neutral')
+    # 30天平均相关性
+    try:
+        _corr_matrices = corr_data.get('corr_matrices', {})
+        _last_date = list(_corr_matrices.keys())[-1] if _corr_matrices else ''
+        _m = _corr_matrices.get(_last_date, {})
+        _assets = list(_m.keys())
+        _corr_vals = [_m[a][b] for i,a in enumerate(_assets) for b in _assets[i+1:]]
+        badge_corr = f"{sum(_corr_vals)/len(_corr_vals):.2f}" if _corr_vals else '--'
+        badge_corr_cls = 'risk' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.5 else ('warn' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.3 else 'good')
+    except:
+        badge_corr = '--'
+        badge_corr_cls = 'neutral'
+
     # ─────────────────────────────────────────────
     # HTML 输出
     # ─────────────────────────────────────────────
@@ -674,8 +696,12 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 .section{{margin-bottom:24px}}
 .signal-bar{{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}}
 .signal-main{{font-size:18px;font-weight:800}}
-.signal-tags{{display:flex;gap:8px;flex-wrap:wrap}}
-.signal-tag{{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}}
+.signal-badges{{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}}
+.signal-badge{{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px}}
+.signal-badge.good{{background:rgba(34,197,94,.18);color:#4ade80}}
+.signal-badge.warn{{background:rgba(245,158,11,.18);color:#fbbf24}}
+.signal-badge.risk{{background:rgba(239,68,68,.18);color:#f87171}}
+.signal-badge.neutral{{background:rgba(148,163,184,.15);color:#94a3b8}}
 .chart-box{{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;overflow:hidden}}
 .chart-box h3{{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}}
 .chart-wrap{{position:relative;height:380px}}
@@ -687,13 +713,13 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 
 <div class="signal-bar">
   <div class="signal-main"> 反脆弱看板</div>
-  <div class="signal-tags">
-    <span class="signal-tag">全球风险资产</span>
-    <span class="signal-tag">归一净值</span>
-    <span class="signal-tag">30天相关性</span>
-    <span class="signal-tag">Meme反身性信号</span>
+  <div class="signal-badges">
+    <span class="signal-badge {badge_murmur_cls}">反身性 {badge_murmur}</span>
+    <span class="signal-badge {badge_nli_cls}">联动 {badge_nli}</span>
+    <span class="signal-badge {badge_va_cls}">量能 {badge_va}</span>
+    <span class="signal-badge {badge_corr_cls}">相关性 {badge_corr}</span>
   </div>
-  <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: {update_time}</div>
+</div>
 </div>
 
 {meme_section_html}

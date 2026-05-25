@@ -11,10 +11,10 @@ h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
 .signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .signal-main{font-size:18px;font-weight:800}
 .signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
-.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
-.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
-.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px;background:rgba(148,163,184,.15);color:#94a3b8}
+.signal-tag.good{background:rgba(34,197,94,0.18);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.18);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.18);color:#fbbf24}
 .chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
 .chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
 .chart-wrap{position:relative;height:280px}
@@ -161,13 +161,36 @@ function render(){
   document.getElementById('app').style.display='';
   document.getElementById('updateTime').textContent='更新: '+(DATA.update_time||'');
   var sigs=DATA.signals||[];
-  document.getElementById('signalTags').innerHTML=sigs.map(function(s){
-    var cls='signal-tag';
-    if(s.indexOf('🟢')>=0) cls+=' good';
-    else if(s.indexOf('🔴')>=0) cls+=' risk';
-    else if(s.indexOf('🟡')>=0) cls+=' warn';
-    return '<span class="'+cls+'">'+s+'</span>';
-  }).join('');
+  // 构建带数值的 badge
+  var badgeHtml = '';
+  var shiborOn = DATA.shibor_on || [];
+  var dr = DATA.dr007 || [];
+  if(shiborOn.length){
+    var lastS = shiborOn[shiborOn.length-1];
+    var sVal = (lastS.value||0).toFixed(3);
+    badgeHtml += '<span class="signal-tag">Shibor O/N '+sVal+'%</span>';
+  }
+  if(dr.length){
+    var lastD = dr[dr.length-1];
+    var drVal = (lastD.dr007||0).toFixed(3);
+    var rVal = (lastD.r007||0).toFixed(3);
+    var spread = ((lastD.r007||0)-(lastD.dr007||0)).toFixed(2);
+    var drCls = (lastD.dr007||0) > 2.0 ? 'warn' : ((lastD.dr007||0) < 1.5 ? 'good' : '');
+    var rCls = (lastD.r007||0) > 2.5 ? 'risk' : ((lastD.r007||0) > 2.0 ? 'warn' : '');
+    badgeHtml += '<span class="signal-tag '+drCls+'">DR007 '+drVal+'%</span>';
+    badgeHtml += '<span class="signal-tag '+rCls+'">R007 '+rVal+'%</span>';
+    if(parseFloat(spread) > 0.5) badgeHtml += '<span class="signal-tag risk">价差 '+spread+'%</span>';
+  }
+  if(sigs.length && sigs[0].indexOf('极端')>=0){
+    badgeHtml += sigs.map(function(s){
+      var cls='signal-tag';
+      if(s.indexOf('🟢')>=0) cls+=' good';
+      else if(s.indexOf('🔴')>=0) cls+=' risk';
+      else if(s.indexOf('🟡')>=0) cls+=' warn';
+      return '<span class="'+cls+'">'+s+'</span>';
+    }).join('');
+  }
+  document.getElementById('signalTags').innerHTML=badgeHtml;
   renderShiborTerm();
   renderShiborOn();
   renderDR();

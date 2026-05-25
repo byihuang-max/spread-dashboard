@@ -10,8 +10,12 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 .section{margin-bottom:24px}
 .signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .signal-main{font-size:18px;font-weight:800}
-.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.signal-badge{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.signal-badge.good{background:rgba(34,197,94,.18);color:#4ade80}
+.signal-badge.warn{background:rgba(245,158,11,.18);color:#fbbf24}
+.signal-badge.risk{background:rgba(239,68,68,.18);color:#f87171}
+.signal-badge.neutral{background:rgba(148,163,184,.15);color:#94a3b8}
 .chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;overflow:hidden}
 .chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
 .chart-wrap{position:relative;height:380px}
@@ -23,13 +27,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 
 <div class="signal-bar">
   <div class="signal-main"> 反脆弱看板</div>
-  <div class="signal-tags">
-    <span class="signal-tag">全球风险资产</span>
-    <span class="signal-tag">归一净值</span>
-    <span class="signal-tag">30天相关性</span>
-    <span class="signal-tag">Meme反身性信号</span>
+  <div class="signal-badges">
+    <span class="signal-badge neutral">反身性 34.1</span>
+    <span class="signal-badge neutral">联动 30.4%ile</span>
+    <span class="signal-badge neutral">量能 -5.1</span>
+    <span class="signal-badge good">相关性 0.27</span>
   </div>
-  <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: 2026-05-25 17:05:52</div>
+</div>
 </div>
 
 
@@ -484,125 +488,59 @@ new Chart(document.getElementById('medianChart'),{
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
         <h2 style="margin:0;font-size:15px;font-weight:700;color:#1e293b;">
           <span style="display:inline-block;width:14px;color:#64748b;font-size:12px;transition:transform .2s;" class="oseas-caret">▶</span>
-          🌍 海外一手要闻 Top 10
+          🌍 海外一手要闻 Top 4
           <span style="font-size:11px;color:#94a3b8;font-weight:400;margin-left:6px;">（点击展开）</span>
         </h2>
-        <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · 05-25 17:08 · 当前窗口 16 条</span>
+        <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · 05-25 08:22 · 当前窗口 4 条</span>
       </div>
     </summary>
     <p style="margin:12px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
       来源：彭博 / 路透 / 华尔街日报等一手外媒（邮箱推送）。每天 <b>08:30 / 20:30</b> 由 Claude Opus 4.7 精筛有参考价值的事件（最多 10 条，宁缺毋滥），给出一句话归纳 + 风险等级 + 受影响资产。
     </p>
     
-<div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">1.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">跨境券商打击</span>
-    <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">霍尔木兹通航恢复</span>
+    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">北京对非法跨境股票交易实施最严厉打击以阻止资本外流，中国投资者紧急寻找替代渠道交易海外股票。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">中概股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美股</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：跨境流动打击后中国贸易商纷纷撤离</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-25/china-traders-rush-for-exit-after-cross-border-flow-crackdown" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">搁浅近三月的中东油气船重启发往中巴航线，霍尔木兹紧张缓解，原油供应风险溢价回落。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">原油</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">航运股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：载有中东石油和液化天然气的船只离开霍尔木兹，前往巴基斯坦和中国</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/business/energy/vessels-carrying-middle-east-oil-lng-exit-hormuz-head-pakistan-china-2026-05-25/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
-<div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">2.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">跨境打击波及港股</span>
-    <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">伊拉克原油运华</span>
+    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中信证券估算跨境股票交易打击可能影响香港高达2500亿港元（320亿美元）资产，港股资金面承压。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">券商股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中信称中国交易限制可能会打击320亿港元资产</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-25/china-trading-curbs-may-hit-32-billion-of-hk-assets-citic-says" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">运伊拉克原油赴华超级油轮越过美国封锁线驶出波斯湾，美伊停战谈判持续，中东供应预期改善。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">原油</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">能源股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：随着谈判继续，装载伊拉克原油的超级油轮离开波斯湾</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-24/supertanker-with-iraq-crude-exits-persian-gulf-as-talks-continue" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
-<div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">3.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">华为芯片突破</span>
-    <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">中巴经贸合作</span>
+    <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">华为称五年内高端芯片晶体管密度将达到1.4纳米工艺等效水平，凸显中国对抗美国制裁的国产替代进展。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股半导体</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美股半导体</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">中概股</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国华为在美国制裁中透露芯片设计突破</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/asia-pacific/huawei-proposes-new-path-chip-development-amid-us-sanctions-2026-05-25/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">杭州中巴商务会议签署12.2亿美元合作协议，强化一带一路与中国产能出海叙事。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股基建</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">一带一路概念</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：巴基斯坦和中国公司在会议上签署12.2亿美元的交易</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/asia-pacific/pakistani-chinese-companies-sign-122-billion-deals-conference-2026-05-24/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
-<div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">4.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中美台海博弈</span>
-    <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">台湾外长称美台领导人通话将是积极信号但需美国总统特朗普主动，目前尚无计划，中美关系敏感变量增加。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：台湾称，特朗普的呼吁将是积极的，尚未进行任何计划谈判</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/china/trump-call-would-be-positive-no-planning-talks-have-taken-place-taiwan-says-2026-05-25/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">5.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">山西矿难</span>
-    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">山西致命矿难引发供应中断担忧，中国炼焦煤期货涨停，煤炭股飙升，行业安全检查或扩大冲击。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">煤炭股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">焦煤期货</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">钢铁</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股周期</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国矿难引发煤炭价格和库存上涨</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-25/china-mine-explosion-sees-coking-coal-jump-by-daily-limit" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">6.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">动力煤价格上涨</span>
-    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">伊朗战争扰动叠加中国国内产量下降，亚洲动力煤价格悄然攀升至多年高点，能源板块受益。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">煤炭股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">动力煤</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">电力股</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：亚洲动力煤进口，伊朗战争导致价格上涨，中国产量下降</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/commentary/reuters-open-interest/asia-thermal-coal-imports-prices-lift-amid-iran-war-china-output-drop-2026-05-25/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">7.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中外车企合作</span>
-    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">全球汽车巨头Stellantis加速与中国竞争对手合作以求生存，反映中国车企在电动化领域的全球话语权抬升。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股新能源车</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股汽车</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">锂电池</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：西方汽车巨头找到了救命稻草：与中国新贵合作</div>
-  <div style="margin-top:8px;"><a href="https://www.wsj.com/business/autos/stellantis-manufacturing-china-c2c34e8f" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">8.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">光伏装机走弱</span>
-    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国4月新增太阳能装机连续第四个月下降，国内需求持续疲软，光伏产业链景气度承压。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">光伏股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">多晶硅</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股新能源</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国太阳能装机量连续第四个月下降</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-25/china-s-solar-installations-fall-for-fourth-straight-month" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">9.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">人民币影响有限</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">华为汽车高端化</span>
     <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">马来亚银行分析师认为中国打击非法跨境交易对人民币汇率走势影响有限，资本管控信号大于实际冲击。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">离岸人民币</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：跨境交易打击后人民币可能受到有限影响</div>
-  <div style="margin-top:8px;"><a href="https://www.wsj.com/finance/currencies/risk-assets-firmer-on-u-s-iran-de-escalation-hopes-oil-key-swing-factor-52fde778" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
-</div>
-<div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
-    <span style="font-size:12px;font-weight:700;color:#64748b;">10.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">亚洲出口强劲</span>
-    <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
-  </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">泰国4月出口同比增长23.1%超预期，电子和汽车对美中需求强劲，反映抢出口效应及亚洲产业链景气延续。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股出口链</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">电子</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">汽车</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：泰国四月出口增长超出预期，美国和中国需求强劲</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/asia-pacific/thai-april-exports-rise-231-year-beating-forecast-2026-05-25/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">搭载华为技术的Maextro豪华车售价约17.3万美元对标劳斯莱斯，国产高端智能车产业链获关注。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">华为概念</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">汽车股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">智能驾驶</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：这是中国对劳斯莱斯的回应——而且里面装满了小玩意</div>
+  <div style="margin-top:8px;"><a href="https://www.wsj.com/business/autos/its-chinas-answer-to-a-rolls-royceand-its-stuffed-with-gadgets-ef27bdf9" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
 </div>
     <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
       数据源：QQ 邮箱 IMAP → hszxboss@qq.com 转发。更新脚本：<code>daily_report/meme交易/overseas_digest.py</code>
@@ -833,7 +771,6 @@ new Chart(document.getElementById('medianChart'),{
   }
   if(!isBloomberg) return;
 
-  // 1. 注入暗色 CSS
   var s = document.createElement('style');
   s.textContent = `
     body{background:#0a0a0a!important;color:#ccc!important}
@@ -861,7 +798,6 @@ new Chart(document.getElementById('medianChart'),{
   `;
   document.head.appendChild(s);
 
-  // 2. Chart.js afterLayout 钩子 - 网格线暗色
   function hookCharts(){
     if(typeof Chart==='undefined')return false;
     Chart.register({
@@ -884,7 +820,6 @@ new Chart(document.getElementById('medianChart'),{
   }
   if(!hookCharts()){var i=setInterval(function(){if(hookCharts())clearInterval(i)},200);}
 
-  // 3. 中位数图表隐藏灰色参考线
   var hideLabels = ['纳斯达克100','标普500','恒生科技ETF','科创50ETF','日经225','韩国KOSPI'];
   function hideGrayInMedChart(){
     if(typeof Chart==='undefined' || !Chart.instances) return false;
