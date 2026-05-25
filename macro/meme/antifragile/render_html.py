@@ -659,15 +659,12 @@ new Chart(document.getElementById('memeVaChart'), {{
     med_labels_json    = json.dumps(median_dates)
     med_datasets_json  = json.dumps(median_datasets)
 
-    # ─── 表头 badge 数据 ───
+    # ─── 表头 signal-tags（动态数据badge） ───
     _cur = meme_data.get('current', {}) if meme_data else {}
     _phase = _cur.get('phase', {})
-    badge_murmur = _cur.get('meme_score', '--')
-    badge_murmur_color = '#dc2626' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 60 else ('#f59e0b' if isinstance(badge_murmur, (int,float)) and badge_murmur >= 40 else '#16a34a')
-    badge_nli = f"{_cur.get('nli_percentile', '--'):.0f}" if isinstance(_cur.get('nli_percentile'), (int,float)) else '--'
-    badge_nli_color = '#dc2626' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 70 else ('#f59e0b' if isinstance(_cur.get('nli_percentile'), (int,float)) and _cur['nli_percentile'] >= 50 else '#16a34a')
-    badge_va = f"{_cur.get('va', '--'):.1f}" if isinstance(_cur.get('va'), (int,float)) else '--'
-    badge_va_color = '#16a34a' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] > 0 else ('#dc2626' if isinstance(_cur.get('va'), (int,float)) and _cur['va'] < -10 else '#f59e0b')
+    _score = _cur.get('meme_score', None)
+    _nli_pct = _cur.get('nli_percentile', None)
+    _va = _cur.get('va', None)
     # 30天平均相关性
     try:
         _corr_matrices = corr_data.get('corr_matrices', {})
@@ -675,11 +672,23 @@ new Chart(document.getElementById('memeVaChart'), {{
         _m = _corr_matrices.get(_last_date, {})
         _assets = list(_m.keys())
         _corr_vals = [_m[a][b] for i,a in enumerate(_assets) for b in _assets[i+1:]]
-        badge_corr = f"{sum(_corr_vals)/len(_corr_vals):.2f}" if _corr_vals else '--'
-        badge_corr_color = '#dc2626' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.5 else ('#f59e0b' if _corr_vals and sum(_corr_vals)/len(_corr_vals) > 0.3 else '#16a34a')
+        _avg_corr = sum(_corr_vals)/len(_corr_vals) if _corr_vals else None
     except:
-        badge_corr = '--'
-        badge_corr_color = '#8b92a5'
+        _avg_corr = None
+
+    signal_tags_html = ''
+    if _score is not None:
+        cls = 'risk' if _score >= 60 else ('warn' if _score >= 40 else 'good')
+        signal_tags_html += f'<span class="signal-tag {cls}">反身性 {_score}</span>'
+    if _nli_pct is not None:
+        cls = 'risk' if _nli_pct >= 70 else ('warn' if _nli_pct >= 50 else 'good')
+        signal_tags_html += f'<span class="signal-tag {cls}">联动 {_nli_pct:.0f}%ile</span>'
+    if _va is not None:
+        cls = 'good' if _va > 0 else ('risk' if _va < -10 else 'warn')
+        signal_tags_html += f'<span class="signal-tag {cls}">量能 {_va:.1f}</span>'
+    if _avg_corr is not None:
+        cls = 'risk' if _avg_corr > 0.5 else ('warn' if _avg_corr > 0.3 else 'good')
+        signal_tags_html += f'<span class="signal-tag {cls}">相关性 {_avg_corr:.2f}</span>'
 
     # ─────────────────────────────────────────────
     # HTML 输出
@@ -701,6 +710,9 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 .signal-tag.good{{background:rgba(34,197,94,0.2);color:#4ade80}}
 .signal-tag.risk{{background:rgba(239,68,68,0.2);color:#f87171}}
 .signal-tag.warn{{background:rgba(245,158,11,0.25);color:#fbbf24}}
+.signal-tag.good{{background:rgba(34,197,94,0.2);color:#4ade80}}
+.signal-tag.risk{{background:rgba(239,68,68,0.2);color:#f87171}}
+.signal-tag.warn{{background:rgba(245,158,11,0.25);color:#fbbf24}}
 .summary-cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}}
 .s-card{{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}}
 .s-card .s-label{{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}}
@@ -718,19 +730,9 @@ body{{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgr
 <div class="signal-bar">
   <div class="signal-main"> 反脆弱看板</div>
   <div class="signal-tags">
-    <span class="signal-tag">全球风险资产</span>
-    <span class="signal-tag">归一净值</span>
-    <span class="signal-tag">30天相关性</span>
-    <span class="signal-tag">Meme反身性信号</span>
+    {signal_tags_html}
   </div>
   <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: {update_time}</div>
-</div>
-
-<div class="summary-cards">
-  <div class="s-card"><div class="s-label">反身性信号</div><div class="s-value" style="color:{badge_murmur_color}">{badge_murmur}</div><div class="s-sub">{_phase.get('label','')}</div></div>
-  <div class="s-card"><div class="s-label">联动指数分位</div><div class="s-value" style="color:{badge_nli_color}">{badge_nli}</div></div>
-  <div class="s-card"><div class="s-label">量能加速度</div><div class="s-value" style="color:{badge_va_color}">{badge_va}</div></div>
-  <div class="s-card"><div class="s-label">30天相关性</div><div class="s-value" style="color:{badge_corr_color}">{badge_corr}</div></div>
 </div>
 
 {meme_section_html}
