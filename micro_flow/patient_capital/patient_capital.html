@@ -352,39 +352,22 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
     <div class="chart-container" style="height: 520px;"><canvas id="mainChart"></canvas></div>
 </div>
 
-<!-- ═══ 方法论说明 ═══ -->
-<div class="methodology">
-    <h3> 计算方法论</h3>
-    <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-text"><b>数据粒度</b> — 拉取每只ETF的 <b>15分钟K线</b>（开盘、收盘、成交量、成交额），同一指数下多只ETF成交额<b>加总</b>。</div>
+<!-- ═══ 指标说明 ═══ -->
+<div class="card" style="padding:14px;font-size:11px;color:var(--text-sub,#64748b);line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:var(--text,#374151);margin-bottom:6px"> 指标说明</div>
+    <p><b>数据粒度：</b>每只ETF的15分钟K线（开盘、收盘、成交量、成交额），同一指数下多只ETF成交额加总</p>
+    <p><b>双基线分离：</b>20日同一时段成交额中位数×1.5（绝对大单）+ 5日同一时段成交额中位数×1.3（近期托盘/徐徐买入），任一满足则视为异常增量资金</p>
+    <p><b>买卖方向判定：</b>异常放量bar阳线（收盘≥开盘）→ 买入；阴线（收盘＜开盘）→ 卖出</p>
+    <p><b>滚动成本：</b>买入用加权均价法累计（成本 = Σ买入金额 ÷ Σ买入股数），卖出按均价法减仓</p>
+    <p><b>浮盈浮亏：</b>PnL = (当前收盘价 - 持仓成本) ÷ 持仓成本 × 100%</p>
+    <p><b>异常高亮：</b>浮盈超50%标注橙色预警；累计持仓超800亿标注红色预警</p>
+    <p style="margin-top:8px">
+      <b style="cursor:pointer" onclick="var d=document.getElementById('indices-detail');d.style.display=d.style.display==='none'?'block':'none'"> 跟踪标的 ▾</b>
+    </p>
+    <div id="indices-detail" style="display:none;margin-top:4px;padding:8px 12px;background:var(--card-bg,#f8fafc);border:1px solid var(--border,#e8eaef);border-radius:4px">
+      <div id="indicesList"></div>
     </div>
-    <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-text"><b>双基线分离</b> — 对每个15分钟切片同时看两把尺子：<b>20日同一时段成交额中位数×1.5</b>，用于识别“绝对底部/绝对买入”级别的大单；<b>5日同一时段成交额中位数×1.3</b>，用于识别近期相对放量的“托盘/徐徐买入”。只要任一条件满足，就把超出阈值的部分视为异常增量资金。</div>
-    </div>
-    <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-text"><b>买卖方向判定</b> — 看异常放量bar的涨跌方向：<b>阳线（收盘≥开盘）→ 买入</b>；<b>阴线（收盘＜开盘）→ 卖出</b>。大资金托底推升价格为买入，砸盘压低价格为卖出。</div>
-    </div>
-    <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-text"><b>滚动成本计算</b> — 买入用加权均价法累计：成本 = Σ买入金额 ÷ Σ买入股数。卖出按均价法减仓。累计持仓 = 净股数 × 当日收盘价。</div>
-    </div>
-    <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-text"><b>浮盈浮亏</b> — PnL = (当前收盘价 - 持仓成本) ÷ 持仓成本 × 100%</div>
-    </div>
-    <div class="note">
-        ⚠ <b>异常高亮规则：</b>浮盈超过 50% 标注<span style="color:#b45309;font-weight:700">橙色预警</span>；累计持仓超过 800亿 标注<span style="color:#dc2626;font-weight:700">红色预警</span>。两者同时触发以红色为准。
-    </div>
-    <div style="margin-top:12px">
-        <b>跟踪标的：</b>
-        <div class="indices-list" id="indicesList"></div>
-    </div>
-    <div style="margin-top:8px;font-size:11px;color:#9ca3af">
-        数据起算：2023-07-03 | 数据源：Tushare 15min K线 | 双基线：20日中位数×1.5（绝对大单） + 5日中位数×1.3（近期托盘/徐徐买入）
-    </div>
+    <p style="margin-top:6px;color:#94a3b8">数据起算：2023-07-03 | 数据源：Tushare 15min K线 | 双基线：20日中位数×1.5 + 5日中位数×1.3</p>
 </div>
 
 <script>
@@ -417,10 +400,11 @@ async function loadData() {
 function renderIndicesList() {
     const el = document.getElementById('indicesList');
     for (const [name, info] of Object.entries(DATA.indices)) {
-        const tag = document.createElement('span');
-        tag.className = 'idx-tag';
-        tag.textContent = `${name}（${info.etfs.length}只ETF）`;
-        el.appendChild(tag);
+        const div = document.createElement('div');
+        div.style.cssText = 'margin-bottom:6px';
+        const etfNames = info.etfs.map(e => e.name || e.code || e).join('、');
+        div.innerHTML = `<b>${name}</b>（${info.etfs.length}只）：${etfNames}`;
+        el.appendChild(div);
     }
 }
 
@@ -561,9 +545,9 @@ function selectIndex(name) {
     const signalColor = signalType === '双重异常' ? '#dc2626' : signalType === '20日异常' ? '#b45309' : signalType === '5日异常' ? '#2563eb' : '';
     const titleEl = document.getElementById('chartTitle');
     if (signalText) {
-        titleEl.innerHTML = `${name} — 耐心资本持仓估算 <span style="font-size:13px;color:${signalColor};font-weight:600;margin-left:8px;"> ${signalText}</span>`;
+        titleEl.innerHTML = `${name} - 耐心资本持仓估算 <span style="font-size:13px;color:${signalColor};font-weight:600;margin-left:8px;"> ${signalText}</span>`;
     } else {
-        titleEl.textContent = name + ' — 耐心资本持仓估算';
+        titleEl.textContent = name + ' - 耐心资本持仓估算';
     }
     renderCharts();
 }
