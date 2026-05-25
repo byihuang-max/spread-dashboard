@@ -9,20 +9,42 @@
   --bg:#000;--surface:#0a0a0a;--surface-2:#141414;
   --border:#2a2a2a;--border-light:#333;
   --text:#fff;--text-dim:#999;--text-muted:#666;
-  --orange:#ff8c00;
+  --orange:#ff8c00;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
   --mono:'JetBrains Mono','SF Mono','Fira Code',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12px;line-height:1.4;padding:12px}
+body{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:12px;line-height:1.4;padding:12px}
 .c-orange{color:var(--orange)}
+.c-green{color:var(--green)}
+.c-red{color:var(--red)}
 .c-dim{color:var(--text-dim)}
 .c-muted{color:var(--text-muted)}
 
-.alert-bar{background:#1a0f00;border:1px solid var(--orange);padding:6px 10px;margin-bottom:10px;font-size:11px;display:flex;gap:10px;align-items:center}
+/* ── Brief Bar ── */
+.brief-bar{background:#0a0f00;border:1px solid #2a3a1a;padding:10px 14px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px}
+.brief-headline{font-size:13px;font-weight:700;color:var(--text);line-height:1.4}
+.brief-sub{font-size:11px;color:var(--text-dim);line-height:1.5}
+.brief-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.brief-action{font-size:10px;padding:3px 8px;border:1px solid var(--border-light);background:var(--surface-2);color:var(--orange);cursor:default;letter-spacing:0.5px}
+.brief-action.negative{color:var(--red);border-color:#3a2020}
+.brief-action.positive{color:var(--green);border-color:#1a3a1a}
 
+/* ── Panels ── */
 .panel{background:var(--surface);border:1px solid var(--border);margin-bottom:10px}
 .panel-header{background:#141414;padding:5px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--orange);text-transform:uppercase}
 .panel-body{padding:10px}
+
+/* ── Macro Hero ── */
+.macro-hero{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.score-big{font-size:48px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;color:var(--text)}
+.score-label{font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.phase-text{font-size:13px;font-weight:600;margin-top:4px;color:var(--text-dim)}
+.score-delta{font-size:11px;margin-top:2px}
+.score-delta.up{color:var(--green)}
+.score-delta.down{color:var(--red)}
+.score-delta.flat{color:var(--text-muted)}
+
+.signal-line{font-size:11px;padding:2px 0;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .data-cell{padding:8px 10px;background:var(--surface-2);border:1px solid var(--border)}
@@ -30,59 +52,84 @@ body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12
 .data-cell .value{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2;color:var(--text)}
 .data-cell .sub{font-size:10px;color:var(--text-dim);margin-top:2px}
 
+/* ── Strategy Table ── */
 .strat-table{width:100%;border-collapse:collapse;font-size:11px}
 .strat-table th{background:#141414;padding:6px 10px;text-align:left;color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
 .strat-table td{padding:7px 10px;border-bottom:1px solid #1a1a1a;color:var(--text-dim)}
 .strat-table tr:hover td{background:#0f0f0f}
+.strat-table tr.highlight td{background:#0f1a00;border-bottom-color:#2a3a1a}
+.strat-table tr.highlight-warn td{background:#1a0f00;border-bottom-color:#3a2a1a}
 .score-cell{font-weight:700;font-variant-numeric:tabular-nums;font-size:13px;color:var(--text)}
 .score-bar{display:inline-block;width:60px;height:5px;background:#1a1a1a;position:relative;vertical-align:middle}
-.score-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--orange)}
+.score-bar-fill{position:absolute;left:0;top:0;height:100%;transition:width .3s}
+.level-friendly{color:var(--green)}
+.level-neutral{color:var(--yellow)}
+.level-cautious{color:var(--orange)}
+.level-unfriendly{color:var(--red)}
+.delta-badge{font-size:9px;padding:1px 5px;margin-left:6px;font-weight:600;vertical-align:middle}
+.delta-badge.up{color:var(--green);border:1px solid #1a3a1a;background:#0a1a00}
+.delta-badge.down{color:var(--red);border:1px solid #3a1a1a;background:#1a0a00}
 
-.macro-hero{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
-.score-big{font-size:48px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;color:var(--text)}
-.score-label{font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.phase-text{font-size:13px;font-weight:600;margin-top:4px;color:var(--text-dim)}
+/* ── Bottom Row ── */
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.tag{display:inline-block;padding:2px 8px;font-size:10px;margin:2px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim)}
+/* ── Key Changes ── */
+.change-item{font-size:11px;padding:5px 0;border-bottom:1px solid #1a1a1a;color:var(--text-dim);display:flex;align-items:baseline;gap:6px}
+.change-item:last-child{border-bottom:0}
+.change-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.change-dot.hot{background:var(--orange)}
+.change-dot.good{background:var(--green)}
+.change-dot.bad{background:var(--red)}
+.change-dot.neutral{background:var(--text-muted)}
 
+/* ── Allocation ── */
+.alloc-stacked{display:flex;height:28px;border:1px solid var(--border);margin-bottom:8px;overflow:visible;position:relative}
+.alloc-stacked-seg{height:100%;position:relative;transition:opacity .15s;cursor:default}
+.alloc-stacked-seg:hover{opacity:.75}
+.alloc-stacked-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px;font-weight:500;color:rgba(255,255,255,.9);pointer-events:none;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:2}
+.alloc-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:10px}
+.alloc-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-dim)}
+.alloc-legend-swatch{width:10px;height:10px;flex-shrink:0}
 .alloc-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;border-bottom:1px solid #1a1a1a}
 .alloc-row:last-child{border-bottom:0}
+.alloc-row.has-delta{background:#0a0f00}
 .alloc-bar{flex:1;height:5px;background:#1a1a1a;position:relative}
-.alloc-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--orange);opacity:.7}
+.alloc-bar-fill{position:absolute;left:0;top:0;height:100%;opacity:.7}
 .alloc-name{width:90px;color:var(--text-dim)}
 .alloc-pct{width:50px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--text)}
-.alloc-delta{width:55px;text-align:right;font-size:10px;font-variant-numeric:tabular-nums;color:var(--text-muted)}
+.alloc-delta{width:55px;text-align:right;font-size:10px;font-variant-numeric:tabular-nums}
+.alloc-delta.up{color:var(--green)}
+.alloc-delta.down{color:var(--red)}
+.alloc-delta.flat{color:var(--text-muted)}
 
-.signal-line{font-size:11px;padding:2px 0;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.loading{text-align:center;padding:60px;color:var(--text-muted)}
-
-.mod-table{width:100%;border-collapse:collapse;font-size:11px}
-.mod-table th{background:#141414;padding:6px 10px;text-align:left;color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
-.mod-table td{padding:7px 10px;border-bottom:1px solid #1a1a1a;color:var(--text-dim);vertical-align:top}
-.mod-table tr:hover td{background:#0f0f0f}
-.mod-name{font-weight:700;color:var(--text);white-space:nowrap}
-.mod-status-on{color:var(--orange);font-size:10px;font-weight:600}
-.mod-status-off{color:var(--text-muted);font-size:10px;font-weight:600}
-
+/* ── Footer ── */
 .bloomberg-tagline{color:var(--text-muted);font-size:10px;letter-spacing:2px}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .macro-hero{grid-template-columns:1fr;gap:12px}
+  .row-2{grid-template-columns:1fr}
+  .data-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+.loading{text-align:center;padding:60px;color:var(--text-muted)}
 </style>
 </head>
 <body>
 <div id="loading" class="loading">LOADING DATA...</div>
 <div id="content" style="display:none">
 
-  <!-- Alert Bar -->
-  <div class="alert-bar">
-    <span class="c-orange">▲ ALERT</span>
-    <span id="alert-text" class="c-dim">--</span>
-    <span style="margin-left:auto;color:var(--text-muted);font-size:10px" id="update-time">--</span>
+  <!-- ══ TODAY'S BRIEF ══ -->
+  <div class="brief-bar" id="brief-bar">
+    <div class="brief-headline" id="brief-headline">--</div>
+    <div class="brief-sub" id="brief-sub">--</div>
+    <div class="brief-actions" id="brief-actions"></div>
   </div>
 
-  <!-- Macro Panel -->
+  <!-- ══ MACRO ENVIRONMENT ══ -->
   <div class="panel">
     <div class="panel-header">
-      <span>MACRO ENVIRONMENT</span>
+      <span>MACRO ENVIRONMENT · 宏观环境</span>
       <span id="macro-date" class="c-muted" style="font-weight:400;letter-spacing:0">--</span>
     </div>
     <div class="panel-body">
@@ -105,18 +152,29 @@ body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12
     </div>
   </div>
 
-  <!-- Strategy Fitness -->
+  <!-- ══ KEY CHANGES ══ -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>KEY CHANGES · 今日关键变化</span>
+      <span class="c-muted" style="font-weight:400;letter-spacing:0" id="changes-count">--</span>
+    </div>
+    <div class="panel-body" id="changes-body">
+      <div class="c-muted" style="text-align:center;padding:12px">加载中...</div>
+    </div>
+  </div>
+
+  <!-- ══ STRATEGY FITNESS ══ -->
   <div class="panel">
     <div class="panel-header">
       <span>STRATEGY FITNESS · 策略适配度</span>
-      <span class="c-muted" style="font-weight:400;letter-spacing:0">6 STRATEGIES</span>
+      <span class="c-muted" style="font-weight:400;letter-spacing:0">SORTED BY DEVIATION</span>
     </div>
     <div class="panel-body" style="padding:0">
       <table class="strat-table">
         <thead>
           <tr>
             <th>Strategy</th>
-            <th style="width:60px">Score</th>
+            <th style="width:70px">Score</th>
             <th style="width:90px">Level</th>
             <th style="width:80px">Bar</th>
             <th>Key Signal</th>
@@ -127,35 +185,24 @@ body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12
     </div>
   </div>
 
-  <!-- Module Status + Allocation -->
+  <!-- ══ ALLOCATION + ACTIVE MODULES ══ -->
   <div class="row-2">
-    <!-- Module Status -->
-    <div class="panel">
-      <div class="panel-header">
-        <span>MODULE STATUS · 模块状态</span>
-        <span class="c-muted" style="font-weight:400;letter-spacing:0" id="mod-count">--</span>
-      </div>
-      <div class="panel-body" style="padding:0">
-        <table class="mod-table">
-          <thead>
-            <tr>
-              <th>Module</th>
-              <th style="width:50px">Status</th>
-              <th style="width:80px">Updated</th>
-            </tr>
-          </thead>
-          <tbody id="mod-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Allocation -->
     <div class="panel">
       <div class="panel-header">
         <span>ALLOCATION · 配置建议</span>
-        <span class="c-muted" style="font-weight:400;letter-spacing:0">SUGGESTED</span>
+        <span class="c-muted" style="font-weight:400;letter-spacing:0">DELTA HIGHLIGHTED</span>
       </div>
       <div class="panel-body" id="alloc-body"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span>ACTIVE MODULES · 运行中模块</span>
+        <span class="c-muted" style="font-weight:400;letter-spacing:0" id="mod-summary">--</span>
+      </div>
+      <div class="panel-body" id="modules-body">
+        <div class="c-muted" style="text-align:center;padding:20px">加载中...</div>
+      </div>
     </div>
   </div>
 
@@ -184,10 +231,17 @@ const MACRO_DETAIL_LABEL = {
 };
 
 function levelByScore(s){
-  if(s>=70)return 'FRIENDLY';
-  if(s>=55)return 'NEUTRAL';
-  if(s>=40)return 'CAUTIOUS';
-  return 'UNFRIENDLY';
+  if(s>=70)return {text:'FRIENDLY',cls:'level-friendly'};
+  if(s>=55)return {text:'NEUTRAL',cls:'level-neutral'};
+  if(s>=40)return {text:'CAUTIOUS',cls:'level-cautious'};
+  return {text:'UNFRIENDLY',cls:'level-unfriendly'};
+}
+
+function barColor(s){
+  if(s>=70)return 'var(--green)';
+  if(s>=55)return 'var(--yellow)';
+  if(s>=40)return 'var(--orange)';
+  return 'var(--red)';
 }
 
 function loadAll(){
@@ -198,25 +252,67 @@ function loadAll(){
 }
 
 loadAll().then(([S, D])=>{
-  // ===== Macro =====
-  const sc = S.macro.total;
-  document.getElementById('macro-score').textContent = Math.round(sc);
-  document.getElementById('macro-phase').textContent = (S.macro.emoji||'') + ' ' + (S.macro.phase||'');
+  // ===== TODAY'S BRIEF =====
+  const hyp = S.macro.macro_hypothesis || {};
+  const strategies = S.strategies || {};
+  
+  // Find most deviated strategy (furthest from 50)
+  const stratEntries = Object.entries(strategies);
+  const sorted = stratEntries.sort((a,b) => Math.abs(b[1].score-50) - Math.abs(a[1].score-50));
+  const topStrat = sorted[0];
+  const topStratLabel = (topStrat[1].label || STRAT_LABEL[topStrat[0]] || topStrat[0]).split(' ').pop();
+  const topStratScore = topStrat[1].score;
+  
+  // Headline: macro phase + top strategy call
+  const macroScore = Math.round(S.macro.total);
+  const phase = S.macro.phase || '--';
+  let headline = `MACRO ${macroScore} · ${phase}`;
+  if(hyp.brief) headline += ` — ${hyp.brief}`;
+  document.getElementById('brief-headline').textContent = headline;
+  
+  // Sub: actionable insight
+  const actionItems = [];
+  stratEntries.forEach(([k,v])=>{
+    const sc = v.score;
+    const label = (v.label || STRAT_LABEL[k] || k).split(' ').pop();
+    if(sc >= 75) actionItems.push({text:`${label} 环境友好 ${sc}`,cls:'positive'});
+    else if(sc <= 35) actionItems.push({text:`${label} 环境恶化 ${sc}`,cls:'negative'});
+  });
+  
+  // Allocation changes
+  const alloc = S.allocation || {};
+  Object.entries(alloc).forEach(([k,v])=>{
+    if(Math.abs(v.delta||0) >= 2){
+      const dir = v.delta > 0 ? '↑' : '↓';
+      actionItems.push({text:`${v.label||k} ${dir}${Math.abs(v.delta).toFixed(1)}%`,cls:v.delta>0?'positive':'negative'});
+    }
+  });
+  
+  const briefSub = hyp.summary || (topStrat[1].signals||[])[0] || '市场环境观察中';
+  document.getElementById('brief-sub').textContent = briefSub;
+  
+  const actionsEl = document.getElementById('brief-actions');
+  if(actionItems.length > 0){
+    actionsEl.innerHTML = actionItems.map(a=>`<span class="brief-action ${a.cls}">${a.text}</span>`).join('');
+  } else {
+    actionsEl.innerHTML = '<span class="brief-action">无显著异动</span>';
+  }
+
+  // ===== MACRO =====
+  document.getElementById('macro-score').textContent = macroScore;
+  document.getElementById('macro-phase').textContent = (S.macro.emoji||'') + ' ' + phase;
   document.getElementById('macro-date').textContent = S.update_time || '--';
-  document.getElementById('update-time').textContent = 'UPDATED ' + (S.update_time || '--');
 
   const sigs = S.macro.raw_signals || [];
-  const topSig = sigs.find(s => /🔴|⚠/.test(s)) || sigs[0] || '宏观环境观察中';
-  document.getElementById('alert-text').textContent = topSig.replace(/[🔴🟢🟡⚠️▲]/g,'').trim();
-
   document.getElementById('macro-signals').innerHTML = sigs.slice(0,4).map(s=>
     '<div class="signal-line">' + s.replace(/[🔴🟢🟡⚠️▲]/g,'').trim() + '</div>'
   ).join('');
 
   const mc = S.macro.merrill_clock||{};
-  document.getElementById('macro-merrill').textContent =
-    (mc.phase||'--') +
-    (mc.pmi?' / PMI '+mc.pmi:'') +
+  document.getElementById('macro-merrill').innerHTML =
+    (mc.phase||'--') + '<br>' +
+    (mc.advice||'') +
+    (mc.pmi?'<br>PMI '+mc.pmi:'') +
     (mc.cpi?' / CPI '+mc.cpi+'%':'');
 
   const detail = S.macro.detail || {};
@@ -224,60 +320,156 @@ loadAll().then(([S, D])=>{
     Object.keys(MACRO_DETAIL_LABEL).map(k=>{
       const d = detail[k] || {};
       const v = Math.round(d.score||0);
+      const lv = levelByScore(v);
       return '<div class="data-cell">' +
         '<div class="label">' + MACRO_DETAIL_LABEL[k] + '</div>' +
-        '<div class="value">' + v + '</div>' +
-        '<div class="sub">' + (d.summary || levelByScore(v)) + '</div>' +
+        '<div class="value" style="color:' + barColor(v) + '">' + v + '</div>' +
+        '<div class="sub">' + lv.text + '</div>' +
       '</div>';
     }).join('');
 
-  // ===== Strategy =====
-  const stratOrder = ['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol'];
-  document.getElementById('strat-tbody').innerHTML = stratOrder.map(k=>{
-    const st = S.strategies[k] || {};
+  // ===== KEY CHANGES =====
+  const modules = (D && D.modules) || (D && D.module_groups) || [];
+  const allSignals = [];
+  modules.forEach(m=>{
+    (m.signals||[]).forEach(sig=>{
+      allSignals.push({module:m.name, signal:sig});
+    });
+  });
+  
+  const changesBody = document.getElementById('changes-body');
+  document.getElementById('changes-count').textContent = allSignals.length + ' SIGNALS';
+  
+  if(allSignals.length > 0){
+    changesBody.innerHTML = allSignals.slice(0,8).map(item=>{
+      let dotCls = 'neutral';
+      if(/🔥|高拥挤|恶化|下行/.test(item.signal)) dotCls = 'hot';
+      else if(/🟢|改善|上行|领跑/.test(item.signal)) dotCls = 'good';
+      else if(/🔴|风险|下跌/.test(item.signal)) dotCls = 'bad';
+      
+      const cleanSig = item.signal.replace(/[🔴🟢🟡⚠️▲🔥]/g,'').trim();
+      return `<div class="change-item"><span class="change-dot ${dotCls}"></span><span>${cleanSig}</span></div>`;
+    }).join('');
+  } else {
+    changesBody.innerHTML = '<div class="c-muted" style="text-align:center;padding:12px">暂无变化信号</div>';
+  }
+
+  // ===== STRATEGY FITNESS (sorted by deviation) =====
+  const stratSorted = stratEntries.sort((a,b) => Math.abs(b[1].score-50) - Math.abs(a[1].score-50));
+  document.getElementById('strat-tbody').innerHTML = stratSorted.map(([k,st])=>{
     const sc2 = st.score || 0;
+    const lv = levelByScore(sc2);
     const sigShow = (st.signals||[])[0] || '--';
-    return '<tr>' +
-      '<td class="mod-name">' + (st.label || STRAT_LABEL[k] || k) + '</td>' +
-      '<td class="score-cell">' + sc2 + '</td>' +
-      '<td>' + levelByScore(sc2) + '</td>' +
-      '<td><span class="score-bar"><span class="score-bar-fill" style="width:' + sc2 + '%"></span></span></td>' +
+    const deviation = Math.abs(sc2 - 50);
+    
+    // Highlight rows with strong signals
+    let rowClass = '';
+    if(sc2 >= 75) rowClass = 'highlight';
+    else if(sc2 <= 35) rowClass = 'highlight-warn';
+    
+    // Delta badge (deviation from neutral)
+    let deltaBadge = '';
+    if(sc2 >= 70) deltaBadge = `<span class="delta-badge up">+${(sc2-50).toFixed(0)}</span>`;
+    else if(sc2 <= 35) deltaBadge = `<span class="delta-badge down">${(sc2-50).toFixed(0)}</span>`;
+    
+    return `<tr class="${rowClass}">` +
+      '<td style="color:var(--text)">' + (st.label || STRAT_LABEL[k] || k) + '</td>' +
+      '<td class="score-cell">' + sc2 + deltaBadge + '</td>' +
+      `<td class="${lv.cls}">${lv.text}</td>` +
+      `<td><span class="score-bar"><span class="score-bar-fill" style="width:${sc2}%;background:${barColor(sc2)}"></span></span></td>` +
       '<td>' + sigShow.replace(/[🔴🟢🟡⚠️▲]/g,'').trim() + '</td>' +
     '</tr>';
   }).join('');
 
-  // ===== Module Status =====
-  const groups = (D && D.module_groups) || [];
-  document.getElementById('mod-count').textContent = groups.length + ' MODULES';
-  document.getElementById('mod-tbody').innerHTML = groups.map(g=>{
-    const stTxt = g.status==='on'
-      ? '<span class="mod-status-on">● ON</span>'
-      : '<span class="mod-status-off">○ OFF</span>';
-    return '<tr>' +
-      '<td class="mod-name">' + g.name + '</td>' +
-      '<td>' + stTxt + '</td>' +
-      '<td class="c-muted">' + (g.updated || '--') + '</td>' +
-    '</tr>';
-  }).join('') || '<tr><td colspan="3" class="c-muted" style="text-align:center;padding:20px">无数据</td></tr>';
+  // ===== ACTIVE MODULES =====
+  const modList = modules; // reuse from KEY CHANGES
+  const modulesBody = document.getElementById('modules-body');
+  const liveCount = modList.filter(m=>m.status==='on').length;
+  const totalCount = modList.length;
+  
+  // Find latest update time
+  const lastSync = modList.reduce((latest, m)=>{
+    return m.updated && m.updated > latest ? m.updated : latest;
+  }, '--');
+  
+  document.getElementById('mod-summary').textContent = `${liveCount}/${totalCount} LIVE · SYNC ${lastSync}`;
+  
+  if(totalCount > 0){
+    modulesBody.innerHTML = modList.map(m=>{
+      const isOn = m.status === 'on';
+      const statusHtml = isOn
+        ? '<span style="color:var(--green);font-size:10px;font-weight:600">● LIVE</span>'
+        : '<span style="color:var(--orange);font-size:10px;font-weight:600">○ STALE</span>';
+      const sig = (m.signals||[])[0];
+      const sigHtml = sig
+        ? `<div style="font-size:10px;color:var(--text-muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sig.replace(/[🔴🟢🟡⚠️▲🔥]/g,'').trim()}</div>`
+        : '';
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1a1a1a">` +
+        `<div style="flex:1;min-width:0"><span style="font-size:11px;color:var(--text);font-weight:300">${m.name}</span>${sigHtml}</div>` +
+        `<div style="flex-shrink:0;margin-left:8px">${statusHtml}</div>` +
+      `</div>`;
+    }).join('');
+  } else {
+    modulesBody.innerHTML = '<div class="c-muted" style="text-align:center;padding:20px">无模块数据</div>';
+  }
 
-  // ===== Allocation =====
-  const alloc = S.allocation || {};
+  // ===== ALLOCATION (delta highlighted) =====
   const allocOrder = ['quant_stock','momentum_stock','commodity_cta','cb_env','arbitrage','option_vol','cash'];
-  document.getElementById('alloc-body').innerHTML = allocOrder.map(k=>{
+  // Distinct muted colors — low saturation, medium brightness, easy to tell apart on dark bg
+  const allocColors = {
+    quant_stock:'#5b8a72',   // muted teal-green
+    momentum_stock:'#8b6b4a',// muted bronze
+    commodity_cta:'#7a6b8a', // muted purple
+    cb_env:'#4a7a8b',        // muted steel-blue
+    arbitrage:'#8a7b4a',     // muted gold
+    option_vol:'#6b4a5a',    // muted mauve
+    cash:'#3a3a3a'           // dark grey
+  };
+  const allocLabelsShort = {
+    quant_stock:'量化',momentum_stock:'强势',commodity_cta:'CTA',
+    cb_env:'转债',arbitrage:'套利',option_vol:'期权',cash:'现金'
+  };
+  
+  // Stacked bar with inline labels for wide segments
+  const stackedHtml = '<div class="alloc-stacked">' + allocOrder.map(k=>{
+    const v = alloc[k] || {};
+    const pct = v.pct || 0;
+    const label = v.label || k;
+    const shortLabel = allocLabelsShort[k] || k;
+    // Always show inline label
+    const inlineLabel = `<span class="alloc-stacked-label">${shortLabel}</span>`;
+    return `<div class="alloc-stacked-seg" title="${label} ${pct.toFixed(1)}%" style="width:${pct}%;background:${allocColors[k]}">` +
+      inlineLabel +
+    `</div>`;
+  }).join('') + '</div>';
+  
+  // Legend
+  const legendHtml = '<div class="alloc-legend">' + allocOrder.filter(k=>(alloc[k]||{}).pct>0).map(k=>{
+    const v = alloc[k] || {};
+    return `<span class="alloc-legend-item"><span class="alloc-legend-swatch" style="background:${allocColors[k]}"></span>${v.label||k} ${(v.pct||0).toFixed(1)}%</span>`;
+  }).join('') + '</div>';
+  
+  // Detail rows
+  const rowsHtml = allocOrder.map(k=>{
     const v = alloc[k] || {};
     const pct = v.pct || 0;
     const delta = v.delta || 0;
-    let dStr;
-    if(delta>0)dStr='↑'+delta.toFixed(1)+'%';
-    else if(delta<0)dStr='↓'+Math.abs(delta).toFixed(1)+'%';
-    else dStr='--';
-    return '<div class="alloc-row">' +
+    const hasDelta = Math.abs(delta) >= 1;
+    
+    let dStr, dCls;
+    if(delta > 0){dStr='↑'+delta.toFixed(1)+'%'; dCls='up';}
+    else if(delta < 0){dStr='↓'+Math.abs(delta).toFixed(1)+'%'; dCls='down';}
+    else{dStr='--'; dCls='flat';}
+    
+    return `<div class="alloc-row ${hasDelta?'has-delta':''}">` +
       '<span class="alloc-name">' + (v.label || k) + '</span>' +
-      '<span class="alloc-bar"><span class="alloc-bar-fill" style="width:' + pct + '%"></span></span>' +
+      `<span class="alloc-bar"><span class="alloc-bar-fill" style="width:${pct}%;background:${allocColors[k]}"></span></span>` +
       '<span class="alloc-pct">' + pct.toFixed(1) + '%</span>' +
-      '<span class="alloc-delta">' + dStr + '</span>' +
+      `<span class="alloc-delta ${dCls}">${dStr}</span>` +
     '</div>';
   }).join('');
+  
+  document.getElementById('alloc-body').innerHTML = stackedHtml + legendHtml + rowsHtml;
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('content').style.display = '';
