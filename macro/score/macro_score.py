@@ -303,6 +303,28 @@ def fit_quant_stock(config):
                 score -= 5
                 signals.append(f"小盘因子近5日 {chg:.1f}% 🔴")
 
+    # Barra 风格因子信号
+    barra = load("size_spread/data/barra_style_nav.json")
+    if barra:
+        r5 = barra.get("recent_5", {})
+        r20 = barra.get("recent_20", {})
+        names = barra.get("names", {})
+        if r5:
+            # 找近5日涨幅最大和最小的因子
+            sorted_5 = sorted(r5.items(), key=lambda x: x[1], reverse=True)
+            top = sorted_5[0]   # 最强因子
+            bot = sorted_5[-1]  # 最弱因子
+            top_name = names.get(top[0], top[0])
+            bot_name = names.get(bot[0], bot[0])
+            signals.append(f"Barra近5日: {top_name}+{top[1]:.1f}% / {bot_name}{bot[1]:.1f}%")
+            # 近20日趋势性因子（绝对值>2%的）
+            if r20:
+                strong_20 = [(names.get(k,k), v) for k,v in r20.items() if abs(v) >= 2.0]
+                strong_20.sort(key=lambda x: abs(x[1]), reverse=True)
+                if strong_20:
+                    parts = [f"{n}{v:+.1f}%" for n,v in strong_20[:3]]
+                    signals.append(f"Barra 20日趋势: {', '.join(parts)}")
+
         # 基差成本
         basis = qs.get("basis", [])
         if basis:

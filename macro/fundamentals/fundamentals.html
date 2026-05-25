@@ -65,9 +65,26 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;backgro
 [style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
 :root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
 html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card,.clock-card,.hypothesis-card,.h-card,.chain-item,.chart-box{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
+.chart-note{background:#111!important;color:#888!important}
+.hypothesis-card{background:#0a0a0a!important}
+/* 文字层级：标题=橙色, 核心内容=亮白, 次要=中灰, 辅助=暗灰 */
+.hypothesis-title,.chain-name{color:#e8e8e8!important;font-weight:700!important}
+.hypothesis-summary,.chain-desc,.h-card p,.h-card div{color:#bbb!important}
+.hypothesis-badge.conf-high{background:#1a2a1a!important;color:#4ade80!important}
+.hypothesis-badge.conf-mid{background:#1a1a0a!important;color:#fbbf24!important}
+.hypothesis-badge.conf-low{background:#2a1a1a!important;color:#f87171!important}
+.hypothesis-badge.note{background:#1a1a2a!important;color:#818cf8!important}
+.chain-status.support{background:#1a2a1a!important;color:#4ade80!important}
+.chain-status.neutral{background:#1a1a0a!important;color:#fbbf24!important}
+.chain-status.reject{background:#2a1a1a!important;color:#f87171!important}
+.h-card{background:#111!important;border-color:#2a2a2a!important}
+.h-card h4,.h-card h3,.h-card strong,.h-card b{color:#ff8c00!important}
+.clock-info .phase-name{color:#e8e8e8!important}
+.clock-info .phase-advice{color:#bbb!important}
+.clock-info .phase-data{color:#888!important}
 .card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
+
 table{border-collapse:collapse!important}
 table,th,td{border-color:#2a2a2a!important;color:#ccc!important}
 th{background:#111!important;color:#ff8c00!important}
@@ -99,10 +116,10 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
     if(!isBloomberg())return true;
-    Chart.defaults.color=(window.__bbMode==="light"?"#475569":"#888");
-    Chart.defaults.borderColor=(window.__bbMode==="light"?"#e2e8f0":"#2a2a2a");
+    Chart.defaults.color="#888";
+    Chart.defaults.borderColor="#2a2a2a";
     Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
-    Chart.defaults.plugins.legend.labels.color=(window.__bbMode==="light"?"#475569":"#888");
+    Chart.defaults.plugins.legend.labels.color="#888";
     Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
     Chart.defaults.plugins.tooltip.borderColor="#333";
     Chart.register({
@@ -111,7 +128,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
         Object.values(chart.scales).forEach(function(scale){
           if(scale.options.grid){scale.options.grid.display=false;}
           if(scale.options.ticks){
-            scale.options.ticks.color=(window.__bbMode==="light"?"#475569":"#888");
+            scale.options.ticks.color="#888";
           }
         });
       }
@@ -127,7 +144,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   }
 })();
 </script>
-<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";var mode="dark";try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light"){var l2=document.createElement("link");l2.rel="stylesheet";l2.href=pre+"bloomberg-light.css"+v;document.head.appendChild(l2);function addLight(){if(document.body)document.body.classList.add("bb-light");}if(document.body)addLight();else document.addEventListener("DOMContentLoaded",addLight);}}}catch(e){}})();</script>
+<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var l=document.createElement("link");l.rel="stylesheet";l.href="../../bloomberg-override.css?v="+Date.now();document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";}}catch(e){}})();</script>
 </head>
 <body>
 <div class="loading" id="loadingMsg">加载中...</div>

@@ -44,13 +44,14 @@ body {
 }
 .nav-group-title {
   color: #ff8c00 !important;
-  font-size: 9px !important;
-  letter-spacing: 1.5px !important;
-  padding: 8px 14px 3px !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  padding: 10px 14px 4px !important;
+  font-weight: 700 !important;
 }
 .nav-item {
-  font-size: 11px !important;
-  padding: 5px 14px !important;
+  font-size: 10px !important;
+  padding: 7px 14px !important;
   border-radius: 0 !important;
   color: #888 !important;
   border-left: 2px solid transparent !important;
@@ -478,3 +479,174 @@ body[class*="ss-"], body { max-width: none !important; }
 
 /* 通用：取消任何 iframe 内部页面的宽度限制 */
 .container, .wrapper, main, [class*="container"] { max-width: none !important; }
+
+/* ========== inline 浅色背景强制覆盖（Bloomberg 模式）========== */
+/* factor-card / 卡片 inline 背景 */
+[style*="background:#f0fdf4"],
+[style*="background:#fffbeb"],
+[style*="background:#fef2f2"],
+[style*="background:#fef3c7"],
+[style*="background:#fee2e2"],
+[style*="background:#dcfce7"],
+[style*="background:#fef9c3"],
+[style*="background:#e0f2fe"],
+[style*="background:#f1f5f9"],
+[style*="background:#f0f9ff"],
+[style*="background: #f0fdf4"],
+[style*="background: #fffbeb"],
+[style*="background: #fef2f2"]{
+  background:#0a0a0a !important;
+  background-color:#0a0a0a !important;
+}
+
+/* inline border-color 浅灰 */
+[style*="border-color:#bbf7d0"],
+[style*="border-color:#fde68a"],
+[style*="border-color:#fecaca"],
+[style*="border-color:#86efac"],
+[style*="border-color:#fcd34d"],
+[style*="border-color:#fca5a5"]{
+  border-color:#2a2a2a !important;
+}
+
+/* gradient 渐变背景 */
+[style*="linear-gradient(135deg,#f0fdf4"],
+[style*="linear-gradient(135deg,#fffbeb"],
+[style*="linear-gradient(135deg,#fef2f2"],
+[style*="linear-gradient(135deg, #f0fdf4"],
+[style*="linear-gradient(135deg, #fffbeb"],
+[style*="linear-gradient(135deg, #fef2f2"]{
+  background:#0a0a0a !important;
+}
+
+/* deep 文字色（卡片内深灰文字也是要变） */
+[style*="color:#1e293b"],
+[style*="color:#334155"],
+[style*="color:#475569"],
+[style*="color:#64748b"],
+[style*="color: #1e293b"],
+[style*="color: #334155"]{
+  color:#999 !important;
+}
+
+/* ========== quant_stock 专用：narrative + neutral 卡片 ========== */
+.narrative-box{
+  background:#0a0a0a !important;
+  border:1px solid #2a2a2a !important;
+  backdrop-filter:none !important;
+}
+.narrative-text{color:#999 !important}
+.narrative-text .sep{color:#444 !important}
+.narrative-text span{color:#999 !important}
+
+.neutral-box{
+  background:#0a0a0a !important;
+  border:1px solid #2a2a2a !important;
+}
+.neutral-title{color:#888 !important}
+.neutral-metric .val{color:#fff !important}
+.neutral-metric .lab{color:#666 !important}
+.neutral-divider{background:#2a2a2a !important}
+
+/* factor-card 自身 class（兜底，inline style 用 JS 改） */
+.factor-card{background:#0a0a0a !important}
+.factor-label{color:#888 !important}
+.factor-sig{color:#999 !important}
+.factor-bar{background:#1a1a1a !important}
+
+/* ========== macro/liquidity, macro/rates, macro/fundamentals 等专用样式 ========== */
+/* signal-bar 顶部信号横条保留深色但调成 Bloomberg 节奏 */
+.signal-bar {
+  background: #0f0f0f !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+  border-left: 3px solid #ff8c00 !important;
+  color: #ccc !important;
+}
+.signal-main { color: #ff8c00 !important; font-weight: 700 !important; letter-spacing: .5px !important; }
+.signal-tag {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #888 !important;
+  border-radius: 0 !important;
+}
+.signal-tag.good { color: #4caf50 !important; border-color: rgba(76,175,80,0.4) !important; background: rgba(76,175,80,0.08) !important; }
+.signal-tag.risk { color: #ff5252 !important; border-color: rgba(255,82,82,0.4) !important; background: rgba(255,82,82,0.08) !important; }
+.signal-tag.warn { color: #ff8c00 !important; border-color: rgba(255,140,0,0.4) !important; background: rgba(255,140,0,0.08) !important; }
+
+/* chart-box 卡片 */
+.chart-box {
+  background: #0a0a0a !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.chart-box h3 { color: #ff8c00 !important; font-family: 'JetBrains Mono', monospace !important; letter-spacing: .5px !important; }
+
+/* chart-note 灰底备注框 */
+.chart-note {
+  background: #0f0f0f !important;
+  border: 1px solid #1a1a1a !important;
+  color: #888 !important;
+  border-radius: 0 !important;
+}
+.chart-note b { color: #ccc !important; }
+
+/* h2 标题 */
+.module-page h2, .section h2, body > h2, body > .section h2 { color: #ff8c00 !important; }
+
+/* 中观景气专用：facet 卡片 */
+.facet-card, .industry-card, .prosperity-card {
+  background: #0a0a0a !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+}
+
+/* loading 文字 */
+.loading { color: #888 !important; }
+
+/* ========== iframe 内部 inline 浅色背景 catch-all（不带 .content 前缀） ========== */
+/* 这套规则专门给在 iframe 里加载的子页面用 */
+[style*="background:#f8fafc"],
+[style*="background: #f8fafc"],
+[style*="background:#f9fafb"],
+[style*="background: #f9fafb"],
+[style*="background:#f1f5f9"],
+[style*="background: #f1f5f9"],
+[style*="background:#fff"]:not(.mega-chip):not(.heatmap-cell),
+[style*="background: #fff"]:not(.mega-chip):not(.heatmap-cell),
+[style*="background:white"]:not(.mega-chip):not(.heatmap-cell),
+[style*="background: white"]:not(.mega-chip):not(.heatmap-cell),
+[style*="background:#ffffff"]:not(.mega-chip):not(.heatmap-cell) {
+  background: #0f0f0f !important;
+  background-color: #0f0f0f !important;
+}
+
+/* iframe 内 inline 深色文字 → 浅灰 */
+[style*="color:#1e293b"],
+[style*="color: #1e293b"],
+[style*="color:#1e2433"],
+[style*="color: #1e2433"],
+[style*="color:#374151"],
+[style*="color: #374151"],
+[style*="color:#2d3142"],
+[style*="color: #2d3142"] {
+  color: #ccc !important;
+}
+
+/* iframe 内 inline 中灰文字 → 灰 */
+[style*="color:#64748b"],
+[style*="color: #64748b"],
+[style*="color:#94a3b8"],
+[style*="color: #94a3b8"],
+[style*="color:#8b92a5"],
+[style*="color: #8b92a5"],
+[style*="color:#7c8598"],
+[style*="color: #7c8598"] {
+  color: #888 !important;
+}
+
+/* iframe 内 inline border-left 颜色蓝/橙 → 保留, Bloomberg 模式只换 border-radius */
+[style*="border-left:3px solid"], [style*="border-left: 3px solid"] {
+  border-radius: 0 !important;
+}

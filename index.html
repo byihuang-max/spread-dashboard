@@ -36,8 +36,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .sidebar .logo em{font-style:normal;color:var(--accent);font-weight:800}
 .sidebar nav{flex:1;padding:12px 0;overflow-y:auto}
 .nav-group{margin-bottom:4px}
-.nav-group-title{padding:8px 20px 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.2);font-weight:700}
-.nav-item{display:flex;align-items:center;gap:9px;padding:9px 20px;cursor:pointer;transition:all .12s;font-size:13px;border-left:2px solid transparent;color:var(--sidebar-text)}
+.nav-group-title{padding:10px 20px 4px;font-size:18px;letter-spacing:0.5px;color:rgba(255,255,255,0.75);font-weight:700}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 20px;cursor:pointer;transition:all .12s;font-size:12px;border-left:2px solid transparent;color:var(--sidebar-text)}
 .nav-item:hover{background:rgba(255,255,255,0.04);color:#b8bfce}
 .nav-item.active{color:#e2e6ed;background:var(--accent-light);border-left-color:var(--accent)}
 .nav-item .icon{font-size:15px;width:18px;text-align:center;filter:grayscale(.3)}
@@ -281,44 +281,27 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 </style>
 <script>
 // Bloomberg theme bootstrap (?theme=bloomberg)
-// 支持 dark / light 配色切换，localStorage 持久化（key: bbMode）
 (function(){
   if(!location.search.includes("theme=bloomberg"))return;
-  // 1) 决定当前配色（URL 参数 > localStorage > 默认 dark）
-  var urlParams=new URLSearchParams(location.search);
-  var urlMode=urlParams.get("mode");
-  var savedMode=null;
-  try{savedMode=localStorage.getItem("bbMode");}catch(_e){}
-  var mode=urlMode||savedMode||"dark";
-  if(mode!=="dark"&&mode!=="light")mode="dark";
-  try{localStorage.setItem("bbMode",mode);}catch(_e){}
-  window.__bbMode=mode;
-  // 2) 注入暗色基底 CSS
+  // 1) inject CSS override
   var l=document.createElement("link");l.rel="stylesheet";l.href="bloomberg-override.css";document.head.appendChild(l);
-  // 3) light 模式追加亮色叠加层 + body class
-  if(mode==="light"){
-    var l2=document.createElement("link");l2.rel="stylesheet";l2.href="bloomberg-light.css";document.head.appendChild(l2);
-    function addLightClass(){if(document.body)document.body.classList.add("bb-light");}
-    if(document.body)addLightClass();else document.addEventListener("DOMContentLoaded",addLightClass);
-  }
-  // 4) hook chart.js after it loads
+  // 2) hook chart.js after it loads
   function tryHook(){
     if(typeof Chart==="undefined")return false;
-    var isLight=window.__bbMode==="light";
-    Chart.defaults.color=isLight?"#475569":"#888";
-    Chart.defaults.borderColor=isLight?"#e2e8f0":"#2a2a2a";
+    Chart.defaults.color="#888";
+    Chart.defaults.borderColor="#2a2a2a";
     if(Chart.defaults.font)Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
     Chart.register({
       id:"bbGridLate",
       afterLayout:function(chart){
         try{
-          var lightNow=window.__bbMode==="light";
           Object.values(chart.scales||{}).forEach(function(scale){
             if(scale.options&&scale.options.grid){
+              // 全部隐藏网格（彻底无线）
               scale.options.grid.display=false;
             }
             if(scale.options&&scale.options.border)scale.options.border.display=false;
-            if(scale.options&&scale.options.ticks)scale.options.ticks.color=lightNow?"#475569":"#888";
+            if(scale.options&&scale.options.ticks)scale.options.ticks.color="#888";
             if(scale.options&&scale.options.title&&scale.options.title.display)scale.options.title.color="#ff8c00";
           });
         }catch(_e){}
@@ -329,12 +312,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   if(!tryHook()){
     var t=0;var iv=setInterval(function(){t++;if(tryHook()||t>50)clearInterval(iv);},50);
   }
-  // 5) 切换函数（toggle 按钮调用）
-  window.bbToggleMode=function(){
-    var cur=(window.__bbMode==="light")?"dark":"light";
-    try{localStorage.setItem("bbMode",cur);}catch(_e){}
-    location.reload();
-  };
 })();
 </script>
 </head><body>
@@ -442,15 +419,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   <nav>
     <div class="nav-group">
       <div class="nav-group-title">总览</div>
-      <div class="nav-item active" data-module="overview">仪表盘 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
+      <div class="nav-item active" data-module="overview">工作台</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">分析</div>
-      <div class="nav-item" data-module="style_spread">风格轧差 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
-      <div class="nav-item" data-module="quant_stock">策略环境适配度</div>
-      <div class="nav-item" data-module="crowding">资金流与微观结构</div>
       <div class="nav-item" data-module="macro_liquidity">宏观与流动性</div>
-      <div class="nav-item" data-module="chain_prosperity">中观景气 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
+      <div class="nav-item" data-module="crowding">资金流与中观景气</div>
+      <div class="nav-item" data-module="chain_prosperity">微观结构</div>
+      <div class="nav-item" data-module="quant_stock">策略环境适配度</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">工具</div>
@@ -476,7 +452,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 <!-- ═══ 主内容 ═══ -->
 <div class="main">
   <div class="header">
-    <div class="title" id="pageTitle">仪表盘</div>
+    <div class="title" id="pageTitle">工作台</div>
     <div class="meta">
       <span id="updateTime"></span>
       <button class="refresh-btn" id="headerRefreshBtn" onclick="headerRefresh()">刷新全部</button>
@@ -2934,8 +2910,8 @@ function initCbCharts() {
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
           <div class="strat-tab active" data-strat="patient-capital">耐心资本持筹</div>
+          <div class="strat-tab" data-strat="chain-prosperity">产业链景气</div>
           <div class="strat-tab" data-strat="crowding">拥挤度监控</div>
-          <div class="strat-tab" data-strat="option-sentiment">期权异常值监控</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
           <button id="refreshBtnFlow" onclick="refreshFlowTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
@@ -2945,11 +2921,11 @@ function initCbCharts() {
       <div class="strat-page active" id="strat-patient-capital">
         <iframe src="micro_flow/patient_capital/patient_capital.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
+      <div class="strat-page" id="strat-chain-prosperity">
+        <iframe src="meso/chain_prosperity/chain_prosperity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
       <div class="strat-page" id="strat-crowding">
         <iframe src="micro_flow/crowding/crowding.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
-      </div>
-      <div class="strat-page" id="strat-option-sentiment">
-        <iframe src="micro_flow/option_sentiment/option_sentiment.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-fund-flow -->
 
@@ -2957,18 +2933,27 @@ function initCbCharts() {
     <div class="module-page" id="page-macro">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="antifragile">反脆弱看板</div>
-          <div class="strat-tab" data-strat="halo">HALO交易</div>
-          <div class="strat-tab" data-strat="liquidity"> 境内流动性</div>
+          <div class="strat-tab active" data-strat="global-calendar">全球金融日历</div>
           <div class="strat-tab" data-strat="rates">全球利率与汇率</div>
           <div class="strat-tab" data-strat="fundamentals">经济基本面</div>
-          <div class="strat-tab" data-strat="global-calendar">全球金融日历</div>
+          <div class="strat-tab" data-strat="antifragile">反脆弱看板</div>
+          <div class="strat-tab" data-strat="halo">HALO交易</div>
+          <div class="strat-tab" data-strat="liquidity">境内流动性</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
           <button id="refreshBtnMacro" onclick="refreshMacroTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
-      <div class="strat-page active" id="strat-antifragile">
+      <div class="strat-page active" id="strat-global-calendar">
+        <iframe src="macro/global_calendar/calendar.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+      <div class="strat-page" id="strat-rates">
+        <iframe src="macro/rates/rates.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+      <div class="strat-page" id="strat-fundamentals">
+        <iframe id="macro-fundamentals-frame" src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+      <div class="strat-page" id="strat-antifragile">
         <iframe src="macro/meme/antifragile/antifragile.html" class="embed-frame" style="height:2000px"></iframe>
       </div>
       <div class="strat-page" id="strat-halo">
@@ -2977,29 +2962,24 @@ function initCbCharts() {
       <div class="strat-page" id="strat-liquidity">
         <iframe src="macro/liquidity/liquidity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
-      <div class="strat-page" id="strat-rates">
-        <iframe src="macro/rates/rates.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
-      </div>
-      <div class="strat-page" id="strat-fundamentals">
-        <iframe id="macro-fundamentals-frame" src="macro/fundamentals/fundamentals.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
-      </div>
-      <div class="strat-page" id="strat-global-calendar">
-        <iframe src="macro/global_calendar/calendar.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
-      </div>
     </div><!-- /page-macro -->
 
-    <!-- ══ 中观景气 ══ -->
+    <!-- ══ 微观结构 ══ -->
     <div class="module-page" id="page-meso">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="strat-tabs" style="margin-bottom:0">
-          <div class="strat-tab active" data-strat="chain-prosperity">产业链景气</div>
+          <div class="strat-tab active" data-strat="style-spread">风格轧差</div>
+          <div class="strat-tab" data-strat="option-sentiment">期权异常值监控</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
           <button id="refreshBtnMeso" onclick="refreshMesoTab()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap" onmouseover="if(!this.disabled){this.style.borderColor='#6366f1';this.style.color='#6366f1'}" onmouseout="if(!this.disabled){this.style.borderColor='#d1d5db';this.style.color='#555'}">刷新当前</button>
         </div>
       </div>
-      <div class="strat-page active" id="strat-chain-prosperity">
-        <iframe src="meso/chain_prosperity/chain_prosperity.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      <div class="strat-page active" id="strat-style-spread">
+        <iframe src="size_spread/style_spread.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
+      </div>
+      <div class="strat-page" id="strat-option-sentiment">
+        <iframe src="micro_flow/option_sentiment/option_sentiment.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 100px)"></iframe>
       </div>
     </div><!-- /page-meso -->
 
@@ -3028,7 +3008,7 @@ function initCbCharts() {
 
 <script>
 (function(){
-  var titles={'overview':'仪表盘','style_spread':'风格轧差','quant_stock':'策略环境适配度','crowding':'资金流与微观结构','macro_liquidity':'宏观与流动性','chain_prosperity':'中观景气','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'并购舆情监控','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选'};
+  var titles={'overview':'工作台','quant_stock':'策略环境适配度','crowding':'资金流与中观景气','macro_liquidity':'宏观与流动性','chain_prosperity':'微观结构','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'并购舆情监控','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -3278,7 +3258,7 @@ function initCbCharts() {
     refreshModule(strat,btn);
   };
 
-  // ═══ 中观景气模块刷新 ═══
+  // ═══ 微观结构模块刷新 ═══
   window.refreshMesoTab=function(){
     var btn=document.getElementById('refreshBtnMeso');
     var activeTab=document.querySelector('#page-meso .strat-tab.active');
@@ -3667,14 +3647,7 @@ function showApp(user){
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
       var teamBtn=(!user.is_admin&&(user.tier||0)>=2)?'<button class="admin-btn" onclick="location.href=\'team.html\'">团队工作台</button>':'';
       var logoutBtn=STATIC_MODE?'':'<button class="logout-btn" onclick="doLogout()">退出</button>';
-      // Bloomberg 模式下显示日/夜切换按钮
-      var themeBtn='';
-      if(location.search.includes('theme=bloomberg')){
-        var curMode=window.__bbMode||'dark';
-        var icon=curMode==='light'?'☾ 暗色':'☀ 亮色';
-        themeBtn='<button class="theme-toggle-btn" onclick="bbToggleMode()" title="切换 暗色/亮色">'+icon+'</button>';
-      }
-      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+logoutBtn;
+      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+adminBtn+teamBtn+logoutBtn;
       header.appendChild(bar);
     }
     // 侧边栏底部：显示用户名 + 管理后台入口
