@@ -58,10 +58,33 @@ if "barbell" in di:
     bb_d = json.dumps(bb["dates"])
     bb_n = json.dumps(bb["navs"])
     bb_dual_n = json.dumps(bb["dual_navs"])
+    # 计算双创-杠铃每日轧差（日度收益之差）
+    dual_daily = bb["dual_navs"]
+    barbell_daily = bb["navs"]
+    dual_spread_vals = []
+    for i in range(1, len(dual_daily)):
+        d_ret = (dual_daily[i] / dual_daily[i-1] - 1) * 100
+        b_ret = (barbell_daily[i] / barbell_daily[i-1] - 1) * 100
+        dual_spread_vals.append(round(d_ret - b_ret, 4))
+    dual_spread_dates = json.dumps(bb["dates"][1:])
+    dual_spread_json = json.dumps(dual_spread_vals)
 else:
     bb_d = "[]"
     bb_n = "[]"
     bb_dual_n = "[]"
+    dual_spread_dates = "[]"
+    dual_spread_json = "[]"
+
+# --- 风格轧差净值 每日轧差柱状图数据（三组） ---
+style_spread_bars = {}
+for pair_name, pair_data in style.items():
+    navs = pair_data["navs"]
+    dates = pair_data["dates"]
+    daily_diffs = []
+    for i in range(1, len(navs)):
+        daily_diffs.append(round((navs[i] / navs[i-1] - 1) * 100, 4))
+    style_spread_bars[pair_name] = {"dates": dates[1:], "vals": daily_diffs}
+style_bar_json = json.dumps(style_spread_bars, ensure_ascii=False)
 
 html = f'''<!DOCTYPE html>
 <html><head><meta charset="utf-8">
@@ -264,8 +287,8 @@ a{{color:#ff8c00!important}}
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 周期-防御 每日轧差%</div>
     <div style="position:relative;height:260px"><canvas id="ecoSpreadChart"></canvas></div>
   </div>
-  <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
+  <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 策略说明</div>
     <p><b>策略逻辑：</b>做多周期板块（有色金属+煤炭+钢铁），做空防御板块（食品饮料+医药生物），等权构建多空组合。净值上行表示经济复苏预期增强、周期跑赢防御；下行表示市场偏好防御。</p>
     <p><b>信号意义：</b>净值持续走高 → 经济景气上行周期；急涨后回落 → 周期股拥挤，注意风格切换。</p>
     <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: {update_time}</p>
@@ -311,8 +334,8 @@ a{{color:#ff8c00!important}}
     <div class="card-title"><span class="dot" style="background:#2980b9"></span> 高拥挤-低拥挤 每日轧差%</div>
     <div style="position:relative;height:260px"><canvas id="crowdSpreadChart"></canvas></div>
   </div>
-  <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
+  <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 策略说明</div>
     <p><b>策略逻辑：</b>每20个交易日统计申万31个行业的拥挤度（涨幅排名），选出最拥挤的 Top6 做空、最冷门的 Bot6 做多，捕捉行业轮动中的反身性效应。</p>
     <p><b>信号意义：</b>净值上行 → 低拥挤反转有效，市场存在均值回归；净值下行 → 趋势延续性强，动量策略占优。</p>
     <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: {update_time}</p>
@@ -329,12 +352,24 @@ a{{color:#ff8c00!important}}
     <div class="card-title"><span class="dot" style="background:#e74c3c"></span> 风格轧差多线对比</div>
     <div style="position:relative;height:280px"><canvas id="styleNavChart"></canvas></div>
   </div>
-  <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#c0392b"></span> 中证红利-科创50 每日轧差%</div>
+    <div style="position:relative;height:200px"><canvas id="styleBar1"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#2980b9"></span> 微盘股-中证全指 每日轧差%</div>
+    <div style="position:relative;height:200px"><canvas id="styleBar2"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#27ae60"></span> 中证2000-沪深300 每日轧差%</div>
+    <div style="position:relative;height:200px"><canvas id="styleBar3"></canvas></div>
+  </div>
+  <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">策略说明</div>
     <p><b>策略逻辑：</b>三组经典风格对冲的净值曲线，均从1开始归一化。</p>
-    <p>🔴 <b>中证红利-科创50</b>：价值 vs 成长，净值下行 = 成长股跑赢。</p>
-    <p>🔵 <b>微盘股-中证全指</b>：小盘超额，净值上行 = 微盘股跑赢大盘。</p>
-    <p>🟢 <b>中证2000-沪深300</b>：大小盘轧差，净值上行 = 小盘跑赢大盘。</p>
+    <p><b>中证红利-科创50</b>：价值 vs 成长，净值下行 = 成长股跑赢。</p>
+    <p><b>微盘股-中证全指</b>：小盘超额，净值上行 = 微盘股跑赢大盘。</p>
+    <p><b>中证2000-沪深300</b>：大小盘轧差，净值上行 = 小盘跑赢大盘。</p>
     <p><b>信号意义：</b>三线同向上行 → 市场偏好小盘成长；三线同向下行 → 大盘价值占优。分化时关注风格切换拐点。</p>
     <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare 申万行业指数 · 最后更新: {update_time}</p>
   </div>
@@ -350,8 +385,12 @@ a{{color:#ff8c00!important}}
     <div class="card-title"><span class="dot" style="background:#9b59b6"></span> 双创等权 vs 杠铃组合（归1净值）</div>
     <div style="position:relative;height:320px"><canvas id="dualChart"></canvas></div>
   </div>
-  <div class="card" style="font-size:11px;color:var(--text-sub);line-height:1.7">
-    <div class="card-title" style="font-size:12px;color:#64748b"><span class="dot" style="background:#94a3b8"></span> 策略说明</div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#e67e22"></span> 双创-杠铃 每日轧差%（正值双创跑赢，负值杠铃跑赢）</div>
+    <div style="position:relative;height:240px"><canvas id="dualSpreadChart"></canvas></div>
+  </div>
+  <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
+    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 策略说明</div>
     <p><b>双创等权：</b>创业板指(399006) + 科创50(000688) 各50%等权，代表成长/科技风格。</p>
     <p><b>杠铃组合：</b>中证红利(000922) + 同花顺微盘股(884143.TI) 各50%等权，代表"高股息+微盘"的防御+弹性组合。</p>
     <p><b>背对逻辑：</b>两条线呈现跷跷板效应。双创强势期（成交量>3万亿、科技虹吸）杠铃跑输；流动性退潮期（成交量<2.5万亿）杠铃回归。2025年以来轮动周期约1.5-3个月。</p>
@@ -372,6 +411,9 @@ const di_navs = {di_n};
 const bb_dates = {bb_d};
 const bb_navs = {bb_n};
 const bb_dual_navs = {bb_dual_n};
+const dual_spread_dates = {dual_spread_dates};
+const dual_spread_vals = {dual_spread_json};
+const style_bar_data = {style_bar_json};
 
 // MA20 计算
 function calcMA(arr, n) {{
@@ -627,6 +669,19 @@ function initTab(tab) {{
       var sOpts = lineOpts();
       sOpts.plugins.legend.display = true;
       new Chart(document.getElementById('styleNavChart'),{{type:'line',data:{{labels:style_data[firstKey].dates,datasets:styleDs}},options:sOpts}});
+      // 三组风格轧差每日柱状图
+      var barKeys = Object.keys(style_bar_data);
+      var barColors = [['rgba(192,57,43,0.6)','rgba(41,128,185,0.6)'],['rgba(41,128,185,0.6)','rgba(192,57,43,0.6)'],['rgba(39,174,96,0.6)','rgba(192,57,43,0.6)']];
+      var barCanvases = ['styleBar1','styleBar2','styleBar3'];
+      for (var bi = 0; bi < barKeys.length; bi++) {{
+        var bk = barKeys[bi];
+        var bDates = style_bar_data[bk].dates;
+        var bVals = style_bar_data[bk].vals;
+        var posC = barColors[bi][0], negC = barColors[bi][1];
+        new Chart(document.getElementById(barCanvases[bi]),{{type:'bar',data:{{labels:bDates,datasets:[{{
+          data:bVals,backgroundColor:bVals.map(function(v){{return v>=0?posC:negC}}),borderRadius:2
+        }}]}},options:barOpts()}});
+      }}
       break;
 
     case 'dual':
@@ -641,6 +696,12 @@ function initTab(tab) {{
         dualDs.push({{label:'杠铃组合(红利+微盘)',data:bb_navs,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.06)',fill:true,tension:0.3,pointRadius:0,borderWidth:2.5}});
       }}
       new Chart(document.getElementById('dualChart'),{{type:'line',data:{{labels:dualDates,datasets:dualDs}},options:dOpts}});
+      // 双创-杠铃每日轧差柱状图
+      if (dual_spread_vals.length > 0) {{
+        new Chart(document.getElementById('dualSpreadChart'),{{type:'bar',data:{{labels:dual_spread_dates,datasets:[{{
+          data:dual_spread_vals,backgroundColor:dual_spread_vals.map(function(v){{return v>=0?'rgba(155,89,182,0.6)':'rgba(230,126,34,0.6)'}}),borderRadius:2
+        }}]}},options:barOpts()}});
+      }}
       break;
   }}
 }}
