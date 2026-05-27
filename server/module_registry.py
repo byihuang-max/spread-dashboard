@@ -28,6 +28,7 @@ MODULE_REGISTRY = {
             ('size_spread/fund_nav', 'fund_nav_data.py'),
         ],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'style_spread': {
@@ -39,6 +40,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['style-spread'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'barra_style': {
@@ -49,6 +51,7 @@ MODULE_REGISTRY = {
         'aliases': ['barra'],
         'late_data': True,  # DataYes因子收益率T+1早上可用，盘后批次更稳
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'quant_stock': {
@@ -62,6 +65,7 @@ MODULE_REGISTRY = {
         'inject_script': ('env_fit/quant_stock', 'inject_quant_stock.py'),
         'aliases': ['quant-stock'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'patient_capital': {
@@ -73,6 +77,7 @@ MODULE_REGISTRY = {
         'aliases': ['patient-capital'],
         'late_data': True,  # 15min成交明细晚到，需21:00后才稳定入库
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'momentum_stock': {
@@ -97,6 +102,7 @@ MODULE_REGISTRY = {
         'aliases': ['momentum-stock'],
         'late_data': True,  # 涨跌停数据约17:30-18:00才出全
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'commodity_cta': {
@@ -116,6 +122,7 @@ MODULE_REGISTRY = {
         'inject_script': ('env_fit/commodity_cta', 'inject_commodity_cta.py'),
         'aliases': ['cta'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'cb_env': {
@@ -131,6 +138,7 @@ MODULE_REGISTRY = {
         'post_inject': [('env_fit/cb_env', 'inject_cb_nav.py')],
         'aliases': ['convertible'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'alerts': {
@@ -141,6 +149,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['alerts'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'us_alerts': {
@@ -152,6 +161,7 @@ MODULE_REGISTRY = {
         'aliases': ['us-alerts'],
         'am_early': True,  # 隔夜美股数据，盘前需要
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'crowding': {
@@ -162,6 +172,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['crowding'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'option_sentiment': {
@@ -172,6 +183,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['option-sentiment'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'macro_liquidity': {
@@ -182,6 +194,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['liquidity'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'macro_rates': {
@@ -192,6 +205,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['rates'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'macro_fundamentals': {
@@ -203,6 +217,7 @@ MODULE_REGISTRY = {
         'aliases': ['fundamentals'],
         'am_early': True,  # 宏观月频数据，月初早上发布
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'global_calendar': {
@@ -214,6 +229,7 @@ MODULE_REGISTRY = {
         'aliases': ['global-calendar', 'calendar'],
         'am_early': True,  # 当天事件日历
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'antifragile': {
@@ -227,6 +243,7 @@ MODULE_REGISTRY = {
         'aliases': ['antifragile'],
         'am_early': True,  # 含海外资产（SOXX/VIX/黄金/原油），隔夜数据
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'narrative_monitor': {
@@ -236,6 +253,7 @@ MODULE_REGISTRY = {
         ],
         'am_early': True,  # 含海外叙事，盘前需要
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'overseas_digest': {
@@ -246,6 +264,7 @@ MODULE_REGISTRY = {
         'aliases': ['overseas-digest', 'overseas-news'],
         'am_early': True,  # 隔夜海外要闻
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'narrative_lifecycle': {
@@ -254,6 +273,7 @@ MODULE_REGISTRY = {
             ('macro/meme', 'macro_lifecycle.py'),
         ],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'chain_prosperity': {
@@ -264,6 +284,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['chain-prosperity'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'macro_score': {
@@ -273,6 +294,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['macro-score'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'timing_factors': {
@@ -284,6 +306,7 @@ MODULE_REGISTRY = {
         ],
         'late_data': True,  # 依赖强势股晚到数据，需与 momentum_stock 联动后移
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'option_vol': {
@@ -296,6 +319,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['option-vol'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'arbitrage': {
@@ -310,6 +334,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['arbitrage'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'macro/halo_trade': {
@@ -324,6 +349,7 @@ MODULE_REGISTRY = {
         'aliases': ['halo'],
         'am_early': True,  # 含海外市场（高盛HALO+重资产范式），隔夜数据
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
     'rates': {
@@ -387,6 +413,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['fund-asset'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'merger_pool': {
@@ -397,6 +424,7 @@ MODULE_REGISTRY = {
         'aliases': ['merger-pool'],
         'late_data': True,
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'merger_report': {
@@ -407,6 +435,7 @@ MODULE_REGISTRY = {
         'aliases': ['merger-report'],
         'late_data': True,
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': False,
     },
     'overview': {
@@ -416,6 +445,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['overview'],
         'include_in_update_all': True,
+        'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
 }

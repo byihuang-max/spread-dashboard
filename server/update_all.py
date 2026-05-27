@@ -37,7 +37,7 @@ def log(msg, level='INFO'):
     prefix = {'INFO': '', 'OK': '', 'ERR': '', 'RUN': ''}
     print(f"[{ts}] {prefix.get(level, '  ')} {msg}", flush=True)
 
-def run_script(subdir, script):
+def run_script(subdir, script, timeout=600):
     """运行一个 Python 脚本，返回 (成功, 耗时秒)。支持 'script.py --arg' 格式"""
     # 分离脚本名和参数
     parts = script.split()
@@ -61,7 +61,7 @@ def run_script(subdir, script):
         result = subprocess.run(
             [sys.executable, path] + script_args,
             cwd=cwd,
-            capture_output=True, text=True, timeout=600
+            capture_output=True, text=True, timeout=timeout
         )
         elapsed = time.time() - t0
         if result.returncode != 0:
@@ -70,8 +70,8 @@ def run_script(subdir, script):
         log(f"  完成 ({elapsed:.1f}s)", 'OK')
         return True, elapsed
     except subprocess.TimeoutExpired:
-        log(f"  超时 (>300s)", 'ERR')
-        return False, 300
+        log(f"  超时 (>{timeout}s)", 'ERR')
+        elapsed = time.time() - t0; return False, elapsed
     except Exception as e:
         log(f"  异常: {e}", 'ERR')
         return False, 0
@@ -79,6 +79,7 @@ def run_script(subdir, script):
 def update_module(mod_key):
     """更新单个模块：数据脚本 → 注入脚本"""
     mod = MODULES[mod_key]
+    timeout = mod.get("timeout", 600)  # None means no timeout
     log(f"═══ {mod['name']} ({mod_key}) ═══")
 
     all_ok = True
@@ -97,7 +98,7 @@ def update_module(mod_key):
             result = subprocess.run(
                 [sys.executable, external_path],
                 cwd=os.path.dirname(external_path),
-                capture_output=True, text=True, timeout=600
+                capture_output=True, text=True, timeout=timeout
             )
             elapsed = time.time() - t0
             if result.returncode != 0:
@@ -106,15 +107,15 @@ def update_module(mod_key):
             log(f"  完成 ({elapsed:.1f}s)", 'OK')
             total_time += elapsed
         except subprocess.TimeoutExpired:
-            log(f"  超时 (>600s)", 'ERR')
-            return False, 600
+            log(f"  超时 (>{timeout}s)", 'ERR')
+            elapsed = time.time() - t0; return False, elapsed
         except Exception as e:
             log(f"  异常: {e}", 'ERR')
             return False, 0
 
     # 2. 数据脚本
     for subdir, script in mod['data_scripts']:
-        ok, t = run_script(subdir, script)
+        ok, t = run_script(subdir, script, timeout=timeout)
         total_time += t
         if not ok:
             all_ok = False
@@ -124,7 +125,7 @@ def update_module(mod_key):
     # 3. 注入脚本
     if mod.get('inject_script'):
         subdir, script = mod['inject_script']
-        ok, t = run_script(subdir, script)
+        ok, t = run_script(subdir, script, timeout=timeout)
         total_time += t
         if not ok:
             all_ok = False
@@ -132,7 +133,7 @@ def update_module(mod_key):
     # 4. 后置注入脚本（可选）
     if mod.get('post_inject'):
         for subdir, script in mod['post_inject']:
-            ok, t = run_script(subdir, script)
+            ok, t = run_script(subdir, script, timeout=timeout)
             total_time += t
             if not ok:
                 all_ok = False
@@ -157,7 +158,7 @@ def update_timing_exposure_page():
             result = subprocess.run(
                 [sys.executable, path],
                 cwd=base,
-                capture_output=True, text=True, timeout=600
+                capture_output=True, text=True, timeout=timeout
             )
             elapsed = time.time() - t0
             total += elapsed
