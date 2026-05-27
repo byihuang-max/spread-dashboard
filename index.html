@@ -280,10 +280,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 .user-bar .admin-btn:hover{background:var(--accent-light)}
 </style>
 <script>
-// Bloomberg theme bootstrap (?theme=bloomberg)
+// Bloomberg theme bootstrap (default dark, ?theme=light to skip)
 // 支持 dark / light 配色切换，localStorage 持久化（key: bbMode）
 (function(){
-  if(!location.search.includes("theme=bloomberg"))return;
+  if(location.search.includes("theme=light"))return;
   // 1) 决定当前配色（URL 参数 > localStorage > 默认 dark）
   var urlParams=new URLSearchParams(location.search);
   var urlMode=urlParams.get("mode");
@@ -329,11 +329,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   if(!tryHook()){
     var t=0;var iv=setInterval(function(){t++;if(tryHook()||t>50)clearInterval(iv);},50);
   }
-  // 5) 切换函数（toggle 按钮调用）
+  // 5) 切换到亮色原版（?theme=light）
   window.bbToggleMode=function(){
-    var cur=(window.__bbMode==="light")?"dark":"light";
-    try{localStorage.setItem("bbMode",cur);}catch(_e){}
-    location.reload();
+    var url=new URL(location.href);
+    if(url.searchParams.has("theme")){url.searchParams.delete("theme");}else{url.searchParams.set("theme","light");}
+    location.href=url.toString();
   };
 })();
 </script>
@@ -489,7 +489,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div id="ov-loading" style="text-align:center;padding:40px;color:#8b92a5">加载中...</div>
       <script>
       (function(){
-        if(location.search.includes("theme=bloomberg")){
+        if(!location.search.includes("theme=light")){
           var frame=document.getElementById("ov-terminal-frame");
           if(frame)frame.style.display="block";
           var loading=document.getElementById("ov-loading");
@@ -588,7 +588,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 
       <script>
       (function(){
-        if(location.search.includes('theme=bloomberg')){return;}
+        if(!location.search.includes('theme=light')){return;}
         /* ── 加载 macro_score.json ── */
         fetch('macro/score/macro_score.json?t='+Date.now()).then(function(r){return r.json()}).then(function(S){
           // Score colors
@@ -756,7 +756,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
         });
 
         /* ── 原有 overview.json ── */
-        if(location.search.includes('theme=bloomberg')){return;}
+        if(!location.search.includes('theme=light')){return;}
         fetch('server/overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
           document.getElementById('ov-loading').style.display='none';
           document.getElementById('ov-content').style.display='';
@@ -3747,13 +3747,11 @@ function showApp(user){
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
       var teamBtn=(!user.is_admin&&(user.tier||0)>=2)?'<button class="admin-btn" onclick="location.href=\'team.html\'">团队工作台</button>':'';
       var logoutBtn=STATIC_MODE?'':'<button class="logout-btn" onclick="doLogout()">退出</button>';
-      // Bloomberg 模式下显示日/夜切换按钮
-      var themeBtn='';
-      if(location.search.includes('theme=bloomberg')){
-        var curMode=window.__bbMode||'dark';
-        var icon=curMode==='light'?'☾ 暗色':'☀ 亮色';
-        themeBtn='<button class="theme-toggle-btn" onclick="bbToggleMode()" title="切换 暗色/亮色">'+icon+'</button>';
-      }
+      // 主题切换按钮（暗色默认 ↔ 亮色原版）
+      var isLight=location.search.includes('theme=light');
+      var themeIcon=isLight?'☾ 暗色':'☀ 亮色';
+      var themeAction=isLight?'location.href=location.pathname':'location.href=location.pathname+"?theme=light"';
+      var themeBtn='<button class="theme-toggle-btn" onclick="'+themeAction+'" title="切换主题">'+themeIcon+'</button>';
       bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+logoutBtn;
       header.appendChild(bar);
     }

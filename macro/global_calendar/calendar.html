@@ -133,7 +133,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
 <script>
 (function(){
   function isBloomberg(){
-    try{return window.parent.location.search.includes("theme=bloomberg")}catch(e){return false}
+    try{return !window.parent.location.search.includes("theme=light")}catch(e){return false}
   }
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
@@ -166,7 +166,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   }
 })();
 </script>
-<script>(function(){try{if(window.parent.location.search.includes("theme=bloomberg")){var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";var mode="dark";try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light"){var l2=document.createElement("link");l2.rel="stylesheet";l2.href=pre+"bloomberg-light.css"+v;document.head.appendChild(l2);function addLight(){if(document.body)document.body.classList.add("bb-light");}if(document.body)addLight();else document.addEventListener("DOMContentLoaded",addLight);}}}catch(e){}})();</script>
+<script>(function(){try{if(!window.parent.location.search.includes("theme=light")){var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";var mode="dark";try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light"){var l2=document.createElement("link");l2.rel="stylesheet";l2.href=pre+"bloomberg-light.css"+v;document.head.appendChild(l2);function addLight(){if(document.body)document.body.classList.add("bb-light");}if(document.body)addLight();else document.addEventListener("DOMContentLoaded",addLight);}}}catch(e){}})();</script>
 </head>
 <body>
 <div class="loading" id="loadingMsg">加载中...</div>

@@ -183,7 +183,7 @@ a{{color:#ff8c00!important}}
 <script>
 (function(){{
   function isBloomberg(){{
-    try{{return window.parent.location.search.includes("theme=bloomberg")}}catch(e){{return false}}
+    try{{return !window.parent.location.search.includes("theme=light")}}catch(e){{return false}}
   }}
   function registerPlugin(){{
     if(typeof Chart==="undefined")return false;
@@ -213,7 +213,7 @@ a{{color:#ff8c00!important}}
     }},50);
   }}
   try{{
-    if(window.parent.location.search.includes("theme=bloomberg")){{
+    if(!window.parent.location.search.includes("theme=light")){{
       var s=document.getElementById("bb-override");
       if(s)s.media="all";
       var l=document.createElement("link");
