@@ -3750,8 +3750,8 @@ function showApp(user){
       // 主题切换按钮（暗色默认 ↔ 亮色原版）
       var isLight=location.search.includes('theme=light');
       var themeIcon=isLight?'☾ 暗色':'☀ 亮色';
-      var themeAction=isLight?'location.href=location.pathname':'location.href=location.pathname+"?theme=light"';
-      var themeBtn='<button class="theme-toggle-btn" onclick="'+themeAction+'" title="切换主题">'+themeIcon+'</button>';
+      var themeHref=isLight?location.pathname:location.pathname+'?theme=light';
+      var themeBtn='<button class="theme-toggle-btn" onclick="location.href=\''+themeHref+'\'" title="切换主题">'+themeIcon+'</button>';
       bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+logoutBtn;
       header.appendChild(bar);
     }
