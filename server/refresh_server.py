@@ -393,7 +393,7 @@ class Handler(BaseHTTPRequestHandler):
     def _serve_chip_query(self):
         """个股筹码分析 API"""
         from urllib.parse import urlparse, parse_qs
-        parsed = urlparse(self.path)
+        parsed = urlparse(self._raw_path)
         params = parse_qs(parsed.query)
         code = params.get('code', [''])[0].strip().upper()
         if not code:
@@ -409,7 +409,7 @@ class Handler(BaseHTTPRequestHandler):
     def _serve_stock_search(self):
         """股票名称/代码模糊搜索 API"""
         from urllib.parse import urlparse, parse_qs
-        parsed = urlparse(self.path)
+        parsed = urlparse(self._raw_path)
         params = parse_qs(parsed.query)
         keyword = params.get('q', [''])[0].strip()
         if not keyword:
@@ -482,6 +482,11 @@ class Handler(BaseHTTPRequestHandler):
             self._json(500, {'error': str(e)})
 
     def do_GET(self):
+        # Strip query string for route matching, preserve original in self._raw_path
+        from urllib.parse import urlparse
+        self._raw_path = self.path
+        _parsed = urlparse(self.path)
+        self.path = _parsed.path
         if self.path == '/api/status':
             self._json(200, {
                 'running': state['running'],
