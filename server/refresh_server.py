@@ -680,6 +680,24 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {'ok': True})
             return
 
+        if self.path == '/api/auth/change-password':
+            user = self._get_user()
+            if not user:
+                self._json(401, {'ok': False, 'msg': '未登录'})
+                return
+            body = self._read_body()
+            old_pw = body.get('old_password', '')
+            new_pw = body.get('new_password', '')
+            if not old_pw or not new_pw:
+                self._json(400, {'ok': False, 'msg': '请填写旧密码和新密码'})
+                return
+            ok, msg = auth.change_password(user['id'], old_pw, new_pw)
+            if ok:
+                self._json(200, {'ok': True, 'msg': msg})
+            else:
+                self._json(400, {'ok': False, 'msg': msg})
+            return
+
         if self.path == '/api/admin/toggle-user':
             admin = self._require_admin()
             if not admin: return

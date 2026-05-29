@@ -3753,12 +3753,13 @@ function showApp(user){
       var adminBtn=user.is_admin?'<button class="admin-btn" onclick="location.href=\'admin.html\'">管理后台</button>':'';
       var teamBtn=(!user.is_admin&&(user.tier||0)>=2)?'<button class="admin-btn" onclick="location.href=\'team.html\'">团队工作台</button>':'';
       var logoutBtn=STATIC_MODE?'':'<button class="logout-btn" onclick="doLogout()">退出</button>';
+      var changePwBtn=STATIC_MODE?'':'<button class="admin-btn" onclick="showChangePw()">改密码</button>';
       // 主题切换按钮（暗色默认 ↔ 亮色原版）
       var isLight=location.search.includes('theme=light');
       var themeIcon=isLight?'☾ 暗色':'☀ 亮色';
       var themeHref=isLight?location.pathname:location.pathname+'?theme=light';
       var themeBtn='<button class="theme-toggle-btn" onclick="location.href=\''+themeHref+'\'" title="切换主题">'+themeIcon+'</button>';
-      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+logoutBtn;
+      bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+changePwBtn+logoutBtn;
       header.appendChild(bar);
     }
     // 侧边栏底部：显示用户名 + 管理后台入口
@@ -3812,6 +3813,34 @@ function showApp(user){
       }).catch(function(){});
     }
   }
+
+  window.showChangePw = function(){
+    var overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center';
+    overlay.innerHTML='<div style="background:#fff;border-radius:12px;padding:24px;width:320px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.2)">'
+      +'<h3 style="margin:0 0 16px;font-size:15px;color:#1a1a2e">修改密码</h3>'
+      +'<input id="cpOld" type="password" placeholder="当前密码" style="width:100%;padding:8px 12px;border:1px solid #e2e5ea;border-radius:6px;margin-bottom:10px;font-size:13px">'
+      +'<input id="cpNew" type="password" placeholder="新密码（至少6位）" style="width:100%;padding:8px 12px;border:1px solid #e2e5ea;border-radius:6px;margin-bottom:10px;font-size:13px">'
+      +'<input id="cpConfirm" type="password" placeholder="确认新密码" style="width:100%;padding:8px 12px;border:1px solid #e2e5ea;border-radius:6px;margin-bottom:16px;font-size:13px">'
+      +'<div style="display:flex;gap:10px;justify-content:flex-end">'
+      +'<button onclick="this.closest(\'div[style]\').parentElement.remove()" style="padding:6px 14px;border:1px solid #e2e5ea;border-radius:6px;background:#fff;cursor:pointer;font-size:12px">取消</button>'
+      +'<button onclick="doChangePw(this)" style="padding:6px 14px;border:none;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer;font-size:12px">确认修改</button>'
+      +'</div></div>';
+    document.body.appendChild(overlay);
+  };
+  window.doChangePw = function(btn){
+    var old=document.getElementById('cpOld').value;
+    var nw=document.getElementById('cpNew').value;
+    var cf=document.getElementById('cpConfirm').value;
+    if(!old||!nw){alert('请填写完整');return;}
+    if(nw!==cf){alert('两次新密码不一致');return;}
+    if(nw.length<6){alert('新密码至少6位');return;}
+    btn.disabled=true;btn.textContent='提交中...';
+    apiCall('POST','/api/auth/change-password',{old_password:old,new_password:nw}).then(function(d){
+      if(d.ok){alert('密码已修改，请重新登录');localStorage.removeItem('gamt_token');localStorage.removeItem('gamt_user');location.reload();}
+      else{alert(d.msg||'修改失败');btn.disabled=false;btn.textContent='确认修改';}
+    }).catch(function(){alert('网络错误');btn.disabled=false;btn.textContent='确认修改';});
+  };
 
   window.doLogout = function(){
     var token=localStorage.getItem('gamt_token');

@@ -552,6 +552,28 @@ def reset_password(user_id, new_password):
     c.commit(); c.close()
 
 
+def change_password(user_id, old_password, new_password):
+    """用户自助修改密码，需验证旧密码"""
+    c = _conn()
+    row = c.execute('SELECT password_hash, salt FROM users WHERE id=?', (user_id,)).fetchone()
+    if not row:
+        c.close()
+        return False, '用户不存在'
+    stored_hash, salt = row
+    h, _ = _hash_pw(old_password, salt)
+    if h != stored_hash:
+        c.close()
+        return False, '旧密码错误'
+    if len(new_password) < 6:
+        c.close()
+        return False, '新密码至少6位'
+    new_h, new_s = _hash_pw(new_password)
+    c.execute('UPDATE users SET password_hash=?, salt=? WHERE id=?', (new_h, new_s, user_id))
+    c.execute('DELETE FROM sessions WHERE user_id=?', (user_id,))
+    c.commit(); c.close()
+    return True, '密码已修改，请重新登录'
+
+
 def set_tier(user_id, tier):
     """设置用户等级: 0=普通, 1=高级"""
     c = _conn()
