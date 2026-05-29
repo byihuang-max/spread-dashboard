@@ -113,7 +113,46 @@ body{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;backgrou
 }
 
 .loading{text-align:center;padding:60px;color:var(--text-muted)}
+
+/* ── Light Mode ── */
+body.light-mode{
+  --bg:#f8f9fb;--surface:#ffffff;--surface-2:#f1f3f6;
+  --border:#e2e5ea;--border-light:#d4d8df;
+  --text:#1a1a2e;--text-dim:#4a5568;--text-muted:#718096;
+  --orange:#c06800;--green:#16a34a;--red:#dc2626;--yellow:#b45309;
+}
+body.light-mode .panel{box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+body.light-mode .panel-header{background:#f1f3f6;border-bottom-color:var(--border)}
+body.light-mode .brief-bar{background:#fffbf0;border-color:#e8dcc0}
+body.light-mode .brief-action{background:#f8f9fb;border-color:var(--border);color:var(--orange)}
+body.light-mode .brief-action.negative{color:var(--red);border-color:#fecaca}
+body.light-mode .brief-action.positive{color:var(--green);border-color:#bbf7d0}
+body.light-mode .data-cell{background:var(--surface-2);border-color:var(--border)}
+body.light-mode .strat-table th{background:#f1f3f6;color:var(--text-muted);border-bottom-color:var(--border)}
+body.light-mode .strat-table td{border-bottom-color:#f0f0f0;color:var(--text-dim)}
+body.light-mode .strat-table tr:hover td{background:#f8f9fb}
+body.light-mode .strat-table tr.highlight td{background:#f0fdf4;border-bottom-color:#bbf7d0}
+body.light-mode .strat-table tr.highlight-warn td{background:#fef2f2;border-bottom-color:#fecaca}
+body.light-mode .score-bar{background:#e2e5ea}
+body.light-mode .delta-badge.up{color:var(--green);border-color:#bbf7d0;background:#f0fdf4}
+body.light-mode .delta-badge.down{color:var(--red);border-color:#fecaca;background:#fef2f2}
+body.light-mode .alloc-row.has-delta{background:#fffbf0}
+body.light-mode .alloc-bar{background:#e2e5ea}
+body.light-mode .alloc-row{border-bottom-color:#f0f0f0}
+body.light-mode .change-item{border-bottom-color:#f0f0f0;color:var(--text-dim)}
+body.light-mode .bloomberg-tagline{color:var(--text-muted)}
 </style>
+<script>
+// Light mode detection: ?mode=light in own URL or parent bbMode
+(function(){
+  var isLight = location.search.includes("mode=light");
+  if(!isLight){try{isLight=window.parent.__bbMode==="light";}catch(e){}}
+  if(isLight){
+    if(document.body) document.body.classList.add("light-mode");
+    else document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("light-mode");});
+  }
+})();
+</script>
 </head>
 <body>
 <div id="loading" class="loading">LOADING DATA...</div>

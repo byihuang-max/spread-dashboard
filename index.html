@@ -489,14 +489,20 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       <div id="ov-loading" style="text-align:center;padding:40px;color:#8b92a5">加载中...</div>
       <script>
       (function(){
-        if(!location.search.includes("theme=light")){
-          var frame=document.getElementById("ov-terminal-frame");
-          if(frame)frame.style.display="block";
-          var loading=document.getElementById("ov-loading");
-          if(loading)loading.style.display="none";
-          var content=document.getElementById("ov-content");
-          if(content)content.style.display="none";
+        var frame=document.getElementById("ov-terminal-frame");
+        var loading=document.getElementById("ov-loading");
+        var content=document.getElementById("ov-content");
+        var isLight=location.search.includes("theme=light");
+        // Both dark and light modes use terminal iframe
+        if(frame){
+          var src="overview-terminal.html";
+          if(isLight) src+="?mode=light";
+          frame.src=src;
+          frame.style.display="block";
+          if(isLight) frame.style.background="#f8f9fb";
         }
+        if(loading)loading.style.display="none";
+        if(content)content.style.display="none";
       })();
       </script>
       <div id="ov-content" style="display:none">
