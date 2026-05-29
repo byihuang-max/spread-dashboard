@@ -761,8 +761,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
           });
         });
 
-        /* ── 原有 overview.json ── */
-        if(!location.search.includes('theme=light')){return;}
+        /* ── 原有 overview.json (已由 overview-terminal.html iframe 替代) ── */
+        return;
         fetch('server/overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(D){
           document.getElementById('ov-loading').style.display='none';
           document.getElementById('ov-content').style.display='';
