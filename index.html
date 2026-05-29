@@ -338,6 +338,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
 })();
 </script>
 </head><body>
+<script>
+// 乐观隐藏登录遮罩：有 token 时先藏，验证失败再显示（避免切主题时闪登录页）
+try{if(localStorage.getItem('gamt_token')){document.write('<style>#loginOverlay{display:none!important}</style>');window.__tokenOptimistic=true;}}catch(e){}
+</script>
 
 <!-- ═══ 登录遮罩 ═══ -->
 <div class="login-overlay" id="loginOverlay">
@@ -3731,6 +3735,15 @@ function loadAccessibleModules(user){
   if(user&&user.is_admin){applyModuleAccess(null,user);return;}
   apiCall('GET','/api/modules/accessible').then(function(d){if(d.error){applyModuleAccess(null,user);return;}applyModuleAccess(Array.isArray(d)?d:(d.modules||d.accessible||null),user);}).catch(function(){applyModuleAccess(null,user);});
 }
+function showLoginOverlay(){
+    var ov=document.getElementById('loginOverlay');
+    if(!ov)return;
+    ov.classList.remove('hidden');
+    ov.style.display='';
+    // 移除乐观隐藏的 style 标签
+    var s=document.querySelector('style');
+    if(s&&s.textContent.indexOf('loginOverlay')!==-1&&s.textContent.indexOf('display:none')!==-1)s.remove();
+}
 function showApp(user){
     currentUser=user;
     var overlay=document.getElementById('loginOverlay');
@@ -3874,8 +3887,7 @@ function showApp(user){
     if(AUTH_API===null){
       // API不可用 → 显示登录页 + 提示服务不可用
       console.log('[GAMT] API not reachable, showing login overlay');
-      var overlay=document.getElementById('loginOverlay');
-      overlay.classList.remove('hidden');
+      showLoginOverlay();
       var errEl=document.querySelector('.login-box .err');
       if(errEl) errEl.textContent='服务暂时不可用，请稍后重试';
       return;
@@ -3891,17 +3903,17 @@ function showApp(user){
           localStorage.removeItem('gamt_token');
           localStorage.removeItem('gamt_user');
           // token 失效，重新显示登录页
-          document.getElementById('loginOverlay').classList.remove('hidden');
+          showLoginOverlay();
         }
       }).catch(function(){
         localStorage.removeItem('gamt_token');
         localStorage.removeItem('gamt_user');
         // 网络异常，重新显示登录页
-        document.getElementById('loginOverlay').classList.remove('hidden');
+        showLoginOverlay();
       });
     } else {
       // 无 token，确保登录页可见
-      document.getElementById('loginOverlay').classList.remove('hidden');
+      showLoginOverlay();
     }
   });
 })();
