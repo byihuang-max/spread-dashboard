@@ -140,7 +140,7 @@ def update_module(mod_key):
 
     return all_ok, total_time
 
-def update_timing_exposure_page():
+def update_timing_exposure_page(timeout=600):
     """更新量化择时研究里的 ML 敞口页"""
     log("═══ 择时敞口评分页 ═══")
     base = os.path.expanduser('~/Desktop/quant-backtest/timing_model')
