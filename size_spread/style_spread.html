@@ -153,6 +153,7 @@ a{color:#ff8c00!important}
     }
     // override CSS 切换
     var lk=document.getElementById("bb-override-link");
+    if(m!=="light"&&!lk){lk=document.createElement("link");lk.rel="stylesheet";lk.id="bb-override-link";lk.href="../bloomberg-override.css";document.head.appendChild(lk);}
     if(lk)lk.disabled=(m==="light");
     var s2=document.getElementById("bb-override");
     if(s2)s2.media=(m==="light"?"not all":"all");
