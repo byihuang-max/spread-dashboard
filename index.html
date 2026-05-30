@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="bloomberg-shell.css">
 <script>if(window.self!==window.top){document.documentElement.innerHTML='';window.stop()}</script>
 <style>
+/* View Transitions: 圆形扩散动画 */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:9999}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --sidebar-w:210px;
@@ -368,10 +372,27 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     var t=0;var iv=setInterval(function(){t++;if(tryHook()||t>50)clearInterval(iv);},50);
   }
 
-  // 6) 原地切换函数（不刷新页面）
-  window.bbToggleMode=function(){
+  // 6) 原地切换函数（圆形扩散动画）
+  window.bbToggleMode=function(evt){
     var newMode=window.__bbMode==="dark"?"light":"dark";
-    applyMode(newMode);
+    // 如果浏览器支持 View Transitions API，用圆形扩散
+    if(document.startViewTransition){
+      // 获取点击位置（按钮中心）
+      var x=window.innerWidth-60, y=40;
+      if(evt && evt.clientX){x=evt.clientX;y=evt.clientY;}
+      var endRadius=Math.hypot(Math.max(x,window.innerWidth-x),Math.max(y,window.innerHeight-y));
+      var t=document.startViewTransition(function(){
+        applyMode(newMode);
+      });
+      t.ready.then(function(){
+        document.documentElement.animate(
+          {clipPath:['circle(0px at '+x+'px '+y+'px)','circle('+endRadius+'px at '+x+'px '+y+'px)']},
+          {duration:500,easing:'ease-out',pseudoElement:'::view-transition-new(root)'}
+        );
+      }).catch(function(){});
+    }else{
+      applyMode(newMode);
+    }
   };
 })();
 </script>
@@ -3808,7 +3829,7 @@ function showApp(user){
       // 主题切换按钮（原地切换，不刷新页面）
       var isLight=window.__bbMode==='light';
       var themeIcon=isLight?'☾ 暗色':'☀ 亮色';
-      var themeBtn='<button class="theme-toggle-btn" onclick="bbToggleMode()" title="切换主题">'+themeIcon+'</button>';
+      var themeBtn='<button class="theme-toggle-btn" onclick="bbToggleMode(event)" title="切换主题">'+themeIcon+'</button>';
       bar.innerHTML='<div class="avatar">'+initial+'</div><span>'+(user.display_name||user.username)+'</span>'+themeBtn+adminBtn+teamBtn+changePwBtn+logoutBtn;
       header.appendChild(bar);
     }
