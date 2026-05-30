@@ -4,13 +4,14 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#2563eb">
+<meta name="theme-color" content="#ff8c00">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GAMT">
 <link rel="manifest" href="static/manifest.json">
 <link rel="apple-touch-icon" href="static/icon-192.png">
 <title>GAMT 投研看板</title>
+<link rel="stylesheet" href="bloomberg-shell.css">
 <script>if(window.self!==window.top){document.documentElement.innerHTML='';window.stop()}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -294,12 +295,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   try{localStorage.setItem("bbMode",mode);}catch(_e){}
   window.__bbMode=mode;
 
-  // 2) 注入 CSS：shell始终加载(sidebar/header Bloomberg风), dark额外加载override(内容区暗色)
-  var shellLink=document.createElement("link");
-  shellLink.rel="stylesheet";shellLink.href="bloomberg-shell.css";
-  shellLink.id="bb-shell-css";
-  document.head.appendChild(shellLink);
-
+  // 2) 注入 CSS：dark额外加载override(内容区暗色)，shell已在<head>静态加载
   var darkLink=document.createElement("link");
   darkLink.rel="stylesheet";darkLink.href="bloomberg-override.css";
   darkLink.id="bb-dark-css";darkLink.disabled=(mode==="light");
