@@ -1,0 +1,145 @@
+/* ========== GAMT Bloomberg Shell Only ==========
+ * 只覆盖外框架（sidebar + header + user-bar），内容区保持原始白色样式。
+ * 用于 light 模式：Bloomberg 风格外壳 + 原始白色内容区。
+ */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --sidebar-w: 180px !important;
+  --header-h: 36px !important;
+}
+
+/* Force monospace on shell elements */
+.sidebar, .nav-item, .header, .user-bar, button {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background: #0a0a0a !important;
+  border-right: 1px solid #2a2a2a !important;
+  width: 180px !important;
+}
+.sidebar .logo {
+  border-bottom: 1px solid #2a2a2a !important;
+  font-size: 13px !important;
+  padding: 12px 14px !important;
+}
+.sidebar .logo em {
+  color: #ff8c00 !important;
+}
+.nav-group-title {
+  color: #ff8c00 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  padding: 10px 14px 4px !important;
+  font-weight: 700 !important;
+}
+.nav-item {
+  font-size: 10px !important;
+  padding: 7px 14px !important;
+  border-radius: 0 !important;
+  color: #888 !important;
+  border-left: 2px solid transparent !important;
+}
+.nav-item:hover {
+  background: #1a1a1a !important;
+  color: #ccc !important;
+}
+.nav-item.active {
+  color: #ff8c00 !important;
+  background: #111 !important;
+  border-left-color: #ff8c00 !important;
+}
+.nav-item .badge, .nav-item span[style*="background:#ff9800"] {
+  display: none !important;
+}
+.user-info {
+  border-top: 1px solid #2a2a2a !important;
+  color: #555 !important;
+}
+
+/* Header */
+.header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  height: 36px !important;
+}
+.header .title {
+  font-size: 12px !important;
+  color: #ff8c00 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+.header .meta {
+  font-size: 10px !important;
+  color: #666 !important;
+}
+.refresh-btn {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #888 !important;
+  border-radius: 2px !important;
+  font-size: 10px !important;
+}
+.refresh-btn:hover {
+  background: #ff8c00 !important;
+  color: #000 !important;
+  border-color: #ff8c00 !important;
+}
+
+/* User bar */
+.user-bar {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  color: #ccc !important;
+  font-size: 11px !important;
+  padding: 4px 12px !important;
+}
+.user-bar .avatar {
+  background: #ff8c00 !important;
+  color: #000 !important;
+  width: 22px !important;
+  height: 22px !important;
+  font-size: 11px !important;
+  border-radius: 2px !important;
+}
+.user-bar .admin-btn {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #888 !important;
+  border-radius: 2px !important;
+  font-size: 10px !important;
+}
+.user-bar .admin-btn:hover {
+  border-color: #ff8c00 !important;
+  color: #ff8c00 !important;
+}
+.user-bar .logout-btn {
+  background: transparent !important;
+  border: 1px solid #333 !important;
+  color: #666 !important;
+  border-radius: 2px !important;
+  font-size: 10px !important;
+}
+.user-bar .logout-btn:hover {
+  border-color: #ff3b3b !important;
+  color: #ff3b3b !important;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  padding: 4px 8px !important;
+  border: 1px solid #2a2a2a !important;
+  background: #1a1a1a !important;
+  color: #888 !important;
+  border-radius: 0 !important;
+  font-size: 11px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  cursor: pointer !important;
+  letter-spacing: 0.5px !important;
+}
+.theme-toggle-btn:hover {
+  border-color: #ff8c00 !important;
+  color: #ff8c00 !important;
+}

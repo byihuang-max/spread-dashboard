@@ -294,31 +294,36 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   try{localStorage.setItem("bbMode",mode);}catch(_e){}
   window.__bbMode=mode;
 
-  // 2) 注入暗色基底 CSS（始终加载）
-  var l=document.createElement("link");l.rel="stylesheet";l.href="bloomberg-override.css";document.head.appendChild(l);
+  // 2) 注入 CSS：dark=bloomberg-override.css, light=bloomberg-shell.css
+  var darkLink=document.createElement("link");
+  darkLink.rel="stylesheet";darkLink.href="bloomberg-override.css";
+  darkLink.id="bb-dark-css";darkLink.disabled=(mode==="light");
+  document.head.appendChild(darkLink);
+
+  var shellLink=document.createElement("link");
+  shellLink.rel="stylesheet";shellLink.href="bloomberg-shell.css";
+  shellLink.id="bb-shell-css";shellLink.disabled=(mode!=="light");
+  document.head.appendChild(shellLink);
 
   // 3) 注入过渡动画 CSS
   var transStyle=document.createElement("style");
   transStyle.textContent="body,body .content,body .sidebar,body .card,.header,.user-bar,.ov-card,.overview-grid,.module-page,.nav-item,.card-title{transition:background-color .35s ease,color .35s ease,border-color .35s ease;}";
   document.head.appendChild(transStyle);
 
-  // 4) light CSS link（预创建，按需启用）
-  var lightLink=document.createElement("link");
-  lightLink.rel="stylesheet";lightLink.href="bloomberg-light.css";
-  lightLink.id="bb-light-css";lightLink.disabled=(mode!=="light");
-  document.head.appendChild(lightLink);
-
-  // 5) 应用 body class
+  // 4) 应用 body class
   function applyMode(m){
     window.__bbMode=m;
     try{localStorage.setItem("bbMode",m);}catch(_e){}
+    // 切换 CSS
+    var dk=document.getElementById("bb-dark-css");
+    var sh=document.getElementById("bb-shell-css");
+    if(dk)dk.disabled=(m==="light");
+    if(sh)sh.disabled=(m!=="light");
     if(!document.body)return;
     if(m==="light"){
       document.body.classList.add("bb-light","bb-light-shell");
-      lightLink.disabled=false;
     }else{
       document.body.classList.remove("bb-light","bb-light-shell");
-      lightLink.disabled=true;
     }
     // 更新 Chart.js 默认色 + 刷新所有图表
     if(typeof Chart!=="undefined"){
@@ -333,16 +338,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       try{
         var doc=fr.contentDocument||fr.contentWindow.document;
         if(!doc||!doc.body)return;
-        if(m==="light"){doc.body.classList.add("bb-light");}
-        else{doc.body.classList.remove("bb-light");}
-        // 切换 light css
-        var links=doc.querySelectorAll('link[href*="bloomberg-light"]');
-        links.forEach(function(lk){lk.disabled=(m!=="light");});
-        if(m==="light"&&links.length===0){
-          var ov=doc.querySelector('link[href*="bloomberg-override"]');
-          var pre=ov?ov.getAttribute("href").replace("bloomberg-override.css",""):"../../";
-          var nl=doc.createElement("link");nl.rel="stylesheet";nl.href=pre+"bloomberg-light.css?v="+Date.now();
-          doc.head.appendChild(nl);
+        if(m==="light"){
+          doc.body.classList.add("bb-light");
+          // light模式：移除iframe的bloomberg-override，让子页面回到原始白色
+          var overrideLinks=doc.querySelectorAll('link[href*="bloomberg-override"]');
+          overrideLinks.forEach(function(lk){lk.disabled=true;});
+        }else{
+          doc.body.classList.remove("bb-light");
+          var overrideLinks=doc.querySelectorAll('link[href*="bloomberg-override"]');
+          overrideLinks.forEach(function(lk){lk.disabled=false;});
         }
         // 刷新子页面 Chart.js
         if(fr.contentWindow.Chart){
@@ -360,7 +364,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   if(document.body)applyMode(mode);
   else document.addEventListener("DOMContentLoaded",function(){applyMode(mode);});
 
-  // 6) hook chart.js after it loads
+  // 5) hook chart.js after it loads
   function tryHook(){
     if(typeof Chart==="undefined")return false;
     var isLight=window.__bbMode==="light";
@@ -372,12 +376,13 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       afterLayout:function(chart){
         try{
           var lightNow=window.__bbMode==="light";
+          if(lightNow)return; // light模式不干预图表，用原始样式
           Object.values(chart.scales||{}).forEach(function(scale){
             if(scale.options&&scale.options.grid){
               scale.options.grid.display=false;
             }
             if(scale.options&&scale.options.border)scale.options.border.display=false;
-            if(scale.options&&scale.options.ticks)scale.options.ticks.color=lightNow?"#475569":"#888";
+            if(scale.options&&scale.options.ticks)scale.options.ticks.color="#888";
             if(scale.options&&scale.options.title&&scale.options.title.display)scale.options.title.color="#ff8c00";
           });
         }catch(_e){}
@@ -389,7 +394,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     var t=0;var iv=setInterval(function(){t++;if(tryHook()||t>50)clearInterval(iv);},50);
   }
 
-  // 7) 原地切换函数（不刷新页面）
+  // 6) 原地切换函数（不刷新页面）
   window.bbToggleMode=function(){
     var newMode=window.__bbMode==="dark"?"light":"dark";
     applyMode(newMode);
