@@ -331,12 +331,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
     }
     // 通知所有 iframe 子页面切换主题（延迟reload，等主框架过渡完）
     setTimeout(function(){
+      var bust = "?_t=" + Date.now();
       document.querySelectorAll("iframe").forEach(function(fr){
         try{
-          if(fr.contentWindow && fr.src && fr.offsetParent !== null){
-            fr.contentWindow.location.reload();
-          } else if(fr.contentWindow){
-            fr.dataset.needsReload = "1";
+          if(fr.src && fr.offsetParent !== null){
+            // 强制刷新：改 src 加 cache-busting 参数
+            var base = fr.src.split("?")[0];
+            fr.src = base + bust;
+          } else if(fr.src){
+            fr.setAttribute("data-needs-reload", "1");
           }
         }catch(_e){}
       });
@@ -3198,6 +3201,12 @@ function initCbCharts() {
     document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
     nav.classList.add('active');
     page.classList.add('active');
+    // 检查 iframe 是否需要 reload（主题切换时标记的）
+    page.querySelectorAll('iframe[data-needs-reload="1"]').forEach(function(fr){
+      fr.removeAttribute('data-needs-reload');
+      var base=fr.src.split("?")[0];
+      fr.src=base+"?_t="+Date.now();
+    });
     document.getElementById('pageTitle').textContent=titles[mod]||mod;
     if(typeof updateHeaderRefreshBtn==='function') updateHeaderRefreshBtn();
     if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
