@@ -6,7 +6,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;overflow-x:hidden}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;transition:background .35s ease,color .35s ease;overflow-x:hidden}
+html.bb-dark,html.bb-dark body{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00}
 .section{margin-bottom:24px}
 .signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .signal-main{font-size:18px;font-weight:800}
@@ -776,12 +777,7 @@ new Chart(document.getElementById('medianChart'),{
   }
   if(!isBloomberg) return;
   // 监听主页面主题切换
-  window.addEventListener("message",function(ev){
-    if(!ev.data||ev.data.type!=="bb-theme")return;
-    var m=ev.data.mode; window.__bbMode=m;
-    var injected=document.getElementById("bb-inline-dark");
-    if(injected)injected.disabled=(m==="light");
-  });
+  window.addEventListener("message",function(ev){if(!ev.data||ev.data.type!=="bb-theme")return;var m=ev.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");var bb=document.getElementById("bb-inline-dark");if(bb)bb.disabled=(m==="light");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});
 
   var s = document.createElement('style');
   s.id = "bb-inline-dark";

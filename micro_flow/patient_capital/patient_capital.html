@@ -9,11 +9,12 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family:'JetBrains Mono',SF Mono,monospace;
     background: #ffffff;
     color: #2d3142;
     padding: 20px 24px;
 }
+html.bb-dark,html.bb-dark body{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00}
 h1 {
     text-align: center;
     font-size: 18px;
@@ -158,6 +159,7 @@ h1 {
     color: #9ca3af;
     padding: 60px 0;
     font-size: 14px;
+    transition: background .35s ease, color .35s ease;
 }
 
 /* ═══ 方法论 ═══ */
@@ -327,7 +329,20 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
   }
 })();
 </script>
-<script>(function(){try{var mode="dark";try{mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light")return;var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;l.id="bb-override-link";document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";}catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");if(m==="light"){document.body.classList.remove("bb-light");}if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});</script>
+<script>(function(){try{
+    var _mode="dark";try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+    window.__bbMode=_mode;
+    if(_mode!=="light"){
+      document.documentElement.classList.add("bb-dark");
+      document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("bb-dark");});
+      var s=document.getElementById("bb-override");
+      if(s)s.media="all";
+      var l=document.createElement("link");
+      l.rel="stylesheet";l.id="bb-override-link";
+      l.href="../../bloomberg-override.css";
+      document.head.appendChild(l);
+    }
+  }catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");var s2=document.getElementById("bb-override");if(s2)s2.media=(m==="light"?"not all":"all");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});}});</script>
 </head>
 <body>
 

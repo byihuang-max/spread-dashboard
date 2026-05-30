@@ -4,7 +4,7 @@
 <title>全球金融日历</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Monaco','SF Mono',monospace;background:#0b0f14;color:#d4d8e0;padding:14px;font-size:13px;line-height:1.5}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:#0b0f14;color:#d4d8e0;padding:14px;font-size:13px;line-height:1.5}
 h2{font-size:14px;font-weight:700;margin-bottom:10px;color:#e7eaf0;letter-spacing:0.5px}
 .hero{background:linear-gradient(135deg,#111722,#1a2233);border:1px solid #2a3240;border-radius:6px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .hero-title{font-size:16px;font-weight:800;color:#f0f3f8;letter-spacing:1px}
@@ -166,7 +166,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   }
 })();
 </script>
-<script>(function(){try{var mode="dark";try{mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light")return;var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;l.id="bb-override-link";document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";}catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");if(m==="light"){document.body.classList.remove("bb-light");}if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});</script>
+<script>(function(){try{var mode="dark";try{mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode!=="light"){document.documentElement.classList.add("bb-dark");document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("bb-dark");});var s=document.getElementById("bb-override");if(s)s.media="all";var l=document.createElement("link");l.rel="stylesheet";l.id="bb-override-link";l.href="../../bloomberg-override.css";document.head.appendChild(l);}}catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");var s2=document.getElementById("bb-override");if(s2)s2.media=(m==="light"?"not all":"all");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});</script>
 </head>
 <body>
 <div class="loading" id="loadingMsg">加载中...</div>
