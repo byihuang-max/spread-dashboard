@@ -1,12 +1,18 @@
 /* ========== GAMT Bloomberg Shell Only ==========
  * 只覆盖外框架（sidebar + header + user-bar），内容区保持原始白色样式。
  * 用于 light 模式：Bloomberg 风格外壳 + 原始白色内容区。
+ * 注意：此文件始终加载（不 disable），确保 sidebar 永远是 Bloomberg 风格。
  */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   --sidebar-w: 180px !important;
   --header-h: 36px !important;
+  --sidebar-bg: #0a0a0a !important;
+  --sidebar-text: #888 !important;
+  --accent: #ff8c00 !important;
+  --accent-light: rgba(255,140,0,0.08) !important;
+  --accent-glow: rgba(255,140,0,0.15) !important;
 }
 
 /* Force monospace on shell elements */

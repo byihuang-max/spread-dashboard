@@ -294,16 +294,16 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   try{localStorage.setItem("bbMode",mode);}catch(_e){}
   window.__bbMode=mode;
 
-  // 2) 注入 CSS：dark=bloomberg-override.css, light=bloomberg-shell.css
+  // 2) 注入 CSS：shell始终加载(sidebar/header Bloomberg风), dark额外加载override(内容区暗色)
+  var shellLink=document.createElement("link");
+  shellLink.rel="stylesheet";shellLink.href="bloomberg-shell.css";
+  shellLink.id="bb-shell-css";
+  document.head.appendChild(shellLink);
+
   var darkLink=document.createElement("link");
   darkLink.rel="stylesheet";darkLink.href="bloomberg-override.css";
   darkLink.id="bb-dark-css";darkLink.disabled=(mode==="light");
   document.head.appendChild(darkLink);
-
-  var shellLink=document.createElement("link");
-  shellLink.rel="stylesheet";shellLink.href="bloomberg-shell.css";
-  shellLink.id="bb-shell-css";shellLink.disabled=(mode!=="light");
-  document.head.appendChild(shellLink);
 
   // 3) 注入过渡动画 CSS
   var transStyle=document.createElement("style");
@@ -314,11 +314,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   function applyMode(m){
     window.__bbMode=m;
     try{localStorage.setItem("bbMode",m);}catch(_e){}
-    // 切换 CSS
+    // 切换 CSS（只切 override，shell 始终生效）
     var dk=document.getElementById("bb-dark-css");
-    var sh=document.getElementById("bb-shell-css");
     if(dk)dk.disabled=(m==="light");
-    if(sh)sh.disabled=(m!=="light");
     if(!document.body)return;
     if(m==="light"){
       document.body.classList.add("bb-light","bb-light-shell");
@@ -331,20 +329,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";
       Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});
     }
-    // 通知所有 iframe 子页面切换主题（reload 方式，确保 inline style 重新生成）
-    document.querySelectorAll("iframe").forEach(function(fr){
-      try{
-        // 只 reload 已加载且可见的 iframe
-        if(fr.contentWindow && fr.src && fr.offsetParent !== null){
-          fr.contentWindow.location.reload();
-        } else if(fr.contentWindow){
-          // 不可见的 iframe 标记需要刷新，下次显示时触发
-          fr.dataset.needsReload = "1";
-        }
-      }catch(_e){
-        // 跨域或未加载的 iframe，忽略
-      }
-    });
+    // 通知所有 iframe 子页面切换主题（延迟reload，等主框架过渡完）
+    setTimeout(function(){
+      document.querySelectorAll("iframe").forEach(function(fr){
+        try{
+          if(fr.contentWindow && fr.src && fr.offsetParent !== null){
+            fr.contentWindow.location.reload();
+          } else if(fr.contentWindow){
+            fr.dataset.needsReload = "1";
+          }
+        }catch(_e){}
+      });
+    }, 400);
     // 更新切换按钮图标
     var btn=document.querySelector(".theme-toggle-btn");
     if(btn)btn.textContent=m==="light"?"\u263D 暗色":"\u2600 亮色";
