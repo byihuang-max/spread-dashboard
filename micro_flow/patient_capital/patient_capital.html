@@ -488,6 +488,11 @@ function renderStateBoard() {
     if (conc.top?.length) {
         lines.push(`4）持仓结构上，当前最重的是 <b>${conc.top[0].name}</b>（${conc.top[0].share_pct}%），风格偏向 <b>${conc.top[0].bucket}</b>。`);
     }
+    // 统计 net=0 的指数，提示用户
+    const zeroNetIndices = Object.entries(DATA.indices).filter(([n, info]) => info.latest && info.latest.net === 0).map(([n]) => n);
+    if (zeroNetIndices.length > 0) {
+        lines.push(`<span style="color:#9ca3af;font-size:12px">注：${zeroNetIndices.join('、')} 当日成交未触发异常阈值（非数据缺失），表示无明显耐心资本动作。</span>`);
+    }
     explain.innerHTML = '<b> 国家队状态解读：</b><br>' + lines.join('<br>');
 }
 
@@ -528,6 +533,7 @@ function renderCards() {
             ${L.cost_idx ? `<div class="meta" style="margin-top:2px"><span> 成本指数位 <b style="color:#6366f1;font-size:13px">${L.cost_idx.toFixed(0)}</b></span>${L.idx_close ? `<span>现指数 <b>${L.idx_close.toFixed(0)}</b></span>` : ''}</div>` : ''}
             <div class="meta" style="margin-top:2px"><span>状态 <b>${L.intent || '暂无'}</b></span><span>${L.pnl_behavior || ''}</span></div>
             <div class="meta"><span>成交占比 <b>${(L.net_to_turnover_pct ?? 0).toFixed(1)}%</b></span><span>偏离20日均值 <b>${(L.net_zscore ?? 0).toFixed(1)}</b></span></div>
+            ${L.net === 0 && L.flow_tag === '低活跃' ? '<div style="margin-top:4px;font-size:11px;color:#9ca3af;background:#f3f4f6;border-radius:4px;padding:2px 6px;display:inline-block">当日成交未触发阈值·非数据缺失</div>' : ''}
         `;
         card.onclick = () => selectIndex(name);
         el.appendChild(card);
@@ -708,6 +714,8 @@ function renderCharts() {
                             else if (signalType === '双重异常') notes.push(' 绝对大单+托盘');
                             const isHeavy = Math.abs(net) > heavyThreshold;
                             if (isHeavy) notes.push(net > 0 ? '⚠ 大幅净买入' : '⚠ 大幅净卖出');
+                            // net=0 时提示非数据缺失
+                            if (net === 0) notes.push('当日成交未达异常阈值');
                             return notes.join('\n');
                         }
                     }
