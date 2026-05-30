@@ -331,31 +331,19 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";
       Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});
     }
-    // 通知所有 iframe 子页面切换主题
+    // 通知所有 iframe 子页面切换主题（reload 方式，确保 inline style 重新生成）
     document.querySelectorAll("iframe").forEach(function(fr){
-      try{fr.contentWindow.postMessage({type:"bb-theme",mode:m},"*");}catch(_e){}
-      // 同源直接操作 DOM 兜底
       try{
-        var doc=fr.contentDocument||fr.contentWindow.document;
-        if(!doc||!doc.body)return;
-        if(m==="light"){
-          doc.body.classList.add("bb-light");
-          // light模式：移除iframe的bloomberg-override，让子页面回到原始白色
-          var overrideLinks=doc.querySelectorAll('link[href*="bloomberg-override"]');
-          overrideLinks.forEach(function(lk){lk.disabled=true;});
-        }else{
-          doc.body.classList.remove("bb-light");
-          var overrideLinks=doc.querySelectorAll('link[href*="bloomberg-override"]');
-          overrideLinks.forEach(function(lk){lk.disabled=false;});
+        // 只 reload 已加载且可见的 iframe
+        if(fr.contentWindow && fr.src && fr.offsetParent !== null){
+          fr.contentWindow.location.reload();
+        } else if(fr.contentWindow){
+          // 不可见的 iframe 标记需要刷新，下次显示时触发
+          fr.dataset.needsReload = "1";
         }
-        // 刷新子页面 Chart.js
-        if(fr.contentWindow.Chart){
-          fr.contentWindow.Chart.defaults.color=m==="light"?"#475569":"#888";
-          fr.contentWindow.Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";
-          Object.values(fr.contentWindow.Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});
-        }
-        fr.contentWindow.__bbMode=m;
-      }catch(_e){}
+      }catch(_e){
+        // 跨域或未加载的 iframe，忽略
+      }
     });
     // 更新切换按钮图标
     var btn=document.querySelector(".theme-toggle-btn");
