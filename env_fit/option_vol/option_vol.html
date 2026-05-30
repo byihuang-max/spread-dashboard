@@ -67,7 +67,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
 <script>
 (function(){
   function isBloomberg(){
-    try{return !window.parent.location.search.includes("theme=light")}catch(e){return false}
+    try{return (window.__bbMode||window.parent.__bbMode||"dark")!=="light";}catch(e){return false}
   }
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
@@ -100,7 +100,7 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
   }
 })();
 </script>
-<script>(function(){try{if(!window.parent.location.search.includes("theme=light")){var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";var mode="dark";try{mode=window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light"){var l2=document.createElement("link");l2.rel="stylesheet";l2.href=pre+"bloomberg-light.css"+v;document.head.appendChild(l2);function addLight(){if(document.body)document.body.classList.add("bb-light");}if(document.body)addLight();else document.addEventListener("DOMContentLoaded",addLight);}}}catch(e){}})();</script>
+<script>(function(){try{var mode="dark";try{mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}window.__bbMode=mode;if(mode==="light")return;var pre="../../";var v="?v="+Date.now();var l=document.createElement("link");l.rel="stylesheet";l.href=pre+"bloomberg-override.css"+v;l.id="bb-override-link";document.head.appendChild(l);var bb=document.getElementById("bb-override");if(bb)bb.media="screen";}catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");if(m==="light"){document.body.classList.remove("bb-light");}if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});</script>
 </head>
 <body>
   <!-- 第一屏：顶部环境指标 -->

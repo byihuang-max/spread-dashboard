@@ -95,7 +95,7 @@ a{color:#ff8c00!important}
 <script>
 (function(){
   function isBloomberg(){
-    try{return !window.parent.location.search.includes("theme=light")}catch(e){return false}
+    try{return (window.__bbMode||window.parent.__bbMode||"dark")!=="light";}catch(e){return false}
   }
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
@@ -125,15 +125,18 @@ a{color:#ff8c00!important}
     },50);
   }
   try{
-    if(!window.parent.location.search.includes("theme=light")){
+    var _mode="dark";try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+    window.__bbMode=_mode;
+    if(_mode!=="light"){
       var s=document.getElementById("bb-override");
       if(s)s.media="all";
       var l=document.createElement("link");
-      l.rel="stylesheet";
+      l.rel="stylesheet";l.id="bb-override-link";
       l.href="../bloomberg-override.css";
       document.head.appendChild(l);
     }
   }catch(e){}
+  window.addEventListener("message",function(ev){if(!ev.data||ev.data.type!=="bb-theme")return;var m=ev.data.mode;window.__bbMode=m;var lk=document.getElementById("bb-override-link");if(lk)lk.disabled=(m==="light");var s2=document.getElementById("bb-override");if(s2)s2.media=(m==="light"?"not all":"all");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});
 })();
 </script>
 </head><body>
