@@ -325,21 +325,12 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
       Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";
       Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});
     }
-    // 通知所有 iframe 子页面切换主题（延迟reload，等主框架过渡完）
-    setTimeout(function(){
-      var bust = "?_t=" + Date.now();
-      document.querySelectorAll("iframe").forEach(function(fr){
-        try{
-          if(fr.src && fr.offsetParent !== null){
-            // 强制刷新：改 src 加 cache-busting 参数
-            var base = fr.src.split("?")[0];
-            fr.src = base + bust;
-          } else if(fr.src){
-            fr.setAttribute("data-needs-reload", "1");
-          }
-        }catch(_e){}
-      });
-    }, 400);
+    // 通知所有 iframe 子页面切换主题（postMessage，不reload，丝滑过渡）
+    document.querySelectorAll("iframe").forEach(function(fr){
+      try{
+        fr.contentWindow.postMessage({type:"bb-theme",mode:m},"*");
+      }catch(_e){}
+    });
     // 更新切换按钮图标
     var btn=document.querySelector(".theme-toggle-btn");
     if(btn)btn.textContent=m==="light"?"\u263D 暗色":"\u2600 亮色";
@@ -3197,12 +3188,6 @@ function initCbCharts() {
     document.querySelectorAll('.module-page').forEach(function(p){p.classList.remove('active')});
     nav.classList.add('active');
     page.classList.add('active');
-    // 检查 iframe 是否需要 reload（主题切换时标记的）
-    page.querySelectorAll('iframe[data-needs-reload="1"]').forEach(function(fr){
-      fr.removeAttribute('data-needs-reload');
-      var base=fr.src.split("?")[0];
-      fr.src=base+"?_t="+Date.now();
-    });
     document.getElementById('pageTitle').textContent=titles[mod]||mod;
     if(typeof updateHeaderRefreshBtn==='function') updateHeaderRefreshBtn();
     if(mod==='update-log' && typeof loadUpdateLog==='function') loadUpdateLog();
