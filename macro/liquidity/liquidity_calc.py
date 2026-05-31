@@ -107,6 +107,16 @@ def calc():
             result['signals'].append(f"M1-M2剪刀差 {scissors:+.1f}%，资金活化 🟢")
         elif scissors < -5:
             result['signals'].append(f"M1-M2剪刀差 {scissors:+.1f}%，资金趋于保守 🟡")
+    else:
+        # 防止覆盖：如果缓存为空但旧 JSON 有 money_supply，保留旧数据
+        if os.path.exists(OUTPUT_JSON):
+            try:
+                old = json.load(open(OUTPUT_JSON, encoding='utf-8'))
+                if 'money_supply' in old and old['money_supply']:
+                    result['money_supply'] = old['money_supply']
+                    print("  [warn] money_supply.csv 为空，保留上次 JSON 数据")
+            except Exception:
+                pass
 
     if not result['signals']:
         result['signals'] = ['流动性指标无极端信号 ']
