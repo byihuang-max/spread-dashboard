@@ -10,7 +10,7 @@
 html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888;--sub-card-bg:#111;--sub-card-text:#ccc;--sub-card-sub:#888;--sub-card-hint:#666}
 body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease;overflow-x:hidden}
 .section{margin-bottom:24px}
-.signal-bar{background:var(--signal-bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-bar{background:var(--signal-bg);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .signal-main{font-size:18px;font-weight:800;color:var(--accent)}
 .signal-tags{display:flex;gap:8px;flex-wrap:wrap}
 .signal-tag{background:var(--tag-bg);padding:4px 12px;border-radius:4px;font-size:12px;color:var(--tag-text)}
@@ -21,11 +21,11 @@ html.bb-dark .signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
 html.bb-dark .signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
 html.bb-dark .signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
 .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.s-card{background:var(--card-bg);padding:14px;border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center}
+.s-card{background:var(--card-bg);padding:14px;border:1px solid var(--border);text-align:center}
 .s-card .s-label{font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
 .s-card .s-value{font-size:22px;font-weight:800;color:var(--text)}
 .s-card .s-sub{font-size:11px;color:var(--text-sub);margin-top:4px}
-.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent);margin-bottom:16px;overflow:hidden}
+.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);margin-bottom:16px;overflow:hidden}
 .chart-box h3{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px}
 .chart-wrap{position:relative;height:380px}
 .chart-wrap-sm{position:relative;height:320px}
@@ -113,12 +113,12 @@ html.bb-dark #dynamic-themes-section{border-color:var(--border)!important}
       </div>
       <!-- 分项指标 -->
       <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #2563eb">
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border:1px solid var(--border)">
           <div style="font-size:11px;color:#64748b;margin-bottom:4px">叙事联动指数 (NLI)</div>
           <div style="font-size:18px;font-weight:700;color:#1e293b">0.308</div>
           <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 28% 分位</div>
         </div>
-        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #F7931A">
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border:1px solid var(--border)">
           <div style="font-size:11px;color:#64748b;margin-bottom:4px">量能加速度 (VA)</div>
           <div style="font-size:18px;font-weight:700;color:#1e293b">+18.5%</div>
           <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 85% 分位</div>
