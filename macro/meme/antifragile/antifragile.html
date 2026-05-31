@@ -31,6 +31,24 @@ html.bb-dark .signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
 .chart-wrap-sm{position:relative;height:320px}
 .chart-note{font-size:11px;color:var(--text-sub);line-height:1.7;margin-top:10px;padding:10px 12px;background:var(--note-bg);border:1px solid var(--border)}
 .chart-note b{color:var(--text)}
+/* Dark mode overrides for inline styles */
+html.bb-dark [style*="background:#f8fafc"],html.bb-dark [style*="background:#f1f5f9"],html.bb-dark [style*="background:#fff"]{background:var(--sub-card-bg)!important}
+html.bb-dark [style*="background:linear-gradient(135deg,#1e2433"]{background:var(--signal-bg)!important;border:1px solid var(--border)!important}
+html.bb-dark [style*="color:#374151"],html.bb-dark [style*="color:#2d3142"]{color:var(--text)!important}
+html.bb-dark [style*="color:#1e293b"]{color:var(--text)!important}
+html.bb-dark [style*="color:#64748b"]{color:var(--text-sub)!important}
+html.bb-dark [style*="color:#94a3b8"],html.bb-dark [style*="color:#7c8598"]{color:var(--sub-card-hint)!important}
+html.bb-dark [style*="border-top:2px solid #e2e8f0"],html.bb-dark [style*="border-bottom:1px solid #e2e8f0"],html.bb-dark [style*="border-top:1px solid #e2e8f0"]{border-color:var(--border)!important}
+html.bb-dark [style*="border:1px solid #f5f5f5"],html.bb-dark [style*="border:1px solid #e5e7eb"]{border-color:var(--border)!important}
+html.bb-dark [style*="border-left:3px solid"]{background:var(--sub-card-bg)!important}
+html.bb-dark table{color:var(--text)!important}
+html.bb-dark thead tr{background:var(--signal-bg)!important}
+html.bb-dark thead th{color:var(--accent)!important;border-color:var(--border)!important}
+html.bb-dark tbody td{border-color:var(--border)!important;color:var(--text)!important}
+html.bb-dark tbody tr:nth-child(odd){background:#0f0f0f!important}
+html.bb-dark tbody tr:nth-child(even){background:var(--bg)!important}
+html.bb-dark b{color:#e8e8e8!important}
+html.bb-dark #dynamic-themes-section{border-color:var(--border)!important}
 </style>
 <script>
 (function(){
@@ -175,7 +193,7 @@ new Chart(document.getElementById('memeScoreChart'), {
       annotation: { /* 可用chartjs-plugin-annotation加阶段分界线 */ }
     },
     scales: {
-      y: { min: 0, max: 100, grid: { color: '#f0f0f0' },
+      y: { min: 0, max: 100, 
             ticks: { callback: function(v) { return v + '分'; } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font: { size: 9 } } }
     }
@@ -204,7 +222,7 @@ new Chart(document.getElementById('memeNliChart'), {
       tooltip: { callbacks: { label: function(ctx) { return 'NLI分位: ' + ctx.parsed.y.toFixed(1) + '%'; } } }
     },
     scales: {
-      y: { min: 0, max: 100, grid: { color: '#f0f0f0' },
+      y: { min: 0, max: 100, 
             ticks: { callback: function(v) { return v + '%'; }, font: { size: 9 } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: { size: 9 } } }
     }
@@ -233,7 +251,7 @@ new Chart(document.getElementById('memeVaChart'), {
       } } }
     },
     scales: {
-      y: { grid: { color: '#f0f0f0' },
+      y: { 
             ticks: { callback: function(v) { return (v >= 0 ? '+' : '') + v + '%'; }, font: { size: 9 } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: { size: 9 } } }
     }
@@ -313,7 +331,7 @@ new Chart(document.getElementById('navChart'),{
     },
     scales:{
       y:{
-        grid:{color:'#f0f0f0'},
+        
         ticks:{callback:function(v){return v.toFixed(2);}}
       },
       x:{ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12, font:{size:10}}}
@@ -357,7 +375,7 @@ var medOpts = {
   scales:{
     y:{
       position:'left',
-      grid:{color:'#f0f0f0'},
+      
       ticks:{callback:function(v){return v.toFixed(2);}}
     },
     y2:{
