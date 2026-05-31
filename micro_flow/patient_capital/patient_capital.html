@@ -279,13 +279,9 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
   try{
     var inIframe=(window.parent!==window);
     if(inIframe){
-      _mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";
+      _mode=window.parent.__bbMode||"dark";
     }else{
       _mode=localStorage.getItem("bbMode")||"dark";
-    }
-    if(_mode==="light"&&inIframe){
-      var overrideLink=window.parent.document.getElementById("bb-dark-css");
-      if(overrideLink&&!overrideLink.disabled)_mode="dark";
     }
   }catch(e){}
   window.__bbMode=_mode;
