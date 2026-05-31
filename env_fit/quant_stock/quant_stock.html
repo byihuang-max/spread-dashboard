@@ -139,8 +139,13 @@ code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!
 </script>
 <script>(function(){try{
     var _mode="dark";try{
-      _mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";
-      if(_mode==="light"){
+      var inIframe=(window.parent!==window);
+      if(inIframe){
+        _mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";
+      }else{
+        _mode=localStorage.getItem("bbMode")||"dark";
+      }
+      if(_mode==="light"&&inIframe){
         var overrideLink=window.parent.document.getElementById("bb-dark-css");
         if(overrideLink&&!overrideLink.disabled)_mode="dark";
       }
