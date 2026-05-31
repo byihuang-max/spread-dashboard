@@ -6,31 +6,69 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'JetBrains Mono',SF Mono,monospace;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;transition:background .35s ease,color .35s ease;overflow-x:hidden}
-html.bb-dark,html.bb-dark body{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00}
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--note-bg:#f9fafb;--signal-bg:#f8f9fa;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070;--sub-card-bg:#f8fafc;--sub-card-text:#1e293b;--sub-card-sub:#64748b;--sub-card-hint:#94a3b8}
+html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888;--sub-card-bg:#111;--sub-card-text:#ccc;--sub-card-sub:#888;--sub-card-hint:#666}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease;overflow-x:hidden}
 .section{margin-bottom:24px}
-.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.signal-main{font-size:18px;font-weight:800}
+.signal-bar{background:var(--signal-bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800;color:var(--accent)}
 .signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
-.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
-.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
-.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
-.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
-.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
-.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag{background:var(--tag-bg);padding:4px 12px;border-radius:4px;font-size:12px;color:var(--tag-text)}
+.signal-tag.good{background:rgba(34,197,94,0.15);color:#16a34a}
+.signal-tag.risk{background:rgba(239,68,68,0.15);color:#dc2626}
+.signal-tag.warn{background:rgba(245,158,11,0.15);color:#d97706}
+html.bb-dark .signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+html.bb-dark .signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+html.bb-dark .signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
 .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
-.s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
-.s-card .s-value{font-size:22px;font-weight:800}
-.s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
-.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;overflow:hidden}
-.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.s-card{background:var(--card-bg);padding:14px;border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center}
+.s-card .s-label{font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.s-card .s-value{font-size:22px;font-weight:800;color:var(--text)}
+.s-card .s-sub{font-size:11px;color:var(--text-sub);margin-top:4px}
+.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent);margin-bottom:16px;overflow:hidden}
+.chart-box h3{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px}
 .chart-wrap{position:relative;height:380px}
 .chart-wrap-sm{position:relative;height:320px}
-.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
-.chart-note b{color:#374151}
+.chart-note{font-size:11px;color:var(--text-sub);line-height:1.7;margin-top:10px;padding:10px 12px;background:var(--note-bg);border:1px solid var(--border)}
+.chart-note b{color:var(--text)}
 </style>
+<script>
+(function(){
+  function isDark(){return document.documentElement.classList.contains("bb-dark");}
+  function registerPlugin(){
+    if(typeof Chart==="undefined")return false;
+    Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
+    Chart.register({
+      id:"themeGrid",
+      afterLayout:function(chart){
+        var textSub=isDark()?"#888":"#8b92a5";
+        var gridColor=isDark()?"#222":"#f0f0f0";
+        Object.values(chart.scales).forEach(function(scale){
+          if(scale.options.grid){scale.options.grid.color=gridColor;}
+          if(scale.options.ticks){scale.options.ticks.color=textSub;}
+        });
+      }
+    });
+    return true;
+  }
+  if(!registerPlugin()){var tries=0;var iv=setInterval(function(){tries++;if(registerPlugin()||tries>50)clearInterval(iv);},50);}
+})();
+</script>
+<script>
+(function(){
+  var _mode="dark";
+  try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  window.__bbMode=_mode;
+  if(_mode!=="light"){document.documentElement.classList.add("bb-dark");}
+  window.addEventListener("message",function(e){
+    if(!e.data||e.data.type!=="bb-theme")return;
+    var m=e.data.mode;window.__bbMode=m;
+    if(m==="light"){document.documentElement.classList.remove("bb-dark");}
+    else{document.documentElement.classList.add("bb-dark");}
+    if(typeof Chart!=="undefined"){Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}
+  });
+})();
+</script>
 </head><body>
 
 <div class="signal-bar">
@@ -770,70 +808,9 @@ new Chart(document.getElementById('medianChart'),{
 </script>
 <script>
 (function(){
-  var params = new URLSearchParams(window.location.search);
-  var isBloomberg = params.get('theme')==='bloomberg';
-  if(!isBloomberg && window.parent !== window){
-    try{ var pm=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark"; isBloomberg=(pm==="dark"); }catch(e){}
-  }
-  if(!isBloomberg) return;
-  // 监听主页面主题切换
-  window.addEventListener("message",function(ev){if(!ev.data||ev.data.type!=="bb-theme")return;var m=ev.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(m!=="light"&&!lk){lk=document.createElement("link");lk.rel="stylesheet";lk.id="bb-override-link";lk.href="../../../bloomberg-override.css";document.head.appendChild(lk);}if(lk)lk.disabled=(m==="light");var bb=document.getElementById("bb-inline-dark");if(bb)bb.disabled=(m==="light");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});
-
-  var s = document.createElement('style');
-  s.id = "bb-inline-dark";
-  s.textContent = `
-    body{background:#0a0a0a!important;color:#ccc!important}
-    .signal-bar{background:#0f0f0f!important;border:1px solid #2a2a2a!important;border-radius:0!important;border-left:3px solid #ff8c00!important}
-    .signal-main{color:#ff8c00!important}
-    .s-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important}
-    .s-card .s-label{color:#888!important}
-    .s-card .s-sub{color:#888!important}
-    .chart-box{background:#111!important;border:1px solid #2a2a2a!important}
-    .chart-box h3{color:#ff8c00!important}
-    .chart-note{background:#111!important;color:#888!important;border-color:#2a2a2a!important}
-    table{color:#ccc!important}
-    thead tr{background:#1a1a1a!important}
-    thead th{color:#ff8c00!important;border-color:#2a2a2a!important}
-    tbody td{border-color:#1a1a1a!important}
-    tbody tr:nth-child(odd){background:#0f0f0f!important}
-    tbody tr:nth-child(even){background:#0a0a0a!important}
-    [style*="background:#f8fafc"],[style*="background:#f1f5f9"],[style*="background:#fff"]{background:#111!important}
-    [style*="border-top:2px solid #e2e8f0"]{border-color:#2a2a2a!important}
-    [style*="border-bottom:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
-    [style*="border:1px solid #f5f5f5"]{border-color:#1a1a1a!important}
-    td[style*="background:rgb("]{opacity:0.7!important;border-color:#1a1a1a!important}
-    [style*="color:#374151"],[style*="color:#2d3142"]{color:#ccc!important}
-    [style*="color:#64748b"],[style*="color:#8b92a5"]{color:#888!important}
-    [style*="border-left:3px solid"]{background:#111!important}
-    [style*="border-top:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
-    h3{color:#ff8c00!important}
-    b{color:#e8e8e8!important}
-    #dynamic-themes-section{border-color:#2a2a2a!important}
-  `;
-  document.head.appendChild(s);
-
-  function hookCharts(){
-    if(typeof Chart==='undefined')return false;
-    Chart.register({
-      id:'bbGridAntifragile',
-      afterLayout:function(chart){
-        Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){
-            scale.options.grid.color='#2a2a2a';
-            scale.options.grid.lineWidth=0.6;
-          }
-          if(scale.options.ticks){
-            scale.options.ticks.color='#888';
-          }
-        });
-      }
-    });
-    Chart.defaults.color='#888';
-    Chart.defaults.borderColor='#2a2a2a';
-    return true;
-  }
-  if(!hookCharts()){var i=setInterval(function(){if(hookCharts())clearInterval(i)},200);}
-
+  /* Already bootstrapped in <head>. Just keep the hideGrayInMedChart logic for Bloomberg mode */
+  function isDark(){return document.documentElement.classList.contains("bb-dark");}
+  if(!isDark()) return;
   var hideLabels = ['纳斯达克100','标普500','恒生科技ETF','科创50ETF','日经225','韩国KOSPI'];
   function hideGrayInMedChart(){
     if(typeof Chart==='undefined' || !Chart.instances) return false;
