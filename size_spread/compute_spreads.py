@@ -192,7 +192,7 @@ def compute_crowding(sw_daily):
             volatility = statistics.stdev(pct_changes)
             amt_vol_data.append((code, avg_amount, volatility))
 
-        amt_vol_data.sort(key=lambda x: (x[1], x[2]))
+        amt_vol_data.sort(key=lambda x: (x[1], x[2]), reverse=True)
         composite_rank = {code: idx for idx, (code, _, _) in enumerate(amt_vol_data)}
 
         # Calculate spread
