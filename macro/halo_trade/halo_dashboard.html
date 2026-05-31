@@ -209,11 +209,11 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
                     </div>
                     <div class="chart-wrap" style="height:500px"><div id="asset-style-chart" style="width:100%;height:100%"></div></div>
                     <div class="chart-note">
-                        <b>风格轧差净值（上图）：</b>重资产净值 / 轻资产净值，归一化到基期=1。>1 表示重资产跑赢轻资产。<br>
+                        <b>净值曲线（上图）：</b>重资产组合与轻资产组合各自的净值走势，基期=100。两线分叉越大=风格分化越明显。<br>
                         <b>每日轧差（下图）：</b>重资产日收益率 - 轻资产日收益率（%）。红色=重资产当日占优，蓝色=轻资产当日占优。<br>
                         <b>中国重资产：</b>有色/钢铁/煤炭/公用事业/建筑（申万一级）。<br>
                         <b>中国轻资产：</b>计算机/传媒/电子/医药（申万一级）。<br>
-                        <b>美国拟合：</b>行业ETF等权组合（重：XLE+XLU+XLI+XLB，轻：XLK+XLV+XLC+XLY）。
+                        <b>Y轴 scale:true：</b>自动适配数据范围，不从0开始，放大净值差异的可读性。
                     </div>
                 </div>
             </div>
@@ -543,56 +543,42 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
             const chart = echarts.init(document.getElementById('asset-style-chart'));
             var c = window.bbEchartsColors ? window.bbEchartsColors() : {subTextColor:'#64748b',axisLineColor:'#e8eaef',splitLineColor:'#e8eaef',legendColor:'#374151'};
             
-            // 归一化到1起始的风格轧差净值 = heavy_nav / light_nav，再除以首日值
             const cnDates = cnData.map(d => d.trade_date.slice(0, 10));
-            const cnRaw = cnData.map(d => parseFloat(d.heavy_nav) / parseFloat(d.light_nav));
-            const cnBase = cnRaw[0] || 1;
-            const cnSpread = cnRaw.map(v => v / cnBase);
             
-            const usDates = usData.map(d => d.trade_date.slice(0, 10));
-            const usRaw = usData.map(d => parseFloat(d.heavy_nav) / parseFloat(d.light_nav));
-            const usBase = usRaw[0] || 1;
-            const usSpread = usRaw.map(v => v / usBase);
+            // 上图：两条净值线（基期100）
+            const cnHeavy = cnData.map(d => parseFloat(d.heavy_nav));
+            const cnLight = cnData.map(d => parseFloat(d.light_nav));
             
-            // 每日轧差 = heavy_ret - light_ret (CN有字段; US从nav算)
+            // 下图：每日轧差 = heavy_ret - light_ret
             const cnDaily = cnData.map(d => {
                 var hr = parseFloat(d.heavy_ret), lr = parseFloat(d.light_ret);
-                return (isNaN(hr) || isNaN(lr)) ? 0 : (hr - lr);
-            });
-            const usDaily = usData.map((d, i) => {
-                if (i === 0) return 0;
-                var hNav = parseFloat(d.heavy_nav), hPrev = parseFloat(usData[i-1].heavy_nav);
-                var lNav = parseFloat(d.light_nav), lPrev = parseFloat(usData[i-1].light_nav);
-                var hRet = (hNav / hPrev - 1) * 100;
-                var lRet = (lNav / lPrev - 1) * 100;
-                return hRet - lRet;
+                return (isNaN(hr) || isNaN(lr)) ? 0 : +(hr - lr).toFixed(3);
             });
             
             chart.setOption({
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
                 legend: {
-                    data: ['CN 风格轧差净值', 'US 风格轧差净值', 'CN 每日轧差', 'US 每日轧差'],
+                    data: ['重资产净值', '轻资产净值', '每日轧差(重-轻)'],
                     top: 0,
                     textStyle: { color: c.legendColor, fontSize: 11 }
                 },
                 grid: [
-                    { left: '8%', right: '8%', top: '8%', height: '45%', containLabel: true },
-                    { left: '8%', right: '8%', top: '62%', height: '30%', containLabel: true }
+                    { left: '8%', right: '4%', top: '8%', height: '48%', containLabel: true },
+                    { left: '8%', right: '4%', top: '65%', height: '28%', containLabel: true }
                 ],
                 xAxis: [
                     { type: 'category', data: cnDates, gridIndex: 0, axisLabel: { show: false }, axisLine: { lineStyle: { color: c.axisLineColor } } },
                     { type: 'category', data: cnDates, gridIndex: 1, axisLabel: { color: c.subTextColor, fontSize: 10, rotate: 30 }, axisLine: { lineStyle: { color: c.axisLineColor } } }
                 ],
                 yAxis: [
-                    { type: 'value', name: '净值(基期=1)', gridIndex: 0, axisLabel: { color: c.subTextColor }, axisLine: { lineStyle: { color: c.axisLineColor } }, splitLine: { lineStyle: { color: c.splitLineColor } } },
+                    { type: 'value', name: '净值(基期100)', gridIndex: 0, scale: true, axisLabel: { color: c.subTextColor }, axisLine: { lineStyle: { color: c.axisLineColor } }, splitLine: { lineStyle: { color: c.splitLineColor } } },
                     { type: 'value', name: '日轧差(%)', gridIndex: 1, axisLabel: { color: c.subTextColor }, axisLine: { lineStyle: { color: c.axisLineColor } }, splitLine: { lineStyle: { color: c.splitLineColor } } }
                 ],
                 series: [
-                    { name: 'CN 风格轧差净值', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: cnSpread, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#ef4444' }, itemStyle: { color: '#ef4444' } },
-                    { name: 'US 风格轧差净值', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: usSpread.length >= cnDates.length ? usSpread.slice(0, cnDates.length) : usSpread, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#3b82f6' }, itemStyle: { color: '#3b82f6' } },
-                    { name: 'CN 每日轧差', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: cnDaily, barWidth: '35%', itemStyle: { color: function(p){ return p.value >= 0 ? 'rgba(239,68,68,0.6)' : 'rgba(59,130,246,0.6)'; } } },
-                    { name: 'US 每日轧差', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: usDaily.length >= cnDates.length ? usDaily.slice(0, cnDates.length) : usDaily, barWidth: '35%', itemStyle: { color: function(p){ return p.value >= 0 ? 'rgba(239,68,68,0.3)' : 'rgba(59,130,246,0.3)'; } } }
+                    { name: '重资产净值', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: cnHeavy, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#ef4444' }, itemStyle: { color: '#ef4444' } },
+                    { name: '轻资产净值', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: cnLight, smooth: true, symbol: 'none', lineStyle: { width: 2, color: '#3b82f6' }, itemStyle: { color: '#3b82f6' } },
+                    { name: '每日轧差(重-轻)', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: cnDaily, itemStyle: { color: function(p){ return p.value >= 0 ? 'rgba(239,68,68,0.6)' : 'rgba(59,130,246,0.6)'; } } }
                 ]
             });
             
