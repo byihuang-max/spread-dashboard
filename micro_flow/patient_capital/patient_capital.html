@@ -7,6 +7,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <style>
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--grid-color:#f0f0f0;--note-bg:#f9fafb;--signal-bg:#f8f9fa;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070}
+html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--grid-color:#222;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     font-family:'JetBrains Mono',SF Mono,monospace;
@@ -109,11 +111,11 @@ h1 {
 .badge-danger { background: #fee2e2; color: #dc2626; }
 
 .state-card {
-    background:#fafbfc;border:1px solid #e8ecf1;border-radius:8px;padding:10px 12px;
+    background:#fafbfc;border:1px solid #e8ecf1;padding:10px 12px;
 }
-.state-card .k { font-size:11px;color:#64748b;margin-bottom:5px; }
+.state-card .k { font-size:11px;color:var(--text-sub);margin-bottom:5px; }
 .state-card .v { font-size:16px;font-weight:800;color:#0f172a; }
-.state-card .s { font-size:11px;color:#64748b;margin-top:4px;line-height:1.5; }
+.state-card .s { font-size:11px;color:var(--text-sub);margin-top:4px;line-height:1.5; }
 @media (max-width: 1100px) { #patientStateBoard { grid-template-columns: repeat(2,1fr) !important; } }
 
 .up { color: #dc2626; }
@@ -221,128 +223,52 @@ h1 {
     font-size: 11px;
     font-weight: 500;
 }
+html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
+html.bb-dark ::-webkit-scrollbar-track{background:#0a0a0a}
+html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </style>
-<style id="bb-override" media="not all">
-/* === BLOOMBERG TERMINAL OVERRIDE === */
-[style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
-:root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
-html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
-.card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
-.card[style*="font-size:11px"] p{color:#888!important}
-.card[style*="font-size:11px"] b{color:#aaa!important;font-weight:600!important}
-table{border-collapse:collapse!important}
-table,th,td{border-color:#2a2a2a!important;color:#ccc!important}
-th{background:#111!important;color:#ff8c00!important}
-tr:nth-child(even) td{background:#0f0f0f!important}
-tr:hover td{background:#1a1a1a!important}
-button,.btn,.refresh-btn,.tab,.ss-tab,.strat-tab,.nav-tab{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
-button:hover,.btn:hover,.tab.active,.ss-tab.active,.strat-tab.active,.nav-tab.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
-.dot{display:none!important}
-canvas{background:transparent!important}
-input,select,textarea{background:#1a1a1a!important;border:1px solid #333!important;color:#ccc!important;border-radius:0!important}
-a{color:#ff8c00!important}
-hr{border-color:#2a2a2a!important}
-code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!important}
-.badge,.tag,.chip,.label-tag{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
-/* Scrollbar */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#0a0a0a}
-::-webkit-scrollbar-thumb{background:#333;border-radius:0}
-/* === patient_capital page-specific === */
-h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
-.subtitle{color:#666!important}
-.state-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important}
-.state-card .k{color:#888!important;font-size:10px!important;letter-spacing:1px;text-transform:uppercase}
-.state-card .v{color:#ff8c00!important}
-.state-card .s{color:#888!important}
-.state-card .algo{color:#555!important;border-top:1px dashed #2a2a2a!important}
-#patientSignalBar{background:#0a0a0a!important;border:1px solid #2a2a2a!important;color:#ccc!important;border-radius:0!important}
-#patientStateBoard .state-card .v{font-family:'JetBrains Mono',SF Mono,monospace!important}
-#patientExplain{background:#0a0a0a!important;border:1px solid #2a2a2a!important;color:#ccc!important;border-radius:0!important}
-#patientExplain b{color:#ff8c00!important}
-.cards .card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important;box-shadow:none!important}
-.cards .card:hover{border-color:#ff8c00!important;box-shadow:none!important}
-.cards .card.active{border-color:#ff8c00!important;background:#111!important;box-shadow:none!important}
-.cards .card.highlight-warn,.cards .card.highlight-warn.active{border-color:#ff8c00!important;background:#0a0a0a!important}
-.cards .card.highlight-danger,.cards .card.highlight-danger.active{border-color:#ef4444!important;background:#0a0a0a!important}
-.cards .card .idx-name{color:#ff8c00!important}
-.cards .card .meta{color:#888!important}
-.cards .card .meta b{color:#ccc!important}
-.cards .card .cum.up,.up{color:#ef4444!important}
-.cards .card .cum.down,.down{color:#16a34a!important}
-.cards .card .cum.flat,.flat{color:#888!important}
-.badge-warn{background:#1a1a1a!important;color:#ff8c00!important;border:1px solid #ff8c00!important}
-.badge-danger{background:#1a1a1a!important;color:#ef4444!important;border:1px solid #ef4444!important}
-.chart-section{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important}
-.chart-title{color:#ff8c00!important}
-.range-btns button{background:#1a1a1a!important;color:#888!important;border:1px solid #333!important;border-radius:0!important}
-.range-btns button:hover{border-color:#ff8c00!important;color:#ff8c00!important}
-.range-btns button.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
-.methodology{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important}
-.methodology h3{color:#ff8c00!important}
-.methodology .step-text,.methodology .step-text b{color:#ccc!important}
-.methodology .step-num{background:#ff8c00!important;color:#000!important;border-radius:0!important}
-.methodology .note{background:#1a1a1a!important;border-left:3px solid #ff8c00!important;color:#ff8c00!important;border-radius:0!important}
-.methodology .note b,.methodology .note span{color:#ff8c00!important}
-.methodology .idx-tag{background:#1a1a1a!important;color:#ff8c00!important;border:1px solid #333!important;border-radius:0!important}
-.no-data{color:#666!important}
-</style>
+
 
 
 
 
 <script>
 (function(){
-  function isBloomberg(){
-    try{return (window.__bbMode||window.parent.__bbMode||"dark")!=="light";}catch(e){return false}
-  }
+  function isDark(){return document.documentElement.classList.contains("bb-dark");}
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
-    if(!isBloomberg())return true;
-    Chart.defaults.color=(window.__bbMode==="light"?"#475569":"#888");
-    Chart.defaults.borderColor=(window.__bbMode==="light"?"#e2e8f0":"#2a2a2a");
     Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
-    Chart.defaults.plugins.legend.labels.color=(window.__bbMode==="light"?"#475569":"#888");
-    Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
-    Chart.defaults.plugins.tooltip.borderColor="#333";
     Chart.register({
-      id:"bloombergGrid",
-      afterLayout(chart){
+      id:"themeGrid",
+      afterLayout:function(chart){
+        var gridColor=isDark()?"#222":"#f0f0f0";
+        var textSub=isDark()?"#888":"#8b92a5";
         Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){scale.options.grid.display=false;}
-          if(scale.options.ticks){
-            scale.options.ticks.color=(window.__bbMode==="light"?"#475569":"#888");
-          }
+          if(scale.options.grid){scale.options.grid.color=gridColor;}
+          if(scale.options.ticks){scale.options.ticks.color=textSub;}
         });
       }
     });
     return true;
   }
-  if(!registerPlugin()){
-    var tries=0;
-    var iv=setInterval(function(){
-      tries++;
-      if(registerPlugin()||tries>50)clearInterval(iv);
-    },50);
-  }
+  if(!registerPlugin()){var tries=0;var iv=setInterval(function(){tries++;if(registerPlugin()||tries>50)clearInterval(iv);},50);}
 })();
 </script>
-<script>(function(){try{
-    var _mode="dark";try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
-    window.__bbMode=_mode;
-    if(_mode!=="light"){
-      document.documentElement.classList.add("bb-dark");
-      document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("bb-dark");});
-      var s=document.getElementById("bb-override");
-      if(s)s.media="all";
-      var l=document.createElement("link");
-      l.rel="stylesheet";l.id="bb-override-link";
-      l.href="../../bloomberg-override.css";
-      document.head.appendChild(l);
-    }
-  }catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(m!=="light"&&!lk){lk=document.createElement("link");lk.rel="stylesheet";lk.id="bb-override-link";lk.href="../../bloomberg-override.css";document.head.appendChild(lk);}if(lk)lk.disabled=(m==="light");var s2=document.getElementById("bb-override");if(s2)s2.media=(m==="light"?"not all":"all");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});}});</script>
+<script>
+(function(){
+  var _mode="dark";
+  try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  window.__bbMode=_mode;
+  if(_mode!=="light"){document.documentElement.classList.add("bb-dark");}
+  window.addEventListener("message",function(e){
+    if(!e.data||e.data.type!=="bb-theme")return;
+    var m=e.data.mode;window.__bbMode=m;
+    if(m==="light"){document.documentElement.classList.remove("bb-dark");}
+    else{document.documentElement.classList.add("bb-dark");}
+    if(typeof Chart!=="undefined"){Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}
+  });
+})();
+</script>
 </head>
 <body>
 
@@ -350,7 +276,7 @@ h1{color:#ff8c00!important;text-align:center;letter-spacing:1px}
 <div class="subtitle" id="updated"></div>
 
 <!-- 信号摘要栏 -->
-<div id="patientSignalBar" style="background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:12px 16px;color:#e2e6ed;margin:10px 0 14px;font-size:12px;line-height:1.8"></div>
+<div id="patientSignalBar" style="background:var(--signal-bg);border-radius:10px;padding:12px 16px;color:#e2e6ed;margin:10px 0 14px;font-size:12px;line-height:1.8"></div>
 <div id="patientStateBoard" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 16px 0"></div>
 <div id="patientExplain" style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin:0 0 16px 0;font-size:12px;line-height:1.8;color:#475569"></div>
 

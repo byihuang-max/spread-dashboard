@@ -4,170 +4,107 @@
 <title>期权异常值监控</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--grid-color:#f0f0f0;--note-bg:#f9fafb;--signal-bg:#f8f9fa;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070}
+html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--grid-color:#222;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'JetBrains Mono',SF Mono,monospace;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;transition:background .35s ease,color .35s ease}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease}
 html.bb-dark,html.bb-dark body{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00}
-h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1e2433}
+h2{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent)}
 .section{margin-bottom:28px}
 
 /* 标的选择器 */
 .und-tabs{display:flex;gap:8px;margin-bottom:20px}
-.und-tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;background:#fff;border:1px solid #e8eaef;color:#6b7280;transition:all .15s}
-.und-tab.active{background:#1e2433;color:#fff;border-color:#1e2433}
+.und-tab{padding:8px 18px;cursor:pointer;font-size:13px;font-weight:600;background:var(--card-bg);border:1px solid var(--border);color:var(--text-sub);transition:all .15s}
+.und-tab.active{background:#1e2433;color:#fff;border-color:var(--accent)}
 .und-tab:hover:not(.active){border-color:#6366f1;color:#6366f1}
 
 /* 摘要卡片 */
 .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
-.s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
+.s-card{background:var(--card-bg);padding:14px;border:1px solid var(--border);text-align:center}
+.s-card .s-label{font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
 .s-card .s-value{font-size:22px;font-weight:800}
-.s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
+.s-card .s-sub{font-size:11px;color:var(--text-sub);margin-top:4px}
 
 /* 图表 */
-.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px}
-.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
+.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px}
 .chart-wrap{position:relative;height:260px}
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:768px){.chart-row{grid-template-columns:1fr}}
 
 /* 异常表格 */
 .anomaly-table{width:100%;border-collapse:collapse;font-size:12px}
-.anomaly-table th{background:#f9fafb;padding:8px 10px;text-align:left;font-weight:700;color:#374151;border-bottom:2px solid #e5e7eb}
-.anomaly-table td{padding:8px 10px;border-bottom:1px solid #f3f4f6}
-.anomaly-table tr:hover{background:#f9fafb}
-.tag-oi{background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
-.tag-iv{background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.anomaly-table th{background:var(--note-bg);padding:8px 10px;text-align:left;font-weight:700;color:var(--text);border-bottom:2px solid var(--border)}
+.anomaly-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.anomaly-table tr:hover{background:var(--note-bg)}
+.tag-oi{background:#fef3c7;color:#92400e;padding:2px 8px;font-size:10px;font-weight:700}
+.tag-iv{background:#ede9fe;color:#5b21b6;padding:2px 8px;font-size:10px;font-weight:700}
 
 /* IV分位条 */
-.pct-bar{height:8px;border-radius:4px;background:#e5e7eb;position:relative;margin-top:4px}
-.pct-fill{height:100%;border-radius:4px;position:absolute;left:0;top:0}
+.pct-bar{height:8px;background:#e5e7eb;position:relative;margin-top:4px}
+.pct-fill{height:100%;position:absolute;left:0;top:0}
 
 /* 图表下方注释 */
-.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
-.chart-note b{color:#374151}
+.chart-note{font-size:11px;color:var(--text-sub);line-height:1.7;margin-top:10px;padding:10px 12px;background:var(--note-bg);}
+.chart-note b{color:var(--text)}
 
-.loading{text-align:center;padding:60px;color:#8b92a5}
+.loading{text-align:center;padding:60px;color:var(--text-sub)}
 
 /* 信号栏 */
-.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.signal-bar{background:var(--signal-bg);padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .signal-main{font-size:18px;font-weight:800;letter-spacing:1px;white-space:nowrap}
 .signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;font-size:12px;color:#b8bfce}
 .signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
 .signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
 .signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
 .signal-tag.info{background:rgba(99,102,241,0.2);color:#a5b4fc}
+html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
+html.bb-dark ::-webkit-scrollbar-track{background:#0a0a0a}
+html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </style>
-<style id="bb-override" media="not all">
-/* === BLOOMBERG TERMINAL OVERRIDE === */
-[style*="animation"],[class*="fade"],[class*="slide"]{opacity:1!important;transform:none!important}canvas{opacity:1!important}
-:root{--bg:#0a0a0a!important;--card-bg:#0a0a0a!important;--card:#0a0a0a!important;--text:#ccc!important;--text-sub:#888!important;--border:#2a2a2a!important;--accent:#ff8c00!important;--sidebar-active:#ff8c00!important}
-html,body{background:#0a0a0a!important;color:#ccc!important;max-width:100%!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.card,.panel,.module-card,.diag-hero,.metric-card,.factor-card,.info-card,.method-card,.legend-card,.stat-card,.overview-card,.ov-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;box-shadow:none!important;color:#ccc!important}
-.card-title,.panel-title,.section-title,.module-title,h1,h2,h3,h4,h5,h6,.ov-label{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-p,span,div,li,td,th,label,.ov-value,.stat-value,.metric-value{color:#ccc!important}
-table{border-collapse:collapse!important}
-table,th,td{border-color:#2a2a2a!important;color:#ccc!important}
-th{background:#111!important;color:#ff8c00!important}
-tr:nth-child(even) td{background:#0f0f0f!important}
-tr:hover td{background:#1a1a1a!important}
-button,.btn,.refresh-btn,.tab,.ss-tab,.strat-tab,.nav-tab{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
-button:hover,.btn:hover,.tab.active,.ss-tab.active,.strat-tab.active,.nav-tab.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
-.dot{display:none!important}
-canvas{background:transparent!important}
-input,select,textarea{background:#1a1a1a!important;border:1px solid #333!important;color:#ccc!important;border-radius:0!important}
-a{color:#ff8c00!important}
-hr{border-color:#2a2a2a!important}
-code,pre{background:#111!important;color:#4caf50!important;border-color:#2a2a2a!important}
-.badge,.tag,.chip,.label-tag{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
-/* Scrollbar */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#0a0a0a}
-::-webkit-scrollbar-thumb{background:#333;border-radius:0}
-/* === option_sentiment page-specific === */
-h2,h3{color:#ff8c00!important;letter-spacing:.5px}
-.signal-bar{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important}
-.signal-main{color:#ff8c00!important}
-.signal-tag{background:#1a1a1a!important;color:#888!important;border:1px solid #333!important;border-radius:0!important;padding:3px 10px!important}
-.signal-tag.warn{background:#1a1a1a!important;color:#ff8c00!important;border-color:#ff8c00!important}
-.signal-tag.good{background:#1a1a1a!important;color:#16a34a!important;border-color:#16a34a!important}
-.signal-tag.risk{background:#1a1a1a!important;color:#ef4444!important;border-color:#ef4444!important}
-.signal-tag.info{background:#1a1a1a!important;color:#a5b4fc!important;border-color:#3a3a4a!important}
-.und-tab{background:#1a1a1a!important;border:1px solid #333!important;color:#888!important;border-radius:0!important}
-.und-tab:hover:not(.active){border-color:#ff8c00!important;color:#ff8c00!important}
-.und-tab.active{background:#ff8c00!important;color:#000!important;border-color:#ff8c00!important}
-.s-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important}
-.s-card .s-label{color:#888!important;text-transform:uppercase;letter-spacing:1px;font-size:10px!important}
-.s-card .s-value{color:#ff8c00!important;font-family:'JetBrains Mono',SF Mono,monospace!important}
-.s-card .s-sub{color:#666!important}
-.pct-bar{background:#1a1a1a!important;border-radius:0!important;border:1px solid #333!important;height:6px!important}
-.pct-fill{border-radius:0!important}
-.chart-box{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important;color:#ccc!important}
-.chart-box h3{color:#ff8c00!important}
-.chart-note{background:#0f0f0f!important;color:#888!important;border:1px solid #2a2a2a!important;border-radius:0!important}
-.chart-note b{color:#ccc!important}
-.anomaly-table{font-family:'JetBrains Mono',SF Mono,monospace!important}
-.anomaly-table th{background:#111!important;color:#ff8c00!important;border-bottom:1px solid #2a2a2a!important}
-.anomaly-table td{border-bottom:1px solid #1a1a1a!important;color:#ccc!important}
-.anomaly-table tr:hover td{background:#1a1a1a!important}
-.tag-oi{background:#1a1a1a!important;color:#ff8c00!important;border:1px solid #ff8c00!important;border-radius:0!important}
-.tag-iv{background:#1a1a1a!important;color:#a5b4fc!important;border:1px solid #3a3a4a!important;border-radius:0!important}
-.loading{color:#666!important}
-</style>
+
 
 
 
 
 <script>
 (function(){
-  function isBloomberg(){
-    try{return (window.__bbMode||window.parent.__bbMode||"dark")!=="light";}catch(e){return false}
-  }
+  function isDark(){return document.documentElement.classList.contains("bb-dark");}
   function registerPlugin(){
     if(typeof Chart==="undefined")return false;
-    if(!isBloomberg())return true;
-    Chart.defaults.color=(window.__bbMode==="light"?"#475569":"#888");
-    Chart.defaults.borderColor=(window.__bbMode==="light"?"#e2e8f0":"#2a2a2a");
     Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
-    Chart.defaults.plugins.legend.labels.color=(window.__bbMode==="light"?"#475569":"#888");
-    Chart.defaults.plugins.tooltip.backgroundColor="#1a1a1a";
-    Chart.defaults.plugins.tooltip.borderColor="#333";
     Chart.register({
-      id:"bloombergGrid",
-      afterLayout(chart){
+      id:"themeGrid",
+      afterLayout:function(chart){
+        var gridColor=isDark()?"#222":"#f0f0f0";
+        var textSub=isDark()?"#888":"#8b92a5";
         Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){scale.options.grid.display=false;}
-          if(scale.options.ticks){
-            scale.options.ticks.color=(window.__bbMode==="light"?"#475569":"#888");
-          }
+          if(scale.options.grid){scale.options.grid.color=gridColor;}
+          if(scale.options.ticks){scale.options.ticks.color=textSub;}
         });
       }
     });
     return true;
   }
-  if(!registerPlugin()){
-    var tries=0;
-    var iv=setInterval(function(){
-      tries++;
-      if(registerPlugin()||tries>50)clearInterval(iv);
-    },50);
-  }
+  if(!registerPlugin()){var tries=0;var iv=setInterval(function(){tries++;if(registerPlugin()||tries>50)clearInterval(iv);},50);}
 })();
 </script>
-<script>(function(){try{
-    var _mode="dark";try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
-    window.__bbMode=_mode;
-    if(_mode!=="light"){
-      document.documentElement.classList.add("bb-dark");
-      document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("bb-dark");});
-      var s=document.getElementById("bb-override");
-      if(s)s.media="all";
-      var l=document.createElement("link");
-      l.rel="stylesheet";l.id="bb-override-link";
-      l.href="../../bloomberg-override.css";
-      document.head.appendChild(l);
-    }
-  }catch(e){}}());window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light"){document.body.classList.remove("bb-dark");document.documentElement.classList.remove("bb-dark");}else{document.body.classList.add("bb-dark");document.documentElement.classList.add("bb-dark");}var lk=document.getElementById("bb-override-link");if(m!=="light"&&!lk){lk=document.createElement("link");lk.rel="stylesheet";lk.id="bb-override-link";lk.href="../../bloomberg-override.css";document.head.appendChild(lk);}if(lk)lk.disabled=(m==="light");var s2=document.getElementById("bb-override");if(s2)s2.media=(m==="light"?"not all":"all");if(typeof Chart!=="undefined"){Chart.defaults.color=m==="light"?"#475569":"#888";Chart.defaults.borderColor=m==="light"?"#e2e8f0":"#2a2a2a";Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}});}});</script>
+<script>
+(function(){
+  var _mode="dark";
+  try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  window.__bbMode=_mode;
+  if(_mode!=="light"){document.documentElement.classList.add("bb-dark");}
+  window.addEventListener("message",function(e){
+    if(!e.data||e.data.type!=="bb-theme")return;
+    var m=e.data.mode;window.__bbMode=m;
+    if(m==="light"){document.documentElement.classList.remove("bb-dark");}
+    else{document.documentElement.classList.add("bb-dark");}
+    if(typeof Chart!=="undefined"){Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}
+  });
+})();
+</script>
 </head>
 <body>
 <div class="loading" id="loadingMsg">加载中...</div>
@@ -328,7 +265,7 @@ function renderTermChart(u){
         borderColor:'#6366f1',backgroundColor:'#6366f118',fill:true,tension:0.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#6366f1'}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
-      scales:{y:{title:{display:true,text:'IV %',font:{size:11}},grid:{color:'#f0f0f0'}},
+      scales:{y:{title:{display:true,text:'IV %',font:{size:11}},},
               x:{title:{display:true,text:'到期月',font:{size:11}}}}}
   });
 }
@@ -346,7 +283,7 @@ function renderPCRChart(u){
       ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'top',labels:{font:{size:11}}}},
-      scales:{y:{grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
+      scales:{,y:{},x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}}}
   });
 }
 
@@ -364,7 +301,7 @@ function renderIVChart(u){
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'top',labels:{font:{size:11}}}},
       scales:{
-        y:{position:'left',title:{display:true,text:'IV %',font:{size:10}},grid:{color:'#f0f0f0'}},
+        y:{position:'left',title:{display:true,text:'IV %',font:{size:10}},},
         y1:{position:'right',title:{display:true,text:'分位 %',font:{size:10}},min:0,max:100,grid:{display:false}},
         x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12,font:{size:10}}}
       }}
@@ -389,7 +326,7 @@ function renderOIChart(u){
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{font:{size:11}}},
         tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+Math.abs(ctx.raw).toLocaleString()}}}},
-      scales:{x:{ticks:{font:{size:9},maxRotation:45}},y:{grid:{color:'#f0f0f0'},
+      scales:{x:{ticks:{font:{size:9},maxRotation:45}},y:{
         ticks:{callback:function(v){return Math.abs(v).toLocaleString()}}}}}
   });
 }
