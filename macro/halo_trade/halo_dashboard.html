@@ -69,7 +69,23 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     var m=e.data.mode;window.__bbMode=m;
     if(m==="light"){document.documentElement.classList.remove("bb-dark");}
     else{document.documentElement.classList.add("bb-dark");}
+    /* Refresh ECharts instances on theme switch */
+    if(typeof echarts!=="undefined"){
+      var doms=document.querySelectorAll('[_echarts_instance_]');
+      doms.forEach(function(dom){var inst=echarts.getInstanceByDom(dom);if(inst)inst.resize();});
+    }
   });
+  /* Helper: get ECharts theme colors based on current mode */
+  window.bbEchartsColors=function(){
+    var dark=document.documentElement.classList.contains("bb-dark");
+    return {
+      textColor:dark?"#888":"#374151",
+      subTextColor:dark?"#666":"#64748b",
+      axisLineColor:dark?"#2a2a2a":"#e8eaef",
+      splitLineColor:dark?"#1a1a1a":"#e8eaef",
+      legendColor:dark?"#888":"#374151"
+    };
+  };
 })();
 </script>
 </head>
@@ -333,30 +349,30 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
         legend: {
             data: series.map(s => s.name),
             top: 10,
-            textStyle: { color: '#374151', fontSize: 11 }
+            textStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().legendColor:'#374151'), fontSize: 11 }
         },
         grid: { left: '10%', right: '10%', top: '20%', bottom: '15%', containLabel: true },
         xAxis: {
             type: 'category',
             data: xAxisData,
-            axisLabel: { color: '#64748b', fontSize: 11 },
-            axisLine: { lineStyle: { color: '#e8eaef' } }
+            axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b'), fontSize: 11 },
+            axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } }
         },
         yAxis: [
             {
                 type: 'value',
                 name: 'YoY增速 (%)',
                 position: 'left',
-                axisLabel: { color: '#64748b', formatter: '{value}%' },
-                axisLine: { lineStyle: { color: '#e8eaef' } },
-                splitLine: { lineStyle: { color: '#e8eaef', type: 'dashed' } }
+                axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b'), formatter: '{value}%' },
+                axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } },
+                splitLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().splitLineColor:'#e8eaef'), type: 'dashed' } }
             },
             {
                 type: 'value',
                 name: '二阶导',
                 position: 'right',
-                axisLabel: { color: '#64748b' },
-                axisLine: { lineStyle: { color: '#e8eaef' } },
+                axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b') },
+                axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } },
                 splitLine: { show: false }
             }
         ],
@@ -398,21 +414,21 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
                 legend: {
                     data: ['重资产 PE', '轻资产 PE', 'PE 差距'],
                     top: 10,
-                    textStyle: { color: '#374151' }
+                    textStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().legendColor:'#374151') }
                 },
                 grid: { left: '10%', right: '10%', top: '20%', bottom: '15%', containLabel: true },
                 xAxis: {
                     type: 'category',
                     data: dates,
-                    axisLabel: { color: '#64748b', fontSize: 11, rotate: 30 },
-                    axisLine: { lineStyle: { color: '#e8eaef' } }
+                    axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b'), fontSize: 11, rotate: 30 },
+                    axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } }
                 },
                 yAxis: {
                     type: 'value',
                     name: 'PE',
-                    axisLabel: { color: '#64748b' },
-                    axisLine: { lineStyle: { color: '#e8eaef' } },
-                    splitLine: { lineStyle: { color: '#e8eaef' } }
+                    axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b') },
+                    axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } },
+                    splitLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().splitLineColor:'#e8eaef') } }
                 },
                 series: [
                     {
@@ -536,23 +552,23 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
                 legend: {
                     data: ['CN 中国相对强弱', 'US 美国相对强弱'],
                     top: 10,
-                    textStyle: { color: '#374151' }
+                    textStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().legendColor:'#374151') }
                 },
                 grid: { left: '8%', right: '8%', top: '18%', bottom: '12%', containLabel: true },
                 xAxis: {
                     type: 'category',
                     data: dates,
-                    axisLabel: { color: '#64748b', fontSize: 11, rotate: 30 },
-                    axisLine: { lineStyle: { color: '#e8eaef' } }
+                    axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b'), fontSize: 11, rotate: 30 },
+                    axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } }
                 },
                 yAxis: {
                     type: 'value',
                     name: '相对强弱',
                     min: 90,
                     max: 120,
-                    axisLabel: { color: '#64748b' },
-                    axisLine: { lineStyle: { color: '#e8eaef' } },
-                    splitLine: { lineStyle: { color: '#e8eaef' } }
+                    axisLabel: { color: (window.bbEchartsColors?window.bbEchartsColors().subTextColor:'#64748b') },
+                    axisLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().axisLineColor:'#e8eaef') } },
+                    splitLine: { lineStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().splitLineColor:'#e8eaef') } }
                 },
                 series: [
                     {
