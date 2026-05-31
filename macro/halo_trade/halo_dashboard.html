@@ -31,7 +31,7 @@
         .section { margin-bottom:24px; }
         .chart-box { background:var(--card-bg); padding:16px; border:1px solid var(--border); border-left:3px solid var(--accent); margin-bottom:16px; overflow:visible; }
         .chart-box h3 { font-size:13px; font-weight:700; color:var(--accent); margin-bottom:12px; }
-        .chart-wrap { position:relative; height:380px; }
+        .chart-wrap { position:relative; height:380px; overflow:visible; }
         .chart-note { font-size:11px; color:var(--text-sub); line-height:1.7; margin-top:10px; padding:10px 12px; background:var(--note-bg); border:1px solid var(--border); }
         .chart-note b { color:var(--text); }
         /* Dark mode inline style overrides */
@@ -559,10 +559,10 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
                 },
                 legend: {
                     data: ['CN 中国相对强弱', 'US 美国相对强弱'],
-                    top: 10,
+                    top: 0,
                     textStyle: { color: (window.bbEchartsColors?window.bbEchartsColors().legendColor:'#374151') }
                 },
-                grid: { left: '8%', right: '8%', top: '18%', bottom: '12%', containLabel: true },
+                grid: { left: '8%', right: '8%', top: '10%', bottom: '12%', containLabel: true },
                 xAxis: {
                     type: 'category',
                     data: dates,
