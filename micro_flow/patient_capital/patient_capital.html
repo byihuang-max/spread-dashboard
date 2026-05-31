@@ -276,7 +276,14 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <script>
 (function(){
   var _mode="dark";
-  try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  try{
+    _mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";
+    // fallback: 检查 parent 的 override CSS 是否启用
+    if(_mode==="light"){
+      var overrideLink=window.parent.document.getElementById("bb-dark-css");
+      if(overrideLink&&!overrideLink.disabled)_mode="dark";
+    }
+  }catch(e){}
   window.__bbMode=_mode;
   if(_mode!=="light"){document.documentElement.classList.add("bb-dark");}
   window.addEventListener("message",function(e){
