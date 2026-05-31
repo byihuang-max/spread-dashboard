@@ -34,6 +34,14 @@
         .chart-wrap { position:relative; height:380px; }
         .chart-note { font-size:11px; color:var(--text-sub); line-height:1.7; margin-top:10px; padding:10px 12px; background:var(--note-bg); border:1px solid var(--border); }
         .chart-note b { color:var(--text); }
+        /* Dark mode inline style overrides */
+        html.bb-dark [style*="background:#f9fafb"],html.bb-dark [style*="background:#f8fafc"]{background:var(--note-bg)!important;border-color:var(--border)!important}
+        html.bb-dark [style*="background:linear-gradient(135deg,#1e2433"]{background:var(--signal-bg)!important}
+        html.bb-dark [style*="color:#64748b"]{color:var(--text-sub)!important}
+        html.bb-dark [style*="color:#374151"]{color:var(--text)!important}
+        html.bb-dark [style*="color:#7c8598"]{color:var(--text-sub)!important}
+        html.bb-dark [style*="color:#e2e6ed"]{color:var(--text)!important}
+        html.bb-dark [style*="border:1px solid #e8eaef"]{border-color:var(--border)!important}
         table { width:100%; border-collapse:collapse; font-size:13px; }
         th { background:var(--th-bg); padding:10px; text-align:left; font-weight:600; color:var(--accent); border-bottom:2px solid var(--border); }
         td { padding:10px; border-bottom:1px solid var(--border); color:var(--text); }
