@@ -294,7 +294,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',
   var urlMode=urlParams.get("mode");
   var savedMode=null;
   try{savedMode=localStorage.getItem("bbMode");}catch(_e){}
-  var mode=urlMode||savedMode||"dark";
+  var mode=urlMode||"dark";
   if(mode!=="dark"&&mode!=="light")mode="dark";
   try{localStorage.setItem("bbMode",mode);}catch(_e){}
   window.__bbMode=mode;
