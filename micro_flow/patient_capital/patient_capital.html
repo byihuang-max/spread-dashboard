@@ -253,11 +253,18 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     Chart.register({
       id:"themeGrid",
       afterLayout:function(chart){
-        var gridColor=isDark()?"#222":"#f0f0f0";
-        var textSub=isDark()?"#888":"#8b92a5";
+        var dark=isDark();
+        var gridColor=dark?"#222":"rgba(0,0,0,0.06)";
+        var borderColor=dark?"#333":"rgba(0,0,0,0.08)";
+        var textSub=dark?"#888":"#8b92a5";
         Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){scale.options.grid.color=gridColor;}
+          if(scale.options.grid){
+            scale.options.grid.color=gridColor;
+            scale.options.grid.borderColor=borderColor;
+            scale.options.grid.lineWidth=0.8;
+          }
           if(scale.options.ticks){scale.options.ticks.color=textSub;}
+          if(scale.options.border){scale.options.border.color=borderColor;}
         });
       }
     });
@@ -543,8 +550,8 @@ function renderCharts() {
 
     const _dark = document.documentElement.classList.contains("bb-dark");
     const chartColors = {
-        text: _dark ? '#888' : '#6b7280',
-        grid: _dark ? '#222' : 'rgba(0,0,0,0.05)',
+        text: _dark ? '#888' : '#8b92a5',
+        grid: _dark ? '#222' : 'rgba(0,0,0,0.06)',
         price: '#3b82f6',
         cost: '#f59e0b',
         cum: 'rgba(99,102,241,0.5)',
