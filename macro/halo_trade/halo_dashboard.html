@@ -115,18 +115,6 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
             <div class="summary-cards" id="halo-summary"></div>
             
             <!-- 场景判断 -->
-            <div class="section">
-                <div class="chart-box">
-                    <h3> 当前场景判断</h3>
-                    <div style="display:flex;gap:16px;margin-bottom:16px">
-                        <div style="flex:0 0 auto;background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:10px;padding:20px 28px;color:#e2e6ed;min-width:180px;text-align:center">
-                            <div style="font-size:18px;font-weight:900" id="scenario-name"></div>
-                            <div style="font-size:12px;color:#7c8598;margin-top:8px" id="scenario-action"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <!-- 核心指标 -->
             
                 <div class="section">
@@ -268,9 +256,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
             });
         
         function renderDashboard(data, financial) {
-            // 场景判断
-            document.getElementById('scenario-name').textContent = data.scenario;
-            document.getElementById('scenario-action').textContent = data.action;
+            // 场景判断（已移至顶部估值状态卡片）
             
             // CapEx 二阶导
             renderCapexIndicators(financial.capex_second_derivative);
