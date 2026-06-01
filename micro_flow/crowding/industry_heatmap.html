@@ -107,9 +107,12 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .ind-cell .ind-signal{font-size:10px;font-weight:700;margin-top:4px;padding:2px 6px;background:rgba(0,0,0,0.15);display:inline-block}
 .ind-cell .ind-crowd{font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px}
 /* 行业选择chip */
-.chip{display:inline-block;padding:3px 10px;font-size:11px;font-weight:700;border:1.5px solid;cursor:pointer;transition:all .15s;user-select:none}
-.chip:hover{opacity:.8}
-.chip.on{opacity:1}
+.chip{display:inline-block;padding:4px 12px;font-size:11px;font-weight:700;border:1.5px solid var(--accent);cursor:pointer;transition:all .15s;user-select:none;color:var(--accent);background:transparent}
+.chip:hover{opacity:.85}
+.chip.on{background:var(--accent);color:#fff}
+/* range slider */
+.range-handle{position:absolute;top:-2px;width:12px;height:36px;background:var(--accent);cursor:ew-resize;transform:translateX(-50%);opacity:.9}
+.range-handle:hover{opacity:1}
 html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
 html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </style>
@@ -142,12 +145,16 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
   <div style="position:relative;height:340px;background:var(--card-bg);border:1px solid var(--border);padding:12px">
     <canvas id="shareChart"></canvas>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
-    <span style="font-size:11px;color:var(--text-sub)">拖拽图表平移 · 滚轮缩放 · </span>
-    <button class="toggle-btn" id="resetZoom" onclick="resetChartZoom()" style="padding:4px 10px;font-size:11px">重置视图</button>
-    <span id="rangeLabel" style="font-size:11px;color:var(--text-sub);margin-left:auto"></span>
+  <div style="margin-top:10px;position:relative;height:32px;background:var(--track);border:1px solid var(--border);user-select:none" id="rangeTrack">
+    <div id="rangeFill" style="position:absolute;top:0;bottom:0;background:rgba(255,140,0,0.2);pointer-events:none"></div>
+    <div id="rangeHandleL" class="range-handle" style="left:0%"></div>
+    <div id="rangeHandleR" class="range-handle" style="left:100%"></div>
   </div>
-  <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div>
+  <div style="display:flex;justify-content:space-between;margin-top:4px">
+    <span id="rangeLabelL" style="font-size:10px;color:var(--text-sub)"></span>
+    <span id="rangeLabelR" style="font-size:10px;color:var(--text-sub)"></span>
+  </div>
+  <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
 </div>
 
 <!-- ③ 横截面占比(当前快照) -->
@@ -211,8 +218,6 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script>
 var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
 var SHARE_SERIES=null, shareChart=null;
@@ -410,20 +415,26 @@ function renderShareChart(){
   Object.keys(ss.series).forEach(function(k){var arr=ss.series[k];latest[k]=arr[arr.length-1]||0;});
   var sorted=Object.keys(latest).sort(function(a,b){return latest[b]-latest[a];});
   var top5=sorted.slice(0,5);
-  sorted.forEach(function(k,i){ACTIVE_SERIES[k]=top5.indexOf(k)>=0;});
-
+  sorted.forEach(function(k){ACTIVE_SERIES[k]=top5.indexOf(k)>=0;});
+  // 默认全量5年
+  RANGE_START=0;RANGE_END=ss.dates.length-1;
   buildChart();
   buildChips(sorted);
+  setupRangeSlider();
 }
+
+var RANGE_START=0, RANGE_END=0;
 
 function buildChart(){
   var ss=SHARE_SERIES;
-  var dates=ss.dates;
+  var s=RANGE_START,e=RANGE_END;
+  if(e<=s)e=s+1;
+  var dates=ss.dates.slice(s,e+1);
   var datasets=[];
   var ci=0;
   Object.keys(ss.series).forEach(function(k){
     if(!ACTIVE_SERIES[k]){ci++;return;}
-    datasets.push({label:k,data:ss.series[k],borderColor:CHART_COLORS[ci%CHART_COLORS.length],backgroundColor:'transparent',borderWidth:1.8,pointRadius:0,tension:0.3});
+    datasets.push({label:k,data:ss.series[k].slice(s,e+1),borderColor:CHART_COLORS[ci%CHART_COLORS.length],backgroundColor:'transparent',borderWidth:1.8,pointRadius:0,tension:0.3});
     ci++;
   });
   var isDark=document.documentElement.classList.contains('bb-dark');
@@ -431,27 +442,56 @@ function buildChart(){
   var tickC=isDark?'#888':'#666';
   if(shareChart){shareChart.destroy();}
   var ctx=document.getElementById('shareChart').getContext('2d');
-  // 默认显示近1年(约250天)
-  var minIdx=Math.max(0,dates.length-250);
-  shareChart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}},zoom:{pan:{enabled:true,mode:'x'},zoom:{wheel:{enabled:true},pinch:{enabled:true},drag:{enabled:true,backgroundColor:isDark?'rgba(255,140,0,0.1)':'rgba(255,140,0,0.08)'},mode:'x',onZoomComplete:updateRangeLabel}}},scales:{x:{min:dates[minIdx],ticks:{color:tickC,maxTicksLimit:12,font:{size:10}},grid:{color:gridC}},y:{ticks:{color:tickC,callback:function(v){return v+'%'},font:{size:10}},grid:{color:gridC}}}}});
-  updateRangeLabel();
+  shareChart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}},scales:{x:{ticks:{color:tickC,maxTicksLimit:12,font:{size:10}},grid:{color:gridC}},y:{ticks:{color:tickC,callback:function(v){return v+'%'},font:{size:10}},grid:{color:gridC}}}}});
+  document.getElementById('rangeLabelL').textContent=dates[0]||'';
+  document.getElementById('rangeLabelR').textContent=dates[dates.length-1]||'';
 }
 
-function updateRangeLabel(){
-  if(!shareChart)return;
-  var scales=shareChart.scales.x;
-  var minL=shareChart.data.labels[Math.max(0,Math.floor(scales.min))];
-  var maxL=shareChart.data.labels[Math.min(shareChart.data.labels.length-1,Math.ceil(scales.max))];
-  document.getElementById('rangeLabel').textContent=(minL||'')+' ~ '+(maxL||'');
+function setupRangeSlider(){
+  var track=document.getElementById('rangeTrack');
+  var hL=document.getElementById('rangeHandleL');
+  var hR=document.getElementById('rangeHandleR');
+  var fill=document.getElementById('rangeFill');
+  var total=SHARE_SERIES.dates.length-1;
+  function updatePos(){
+    var lPct=(RANGE_START/total*100).toFixed(2);
+    var rPct=(RANGE_END/total*100).toFixed(2);
+    hL.style.left=lPct+'%';
+    hR.style.left=rPct+'%';
+    fill.style.left=lPct+'%';
+    fill.style.width=(rPct-lPct)+'%';
+  }
+  updatePos();
+  function drag(handle,isLeft){
+    var onMove=function(ev){
+      var rect=track.getBoundingClientRect();
+      var pct=Math.max(0,Math.min(1,(ev.clientX-rect.left)/rect.width));
+      var idx=Math.round(pct*total);
+      if(isLeft){RANGE_START=Math.min(idx,RANGE_END-10);}
+      else{RANGE_END=Math.max(idx,RANGE_START+10);}
+      updatePos();
+    };
+    var onUp=function(){
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onUp);
+      buildChart();
+    };
+    handle.addEventListener('mousedown',function(ev){
+      ev.preventDefault();
+      document.addEventListener('mousemove',onMove);
+      document.addEventListener('mouseup',onUp);
+    });
+  }
+  drag(hL,true);
+  drag(hR,false);
 }
 
-function resetChartZoom(){if(shareChart){shareChart.resetZoom();updateRangeLabel();}}
+function resetChartZoom(){RANGE_START=0;RANGE_END=SHARE_SERIES.dates.length-1;buildChart();setupRangeSlider();}
 
 function buildChips(sorted){
   var html=sorted.map(function(k,i){
     var active=ACTIVE_SERIES[k];
-    var c=CHART_COLORS[i%CHART_COLORS.length];
-    return '<span class="chip'+(active?' on':'')+'" data-k="'+k+'" style="border-color:'+c+';'+(active?'background:'+c+';color:#fff':'color:'+c)+'">'+k+'</span>';
+    return '<span class="chip'+(active?' on':'')+'" data-k="'+k+'">'+k+'</span>';
   }).join('');
   document.getElementById('shareChipBar').innerHTML=html;
   document.querySelectorAll('#shareChipBar .chip').forEach(function(el){
