@@ -552,7 +552,7 @@ new Chart(document.getElementById('memeVaChart'), {{
                 news_items_html = '<div style="font-size:11px;color:#94a3b8;padding-top:8px;">暂无可展开新闻列表</div>'
 
             cards.append(
-                f'''<details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid {heat_color};overflow:hidden;" {'open' if idx == 1 else ''}>
+                f'''<details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid {heat_color};overflow:hidden;" open>
   <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
     <span style="font-size:13px;font-weight:600;color:#1e293b;">{name}</span>
     <span style="margin-left:auto;font-size:11px;color:{heat_color};font-weight:600;">主题热度 {count} · 已收录 {stored_count}</span>
