@@ -1171,8 +1171,15 @@ new Chart(document.getElementById('medianChart'),{{
   var params = new URLSearchParams(window.location.search);
   var isBloomberg = params.get('theme')==='bloomberg';
   if(!isBloomberg && window.parent !== window){{
-    try{{ isBloomberg = !window.parent.location.search.includes('theme=light'); }}catch(e){{}}
+    try{{ isBloomberg = window.parent.__bbMode === 'dark' || window.parent.document.documentElement.classList.contains('bb-dark'); }}catch(e){{ isBloomberg = false; }}
   }}
+
+  // 监听父窗口主题切换
+  window.addEventListener('message', function(e){{
+    if(!e.data || e.data.type !== 'bb-theme') return;
+    window.location.reload();
+  }});
+
   if(!isBloomberg) return;
 
   var s = document.createElement('style');
@@ -1185,6 +1192,7 @@ new Chart(document.getElementById('medianChart'),{{
     .s-card .s-sub{{color:#888!important}}
     .chart-box{{background:#111!important;border:1px solid #2a2a2a!important}}
     .chart-box h3{{color:#ff8c00!important}}
+    .chart-box canvas{{background:transparent!important}}
     .chart-note{{background:#111!important;color:#888!important;border-color:#2a2a2a!important}}
     table{{color:#ccc!important}}
     thead tr{{background:#1a1a1a!important}}
@@ -1192,7 +1200,8 @@ new Chart(document.getElementById('medianChart'),{{
     tbody td{{border-color:#1a1a1a!important}}
     tbody tr:nth-child(odd){{background:#0f0f0f!important}}
     tbody tr:nth-child(even){{background:#0a0a0a!important}}
-    [style*="background:#f8fafc"],[style*="background:#f1f5f9"],[style*="background:#fff"]{{background:#111!important}}
+    [style*="background:#f8fafc"],[style*="background:#f1f5f9"],[style*="background:#fff"],[style*="background: #fff"]{{background:#111!important}}
+    div[style*="box-shadow"]{{background:#111!important;box-shadow:none!important}}
     [style*="border-top:2px solid #e2e8f0"]{{border-color:#2a2a2a!important}}
     [style*="border-bottom:1px solid #e2e8f0"]{{border-color:#2a2a2a!important}}
     [style*="border:1px solid #f5f5f5"]{{border-color:#1a1a1a!important}}
@@ -1200,10 +1209,17 @@ new Chart(document.getElementById('medianChart'),{{
     [style*="color:#374151"],[style*="color:#2d3142"]{{color:#ccc!important}}
     [style*="color:#64748b"],[style*="color:#8b92a5"]{{color:#888!important}}
     [style*="border-left:3px solid"]{{background:#111!important}}
+    [style*="border-left:4px solid"]{{background:#111!important}}
     [style*="border-top:1px solid #e2e8f0"]{{border-color:#2a2a2a!important}}
     h3{{color:#ff8c00!important}}
     b{{color:#e8e8e8!important}}
     #dynamic-themes-section{{border-color:#2a2a2a!important}}
+    details{{background:#111!important;border-color:#2a2a2a!important}}
+    details summary{{color:#ccc!important}}
+    [style*="color:#1e293b"],[style*="color:#334155"],[style*="color:#475569"]{{color:#ccc!important}}
+    [style*="color:#c2410c"]{{color:#f59e0b!important}}
+    [style*="color:#854d0e"]{{color:#fbbf24!important}}
+    [style*="color:#991b1b"]{{color:#f87171!important}}
   `;
   document.head.appendChild(s);
 
