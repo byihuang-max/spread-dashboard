@@ -738,8 +738,16 @@ new Chart(document.getElementById('medianChart'),{
   var params = new URLSearchParams(window.location.search);
   var isBloomberg = params.get('theme')==='bloomberg';
   if(!isBloomberg && window.parent !== window){
-    try{ isBloomberg = window.parent.__bbMode === 'dark' || window.parent.document.documentElement.classList.contains('bb-dark'); }catch(e){ isBloomberg = true; }
+    try{ isBloomberg = window.parent.__bbMode === 'dark' || window.parent.document.documentElement.classList.contains('bb-dark'); }catch(e){ isBloomberg = false; }
   }
+
+  // 监听父窗口主题切换
+  window.addEventListener('message', function(e){
+    if(!e.data || e.data.type !== 'bb-theme') return;
+    // 页面重载以应用/移除暗色样式
+    window.location.reload();
+  });
+
   if(!isBloomberg) return;
 
   var s = document.createElement('style');
