@@ -223,10 +223,13 @@ var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
 var SHARE_SERIES=null, shareChart=null;
 
 function loadData(){
-  Promise.all([
-    fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}),
-    fetch('share_series.json?t='+Date.now()).then(function(r){return r.json()})
-  ]).then(function(arr){DATA=arr[0];SHARE_SERIES=arr[1];render();renderShareChart()}).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
+  fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+    DATA=d;render();
+    // 折线图独立加载,失败不阻塞
+    fetch('share_series.json?t='+Date.now()).then(function(r){return r.json()}).then(function(ss){
+      SHARE_SERIES=ss;renderShareChart();
+    }).catch(function(e){console.warn('share_series加载失败:',e)});
+  }).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
 }
 
 function fmtPct(v,digits){return (v>=0?'+':'')+(v*100).toFixed(digits||2);}
@@ -408,7 +411,7 @@ var CHART_COLORS=['#ff8c00','#ef4444','#3b82f6','#22c55e','#a855f7','#ec4899','#
 var ACTIVE_SERIES={};
 
 function renderShareChart(){
-  if(!SHARE_SERIES||!SHARE_SERIES.dates)return;
+  if(!SHARE_SERIES||!SHARE_SERIES.dates||typeof Chart==='undefined')return;
   var ss=SHARE_SERIES;
   // 默认显示占比TOP5(按最新值)
   var latest={};
