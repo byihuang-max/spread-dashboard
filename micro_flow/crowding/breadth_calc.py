@@ -226,21 +226,24 @@ def calc_vp_matrix(cross, breadth_l1):
 
 def export_share_series(share):
     """
-    导出占比时间序列为独立 JSON（前端折线图 + range slider 用）。
-    格式：{ dates: [...], series: { "电子": [...], "通信": [...], ... } }
-    占比值保留4位小数（百分比形式，如 30.77）。
+    导出占比时间序列为独立 JSON（前端折线图 + 量比计算用）。
+    格式：{ dates: [...], series: { "电子": [...], ... }, amount: { "电子": [...], ... } }
+    series = 占比百分比（如 30.77），amount = 原始成交额（千元）。
     """
     if share.empty:
         return
     share = share.copy()
     share['share'] = pd.to_numeric(share['share'], errors='coerce')
-    pivot = share.pivot_table(index='trade_date', columns='name', values='share', aggfunc='first').sort_index()
-    dates = [pd.Timestamp(d).strftime('%Y-%m-%d') for d in pivot.index]
+    share['amount'] = pd.to_numeric(share['amount'], errors='coerce')
+    pivot_share = share.pivot_table(index='trade_date', columns='name', values='share', aggfunc='first').sort_index()
+    pivot_amount = share.pivot_table(index='trade_date', columns='name', values='amount', aggfunc='first').sort_index()
+    dates = [pd.Timestamp(d).strftime('%Y-%m-%d') for d in pivot_share.index]
     series = {}
-    for col in pivot.columns:
-        # 转为百分比，保留2位
-        series[col] = [round(float(v * 100), 2) if pd.notna(v) else None for v in pivot[col]]
-    out = {'dates': dates, 'series': series}
+    amount = {}
+    for col in pivot_share.columns:
+        series[col] = [round(float(v * 100), 2) if pd.notna(v) else None for v in pivot_share[col]]
+        amount[col] = [round(float(v), 0) if pd.notna(v) else None for v in pivot_amount[col]]
+    out = {'dates': dates, 'series': series, 'amount': amount}
     with open(SHARE_SERIES_JSON, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False)
     print(f'  占比时间序列: {len(dates)}天 × {len(series)}行业 → {SHARE_SERIES_JSON}')

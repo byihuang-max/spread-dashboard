@@ -142,7 +142,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 
 <!-- ② 横截面占比时间序列(动态折线图) -->
 <div class="sec">
-  <h2>① 行业拥挤度占比变化</h2>
+  <h2>① 行业拥挤度占比变化 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 全市场成交额）</span></h2>
   <div class="sec-desc">每个申万一级行业占全市场成交额的比例随时间变化。默认显示占比TOP5，点击图例切换行业。拖动底部滑块选择时间范围。</div>
   <div style="position:relative;height:340px;background:var(--card-bg);border:1px solid var(--border);padding:12px">
     <canvas id="shareChart"></canvas>
@@ -162,7 +162,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- ③ 行业自身活跃度(自己vs自己历史) -->
 <div class="sec">
   <div class="sec-head">
-    <h2>② 行业活跃度（自身成交额 vs 历史均值）</h2>
+    <h2>② 行业活跃度 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 自身历史均值）</span></h2>
   </div>
   <div class="sec-desc">各行业当前成交额相对自身过去N天均值的倍数（量比）。<b style="color:var(--up)">&gt;1.5倍标红</b>=该行业相对自己历史在显著放量。与①结合：占比高+量比高=真拥挤。</div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
@@ -311,22 +311,23 @@ function switchPctWindow(w){
 }
 
 function renderShare(){
-  // 量比 = 当前成交额(用占比代替,等比) / 过去N天均值
-  // 用 share_series 的原始占比数据算量比
-  if(!SHARE_SERIES||!SHARE_SERIES.series){
+  // 量比 = 当前成交额 / 过去N天均值（用原始amount数据）
+  if(!SHARE_SERIES||!SHARE_SERIES.amount){
     document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">加载中...</div>';
     return;
   }
   var results=[];
-  Object.keys(SHARE_SERIES.series).forEach(function(name){
-    var arr=SHARE_SERIES.series[name];
+  Object.keys(SHARE_SERIES.amount).forEach(function(name){
+    var arr=SHARE_SERIES.amount[name];
     if(!arr||arr.length<20)return;
     var latest=arr[arr.length-1];
     var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW-1),arr.length-1); // 不含今天
     if(window.length<10)return;
     var avg=window.reduce(function(s,v){return s+(v||0)},0)/window.length;
     var ratio=avg>0?latest/avg:1;
-    results.push({name:name,ratio:ratio,latest:latest,avg:avg});
+    var shareArr=SHARE_SERIES.series[name];
+    var sharePct=shareArr?shareArr[shareArr.length-1]:0;
+    results.push({name:name,ratio:ratio,latest:latest,avg:avg,share:sharePct});
   });
   // 按量比降序
   results.sort(function(a,b){return b.ratio-a.ratio;});
@@ -335,19 +336,15 @@ function renderShare(){
     var barW=Math.min(100,(d.ratio/maxRatio*100)).toFixed(1);
     var hot=d.ratio>1.5;
     var cold=d.ratio<0.7;
-    // 透明度随量比变化
     var alpha=Math.min(0.9,0.3+d.ratio*0.3);
     var barColor=hot?'rgba(239,68,68,'+alpha.toFixed(2)+')':cold?'rgba(34,197,94,'+alpha.toFixed(2)+')':'rgba(255,140,0,'+alpha.toFixed(2)+')';
     var ratioStr=d.ratio.toFixed(2)+'x';
-    var chg=d.latest-d.avg;
-    var chgStr=(chg>=0?'+':'')+chg.toFixed(2)+'pct';
-    var chgColor=chg>0?'var(--up)':(chg<0?'var(--down)':'var(--text-sub)');
     return '<div class="share-row">'+
       '<div class="share-name">'+d.name+'</div>'+
       '<div class="share-track"><div class="share-fill" style="width:'+barW+'%;background:'+barColor+'"></div></div>'+
-      '<div class="share-val">'+d.latest.toFixed(1)+'%</div>'+
-      '<div class="share-rank'+(hot?' high':'')+'">'+ratioStr+'</div>'+
-      '<div class="share-chg" style="color:'+chgColor+'">'+chgStr+'</div>'+
+      '<div class="share-val">'+ratioStr+'</div>'+
+      '<div class="share-rank'+(hot?' high':'')+'">占比'+d.share.toFixed(1)+'%</div>'+
+      '<div class="share-chg" style="color:var(--text-sub)">均值'+(d.avg/10000).toFixed(0)+'亿</div>'+
     '</div>';
   }).join('');
 }
