@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中观资金流监控</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--grid-color:#f0f0f0;--note-bg:#f9fafb;--signal-bg:#f8f9fa;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070}
+html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--grid-color:#222;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease}
+h2{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent)}
+.section{margin-bottom:24px}
+.signal-bar{background:var(--signal-bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px 20px;color:var(--text);display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:20px;font-weight:800;letter-spacing:1px;color:var(--accent)}
+.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.signal-tag{background:var(--tag-bg);padding:4px 12px;font-size:12px;color:var(--tag-text)}
+.signal-tag.warn{background:rgba(245,158,11,0.15);color:#f59e0b}
+.signal-tag.good{background:rgba(34,197,94,0.15);color:#22c55e}
+.signal-tag.risk{background:rgba(239,68,68,0.15);color:#ef4444}
+.flow-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.flow-card{background:var(--card-bg);padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent)}
+.flow-card .name{font-size:12px;color:var(--text-sub);margin-bottom:8px;font-weight:600}
+.flow-card .value{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:4px}
+.flow-card .dir{font-size:11px;font-weight:700;padding:2px 8px;display:inline-block}
+.flow-card .dir.inflow{background:rgba(22,163,98,0.12);color:#16a34a}
+.flow-card .dir.outflow{background:rgba(220,38,38,0.12);color:#dc2626}
+.flow-card .dir.active{background:rgba(99,102,241,0.12);color:#6366f1}
+.flow-card .dir.normal{background:var(--tag-bg);color:var(--text-sub)}
+.flow-card .ma-info{font-size:11px;color:var(--text-sub);margin-top:6px}
+.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent);margin-bottom:16px}
+.chart-box h3{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.chart-note{font-size:11px;line-height:1.7;color:var(--text-sub);margin-bottom:12px}
+.chart-note b{color:var(--text)}
+.chart-wrap{position:relative;height:280px}
+.range-wrap{margin-top:10px;display:flex;align-items:center;gap:10px}
+.range-wrap input[type=range]{flex:1;height:6px;-webkit-appearance:none;appearance:none;background:var(--border);outline:none;border-radius:3px;cursor:pointer}
+.range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer}
+.range-label{font-size:11px;color:var(--text-sub);min-width:90px;text-align:right}
+html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
+html.bb-dark ::-webkit-scrollbar-track{background:#0a0a0a}
+html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
+</style>
+<script>
+(function(){
+  function isDark(){return document.documentElement.classList.contains("bb-dark");}
+  function registerPlugin(){
+    if(typeof Chart==="undefined")return false;
+    Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
+    Chart.register({id:"themeGrid",afterLayout:function(chart){
+      var gc=isDark()?"#222":"#f0f0f0",bc=isDark()?"#333":"rgba(0,0,0,0.08)",tc=isDark()?"#888":"#8b92a5";
+      Object.values(chart.scales).forEach(function(s){if(s.options.grid){s.options.grid.color=gc;s.options.grid.lineWidth=0.8;}if(s.options.border){s.options.border.color=bc;}if(s.options.ticks){s.options.ticks.color=tc;}});
+    }});return true;
+  }
+  if(!registerPlugin()){var t=0;var iv=setInterval(function(){t++;if(registerPlugin()||t>50)clearInterval(iv);},50);}
+})();
+</script>
+<script>
+(function(){
+  var _m="dark";try{_m=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
+  window.__bbMode=_m;if(_m!=="light"){document.documentElement.classList.add("bb-dark");}
+  window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light")document.documentElement.classList.remove("bb-dark");else document.documentElement.classList.add("bb-dark");if(typeof Chart!=="undefined")Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_){}});});
+})();
+</script>
+</head>
+<body>
+<div class="loading" id="loadingMsg">加载中...</div>
+<div id="app" style="display:none">
+
+<div class="signal-bar">
+  <div class="signal-main" id="consensusLabel">--</div>
+  <div class="signal-tags" id="signalTags"></div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+</div>
+
+<div class="flow-cards" id="flowCards"></div>
+
+<!-- 1. 南向 + 两融每日变化 -->
+<div class="chart-box section" id="sec-south">
+  <h3>南向净买入 / 两融每日变化</h3>
+  <div class="chart-note">南向来自港股通 <b>ggt_daily</b>（买入-卖出=净买入，亿元）；两融来自 <b>margin</b> 三家交易所汇总（亿元）。</div>
+  <div class="chart-wrap"><canvas id="southChart"></canvas></div>
+  <div class="range-wrap"><input type="range" id="southRange" min="0" max="100" value="100"><span class="range-label" id="southLabel">近60日</span></div>
+</div>
+
+<!-- 2. 北向成交活跃度 -->
+<div class="chart-box section" id="sec-north">
+  <h3>北向成交活跃度</h3>
+  <div class="chart-note">2024年7月起北向净买入停止日频披露。此图为沪股通+深股通每日成交额及MA20。成交额/MA20即活跃度量比。数据源 <b>moneyflow_hsgt</b>。</div>
+  <div class="chart-wrap"><canvas id="northChart"></canvas></div>
+  <div class="range-wrap"><input type="range" id="northRange" min="0" max="100" value="100"><span class="range-label" id="northLabel">近60日</span></div>
+</div>
+
+<!-- 3. ETF份额变化 -->
+<div class="chart-box section" id="sec-etf">
+  <h3>宽基ETF份额变化</h3>
+  <div class="chart-note">7只主要宽基ETF合计份额日变化（万份）。数据源 <b>fund_share</b>。</div>
+  <div class="chart-wrap"><canvas id="etfChart"></canvas></div>
+  <div class="range-wrap"><input type="range" id="etfRange" min="0" max="100" value="100"><span class="range-label" id="etfLabel">近60日</span></div>
+</div>
+
+<!-- 4. 三路20日滚动累计 -->
+<div class="chart-box section">
+  <h3>三路资金 20日滚动累计</h3>
+  <div class="chart-note">南向净买入、ETF份额变化、两融变化的近20个交易日累计。</div>
+  <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
+  <div class="range-wrap"><input type="range" id="cumRange" min="0" max="100" value="100"><span class="range-label" id="cumLabel">近60日</span></div>
+</div>
+
+<!-- 两融余额 -->
+<div class="margin-box section">
+  <h3>两融余额趋势</h3>
+  <div class="chart-wrap"><canvas id="marginChart"></canvas></div>
+  <div class="range-wrap"><input type="range" id="marginRange" min="0" max="100" value="100"><span class="range-label" id="marginLabel">近60日</span></div>
+</div>
+
+</div>
+
+<script>
+var DATA,CHARTS={};
+var WIN=60; // 默认窗口
+
+
+function loadData(){
+  fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){DATA=d;render()}).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
+}
+
+function sliceEnd(arr,win){return arr.slice(Math.max(0,arr.length-win));}
+
+function render(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('app').style.display='';
+  var sig=DATA.crowding_signal||{};
+  document.getElementById('consensusLabel').textContent=sig.consensus||'--';
+  var tags=sig.signals||[];
+  document.getElementById('signalTags').innerHTML=tags.map(function(t){
+    var cls='signal-tag';
+    if(t.indexOf('⚠')>=0||t.indexOf('追高')>=0||t.indexOf('高位')>=0)cls+=' risk';
+    else if(t.indexOf('确认')>=0||t.indexOf('吸筹')>=0||t.indexOf('流入')>=0)cls+=' good';
+    else if(t.indexOf('低位')>=0||t.indexOf('低迷')>=0)cls+=' warn';
+    return'<span class="'+cls+'">'+t+'</span>';
+  }).join('');
+
+  var dates=DATA.data_dates||{};var dh=[];
+  if(dates.northbound)dh.push('北向:'+dates.northbound);
+  if(dates.southbound)dh.push('南向:'+dates.southbound);
+  if(dates.etf)dh.push('ETF:'+dates.etf);
+  if(dates.margin)dh.push('两融:'+dates.margin);
+  document.getElementById('updateTime').textContent=dh.length?'截至 '+dh.join(' | '):'';
+
+  // 卡片
+  var flows=DATA.three_flows||{},details=flows.details||{},na=DATA.north_activity||{};
+  var html='';
+  if(na.ratio){var ac=na.label==='活跃'?'active':'normal';html+='<div class="flow-card"><div class="name">北向活跃度</div><div class="value">'+na.ratio.toFixed(2)+'</div><div class="dir '+ac+'">'+na.label+'</div><div class="ma-info">成交额/MA20 | 净买入已停止日频披露</div></div>';}
+  ['south_net','etf_share_chg','margin_chg'].forEach(function(k){var d=details[k];if(!d)return;var c=d.direction==='inflow'?'inflow':'outflow';html+='<div class="flow-card"><div class="name">'+d.name+'</div><div class="value">'+d.latest+'</div><div class="dir '+c+'">'+(d.direction==='inflow'?'▲ 流入':'▼ 流出')+'</div><div class="ma-info">MA5:'+d.ma5+' | MA20:'+d.ma20+'</div></div>';});
+  document.getElementById('flowCards').innerHTML=html;
+
+  // 初始化滑块
+  var total=DATA.direction_chart.length;
+  ['south','north','etf','cum','margin'].forEach(function(id){
+    var el=document.getElementById(id+'Range');
+    if(el){el.max=total;el.value=total;el.min=Math.min(60,total);}
+  });
+
+  renderSouthChart(WIN);
+  renderNorthChart(WIN);
+  renderEtfChart(WIN);
+  renderCumChart(WIN);
+  renderMarginChart(WIN);
+
+  // 绑定滑块事件
+  bindRange('south',renderSouthChart);
+  bindRange('north',renderNorthChart);
+  bindRange('etf',renderEtfChart);
+  bindRange('cum',renderCumChart);
+  bindRange('margin',renderMarginChart);
+}
+
+function bindRange(id,fn){
+  var el=document.getElementById(id+'Range');
+  if(!el)return;
+  el.addEventListener('input',function(){
+    var w=parseInt(this.value);
+    document.getElementById(id+'Label').textContent='近'+w+'日';
+    fn(w);
+  });
+}
+
+function updateChart(key,cfg){
+  if(CHARTS[key]){CHARTS[key].destroy();}
+  CHARTS[key]=new Chart(document.getElementById(key+'Chart'),cfg);
+}
+
+function renderSouthChart(win){
+  var chart=sliceEnd(DATA.direction_chart,win);
+  var labels=chart.map(function(d){return d.date});
+  var ds=[];
+  if(chart.some(function(d){return d.south_net!=null}))ds.push({label:'南向净买入(亿)',data:chart.map(function(d){return d.south_net}),backgroundColor:'#ec489988',borderColor:'#ec4899',borderWidth:1,barPercentage:0.6});
+  if(chart.some(function(d){return d.margin_chg!=null}))ds.push({label:'两融变化(亿)',data:chart.map(function(d){return d.margin_chg}),backgroundColor:'#10b98188',borderColor:'#10b981',borderWidth:1,barPercentage:0.6});
+  updateChart('south',{type:'bar',data:{labels:labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},y:{}}}});
+  document.getElementById('southLabel').textContent='近'+win+'日';
+}
+
+function renderNorthChart(win){
+  var chart=sliceEnd(DATA.direction_chart,win);
+  var values=chart.map(function(d){return d.north_turnover});
+  var ma20=[];
+  for(var i=0;i<values.length;i++){var s=Math.max(0,i-19);var sl=values.slice(s,i+1).filter(function(v){return v!=null});ma20.push(sl.length>=10?sl.reduce(function(a,b){return a+b},0)/sl.length:null);}
+  updateChart('north',{type:'bar',data:{labels:chart.map(function(d){return d.date}),datasets:[
+    {type:'bar',label:'北向成交额',data:values,backgroundColor:'#6366f144',borderColor:'#6366f1',borderWidth:1,barPercentage:0.6,order:2},
+    {type:'line',label:'MA20',data:ma20,borderColor:'#f59e0b',borderWidth:2,pointRadius:0,tension:0.3,order:1}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},y:{}}}});
+  document.getElementById('northLabel').textContent='近'+win+'日';
+}
+
+function renderEtfChart(win){
+  var chart=sliceEnd(DATA.direction_chart,win);
+  if(!chart.some(function(d){return d.etf_share_chg!=null}))return;
+  updateChart('etf',{type:'bar',data:{labels:chart.map(function(d){return d.date}),datasets:[{label:'ETF份额变化(万份)',data:chart.map(function(d){return d.etf_share_chg}),backgroundColor:'#f59e0b88',borderColor:'#f59e0b',borderWidth:1,barPercentage:0.6}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},y:{}}}});
+  document.getElementById('etfLabel').textContent='近'+win+'日';
+}
+
+function renderCumChart(win){
+  var rolling=DATA.rolling_cum||[];if(!rolling.length)return;
+  var colors=['#ec4899','#f59e0b','#10b981'];
+  var sliced=rolling.map(function(s){return{name:s.name,data:sliceEnd(s.data,win)};});
+  var ds=sliced.map(function(s,i){return{label:s.name+'(20日累计)',data:s.data.map(function(d){return d.value}),borderColor:colors[i%3],backgroundColor:colors[i%3]+'18',fill:true,tension:0.3,borderWidth:2,pointRadius:0};});
+  updateChart('cum',{type:'line',data:{labels:sliced[0].data.map(function(d){return d.date}),datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},y:{}}}});
+  document.getElementById('cumLabel').textContent='近'+win+'日';
+}
+
+function renderMarginChart(win){
+  var mt=sliceEnd(DATA.margin_trend||[],win);if(!mt.length)return;
+  updateChart('margin',{type:'line',data:{labels:mt.map(function(d){return d.date}),datasets:[{label:'两融余额(亿)',data:mt.map(function(d){return d.balance}),borderColor:'#8b5cf6',backgroundColor:'#8b5cf618',fill:true,tension:0.3,borderWidth:2,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:15,font:{size:10}}},y:{}}}});
+  document.getElementById('marginLabel').textContent='近'+win+'日';
+}
+
+loadData();
+</script>
+
+<!-- 底部说明 -->
+<div style="margin-top:32px;padding:20px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--accent);font-size:12px;color:var(--text-sub);line-height:1.8">
+  <div style="font-weight:700;color:var(--accent);margin-bottom:8px;font-size:13px">指标说明</div>
+  <div><b>三路方向共振：</b>南向净买入（ggt_daily）、宽基ETF份额变化、两融余额变化。MA5>MA20判定为流入。</div>
+  <div><b>北向活跃度：</b>2024年7月起净买入停止日频披露，仅保留成交额。活跃度=成交额/MA20，>1.3活跃，<0.7低迷。</div>
+  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据源：Tushare（ggt_daily / moneyflow_hsgt / fund_share / margin）</div>
+</div>
+</body></html>
