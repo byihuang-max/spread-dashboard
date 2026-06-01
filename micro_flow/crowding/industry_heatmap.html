@@ -113,6 +113,8 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 /* range slider */
 .range-handle{position:absolute;top:-2px;width:12px;height:36px;background:var(--accent);cursor:ew-resize;transform:translateX(-50%);opacity:.9}
 .range-handle:hover{opacity:1}
+.pct-btn{padding:4px 10px;font-size:11px}
+.pct-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
 html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </style>
@@ -161,9 +163,17 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <div class="sec">
   <div class="sec-head">
     <h2>② 横截面拥挤度（成交额占比 + 历史分位）</h2>
-    <button class="toggle-btn" id="shareToggle" onclick="toggleShare()">展开全部</button>
   </div>
-  <div class="sec-desc">各申万一级行业占全市场成交额的比例（31个合计=100%），衡量<b>资金集中度</b>。<b>分位</b>=当前占比在近2年历史中的位置，<b style="color:var(--up)">&gt;90%标红</b>=占比处历史高位（真拥挤）。占比高≠拥挤，要看分位。</div>
+  <div class="sec-desc">各申万一级行业占全市场成交额的比例（31个合计=100%），衡量<b>资金集中度</b>。<b>分位</b>=当前占比在所选时间窗口内的历史位置，<b style="color:var(--up)">&gt;90%标红</b>=占比处历史高位（真拥挤）。</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <span style="font-size:11px;color:var(--text-sub)">分位窗口:</span>
+    <button class="toggle-btn pct-btn on" data-w="63" onclick="switchPctWindow(63)">近3月</button>
+    <button class="toggle-btn pct-btn" data-w="126" onclick="switchPctWindow(126)">近6月</button>
+    <button class="toggle-btn pct-btn" data-w="250" onclick="switchPctWindow(250)">近1年</button>
+    <button class="toggle-btn pct-btn" data-w="500" onclick="switchPctWindow(500)">近2年</button>
+    <button class="toggle-btn pct-btn" data-w="750" onclick="switchPctWindow(750)">近3年</button>
+    <button class="toggle-btn pct-btn" data-w="1300" onclick="switchPctWindow(1300)">全量5年</button>
+  </div>
   <div class="share-list" id="shareList"></div>
 </div>
 
@@ -221,6 +231,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <script>
 var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
 var SHARE_SERIES=null, shareChart=null;
+var PCT_WINDOW=63; // 默认近3月(约63个交易日)
 
 function loadData(){
   fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
@@ -277,26 +288,45 @@ function renderEmotion(){
     '<div class="emotion-item">跌停 <span class="emotion-num" style="color:var(--down);font-size:15px">'+(em.limit_down||0)+'</span></div>';
 }
 
+function switchPctWindow(w){
+  PCT_WINDOW=w;
+  document.querySelectorAll('.pct-btn').forEach(function(b){b.classList.toggle('on',parseInt(b.getAttribute('data-w'))===w);});
+  renderShare();
+}
+
 function renderShare(){
   var cs=DATA.cross_section||[];
   if(!cs.length){document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">暂无数据</div>';return;}
-  var list=SHARE_ALL?cs:cs.slice(0,12);
+  // 动态分位：用 SHARE_SERIES 的历史数据按 PCT_WINDOW 重算
+  var dynRank={};
+  if(SHARE_SERIES&&SHARE_SERIES.series){
+    Object.keys(SHARE_SERIES.series).forEach(function(k){
+      var arr=SHARE_SERIES.series[k];
+      var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW));
+      var latest=arr[arr.length-1];
+      if(window.length>=10&&latest!=null){
+        var below=window.filter(function(v){return v!=null&&v<latest}).length;
+        dynRank[k]=below/window.length;
+      }
+    });
+  }
+  var list=cs.slice(); // 显示全部31个
   var maxShare=cs[0]?cs[0].share:1;
   document.getElementById('shareList').innerHTML=list.map(function(d){
     var w=(d.share/maxShare*100).toFixed(1);
-    var rank=d.rank!=null?(d.rank*100).toFixed(0):'-';
-    var rankHigh=d.rank!=null&&d.rank>0.9;
+    var rank=dynRank[d.name]!=null?dynRank[d.name]:(d.rank!=null?d.rank:null);
+    var rankStr=rank!=null?(rank*100).toFixed(0):'-';
+    var rankHigh=rank!=null&&rank>0.9;
     var chg=d.chg_5d!=null?fmtPct(d.chg_5d,2)+'pct':'-';
     var chgColor=d.chg_5d>0?'var(--up)':(d.chg_5d<0?'var(--down)':'var(--text-sub)');
     return '<div class="share-row">'+
       '<div class="share-name">'+d.name+'</div>'+
       '<div class="share-track"><div class="share-fill'+(rankHigh?' hot':'')+'" style="width:'+w+'%"></div></div>'+
       '<div class="share-val">'+d.share_pct.toFixed(2)+'%</div>'+
-      '<div class="share-rank'+(rankHigh?' high':'')+'">分位'+rank+'%</div>'+
+      '<div class="share-rank'+(rankHigh?' high':'')+'">分位'+rankStr+'%</div>'+
       '<div class="share-chg" style="color:'+chgColor+'">'+chg+'</div>'+
     '</div>';
   }).join('');
-  document.getElementById('shareToggle').textContent=SHARE_ALL?'收起':'展开全部';
 }
 function toggleShare(){SHARE_ALL=!SHARE_ALL;renderShare();}
 
