@@ -740,6 +740,24 @@ def main():
     log(f"   最新: {latest['date']} 情绪={latest['sentiment']} 周期={latest['cycle_label']}")
     log(f"   CSV: momentum_raw.csv + momentum_sentiment.csv")
 
+    # ── 完整性校验：最新数据必须是最近交易日 ──
+    # 防止 Tushare 返回空/超时导致数据静默不更新
+    from datetime import date as _date
+    today_str = _date.today().strftime('%Y%m%d')
+    latest_date = latest['date']
+    # 允许的最大滞后：3个自然日（覆盖周末+节假日正常间隔）
+    days_gap = (datetime.strptime(today_str, '%Y%m%d') - datetime.strptime(latest_date, '%Y%m%d')).days
+    if days_gap > 3:
+        log(f"\n⚠ 完整性校验失败: 最新数据 {latest_date}，距今 {days_gap} 天（>3天）")
+        log(f"  可能原因: Tushare 接口返回空数据 / 网络超时 / trade_cal 异常")
+        sys.exit(1)
+    elif days_gap > 1 and today_str in (dates if dates else []):
+        # 今天是交易日但数据没更新到今天
+        log(f"\n⚠ 完整性校验警告: 今天 {today_str} 是交易日，但最新数据只到 {latest_date}")
+        sys.exit(1)
+    else:
+        log(f"\n✓ 完整性校验通过: 最新 {latest_date}，距今 {days_gap} 天")
+
 
 if __name__ == '__main__':
     main()

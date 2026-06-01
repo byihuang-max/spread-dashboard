@@ -291,11 +291,38 @@ def is_trading_day(dt=None):
     return True  # 查询失败时不阻断
 
 
+def check_data_freshness():
+    """检查情绪数据是否足够新，防止发过期日报"""
+    import json
+    from datetime import date as _date, timedelta
+    sent_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'momentum_sentiment.json')
+    try:
+        with open(sent_path) as f:
+            data = json.load(f)
+        latest_date = data['daily'][-1]['date']
+        today = _date.today()
+        latest_dt = _date(int(latest_date[:4]), int(latest_date[4:6]), int(latest_date[6:8]))
+        gap = (today - latest_dt).days
+        if gap > 3:
+            print(f'⚠ 数据过期: 最新 {latest_date}，距今 {gap} 天（>3天），跳过发送')
+            return False
+        # 如果今天是交易日，数据应该是今天的
+        today_str = today.strftime('%Y%m%d')
+        if latest_date != today_str and is_trading_day():
+            print(f'⚠ 数据未更新到今天: 最新 {latest_date}，今天 {today_str}，跳过发送')
+            return False
+    except Exception as e:
+        print(f'⚠ 数据新鲜度检查异常({e})，放行')
+    return True
+
+
 def main():
     # --force 跳过交易日判断（手动补发用）
     if '--force' not in sys.argv and '--test' not in sys.argv:
         if not is_trading_day():
             print('今日非交易日，跳过发送')
+            return
+        if not check_data_freshness():
             return
 
     print('生成日报...')
