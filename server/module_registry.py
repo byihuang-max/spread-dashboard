@@ -168,7 +168,9 @@ MODULE_REGISTRY = {
         'name': '资金流拥挤度',
         'scripts': [
             ('micro_flow/crowding', 'crowding_data.py'),
+            ('micro_flow/crowding', 'breadth_data.py'),
             ('micro_flow/crowding', 'crowding_calc.py'),
+            ('micro_flow/crowding', 'breadth_calc.py'),
         ],
         'aliases': ['crowding'],
         'include_in_update_all': True,
