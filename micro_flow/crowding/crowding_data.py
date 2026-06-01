@@ -18,6 +18,8 @@ LOOKBACK_DAYS = 10
 
 NORTHBOUND_CSV = os.path.join(CACHE_DIR, 'northbound.csv')
 NORTHBOUND_DETAIL_CSV = os.path.join(CACHE_DIR, 'northbound_detail.csv')
+SOUTHBOUND_CSV = os.path.join(CACHE_DIR, 'southbound.csv')
+SOUTHBOUND_DETAIL_CSV = os.path.join(CACHE_DIR, 'southbound_detail.csv')
 ETF_FLOW_CSV = os.path.join(CACHE_DIR, 'etf_flow.csv')
 ETF_FLOW_DETAIL_CSV = os.path.join(CACHE_DIR, 'etf_flow_detail.csv')
 MARGIN_CSV = os.path.join(CACHE_DIR, 'margin.csv')
@@ -114,12 +116,19 @@ def merge_dedup(old, new, keys):
 
 
 def fetch_northbound():
-    print('增量拉取北向/南向资金...')
+    """
+    拉取北向成交额（沪股通+深股通）。
+
+    2024年7月改革后，北向净买入停止日频披露，只剩成交额。
+    north_money = hgt + sgt = 当日成交额（全部为正，无方向信息）。
+    用途：计算活跃度（成交额/MA20），不参与方向判断。
+    """
+    print('增量拉取北向成交额...')
     old = read_csv(NORTHBOUND_DETAIL_CSV)
     start = incremental_start(old)
     new = ts_api(
         'moneyflow_hsgt',
-        fields='trade_date,north_money,south_money,hgt,sgt,ggt_ss,ggt_sz',
+        fields='trade_date,north_money,hgt,sgt',
         start_date=start,
         end_date=END_DATE,
     )
@@ -128,15 +137,48 @@ def fetch_northbound():
         return
     if not new.empty:
         new['trade_date'] = new['trade_date'].map(norm_date)
-        for col in ['north_money', 'south_money', 'hgt', 'sgt', 'ggt_ss', 'ggt_sz']:
+        for col in ['north_money', 'hgt', 'sgt']:
             new[col] = pd.to_numeric(new[col], errors='coerce')
     detail = merge_dedup(old, new, ['trade_date']).sort_values('trade_date')
     detail.to_csv(NORTHBOUND_DETAIL_CSV, index=False)
-    daily = detail[['trade_date', 'north_money', 'south_money']].copy()
-    daily['north_net'] = daily['north_money'] / 10000
-    daily['south_net'] = daily['south_money'] / 10000
-    daily[['trade_date', 'north_net', 'south_net']].to_csv(NORTHBOUND_CSV, index=False)
-    print(f"  北向/南向: {len(daily)}条，最新 {daily.iloc[-1]['trade_date']}")
+
+    daily = detail[['trade_date', 'north_money']].copy()
+    daily['north_turnover'] = pd.to_numeric(daily['north_money'], errors='coerce')
+    daily[['trade_date', 'north_turnover']].to_csv(NORTHBOUND_CSV, index=False)
+    print(f"  北向成交额: {len(daily)}条，最新 {daily.iloc[-1]['trade_date']}")
+
+
+def fetch_southbound():
+    """
+    拉取南向净买入（港股通 ggt_daily 接口）。
+
+    ggt_daily 返回每日 buy_amount / sell_amount（亿元），
+    net_buy = buy - sell 即为当日南向净流入。
+    南向数据仍完整披露，不受2024年改革影响。
+    """
+    print('增量拉取南向净买入...')
+    old = read_csv(SOUTHBOUND_DETAIL_CSV)
+    start = incremental_start(old)
+    new = ts_api(
+        'ggt_daily',
+        fields='trade_date,buy_amount,buy_volume,sell_amount,sell_volume',
+        start_date=start,
+        end_date=END_DATE,
+    )
+    if new.empty and old.empty:
+        print('  无数据')
+        return
+    if not new.empty:
+        new['trade_date'] = new['trade_date'].map(norm_date)
+        for col in ['buy_amount', 'sell_amount']:
+            new[col] = pd.to_numeric(new[col], errors='coerce')
+    detail = merge_dedup(old, new, ['trade_date']).sort_values('trade_date')
+    detail.to_csv(SOUTHBOUND_DETAIL_CSV, index=False)
+
+    daily = detail[['trade_date', 'buy_amount', 'sell_amount']].copy()
+    daily['south_net'] = daily['buy_amount'] - daily['sell_amount']
+    daily[['trade_date', 'south_net']].to_csv(SOUTHBOUND_CSV, index=False)
+    print(f"  南向净买入: {len(daily)}条，最新 {daily.iloc[-1]['trade_date']}")
 
 
 def fetch_etf_flow():
@@ -263,6 +305,7 @@ def main():
     print('=' * 50)
     print(f'区间: {START_DATE} ~ {END_DATE}')
     fetch_northbound()
+    fetch_southbound()
     fetch_etf_flow()
     fetch_margin()
     fetch_sw_daily()
