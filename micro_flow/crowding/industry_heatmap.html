@@ -292,6 +292,23 @@ function switchPctWindow(w){
   PCT_WINDOW=w;
   document.querySelectorAll('.pct-btn').forEach(function(b){b.classList.toggle('on',parseInt(b.getAttribute('data-w'))===w);});
   renderShare();
+  // 联动折线图：缩放到对应时间窗口
+  if(SHARE_SERIES&&SHARE_SERIES.dates){
+    var total=SHARE_SERIES.dates.length;
+    RANGE_START=Math.max(0,total-w);
+    RANGE_END=total-1;
+    buildChart();
+    // 更新进度条手柄位置
+    var track=document.getElementById('rangeTrack');
+    if(track){
+      var lPct=(RANGE_START/(total-1)*100).toFixed(2);
+      var rPct=(RANGE_END/(total-1)*100).toFixed(2);
+      document.getElementById('rangeHandleL').style.left=lPct+'%';
+      document.getElementById('rangeHandleR').style.left=rPct+'%';
+      document.getElementById('rangeFill').style.left=lPct+'%';
+      document.getElementById('rangeFill').style.width=(rPct-lPct)+'%';
+    }
+  }
 }
 
 function renderShare(){
