@@ -314,8 +314,8 @@ function switchPctWindow(w){
 function renderShare(){
   var cs=DATA.cross_section||[];
   if(!cs.length){document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">暂无数据</div>';return;}
-  // 动态分位：用 SHARE_SERIES 的历史数据按 PCT_WINDOW 重算
-  var dynRank={};
+  // 动态分位 + 窗口内变化：用 SHARE_SERIES 的历史数据按 PCT_WINDOW 重算
+  var dynRank={}, dynChg={};
   if(SHARE_SERIES&&SHARE_SERIES.series){
     Object.keys(SHARE_SERIES.series).forEach(function(k){
       var arr=SHARE_SERIES.series[k];
@@ -324,24 +324,42 @@ function renderShare(){
       if(window.length>=10&&latest!=null){
         var below=window.filter(function(v){return v!=null&&v<latest}).length;
         dynRank[k]=below/window.length;
+        // 窗口起点 vs 现在的变化
+        var startVal=window[0];
+        if(startVal!=null) dynChg[k]=latest-startVal;
       }
     });
   }
-  var list=cs.slice(); // 显示全部31个
-  var maxShare=cs[0]?cs[0].share:1;
+  // 按分位降序排列
+  var list=cs.slice().sort(function(a,b){
+    var ra=dynRank[a.name]!=null?dynRank[a.name]:0;
+    var rb=dynRank[b.name]!=null?dynRank[b.name]:0;
+    return rb-ra;
+  });
   document.getElementById('shareList').innerHTML=list.map(function(d){
-    var w=(d.share/maxShare*100).toFixed(1);
-    var rank=dynRank[d.name]!=null?dynRank[d.name]:(d.rank!=null?d.rank:null);
-    var rankStr=rank!=null?(rank*100).toFixed(0):'-';
-    var rankHigh=rank!=null&&rank>0.9;
-    var chg=d.chg_5d!=null?fmtPct(d.chg_5d,2)+'pct':'-';
-    var chgColor=d.chg_5d>0?'var(--up)':(d.chg_5d<0?'var(--down)':'var(--text-sub)');
+    var rank=dynRank[d.name]!=null?dynRank[d.name]:(d.rank!=null?d.rank:0);
+    var rankStr=(rank*100).toFixed(0);
+    var rankHigh=rank>0.9;
+    var rankMid=rank>0.7&&rank<=0.9;
+    // 条形长度 = 分位数(0~100%)
+    var barW=(rank*100).toFixed(1);
+    // 条形颜色：分位渐变 绿→黄→红
+    var barColor;
+    if(rank>0.9) barColor='var(--up)';
+    else if(rank>0.7) barColor='#f59e0b';
+    else if(rank>0.5) barColor='var(--accent)';
+    else if(rank>0.3) barColor='#3b82f6';
+    else barColor='var(--down)';
+    // 窗口内变化
+    var chg=dynChg[d.name]!=null?dynChg[d.name]:(d.chg_5d!=null?d.chg_5d*100:null);
+    var chgStr=chg!=null?((chg>=0?'+':'')+chg.toFixed(2)+'pct'):'-';
+    var chgColor=chg!=null?(chg>0?'var(--up)':(chg<0?'var(--down)':'var(--text-sub)')):'var(--text-sub)';
     return '<div class="share-row">'+
       '<div class="share-name">'+d.name+'</div>'+
-      '<div class="share-track"><div class="share-fill'+(rankHigh?' hot':'')+'" style="width:'+w+'%"></div></div>'+
-      '<div class="share-val">'+d.share_pct.toFixed(2)+'%</div>'+
+      '<div class="share-track"><div class="share-fill" style="width:'+barW+'%;background:'+barColor+'"></div></div>'+
+      '<div class="share-val">'+d.share_pct.toFixed(1)+'%</div>'+
       '<div class="share-rank'+(rankHigh?' high':'')+'">分位'+rankStr+'%</div>'+
-      '<div class="share-chg" style="color:'+chgColor+'">'+chg+'</div>'+
+      '<div class="share-chg" style="color:'+chgColor+'">'+chgStr+'</div>'+
     '</div>';
   }).join('');
 }
