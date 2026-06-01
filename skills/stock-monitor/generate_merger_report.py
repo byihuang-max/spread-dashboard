@@ -11,7 +11,7 @@
   python3 generate_merger_report.py --code 002176.SZ
   python3 generate_merger_report.py --code 002176.SZ --chip-only   # 只跑筹码
   python3 generate_merger_report.py --code 002176.SZ --report-only # 只跑底稿
-  python3 generate_merger_report.py --auto                         # 自动跑异动 Top 8
+  python3 generate_merger_report.py --auto                         # 自动跑异动 Top 3
 
 输出：
   detail/{code}.json  — 前端读取的完整数据（筹码+底稿+元信息）
@@ -653,7 +653,7 @@ def _save_output(code_clean: str, stock_name: str, output: dict):
 
 
 def run_auto():
-    """自动模式：从"进行中"池子（~70只）实时拉涨幅，取 Top 8"""
+    """自动模式：从"进行中"池子（~70只）实时拉涨幅，取 Top 3"""
     print("=" * 50)
     print("  并购深度分析 - 自动模式")
     print("=" * 50)
@@ -715,7 +715,7 @@ def run_auto():
         print("[!] 无法获取行情数据")
         return
 
-    # 按 5 日涨幅排序，取 Top 8
+    # 按 5 日涨幅排序，取 Top 3
     results.sort(key=lambda x: x['ret_5d'], reverse=True)
     # 过滤：至少有一个周期涨幅 > 5%
     top_candidates = [r for r in results if r['ret_5d'] > 5 or r['ret_3d'] > 5 or r['ret_1d'] > 5]
@@ -726,32 +726,32 @@ def run_auto():
         _save_anomaly_json([], results[0]['data_date'] if results else today)
         return
 
-    top8 = top_candidates[:8]
-    data_date = top8[0]['data_date']
+    top3 = top_candidates[:3]
+    data_date = top3[0]['data_date']
 
-    print(f"\n异动 Top {len(top8)}（数据截止: {data_date}）:")
+    print(f"\n异动 Top {len(top3)}（数据截止: {data_date}）:")
     print(f"  {'名称':8s} {'代码':12s} {'阶段':6s} {'1日':>6s} {'3日':>6s} {'5日':>6s}")
     print(f"  {'─'*50}")
-    for r in top8:
+    for r in top3:
         print(f"  {r['name']:8s} {r['code']:12s} {r['stage']:6s} {r['ret_1d']:+5.1f}% {r['ret_3d']:+5.1f}% {r['ret_5d']:+5.1f}%")
 
     # 保存异动 JSON（供前端异动面板读取）
-    _save_anomaly_json(top8, data_date)
+    _save_anomaly_json(top3, data_date)
 
     # 逐个生成：Top 3 完整底稿+筹码，4-8 只跑筹码
-    for i, r in enumerate(top8):
+    for i, r in enumerate(top3):
         code = r['code']
         if i < 3:
             print(f"\n{'─'*40}")
-            print(f"[{i+1}/{len(top8)}] {r['name']} - 完整分析（底稿+筹码）")
+            print(f"[{i+1}/{len(top3)}] {r['name']} - 完整分析（底稿+筹码）")
             generate_report(code, chip_only=False)
         else:
             print(f"\n{'─'*40}")
-            print(f"[{i+1}/{len(top8)}] {r['name']} - 筹码分析")
+            print(f"[{i+1}/{len(top3)}] {r['name']} - 筹码分析")
             generate_report(code, chip_only=True)
 
     print(f"\n{'='*50}")
-    print(f"  完成！Top 3 完整底稿 + Top 4-8 筹码")
+    print(f"  完成！Top 3 完整底稿")
     print(f"{'='*50}")
 
 
@@ -777,7 +777,7 @@ def main():
     parser.add_argument('--code', type=str, help='股票代码（如 002176.SZ 或 002176）')
     parser.add_argument('--chip-only', action='store_true', help='只跑筹码分析')
     parser.add_argument('--report-only', action='store_true', help='只跑底稿生成')
-    parser.add_argument('--auto', action='store_true', help='自动模式：跑异动 Top 8')
+    parser.add_argument('--auto', action='store_true', help='自动模式：跑异动 Top 3')
     args = parser.parse_args()
 
     if args.auto:
