@@ -98,8 +98,9 @@ def calc_crowding():
     if dfs:
         merged = pd.concat(dfs, axis=1, sort=True).sort_index()
         recent = merged.tail(60).copy()
+        full = merged.copy()  # 全量数据用于图表
 
-        # 方向判断（只对有方向意义的指标）
+        # 方向判断（只对有方向意义的指标，用最近60日）
         directions = {}
         direction_cols = {
             'south_net': '南向资金',
@@ -135,10 +136,10 @@ def calc_crowding():
 
         result['three_flows'] = {'details': directions, 'consensus': consensus_label}
 
-        # ── 每日变化图表数据 ──
+        # ── 每日变化图表数据（全量，前端控制窗口）──
         chart_data = []
-        for idx, row in recent.iterrows():
-            d = {'date': idx.strftime('%m-%d')}
+        for idx, row in full.iterrows():
+            d = {'date': idx.strftime('%Y-%m-%d')}
             for col in ['south_net', 'north_turnover', 'etf_share_chg', 'margin_chg']:
                 if col in row and pd.notna(row[col]):
                     d[col] = round(float(row[col]), 2)
@@ -147,7 +148,7 @@ def calc_crowding():
             chart_data.append(d)
         result['direction_chart'] = chart_data
 
-        # ── 20日滚动累计 ──
+        # ── 20日滚动累计（全量）──
         rolling_labels = {
             'south_net': '南向资金',
             'etf_share_chg': 'ETF份额变化',
@@ -159,20 +160,19 @@ def calc_crowding():
                 continue
             s = pd.to_numeric(merged[col], errors='coerce').fillna(0)
             cum20 = s.rolling(20, min_periods=1).sum()
-            recent_cum = cum20.tail(60)
             rolling_data.append({
                 'name': label,
                 'key': col,
-                'data': [{'date': idx.strftime('%m-%d'), 'value': round(float(val), 2)} for idx, val in recent_cum.items()]
+                'data': [{'date': idx.strftime('%Y-%m-%d'), 'value': round(float(val), 2)} for idx, val in cum20.items()]
             })
         result['rolling_cum'] = rolling_data
 
-        # ── 两融余额趋势 ──
+        # ── 两融余额趋势（全量）──
         if 'margin_balance' in merged.columns:
-            mb_recent = pd.to_numeric(merged['margin_balance'], errors='coerce').dropna().tail(60)
+            mb_all = pd.to_numeric(merged['margin_balance'], errors='coerce').dropna()
             result['margin_trend'] = [
-                {'date': idx.strftime('%m-%d'), 'balance': round(float(val), 0)}
-                for idx, val in mb_recent.items()
+                {'date': idx.strftime('%Y-%m-%d'), 'balance': round(float(val), 0)}
+                for idx, val in mb_all.items()
             ]
 
     # ── 行业三维热力图（仅申万一级行业）──
