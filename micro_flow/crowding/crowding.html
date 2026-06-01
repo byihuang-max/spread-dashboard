@@ -3,141 +3,49 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>行业拥挤度监控</title>
 <style>
-:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--grid-color:#f0f0f0;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070;--signal-bg:#f8f9fa}
-html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--grid-color:#222;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888;--signal-bg:#0f0f0f}
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00}
+html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease}
-h2{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent)}
-.signal-bar{background:var(--signal-bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:14px 20px;color:var(--text);display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:var(--tag-bg);padding:4px 12px;font-size:12px;color:var(--tag-text)}
-.signal-tag.warn{background:rgba(245,158,11,0.15);color:#f59e0b}
-.signal-tag.good{background:rgba(34,197,94,0.15);color:#22c55e}
-.signal-tag.risk{background:rgba(239,68,68,0.15);color:#ef4444}
-.ind-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
-.ind-subtitle{font-size:12px;font-weight:700;color:var(--text-sub);margin:4px 0 8px}
-.expand-btn{border:1px solid var(--border);background:var(--tag-bg);color:var(--accent);padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer}
-.expand-btn:hover{background:var(--accent);color:#000}
-.ind-cell{padding:12px 10px;text-align:center;font-size:11px;line-height:1.5;transition:transform .15s;position:relative;cursor:default}
-.ind-cell:hover{transform:scale(1.04);z-index:2;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
-.ind-cell .ind-name{font-weight:800;font-size:13px;margin-bottom:3px}
-.ind-cell .ind-pct{font-size:16px;font-weight:800;margin-bottom:4px}
-.ind-cell .ind-tags{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:4px}
-.ind-cell .ind-tag{font-size:9px;padding:1px 6px;background:rgba(255,255,255,0.3);white-space:nowrap}
-.ind-cell .ind-signal{font-size:10px;font-weight:700;margin-top:4px;padding:2px 6px;background:rgba(0,0,0,0.15);display:inline-block}
-.ind-cell .ind-crowd{font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;color:var(--text-sub)}
-.legend-item{display:flex;align-items:center;gap:4px}
-.legend-dot{width:10px;height:10px;display:inline-block}
-.loading{text-align:center;padding:60px;color:var(--text-sub);font-size:14px}
-html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
-html.bb-dark ::-webkit-scrollbar-track{background:#0a0a0a}
-html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
+body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:0;font-size:14px}
+.sub-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card-bg);position:sticky;top:0;z-index:10}
+.sub-tab{padding:12px 20px;font-size:13px;font-weight:700;color:var(--text-sub);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.sub-tab:hover{color:var(--text)}
+.sub-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.sub-page{display:none;width:100%;height:calc(100vh - 46px)}
+.sub-page.active{display:block}
+.sub-page iframe{width:100%;height:100%;border:none}
 </style>
 <script>
 (function(){
   var _m="dark";try{_m=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
   window.__bbMode=_m;if(_m!=="light"){document.documentElement.classList.add("bb-dark");}
-  window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light")document.documentElement.classList.remove("bb-dark");else document.documentElement.classList.add("bb-dark");});
+  window.addEventListener("message",function(e){if(!e.data||e.data.type!=="bb-theme")return;var m=e.data.mode;window.__bbMode=m;if(m==="light")document.documentElement.classList.remove("bb-dark");else document.documentElement.classList.add("bb-dark");
+    // 转发给子iframe
+    document.querySelectorAll('iframe').forEach(function(f){try{f.contentWindow.postMessage(e.data,'*');}catch(_){}});
+  });
 })();
 </script>
 </head>
 <body>
-<div class="loading" id="loadingMsg">加载中...</div>
-<div id="app" style="display:none">
-
-<!-- 组合信号栏 -->
-<div class="signal-bar">
-  <div style="font-size:13px;font-weight:700;color:var(--accent)">行业信号</div>
-  <div class="signal-tags" id="signalTags"></div>
-  <div style="margin-left:auto;font-size:11px;color:#7c8598" id="updateTime"></div>
+<div class="sub-tabs">
+  <div class="sub-tab active" data-page="heatmap">行业拥挤度</div>
+  <div class="sub-tab" data-page="chain">产业链景气</div>
 </div>
-
-<!-- 行业热力图 -->
-<div class="ind-section-head">
-  <h2>申万一级行业拥挤度（近5日）</h2>
-  <button class="expand-btn" id="toggleIndustryBtn" onclick="toggleIndustryView()">展开全部</button>
+<div class="sub-page active" id="page-heatmap">
+  <iframe src="industry_heatmap.html"></iframe>
 </div>
-<div class="chart-note" style="margin-bottom:10px;font-size:11px;color:var(--text-sub);line-height:1.7">申万一级行业（31个）近5个交易日涨跌 + 成交额/MA20拥挤度 + 行业ETF份额变化。数据源 Tushare <b style="color:var(--text)">sw_daily</b> + <b style="color:var(--text)">fund_share</b>。</div>
-<div class="legend">
-  <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> 涨</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 跌</div>
-  <div class="legend-item">拥挤(&gt;1.5)</div>
-  <div class="legend-item">冷清(&lt;0.7)</div>
-  <div class="legend-item">▲ ETF流入</div>
-  <div class="legend-item">▼ ETF流出</div>
-</div>
-<div id="indGrid"></div>
-
+<div class="sub-page" id="page-chain">
+  <iframe src="../../meso/chain_prosperity/chain_prosperity.html"></iframe>
 </div>
 
 <script>
-var DATA;
-var SHOW_ALL=false;
-
-function loadData(){
-  fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){DATA=d;render()}).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
-}
-
-function render(){
-  document.getElementById('loadingMsg').style.display='none';
-  document.getElementById('app').style.display='';
-
-  // 行业信号
-  var signals=[];
-  (DATA.industry_heatmap||[]).forEach(function(d){if(d.signal)signals.push(d.name+' '+d.signal+'('+((d.pct_5d>=0?'+':'')+d.pct_5d.toFixed(1))+'%)');});
-  if(!signals.length)signals=['当前无极端信号'];
-  document.getElementById('signalTags').innerHTML=signals.map(function(t){
-    var cls='signal-tag';
-    if(t.indexOf('⚠')>=0||t.indexOf('追高')>=0)cls+=' risk';
-    else if(t.indexOf('确认')>=0||t.indexOf('吸筹')>=0)cls+=' good';
-    else if(t.indexOf('超跌')>=0)cls+=' warn';
-    return'<span class="'+cls+'">'+t+'</span>';
-  }).join('');
-
-  var dates=DATA.data_dates||{};
-  document.getElementById('updateTime').textContent=dates.industry?'数据截至 '+dates.industry:'';
-
-  renderGrid();
-}
-
-function renderCards(list){
-  if(!list.length)return'<div style="color:#8b92a5;padding:20px">暂无数据</div>';
-  var maxPct=Math.max.apply(null,(DATA.industry_heatmap||[]).map(function(d){return Math.abs(d.pct_5d)}))||1;
-  var html='<div class="ind-grid">';
-  list.forEach(function(d){
-    var ratio=d.pct_5d/maxPct;var bg,fg;
-    if(d.pct_5d>=0){var a=Math.min(Math.abs(ratio)*0.65+0.15,0.85);bg='rgba(220,38,38,'+a+')';fg=a>0.4?'#fff':'#dc2626';}
-    else{var a=Math.min(Math.abs(ratio)*0.65+0.15,0.85);bg='rgba(22,163,106,'+a+')';fg=a>0.4?'#fff':'#16a34a';}
-    var tags=d.tags&&d.tags.length?'<div class="ind-tags">'+d.tags.map(function(t){return'<span class="ind-tag">'+t+'</span>'}).join('')+'</div>':'';
-    var sig=d.signal?'<div class="ind-signal">'+d.signal+'</div>':'';
-    html+='<div class="ind-cell" style="background:'+bg+';color:'+fg+'" title="'+d.name+' | 5日:'+d.pct_5d+'% | 量比:'+d.crowding_ratio+'"><div class="ind-name">'+d.name+'</div><div class="ind-pct">'+(d.pct_5d>=0?'+':'')+d.pct_5d.toFixed(2)+'%</div><div class="ind-crowd">量比:'+d.crowding_ratio.toFixed(2)+'</div>'+tags+sig+'</div>';
+document.querySelectorAll('.sub-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.sub-tab').forEach(function(t){t.classList.remove('active')});
+    document.querySelectorAll('.sub-page').forEach(function(p){p.classList.remove('active')});
+    tab.classList.add('active');
+    document.getElementById('page-'+tab.getAttribute('data-page')).classList.add('active');
   });
-  return html+'</div>';
-}
-
-function renderGrid(){
-  var inds=DATA.industry_heatmap||[];
-  if(!inds.length){document.getElementById('indGrid').innerHTML='<div style="color:#8b92a5;padding:20px">暂无数据</div>';return}
-  var html='';
-  if(SHOW_ALL){html+='<div class="ind-subtitle">全部一级行业（31个）</div>';html+=renderCards(inds);}
-  else{html+='<div class="ind-subtitle">近5日涨幅TOP10</div>';html+=renderCards(inds.slice(0,10));html+='<div class="ind-subtitle" style="margin-top:14px">近5日跌幅TOP10</div>';html+=renderCards(inds.slice(-10).reverse());}
-  document.getElementById('indGrid').innerHTML=html;
-  document.getElementById('toggleIndustryBtn').textContent=SHOW_ALL?'收起':'展开全部';
-}
-function toggleIndustryView(){SHOW_ALL=!SHOW_ALL;renderGrid();}
-
-loadData();
+});
 </script>
-
-<!-- 底部说明 -->
-<div style="margin-top:32px;padding:20px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--accent);font-size:12px;color:var(--text-sub);line-height:1.8">
-  <div style="font-weight:700;color:var(--accent);margin-bottom:8px;font-size:13px">指标说明</div>
-  <div><b>量比（拥挤度）：</b>当日成交额/MA20。>1.5拥挤（交易过热），<0.7冷清。</div>
-  <div><b>ETF资金流向：</b>行业代表性ETF近5日份额变化。份额增加=资金净申购流入。</div>
-  <div style="margin-top:8px;font-weight:700;color:var(--text)">组合信号</div>
-  <div>● ⚠追高风险：涨>3%+拥挤+ETF流出 ● 资金确认：涨>2%+ETF流入+正常 ● 超跌冷门：跌>2%+冷清 ● 逆势吸筹：跌>2%+ETF流入</div>
-  <div style="margin-top:8px;color:#9ca3af;font-size:11px">数据源：Tushare（sw_daily / fund_share）</div>
-</div>
 </body></html>
