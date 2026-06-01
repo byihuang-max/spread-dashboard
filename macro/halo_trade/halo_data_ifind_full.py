@@ -60,8 +60,12 @@ def get_token():
         d = r.json()
         if d.get('errorcode') == 0:
             return d['data']['access_token']
+        else:
+            import sys
+            print(f" Token API 返回错误: {d.get('errmsg', d)}", file=sys.stderr)
     except Exception as e:
-        print(f" Token 错误: {e}")
+        import sys
+        print(f" Token 错误: {e}", file=sys.stderr)
     return None
 
 def ifind_history(token, code, start, end):
@@ -92,7 +96,8 @@ if __name__ == '__main__':
     
     token = get_token()
     if not token:
-        print(" 无法获取 token")
+        import sys
+        print(" 无法获取 token", file=sys.stderr)
         exit(1)
     
     print(" Token 获取成功")

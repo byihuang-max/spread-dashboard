@@ -47,11 +47,11 @@ def get_last_date(csv_path, date_col):
     df = read_csv(csv_path)
     if df.empty:
         return None
-    df[date_col] = df[date_col].astype(str).str.replace('.0', '', regex=False)
-    df = df[df[date_col].str.match(r'^\d{8}$', na=False)]
+    df[date_col] = df[date_col].astype(str).str.replace(r'\.0$', '', regex=True)
+    df = df[df[date_col].str.match(r'^\d{6,8}$', na=False)]
     if df.empty:
         return None
-    return df[date_col].max()
+    return str(df[date_col].max())
 
 
 def save_incremental(csv_path, new_data, date_col):
