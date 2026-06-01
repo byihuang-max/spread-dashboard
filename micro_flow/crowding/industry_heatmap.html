@@ -106,6 +106,10 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .ind-cell .ind-tag{font-size:9px;padding:1px 6px;background:rgba(255,255,255,0.3);white-space:nowrap}
 .ind-cell .ind-signal{font-size:10px;font-weight:700;margin-top:4px;padding:2px 6px;background:rgba(0,0,0,0.15);display:inline-block}
 .ind-cell .ind-crowd{font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px}
+/* 行业选择chip */
+.chip{display:inline-block;padding:3px 10px;font-size:11px;font-weight:700;border:1.5px solid;cursor:pointer;transition:all .15s;user-select:none}
+.chip:hover{opacity:.8}
+.chip.on{opacity:1}
 html.bb-dark ::-webkit-scrollbar{width:6px;height:6px}
 html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </style>
@@ -131,10 +135,26 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- 情绪温度 -->
 <div class="emotion" id="emotionBar"></div>
 
-<!-- ② 横截面占比 -->
+<!-- ② 横截面占比时间序列(动态折线图) -->
+<div class="sec">
+  <h2>① 行业占比变化（拖拽时间窗口）</h2>
+  <div class="sec-desc">每个申万一级行业占全市场成交额的比例随时间变化。默认显示占比TOP5，点击图例切换行业。拖动底部滑块选择时间范围。</div>
+  <div style="position:relative;height:340px;background:var(--card-bg);border:1px solid var(--border);padding:12px">
+    <canvas id="shareChart"></canvas>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
+    <span style="font-size:11px;color:var(--text-sub)">时间范围:</span>
+    <input type="range" id="rangeStart" min="0" max="100" value="75" style="flex:1">
+    <input type="range" id="rangeEnd" min="0" max="100" value="100" style="flex:1">
+    <span id="rangeLabel" style="font-size:11px;color:var(--text-sub);min-width:180px"></span>
+  </div>
+  <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div>
+</div>
+
+<!-- ③ 横截面占比(当前快照) -->
 <div class="sec">
   <div class="sec-head">
-    <h2>① 横截面拥挤度（成交额占比 + 历史分位）</h2>
+    <h2>② 横截面拥挤度（成交额占比 + 历史分位）</h2>
     <button class="toggle-btn" id="shareToggle" onclick="toggleShare()">展开全部</button>
   </div>
   <div class="sec-desc">各申万一级行业占全市场成交额的比例（31个合计=100%），衡量<b>资金集中度</b>。<b>分位</b>=当前占比在近2年历史中的位置，<b style="color:var(--up)">&gt;90%标红</b>=占比处历史高位（真拥挤）。占比高≠拥挤，要看分位。</div>
@@ -143,14 +163,14 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 
 <!-- ③ 边际加速 -->
 <div class="sec">
-  <h2>② 拥挤度边际加速 TOP5（资金正涌向哪 / 撤离哪）</h2>
+  <h2>③ 拥挤度边际加速 TOP5（资金正涌向哪 / 撤离哪）</h2>
   <div class="sec-desc">占比的<b>变化量</b>排名（周=5日，月=20日）。占比上升=资金加速流入，下降=资金撤离。这是<b>边际视角</b>，比静态占比更早反映资金动向。单位 pct=百分点。</div>
   <div class="accel-grid" id="accelGrid"></div>
 </div>
 
 <!-- ④ 量价状态矩阵 -->
 <div class="sec">
-  <h2>③ 量价状态矩阵（占比边际 × 赚钱效应）</h2>
+  <h2>④ 量价状态矩阵（占比边际 × 赚钱效应）</h2>
   <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。</div>
   <div class="vp-legend">
     <span>■ <span style="color:var(--up)">量价齐升</span></span>
@@ -164,7 +184,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- ⑤ breadth 涨跌家数 -->
 <div class="sec">
   <div class="sec-head">
-    <h2>④ 行业涨跌家数（breadth，点击下钻二级）</h2>
+    <h2>⑤ 行业涨跌家数（breadth，点击下钻二级）</h2>
     <button class="toggle-btn" id="bdToggle" onclick="toggleBreadth()">按涨家占比排序</button>
   </div>
   <div class="sec-desc">每个一级行业当天<b>上涨/下跌成份股数量</b>。<span style="color:var(--up)">红=涨</span> <span style="color:var(--down)">绿=跌</span>。涨家占比=涨/(涨+跌)，越高赚钱效应越广。<b>涨停U/跌停D</b>反映情绪温度。点行名展开<b>二级行业</b>明细。</div>
@@ -174,7 +194,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- ⑥ 时序量比热力图（保留原模块） -->
 <div class="sec">
   <div class="sec-head">
-    <h2>⑤ 时序量比热力图（成交额/MA20 + ETF流向）</h2>
+    <h2>⑥ 时序量比热力图（成交额/MA20 + ETF流向）</h2>
     <button class="toggle-btn" id="toggleIndustryBtn" onclick="toggleIndustryView()">展开全部</button>
   </div>
   <div class="sec-desc">这是<b>纵向</b>视角：每个行业当日成交额相对自己 MA20 的<b>量比</b>（&gt;1.5拥挤 / &lt;0.7冷清），叠加近5日涨跌 + 行业ETF份额变化。与上方横截面占比互补。数据源 <b>sw_daily</b> + <b>fund_share</b>。</div>
@@ -191,11 +211,16 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
 var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
+var SHARE_SERIES=null, shareChart=null;
 
 function loadData(){
-  fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){DATA=d;render()}).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
+  Promise.all([
+    fetch('crowding.json?t='+Date.now()).then(function(r){return r.json()}),
+    fetch('share_series.json?t='+Date.now()).then(function(r){return r.json()})
+  ]).then(function(arr){DATA=arr[0];SHARE_SERIES=arr[1];render();renderShareChart()}).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
 }
 
 function fmtPct(v,digits){return (v>=0?'+':'')+(v*100).toFixed(digits||2);}
@@ -371,6 +396,79 @@ function renderGrid(){
   document.getElementById('toggleIndustryBtn').textContent=SHOW_ALL?'收起':'展开全部';
 }
 function toggleIndustryView(){SHOW_ALL=!SHOW_ALL;renderGrid();}
+
+/* ① 占比时间序列折线图 */
+var CHART_COLORS=['#ff8c00','#ef4444','#3b82f6','#22c55e','#a855f7','#ec4899','#14b8a6','#f59e0b','#6366f1','#84cc16','#06b6d4','#e11d48','#8b5cf6','#10b981','#f97316','#0ea5e9','#d946ef','#64748b','#facc15','#2dd4bf','#fb7185','#a3e635','#818cf8','#fbbf24','#34d399','#f472b6','#38bdf8','#c084fc','#4ade80','#fb923c','#67e8f9'];
+var ACTIVE_SERIES={};
+
+function renderShareChart(){
+  if(!SHARE_SERIES||!SHARE_SERIES.dates)return;
+  var ss=SHARE_SERIES;
+  // 默认显示占比TOP5(按最新值)
+  var latest={};
+  Object.keys(ss.series).forEach(function(k){var arr=ss.series[k];latest[k]=arr[arr.length-1]||0;});
+  var sorted=Object.keys(latest).sort(function(a,b){return latest[b]-latest[a];});
+  var top5=sorted.slice(0,5);
+  sorted.forEach(function(k,i){ACTIVE_SERIES[k]=top5.indexOf(k)>=0;});
+
+  buildChart();
+  buildChips(sorted);
+  setupRange();
+}
+
+function buildChart(){
+  var ss=SHARE_SERIES;
+  var startIdx=Math.floor(ss.dates.length*0.75);
+  var endIdx=ss.dates.length-1;
+  var rs=document.getElementById('rangeStart');
+  var re=document.getElementById('rangeEnd');
+  if(rs&&re){startIdx=Math.floor(ss.dates.length*rs.value/100);endIdx=Math.floor(ss.dates.length*re.value/100);}
+  if(endIdx<=startIdx)endIdx=startIdx+1;
+  var dates=ss.dates.slice(startIdx,endIdx+1);
+  var datasets=[];
+  var ci=0;
+  Object.keys(ss.series).forEach(function(k){
+    if(!ACTIVE_SERIES[k]){ci++;return;}
+    datasets.push({label:k,data:ss.series[k].slice(startIdx,endIdx+1),borderColor:CHART_COLORS[ci%CHART_COLORS.length],backgroundColor:'transparent',borderWidth:1.8,pointRadius:0,tension:0.3});
+    ci++;
+  });
+  var isDark=document.documentElement.classList.contains('bb-dark');
+  var gridC=isDark?'#222':'#f0f0f0';
+  var tickC=isDark?'#888':'#666';
+  if(shareChart){shareChart.destroy();}
+  var ctx=document.getElementById('shareChart').getContext('2d');
+  shareChart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}},scales:{x:{ticks:{color:tickC,maxTicksLimit:12,font:{size:10}},grid:{color:gridC}},y:{ticks:{color:tickC,callback:function(v){return v+'%'},font:{size:10}},grid:{color:gridC}}}}});
+  document.getElementById('rangeLabel').textContent=dates[0]+' ~ '+dates[dates.length-1]+' ('+dates.length+'天)';
+}
+
+function buildChips(sorted){
+  var html=sorted.map(function(k,i){
+    var active=ACTIVE_SERIES[k];
+    var c=CHART_COLORS[i%CHART_COLORS.length];
+    return '<span class="chip'+(active?' on':'')+'" data-k="'+k+'" style="border-color:'+c+';'+(active?'background:'+c+';color:#fff':'color:'+c)+'">'+k+'</span>';
+  }).join('');
+  document.getElementById('shareChipBar').innerHTML=html;
+  document.querySelectorAll('#shareChipBar .chip').forEach(function(el){
+    el.addEventListener('click',function(){
+      var k=el.getAttribute('data-k');
+      ACTIVE_SERIES[k]=!ACTIVE_SERIES[k];
+      buildChart();
+      buildChips(sorted);
+    });
+  });
+}
+
+function setupRange(){
+  var rs=document.getElementById('rangeStart');
+  var re=document.getElementById('rangeEnd');
+  function onSlide(){
+    var s=parseInt(rs.value),e=parseInt(re.value);
+    if(s>=e){if(this===rs)rs.value=e-1;else re.value=s+1;}
+    buildChart();
+  }
+  rs.addEventListener('input',onSlide);
+  re.addEventListener('input',onSlide);
+}
 
 loadData();
 </script>

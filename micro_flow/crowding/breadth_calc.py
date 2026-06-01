@@ -22,6 +22,7 @@ import pandas as pd
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_DIR = os.path.join(SCRIPT_DIR, 'cache')
 OUTPUT_JSON = os.path.join(SCRIPT_DIR, 'crowding.json')
+SHARE_SERIES_JSON = os.path.join(SCRIPT_DIR, 'share_series.json')  # 占比时间序列(前端折线图用)
 
 SHARE_HIST_CSV = os.path.join(CACHE_DIR, 'sw_share_hist.csv')
 BREADTH_L1_CSV = os.path.join(CACHE_DIR, 'breadth_l1.csv')
@@ -223,6 +224,28 @@ def calc_vp_matrix(cross, breadth_l1):
     return matrix
 
 
+def export_share_series(share):
+    """
+    导出占比时间序列为独立 JSON（前端折线图 + range slider 用）。
+    格式：{ dates: [...], series: { "电子": [...], "通信": [...], ... } }
+    占比值保留4位小数（百分比形式，如 30.77）。
+    """
+    if share.empty:
+        return
+    share = share.copy()
+    share['share'] = pd.to_numeric(share['share'], errors='coerce')
+    pivot = share.pivot_table(index='trade_date', columns='name', values='share', aggfunc='first').sort_index()
+    dates = [pd.Timestamp(d).strftime('%Y-%m-%d') for d in pivot.index]
+    series = {}
+    for col in pivot.columns:
+        # 转为百分比，保留2位
+        series[col] = [round(float(v * 100), 2) if pd.notna(v) else None for v in pivot[col]]
+    out = {'dates': dates, 'series': series}
+    with open(SHARE_SERIES_JSON, 'w', encoding='utf-8') as f:
+        json.dump(out, f, ensure_ascii=False)
+    print(f'  占比时间序列: {len(dates)}天 × {len(series)}行业 → {SHARE_SERIES_JSON}')
+
+
 def main():
     if not os.path.exists(OUTPUT_JSON):
         print(f'未找到 {OUTPUT_JSON}，请先运行 crowding_calc.py')
@@ -294,6 +317,9 @@ def main():
 
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
+
+    # 输出占比时间序列(独立 JSON,前端折线图用)
+    export_share_series(share)
 
     print(f'输出: {OUTPUT_JSON}')
     print(f'  横截面占比: {len(cross)} 行业, 最新 {accel.get("date")}')

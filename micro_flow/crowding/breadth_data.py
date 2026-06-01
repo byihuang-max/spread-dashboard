@@ -29,8 +29,8 @@ TUSHARE_URL = 'https://api.tushare.pro'
 
 # breadth / 涨跌停从近一年起即可（不需要太长）
 BREADTH_START = '20240101'
-# 占比分位需要长历史铺底（2 年）
-SHARE_HIST_START = '20240101'
+# 占比分位需要长历史铺底（拉到2021，和xls起始一致）
+SHARE_HIST_START = '20210101'
 END_DATE = dt.date.today().strftime('%Y%m%d')
 LOOKBACK_DAYS = 10
 # 行业成份映射缓存有效期（天），超过才重新逐行业拉
@@ -245,28 +245,18 @@ SW_L1_CODES = {
 def fetch_share_hist():
     """
     拉申万一级行业历史成交额，算横截面占比（每日 31 个行业占比合计=1）。
-    sw_daily 单次上限 4000 行，按季度分段循环。
+    逐行业拉取（每个一级指数单独调用，避免 sw_daily 4000行截断）。
     """
     print('增量拉取申万一级占比历史...')
     old = read_csv(SHARE_HIST_CSV)
     start = incremental_start(old, fallback=SHARE_HIST_START)
 
-    # 分段（每段 ~80 天，31 行业 × 80 ≈ 2480 行 < 4000）
-    segs = []
-    cur = pd.to_datetime(start)
-    end = pd.to_datetime(END_DATE)
-    while cur <= end:
-        seg_end = min(cur + pd.Timedelta(days=80), end)
-        segs.append((cur.strftime('%Y%m%d'), seg_end.strftime('%Y%m%d')))
-        cur = seg_end + pd.Timedelta(days=1)
-
     parts = []
-    for s, e in segs:
-        df = ts_api('sw_daily', fields='ts_code,trade_date,amount', start_date=s, end_date=e)
+    for code, name in SW_L1_CODES.items():
+        df = ts_api('sw_daily', fields='ts_code,trade_date,amount', ts_code=code, start_date=start, end_date=END_DATE)
         if not df.empty:
-            df = df[df['ts_code'].isin(SW_L1_CODES)].copy()
             parts.append(df)
-        time.sleep(0.3)
+        time.sleep(0.25)
     if not parts and old.empty:
         print('  无数据')
         return
@@ -281,7 +271,8 @@ def fetch_share_hist():
     merged['amount'] = pd.to_numeric(merged['amount'], errors='coerce')
     merged['share'] = merged.groupby('trade_date')['amount'].transform(lambda x: x / x.sum())
     merged.to_csv(SHARE_HIST_CSV, index=False)
-    print(f'  占比历史: {len(merged)}行，{merged["trade_date"].min()} ~ {merged["trade_date"].max()}')
+    dates_n = merged['trade_date'].nunique()
+    print(f'  占比历史: {len(merged)}行 / {dates_n}天，{merged["trade_date"].min()} ~ {merged["trade_date"].max()}')
 
 
 def main():
