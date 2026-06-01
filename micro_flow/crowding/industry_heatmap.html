@@ -143,10 +143,9 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     <canvas id="shareChart"></canvas>
   </div>
   <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
-    <span style="font-size:11px;color:var(--text-sub)">时间范围:</span>
-    <input type="range" id="rangeStart" min="0" max="100" value="75" style="flex:1">
-    <input type="range" id="rangeEnd" min="0" max="100" value="100" style="flex:1">
-    <span id="rangeLabel" style="font-size:11px;color:var(--text-sub);min-width:180px"></span>
+    <span style="font-size:11px;color:var(--text-sub)">拖拽图表平移 · 滚轮缩放 · </span>
+    <button class="toggle-btn" id="resetZoom" onclick="resetChartZoom()" style="padding:4px 10px;font-size:11px">重置视图</button>
+    <span id="rangeLabel" style="font-size:11px;color:var(--text-sub);margin-left:auto"></span>
   </div>
   <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div>
 </div>
@@ -212,6 +211,8 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script>
 var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
 var SHARE_SERIES=null, shareChart=null;
@@ -413,23 +414,16 @@ function renderShareChart(){
 
   buildChart();
   buildChips(sorted);
-  setupRange();
 }
 
 function buildChart(){
   var ss=SHARE_SERIES;
-  var startIdx=Math.floor(ss.dates.length*0.75);
-  var endIdx=ss.dates.length-1;
-  var rs=document.getElementById('rangeStart');
-  var re=document.getElementById('rangeEnd');
-  if(rs&&re){startIdx=Math.floor(ss.dates.length*rs.value/100);endIdx=Math.floor(ss.dates.length*re.value/100);}
-  if(endIdx<=startIdx)endIdx=startIdx+1;
-  var dates=ss.dates.slice(startIdx,endIdx+1);
+  var dates=ss.dates;
   var datasets=[];
   var ci=0;
   Object.keys(ss.series).forEach(function(k){
     if(!ACTIVE_SERIES[k]){ci++;return;}
-    datasets.push({label:k,data:ss.series[k].slice(startIdx,endIdx+1),borderColor:CHART_COLORS[ci%CHART_COLORS.length],backgroundColor:'transparent',borderWidth:1.8,pointRadius:0,tension:0.3});
+    datasets.push({label:k,data:ss.series[k],borderColor:CHART_COLORS[ci%CHART_COLORS.length],backgroundColor:'transparent',borderWidth:1.8,pointRadius:0,tension:0.3});
     ci++;
   });
   var isDark=document.documentElement.classList.contains('bb-dark');
@@ -437,9 +431,21 @@ function buildChart(){
   var tickC=isDark?'#888':'#666';
   if(shareChart){shareChart.destroy();}
   var ctx=document.getElementById('shareChart').getContext('2d');
-  shareChart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}}},scales:{x:{ticks:{color:tickC,maxTicksLimit:12,font:{size:10}},grid:{color:gridC}},y:{ticks:{color:tickC,callback:function(v){return v+'%'},font:{size:10}},grid:{color:gridC}}}}});
-  document.getElementById('rangeLabel').textContent=dates[0]+' ~ '+dates[dates.length-1]+' ('+dates.length+'天)';
+  // 默认显示近1年(约250天)
+  var minIdx=Math.max(0,dates.length-250);
+  shareChart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}},zoom:{pan:{enabled:true,mode:'x'},zoom:{wheel:{enabled:true},pinch:{enabled:true},drag:{enabled:true,backgroundColor:isDark?'rgba(255,140,0,0.1)':'rgba(255,140,0,0.08)'},mode:'x',onZoomComplete:updateRangeLabel}}},scales:{x:{min:dates[minIdx],ticks:{color:tickC,maxTicksLimit:12,font:{size:10}},grid:{color:gridC}},y:{ticks:{color:tickC,callback:function(v){return v+'%'},font:{size:10}},grid:{color:gridC}}}}});
+  updateRangeLabel();
 }
+
+function updateRangeLabel(){
+  if(!shareChart)return;
+  var scales=shareChart.scales.x;
+  var minL=shareChart.data.labels[Math.max(0,Math.floor(scales.min))];
+  var maxL=shareChart.data.labels[Math.min(shareChart.data.labels.length-1,Math.ceil(scales.max))];
+  document.getElementById('rangeLabel').textContent=(minL||'')+' ~ '+(maxL||'');
+}
+
+function resetChartZoom(){if(shareChart){shareChart.resetZoom();updateRangeLabel();}}
 
 function buildChips(sorted){
   var html=sorted.map(function(k,i){
