@@ -738,7 +738,7 @@ new Chart(document.getElementById('medianChart'),{
   var params = new URLSearchParams(window.location.search);
   var isBloomberg = params.get('theme')==='bloomberg';
   if(!isBloomberg && window.parent !== window){
-    try{ isBloomberg = !window.parent.location.search.includes('theme=light'); }catch(e){}
+    try{ isBloomberg = window.parent.__bbMode === 'dark' || window.parent.document.documentElement.classList.contains('bb-dark'); }catch(e){ isBloomberg = true; }
   }
   if(!isBloomberg) return;
 
