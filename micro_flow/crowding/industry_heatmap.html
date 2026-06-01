@@ -343,13 +343,9 @@ function renderShare(){
     var rankMid=rank>0.7&&rank<=0.9;
     // 条形长度 = 分位数(0~100%)
     var barW=(rank*100).toFixed(1);
-    // 条形颜色：分位渐变 绿→黄→红
-    var barColor;
-    if(rank>0.9) barColor='var(--up)';
-    else if(rank>0.7) barColor='#f59e0b';
-    else if(rank>0.5) barColor='var(--accent)';
-    else if(rank>0.3) barColor='#3b82f6';
-    else barColor='var(--down)';
+    // 条形颜色：统一橘色,透明度随分位变化(高=实,低=淡)
+    var alpha=0.3+rank*0.6; // 0.3~0.9
+    var barColor='rgba(255,140,0,'+alpha.toFixed(2)+')';
     // 窗口内变化
     var chg=dynChg[d.name]!=null?dynChg[d.name]:(d.chg_5d!=null?d.chg_5d*100:null);
     var chgStr=chg!=null?((chg>=0?'+':'')+chg.toFixed(2)+'pct'):'-';
