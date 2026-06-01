@@ -159,14 +159,14 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
   <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
 </div>
 
-<!-- ③ 横截面占比(当前快照) -->
+<!-- ③ 行业自身活跃度(自己vs自己历史) -->
 <div class="sec">
   <div class="sec-head">
-    <h2>② 横截面拥挤度（成交额占比 + 历史分位）</h2>
+    <h2>② 行业活跃度（自身成交额 vs 历史均值）</h2>
   </div>
-  <div class="sec-desc">各申万一级行业占全市场成交额的比例（31个合计=100%），衡量<b>资金集中度</b>。<b>分位</b>=当前占比在所选时间窗口内的历史位置，<b style="color:var(--up)">&gt;90%标红</b>=占比处历史高位（真拥挤）。</div>
+  <div class="sec-desc">各行业当前成交额相对自身过去N天均值的倍数（量比）。<b style="color:var(--up)">&gt;1.5倍标红</b>=该行业相对自己历史在显著放量。与①结合：占比高+量比高=真拥挤。</div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-    <span style="font-size:11px;color:var(--text-sub)">分位窗口:</span>
+    <span style="font-size:11px;color:var(--text-sub)">均值窗口:</span>
     <button class="toggle-btn pct-btn on" data-w="63" onclick="switchPctWindow(63)">近3月</button>
     <button class="toggle-btn pct-btn" data-w="126" onclick="switchPctWindow(126)">近6月</button>
     <button class="toggle-btn pct-btn" data-w="250" onclick="switchPctWindow(250)">近1年</button>
@@ -298,7 +298,6 @@ function switchPctWindow(w){
     RANGE_START=Math.max(0,total-w);
     RANGE_END=total-1;
     buildChart();
-    // 更新进度条手柄位置
     var track=document.getElementById('rangeTrack');
     if(track){
       var lPct=(RANGE_START/(total-1)*100).toFixed(2);
@@ -312,49 +311,42 @@ function switchPctWindow(w){
 }
 
 function renderShare(){
-  var cs=DATA.cross_section||[];
-  if(!cs.length){document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">暂无数据</div>';return;}
-  // 动态分位 + 窗口内变化：用 SHARE_SERIES 的历史数据按 PCT_WINDOW 重算
-  var dynRank={}, dynChg={};
-  if(SHARE_SERIES&&SHARE_SERIES.series){
-    Object.keys(SHARE_SERIES.series).forEach(function(k){
-      var arr=SHARE_SERIES.series[k];
-      var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW));
-      var latest=arr[arr.length-1];
-      if(window.length>=10&&latest!=null){
-        var below=window.filter(function(v){return v!=null&&v<latest}).length;
-        dynRank[k]=below/window.length;
-        // 窗口起点 vs 现在的变化
-        var startVal=window[0];
-        if(startVal!=null) dynChg[k]=latest-startVal;
-      }
-    });
+  // 量比 = 当前成交额(用占比代替,等比) / 过去N天均值
+  // 用 share_series 的原始占比数据算量比
+  if(!SHARE_SERIES||!SHARE_SERIES.series){
+    document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">加载中...</div>';
+    return;
   }
-  // 按分位降序排列
-  var list=cs.slice().sort(function(a,b){
-    var ra=dynRank[a.name]!=null?dynRank[a.name]:0;
-    var rb=dynRank[b.name]!=null?dynRank[b.name]:0;
-    return rb-ra;
+  var results=[];
+  Object.keys(SHARE_SERIES.series).forEach(function(name){
+    var arr=SHARE_SERIES.series[name];
+    if(!arr||arr.length<20)return;
+    var latest=arr[arr.length-1];
+    var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW-1),arr.length-1); // 不含今天
+    if(window.length<10)return;
+    var avg=window.reduce(function(s,v){return s+(v||0)},0)/window.length;
+    var ratio=avg>0?latest/avg:1;
+    results.push({name:name,ratio:ratio,latest:latest,avg:avg});
   });
-  document.getElementById('shareList').innerHTML=list.map(function(d){
-    var rank=dynRank[d.name]!=null?dynRank[d.name]:(d.rank!=null?d.rank:0);
-    var rankStr=(rank*100).toFixed(0);
-    var rankHigh=rank>0.9;
-    var rankMid=rank>0.7&&rank<=0.9;
-    // 条形长度 = 分位数(0~100%)
-    var barW=(rank*100).toFixed(1);
-    // 条形颜色：统一橘色,透明度随分位变化(高=实,低=淡)
-    var alpha=0.3+rank*0.6; // 0.3~0.9
-    var barColor='rgba(255,140,0,'+alpha.toFixed(2)+')';
-    // 窗口内变化
-    var chg=dynChg[d.name]!=null?dynChg[d.name]:(d.chg_5d!=null?d.chg_5d*100:null);
-    var chgStr=chg!=null?((chg>=0?'+':'')+chg.toFixed(2)+'pct'):'-';
-    var chgColor=chg!=null?(chg>0?'var(--up)':(chg<0?'var(--down)':'var(--text-sub)')):'var(--text-sub)';
+  // 按量比降序
+  results.sort(function(a,b){return b.ratio-a.ratio;});
+  var maxRatio=results.length?Math.max(results[0].ratio,2):2;
+  document.getElementById('shareList').innerHTML=results.map(function(d){
+    var barW=Math.min(100,(d.ratio/maxRatio*100)).toFixed(1);
+    var hot=d.ratio>1.5;
+    var cold=d.ratio<0.7;
+    // 透明度随量比变化
+    var alpha=Math.min(0.9,0.3+d.ratio*0.3);
+    var barColor=hot?'rgba(239,68,68,'+alpha.toFixed(2)+')':cold?'rgba(34,197,94,'+alpha.toFixed(2)+')':'rgba(255,140,0,'+alpha.toFixed(2)+')';
+    var ratioStr=d.ratio.toFixed(2)+'x';
+    var chg=d.latest-d.avg;
+    var chgStr=(chg>=0?'+':'')+chg.toFixed(2)+'pct';
+    var chgColor=chg>0?'var(--up)':(chg<0?'var(--down)':'var(--text-sub)');
     return '<div class="share-row">'+
       '<div class="share-name">'+d.name+'</div>'+
       '<div class="share-track"><div class="share-fill" style="width:'+barW+'%;background:'+barColor+'"></div></div>'+
-      '<div class="share-val">'+d.share_pct.toFixed(1)+'%</div>'+
-      '<div class="share-rank'+(rankHigh?' high':'')+'">分位'+rankStr+'%</div>'+
+      '<div class="share-val">'+d.latest.toFixed(1)+'%</div>'+
+      '<div class="share-rank'+(hot?' high':'')+'">'+ratioStr+'</div>'+
       '<div class="share-chg" style="color:'+chgColor+'">'+chgStr+'</div>'+
     '</div>';
   }).join('');
