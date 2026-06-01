@@ -5168,3 +5168,73 @@ Updating files:  94% (2603/2742)Updating files:  95% (2605/2742)Updating files
 HEAD is now at 960b8629 auto: update am 6/8 modules
 [08:23:31]  腾讯云同步成功
 [08:23:31]  完成！
+[08:20:00]  GAMT 投研看板 — 一键更新开始
+[08:20:00]  盘前模式：只跑海外/宏观等盘前模块（7 个）
+[08:20:00]  ═══ 美股风险监控 (us_alerts) ═══
+[08:20:00]  运行 alerts/us_alerts_data.py
+[08:20:09]    完成 (9.0s)
+[08:20:09]  运行 alerts/us_alerts_calc.py
+[08:20:10]    完成 (1.1s)
+
+[08:20:10]  ═══ 基本面数据 (macro_fundamentals) ═══
+[08:20:10]  运行 macro/fundamentals/fundamentals_data.py
+[08:21:52]    完成 (101.8s)
+[08:21:52]  运行 macro/fundamentals/fundamentals_calc.py
+[08:21:52]    完成 (0.7s)
+
+[08:21:52]  ═══ 全球金融日历 (global_calendar) ═══
+[08:21:52]  运行 macro/global_calendar/calendar_data.py
+[08:21:53]    完成 (0.9s)
+[08:21:53]  运行 macro/global_calendar/calendar_calc.py
+[08:21:54]    完成 (0.6s)
+
+[08:21:54]  ═══ 反脆弱看板 (antifragile) ═══
+[08:21:54]  运行 macro/meme/antifragile/fetch_data_ifind.py
+[08:22:13]    完成 (18.9s)
+[08:22:13]  运行 macro/meme/antifragile/calc_corr.py
+[08:22:13]    完成 (0.8s)
+[08:22:13]  运行 macro/meme/antifragile/calc_meme.py
+[08:22:14]    完成 (0.7s)
+[08:22:14]  运行 macro/meme/antifragile/render_html.py
+[08:22:15]    完成 (0.6s)
+
+[08:22:15]  ═══ 叙事监控 (narrative_monitor) ═══
+[08:22:15]  运行 daily_report/meme交易/narrative_monitor.py
+[08:23:10]    完成 (55.4s)
+
+[08:23:10]  ═══ 海外一手要闻 (overseas_digest) ═══
+[08:23:10]  运行 daily_report/meme交易/overseas_digest.py
+[08:23:28]    完成 (18.0s)
+
+[08:23:28]  ═══ HALO交易 (macro/halo_trade) ═══
+[08:23:28]  运行 macro/halo_trade/halo_data_ifind_full.py
+[08:23:29]    失败 (1.1s): rew/lib/python3.14/site-packages/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (7.4.3)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+
+[08:23:29]    数据脚本失败，跳过注入
+
+[08:23:29]  ═══ 汇总 ═══
+[08:23:29]     美股风险监控       (10.0s)
+[08:23:29]     基本面数据        (102.5s)
+[08:23:29]     全球金融日历       (1.4s)
+[08:23:29]     反脆弱看板        (21.0s)
+[08:23:29]     叙事监控         (55.4s)
+[08:23:29]     海外一手要闻       (18.0s)
+[08:23:29]     HALO交易       (1.1s)
+[08:23:29]  总耗时: 209.4s
+[08:23:29]  已更新 update_log.json
+[08:23:29]  ═══ 择时敞口评分页 ═══
+[08:23:29]  运行 factor_system/daily_update.py
+[08:24:03]    完成 (34.3s)
+[08:24:03]  运行 fetch_full_a_amount.py
+[08:24:04]    完成 (0.8s)
+[08:24:04]  运行 ml_exposure_score.py
+[08:24:13]    完成 (8.6s)
+[08:24:13]  运行 generate_ml_exposure_page.py
+[08:24:13]    完成 (0.1s)
+[08:24:13]  运行 live_exposure_nav.py
+[08:24:14]    完成 (0.7s)
+[08:24:14]  运行 generate_live_exposure_page.py
+[08:24:14]    完成 (0.6s)
+
+[08:24:14]  ═══ Git Push ═══

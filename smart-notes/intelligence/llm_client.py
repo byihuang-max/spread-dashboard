@@ -20,7 +20,8 @@ def _load_provider():
     cfg_path = os.path.expanduser("~/.openclaw/openclaw.json")
     with open(cfg_path) as f:
         cfg = json.load(f)
-    return cfg["models"]["providers"]["aicanapi-47"]
+    # 用 aicanapi（4.6 通道），比 aicanapi-47 更稳定
+    return cfg["models"]["providers"]["aicanapi"]
 
 
 def _load_openai_provider():
@@ -56,8 +57,12 @@ def call_claude(prompt: str, system: str = "", max_tokens: int = 1000, model: st
         )
         r.raise_for_status()
         data = r.json()
-        return data["content"][0]["text"]
-    except (requests.exceptions.HTTPError, requests.exceptions.Timeout) as e:
+        # 防御：content 可能不是 text 类型（filter/tool_use/空响应）
+        for block in data.get("content", []):
+            if block.get("type") == "text" and block.get("text"):
+                return block["text"]
+        raise ValueError(f"No text block in Claude response: {data.get('content', [])}")
+    except (requests.exceptions.HTTPError, requests.exceptions.Timeout, ValueError) as e:
         print(f"[llm_client] Claude 失败 ({e})，fallback 到 GPT-5.5")
 
     # Fallback: GPT-5.5
@@ -167,7 +172,17 @@ def judge_iteration(new_text: str, old_title: str, old_content: str) -> dict:
         raw = raw.strip()
     import re
     raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
-    return json.loads(raw)
+    # 防御：尝试提取第一个 JSON 对象
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # 尝试找 { ... } 子串
+        import re as _re
+        m = _re.search(r'\{[^{}]*\}', raw, _re.DOTALL)
+        if m:
+            return json.loads(m.group())
+        # 实在解析不了，返回安全默认值
+        return {"is_iteration": False, "diff_summary": "", "confidence": "low"}
 
 
 GRAY_ZONE_SYSTEM_PROMPT = """你是笔记归类仲裁助手。

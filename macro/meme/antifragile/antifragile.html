@@ -6,87 +6,30 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#ff8c00;--note-bg:#f9fafb;--signal-bg:#f8f9fa;--tag-bg:rgba(0,0,0,0.05);--tag-text:#5a6070;--sub-card-bg:#f8fafc;--sub-card-text:#1e293b;--sub-card-sub:#64748b;--sub-card-hint:#94a3b8}
-html.bb-dark{--bg:#0a0a0a;--card-bg:#0a0a0a;--text:#ccc;--text-sub:#888;--border:#2a2a2a;--accent:#ff8c00;--note-bg:#111;--signal-bg:#0f0f0f;--tag-bg:rgba(255,255,255,0.06);--tag-text:#888;--sub-card-bg:#111;--sub-card-text:#ccc;--sub-card-sub:#888;--sub-card-hint:#666}
-body{font-family:'JetBrains Mono',SF Mono,monospace;background:var(--bg);color:var(--text);padding:20px;font-size:14px;transition:background .35s ease,color .35s ease;overflow-x:hidden}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:#f5f6f8;color:#2d3142;padding:20px;font-size:14px;overflow-x:hidden}
 .section{margin-bottom:24px}
-.signal-bar{background:var(--signal-bg);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.signal-main{font-size:18px;font-weight:800;color:var(--accent)}
+.signal-bar{background:linear-gradient(135deg,#1e2433,#2a3350);border-radius:12px;padding:16px 20px;color:#e2e6ed;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.signal-main{font-size:18px;font-weight:800}
 .signal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.signal-tag{background:var(--tag-bg);padding:4px 12px;border-radius:4px;font-size:12px;color:var(--tag-text)}
-.signal-tag.good{background:rgba(34,197,94,0.15);color:#16a34a}
-.signal-tag.risk{background:rgba(239,68,68,0.15);color:#dc2626}
-.signal-tag.warn{background:rgba(245,158,11,0.15);color:#d97706}
-html.bb-dark .signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
-html.bb-dark .signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
-html.bb-dark .signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag{background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:12px;color:#b8bfce}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
+.signal-tag.good{background:rgba(34,197,94,0.2);color:#4ade80}
+.signal-tag.risk{background:rgba(239,68,68,0.2);color:#f87171}
+.signal-tag.warn{background:rgba(245,158,11,0.25);color:#fbbf24}
 .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.s-card{background:var(--card-bg);padding:14px;border:1px solid var(--border);text-align:center}
-.s-card .s-label{font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
-.s-card .s-value{font-size:22px;font-weight:800;color:var(--text)}
-.s-card .s-sub{font-size:11px;color:var(--text-sub);margin-top:4px}
-.chart-box{background:var(--card-bg);padding:16px;border:1px solid var(--border);margin-bottom:16px;overflow:hidden}
-.chart-box h3{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px}
+.s-card{background:#fff;border-radius:10px;padding:14px;border:1px solid #e8eaef;text-align:center}
+.s-card .s-label{font-size:11px;color:#8b92a5;font-weight:600;margin-bottom:6px}
+.s-card .s-value{font-size:22px;font-weight:800}
+.s-card .s-sub{font-size:11px;color:#8b92a5;margin-top:4px}
+.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8eaef;margin-bottom:16px;overflow:hidden}
+.chart-box h3{font-size:13px;font-weight:700;color:#374151;margin-bottom:12px}
 .chart-wrap{position:relative;height:380px}
 .chart-wrap-sm{position:relative;height:320px}
-.chart-note{font-size:11px;color:var(--text-sub);line-height:1.7;margin-top:10px;padding:10px 12px;background:var(--note-bg);border:1px solid var(--border)}
-.chart-note b{color:var(--text)}
-/* Dark mode overrides for inline styles */
-html.bb-dark [style*="background:#f8fafc"],html.bb-dark [style*="background:#f1f5f9"],html.bb-dark [style*="background:#fff"]{background:var(--sub-card-bg)!important}
-html.bb-dark [style*="background:linear-gradient(135deg,#1e2433"]{background:var(--signal-bg)!important;border:1px solid var(--border)!important}
-html.bb-dark [style*="color:#374151"],html.bb-dark [style*="color:#2d3142"]{color:var(--text)!important}
-html.bb-dark [style*="color:#1e293b"]{color:var(--text)!important}
-html.bb-dark [style*="color:#64748b"]{color:var(--text-sub)!important}
-html.bb-dark [style*="color:#94a3b8"],html.bb-dark [style*="color:#7c8598"]{color:var(--sub-card-hint)!important}
-html.bb-dark [style*="border-top:2px solid #e2e8f0"],html.bb-dark [style*="border-bottom:1px solid #e2e8f0"],html.bb-dark [style*="border-top:1px solid #e2e8f0"]{border-color:var(--border)!important}
-html.bb-dark [style*="border:1px solid #f5f5f5"],html.bb-dark [style*="border:1px solid #e5e7eb"]{border-color:var(--border)!important}
-html.bb-dark [style*="border-left:3px solid"]{background:var(--sub-card-bg)!important}
-html.bb-dark table{color:var(--text)!important}
-html.bb-dark thead tr{background:var(--signal-bg)!important}
-html.bb-dark thead th{color:var(--accent)!important;border-color:var(--border)!important}
-html.bb-dark tbody td{border-color:var(--border)!important;color:var(--text)!important}
-html.bb-dark tbody tr:nth-child(odd){background:#0f0f0f!important}
-html.bb-dark tbody tr:nth-child(even){background:var(--bg)!important}
-html.bb-dark b{color:#e8e8e8!important}
-html.bb-dark #dynamic-themes-section{border-color:var(--border)!important}
+.chart-note{font-size:11px;color:#8b92a5;line-height:1.7;margin-top:10px;padding:10px 12px;background:#f9fafb;border-radius:6px}
+.chart-note b{color:#374151}
 </style>
-<script>
-(function(){
-  function isDark(){return document.documentElement.classList.contains("bb-dark");}
-  function registerPlugin(){
-    if(typeof Chart==="undefined")return false;
-    Chart.defaults.font.family="JetBrains Mono,SF Mono,monospace";
-    Chart.register({
-      id:"themeGrid",
-      afterLayout:function(chart){
-        var textSub=isDark()?"#888":"#8b92a5";
-        var gridColor=isDark()?"#222":"#f0f0f0";
-        Object.values(chart.scales).forEach(function(scale){
-          if(scale.options.grid){scale.options.grid.color=gridColor;}
-          if(scale.options.ticks){scale.options.ticks.color=textSub;}
-        });
-      }
-    });
-    return true;
-  }
-  if(!registerPlugin()){var tries=0;var iv=setInterval(function(){tries++;if(registerPlugin()||tries>50)clearInterval(iv);},50);}
-})();
-</script>
-<script>
-(function(){
-  var _mode="dark";
-  try{_mode=window.parent.__bbMode||window.parent.localStorage.getItem("bbMode")||"dark";}catch(e){}
-  window.__bbMode=_mode;
-  if(_mode!=="light"){document.documentElement.classList.add("bb-dark");}
-  window.addEventListener("message",function(e){
-    if(!e.data||e.data.type!=="bb-theme")return;
-    var m=e.data.mode;window.__bbMode=m;
-    if(m==="light"){document.documentElement.classList.remove("bb-dark");}
-    else{document.documentElement.classList.add("bb-dark");}
-    if(typeof Chart!=="undefined"){Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});}
-  });
-})();
-</script>
 </head><body>
 
 <div class="signal-bar">
@@ -94,7 +37,7 @@ html.bb-dark #dynamic-themes-section{border-color:var(--border)!important}
   <div class="signal-tags">
     <span class="signal-tag warn">反身性 56.3</span><span class="signal-tag good">联动 28%ile</span><span class="signal-tag good">量能 18.5</span><span class="signal-tag good">相关性 0.24</span>
   </div>
-  <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: 2026-05-28 08:22:38</div>
+  <div style="margin-left:auto;font-size:11px;color:#7c8598">更新: 2026-06-01 08:22:12</div>
 </div>
 
 
@@ -113,12 +56,12 @@ html.bb-dark #dynamic-themes-section{border-color:var(--border)!important}
       </div>
       <!-- 分项指标 -->
       <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border:1px solid var(--border)">
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #2563eb">
           <div style="font-size:11px;color:#64748b;margin-bottom:4px">叙事联动指数 (NLI)</div>
           <div style="font-size:18px;font-weight:700;color:#1e293b">0.308</div>
           <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 28% 分位</div>
         </div>
-        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border:1px solid var(--border)">
+        <div style="background:#f8fafc;border-radius:8px;padding:14px 16px;border-left:3px solid #F7931A">
           <div style="font-size:11px;color:#64748b;margin-bottom:4px">量能加速度 (VA)</div>
           <div style="font-size:18px;font-weight:700;color:#1e293b">+18.5%</div>
           <div style="font-size:11px;color:#94a3b8;margin-top:2px">历史 85% 分位</div>
@@ -193,7 +136,7 @@ new Chart(document.getElementById('memeScoreChart'), {
       annotation: { /* 可用chartjs-plugin-annotation加阶段分界线 */ }
     },
     scales: {
-      y: { min: 0, max: 100, 
+      y: { min: 0, max: 100, grid: { color: '#f0f0f0' },
             ticks: { callback: function(v) { return v + '分'; } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font: { size: 9 } } }
     }
@@ -222,7 +165,7 @@ new Chart(document.getElementById('memeNliChart'), {
       tooltip: { callbacks: { label: function(ctx) { return 'NLI分位: ' + ctx.parsed.y.toFixed(1) + '%'; } } }
     },
     scales: {
-      y: { min: 0, max: 100, 
+      y: { min: 0, max: 100, grid: { color: '#f0f0f0' },
             ticks: { callback: function(v) { return v + '%'; }, font: { size: 9 } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: { size: 9 } } }
     }
@@ -251,7 +194,7 @@ new Chart(document.getElementById('memeVaChart'), {
       } } }
     },
     scales: {
-      y: { 
+      y: { grid: { color: '#f0f0f0' },
             ticks: { callback: function(v) { return (v >= 0 ? '+' : '') + v + '%'; }, font: { size: 9 } } },
       x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8, font: { size: 9 } } }
     }
@@ -331,7 +274,7 @@ new Chart(document.getElementById('navChart'),{
     },
     scales:{
       y:{
-        
+        grid:{color:'#f0f0f0'},
         ticks:{callback:function(v){return v.toFixed(2);}}
       },
       x:{ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12, font:{size:10}}}
@@ -375,7 +318,7 @@ var medOpts = {
   scales:{
     y:{
       position:'left',
-      
+      grid:{color:'#f0f0f0'},
       ticks:{callback:function(v){return v.toFixed(2);}}
     },
     y2:{
@@ -461,10 +404,75 @@ new Chart(document.getElementById('medianChart'),{
   <div id="dynamic-themes-section" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
       <h3 style="margin:0;font-size:14px;font-weight:700;color:#1e293b;"> 今日新兴主题</h3>
-      <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新） · 05-27 17:07</span>
+      <span style="font-size:11px;color:#94a3b8;">LLM动态发现（每日更新） · 05-28 08:22</span>
     </div>
     <div id="dynamic-themes-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
-      <div style="color:#94a3b8;font-size:12px;padding:12px 0;">暂无新兴主题数据</div>
+      <details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid #ea580c;overflow:hidden;" open>
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">美股科技与AI动态</span>
+    <span style="margin-left:auto;font-size:11px;color:#ea580c;font-weight:600;">主题热度 12 · 已收录 8</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：AI、芯片、美股</p>
+    <div style="font-size:11px;color:#64748b;line-height:1.6;"><div style="margin-bottom:4px;">• Meta将推出AI聊天机器人订阅服务 月费最低7.99美元</div><div style="margin-bottom:4px;">• Salesforce发布温和指引，加剧市场对AI颠覆软件业的担忧</div></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      <ol style="margin:10px 0 0;padding:0;"><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">Salesforce发布温和指引，加剧市场对AI颠覆软件业的担忧</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 04:01:36</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">Meta将推出AI聊天机器人订阅服务 月费最低7.99美元</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-28 06:59:25</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">迈威尔科技预计定制芯片业务2029财年营收超100亿美元</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 07:06:29</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美股三大指数小幅高开 存储芯片股领涨</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 21:30:49</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美股芯片股持续走弱 美光科技转跌</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 22:27:29</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">芯片股跨越万亿美元大关，推动新兴市场股指创历史新高</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 00:31:37</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美股三大股指小幅收涨 美光科技续创新高</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-28 04:00:38</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">Astrotech美股盘前涨超200%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 21:17:15</div></li></ol>
+    </div>
+  </div>
+</details><details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid #64748b;overflow:hidden;" >
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">中概股表现分化</span>
+    <span style="margin-left:auto;font-size:11px;color:#64748b;font-weight:600;">主题热度 8 · 已收录 7</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：中概股、拼多多、奇富科技</p>
+    <div style="font-size:11px;color:#64748b;line-height:1.6;"><div style="margin-bottom:4px;">• 纳斯达克中国金龙指数收涨1.05%</div><div style="margin-bottom:4px;">• 中概指数收涨1%，奇富科技涨25%，蔚来涨超9.3%，CQQQ跌1.5%，阿里跌超1.3%，拼多多跌约10.4%</div></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      <ol style="margin:10px 0 0;padding:0;"><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">中概指数收涨1%，奇富科技涨25%，蔚来涨超9.3%，CQQQ跌1.5%，阿里跌超1.3%，拼多多跌约10.4%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 04:00:20</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">利弗莫尔中概股龙头指数跌幅扩大至1%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 22:29:40</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">纳斯达克中国金龙指数收涨1.05%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-28 04:01:47</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">中概股网班科技收涨110%，奇富科技涨25%，盛大科技涨约14%，蔚来涨超9%，拼多多跌超10%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 04:00:12</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">利弗莫尔中概股龙头指数盘初下跌0.45%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 21:32:05</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美股盘初：美光科技涨约5%，拼多多跌约9%，特斯拉涨约2%</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-27 21:33:35</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美股三大指数小幅高开 存储芯片股领涨</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 21:30:49</div></li></ol>
+    </div>
+  </div>
+</details><details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid #64748b;overflow:hidden;" >
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">港股IPO热潮</span>
+    <span style="margin-left:auto;font-size:11px;color:#64748b;font-weight:600;">主题热度 5 · 已收录 4</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：港交所、递表、上市申请</p>
+    <div style="font-size:11px;color:#64748b;line-height:1.6;"><div style="margin-bottom:4px;">• 港股IPO：汉威科技集团股份有限公司递表港交所</div><div style="margin-bottom:4px;">• 港股IPO：赛诺医疗科学技术股份有限公司递表港交所</div></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      <ol style="margin:10px 0 0;padding:0;"><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">港股IPO：赛诺医疗科学技术股份有限公司递表港交所</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 22:45:09</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">港股IPO：汉威科技集团股份有限公司递表港交所</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 23:01:48</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">爱尔眼科医院集团股份有限公司向港交所提交上市申请书</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-27 21:56:05</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">港股IPO：爱士惟科技股份有限公司递表港交所</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-27 22:24:59</div></li></ol>
+    </div>
+  </div>
+</details><details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid #64748b;overflow:hidden;" >
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">埃博拉疫情防控</span>
+    <span style="margin-left:auto;font-size:11px;color:#64748b;font-weight:600;">主题热度 5 · 已收录 4</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：埃博拉、刚果金、世卫组织</p>
+    <div style="font-size:11px;color:#64748b;line-height:1.6;"><div style="margin-bottom:4px;">• 特朗普政府要求在肯尼亚隔离埃博拉病毒接触人员，专家：在美国、德国治疗的效果更好</div><div style="margin-bottom:4px;">• 美国将工作重心转向严防埃博拉病例入境</div></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      <ol style="margin:10px 0 0;padding:0;"><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">乌干达关闭与刚果（金）边境，升级埃博拉疫情防控</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 01:41:49</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">美国将工作重心转向严防埃博拉病例入境</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 05:54:02</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">特朗普政府要求在肯尼亚隔离埃博拉病毒接触人员，专家：在美国、德国治疗的效果更好</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 05:55:26</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">病例激增，世卫组织敦促刚果（金）停火，从而遏制埃博拉疫情</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-27 22:45:23</div></li></ol>
+    </div>
+  </div>
+</details><details style="background:#f8fafc;border-radius:8px;padding:0;border-left:3px solid #64748b;overflow:hidden;" >
+  <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:8px;user-select:none;">
+    <span style="font-size:13px;font-weight:600;color:#1e293b;">公募基金行业发展</span>
+    <span style="margin-left:auto;font-size:11px;color:#64748b;font-weight:600;">主题热度 6 · 已收录 5</span>
+  </summary>
+  <div style="padding:0 16px 14px;">
+    <p style="margin:0 0 8px;font-size:11px;color:#94a3b8;">关键词：公募、浮动费率、投研</p>
+    <div style="font-size:11px;color:#64748b;line-height:1.6;"><div style="margin-bottom:4px;">• 公募量化产品火了，银行渠道却很冷静</div><div style="margin-bottom:4px;">• 头部公募机构招兵买马，投研补强进行时</div></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">展开新闻列表</div>
+      <ol style="margin:10px 0 0;padding:0;"><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">头部公募机构招兵买马，投研补强进行时</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 06:42:48</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">首批新型浮动费率基金发行一周年 超八成产品实现正收益</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-28 06:36:53</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">首批新型浮动费率基金发行一周年，超八成产品实现正收益</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 06:36:03</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">4月单月增长逾1.8万亿元 公募基金规模逼近40万亿元</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">cls · 2026-05-28 06:15:21</div></li><li style="margin:0 0 10px 18px;color:#374151;"><div style="font-size:12px;line-height:1.6;">公募量化产品火了，银行渠道却很“冷静”</div><div style="font-size:10px;color:#94a3b8;margin-top:2px;">wallstreetcn · 2026-05-28 06:56:34</div></li></ol>
+    </div>
+  </div>
+</details>
     </div>
   </div>
 
@@ -487,7 +495,7 @@ new Chart(document.getElementById('medianChart'),{
           🌍 海外一手要闻 Top 10
           <span style="font-size:11px;color:#94a3b8;font-weight:400;margin-left:6px;">（点击展开）</span>
         </h2>
-        <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · 05-27 08:22 · 当前窗口 20 条</span>
+        <span style="font-size:11px;color:#94a3b8;">Opus 4.7 归纳 · 05-28 08:23 · 当前窗口 15 条</span>
       </div>
     </summary>
     <p style="margin:12px 0 16px;font-size:11.5px;color:#64748b;line-height:1.6;">
@@ -497,112 +505,112 @@ new Chart(document.getElementById('medianChart'),{
 <div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">1.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中美关税豁免</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">AI需求与人民币</span>
     <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">美国贸易代表格里尔将就符合关税削减资格的中国商品征求公众意见，释放结构性缓和信号。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股出口链</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美债</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：美国将就符合削减关税资格的中国商品征求公众意见</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/asia-pacific/us-seek-public-comment-chinese-goods-eligible-tariff-cuts-2026-05-26/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">全球AI投资热潮推动中国新一轮出口浪潮，北京对人民币走强容忍度提升，汇率政策转向。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美元</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：世界对人工智能的需求让中国不再害怕人民币走强</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-28/world-s-appetite-for-ai-makes-china-less-afraid-of-stronger-yuan" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">2.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中美贸易委员会</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">拼多多业绩不及预期</span>
     <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">美国贸易代表格里尔表示将在联邦公报发布通知，启动组建美中贸易委员会的正式程序，构建新的双边经贸管理机制。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美元</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：美国表示组建中国贸易委员会的程序即将启动</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-26/greer-says-process-to-form-china-board-of-trade-to-start-shortly" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">PDD一季度营收低于预期、股价盘前跌超9%，国内竞争加剧叠加消费信心疲软，中概股承压。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">中概股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">消费股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：Temu 所有者 PDD 的股价在销售未达到预期后下滑</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-27/temu-owner-pdd-s-revenue-misses-as-china-competition-persists" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
-<div style="background:#fff;border-left:4px solid #dc2626;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">3.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">AI算力链</span>
-    <span style="background:#fef2f2;color:#dc2626;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #dc262633;">风险 高</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">中国AI就业政策</span>
+    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">高通与字节跳动达成AI数据中心芯片供应协议，国产替代叙事下海外芯片仍获中国大厂订单。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">半导体</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股互联网</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股算力</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：据彭博社报道，高通与 TikTok 母公司字节跳动达成人工智能芯片协议</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/business/qualcomm-strikes-ai-chip-deal-with-tiktok-owner-bytedance-bloomberg-news-reports-2026-05-26/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国推动企业拥抱AI同时要求避免裁员引发社会动荡，AI落地节奏受政策约束，影响产业叙事。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股AI板块</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">中概股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国希望其企业拥抱人工智能，但又不解雇员工</div>
+  <div style="margin-top:8px;"><a href="https://www.wsj.com/tech/ai/china-wants-its-companies-to-embrace-aiwithout-firing-workers-c8fcafa6" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">4.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">联网汽车禁令</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">香港黄金枢纽</span>
     <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">吉利控股的沃尔沃获美国批准继续在美销售搭载中国联网技术的汽车，中国汽车出海获政策松动信号。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股汽车</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股汽车</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">吉利</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：沃尔沃汽车获得美国批准继续进口采用“联网汽车”技术的车辆</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/asia-pacific/volvo-cars-wins-us-approval-keep-importing-vehicles-with-connected-car-2026-05-26/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">香港未来几月推出黄金清算系统，抢占亚洲黄金交易中心先机，利好港交所及黄金人民币定价权。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：香港将凭借清算系统在亚洲黄金枢纽中占据优势</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-27/hong-kong-to-get-edge-in-asia-gold-hub-push-with-clearing-system" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">5.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">欧盟贸易防御</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">澳对华牛肉关税</span>
     <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">法意西等五国推动欧盟强化贸易防御工具，矛头隐指中国低价商品，中国出口欧洲承压。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股出口链</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">欧元</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">光伏新能源</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：法国、意大利和西班牙敦促欧盟加强并加快贸易防御</div>
-  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/china/france-italy-spain-urge-eu-toughen-hasten-trade-defences-2026-05-26/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国最早6月中旬对澳牛肉加征55%关税，澳方预计美国与东南亚需求可对冲，中澳贸易摩擦升温。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">大宗商品</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">农产品</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">澳元</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：澳大利亚牛肉养殖户预计几周内将对中国征收新关税</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-27/australia-s-beef-farmers-expect-new-china-tariff-within-weeks" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">6.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中美外交</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">华为国产算力</span>
     <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国最高外交官在联合国批评美国总统特朗普对伊朗动武及对联合国态度，中美外交摩擦升温。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">原油</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国最高外交官在联合国暗讽特朗普</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-26/china-s-top-diplomat-makes-veiled-jabs-at-trump-from-un" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">华为绕开摩尔定律推进国产AI算力路线，强化中国半导体自主叙事，利好国产替代产业链。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">半导体</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股科技</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：华为的目光超越摩尔定律</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/technology/artificial-intelligence/huawei-looks-beyond-moores-law-2026-05-27/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">7.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">AI出口管制</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">日菲安全合作</span>
     <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">WSJ评论称《AI守望先锋法案》将损害美国科技领先地位、反助中国，反映美国内部对AI出口限制存在分歧。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">半导体</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">美股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股算力</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：《人工智能守望先锋法案》将帮助中国</div>
-  <div style="margin-top:8px;"><a href="https://www.wsj.com/opinion/ai-overwatch-act-would-help-china-5e5e61fe" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">日本首相高市早苗与菲律宾总统马科斯东京会晤深化安全合作，共同应对中国，亚太地缘风险升温。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">国防股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：高市将与菲律宾马科斯会面以深化安全关系</div>
+  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-28/takaichi-to-meet-philippines-marcos-to-deepen-security-ties" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
 </div>
-<div style="background:#fff;border-left:4px solid #ea580c;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+<div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">8.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中国网络科技</span>
-    <span style="background:#fff7ed;color:#ea580c;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #ea580c33;">风险 中</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">意调查中资法拉帝</span>
+    <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">英国国家网络安全中心负责人警告中国正快速缩小与西方的网络技术差距，敦促西方企业加强与情报合作。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股信创</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股科技</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">网络安全</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：英国间谍头子警告中国正在缩小与西方的网络差距</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-26/uk-spy-chief-warns-china-is-closing-cyber-gap-with-west" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">意大利启动对法拉帝中国投资者黄金权力合规调查，欧洲对华战略资产审查趋严，中企出海受阻。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">中概股</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">港股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：意大利调查中国主导的法拉帝投资者是否违反“黄金权力”规则</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/business/finance/italy-probing-whether-china-led-investors-ferretti-breached-golden-power-rules-2026-05-27/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">9.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">中国城市化</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">南海中荷对峙</span>
     <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国推出特大城市群融合计划，推动数亿劳动力流动以重塑经济结构，长期利好城市基建与消费。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股基建</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">地产</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">消费</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国希望将其城市融合成特大城市</div>
-  <div style="margin-top:8px;"><a href="https://www.bloomberg.com/news/articles/2026-05-26/china-has-a-plan-to-fuse-its-major-cities-into-megaregions" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">彭博社 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中国军方称驱离侵入西沙群岛的荷兰护卫舰，南海地缘摩擦升温，但风险可控。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">黄金</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">原油</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">国防股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中国军方称在南海击退了荷兰护卫舰</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/china/chinas-military-says-it-drove-away-dutch-frigate-south-china-sea-2026-05-27/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
 <div style="background:#fff;border-left:4px solid #16a34a;border-radius:6px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:#64748b;">10.</span>
-    <span style="font-size:14px;font-weight:700;color:#1e293b;">关税执法</span>
+    <span style="font-size:14px;font-weight:700;color:#1e293b;">霍尔木兹油运</span>
     <span style="background:#f0fdf4;color:#16a34a;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid #16a34a33;">风险 低</span>
   </div>
-  <div style="font-size:12.5px;color:#374151;line-height:1.7;">美国政府对First Brands提起2.86亿美元少缴关税索赔，针对中国进口低报价格行为，关税执法趋严。</div>
-  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">A股出口链</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">人民币</span></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：美国政府对首批品牌提出 2.86 亿美元少付关税索赔</div>
-  <div style="margin-top:8px;"><a href="https://www.wsj.com/pro/bankruptcy/u-s-government-hits-first-brands-with-286-million-claim-in-underpaid-tariffs-a2251078" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">华尔街日报 · 原文 ↗</a></div>
+  <div style="font-size:12.5px;color:#374151;line-height:1.7;">中远成品油轮穿越霍尔木兹海峡，整体油运量仍受限，中东能源通道紧张持续影响油价。</div>
+  <div style="margin-top:8px;"><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">原油</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">航运</span><span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:4px;margin-top:4px;">能源股</span></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:6px;">原标题：中远成品油轮离开霍尔木兹海峡，石油运输仍然有限</div>
+  <div style="margin-top:8px;"><a href="https://www.reuters.com/world/china/cosco-products-tanker-leaving-strait-hormuz-oil-traffic-still-limited-2026-05-27/" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none;">路透社 · 原文 ↗</a></div>
 </div>
     <p style="margin:12px 0 0;font-size:11px;color:#94a3b8;">
       数据源：QQ 邮箱 IMAP → hszxboss@qq.com 转发。更新脚本：<code>daily_report/meme交易/overseas_digest.py</code>
@@ -826,9 +834,67 @@ new Chart(document.getElementById('medianChart'),{
 </script>
 <script>
 (function(){
-  /* Already bootstrapped in <head>. Just keep the hideGrayInMedChart logic for Bloomberg mode */
-  function isDark(){return document.documentElement.classList.contains("bb-dark");}
-  if(!isDark()) return;
+  var params = new URLSearchParams(window.location.search);
+  var isBloomberg = params.get('theme')==='bloomberg';
+  if(!isBloomberg && window.parent !== window){
+    try{ isBloomberg = !window.parent.location.search.includes('theme=light'); }catch(e){}
+  }
+  if(!isBloomberg) return;
+
+  var s = document.createElement('style');
+  s.textContent = `
+    body{background:#0a0a0a!important;color:#ccc!important}
+    .signal-bar{background:#0f0f0f!important;border:1px solid #2a2a2a!important;border-radius:0!important;border-left:3px solid #ff8c00!important}
+    .signal-main{color:#ff8c00!important}
+    .s-card{background:#0a0a0a!important;border:1px solid #2a2a2a!important;border-radius:0!important}
+    .s-card .s-label{color:#888!important}
+    .s-card .s-sub{color:#888!important}
+    .chart-box{background:#111!important;border:1px solid #2a2a2a!important}
+    .chart-box h3{color:#ff8c00!important}
+    .chart-note{background:#111!important;color:#888!important;border-color:#2a2a2a!important}
+    table{color:#ccc!important}
+    thead tr{background:#1a1a1a!important}
+    thead th{color:#ff8c00!important;border-color:#2a2a2a!important}
+    tbody td{border-color:#1a1a1a!important}
+    tbody tr:nth-child(odd){background:#0f0f0f!important}
+    tbody tr:nth-child(even){background:#0a0a0a!important}
+    [style*="background:#f8fafc"],[style*="background:#f1f5f9"],[style*="background:#fff"]{background:#111!important}
+    [style*="border-top:2px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    [style*="border-bottom:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    [style*="border:1px solid #f5f5f5"]{border-color:#1a1a1a!important}
+    td[style*="background:rgb("]{opacity:0.7!important;border-color:#1a1a1a!important}
+    [style*="color:#374151"],[style*="color:#2d3142"]{color:#ccc!important}
+    [style*="color:#64748b"],[style*="color:#8b92a5"]{color:#888!important}
+    [style*="border-left:3px solid"]{background:#111!important}
+    [style*="border-top:1px solid #e2e8f0"]{border-color:#2a2a2a!important}
+    h3{color:#ff8c00!important}
+    b{color:#e8e8e8!important}
+    #dynamic-themes-section{border-color:#2a2a2a!important}
+  `;
+  document.head.appendChild(s);
+
+  function hookCharts(){
+    if(typeof Chart==='undefined')return false;
+    Chart.register({
+      id:'bbGridAntifragile',
+      afterLayout:function(chart){
+        Object.values(chart.scales).forEach(function(scale){
+          if(scale.options.grid){
+            scale.options.grid.color='#2a2a2a';
+            scale.options.grid.lineWidth=0.6;
+          }
+          if(scale.options.ticks){
+            scale.options.ticks.color='#888';
+          }
+        });
+      }
+    });
+    Chart.defaults.color='#888';
+    Chart.defaults.borderColor='#2a2a2a';
+    return true;
+  }
+  if(!hookCharts()){var i=setInterval(function(){if(hookCharts())clearInterval(i)},200);}
+
   var hideLabels = ['纳斯达克100','标普500','恒生科技ETF','科创50ETF','日经225','韩国KOSPI'];
   function hideGrayInMedChart(){
     if(typeof Chart==='undefined' || !Chart.instances) return false;
