@@ -27,6 +27,7 @@ SHARE_SERIES_JSON = os.path.join(SCRIPT_DIR, 'share_series.json')  # 占比时�
 SHARE_HIST_CSV = os.path.join(CACHE_DIR, 'sw_share_hist.csv')
 BREADTH_L1_CSV = os.path.join(CACHE_DIR, 'breadth_l1.csv')
 BREADTH_L2_CSV = os.path.join(CACHE_DIR, 'breadth_l2.csv')
+LIMIT_DETAIL_CSV = os.path.join(CACHE_DIR, 'limit_detail.csv')
 
 
 def load_csv(path):
@@ -165,9 +166,72 @@ def calc_breadth(bdf, ref_date=None):
 
 
 # ════════════════════════════════════════════════════════
+#  龙头案例：每个一级行业取「连板最高」+「成交额最大」两只代表票
+#  借鉴龙头池算法（leader_pool_builder）：龙头 = 高度（连板）+ 资金（成交额）
+# ════════════════════════════════════════════════════════
+def calc_leader_cases(detail_df, ref_date=None):
+    """
+    detail_df: limit_detail.csv（trade_date, ts_code, stock_name, l1, l2, limit, limit_times, amount, pct_chg）
+    返回 {一级行业名: {'up': [龙头票...], 'down': [跌停代表...]}}
+    每个方向取两只去重：连板最高 + 成交额最大。
+    """
+    if detail_df.empty:
+        return {}
+    df = detail_df.copy()
+    dates = sorted(df['trade_date'].unique())
+    latest = ref_date if (ref_date is not None and ref_date in dates) else dates[-1]
+    cur = df[df['trade_date'] == latest]
+    if cur.empty:
+        return {}
+
+    cur = cur.copy()
+    cur['limit_times'] = pd.to_numeric(cur['limit_times'], errors='coerce').fillna(1).astype(int)
+    cur['amount'] = pd.to_numeric(cur['amount'], errors='coerce').fillna(0)
+    cur['pct_chg'] = pd.to_numeric(cur['pct_chg'], errors='coerce').fillna(0)
+
+    def pick_two(g):
+        """连板最高 + 成交额最大，去重，最多两只"""
+        picks = []
+        seen = set()
+        # 1. 连板最高（同高度取成交额大的）
+        top_height = g.sort_values(['limit_times', 'amount'], ascending=[False, False]).iloc[0]
+        picks.append(top_height)
+        seen.add(top_height['ts_code'])
+        # 2. 成交额最大（若与上面不同）
+        top_amount = g.sort_values('amount', ascending=False).iloc[0]
+        if top_amount['ts_code'] not in seen:
+            picks.append(top_amount)
+        return picks
+
+    def fmt(row):
+        return {
+            'ts_code': row['ts_code'],
+            'name': row['stock_name'],
+            'limit_times': int(row['limit_times']),
+            'amount': round(float(row['amount']) / 1e8, 2),  # 亿元
+            'pct_chg': round(float(row['pct_chg']), 2),
+            'l2': row.get('l2', ''),
+        }
+
+    result = {}
+    for l1, g in cur.groupby('l1'):
+        ups = g[g['limit'] == 'U']
+        downs = g[g['limit'] == 'D']
+        entry = {}
+        if not ups.empty:
+            entry['up'] = [fmt(r) for r in pick_two(ups)]
+        if not downs.empty:
+            # 跌停代表：成交额最大的1只（跌停不看连板高度）
+            entry['down'] = [fmt(downs.sort_values('amount', ascending=False).iloc[0])]
+        if entry:
+            result[l1] = entry
+    return result
+
+
+# ════════════════════════════════════════════════════════
 #  量价状态矩阵：占比分位（量/资金集中度） × breadth（价/赚钱效应）
 # ════════════════════════════════════════════════════════
-def calc_vp_matrix(cross, breadth_l1):
+def calc_vp_matrix(cross, breadth_l1, leader_cases=None):
     """
     占比边际（chg_5d 升/降）作"量"维度，up_ratio（>0.5 强 / <0.5 弱）作"价"维度。
     四象限：
@@ -176,6 +240,7 @@ def calc_vp_matrix(cross, breadth_l1):
     叠加占比历史分位 rank：rank>0.9 标拥挤顶风险。
     """
     breadth_map = {b['name']: b for b in breadth_l1}
+    leader_cases = leader_cases or {}
     matrix = []
     for c in cross:
         b = breadth_map.get(c['name'])
@@ -219,6 +284,7 @@ def calc_vp_matrix(cross, breadth_l1):
             'state': state,
             'tone': tone,
             'risk': risk,
+            'leaders': leader_cases.get(c['name'], {}),
         })
     matrix.sort(key=lambda x: (x['rank'] if x['rank'] is not None else 0), reverse=True)
     return matrix
@@ -260,6 +326,7 @@ def main():
     share = load_csv(SHARE_HIST_CSV)
     bl1 = load_csv(BREADTH_L1_CSV)
     bl2 = load_csv(BREADTH_L2_CSV)
+    detail = load_csv(LIMIT_DETAIL_CSV)
 
     # 统一对齐到三源齐全的最近交易日
     ref_date = resolve_ref_date(share, bl1)
@@ -269,7 +336,8 @@ def main():
     cross, accel = calc_cross_section(share, ref_date)
     breadth_l1, b1_date = calc_breadth(bl1, ref_date)
     breadth_l2, b2_date = calc_breadth(bl2, ref_date)
-    vp_matrix = calc_vp_matrix(cross, breadth_l1)
+    leader_cases = calc_leader_cases(detail, ref_date)
+    vp_matrix = calc_vp_matrix(cross, breadth_l1, leader_cases)
 
     # 全市场情绪温度（一级行业涨跌停加总）
     total_lu = sum(b['limit_up'] for b in breadth_l1)

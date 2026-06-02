@@ -91,6 +91,12 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 /* 量价矩阵 - 可点击 + 二级展开 */
 .vp-cell{cursor:pointer;transition:transform .1s}
 .vp-cell:hover{transform:scale(1.02)}
+/* 涨跌停家数行 */
+.vp-lim-row{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.vp-lim{font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px}
+.vp-lim.up{color:#fff;background:var(--up)}
+.vp-lim.down{color:#fff;background:var(--down)}
+.vp-lim.none{color:var(--text-sub);background:var(--track);font-weight:400}
 .vp-sub-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0}
 .vp-sub-name{width:70px;font-weight:600;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vp-sub-bar{flex:1;height:10px;background:var(--track);display:flex;overflow:hidden;min-width:50px}
@@ -98,6 +104,15 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .vp-sub-ratio{width:36px;font-weight:700;flex-shrink:0;text-align:right}
 .vp-sub-cnt{width:50px;font-size:10px;color:var(--text-sub);flex-shrink:0}
 .vp-sub-lim{font-size:10px;flex-shrink:0}
+/* 龙头案例 */
+.lead-section{margin-bottom:14px}
+.lead-section-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.lead-grid{display:flex;flex-wrap:wrap;gap:8px}
+.lead-stock{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--up);padding:8px 12px;min-width:180px}
+.lead-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.lead-name{font-weight:800;font-size:13px}
+.lead-board{font-size:10px;font-weight:700;color:#fff;background:#f59e0b;padding:1px 6px;border-radius:2px}
+.lead-meta{font-size:11px;color:var(--text-sub)}
 
 /* breadth styles removed — now integrated into VP matrix cards */
 
@@ -407,6 +422,9 @@ function renderVP(){
   bl2.forEach(function(b){var k=b.l1||'其他';(bl2Map[k]=bl2Map[k]||[]).push(b);});
   Object.keys(bl2Map).forEach(function(k){bl2Map[k].sort(function(a,b){return b.up_ratio-a.up_ratio;});});
   window._bl2Map=bl2Map;
+  // 龙头案例按行业名索引（供展开面板用）
+  window._leadersMap={};
+  vp.forEach(function(m){window._leadersMap[m.name]=m.leaders||null;});
 
   document.getElementById('vpGrid').innerHTML=vp.map(function(m){
     var rank=m.rank!=null?(m.rank*100).toFixed(0):'-';
@@ -418,14 +436,17 @@ function renderVP(){
     var bd=bl1Map[m.name]||{};
     var upN=bd.up||0, downN=bd.down||0, totalN=bd.total||(upN+downN)||1;
     var upPct=(upN/totalN*100).toFixed(0);
+    // 涨跌停家数独立成行，醒目显示（U=涨停 D=跌停）
     var limHtml='';
-    if(bd.limit_up)limHtml+=' <span style="color:var(--up);font-weight:700">'+bd.limit_up+'U</span>';
-    if(bd.limit_down)limHtml+=' <span style="color:var(--down);font-weight:700">'+bd.limit_down+'D</span>';
+    if(bd.limit_up)limHtml+='<span class="vp-lim up">涨停 '+bd.limit_up+'</span>';
+    if(bd.limit_down)limHtml+='<span class="vp-lim down">跌停 '+bd.limit_down+'</span>';
+    if(!limHtml)limHtml='<span class="vp-lim none">无涨跌停</span>';
 
     return '<div class="vp-cell '+m.tone+'" data-name="'+m.name+'" onclick="toggleVPSub(this)">'+
       '<div class="vp-name">'+m.name+'</div>'+
       '<div class="vp-state '+m.tone+'">'+m.state+'</div>'+
-      '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）'+limHtml+'</div>'+
+      '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）</div>'+
+      '<div class="vp-lim-row">'+limHtml+'</div>'+
       risk+
     '</div>';
   }).join('');
@@ -470,7 +491,27 @@ function toggleVPSub(el){
   var panel=document.createElement('div');
   panel.className='vp-expand open';
   panel.setAttribute('data-for',name);
-  panel.innerHTML='<div class="vp-expand-title">'+name+' 二级行业涨跌</div><div class="vp-expand-grid">'+content+'</div>';
+
+  // 龙头案例（连板最高 + 成交额最大）
+  var leaders=window._leadersMap&&window._leadersMap[name];
+  var leaderHtml='';
+  if(leaders&&(leaders.up&&leaders.up.length||leaders.down&&leaders.down.length)){
+    function stockCard(s,dir){
+      var color=dir==='up'?'var(--up)':'var(--down)';
+      var board=s.limit_times>1?'<span class="lead-board">'+s.limit_times+'连板</span>':'';
+      var tag=dir==='up'?'涨停':'跌停';
+      return '<div class="lead-stock" style="border-left-color:'+color+'">'+
+        '<div class="lead-top"><span class="lead-name">'+s.name+'</span>'+board+'</div>'+
+        '<div class="lead-meta"><span style="color:'+color+'">'+tag+' '+(s.pct_chg>=0?'+':'')+s.pct_chg+'%</span> · 成交 '+s.amount+'亿 · '+(s.l2||'')+'</div>'+
+      '</div>';
+    }
+    var cards='';
+    if(leaders.up)leaders.up.forEach(function(s){cards+=stockCard(s,'up');});
+    if(leaders.down)leaders.down.forEach(function(s){cards+=stockCard(s,'down');});
+    leaderHtml='<div class="lead-section"><div class="lead-section-title">龙头案例 <span style="font-weight:400;color:var(--text-sub)">（连板最高 + 成交额最大）</span></div><div class="lead-grid">'+cards+'</div></div>';
+  }
+
+  panel.innerHTML=leaderHtml+'<div class="vp-expand-title">'+name+' 二级行业涨跌</div><div class="vp-expand-grid">'+content+'</div>';
 
   // 插入到被点击卡片的下一行位置
   el.classList.add('active');

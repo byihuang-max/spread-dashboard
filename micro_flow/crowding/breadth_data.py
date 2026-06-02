@@ -41,6 +41,7 @@ MEMBER_MAP_CSV = os.path.join(CACHE_DIR, 'sw_member_map.csv')        # 个股→
 BREADTH_L1_CSV = os.path.join(CACHE_DIR, 'breadth_l1.csv')          # 一级行业每日涨跌家数
 BREADTH_L2_CSV = os.path.join(CACHE_DIR, 'breadth_l2.csv')          # 二级行业每日涨跌家数
 SHARE_HIST_CSV = os.path.join(CACHE_DIR, 'sw_share_hist.csv')       # 一级行业每日成交额占比历史
+LIMIT_DETAIL_CSV = os.path.join(CACHE_DIR, 'limit_detail.csv')      # 涨跌停个股明细（连板数+成交额，龙头案例用）
 
 
 def ts_api(api_name, fields='', **kwargs):
@@ -167,6 +168,7 @@ def fetch_breadth():
 
     old_l1 = read_csv(BREADTH_L1_CSV)
     old_l2 = read_csv(BREADTH_L2_CSV)
+    old_detail = read_csv(LIMIT_DETAIL_CSV)
     # 增量基于二级（一级派生），二级 name 不会出现空值污染
     start = incremental_start(old_l2)
     trade_dates = get_trade_dates(start, END_DATE)
@@ -180,9 +182,11 @@ def fetch_breadth():
     print(f'  待拉交易日 {len(todo)} 天（{todo[0] if todo else "-"} ~ {todo[-1] if todo else "-"}）')
 
     new_l2 = []
+    new_detail = []
     for d in todo:
         daily = ts_api('daily', fields='ts_code,pct_chg', trade_date=d)
-        limit = ts_api('limit_list_d', fields='ts_code,limit', trade_date=d)
+        # 涨跌停明细：多取 name/limit_times/amount，用于龙头案例（连板最高+成交额最大）
+        limit = ts_api('limit_list_d', fields='ts_code,name,limit,limit_times,amount,pct_chg', trade_date=d)
         if daily.empty:
             continue
         daily['pct_chg'] = pd.to_numeric(daily['pct_chg'], errors='coerce')
@@ -201,6 +205,22 @@ def fetch_breadth():
                 'limit_up': int((g['lim'] == 'U').sum()),
                 'limit_down': int((g['lim'] == 'D').sum()),
             })
+
+        # 涨跌停个股明细（关联到申万一级，供龙头案例用）
+        if not limit.empty:
+            lim = limit.copy()
+            lim['l2'] = lim['ts_code'].map(code2l2)
+            lim['l1'] = lim['l2'].map(l2_to_l1)
+            lim['limit_times'] = pd.to_numeric(lim['limit_times'], errors='coerce').fillna(1)
+            lim['amount'] = pd.to_numeric(lim['amount'], errors='coerce').fillna(0)
+            lim['pct_chg'] = pd.to_numeric(lim['pct_chg'], errors='coerce').fillna(0)
+            for _, r in lim.dropna(subset=['l1']).iterrows():
+                new_detail.append({
+                    'trade_date': d, 'ts_code': r['ts_code'], 'stock_name': r['name'],
+                    'l1': r['l1'], 'l2': r['l2'], 'limit': r['limit'],
+                    'limit_times': int(r['limit_times']), 'amount': float(r['amount']),
+                    'pct_chg': float(r['pct_chg']),
+                })
         time.sleep(0.3)
 
     # 写二级
@@ -210,6 +230,13 @@ def fetch_breadth():
         return
     merged_l2.to_csv(BREADTH_L2_CSV, index=False)
     print(f'  breadth 二级: {len(merged_l2)}行，最新 {merged_l2["trade_date"].max()}')
+
+    # 写涨跌停明细（龙头案例用）
+    merged_detail = merge_dedup(old_detail, pd.DataFrame(new_detail), ['trade_date', 'ts_code'])
+    if not merged_detail.empty:
+        merged_detail = merged_detail.sort_values(['trade_date', 'l1'])
+        merged_detail.to_csv(LIMIT_DETAIL_CSV, index=False)
+        print(f'  涨跌停明细: {len(merged_detail)}行，最新 {merged_detail["trade_date"].max()}')
 
     # 一级 = 二级按 l2_name→l1_name 聚合（涨跌家数可加，口径与二级一致）
     cnt_cols = ['up', 'down', 'flat', 'total', 'limit_up', 'limit_down']
