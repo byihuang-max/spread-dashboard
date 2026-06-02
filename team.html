@@ -84,6 +84,7 @@ tr:hover td{background:#1b2230}
     <!-- Tabs -->
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="pool" onclick="switchTab('pool')">产品推荐</div>
+      <div class="tab" data-tab="dd-submit" onclick="switchTab('dd-submit')">尽调申请</div>
       <div class="tab" data-tab="my-submissions" onclick="switchTab('my-submissions')">我的提交</div>
       <div class="tab" data-tab="modules" onclick="switchTab('modules')">可用模块</div>
     </div>
@@ -120,6 +121,51 @@ tr:hover td{background:#1b2230}
           <table>
             <thead><tr><th>编码</th><th>产品名</th><th>策略组</th><th>细分</th><th>提交人</th><th>审核人</th><th>类型</th></tr></thead>
             <tbody id="approvedBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: 尽调申请 -->
+    <div id="tab-dd-submit" class="tab-content">
+      <div class="card">
+        <h3>提交尽调申请</h3>
+        <p style="color:var(--text-muted);font-size:12px;margin:4px 0 12px">提交后进入待审批，管理员通过后才会进入尽调库。</p>
+        <div class="form-row">
+          <input id="ddName" placeholder="管理人全称（必填）" style="width:220px">
+          <input id="ddShort" placeholder="管理人简称（必填）" style="width:160px">
+          <input id="ddYear" placeholder="成立年份" style="width:90px">
+          <input id="ddTeam" type="number" placeholder="团队人数" style="width:90px">
+          <input id="ddScale" placeholder="管理规模" style="width:120px">
+        </div>
+        <div class="form-row">
+          <select id="ddGroup">
+            <option value="">选择策略大类</option>
+            <option value="指数增强">指数增强</option>
+            <option value="量化多头">量化多头</option>
+            <option value="量化选股">量化选股</option>
+            <option value="市场中性">市场中性</option>
+            <option value="主观多头">主观多头</option>
+            <option value="商品CTA">商品CTA</option>
+            <option value="债券固收">债券固收</option>
+            <option value="套利">套利</option>
+            <option value="多策略">多策略</option>
+          </select>
+          <input id="ddStrategy" placeholder="策略细分（如 1000指增）" style="width:170px">
+          <input id="ddTags" placeholder="标签（逗号分隔）" style="width:180px">
+        </div>
+        <div class="form-row">
+          <input id="ddRecommender" placeholder="推荐人（选填，默认你）" style="width:150px">
+          <input id="ddDiligencer" placeholder="尽调人（选填）" style="width:150px">
+          <button class="btn" onclick="doDDSubmit()">提交尽调申请</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>我提交的尽调记录</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>管理人</th><th>策略</th><th>阶段</th><th>审批状态</th><th>审核人</th><th>审核备注</th><th>提交时间</th></tr></thead>
+            <tbody id="ddMyBody"></tbody>
           </table>
         </div>
       </div>
@@ -209,7 +255,8 @@ function loadPool(){
     renderStats(d);
     renderApproved(d);
     renderMySubmissions(d);
-  })
+  });
+  loadDDMine();
 }
 
 function renderStats(d){
@@ -295,6 +342,51 @@ function doSubmit(){
       alert(d.msg||'提交失败');
     }
   }).catch(function(){alert('网络错误')})
+}
+
+function doDDSubmit(){
+  var name=document.getElementById('ddName').value.trim();
+  var short=document.getElementById('ddShort').value.trim();
+  var group=document.getElementById('ddGroup').value;
+  var strategy=document.getElementById('ddStrategy').value.trim();
+  if(!name||!short){showToast('请填写管理人全称和简称');return}
+  if(!group){showToast('请选择策略大类');return}
+  var stratType=strategy||group;
+  var data={
+    company:{name:name,shortName:short,
+      established:document.getElementById('ddYear').value.trim(),
+      teamSize:parseInt(document.getElementById('ddTeam').value)||null,
+      actualScale:document.getElementById('ddScale').value.trim()},
+    strategies:[{type:group,name:stratType}],
+    tags:document.getElementById('ddTags').value.split(',').map(function(t){return t.trim()}).filter(Boolean),
+    recommendedBy:document.getElementById('ddRecommender').value.trim(),
+    diligencedBy:document.getElementById('ddDiligencer').value.trim(),
+    stage:'initial'
+  };
+  if(!confirm('确认提交「'+short+'」的尽调申请？提交后需管理员审批。'))return;
+  apiCall('POST','/api/dd/funds',data).then(function(d){
+    if(d.ok){
+      showToast('已提交，等待管理员审批');
+      ['ddName','ddShort','ddYear','ddTeam','ddScale','ddStrategy','ddTags','ddRecommender','ddDiligencer'].forEach(function(id){document.getElementById(id).value=''});
+      document.getElementById('ddGroup').value='';
+      loadDDMine();
+    }else{alert(d.error||'提交失败')}
+  }).catch(function(){alert('网络错误')})
+}
+
+function loadDDMine(){
+  apiCall('GET','/api/dd/funds?mine=1').then(function(funds){
+    var arr=Array.isArray(funds)?funds:(funds.funds||[]);
+    var mine=arr;
+    var stageMap={initial:'初步接触',communicating:'沟通中',diligenced:'已尽调',approved:'已入库',invested:'已投资',rejected:'已否决'};
+    document.getElementById('ddMyBody').innerHTML=mine.length?mine.map(function(f){
+      var nm=f.company?(f.company.shortName||f.company.name):f.id;
+      var st=f.strategies&&f.strategies[0]?f.strategies[0].type:'';
+      var as=f.approvalStatus||'approved';
+      var asTag=as==='pending'?'<span class="tag tag-amber">待审批</span>':as==='rejected'?'<span class="tag tag-red">已拒绝</span>':'<span class="tag tag-green">已通过</span>';
+      return '<tr><td>'+esc(nm)+'</td><td>'+esc(st)+'</td><td>'+esc(stageMap[f.stage]||f.stage)+'</td><td>'+asTag+'</td><td>'+esc(f.reviewedBy)+'</td><td>'+esc(f.reviewNote)+'</td><td>'+esc((f.createdAt||'').split(' ')[0])+'</td></tr>'
+    }).join(''):'<tr><td colspan="7" class="empty">你还没有提交过尽调申请</td></tr>';
+  }).catch(function(){})
 }
 
 function retryVerify(code){

@@ -124,7 +124,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
     <div style="font-size:11px;color:var(--sidebar-text);margin-bottom:8px;padding:0 12px">按阶段筛选</div>
     <div id="stageNav"></div>
   </div>
-  <button class="btn-new" onclick="openNewFundModal()">+ 新增基金</button>
 </aside>
 <main class="main">
   <div class="topbar">
@@ -159,17 +158,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
       <div class="tabs" id="modalTabs"></div>
       <div id="modalContent"></div>
     </div>
-  </div>
-</div>
-
-<!-- New Fund Modal -->
-<div class="modal-overlay" id="newFundModal">
-  <div class="modal" style="max-width:700px">
-    <div class="modal-header">
-      <h2>新增基金</h2>
-      <button class="modal-close" onclick="closeNewFundModal()">×</button>
-    </div>
-    <div class="modal-body" id="newFundForm"></div>
   </div>
 </div>
 
@@ -600,51 +588,8 @@ function uploadFile(){
   input.click();
 }
 
-// ═══ 新增基金 ═══
-function openNewFundModal(){
-  const el=document.getElementById('newFundForm');
-  el.innerHTML=`<div style="display:grid;gap:16px">
-    <div><label style="font-size:13px;font-weight:500">公司全称 *</label><input type="text" id="nf_name" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    <div><label style="font-size:13px;font-weight:500">公司简称 *</label><input type="text" id="nf_short" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div><label style="font-size:13px">成立年份</label><input type="text" id="nf_year" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-      <div><label style="font-size:13px">团队人数</label><input type="number" id="nf_team" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    </div>
-    <div><label style="font-size:13px">管理规模</label><input type="text" id="nf_scale" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    <div><label style="font-size:13px">策略类型</label><input type="text" id="nf_strategy" placeholder="如: 市场中性, 量化多头" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    <div><label style="font-size:13px">标签（逗号分隔）</label><input type="text" id="nf_tags" placeholder="量化中性, 低相关" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px"></div>
-    <div><label style="font-size:13px">初始阶段</label><select id="nf_stage" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-top:4px">
-      ${STAGE_ORDER.map(k=>`<option value="${k}" ${k==='initial'?'selected':''}>${STAGES[k].label}</option>`).join('')}</select></div>
-    <button onclick="submitNewFund()" style="padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500">创建</button>
-  </div>`;
-  document.getElementById('newFundModal').classList.add('show');
-}
-
-function closeNewFundModal(){document.getElementById('newFundModal').classList.remove('show');}
-
-async function submitNewFund(){
-  const name=document.getElementById('nf_name').value.trim();
-  const short=document.getElementById('nf_short').value.trim();
-  if(!name||!short){alert('请填写公司全称和简称');return;}
-  const data={
-    company:{name,shortName:short,established:document.getElementById('nf_year').value.trim(),
-      teamSize:parseInt(document.getElementById('nf_team').value)||null,
-      actualScale:document.getElementById('nf_scale').value.trim()},
-    strategies:document.getElementById('nf_strategy').value.trim()?
-      [{type:document.getElementById('nf_strategy').value.trim(),name:document.getElementById('nf_strategy').value.trim()}]:[],
-    tags:document.getElementById('nf_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    stage:document.getElementById('nf_stage').value
-  };
-  const res=await api('/funds',{method:'POST',body:JSON.stringify(data)});
-  if(res.ok){
-    closeNewFundModal();
-    init();
-  }else{alert(res.error||'创建失败');}
-}
-
 // ═══ 启动 ═══
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
-document.getElementById('newFundModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeNewFundModal();});
 init();
 </script>
 </body>

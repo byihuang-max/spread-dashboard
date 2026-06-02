@@ -94,16 +94,22 @@ def get_stats():
         for key, info in STAGES.items():
             count = sum(1 for f in funds if f.get('stage') == key)
             by_stage[key] = {'label': info['label'], 'count': count}
+        pending = sum(1 for f in funds if f.get('approvalStatus') == 'pending')
         return {
             'total': len(funds),
+            'pending': pending,
+            'pendingStageChanges': 0,
             'byStage': by_stage,
         }
 
 
 # ═══ 创建/编辑 API ═══
 
-def create_fund(data, created_by='system'):
-    """创建新基金记录。"""
+def create_fund(data, created_by='system', approval_status='pending'):
+    """创建新基金记录。
+
+    approval_status: 'pending'（组员提交，待审批）或 'approved'（admin 直接入库）。
+    """
     with _lock:
         funds = _load_funds()
         fund_id = data.get('id') or f"fund-{uuid.uuid4().hex[:8]}"
@@ -111,6 +117,7 @@ def create_fund(data, created_by='system'):
         if _find_fund(funds, fund_id)[0] >= 0:
             return False, '基金ID已存在'
 
+        approved = approval_status == 'approved'
         fund = {
             'id': fund_id,
             'company': data.get('company', {}),
@@ -129,6 +136,14 @@ def create_fund(data, created_by='system'):
             'stage': data.get('stage', 'initial'),
             'ddTimeline': data.get('ddTimeline', []),
             'rating': data.get('rating', {}),
+            # ═══ 审批 + 归属 ═══
+            'approvalStatus': approval_status,
+            'submittedBy': created_by,
+            'recommendedBy': data.get('recommendedBy', '') or created_by,
+            'diligencedBy': data.get('diligencedBy', ''),
+            'reviewedBy': created_by if approved else '',
+            'reviewedAt': _now() if approved else '',
+            'reviewNote': '',
             'stageHistory': [{
                 'from': None,
                 'to': data.get('stage', 'initial'),
@@ -145,6 +160,35 @@ def create_fund(data, created_by='system'):
             'updatedAt': _now(),
         }
         funds.append(fund)
+        _save_funds(funds)
+        return True, fund
+
+
+def review_fund(fund_id, action, reviewed_by='admin', note=''):
+    """admin 审批组员提交的尽调记录。action: 'approve' / 'reject'。"""
+    if action not in ('approve', 'reject'):
+        return False, f'无效操作: {action}'
+    with _lock:
+        funds = _load_funds()
+        idx, fund = _find_fund(funds, fund_id)
+        if idx < 0:
+            return False, '基金不存在'
+
+        new_status = 'approved' if action == 'approve' else 'rejected'
+        fund['approvalStatus'] = new_status
+        fund['reviewedBy'] = reviewed_by
+        fund['reviewedAt'] = _now()
+        fund['reviewNote'] = note
+        if action == 'reject':
+            fund['stage'] = 'rejected'
+        fund['updatedAt'] = _now()
+        fund.setdefault('auditLog', []).append({
+            'action': f'review_{action}',
+            'by': reviewed_by,
+            'at': _now(),
+            'note': note,
+        })
+        funds[idx] = fund
         _save_funds(funds)
         return True, fund
 

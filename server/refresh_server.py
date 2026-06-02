@@ -620,9 +620,18 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {'pool': pool, 'stats': stats})
 
         # ═══ 尽调库 GET API ═══
-        elif self.path == '/api/dd/funds':
+        elif self.path.startswith('/api/dd/funds') and not self.path.startswith('/api/dd/funds/'):
             import dd_api
-            self._json(200, dd_api.get_all())
+            user = self._get_user()
+            funds = dd_api.get_all()
+            if '?mine=1' in self.path or '&mine=1' in self.path:
+                # 团队工作台「我提交的尽调记录」：只返回当前用户提交的（全部状态）
+                me = (user.get('display_name') or user.get('username', '')) if user else ''
+                funds = [f for f in funds if f.get('submittedBy') == me]
+            elif not (user and user.get('is_admin')):
+                # 尽调库展示：非 admin 只看已通过审批的（pending/rejected 不露出）
+                funds = [f for f in funds if f.get('approvalStatus', 'approved') == 'approved']
+            self._json(200, funds)
         elif self.path == '/api/dd/stats':
             import dd_api
             self._json(200, dd_api.get_stats())
@@ -973,14 +982,31 @@ class Handler(BaseHTTPRequestHandler):
 
         # ═══ 尽调库 POST API ═══
         elif self.path == '/api/dd/funds':
-            # 创建新基金
+            # 创建新基金（组员提交→待审批；admin 提交→直接入库）
             user = self._get_user()
             if not user:
                 self._json(401, {'error': '未登录'}); return
             body = self._read_body()
             import dd_api
             created_by = user.get('display_name') or user.get('username', 'system')
-            ok, result = dd_api.create_fund(body, created_by=created_by)
+            approval = 'approved' if user.get('is_admin') else 'pending'
+            ok, result = dd_api.create_fund(body, created_by=created_by, approval_status=approval)
+            self._json(200 if ok else 400, {'ok': ok, 'data': result} if ok else {'ok': ok, 'error': result})
+
+        elif self.path.startswith('/api/dd/funds/') and '/review' in self.path:
+            # 审批组员提交: POST /api/dd/funds/<id>/review (admin only)
+            admin = self._require_admin()
+            if not admin: return
+            fund_id = self.path.split('/api/dd/funds/')[1].split('/review')[0]
+            body = self._read_body()
+            import dd_api
+            reviewed_by = admin.get('display_name') or admin.get('username', 'admin')
+            ok, result = dd_api.review_fund(
+                fund_id,
+                body.get('action', ''),
+                reviewed_by=reviewed_by,
+                note=body.get('reviewNote', '') or body.get('note', ''),
+            )
             self._json(200 if ok else 400, {'ok': ok, 'data': result} if ok else {'ok': ok, 'error': result})
 
         elif self.path.startswith('/api/dd/funds/') and '/stage' in self.path:
