@@ -386,6 +386,39 @@ tbody td {
   transition: color 0.15s;
 }
 .alert-card:hover .alert-link-icon { color: #f0883e; }
+
+/* 深度分析卡片 - 金色高亮 */
+.alert-card.deep-card {
+  border-color: #f0883e;
+  background: #1a1510;
+  flex-wrap: wrap;
+}
+.alert-card.deep-card:hover {
+  border-color: #ffb347;
+  background: #1f1a12;
+}
+.deep-badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #f0883e;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.alert-card {
+  position: relative;
+}
+.deep-reason {
+  width: 100%;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #2a2520;
+  font-size: 11px;
+  color: #b08030;
+  line-height: 1.4;
+}
 </style>
 </head>
 <body>
@@ -1009,8 +1042,10 @@ function renderAlertPanel() {
 
   grid.innerHTML = recent.map(r => {
     const code = r.code || '';
-    const codeClean = code.replace('.SH', '').replace('.SZ', '');
+    const codeClean = code.replace('.SH', '').replace('.SZ', '').replace('.BJ', '');
     const skillLink = `merger_detail.html?code=${codeClean}&name=${encodeURIComponent(r.name)}`;
+    const isDeep = r.has_deep === true;
+    const cardClass = isDeep ? 'alert-card deep-card' : 'alert-card';
 
     function retHtml(val, label) {
       if (val === null || val === undefined) return `<div class="alert-ret"><div class="alert-ret-val" style="color:#555">-</div><div class="alert-ret-label">${label}</div></div>`;
@@ -1019,7 +1054,11 @@ function renderAlertPanel() {
       return `<div class="alert-ret"><div class="alert-ret-val ${cls}">${sign}${val.toFixed(1)}%</div><div class="alert-ret-label">${label}</div></div>`;
     }
 
-    return `<a class="alert-card" href="${skillLink}" title="点击查看并购深度分析">
+    const deepBadge = isDeep ? '<span class="deep-badge">DEEP</span>' : '';
+    const reasonHtml = isDeep && r.reason ? `<div class="deep-reason">${r.reason}</div>` : '';
+
+    return `<a class="${cardClass}" href="${skillLink}" title="点击查看并购深度分析">
+      ${deepBadge}
       <div class="alert-card-info">
         <div class="alert-card-name">${r.name}</div>
         <div class="alert-card-code">${code}</div>
@@ -1031,6 +1070,7 @@ function renderAlertPanel() {
         ${retHtml(r.ret_5d, '5日')}
       </div>
       <span class="alert-link-icon">→</span>
+      ${reasonHtml}
     </a>`;
   }).join('');
 }
