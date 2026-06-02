@@ -329,7 +329,26 @@ function switchPctWindow(w){
 }
 
 function renderShare(){
-  // 量比 = 当前成交额 / 过去N天均值（用原始amount数据）
+  // ═══════════════════════════════════════════════════
+  // 行业活跃度（量比）计算逻辑
+  // ═══════════════════════════════════════════════════
+  // 数据来源: share_series.json → amount 字段（每个行业每天的成交额，单位万元）
+  //
+  // 【量比 ratio】= 今日成交额 / 过去N天成交额均值（N = PCT_WINDOW，默认63≈3个月）
+  //   - latest = amount数组最后一个值（今日成交额）
+  //   - window = amount数组倒数第2~第N+1个值（不含今天，避免自相关）
+  //   - avg = window 的算术平均
+  //   - ratio = latest / avg
+  //   - ratio > 1.5 → 显著放量（标红）
+  //   - ratio < 0.7 → 显著缩量（标绿）
+  //   - 0.7~1.5 → 正常（标橙）
+  //
+  // 【占比 share】= 该行业今日成交额 / 全市场今日总成交额 × 100%
+  //   - 来源: share_series.json → series 字段（已算好的百分比序列）
+  //   - 取最后一个值即为最新占比
+  //
+  // 【均值】= 过去N天成交额均值，单位亿元（avg / 10000，因原始数据单位万元）
+  // ═══════════════════════════════════════════════════
   if(!SHARE_SERIES||!SHARE_SERIES.amount){
     document.getElementById('shareList').innerHTML='<div style="color:var(--text-sub)">加载中...</div>';
     return;
@@ -338,13 +357,13 @@ function renderShare(){
   Object.keys(SHARE_SERIES.amount).forEach(function(name){
     var arr=SHARE_SERIES.amount[name];
     if(!arr||arr.length<20)return;
-    var latest=arr[arr.length-1];
-    var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW-1),arr.length-1); // 不含今天
+    var latest=arr[arr.length-1]; // 今日成交额（万元）
+    var window=arr.slice(Math.max(0,arr.length-PCT_WINDOW-1),arr.length-1); // 过去N天（不含今天）
     if(window.length<10)return;
-    var avg=window.reduce(function(s,v){return s+(v||0)},0)/window.length;
-    var ratio=avg>0?latest/avg:1;
-    var shareArr=SHARE_SERIES.series[name];
-    var sharePct=shareArr?shareArr[shareArr.length-1]:0;
+    var avg=window.reduce(function(s,v){return s+(v||0)},0)/window.length; // N日均值（万元）
+    var ratio=avg>0?latest/avg:1; // 量比 = 今日/均值
+    var shareArr=SHARE_SERIES.series[name]; // 占比序列（%）
+    var sharePct=shareArr?shareArr[shareArr.length-1]:0; // 最新占比
     results.push({name:name,ratio:ratio,latest:latest,avg:avg,share:sharePct});
   });
   // 按量比降序
