@@ -68,8 +68,9 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 
 /* 量价状态矩阵 */
 .vp-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;color:var(--text-sub)}
-.vp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.vp-cell{padding:11px 12px;border:1px solid var(--border);position:relative}
+.vp-grid{display:flex;flex-wrap:wrap;gap:8px}
+.vp-cell{padding:11px 12px;border:1px solid var(--border);position:relative;width:calc(16.6% - 8px);min-width:140px;flex-shrink:0}
+.vp-cell.active{border-color:var(--accent);background:var(--signal-bg)}
 .vp-cell .vp-name{font-weight:800;font-size:13px;margin-bottom:5px}
 .vp-cell .vp-state{font-size:11px;font-weight:700;margin-bottom:4px}
 .vp-cell .vp-meta{font-size:10px;color:var(--text-sub);line-height:1.6}
@@ -78,13 +79,18 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .vp-cell.warn{border-left:3px solid #f59e0b}
 .vp-cell.cool{border-left:3px solid #3b82f6}
 .vp-state.up{color:var(--up)}.vp-state.down{color:var(--down)}.vp-state.warn{color:#f59e0b}.vp-state.cool{color:#3b82f6}
+
+/* 量价矩阵 - 展开面板（全宽插入） */
+.vp-expand{width:100%;background:var(--signal-bg);border:1px solid var(--accent);padding:12px 16px;display:none;flex-basis:100%}
+.vp-expand.open{display:block}
+.vp-expand-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.vp-expand-grid{display:flex;flex-direction:column;gap:4px}
 .vp-risk{display:inline-block;margin-top:5px;font-size:9px;font-weight:700;padding:1px 6px;background:rgba(239,68,68,0.15);color:#ef4444}
 .vp-risk.amber{background:rgba(245,158,11,0.15);color:#f59e0b}
 
 /* 量价矩阵 - 可点击 + 二级展开 */
 .vp-cell{cursor:pointer;transition:transform .1s}
 .vp-cell:hover{transform:scale(1.02)}
-.vp-sub{margin-top:8px;border-top:1px dashed var(--border);padding-top:6px}
 .vp-sub-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0}
 .vp-sub-name{width:70px;font-weight:600;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vp-sub-bar{flex:1;height:10px;background:var(--track);display:flex;overflow:hidden;min-width:50px}
@@ -400,6 +406,7 @@ function renderVP(){
   var bl2Map={};
   bl2.forEach(function(b){var k=b.l1||'其他';(bl2Map[k]=bl2Map[k]||[]).push(b);});
   Object.keys(bl2Map).forEach(function(k){bl2Map[k].sort(function(a,b){return b.up_ratio-a.up_ratio;});});
+  window._bl2Map=bl2Map;
 
   document.getElementById('vpGrid').innerHTML=vp.map(function(m){
     var rank=m.rank!=null?(m.rank*100).toFixed(0):'-';
@@ -408,7 +415,6 @@ function renderVP(){
     else if(m.risk=='高位拥挤')risk='<span class="vp-risk amber">'+m.risk+'</span>';
     else if(m.risk=='低位出清')risk='<span class="vp-risk amber">'+m.risk+'</span>';
 
-    // 涨跌家数（从 breadth_l1 取）
     var bd=bl1Map[m.name]||{};
     var upN=bd.up||0, downN=bd.down||0, totalN=bd.total||(upN+downN)||1;
     var upPct=(upN/totalN*100).toFixed(0);
@@ -421,36 +427,56 @@ function renderVP(){
       '<div class="vp-state '+m.tone+'">'+m.state+'</div>'+
       '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）'+limHtml+'</div>'+
       risk+
-      '<div class="vp-sub" style="display:none"></div>'+
     '</div>';
   }).join('');
-
-  // 存储 bl2Map 供展开使用
-  window._bl2Map=bl2Map;
 }
 
 function toggleVPSub(el){
   var name=el.getAttribute('data-name');
-  var sub=el.querySelector('.vp-sub');
-  if(sub.style.display!=='none'){sub.style.display='none';return;}
+  var grid=document.getElementById('vpGrid');
+
+  // 移除已存在的展开面板
+  var existing=grid.querySelector('.vp-expand.open');
+  var wasOpen=existing&&existing.getAttribute('data-for')===name;
+  if(existing){
+    existing.remove();
+    grid.querySelectorAll('.vp-cell.active').forEach(function(c){c.classList.remove('active');});
+  }
+  if(wasOpen)return; // 点同一个就收起
+
+  // 生成二级面板
   var subs=window._bl2Map&&window._bl2Map[name]||[];
-  if(!subs.length){sub.innerHTML='<div style="font-size:10px;color:var(--text-sub);padding:4px 0">无二级数据</div>';sub.style.display='block';return;}
-  sub.innerHTML=subs.map(function(s){
-    var tot=s.total||(s.up+s.down)||1;
-    var upW=(s.up/tot*100).toFixed(0);
-    var color=s.up_ratio>=0.5?'var(--up)':'var(--down)';
-    var lim='';
-    if(s.limit_up)lim+='<span style="color:var(--up)">'+s.limit_up+'U</span> ';
-    if(s.limit_down)lim+='<span style="color:var(--down)">'+s.limit_down+'D</span>';
-    return '<div class="vp-sub-row">'+
-      '<span class="vp-sub-name">'+s.name+'</span>'+
-      '<span class="vp-sub-bar"><span class="vp-sub-fill" style="width:'+upW+'%"></span></span>'+
-      '<span class="vp-sub-ratio" style="color:'+color+'">'+upW+'%</span>'+
-      '<span class="vp-sub-cnt">'+s.up+'/'+tot+'</span>'+
-      (lim?'<span class="vp-sub-lim">'+lim+'</span>':'')+
-    '</div>';
-  }).join('');
-  sub.style.display='block';
+  var content='';
+  if(!subs.length){
+    content='<div style="font-size:11px;color:var(--text-sub)">无二级行业数据</div>';
+  } else {
+    content=subs.map(function(s){
+      var tot=s.total||(s.up+s.down)||1;
+      var upW=(s.up/tot*100).toFixed(0);
+      var color=s.up_ratio>=0.5?'var(--up)':'var(--down)';
+      var lim='';
+      if(s.limit_up)lim+='<span style="color:var(--up);font-weight:700"> '+s.limit_up+'U</span>';
+      if(s.limit_down)lim+='<span style="color:var(--down);font-weight:700"> '+s.limit_down+'D</span>';
+      return '<div class="vp-sub-row">'+
+        '<span class="vp-sub-name">'+s.name+'</span>'+
+        '<span class="vp-sub-bar"><span class="vp-sub-fill" style="width:'+upW+'%"></span></span>'+
+        '<span class="vp-sub-ratio" style="color:'+color+'">'+upW+'%</span>'+
+        '<span class="vp-sub-cnt">'+s.up+'/'+tot+'</span>'+
+        (lim?'<span class="vp-sub-lim">'+lim+'</span>':'')+
+      '</div>';
+    }).join('');
+  }
+
+  var panel=document.createElement('div');
+  panel.className='vp-expand open';
+  panel.setAttribute('data-for',name);
+  panel.innerHTML='<div class="vp-expand-title">'+name+' 二级行业涨跌</div><div class="vp-expand-grid">'+content+'</div>';
+
+  // 插入到被点击卡片的下一行位置
+  el.classList.add('active');
+  var next=el.nextSibling;
+  if(next){grid.insertBefore(panel,next);}
+  else{grid.appendChild(panel);}
 }
 
 /* renderBreadth removed — breadth data now integrated into renderVP cards */
