@@ -735,6 +735,14 @@ def run_auto():
     for r in top8:
         print(f"  {r['name']:8s} {r['code']:12s} {r['stage']:6s} {r['ret_1d']:+5.1f}% {r['ret_3d']:+5.1f}% {r['ret_5d']:+5.1f}%")
 
+    # 标记 Top 3 深度分析 + 生成理由
+    for i, r in enumerate(top8):
+        if i < 3:
+            r['has_deep'] = True
+            r['reason'] = _gen_anomaly_reason(r)
+        else:
+            r['has_deep'] = False
+
     # 保存异动 JSON（供前端异动面板读取）
     _save_anomaly_json(top8, data_date)
 
@@ -753,6 +761,38 @@ def run_auto():
     print(f"\n{'='*50}")
     print(f"  完成！Top 3 完整底稿 + Top 4-8 筹码")
     print(f"{'='*50}")
+
+
+def _gen_anomaly_reason(r: dict) -> str:
+    """根据涨幅和阶段生成简短异动理由"""
+    parts = []
+    # 涨幅描述
+    ret5 = r.get('ret_5d', 0)
+    ret3 = r.get('ret_3d', 0)
+    ret1 = r.get('ret_1d', 0)
+    if ret5 > 20:
+        parts.append(f"5日+{ret5:.0f}%")
+    elif ret3 > 10:
+        parts.append(f"3日+{ret3:.0f}%")
+    elif ret1 > 8:
+        parts.append(f"单日+{ret1:.0f}%")
+    else:
+        parts.append(f"5日+{ret5:.1f}%")
+
+    # 阶段
+    stage = r.get('stage', '')
+    if stage:
+        parts.append(f"{stage}阶段")
+
+    # 判断异动性质
+    if ret1 > 9.5:
+        parts.append("涨停")
+    elif ret5 > 25 and ret1 < 3:
+        parts.append("连续放量")
+    elif ret3 > 15:
+        parts.append("短期加速")
+
+    return "，".join(parts)
 
 
 def _save_anomaly_json(top_list: list, data_date: str):
