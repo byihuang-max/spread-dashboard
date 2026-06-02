@@ -12,6 +12,17 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .sec-desc{font-size:11px;color:var(--text-sub);line-height:1.7;margin-bottom:12px}
 .sec-desc b{color:var(--text)}
 
+/* 模块卡片边框 */
+.module-box{background:var(--card-bg);border:1px solid var(--border);padding:18px 20px}
+
+/* 活跃度表头 */
+.share-header{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text-sub);font-weight:600;padding:4px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.share-header .sh-name{width:80px;text-align:right;flex-shrink:0}
+.share-header .sh-bar{flex:1}
+.share-header .sh-val{width:62px;flex-shrink:0}
+.share-header .sh-rank{width:70px;font-size:10px;flex-shrink:0}
+.share-header .sh-chg{width:64px;font-size:10px;flex-shrink:0;text-align:right}
+
 /* 信号栏 */
 .signal-bar{background:var(--signal-bg);border:1px solid var(--border);border-left:3px solid var(--accent);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:24px}
 .signal-head{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap}
@@ -130,7 +141,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <div class="loading" id="loadingMsg">加载中...</div>
 <div id="app" style="display:none">
 
-<!-- ① 信号栏 -->
+<!-- 信号栏 -->
 <div class="signal-bar">
   <div class="signal-head">行业信号</div>
   <div class="signal-tags" id="signalTags"></div>
@@ -140,9 +151,9 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- 情绪温度 -->
 <div class="emotion" id="emotionBar"></div>
 
-<!-- ② 横截面占比时间序列(动态折线图) -->
-<div class="sec">
-  <h2>① 行业拥挤度占比变化 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 全市场成交额）</span></h2>
+<!-- 行业拥挤度占比变化 -->
+<div class="sec module-box">
+  <h2>行业拥挤度占比变化 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 全市场成交额）</span></h2>
   <div class="sec-desc">每个申万一级行业占全市场成交额的比例随时间变化。默认显示占比TOP5，点击图例切换行业。拖动底部滑块选择时间范围。</div>
   <div style="position:relative;height:340px;background:var(--card-bg);border:1px solid var(--border);padding:12px">
     <canvas id="shareChart"></canvas>
@@ -153,18 +164,18 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     <div id="rangeHandleR" class="range-handle" style="left:100%"></div>
   </div>
   <div style="display:flex;justify-content:space-between;margin-top:4px">
-    <span id="rangeLabelL" style="font-size:10px;color:var(--text-sub)"></span>
-    <span id="rangeLabelR" style="font-size:10px;color:var(--text-sub)"></span>
+    <span id="rangeLabelL" style="font-size:11px;color:var(--text);font-weight:600"></span>
+    <span id="rangeLabelR" style="font-size:11px;color:var(--text);font-weight:600"></span>
   </div>
   <div id="shareChipBar" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
 </div>
 
-<!-- ③ 行业自身活跃度(自己vs自己历史) -->
-<div class="sec">
+<!-- 行业活跃度 -->
+<div class="sec module-box">
   <div class="sec-head">
-    <h2>② 行业活跃度 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 自身历史均值）</span></h2>
+    <h2>行业活跃度 <span style="font-weight:400;font-size:13px;color:var(--text-sub)">（自身成交额 vs 自身历史均值）</span></h2>
   </div>
-  <div class="sec-desc">各行业当前成交额相对自身过去N天均值的倍数（量比）。<b style="color:var(--up)">&gt;1.5倍标红</b>=该行业相对自己历史在显著放量。与①结合：占比高+量比高=真拥挤。</div>
+  <div class="sec-desc">各行业当前成交额相对自身过去N天均值的倍数（量比）。<b style="color:var(--up)">&gt;1.5倍标红</b>=该行业相对自己历史在显著放量。与上方占比结合：占比高+量比高=真拥挤。</div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
     <span style="font-size:11px;color:var(--text-sub)">均值窗口:</span>
     <button class="toggle-btn pct-btn on" data-w="63" onclick="switchPctWindow(63)">近3月</button>
@@ -174,19 +185,26 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     <button class="toggle-btn pct-btn" data-w="750" onclick="switchPctWindow(750)">近3年</button>
     <button class="toggle-btn pct-btn" data-w="1300" onclick="switchPctWindow(1300)">全量5年</button>
   </div>
+  <div class="share-header">
+    <span class="sh-name">行业</span>
+    <span class="sh-bar">量比条</span>
+    <span class="sh-val">量比</span>
+    <span class="sh-rank">占比</span>
+    <span class="sh-chg">均值</span>
+  </div>
   <div class="share-list" id="shareList"></div>
 </div>
 
-<!-- ③ 边际加速 -->
-<div class="sec">
-  <h2>③ 拥挤度边际加速 TOP5（资金正涌向哪 / 撤离哪）</h2>
+<!-- 拥挤度边际加速 -->
+<div class="sec module-box">
+  <h2>拥挤度边际加速 TOP5（资金正涌向哪 / 撤离哪）</h2>
   <div class="sec-desc">占比的<b>变化量</b>排名（周=5日，月=20日）。占比上升=资金加速流入，下降=资金撤离。这是<b>边际视角</b>，比静态占比更早反映资金动向。单位 pct=百分点。</div>
   <div class="accel-grid" id="accelGrid"></div>
 </div>
 
-<!-- ④ 量价状态矩阵 -->
-<div class="sec">
-  <h2>④ 量价状态矩阵（占比边际 × 赚钱效应）</h2>
+<!-- 量价状态矩阵 -->
+<div class="sec module-box">
+  <h2>量价状态矩阵（占比边际 × 赚钱效应）</h2>
   <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。</div>
   <div class="vp-legend">
     <span>■ <span style="color:var(--up)">量价齐升</span></span>
@@ -197,20 +215,20 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
   <div class="vp-grid" id="vpGrid"></div>
 </div>
 
-<!-- ⑤ breadth 涨跌家数 -->
-<div class="sec">
+<!-- 行业涨跌家数 -->
+<div class="sec module-box">
   <div class="sec-head">
-    <h2>⑤ 行业涨跌家数（breadth，点击下钻二级）</h2>
+    <h2>行业涨跌家数（breadth，点击下钻二级）</h2>
     <button class="toggle-btn" id="bdToggle" onclick="toggleBreadth()">按涨家占比排序</button>
   </div>
   <div class="sec-desc">每个一级行业当天<b>上涨/下跌成份股数量</b>。<span style="color:var(--up)">红=涨</span> <span style="color:var(--down)">绿=跌</span>。涨家占比=涨/(涨+跌)，越高赚钱效应越广。<b>涨停U/跌停D</b>反映情绪温度。点行名展开<b>二级行业</b>明细。</div>
   <div class="breadth-list" id="breadthList"></div>
 </div>
 
-<!-- ⑥ 时序量比热力图（保留原模块） -->
-<div class="sec">
+<!-- 时序量比热力图 -->
+<div class="sec module-box">
   <div class="sec-head">
-    <h2>⑥ 时序量比热力图（成交额/MA20 + ETF流向）</h2>
+    <h2>时序量比热力图（成交额/MA20 + ETF流向）</h2>
     <button class="toggle-btn" id="toggleIndustryBtn" onclick="toggleIndustryView()">展开全部</button>
   </div>
   <div class="sec-desc">这是<b>纵向</b>视角：每个行业当日成交额相对自己 MA20 的<b>量比</b>（&gt;1.5拥挤 / &lt;0.7冷清），叠加近5日涨跌 + 行业ETF份额变化。与上方横截面占比互补。数据源 <b>sw_daily</b> + <b>fund_share</b>。</div>
@@ -513,6 +531,9 @@ function setupRangeSlider(){
     hR.style.left=rPct+'%';
     fill.style.left=lPct+'%';
     fill.style.width=(rPct-lPct)+'%';
+    // 实时更新日期标签
+    document.getElementById('rangeLabelL').textContent=SHARE_SERIES.dates[RANGE_START]||'';
+    document.getElementById('rangeLabelR').textContent=SHARE_SERIES.dates[RANGE_END]||'';
   }
   updatePos();
   function drag(handle,isLeft){
