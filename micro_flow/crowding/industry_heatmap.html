@@ -81,24 +81,19 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .vp-risk{display:inline-block;margin-top:5px;font-size:9px;font-weight:700;padding:1px 6px;background:rgba(239,68,68,0.15);color:#ef4444}
 .vp-risk.amber{background:rgba(245,158,11,0.15);color:#f59e0b}
 
-/* breadth 涨跌家数 */
-.breadth-list{display:flex;flex-direction:column;gap:4px}
-.bd-row{display:flex;align-items:center;gap:10px;font-size:12px;cursor:pointer;padding:3px 4px}
-.bd-row:hover{background:var(--tag-bg)}
-.bd-name{width:84px;font-weight:700;flex-shrink:0;display:flex;align-items:center;gap:4px}
-.bd-caret{font-size:9px;color:var(--text-sub);transition:transform .15s}
-.bd-row.open .bd-caret{transform:rotate(90deg)}
-.bd-track{flex:1;height:18px;background:var(--track);display:flex;overflow:hidden;min-width:120px}
-.bd-up{background:var(--up);height:100%}
-.bd-down{background:var(--down);height:100%}
-.bd-ratio{width:46px;font-weight:700;flex-shrink:0;text-align:right}
-.bd-cnt{width:96px;font-size:10px;color:var(--text-sub);flex-shrink:0}
-.bd-lim{width:90px;font-size:10px;flex-shrink:0}
-.bd-lim .lu{color:var(--up);font-weight:700}.bd-lim .ld{color:var(--down);font-weight:700}
-.bd-sub{display:none;padding:4px 0 8px 28px;flex-direction:column;gap:3px}
-.bd-sub.open{display:flex}
-.bd-sub .bd-row{font-size:11px}
-.bd-sub .bd-name{width:96px;font-weight:400;color:var(--text-sub)}
+/* 量价矩阵 - 可点击 + 二级展开 */
+.vp-cell{cursor:pointer;transition:transform .1s}
+.vp-cell:hover{transform:scale(1.02)}
+.vp-sub{margin-top:8px;border-top:1px dashed var(--border);padding-top:6px}
+.vp-sub-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0}
+.vp-sub-name{width:70px;font-weight:600;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vp-sub-bar{flex:1;height:10px;background:var(--track);display:flex;overflow:hidden;min-width:50px}
+.vp-sub-fill{height:100%;background:var(--up)}
+.vp-sub-ratio{width:36px;font-weight:700;flex-shrink:0;text-align:right}
+.vp-sub-cnt{width:50px;font-size:10px;color:var(--text-sub);flex-shrink:0}
+.vp-sub-lim{font-size:10px;flex-shrink:0}
+
+/* breadth styles removed — now integrated into VP matrix cards */
 
 .toggle-btn{border:1px solid var(--border);background:var(--tag-bg);color:var(--accent);padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer}
 .toggle-btn:hover{background:var(--accent);color:#000}
@@ -205,7 +200,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- 量价状态矩阵 -->
 <div class="sec module-box">
   <h2>量价状态矩阵（占比边际 × 赚钱效应）</h2>
-  <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。</div>
+  <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。点击行业卡片展开二级明细。</div>
   <div class="vp-legend">
     <span>■ <span style="color:var(--up)">量价齐升</span></span>
     <span>■ <span style="color:#f59e0b">量升价不跟</span></span>
@@ -213,16 +208,6 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
     <span>■ <span style="color:var(--down)">量价齐跌</span></span>
   </div>
   <div class="vp-grid" id="vpGrid"></div>
-</div>
-
-<!-- 行业涨跌家数 -->
-<div class="sec module-box">
-  <div class="sec-head">
-    <h2>行业涨跌家数（breadth，点击下钻二级）</h2>
-    <button class="toggle-btn" id="bdToggle" onclick="toggleBreadth()">按涨家占比排序</button>
-  </div>
-  <div class="sec-desc">每个一级行业当天<b>上涨/下跌成份股数量</b>。<span style="color:var(--up)">红=涨</span> <span style="color:var(--down)">绿=跌</span>。涨家占比=涨/(涨+跌)，越高赚钱效应越广。<b>涨停U/跌停D</b>反映情绪温度。点行名展开<b>二级行业</b>明细。</div>
-  <div class="breadth-list" id="breadthList"></div>
 </div>
 
 <!-- 时序量比热力图 -->
@@ -247,7 +232,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 
 <script src="chart.min.js"></script>
 <script>
-var DATA, SHARE_ALL=false, BD_SORT='l1order', SHOW_ALL=false;
+var DATA, SHARE_ALL=false, SHOW_ALL=false;
 var SHARE_SERIES=null, shareChart=null;
 var PCT_WINDOW=63; // 默认近3月(约63个交易日)
 
@@ -271,7 +256,6 @@ function render(){
   renderShare();
   renderAccel();
   renderVP();
-  renderBreadth();
   renderGrid();
   var dates=DATA.data_dates||{};
   var em=DATA.market_emotion||{};
@@ -406,66 +390,70 @@ function renderAccel(){
 
 function renderVP(){
   var vp=DATA.vp_matrix||[];
+  var bl1=(DATA.breadth_l1&&DATA.breadth_l1.data)||[];
+  var bl2=(DATA.breadth_l2&&DATA.breadth_l2.data)||[];
   if(!vp.length){document.getElementById('vpGrid').innerHTML='<div style="color:var(--text-sub)">暂无数据</div>';return;}
+
+  // breadth 按一级行业名索引
+  var bl1Map={};
+  bl1.forEach(function(b){bl1Map[b.name]=b;});
+  var bl2Map={};
+  bl2.forEach(function(b){var k=b.l1||'其他';(bl2Map[k]=bl2Map[k]||[]).push(b);});
+  Object.keys(bl2Map).forEach(function(k){bl2Map[k].sort(function(a,b){return b.up_ratio-a.up_ratio;});});
+
   document.getElementById('vpGrid').innerHTML=vp.map(function(m){
     var rank=m.rank!=null?(m.rank*100).toFixed(0):'-';
-    var chg=m.chg_5d!=null?fmtPct(m.chg_5d,2):'-';
     var risk='';
     if(m.risk=='拥挤顶预警')risk='<span class="vp-risk">⚠ '+m.risk+'</span>';
     else if(m.risk=='高位拥挤')risk='<span class="vp-risk amber">'+m.risk+'</span>';
     else if(m.risk=='低位出清')risk='<span class="vp-risk amber">'+m.risk+'</span>';
-    return '<div class="vp-cell '+m.tone+'">'+
+
+    // 涨跌家数（从 breadth_l1 取）
+    var bd=bl1Map[m.name]||{};
+    var upN=bd.up||0, downN=bd.down||0, totalN=bd.total||(upN+downN)||1;
+    var upPct=(upN/totalN*100).toFixed(0);
+    var limHtml='';
+    if(bd.limit_up)limHtml+=' <span style="color:var(--up);font-weight:700">'+bd.limit_up+'U</span>';
+    if(bd.limit_down)limHtml+=' <span style="color:var(--down);font-weight:700">'+bd.limit_down+'D</span>';
+
+    return '<div class="vp-cell '+m.tone+'" data-name="'+m.name+'" onclick="toggleVPSub(this)">'+
       '<div class="vp-name">'+m.name+'</div>'+
       '<div class="vp-state '+m.tone+'">'+m.state+'</div>'+
-      '<div class="vp-meta">占比'+m.share_pct.toFixed(1)+'% · 分位'+rank+'%<br>占比5日'+chg+'pct · 涨家'+(m.up_ratio*100).toFixed(0)+'%</div>'+
+      '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）'+limHtml+'</div>'+
       risk+
+      '<div class="vp-sub" style="display:none"></div>'+
     '</div>';
   }).join('');
+
+  // 存储 bl2Map 供展开使用
+  window._bl2Map=bl2Map;
 }
 
-function renderBreadth(){
-  var bl1=(DATA.breadth_l1&&DATA.breadth_l1.data)||[];
-  var bl2=(DATA.breadth_l2&&DATA.breadth_l2.data)||[];
-  if(!bl1.length){document.getElementById('breadthList').innerHTML='<div style="color:var(--text-sub)">暂无数据</div>';return;}
-  // 二级按一级分组
-  var subMap={};
-  bl2.forEach(function(b){var k=b.l1||'其他';(subMap[k]=subMap[k]||[]).push(b);});
-  Object.keys(subMap).forEach(function(k){subMap[k].sort(function(a,b){return b.up_ratio-a.up_ratio;});});
-
-  var list=bl1.slice();
-  if(BD_SORT=='ratio')list.sort(function(a,b){return b.up_ratio-a.up_ratio;});
-
-  function rowHtml(d,isSub){
-    var up=d.up||0,down=d.down||0,tot=up+down||1;
-    var upW=(up/tot*100).toFixed(1);
-    var ratioColor=d.up_ratio>=0.5?'var(--up)':'var(--down)';
-    var lim=(d.limit_up?'<span class="lu">'+d.limit_up+'U</span> ':'')+(d.limit_down?'<span class="ld">'+d.limit_down+'D</span>':'');
-    var caret=isSub?'':'<span class="bd-caret">▶</span>';
-    return '<div class="bd-row'+(isSub?'':' l1row')+'" '+(isSub?'':'data-name="'+d.name+'"')+'>'+
-      '<div class="bd-name">'+caret+d.name+'</div>'+
-      '<div class="bd-track"><div class="bd-up" style="width:'+upW+'%"></div><div class="bd-down" style="width:'+(100-upW)+'%"></div></div>'+
-      '<div class="bd-ratio" style="color:'+ratioColor+'">'+(d.up_ratio*100).toFixed(0)+'%</div>'+
-      '<div class="bd-cnt">'+up+'涨 / '+down+'跌</div>'+
-      '<div class="bd-lim">'+(lim||'-')+'</div>'+
+function toggleVPSub(el){
+  var name=el.getAttribute('data-name');
+  var sub=el.querySelector('.vp-sub');
+  if(sub.style.display!=='none'){sub.style.display='none';return;}
+  var subs=window._bl2Map&&window._bl2Map[name]||[];
+  if(!subs.length){sub.innerHTML='<div style="font-size:10px;color:var(--text-sub);padding:4px 0">无二级数据</div>';sub.style.display='block';return;}
+  sub.innerHTML=subs.map(function(s){
+    var tot=s.total||(s.up+s.down)||1;
+    var upW=(s.up/tot*100).toFixed(0);
+    var color=s.up_ratio>=0.5?'var(--up)':'var(--down)';
+    var lim='';
+    if(s.limit_up)lim+='<span style="color:var(--up)">'+s.limit_up+'U</span> ';
+    if(s.limit_down)lim+='<span style="color:var(--down)">'+s.limit_down+'D</span>';
+    return '<div class="vp-sub-row">'+
+      '<span class="vp-sub-name">'+s.name+'</span>'+
+      '<span class="vp-sub-bar"><span class="vp-sub-fill" style="width:'+upW+'%"></span></span>'+
+      '<span class="vp-sub-ratio" style="color:'+color+'">'+upW+'%</span>'+
+      '<span class="vp-sub-cnt">'+s.up+'/'+tot+'</span>'+
+      (lim?'<span class="vp-sub-lim">'+lim+'</span>':'')+
     '</div>';
-  }
-
-  var html=list.map(function(d){
-    var subs=subMap[d.name]||[];
-    var subHtml='<div class="bd-sub" data-sub="'+d.name+'">'+subs.map(function(s){return rowHtml(s,true);}).join('')+'</div>';
-    return rowHtml(d,false)+subHtml;
   }).join('');
-  document.getElementById('breadthList').innerHTML=html;
-
-  document.querySelectorAll('#breadthList .l1row').forEach(function(row){
-    row.addEventListener('click',function(){
-      var nm=row.getAttribute('data-name');
-      var sub=document.querySelector('#breadthList .bd-sub[data-sub="'+nm+'"]');
-      if(sub){row.classList.toggle('open');sub.classList.toggle('open');}
-    });
-  });
+  sub.style.display='block';
 }
-function toggleBreadth(){BD_SORT=(BD_SORT=='ratio')?'l1order':'ratio';document.getElementById('bdToggle').textContent=(BD_SORT=='ratio')?'恢复默认排序':'按涨家占比排序';renderBreadth();}
+
+/* renderBreadth removed — breadth data now integrated into renderVP cards */
 
 /* ⑥ 时序量比热力图 */
 function renderCards(list){
