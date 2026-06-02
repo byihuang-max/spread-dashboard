@@ -5267,3 +5267,85 @@ To https://github.com/byihuang-max/spread-dashboard.git
 HEAD is now at b1491144 auto: update am 6/8 modules
 [08:24:21]  腾讯云同步成功
 [08:24:21]  完成！
+[08:20:00]  GAMT 投研看板 — 一键更新开始
+[08:20:00]  盘前模式：只跑海外/宏观等盘前模块（7 个）
+[08:20:00]  ═══ 美股风险监控 (us_alerts) ═══
+[08:20:00]  运行 alerts/us_alerts_data.py
+[08:20:12]    完成 (11.6s)
+[08:20:12]  运行 alerts/us_alerts_calc.py
+[08:20:13]    完成 (1.0s)
+
+[08:20:13]  ═══ 基本面数据 (macro_fundamentals) ═══
+[08:20:13]  运行 macro/fundamentals/fundamentals_data.py
+[08:21:30]    完成 (76.6s)
+[08:21:30]  运行 macro/fundamentals/fundamentals_calc.py
+[08:21:30]    完成 (0.8s)
+
+[08:21:30]  ═══ 全球金融日历 (global_calendar) ═══
+[08:21:30]  运行 macro/global_calendar/calendar_data.py
+[08:21:31]    完成 (0.8s)
+[08:21:31]  运行 macro/global_calendar/calendar_calc.py
+[08:21:32]    完成 (0.6s)
+
+[08:21:32]  ═══ 反脆弱看板 (antifragile) ═══
+[08:21:32]  运行 macro/meme/antifragile/fetch_data_ifind.py
+[08:21:34]    完成 (2.6s)
+[08:21:34]  运行 macro/meme/antifragile/calc_corr.py
+[08:21:35]    完成 (0.9s)
+[08:21:35]  运行 macro/meme/antifragile/calc_meme.py
+[08:21:36]    完成 (0.7s)
+[08:21:36]  运行 macro/meme/antifragile/render_html.py
+[08:21:36]    完成 (0.6s)
+
+[08:21:36]  ═══ 叙事监控 (narrative_monitor) ═══
+[08:21:36]  运行 daily_report/meme交易/narrative_monitor.py
+[08:21:53]    完成 (16.9s)
+
+[08:21:53]  ═══ 海外一手要闻 (overseas_digest) ═══
+[08:21:53]  运行 daily_report/meme交易/overseas_digest.py
+[08:22:17]    完成 (23.3s)
+
+[08:22:17]  ═══ HALO交易 (macro/halo_trade) ═══
+[08:22:17]  运行 macro/halo_trade/halo_data_ifind_full.py
+[08:22:34]    完成 (17.3s)
+[08:22:34]  运行 macro/halo_trade/halo_financials.py
+[08:22:38]    完成 (4.3s)
+[08:22:38]  运行 macro/halo_trade/halo_pe_scissors.py
+[08:22:41]    完成 (2.3s)
+[08:22:41]  运行 macro/halo_trade/halo_calc.py
+[08:22:41]    完成 (0.6s)
+[08:22:41]  运行 macro/halo_trade/china_halo.py
+[08:22:47]    完成 (6.0s)
+
+[08:22:47]  ═══ 汇总 ═══
+[08:22:47]     美股风险监控       (12.6s)
+[08:22:47]     基本面数据        (77.5s)
+[08:22:47]     全球金融日历       (1.4s)
+[08:22:47]     反脆弱看板        (4.6s)
+[08:22:47]     叙事监控         (16.9s)
+[08:22:47]     海外一手要闻       (23.3s)
+[08:22:47]     HALO交易       (30.5s)
+[08:22:47]  总耗时: 166.8s
+[08:22:47]  已更新 update_log.json
+[08:22:47]  ═══ 择时敞口评分页 ═══
+[08:22:47]  运行 factor_system/daily_update.py
+[08:23:11]    失败 (23.5s): rr)
+subprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.14/bin/python3.14', '/Users/apple/Desktop/quant-backtest/timing_model/ml_exposure_score.py']' returned non-zero exit status 1.
+
+[08:23:11]  运行 fetch_full_a_amount.py
+[08:23:11]    完成 (0.8s)
+[08:23:11]  运行 ml_exposure_score.py
+[08:23:13]    失败 (1.8s):  handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/apple/Desktop/gamt-dashboard/env_fit/momentum_stock/limit_index/limit_index.csv'
+
+[08:23:13]  运行 generate_ml_exposure_page.py
+[08:23:13]    完成 (0.1s)
+[08:23:13]  运行 live_exposure_nav.py
+[08:23:14]    完成 (0.6s)
+[08:23:14]  运行 generate_live_exposure_page.py
+[08:23:15]    完成 (0.6s)
+
+[08:23:15]  ═══ Git Push ═══
