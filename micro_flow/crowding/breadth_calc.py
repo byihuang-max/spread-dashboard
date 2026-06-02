@@ -142,6 +142,9 @@ def calc_breadth(bdf, ref_date=None):
     bdf = bdf.copy()
     for c in ['up', 'down', 'flat', 'total', 'limit_up', 'limit_down']:
         bdf[c] = pd.to_numeric(bdf[c], errors='coerce').fillna(0)
+    has_avg = 'avg_chg' in bdf.columns
+    if has_avg:
+        bdf['avg_chg'] = pd.to_numeric(bdf['avg_chg'], errors='coerce').fillna(0)
     dates = sorted(bdf['trade_date'].unique())
     latest = ref_date if (ref_date is not None and ref_date in dates) else dates[-1]
     cur = bdf[bdf['trade_date'] == latest]
@@ -158,6 +161,8 @@ def calc_breadth(bdf, ref_date=None):
             'up_ratio': round(up_ratio, 3),
             'limit_up': int(r['limit_up']), 'limit_down': int(r['limit_down']),
         }
+        if has_avg:
+            item['avg_chg'] = round(float(r['avg_chg']), 2)  # 等权平均涨幅（强度）
         if 'l1' in cur.columns:
             item['l1'] = r['l1']
         out.append(item)
@@ -281,6 +286,7 @@ def calc_vp_matrix(cross, breadth_l1, leader_cases=None):
             'rank': rank,
             'chg_5d': chg5,
             'up_ratio': up_ratio,
+            'avg_chg': b.get('avg_chg'),
             'state': state,
             'tone': tone,
             'risk': risk,

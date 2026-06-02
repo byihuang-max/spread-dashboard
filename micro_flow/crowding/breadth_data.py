@@ -199,11 +199,13 @@ def fetch_breadth():
             up = int((g['pct_chg'] > 0).sum())
             down = int((g['pct_chg'] < 0).sum())
             flat = int((g['pct_chg'] == 0).sum())
+            avg_chg = g['pct_chg'].dropna().mean()  # 等权平均涨幅（强度，与涨家占比配对看背离）
             new_l2.append({
                 'trade_date': d, 'name': name, 'l1': l2_to_l1.get(name, ''),
                 'up': up, 'down': down, 'flat': flat, 'total': up + down + flat,
                 'limit_up': int((g['lim'] == 'U').sum()),
                 'limit_down': int((g['lim'] == 'D').sum()),
+                'avg_chg': round(float(avg_chg), 3) if pd.notna(avg_chg) else 0.0,
             })
 
         # 涨跌停个股明细（关联到申万一级，供龙头案例用）
@@ -247,6 +249,15 @@ def fetch_breadth():
         roll[c] = pd.to_numeric(roll[c], errors='coerce').fillna(0)
     merged_l1 = (roll.groupby(['trade_date', 'l1'])[cnt_cols].sum()
                  .reset_index().rename(columns={'l1': 'name'}).sort_values(['trade_date', 'name']))
+    # 一级等权平均涨幅 = 二级 avg_chg 按成分股数(total)加权（等价于全行业个股等权平均）
+    if 'avg_chg' in roll.columns:
+        roll['avg_chg'] = pd.to_numeric(roll['avg_chg'], errors='coerce').fillna(0)
+        roll['_wsum'] = roll['avg_chg'] * roll['total']
+        agg = roll.groupby(['trade_date', 'l1']).agg(_wsum=('_wsum', 'sum'), _tot=('total', 'sum')).reset_index()
+        agg['avg_chg'] = (agg['_wsum'] / agg['_tot'].replace(0, pd.NA)).fillna(0).round(3)
+        agg = agg.rename(columns={'l1': 'name'})[['trade_date', 'name', 'avg_chg']]
+        merged_l1 = merged_l1.merge(agg, on=['trade_date', 'name'], how='left')
+        merged_l1['avg_chg'] = merged_l1['avg_chg'].fillna(0)
     merged_l1.to_csv(BREADTH_L1_CSV, index=False)
     print(f'  breadth 一级(由二级聚合): {len(merged_l1)}行，{merged_l1["name"].nunique()}个行业，最新 {merged_l1["trade_date"].max()}')
 

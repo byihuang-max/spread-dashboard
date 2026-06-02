@@ -92,18 +92,27 @@ h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
 .vp-cell{cursor:pointer;transition:transform .1s}
 .vp-cell:hover{transform:scale(1.02)}
 /* 涨跌停家数行 */
-.vp-lim-row{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
-.vp-lim{font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px}
-.vp-lim.up{color:#fff;background:var(--up)}
-.vp-lim.down{color:#fff;background:var(--down)}
-.vp-lim.none{color:var(--text-sub);background:var(--track);font-weight:400}
+.vp-lim-row{margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.vp-lim{font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.vp-lim::before{content:'●';font-size:8px}
+.vp-lim.up{color:var(--up)}
+.vp-lim.down{color:var(--down)}
+.vp-lim.none{color:var(--text-sub);font-weight:400}
+.vp-lim.none::before{content:''}
+.vp-diverge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;color:#fff;background:#9333ea}
+.vp-diverge.amber{background:#f59e0b}
 .vp-sub-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0}
 .vp-sub-name{width:70px;font-weight:600;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vp-sub-bar{flex:1;height:10px;background:var(--track);display:flex;overflow:hidden;min-width:50px}
 .vp-sub-fill{height:100%;background:var(--up)}
 .vp-sub-ratio{width:36px;font-weight:700;flex-shrink:0;text-align:right}
 .vp-sub-cnt{width:50px;font-size:10px;color:var(--text-sub);flex-shrink:0}
-.vp-sub-lim{font-size:10px;flex-shrink:0}
+.vp-sub-avg{width:48px;font-size:10px;font-weight:700;flex-shrink:0;text-align:right}
+.vp-sub-lim{width:70px;font-size:10px;flex-shrink:0;text-align:right}
+.vp-sub-head{font-weight:700;color:var(--text-sub);border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:3px}
+.vp-sub-head .vp-sub-bar{font-size:10px;color:var(--text-sub)}
+.vp-expand-desc{font-size:11px;color:var(--text-sub);line-height:1.6;margin:4px 0 10px;padding:6px 10px;background:var(--track);border-radius:3px}
+.vp-expand-desc b{color:var(--text)}
 /* 龙头案例 */
 .lead-section{margin-bottom:14px}
 .lead-section-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px}
@@ -221,7 +230,7 @@ html.bb-dark ::-webkit-scrollbar-thumb{background:#333}
 <!-- 量价状态矩阵 -->
 <div class="sec module-box">
   <h2>量价状态矩阵（占比边际 × 赚钱效应）</h2>
-  <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。点击行业卡片展开二级明细。</div>
+  <div class="sec-desc"><b>量</b>=占比5日变化（资金进/出），<b>价</b>=涨家数占比（赚钱效应强/弱）。交叉成四态：<b>量价齐升</b>健康趋势 / <b style="color:#f59e0b">量升价不跟</b>少数权重硬拉(见顶预警) / <b style="color:#3b82f6">缩量上涨</b>持续性存疑 / <b style="color:var(--down)">量价齐跌</b>资金撤离。叠加占比分位&gt;90%标拥挤顶风险。<br><b>广度 vs 强度：</b>涨家占比(广度)看"多少在涨"，均涨(等权平均涨幅·强度)看"涨了多少"；两者背离会标记——<b style="color:#9333ea">普涨偏软</b>(过半在涨但均跌，虚) / <b style="color:#f59e0b">少数强拉</b>(涨家不足半但均涨强，龙头抱团)。点击行业卡片展开二级明细+龙头案例。</div>
   <div class="vp-legend">
     <span>■ <span style="color:var(--up)">量价齐升</span></span>
     <span>■ <span style="color:#f59e0b">量升价不跟</span></span>
@@ -442,11 +451,24 @@ function renderVP(){
     if(bd.limit_down)limHtml+='<span class="vp-lim down">跌停 '+bd.limit_down+'</span>';
     if(!limHtml)limHtml='<span class="vp-lim none">无涨跌停</span>';
 
+    // 强度：等权平均涨幅 + 与广度(涨家占比)的背离检测
+    var avg=(m.avg_chg!=null?m.avg_chg:bd.avg_chg);
+    var avgHtml='', diverge='';
+    if(avg!=null){
+      var ac=avg.toFixed(2);
+      var acColor=avg>=0?'var(--up)':'var(--down)';
+      avgHtml=' · 均涨 <b style="color:'+acColor+'">'+(avg>=0?'+':'')+ac+'%</b>';
+      var ur=upN/totalN;
+      // 背离：广度高(涨家过半)但强度弱(均跌) / 广度低(涨家不足半)但强度强(均涨>0.5%)
+      if(ur>=0.5&&avg<0)diverge='<span class="vp-diverge">背离·普涨偏软</span>';
+      else if(ur<0.5&&avg>0.5)diverge='<span class="vp-diverge amber">背离·少数强拉</span>';
+    }
+
     return '<div class="vp-cell '+m.tone+'" data-name="'+m.name+'" onclick="toggleVPSub(this)">'+
       '<div class="vp-name">'+m.name+'</div>'+
       '<div class="vp-state '+m.tone+'">'+m.state+'</div>'+
-      '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）</div>'+
-      '<div class="vp-lim-row">'+limHtml+'</div>'+
+      '<div class="vp-meta">成交额占比 '+m.share_pct.toFixed(1)+'% · 近2年分位 '+rank+'%<br>涨家 '+upN+'/'+totalN+'（'+upPct+'%）'+avgHtml+'</div>'+
+      '<div class="vp-lim-row">'+limHtml+diverge+'</div>'+
       risk+
     '</div>';
   }).join('');
@@ -471,19 +493,31 @@ function toggleVPSub(el){
   if(!subs.length){
     content='<div style="font-size:11px;color:var(--text-sub)">无二级行业数据</div>';
   } else {
-    content=subs.map(function(s){
+    // 表头
+    var header='<div class="vp-sub-row vp-sub-head">'+
+      '<span class="vp-sub-name">二级行业</span>'+
+      '<span class="vp-sub-bar" style="text-align:center;background:none">涨家占比(广度)</span>'+
+      '<span class="vp-sub-ratio">占比</span>'+
+      '<span class="vp-sub-cnt">涨/总</span>'+
+      '<span class="vp-sub-avg">均涨</span>'+
+      '<span class="vp-sub-lim">涨跌停</span>'+
+    '</div>';
+    content=header+subs.map(function(s){
       var tot=s.total||(s.up+s.down)||1;
       var upW=(s.up/tot*100).toFixed(0);
       var color=s.up_ratio>=0.5?'var(--up)':'var(--down)';
       var lim='';
-      if(s.limit_up)lim+='<span style="color:var(--up);font-weight:700"> '+s.limit_up+'U</span>';
-      if(s.limit_down)lim+='<span style="color:var(--down);font-weight:700"> '+s.limit_down+'D</span>';
+      if(s.limit_up)lim+='<span style="color:var(--up);font-weight:700">涨'+s.limit_up+'</span>';
+      if(s.limit_down)lim+=(lim?' ':'')+'<span style="color:var(--down);font-weight:700">跌'+s.limit_down+'</span>';
+      var avgS='-';
+      if(s.avg_chg!=null){var c2=s.avg_chg>=0?'var(--up)':'var(--down)';avgS='<span style="color:'+c2+'">'+(s.avg_chg>=0?'+':'')+s.avg_chg.toFixed(1)+'%</span>';}
       return '<div class="vp-sub-row">'+
         '<span class="vp-sub-name">'+s.name+'</span>'+
         '<span class="vp-sub-bar"><span class="vp-sub-fill" style="width:'+upW+'%"></span></span>'+
         '<span class="vp-sub-ratio" style="color:'+color+'">'+upW+'%</span>'+
         '<span class="vp-sub-cnt">'+s.up+'/'+tot+'</span>'+
-        (lim?'<span class="vp-sub-lim">'+lim+'</span>':'')+
+        '<span class="vp-sub-avg">'+avgS+'</span>'+
+        '<span class="vp-sub-lim">'+(lim||'-')+'</span>'+
       '</div>';
     }).join('');
   }
@@ -511,7 +545,9 @@ function toggleVPSub(el){
     leaderHtml='<div class="lead-section"><div class="lead-section-title">龙头案例 <span style="font-weight:400;color:var(--text-sub)">（连板最高 + 成交额最大）</span></div><div class="lead-grid">'+cards+'</div></div>';
   }
 
-  panel.innerHTML=leaderHtml+'<div class="vp-expand-title">'+name+' 二级行业涨跌</div><div class="vp-expand-grid">'+content+'</div>';
+  panel.innerHTML=leaderHtml+'<div class="vp-expand-title">'+name+' · 二级行业活跃度</div>'+
+    '<div class="vp-expand-desc">每行=一个二级行业当日表现。<b>广度</b>(涨家占比)看多少只在涨，<b>强度</b>(均涨·等权平均涨幅)看涨了多少；红条越长涨家越多。<b>涨跌停</b>列：涨N=N只涨停，跌N=N只跌停。</div>'+
+    '<div class="vp-expand-grid">'+content+'</div>';
 
   // 插入到被点击卡片的下一行位置
   el.classList.add('active');
