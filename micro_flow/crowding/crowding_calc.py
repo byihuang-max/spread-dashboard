@@ -190,9 +190,11 @@ def calc_crowding():
 
         etf_5d_chg = {}
         if not ind_etf.empty:
-            ind_etf['share_chg'] = pd.to_numeric(ind_etf['share_chg'], errors='coerce')
+            # 优先用 flow_amt(份额变化×净值=资金净流入万元)；老数据无该列时退回 share_chg
+            flow_col = 'flow_amt' if 'flow_amt' in ind_etf.columns else 'share_chg'
+            ind_etf[flow_col] = pd.to_numeric(ind_etf[flow_col], errors='coerce')
             etf_last5 = ind_etf[ind_etf['trade_date'].isin(last5)]
-            etf_5d_chg = etf_last5.groupby('industry')['share_chg'].sum(min_count=1).to_dict()
+            etf_5d_chg = etf_last5.groupby('industry')[flow_col].sum(min_count=1).to_dict()
 
         industries = []
         for name, grp in sw.groupby('name'):
@@ -255,6 +257,15 @@ def calc_crowding():
             else:
                 signal = None
 
+            # 价 vs 资金 背离判定（默认只显示背离行业，其余折叠）
+            # 涨+ETF流出=热闹出货(追高险)；跌+ETF流入=低迷吸筹(埋伏)
+            divergence = None
+            if etf_dir is not None:
+                if cum_ret > 0 and etf_dir == 'outflow':
+                    divergence = 'distribution'   # 价涨钱撤
+                elif cum_ret < 0 and etf_dir == 'inflow':
+                    divergence = 'accumulation'   # 价跌钱进
+
             industries.append({
                 'name': name,
                 'pct_5d': round(float(cum_ret), 2),
@@ -262,6 +273,7 @@ def calc_crowding():
                 'crowd_label': crowd_label,
                 'etf_chg': etf_chg_val,
                 'etf_dir': etf_dir,
+                'divergence': divergence,
                 'tags': tags,
                 'signal': signal,
                 'amount_latest': round(float(latest_amt), 0),

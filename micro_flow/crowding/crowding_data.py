@@ -270,7 +270,7 @@ def fetch_sw_daily():
 
 
 def fetch_industry_etf():
-    print('增量拉取行业ETF份额...')
+    print('增量拉取行业ETF份额+净值（算资金净流入）...')
     old = read_csv(INDUSTRY_ETF_DETAIL_CSV)
     start = incremental_start(old)
     parts = []
@@ -286,17 +286,36 @@ def fetch_industry_etf():
             df['industry'] = industry
             df['trade_date'] = df['trade_date'].map(norm_date)
             df['fd_share'] = pd.to_numeric(df['fd_share'], errors='coerce')
+            # 抓场内收盘价（fund_daily），份额×价格才是真实资金体量
+            px = ts_api(
+                'fund_daily',
+                fields='ts_code,trade_date,close',
+                ts_code=code,
+                start_date=start,
+                end_date=END_DATE,
+            )
+            if not px.empty:
+                px['trade_date'] = px['trade_date'].map(norm_date)
+                px['close'] = pd.to_numeric(px['close'], errors='coerce')
+                df = df.merge(px[['trade_date', 'close']], on='trade_date', how='left')
+            else:
+                df['close'] = pd.NA
             parts.append(df)
-        time.sleep(0.25)
+        time.sleep(0.3)
     if not parts and old.empty:
         print('  无数据')
         return
-    new = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=['ts_code', 'trade_date', 'fd_share', 'industry'])
+    new = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=['ts_code', 'trade_date', 'fd_share', 'industry', 'close'])
     detail = merge_dedup(old, new, ['ts_code', 'trade_date']).sort_values(['ts_code', 'trade_date'])
+    detail['fd_share'] = pd.to_numeric(detail['fd_share'], errors='coerce')
+    detail['close'] = pd.to_numeric(detail.get('close'), errors='coerce')
     detail['share_chg'] = detail.groupby('ts_code')['fd_share'].diff()
+    # 资金净流入(万元) = 份额变化(万份) × 当日净值(元/份)。净值缺失时回退用份额变化(标记口径)
+    detail['flow_amt'] = detail['share_chg'] * detail['close']
     detail.to_csv(INDUSTRY_ETF_DETAIL_CSV, index=False)
     detail.to_csv(INDUSTRY_ETF_CSV, index=False)
-    print(f"  行业ETF: {len(detail)}条，最新 {detail['trade_date'].max()}")
+    n_px = int(detail['close'].notna().sum())
+    print(f"  行业ETF: {len(detail)}条，最新 {detail['trade_date'].max()}，含净值 {n_px} 条")
 
 
 def main():
