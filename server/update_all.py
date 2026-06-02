@@ -206,13 +206,18 @@ def git_push(msg='auto: update data'):
         import socket
         is_cloud = socket.gethostname() == 'localhost' or Path('/home/ubuntu/gamt-dashboard').exists()
         if not is_cloud:
-            try:
-                subprocess.run(['ssh', '-o', 'ConnectTimeout=5', 'ubuntu@111.229.129.146',
-                              'cd /home/ubuntu/gamt-dashboard && git fetch origin && git reset --hard origin/main'],
-                              check=True, timeout=30)
-                log("腾讯云同步成功", 'OK')
-            except Exception:
-                log("腾讯云同步失败（非致命）", 'WARN')
+            if not pushed:
+                # push 失败时不做腾讯云同步，避免 reset --hard 把线上回退到旧版本
+                log("push 失败，跳过腾讯云同步（防止数据回退）", 'WARN')
+            else:
+                try:
+                    # 用推送成功的 remote 来 fetch
+                    subprocess.run(['ssh', '-o', 'ConnectTimeout=5', 'ubuntu@111.229.129.146',
+                                  'cd /home/ubuntu/gamt-dashboard && git fetch origin && git reset --hard origin/main'],
+                                  check=True, timeout=30)
+                    log("腾讯云同步成功", 'OK')
+                except Exception:
+                    log("腾讯云同步失败（非致命）", 'WARN')
         return pushed
     except Exception as e:
         log(f"Git 失败: {e}", 'ERR')
