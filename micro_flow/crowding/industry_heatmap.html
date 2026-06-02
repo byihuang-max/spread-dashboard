@@ -238,7 +238,7 @@ function loadData(){
     DATA=d;render();
     // 折线图独立加载,失败不阻塞
     fetch('share_series.json?t='+Date.now()).then(function(r){return r.json()}).then(function(ss){
-      SHARE_SERIES=ss;renderShareChart();
+      SHARE_SERIES=ss;renderShare();renderShareChart();
     }).catch(function(e){console.warn('share_series加载失败:',e)});
   }).catch(function(e){document.getElementById('loadingMsg').textContent='加载失败: '+e.message});
 }
