@@ -460,3 +460,85 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [18:31:29] ✅ 完成！
 [18:31:31] ✅ 同步完成
 [18:31:31] ✅ 后端已重启
+[18:30:00]  GAMT 投研看板 — 一键更新开始
+[18:30:00]  晚到数据模式：只更新 barra_style, patient_capital, momentum_stock, timing_factors, merger_pool, merger_report
+[18:30:00]  ═══ Barra风格因子 (barra_style) ═══
+[18:30:00]  运行 size_spread/barra_update.py
+[18:30:02]    完成 (1.8s)
+
+[18:30:02]  ═══ 耐心资本 (patient_capital) ═══
+[18:30:02]  运行 micro_flow/patient_capital/patient_data.py
+[18:30:21]    完成 (19.4s)
+[18:30:21]  运行 micro_flow/patient_capital/patient_calc.py
+[18:30:24]    完成 (3.2s)
+
+[18:30:24]  ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:24]  运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:31]    完成 (6.6s)
+[18:30:31]  运行 env_fit/momentum_stock/momentum_data.py
+[18:32:11]    完成 (100.6s)
+[18:32:11]  运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:32:41]    完成 (30.0s)
+[18:32:41]  运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:32:43]    完成 (1.5s)
+[18:32:43]  运行 env_fit/momentum_stock/momentum_sector.py
+[18:34:34]    完成 (111.1s)
+[18:34:34]  运行 env_fit/momentum_stock/momentum_warning.py
+[18:34:34]    完成 (0.2s)
+[18:34:34]  运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:34:34]    完成 (0.2s)
+[18:34:34]  运行 env_fit/momentum_stock/inject_momentum.py
+[18:34:34]    完成 (0.1s)
+[18:34:34]  运行 timing-research/generate_leader_pool.py
+[18:34:35]    完成 (0.1s)
+[18:34:35]  运行 timing-research/export_leader_pool_history.py
+[18:34:35]    完成 (0.2s)
+[18:34:35]  运行 timing-research/generate_replay_page.py
+[18:34:35]    完成 (0.1s)
+[18:34:35]  运行 timing-research/push_limit_replay_feishu.py
+[18:34:36]    完成 (1.2s)
+
+[18:34:36]  ═══ 择时因子系统 (timing_factors) ═══
+[18:34:36]  运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[18:35:11]    完成 (34.6s)
+[18:35:11]  运行 timing-research/update_ic_table.py
+[18:35:11]    完成 (0.0s)
+
+[18:35:11]  ═══ 并购池 (merger_pool) ═══
+[18:35:11]  运行 skills/stock-monitor/merger_pool.py
+[18:35:11]    失败 (0.1s): rsions/3.14/lib/python3.14/subprocess.py", line 1989, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'node'
+
+[18:35:11]    数据脚本失败，跳过注入
+
+[18:35:11]  ═══ 并购深度分析 (merger_report) ═══
+[18:35:11]  运行 skills/stock-monitor/generate_merger_report.py --auto
+[18:45:11]    超时 (>600s)
+[18:45:11]    数据脚本失败，跳过注入
+
+[18:45:11]  ═══ 汇总 ═══
+[18:45:11]     Barra风格因子    (1.8s)
+[18:45:11]     耐心资本         (22.6s)
+[18:45:11]     强势股情绪        (251.9s)
+[18:45:11]     择时因子系统       (34.7s)
+[18:45:11]     并购池          (0.1s)
+[18:45:11]     并购深度分析       (600.0s)
+[18:45:11]  总耗时: 911.1s
+[18:45:11]  已更新 update_log.json
+[18:45:11]  ═══ Git Push ═══
+[18:45:11] 同步到云端...
+[main 46ffe431] auto: update late_only 4/6 modules
+ 26 files changed, 2640 insertions(+), 948 deletions(-)
+ create mode 100644 "skills/stock-monitor/analysis/ST\346\231\257\350\260\267_\345\271\266\350\264\255\351\207\215\347\273\204\350\267\237\350\270\252.md"
+ create mode 100644 skills/stock-monitor/detail/600265.json
+ create mode 100644 timing-research/leader_pool_history/20260602.json
+To gitee.com:ronihuang/gamt-dashboard.git
+ ! [rejected]          main -> main (fetch first)
+error: failed to push some refs to 'gitee.com:ronihuang/gamt-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:45:13]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
