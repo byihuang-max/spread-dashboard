@@ -173,8 +173,9 @@ MODULE_REGISTRY = {
             ('micro_flow/crowding', 'breadth_calc.py'),
         ],
         'aliases': ['crowding'],
+        'late_data': True,  # Tushare日线数据17:00左右才稳定入库，移到21:00 late-only批次确保数据完整
         'include_in_update_all': True,
-        'timeout': None,  # 不限时（API调用耗时长）
+        'timeout': None,  # 不限时（4个脚本完整跑约80s，crowding_calc本身10-13min）
         'include_in_refresh_server': True,
     },
     'option_sentiment': {
