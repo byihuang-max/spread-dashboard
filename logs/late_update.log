@@ -641,3 +641,81 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [18:43:03]    推送 origin 失败: Command '['git', 'push', 'origin', 'main']' returned non-zero exit status 1.
 [18:43:03]    push 失败，跳过腾讯云同步（防止数据回退）
 [18:43:03]  完成！
+[00:15:01]  GAMT 投研看板 — 一键更新开始
+[00:15:01]  晚到数据模式：只更新 barra_style, patient_capital, momentum_stock, crowding, timing_factors, merger_pool, merger_report
+[00:15:01]  ═══ Barra风格因子 (barra_style) ═══
+[00:15:01]  运行 size_spread/barra_update.py
+[00:15:02]    完成 (1.8s)
+
+[00:15:03]  ═══ 耐心资本 (patient_capital) ═══
+[00:15:03]  运行 micro_flow/patient_capital/patient_data.py
+[00:15:11]    完成 (8.8s)
+[00:15:11]  运行 micro_flow/patient_capital/patient_calc.py
+[00:15:14]    完成 (2.9s)
+
+[00:15:14]  ═══ 强势股情绪 (momentum_stock) ═══
+[00:15:14]  运行 size_spread/fund_nav/fund_nav_data.py
+[00:15:21]    完成 (6.8s)
+[00:15:21]  运行 env_fit/momentum_stock/momentum_data.py
+[00:15:23]    完成 (2.1s)
+[00:15:23]  运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[00:15:42]    完成 (18.8s)
+[00:15:42]  运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[00:15:42]    完成 (0.1s)
+[00:15:42]  运行 env_fit/momentum_stock/momentum_sector.py
+[00:15:48]    完成 (6.3s)
+[00:15:48]  运行 env_fit/momentum_stock/momentum_warning.py
+[00:15:49]    完成 (0.2s)
+[00:15:49]  运行 env_fit/momentum_stock/momentum_return_decomp.py
+[00:15:49]    完成 (0.3s)
+[00:15:49]  运行 env_fit/momentum_stock/inject_momentum.py
+[00:15:49]    完成 (0.1s)
+[00:15:49]  运行 timing-research/generate_leader_pool.py
+[00:15:49]    完成 (0.1s)
+[00:15:49]  运行 timing-research/export_leader_pool_history.py
+[00:15:49]    完成 (0.2s)
+[00:15:49]  运行 timing-research/generate_replay_page.py
+[00:15:49]    完成 (0.1s)
+[00:15:49]  运行 timing-research/push_limit_replay_feishu.py
+[00:15:50]    完成 (1.0s)
+
+[00:15:50]  ═══ 资金流拥挤度 (crowding) ═══
+[00:15:50]  运行 micro_flow/crowding/crowding_data.py
+[00:16:20]    完成 (29.3s)
+[00:16:20]  运行 micro_flow/crowding/breadth_data.py
+[00:17:02]    完成 (42.8s)
+[00:17:02]  运行 micro_flow/crowding/crowding_calc.py
+[00:17:03]    完成 (0.9s)
+[00:17:03]  运行 micro_flow/crowding/breadth_calc.py
+[00:17:05]    完成 (1.2s)
+
+[00:17:05]  ═══ 择时因子系统 (timing_factors) ═══
+[00:17:05]  运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[00:17:39]    完成 (34.2s)
+[00:17:39]  运行 timing-research/update_ic_table.py
+[00:17:39]    完成 (0.1s)
+
+[00:17:39]  ═══ 并购池 (merger_pool) ═══
+[00:17:39]  运行 skills/stock-monitor/merger_pool.py
+[00:17:39]    失败 (0.1s): 14/lib/python3.14/subprocess.py", line 1989, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+
+[00:17:39]    数据脚本失败，跳过注入
+
+[00:17:39]  ═══ 并购深度分析 (merger_report) ═══
+[00:17:39]  运行 skills/stock-monitor/generate_merger_report.py --auto
+[00:27:39]    超时 (>600s)
+[00:27:39]    数据脚本失败，跳过注入
+
+[00:27:39]  ═══ 汇总 ═══
+[00:27:39]     Barra风格因子    (1.8s)
+[00:27:39]     耐心资本         (11.7s)
+[00:27:39]     强势股情绪        (36.2s)
+[00:27:39]     资金流拥挤度       (74.2s)
+[00:27:39]     择时因子系统       (34.2s)
+[00:27:39]     并购池          (0.1s)
+[00:27:39]     并购深度分析       (600.0s)
+[00:27:39]  总耗时: 758.3s
+[00:27:39]  已更新 update_log.json
+[00:27:39]  ═══ Git Push ═══
