@@ -117,7 +117,7 @@ async function main() {{
 main().catch(e => {{ console.error(e); process.exit(1); }});
 """
     result = subprocess.run(
-        ['node', '-e', js_code],
+        ['/usr/local/bin/node', '-e', js_code],
         capture_output=True, text=True, timeout=60,
         cwd=str(IFIND_DIR)
     )

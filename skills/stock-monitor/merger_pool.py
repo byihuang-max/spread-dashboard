@@ -159,7 +159,7 @@ call("{server_type}", "{tool_name}", {json.dumps(params, ensure_ascii=False)})
   .catch(e => console.error(e));
 """
     result = subprocess.run(
-        ['node', '-e', js_code],
+        ['/usr/local/bin/node', '-e', js_code],
         cwd=str(IFIND_DIR),
         capture_output=True, text=True, timeout=30
     )
