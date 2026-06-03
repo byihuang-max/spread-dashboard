@@ -11,10 +11,14 @@
 import os
 import sys
 import json
+import shutil
 import requests
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import quote
+
+# node 可执行路径：两端自适应（本地 Mac /usr/local/bin，腾讯云 /usr/bin）
+NODE_BIN = shutil.which('node') or '/usr/bin/node'
 
 # ── 路径 ──
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -117,7 +121,7 @@ async function main() {{
 main().catch(e => {{ console.error(e); process.exit(1); }});
 """
     result = subprocess.run(
-        ['/usr/local/bin/node', '-e', js_code],
+        [NODE_BIN, '-e', js_code],
         capture_output=True, text=True, timeout=60,
         cwd=str(IFIND_DIR)
     )

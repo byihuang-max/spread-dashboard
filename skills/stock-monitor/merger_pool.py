@@ -26,9 +26,13 @@ import os
 import sys
 import json
 import subprocess
+import shutil
 import argparse
 from datetime import datetime, timedelta
 from pathlib import Path
+
+# node 可执行路径：两端自适应（本地 Mac /usr/local/bin，腾讯云 /usr/bin）
+NODE_BIN = shutil.which('node') or '/usr/bin/node'
 
 # ── 路径 ──
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -159,7 +163,7 @@ call("{server_type}", "{tool_name}", {json.dumps(params, ensure_ascii=False)})
   .catch(e => console.error(e));
 """
     result = subprocess.run(
-        ['/usr/local/bin/node', '-e', js_code],
+        [NODE_BIN, '-e', js_code],
         cwd=str(IFIND_DIR),
         capture_output=True, text=True, timeout=30
     )
