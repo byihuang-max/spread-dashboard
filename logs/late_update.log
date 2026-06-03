@@ -542,3 +542,102 @@ hint: the same ref. If you want to integrate the remote changes, use
 hint: 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [18:45:13]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
+[18:30:01]  GAMT 投研看板 — 一键更新开始
+[18:30:01]  晚到数据模式：只更新 barra_style, patient_capital, momentum_stock, crowding, timing_factors, merger_pool, merger_report
+[18:30:01]  ═══ Barra风格因子 (barra_style) ═══
+[18:30:01]  运行 size_spread/barra_update.py
+[18:30:02]    完成 (1.4s)
+
+[18:30:02]  ═══ 耐心资本 (patient_capital) ═══
+[18:30:02]  运行 micro_flow/patient_capital/patient_data.py
+[18:30:12]    完成 (10.1s)
+[18:30:12]  运行 micro_flow/patient_capital/patient_calc.py
+[18:30:15]    完成 (2.9s)
+
+[18:30:15]  ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:15]  运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:24]    完成 (8.7s)
+[18:30:24]  运行 env_fit/momentum_stock/momentum_data.py
+[18:30:26]    完成 (2.7s)
+[18:30:26]  运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:30:45]    完成 (18.3s)
+[18:30:45]  运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:30:45]    完成 (0.1s)
+[18:30:45]  运行 env_fit/momentum_stock/momentum_sector.py
+[18:30:49]    完成 (4.3s)
+[18:30:49]  运行 env_fit/momentum_stock/momentum_warning.py
+[18:30:49]    完成 (0.2s)
+[18:30:49]  运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:30:50]    完成 (0.2s)
+[18:30:50]  运行 env_fit/momentum_stock/inject_momentum.py
+[18:30:50]    完成 (0.1s)
+[18:30:50]  运行 timing-research/generate_leader_pool.py
+[18:30:50]    完成 (0.1s)
+[18:30:50]  运行 timing-research/export_leader_pool_history.py
+[18:30:50]    完成 (0.2s)
+[18:30:50]  运行 timing-research/generate_replay_page.py
+[18:30:50]    完成 (0.1s)
+[18:30:50]  运行 timing-research/push_limit_replay_feishu.py
+[18:30:51]    完成 (1.1s)
+
+[18:30:51]  ═══ 资金流拥挤度 (crowding) ═══
+[18:30:51]  运行 micro_flow/crowding/crowding_data.py
+[18:31:21]    完成 (29.8s)
+[18:31:21]  运行 micro_flow/crowding/breadth_data.py
+[18:32:04]    完成 (42.8s)
+[18:32:04]  运行 micro_flow/crowding/crowding_calc.py
+[18:32:05]    完成 (0.9s)
+[18:32:05]  运行 micro_flow/crowding/breadth_calc.py
+[18:32:06]    完成 (1.2s)
+
+[18:32:06]  ═══ 择时因子系统 (timing_factors) ═══
+[18:32:06]  运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[18:32:39]    完成 (33.5s)
+[18:32:39]  运行 timing-research/update_ic_table.py
+[18:32:39]    完成 (0.0s)
+
+[18:32:39]  ═══ 并购池 (merger_pool) ═══
+[18:32:39]  运行 skills/stock-monitor/merger_pool.py
+[18:33:00]    完成 (20.7s)
+
+[18:33:00]  ═══ 并购深度分析 (merger_report) ═══
+[18:33:00]  运行 skills/stock-monitor/generate_merger_report.py --auto
+[18:43:00]    超时 (>600s)
+[18:43:00]    数据脚本失败，跳过注入
+
+[18:43:00]  ═══ 汇总 ═══
+[18:43:00]     Barra风格因子    (1.4s)
+[18:43:00]     耐心资本         (13.1s)
+[18:43:00]     强势股情绪        (36.1s)
+[18:43:00]     资金流拥挤度       (74.7s)
+[18:43:00]     择时因子系统       (33.5s)
+[18:43:00]     并购池          (20.7s)
+[18:43:00]     并购深度分析       (600.0s)
+[18:43:00]  总耗时: 779.5s
+[18:43:00]  已更新 update_log.json
+[18:43:00]  ═══ Git Push ═══
+[18:43:01] 同步到云端...
+[main 12a289f0] auto: update late_only 6/7 modules
+ 31 files changed, 6578 insertions(+), 3252 deletions(-)
+ create mode 100644 timing-research/leader_pool_history/20260602.json
+ create mode 100644 timing-research/leader_pool_history/20260603.json
+To gitee.com:ronihuang/gamt-dashboard.git
+ ! [rejected]          main -> main (fetch first)
+error: failed to push some refs to 'gitee.com:ronihuang/gamt-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:43:02]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
+failed to store: -61
+To https://github.com/byihuang-max/spread-dashboard.git
+ ! [rejected]          main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/byihuang-max/spread-dashboard.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:43:03]    推送 origin 失败: Command '['git', 'push', 'origin', 'main']' returned non-zero exit status 1.
+[18:43:03]    push 失败，跳过腾讯云同步（防止数据回退）
+[18:43:03]  完成！
