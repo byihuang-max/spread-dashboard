@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(BASE_DIR)
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'server'))
-from module_registry import build_update_all_modules
+from module_registry import build_update_all_modules, MODULE_REGISTRY
 
 MODULES = build_update_all_modules()
 
@@ -78,7 +78,14 @@ def run_script(subdir, script, timeout=600):
 
 def update_module(mod_key):
     """更新单个模块：数据脚本 → 注入脚本"""
-    mod = MODULES[mod_key]
+    # 优先从完整 registry 取（支持 include_in_update_all=False 的模块单独跑）
+    reg = MODULE_REGISTRY.get(mod_key, {})
+    mod = MODULES.get(mod_key) or {
+        'name': reg.get('name', mod_key),
+        'data_scripts': reg.get('scripts', []),
+        'inject_script': reg.get('inject_script'),
+        'timeout': reg.get('timeout', 600),
+    }
     timeout = mod.get("timeout", 600)  # None means no timeout
     log(f"═══ {mod['name']} ({mod_key}) ═══")
 
@@ -144,7 +151,11 @@ def update_timing_exposure_page(timeout=600):
     """更新量化择时研究里的 ML 敞口页"""
     log("═══ 择时敞口评分页 ═══")
     base = None
+    # 真实用户目录探测（不依赖 $HOME，兼容 HOME 被代理工具/cron 重定向的场景）
+    _real_home = '/Users/apple' if os.path.isdir('/Users/apple') else '/home/ubuntu'
     for candidate in [
+        os.path.join(_real_home, 'Desktop/quant-backtest/timing_model'),
+        os.path.join(_real_home, 'quant-backtest/timing_model'),
         os.path.expanduser('~/Desktop/quant-backtest/timing_model'),
         os.path.expanduser('~/quant-backtest/timing_model'),
     ]:
@@ -283,7 +294,7 @@ def main():
     results = {}
 
     for mod_key in modules_to_run:
-        if mod_key not in MODULES:
+        if mod_key not in MODULES and mod_key not in MODULE_REGISTRY:
             log(f"未知模块: {mod_key}", 'ERR')
             continue
         ok, t = update_module(mod_key)

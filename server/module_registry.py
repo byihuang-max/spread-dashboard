@@ -437,8 +437,8 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['merger-report'],
         'late_data': True,
-        'include_in_update_all': True,
-        'timeout': None,  # 不限时（API调用耗时长）
+        'include_in_update_all': False,  # 从 late 批次拆出，单独挂 21:30 cron，不阻塞日报关键路径
+        'timeout': 300,  # 5分钟上限，防止 AI API 超时卡死
         'include_in_refresh_server': False,
     },
     'overview': {
@@ -448,6 +448,7 @@ MODULE_REGISTRY = {
         ],
         'aliases': ['overview'],
         'include_in_update_all': True,
+        'late_data': True,  # 纯聚合器，依赖 crowding/momentum 等晚到数据，必须排在 late 批次最后跑（registry 定义顺序在 crowding 之后）才能读到当天信号
         'timeout': None,  # 不限时（API调用耗时长）
         'include_in_refresh_server': True,
     },
