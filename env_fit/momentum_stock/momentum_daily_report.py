@@ -13,6 +13,52 @@ def load_json(path):
         return json.load(f)
 
 
+# ===== 辅助：3日趋势标注 =====
+def trend3(daily, field, n=3):
+    """取最近 n 日某字段，返回 (values, arrow, desc)"""
+    vals = [d[field] for d in daily[-n:] if field in d]
+    if len(vals) < 2:
+        return vals, '', ''
+    if all(vals[i] < vals[i+1] for i in range(len(vals)-1)):
+        arrow, desc = '↑', f'连升{len(vals)}日'
+    elif all(vals[i] > vals[i+1] for i in range(len(vals)-1)):
+        arrow, desc = '↓', f'连降{len(vals)}日'
+    else:
+        arrow, desc = '━', '震荡'
+    return vals, arrow, desc
+
+
+# ===== 辅助：crowding 数据读取 =====
+def load_crowding():
+    """读 crowding.json，失败返回 None"""
+    try:
+        path = os.path.join(BASE, '..', '..', 'micro_flow', 'crowding', 'crowding.json')
+        with open(path) as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+# ===== 辅助：最强链连续性 =====
+def chain_streak(dt, daily_dates, current_top):
+    """统计最强链连续天数（读 chain_rank_history）"""
+    if not os.path.exists(CHAIN_HIST_DIR):
+        return 1
+    streak = 1
+    for d in reversed(daily_dates[:-1][-5:]):  # 往前最多查5天
+        path = os.path.join(CHAIN_HIST_DIR, f'{d}.json')
+        if not os.path.exists(path):
+            break
+        with open(path) as f:
+            snap = json.load(f)
+        top = snap.get('ranking', [[None]])[0][0] if snap.get('ranking') else None
+        if top == current_top:
+            streak += 1
+        else:
+            break
+    return streak
+
+
 # ===== 龙头池历史快照（用于 delta 对比）=====
 LEADER_HIST_DIR = os.path.join(BASE, 'leader_pool_history')
 
@@ -331,6 +377,7 @@ def generate_report(trade_date=None):
     warn_latest = warn['latest']
     dt = today['date']
     daily = sent['daily']
+    crowding = load_crowding()  # crowding 共振数据（可能为 None）
 
     name_to_code = {v['industry_l2']: v['industry_l2_code'] for v in stocks.values()}
     code_to_pct, code_to_amt = fetch_sw_daily(dt)
@@ -376,7 +423,9 @@ def generate_report(trade_date=None):
     # 晋级/1进2/首板 方向
     promo_dir, one2two_dir, shouban_dir, shouban_focus = promotion_direction(dt, yesterday['date'])
     # 涨停
-    L.append(f'- 涨停 {today["up_count"]}家（分位{up_pct}%）')
+    up_vals, up_arrow, up_desc = trend3(daily, 'up_count')
+    up_trend = f' {up_arrow}{up_desc}({"→".join(str(int(v)) for v in up_vals)})' if up_desc else ''
+    L.append(f'- 涨停 {today["up_count"]}家（分位{up_pct}%）{up_trend}')
     if up_ind:
         L.append(f'  方向: {up_ind}')
     if up_str or up_amt:
@@ -387,7 +436,9 @@ def generate_report(trade_date=None):
     if shouban_dir:
         L.append(f'     首板方向: {shouban_dir}')
     # 晋级率（次级）
-    L.append(f'  >> 晋级率 {today["promotion_rate"]:.1f}%（分位{promo_pct}%）| 断板 {today["duanban_count"]}/{today["lianban_count"]+today["duanban_count"]}')
+    pr_vals, pr_arrow, pr_desc = trend3(daily, 'promotion_rate')
+    pr_trend = f' {pr_arrow}{pr_desc}({"→".join(f"{v:.0f}" for v in pr_vals)})' if pr_desc else ''
+    L.append(f'  >> 晋级率 {today["promotion_rate"]:.1f}%（分位{promo_pct}%）{pr_trend}| 断板 {today["duanban_count"]}/{today["lianban_count"]+today["duanban_count"]}')
     if promo_dir:
         L.append(f'     晋级方向: {promo_dir}')
     # 1进2（次级）
@@ -438,7 +489,7 @@ def generate_report(trade_date=None):
     L.append('成交额加权强度 + 上下游传导验证')
     sec_idx += 1
 
-    # 排名变化提示
+    # 排名变化提示 + 最强链连续性
     if prev_chain:
         prev_ranking = [r[0] for r in prev_chain.get('ranking', [])]
         today_ranking = [cn for cn, *_ in chains]
@@ -447,7 +498,24 @@ def generate_report(trade_date=None):
         if prev_top and today_top and prev_top != today_top:
             L.append(f'- 最强链切换: {prev_top} → {today_top}')
         elif prev_top and today_top and prev_top == today_top:
-            L.append(f'- 最强链连续: {today_top}')
+            streak = chain_streak(dt, daily_dates, today_top)
+            streak_str = f'连续{streak}日' if streak > 1 else '今日'
+            L.append(f'- 最强链{streak_str}: {today_top}')
+
+    # crowding 三维交叉验证（全市场量价最强方向 + 资金加速方向）
+    if crowding:
+        vp_list = crowding.get('vp_matrix', [])
+        accel = crowding.get('accel_rank', {})
+        # 全市场量价最强的1-2个一级行业（vp_matrix 已按 rank 排序）
+        vp_top = [r for r in vp_list if r.get('state') == '量价齐升'][:2]
+        if vp_top:
+            vp_str = ' / '.join(f"{r['name']}({r['state']}{',' + r['risk'] if r.get('risk') else ''})" for r in vp_top)
+            L.append(f'- 全市场量价: {vp_str}')
+        # 资金5日加速涌入方向（week_up 前2）
+        week_up = accel.get('week_up', [])[:2]
+        if week_up:
+            au_str = ' / '.join(f"{r['name']}(+{r['chg_5d']*100:.1f}pct)" for r in week_up)
+            L.append(f'- 资金5日加速: {au_str}')
 
     L.append('')
     nums = ['', '', '']
@@ -757,6 +825,38 @@ def generate_report(trade_date=None):
             pool_top_chain = pool_chain_count.most_common(1)[0]
             if pool_top_chain[0] != top_chain_name and pool_top_chain[1] >= 2:
                 L.append(f'- <<注意: 龙头池偏向{pool_top_chain[0]}({pool_top_chain[1]}只)，与最强链{top_chain_name}分化>>')
+
+    # crowding 资金共识 + 情绪
+    if crowding:
+        tf = crowding.get('three_flows', {})
+        tf_consensus = tf.get('consensus', '')
+        if tf_consensus:
+            flows = tf.get('details', {})
+            flow_parts = []
+            for k, v in flows.items():
+                dir_cn = '流入' if v.get('direction') == 'inflow' else '流出'
+                flow_parts.append(f"{v.get('name','')}{dir_cn}")
+            L.append(f'- 资金共识: {tf_consensus} (({" / ".join(flow_parts)}))')
+
+        breadth = crowding.get('breadth_signals', [])
+        if breadth:
+            # 取最相关的1-2条（优先含"拥挤"或"情绪"的）
+            priority = [s for s in breadth if '情绪' in s or '拥挤顶' in s or '加速' in s]
+            show = priority[:2] if priority else breadth[:2]
+            for s in show:
+                L.append(f'- 市场: {s}')
+
+    # 状态画像（cycle_label → 该状态的客观特征，描述而非指令）
+    STATE_PROFILE = {
+        '加速': '高度抬升、晋级率走高，资金向高标扩散，赚钱效应强',
+        '震荡': '方向分散无主线，高低切频繁，连板梯队不稳',
+        '退潮': '高度回落、断板增多，赚钱效应收缩，资金离场',
+        '修复': '涨停回升、晋级率企稳，但梯队持续性尚未验证',
+        '冰点': '涨停极少、情绪低迷，无明显赚钱效应',
+    }
+    profile = STATE_PROFILE.get(t_label, '')
+    if profile:
+        L.append(f'- {t_label}期特征: {profile}')
 
     return '\n'.join(L)
 
