@@ -29,7 +29,8 @@ import numpy as np
 # ---------- 路径常量 ----------
 ROOT = Path(__file__).resolve().parent.parent  # smart-notes/
 INTEL_DIR = Path(__file__).resolve().parent  # smart-notes/intelligence/
-MODEL_PATH = Path.home() / ".cache/modelscope/hub/models/AI-ModelScope/bge-base-zh-v1___5"
+_REAL_HOME = Path("/Users/apple") if Path("/Users/apple/.cache").exists() else Path.home()
+MODEL_PATH = _REAL_HOME / ".cache/modelscope/hub/models/AI-ModelScope/bge-base-zh-v1___5"
 EMBEDDINGS_FILE = INTEL_DIR / "note_vectors.json"
 CATEGORY_CENTERS_FILE = INTEL_DIR / "category_centers.json"
 

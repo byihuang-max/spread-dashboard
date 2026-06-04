@@ -16,17 +16,27 @@ import requests
 import certifi
 
 
+def _openclaw_cfg_path():
+    """openclaw.json 真实路径（兼容 HOME 被 Hermes/代理重定向的场景）"""
+    for p in [
+        os.path.expanduser("~/.openclaw/openclaw.json"),
+        "/Users/apple/.openclaw/openclaw.json",
+        "/home/ubuntu/.openclaw/openclaw.json",
+    ]:
+        if os.path.exists(p):
+            return p
+    return os.path.expanduser("~/.openclaw/openclaw.json")
+
+
 def _load_provider():
-    cfg_path = os.path.expanduser("~/.openclaw/openclaw.json")
-    with open(cfg_path) as f:
+    with open(_openclaw_cfg_path()) as f:
         cfg = json.load(f)
     # 用 aicanapi（4.6 通道），比 aicanapi-47 更稳定
     return cfg["models"]["providers"]["aicanapi"]
 
 
 def _load_openai_provider():
-    cfg_path = os.path.expanduser("~/.openclaw/openclaw.json")
-    with open(cfg_path) as f:
+    with open(_openclaw_cfg_path()) as f:
         cfg = json.load(f)
     return cfg["models"]["providers"]["aicanopenai"]
 
