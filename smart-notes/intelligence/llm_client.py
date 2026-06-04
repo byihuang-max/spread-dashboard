@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import requests
 import certifi
 
@@ -130,20 +131,13 @@ def generate_metadata(text: str) -> dict:
     """让 LLM 生成笔记元数据"""
     prompt = f"原文：\n\n{text[:3000]}\n\n请返回 JSON。"
     raw = call_claude(prompt, system=META_SYSTEM_PROMPT, max_tokens=500)
-    # 清理：去掉 <think>...</think> 标签（GPT-5.5 会带）
     raw = raw.strip()
-    import re
+    # 去掉 <think>...</think>
     raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
-    import re
-    raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL).strip()
-    # 兼容代码块
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-        raw = raw.strip()
-    import re
-    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+    # 提取第一个 {...} 块（兼容代码围栏和多余文本）
+    m = re.search(r"\{.*\}", raw, flags=re.DOTALL)
+    if m:
+        raw = m.group(0)
     return json.loads(raw)
 
 
