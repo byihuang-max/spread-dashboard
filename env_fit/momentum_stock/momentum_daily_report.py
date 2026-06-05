@@ -78,8 +78,8 @@ def save_leader_snapshot(dt, pool_items, rec_leader, amt_leader):
 
 
 def read_timing_exposure(dt):
-    """读取择时模块的收益优先线敞口（base_exposure，α=1.75，均仓~30%）。
-    返回 dict 或 None。数据源 timing-research/data/live_exposure_nav.json。
+    """读取收益优先线近5日敞口序列（base_exposure，α=1.75）。
+    返回 {'recent5': [pct, ...], 'today': pct} 或 None。
     """
     candidates = [
         os.path.join(BASE, '..', '..', 'timing-research', 'data', 'live_exposure_nav.json'),
@@ -91,20 +91,14 @@ def read_timing_exposure(dt):
     try:
         with open(path) as f:
             d = json.load(f)
-        summary = d.get('summary', {})
-        # 收益优先线 = base
-        line = next((L for L in summary.get('lines', []) if L.get('key') == 'base'), None)
-        if not line:
+        rows = d.get('recent_rows', [])  # 最新在前，含 pending
+        # 取最近5行（含 pending 的今日）
+        last5 = rows[:5]
+        if not last5:
             return None
-        return {
-            'signal_date': summary.get('latest_signal_date'),
-            'execute_date': summary.get('latest_execute_date'),
-            'regime': summary.get('latest_regime'),
-            'exposure': line.get('latest_exposure'),      # 今日目标敞口(0~1)
-            'total_return': line.get('total_return'),
-            'max_drawdown': line.get('max_drawdown'),
-            'avg_exposure': line.get('avg_exposure'),
-        }
+        # 从旧到新排列方便阅读
+        seq = [round(r.get('base_exposure', 0) * 100) for r in reversed(last5)]
+        return {'recent5': seq, 'today': seq[-1]}
     except Exception:
         return None
 
@@ -890,13 +884,12 @@ def generate_report(trade_date=None):
     if profile:
         L.append(f'- {t_label}期特征: {profile}')
 
-    # 择时敞口（收益优先线 α=1.75，均仓~30%，给满仓散户的减仓提示）
+    # 择时敞口（收益优先线 α=1.75）：近5日序列，让客户看到动态调整
     timing = read_timing_exposure(dt)
-    if timing and timing.get('exposure') is not None:
-        exp_pct = timing['exposure'] * 100
-        avg = timing.get('avg_exposure')
-        avg_txt = f'，长期均仓约{avg*100:.0f}%' if avg else ''
-        L.append(f'- <<强势股建议仓位: {exp_pct:.0f}%>>{avg_txt} ((此为强势股这一篮子的持仓，非全仓；中证2000择时·收益优先线))')
+    if timing and timing.get('recent5'):
+        seq = timing['recent5']
+        seq_txt = '→'.join(f'{v}%' for v in seq)
+        L.append(f'- <<强势股建议仓位: {seq_txt}>> ((近5日，强势股篮子非全仓))')
 
     return '\n'.join(L)
 
