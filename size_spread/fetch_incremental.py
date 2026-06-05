@@ -27,6 +27,9 @@ SW_CSV = os.path.join(BASE_DIR, "ss_sw_daily.csv")
 
 IDX_HEADERS = ['trade_date', 'ts_code', 'close', 'pct_chg']
 SW_HEADERS = ['trade_date', 'ts_code', 'pct_change', 'amount']
+STOCK_EW_CSV = os.path.join(BASE_DIR, "ss_stock_ew_daily.csv")  # 双创等权个股汇总
+STOCK_EW_HEADERS = ['trade_date', 'avg_pct_chg', 'avg_pct_chg_old', 'count_300', 'count_688']
+DUAL_INNOV_START = '20250101'
 
 # 指数代码（index_daily 接口）
 INDEX_CODES = {
@@ -383,6 +386,81 @@ def fetch_incremental():
                 print(" iFinD token 获取失败")
         except Exception as e:
             print(f" iFinD 异常: {e}")
+
+    # --- 双创等权个股日线 ---
+    print()
+    print("=" * 50)
+    print("拉取双创等权个股数据（daily: 300x + 688x）")
+    print("=" * 50)
+
+    # 获取增量起始日
+    ew_last_dates = get_csv_last_dates(STOCK_EW_CSV, code_col='trade_date')
+    # STOCK_EW_CSV 每行是一个 trade_date，用 trade_date 列做 key
+    ew_last = max(ew_last_dates.keys()) if ew_last_dates else None
+    ew_start = next_day(ew_last) if ew_last else DUAL_INNOV_START
+
+    if ew_last and ew_last >= today:
+        print(f"  双创等权: 已是最新 ({ew_last})，跳过")
+    else:
+        # 拉取交易日历
+        cal_data = ts('trade_cal', {
+            'exchange': 'SSE', 'start_date': ew_start, 'end_date': today, 'is_open': '1'
+        }, fields='cal_date')
+        trade_dates = sorted(c['cal_date'] for c in (cal_data or []))
+        print(f"  需补充 {len(trade_dates)} 个交易日 ({ew_start} ~ {today})")
+
+        # 旧口径所需指数数据（从 cache 里取，用来做对比列）
+        cyb_cache = cache.get("index_daily", {}).get('399006.SZ', {}).get('data', {})
+        kc50_cache = cache.get("index_daily", {}).get('000688.SH', {}).get('data', {})
+
+        ew_rows = []
+        for tdate in trade_dates:
+            rows = ts('daily', {'trade_date': tdate}, fields='ts_code,pct_chg')
+            if isinstance(rows, dict):
+                print(f"    {tdate}: daily 接口错误 {rows}，跳过")
+                time.sleep(1)
+                continue
+
+            vals_300 = [float(r['pct_chg']) for r in rows
+                        if r['ts_code'].startswith('300') and r['pct_chg'] is not None]
+            vals_688 = [float(r['pct_chg']) for r in rows
+                        if r['ts_code'].startswith('688') and r['pct_chg'] is not None]
+            all_vals = vals_300 + vals_688
+            if not all_vals:
+                print(f"    {tdate}: 无有效数据，跳过")
+                continue
+
+            avg_new = sum(all_vals) / len(all_vals)
+
+            # 旧口径：(创业板指 + 科创50) / 2
+            c = cyb_cache.get(tdate, {})
+            k = kc50_cache.get(tdate, {})
+            if c.get('pct_chg') is not None and k.get('pct_chg') is not None:
+                avg_old = (float(c['pct_chg']) + float(k['pct_chg'])) / 2
+            else:
+                avg_old = ''
+
+            ew_rows.append({
+                'trade_date': tdate,
+                'avg_pct_chg': round(avg_new, 6),
+                'avg_pct_chg_old': round(avg_old, 6) if avg_old != '' else '',
+                'count_300': len(vals_300),
+                'count_688': len(vals_688),
+            })
+            print(f"    {tdate}: 300x={len(vals_300)} 688x={len(vals_688)} 等权={avg_new:.4f}%", flush=True)
+            time.sleep(0.3)  # 避免频率超限
+
+        if ew_rows:
+            append_csv(STOCK_EW_CSV, STOCK_EW_HEADERS, ew_rows)
+            print(f"  写入 ss_stock_ew_daily.csv: +{len(ew_rows)} 行")
+
+        # 写入 cache 供 compute_spreads.py 使用
+        cache.setdefault("dual_innovation_ew", {})
+        for row in ew_rows:
+            cache["dual_innovation_ew"][row['trade_date']] = {
+                'avg_pct_chg': row['avg_pct_chg'],
+                'avg_pct_chg_old': row['avg_pct_chg_old'],
+            }
 
     save_cache(cache)
 

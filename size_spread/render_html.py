@@ -52,6 +52,10 @@ style_json = json.dumps(style, ensure_ascii=False)
 di = data["dual_innovation"]
 di_d = json.dumps(di["dates"])
 di_n = json.dumps(di["navs"])
+# 旧口径净值（创业板指50%+科创50 50%）做对比
+di_n_old = json.dumps(di.get("navs_old", []))
+# 新旧口径每日轧差（新口径日收益 - 旧口径日收益）
+di_method_spread = json.dumps(di.get("spreads", []))
 # 杠铃数据（如果有）
 if "barbell" in di:
     bb = di["barbell"]
@@ -389,12 +393,21 @@ a{{color:#ff8c00!important}}
     <div class="card-title"><span class="dot" style="background:#e67e22"></span> 双创-杠铃 每日轧差%（正值双创跑赢，负值杠铃跑赢）</div>
     <div style="position:relative;height:240px"><canvas id="dualSpreadChart"></canvas></div>
   </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#3498db"></span> 双创等权 vs 双创50/50 净值对比</div>
+    <div style="position:relative;height:260px"><canvas id="dualMethodChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#27ae60"></span> 双创等权 - 双创50/50 每日收益轧差%（正值=等权跑赢）</div>
+    <div style="position:relative;height:200px"><canvas id="dualMethodSpreadChart"></canvas></div>
+  </div>
   <div class="card" style="padding:14px;font-size:11px;color:var(--text-sub);line-height:1.7">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px"> 策略说明</div>
-    <p><b>双创等权：</b>创业板指(399006) + 科创50(000688) 各50%等权，代表成长/科技风格。</p>
+    <p><b>双创等权：</b>全市场 300x(创业板) + 688x(科创板) 所有在市股票逐日等权，自动排除停牌/退市，2025-01-01 起算。</p>
+    <p><b>双创50/50：</b>创业板指(399006) + 科创50(000688) 各50%，指数合成，仅供对比。</p>
     <p><b>杠铃组合：</b>中证红利(000922) + 同花顺微盘股(884143.TI) 各50%等权，代表"高股息+微盘"的防御+弹性组合。</p>
     <p><b>背对逻辑：</b>两条线呈现跷跷板效应。双创强势期（成交量>3万亿、科技虹吸）杠铃跑输；流动性退潮期（成交量<2.5万亿）杠铃回归。2025年以来轮动周期约1.5-3个月。</p>
-    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare（双创/红利） + iFinD（同花顺微盘股指数） · 最后更新: {update_time}</p>
+    <p style="margin-top:6px;color:#94a3b8">数据来源：Tushare（双创个股/红利） + iFinD（同花顺微盘股指数） · 最后更新: {update_time}</p>
   </div>
 </div>
 
@@ -408,6 +421,8 @@ const cr_spreads = {cr_s};
 const style_data = {style_json};
 const di_dates = {di_d};
 const di_navs = {di_n};
+const di_navs_old = {di_n_old};
+const di_method_spread = {di_method_spread};
 const bb_dates = {bb_d};
 const bb_navs = {bb_n};
 const bb_dual_navs = {bb_dual_n};
@@ -700,6 +715,21 @@ function initTab(tab) {{
       if (dual_spread_vals.length > 0) {{
         new Chart(document.getElementById('dualSpreadChart'),{{type:'bar',data:{{labels:dual_spread_dates,datasets:[{{
           data:dual_spread_vals,backgroundColor:dual_spread_vals.map(function(v){{return v>=0?'rgba(155,89,182,0.6)':'rgba(230,126,34,0.6)'}}),borderRadius:2
+        }}]}},options:barOpts()}});
+      }}
+      // 双创等权 vs 双创50/50 净值对比
+      if (di_navs_old.length > 0) {{
+        var mOpts = lineOpts();
+        mOpts.plugins.legend.display = true;
+        new Chart(document.getElementById('dualMethodChart'),{{type:'line',data:{{labels:di_dates,datasets:[
+          {{label:'双创等权',data:di_navs,borderColor:'#9b59b6',backgroundColor:'transparent',tension:0.3,pointRadius:0,borderWidth:2.5}},
+          {{label:'双创50/50',data:di_navs_old,borderColor:'#3498db',backgroundColor:'transparent',tension:0.3,pointRadius:0,borderWidth:2,borderDash:[4,3]}}
+        ]}},options:mOpts}});
+      }}
+      // 双创等权 - 双创50/50 每日收益轧差柱状图
+      if (di_method_spread.length > 0) {{
+        new Chart(document.getElementById('dualMethodSpreadChart'),{{type:'bar',data:{{labels:di_dates,datasets:[{{
+          data:di_method_spread,backgroundColor:di_method_spread.map(function(v){{return v>=0?'rgba(39,174,96,0.6)':'rgba(192,57,43,0.6)'}}),borderRadius:2
         }}]}},options:barOpts()}});
       }}
       break;

@@ -182,9 +182,12 @@ def judge_iteration(new_text: str, old_title: str, old_content: str) -> dict:
     except json.JSONDecodeError:
         # 尝试找 { ... } 子串
         import re as _re
-        m = _re.search(r'\{[^{}]*\}', raw, _re.DOTALL)
+        m = _re.search(r'\{.*\}', raw, _re.DOTALL)
         if m:
-            return json.loads(m.group())
+            try:
+                return json.loads(m.group())
+            except json.JSONDecodeError:
+                pass
         # 实在解析不了，返回安全默认值
         return {"is_iteration": False, "diff_summary": "", "confidence": "low"}
 

@@ -61,6 +61,10 @@ def compute_style_spread(index_daily):
 
 # Sheet2: 双创等权 + 杠铃指数（背对图）
 def compute_dual_innovation(index_daily):
+    """双创等权：全市场 300x(创业板) + 688x(科创板) 个股等权（剔除停牌/未上市，逐日动态成分）。
+    数据来自 fetch_incremental.py 写入的 cache['dual_innovation_ew']（2025-01-01 起算）。
+    同时保留旧口径（创业板指50% + 科创50 50%）做轧差对比。
+    """
     cyb_code = '399006.SZ'
     kc50_code = '000688.SH'
     dividend_code = '000922.CSI'
@@ -69,22 +73,49 @@ def compute_dual_innovation(index_daily):
     cyb_data = index_daily[cyb_code]['data']
     kc50_data = index_daily[kc50_code]['data']
 
-    # 双创等权
-    common_dates = set(cyb_data.keys()).intersection(set(kc50_data.keys()))
-    common_dates = sorted(common_dates)
+    # 真正的双创等权：来自个股等权日收益
+    ew_data = cache_data.get('dual_innovation_ew', {})
+    common_dates = sorted(ew_data.keys())
 
-    navs, cyb_chg, kc50_chg = [], [], []
-    nav = 1.0
+    navs, navs_old, cyb_chg, kc50_chg, ew_chg, old_chg, spreads = [], [], [], [], [], [], []
+    nav = 1.0       # 双创等权：个股等权
+    nav_old = 1.0   # 双创50/50：创业板指50% + 科创50 50%
     for date in common_dates:
-        avg_chg = (cyb_data[date]['pct_chg'] + kc50_data[date]['pct_chg']) / 2
-        nav *= (1 + avg_chg / 100)
+        ew = ew_data[date]
+        new_chg = ew['avg_pct_chg']
+        nav *= (1 + new_chg / 100)
         navs.append(nav)
-        cyb_chg.append(cyb_data[date]['pct_chg'])
-        kc50_chg.append(kc50_data[date]['pct_chg'])
+        ew_chg.append(new_chg)
+
+        # 旧口径：优先用 ew 里记录的 avg_pct_chg_old，否则回退到指数 cache
+        old = ew.get('avg_pct_chg_old', '')
+        if old == '' or old is None:
+            c = cyb_data.get(date, {})
+            k = kc50_data.get(date, {})
+            if c.get('pct_chg') is not None and k.get('pct_chg') is not None:
+                old = (c['pct_chg'] + k['pct_chg']) / 2
+            else:
+                old = new_chg  # 兜底：缺旧数据时用新口径，避免净值断裂
+        nav_old *= (1 + old / 100)
+        navs_old.append(nav_old)
+        old_chg.append(old)
+
+        # 轧差：新口径日收益 - 旧口径日收益
+        spreads.append(round(new_chg - old, 6))
+
+        # 兼容旧字段（cyb_chg/kc50_chg 仍输出，供 CSV/xlsx）
+        c = cyb_data.get(date, {})
+        k = kc50_data.get(date, {})
+        cyb_chg.append(c.get('pct_chg') if c.get('pct_chg') is not None else '')
+        kc50_chg.append(k.get('pct_chg') if k.get('pct_chg') is not None else '')
 
     result = {
         'dates': [d[:4] + '/' + d[4:6] + '/' + d[6:] for d in common_dates],
-        'navs': navs,
+        'navs': navs,            # 新口径：真正双创等权
+        'navs_old': navs_old,    # 旧口径：创业板指50%+科创50 50%
+        'ew_chg': ew_chg,        # 新口径日收益
+        'old_chg': old_chg,      # 旧口径日收益
+        'spreads': spreads,      # 新-旧 轧差
         'cyb_chg': cyb_chg,
         'kc50_chg': kc50_chg,
     }
@@ -110,13 +141,11 @@ def compute_dual_innovation(index_daily):
             barbell_div_chg.append(d_chg)
             barbell_mic_chg.append(m_chg)
 
-        # 双创在杠铃日期范围内的净值（重新归一化）
+        # 双创（新口径）在杠铃日期范围内的净值（重新归一化）
         dual_navs_aligned = []
         dual_nav = 1.0
         for date in barbell_dates:
-            idx = common_dates.index(date)
-            chg = (cyb_data[date]['pct_chg'] + kc50_data[date]['pct_chg']) / 2
-            dual_nav *= (1 + chg / 100)
+            dual_nav *= (1 + ew_data[date]['avg_pct_chg'] / 100)
             dual_navs_aligned.append(dual_nav)
 
         result['barbell'] = {
