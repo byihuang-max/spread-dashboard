@@ -74,6 +74,14 @@ def report_to_html(text, footer):
                 f'font-size:13px;font-weight:700;color:{C_BLACK};margin:0 0 12px">{s}</div>')
             continue
 
+        # 强势股建议仓位（最早匹配，防止被其他分支拦截）
+        if s.startswith('- <<强势股建议仓位'):
+            content = _gray_explain(_highlight_red(s[2:]))
+            html_parts.append(
+                f'<div style="padding:2px 0 2px 8px;font-size:12px;font-weight:700;'
+                f'color:{C_BLACK}">{content}</div>')
+            continue
+
         # 章节标题
         if len(s) > 1 and s[0] in '一二三四五六七' and '、' in s[:3]:
             html_parts.append(
@@ -181,8 +189,8 @@ def report_to_html(text, footer):
                 f'line-height:1.6">{content}</div>')
             continue
 
-        # 主攻/注意（主攻+注意标红，括号内解释灰色小字）
-        if s.startswith('- <<主攻') or s.startswith('- <<注意') or s.startswith('- 主攻') or s.startswith('- 注意'):
+        # 主攻/注意/强势股建议仓位（标红，括号内解释灰色小字）
+        if s.startswith('- <<主攻') or s.startswith('- <<注意') or s.startswith('- 主攻') or s.startswith('- 注意') or s.startswith('- <<强势股建议仓位'):
             content = _gray_explain(_highlight_red(s[2:]))
             html_parts.append(
                 f'<div style="padding:2px 0 2px 8px;font-size:12px;font-weight:700;'

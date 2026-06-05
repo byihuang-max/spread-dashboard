@@ -77,6 +77,38 @@ def save_leader_snapshot(dt, pool_items, rec_leader, amt_leader):
         json.dump(snapshot, f, ensure_ascii=False, indent=2)
 
 
+def read_timing_exposure(dt):
+    """读取择时模块的收益优先线敞口（base_exposure，α=1.75，均仓~30%）。
+    返回 dict 或 None。数据源 timing-research/data/live_exposure_nav.json。
+    """
+    candidates = [
+        os.path.join(BASE, '..', '..', 'timing-research', 'data', 'live_exposure_nav.json'),
+        '/home/ubuntu/gamt-dashboard/timing-research/data/live_exposure_nav.json',
+    ]
+    path = next((p for p in candidates if os.path.exists(p)), None)
+    if not path:
+        return None
+    try:
+        with open(path) as f:
+            d = json.load(f)
+        summary = d.get('summary', {})
+        # 收益优先线 = base
+        line = next((L for L in summary.get('lines', []) if L.get('key') == 'base'), None)
+        if not line:
+            return None
+        return {
+            'signal_date': summary.get('latest_signal_date'),
+            'execute_date': summary.get('latest_execute_date'),
+            'regime': summary.get('latest_regime'),
+            'exposure': line.get('latest_exposure'),      # 今日目标敞口(0~1)
+            'total_return': line.get('total_return'),
+            'max_drawdown': line.get('max_drawdown'),
+            'avg_exposure': line.get('avg_exposure'),
+        }
+    except Exception:
+        return None
+
+
 def load_prev_leader_snapshot(dt, daily_dates):
     """加载前一交易日的龙头池快照，返回 dict 或 None"""
     if not os.path.exists(LEADER_HIST_DIR):
@@ -857,6 +889,14 @@ def generate_report(trade_date=None):
     profile = STATE_PROFILE.get(t_label, '')
     if profile:
         L.append(f'- {t_label}期特征: {profile}')
+
+    # 择时敞口（收益优先线 α=1.75，均仓~30%，给满仓散户的减仓提示）
+    timing = read_timing_exposure(dt)
+    if timing and timing.get('exposure') is not None:
+        exp_pct = timing['exposure'] * 100
+        avg = timing.get('avg_exposure')
+        avg_txt = f'，长期均仓约{avg*100:.0f}%' if avg else ''
+        L.append(f'- <<强势股建议仓位: {exp_pct:.0f}%>>{avg_txt} ((此为强势股这一篮子的持仓，非全仓；中证2000择时·收益优先线))')
 
     return '\n'.join(L)
 
