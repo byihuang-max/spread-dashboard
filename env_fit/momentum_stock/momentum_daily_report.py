@@ -486,29 +486,43 @@ def generate_report(trade_date=None):
     L.append(f'- 封单轧差 {ss_today["seal_spread"]:+.1f}亿（1Y分位{ss_today["spread_pct_1y"]*100:.0f}%）')
     L.append('')
 
-    # 二、百亿涨停
+    # 二、百亿涨停（始终出现）
     names = today.get('mega_cap_names', '')
+    L.append('二、百亿涨停')
     if names:
-        L.append('二、百亿涨停')
         L.append('市场核心聚焦方向')
         name_list = [n.replace('[', '(').replace(']', ')') for n in names.split('|')]
         for j in range(0, len(name_list), 3):
             chunk = name_list[j:j+3]
             L.append('- ' + ' · '.join(chunk))
-        L.append('')
+    else:
+        L.append('- 今日无百亿市值涨停')
+    L.append('')
 
     # 动态编号
     CN_NUMS = ['一', '二', '三', '四', '五', '六', '七']
     sec_idx = 2  # 下一个是"三"
 
-    # 三、异常信号
+    # 三、异常信号（始终出现：触发时报预警，未触发时报各指标正常状态）
+    L.append(f'{CN_NUMS[sec_idx]}、异常信号')
+    sec_idx += 1
     if warn_latest.get('signal_triggered'):
         narrative = warn_latest['narrative'].replace('🟡', '⚠').replace('🔴', '').replace('🟢', '')
-        L.append(f'{CN_NUMS[sec_idx]}、异常信号')
-        sec_idx += 1
         tail = narrative.split('：')[-1] if '：' in narrative else narrative
         L.append(f'- {tail}')
-        L.append('')
+    else:
+        # 无预警：逐项列出关键指标的正常状态，让你能直接看到"哪些都正常"
+        checks = [
+            ('缩量', warn_latest.get('volume_declining')),
+            ('量能波动', warn_latest.get('volume_cv_high')),
+            ('支撑', not warn_latest.get('has_support', True)),  # 反向：无支撑才是异常
+        ]
+        abnormal = [name for name, bad in checks if bad]
+        if abnormal:
+            L.append(f'- 局部异常: {" / ".join(abnormal)}')
+        else:
+            L.append('- 各项正常: 量能平稳、无缩量、有支撑')
+    L.append('')
 
     # 四、产业链共振
     L.append(f'{CN_NUMS[sec_idx]}、产业链共振')
