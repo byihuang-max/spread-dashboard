@@ -809,3 +809,100 @@ hint: the same ref. If you want to integrate the remote changes, use
 hint: 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [18:32:42]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
+[18:30:01]  GAMT 投研看板 — 一键更新开始
+[18:30:01]  晚到数据模式：只更新 barra_style, patient_capital, momentum_stock, crowding, timing_factors, merger_pool, overview
+[18:30:01]  ═══ Barra风格因子 (barra_style) ═══
+[18:30:01]  运行 size_spread/barra_update.py
+[18:30:02]    完成 (1.5s)
+
+[18:30:02]  ═══ 耐心资本 (patient_capital) ═══
+[18:30:02]  运行 micro_flow/patient_capital/patient_data.py
+[18:30:11]    完成 (9.2s)
+[18:30:11]  运行 micro_flow/patient_capital/patient_calc.py
+[18:30:14]    完成 (2.9s)
+
+[18:30:14]  ═══ 强势股情绪 (momentum_stock) ═══
+[18:30:14]  运行 size_spread/fund_nav/fund_nav_data.py
+[18:30:21]    完成 (6.9s)
+[18:30:21]  运行 env_fit/momentum_stock/momentum_data.py
+[18:30:24]    完成 (2.4s)
+[18:30:24]  运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[18:30:43]    完成 (19.0s)
+[18:30:43]  运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[18:30:43]    完成 (0.1s)
+[18:30:43]  运行 env_fit/momentum_stock/momentum_sector.py
+[18:30:49]    完成 (5.7s)
+[18:30:49]  运行 env_fit/momentum_stock/momentum_warning.py
+[18:30:49]    完成 (0.2s)
+[18:30:49]  运行 env_fit/momentum_stock/momentum_return_decomp.py
+[18:30:49]    完成 (0.2s)
+[18:30:49]  运行 env_fit/momentum_stock/inject_momentum.py
+[18:30:49]    完成 (0.1s)
+[18:30:49]  运行 timing-research/generate_leader_pool.py
+[18:30:49]    完成 (0.4s)
+[18:30:49]  运行 timing-research/export_leader_pool_history.py
+[18:30:50]    完成 (0.2s)
+[18:30:50]  运行 timing-research/generate_replay_page.py
+[18:30:50]    完成 (0.2s)
+[18:30:50]  运行 timing-research/push_limit_replay_feishu.py
+[18:30:51]    完成 (1.1s)
+
+[18:30:51]  ═══ 资金流拥挤度 (crowding) ═══
+[18:30:51]  运行 micro_flow/crowding/crowding_data.py
+[18:31:21]    完成 (29.8s)
+[18:31:21]  运行 micro_flow/crowding/breadth_data.py
+[18:32:05]    完成 (44.2s)
+[18:32:05]  运行 micro_flow/crowding/crowding_calc.py
+[18:32:06]    完成 (0.9s)
+[18:32:06]  运行 micro_flow/crowding/breadth_calc.py
+[18:32:07]    完成 (1.2s)
+
+[18:32:07]  ═══ 择时因子系统 (timing_factors) ═══
+[18:32:07]  运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[18:32:42]    完成 (34.9s)
+[18:32:42]  运行 timing-research/update_ic_table.py
+[18:32:42]    完成 (0.1s)
+
+[18:32:42]  ═══ 并购池 (merger_pool) ═══
+[18:32:42]  运行 skills/stock-monitor/merger_pool.py
+[18:32:42]    失败 (0.1s): 14/lib/python3.14/subprocess.py", line 1989, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+
+[18:32:42]    数据脚本失败，跳过注入
+
+[18:32:42]  ═══ 仪表盘汇总 (overview) ═══
+[18:32:42]  运行 server/overview_calc.py
+[18:32:42]    完成 (0.3s)
+
+[18:32:42]  ═══ 汇总 ═══
+[18:32:42]     Barra风格因子    (1.5s)
+[18:32:42]     耐心资本         (12.1s)
+[18:32:42]     强势股情绪        (36.5s)
+[18:32:42]     资金流拥挤度       (76.2s)
+[18:32:42]     择时因子系统       (35.0s)
+[18:32:42]     并购池          (0.1s)
+[18:32:42]     仪表盘汇总        (0.3s)
+[18:32:42]  总耗时: 161.7s
+[18:32:42]  已更新 update_log.json
+[18:32:42]  ═══ Git Push ═══
+[18:32:43] 同步到云端...
+[main bd2ad74e] auto: update late_only 6/7 modules
+ 49 files changed, 10967 insertions(+), 4253 deletions(-)
+ create mode 100644 size_spread/ss_stock_ew_daily.csv
+ create mode 100644 "smart-notes/sessions/2026-06-05_\346\213\251\346\227\266\344\270\211\346\235\241\346\225\236\345\217\243\347\272\277\357\274\232\344\273\216\346\266\214\347\216\260\345\210\260\350\256\276\350\256\241\347\232\204\345\271\202\346\254\241\344\274\230\345\214\226\344\270\216\347\234\237\345\256\236\345\274\200\347\233\230\345\217\243\345\276\204\346\224\271\351\200\240.md"
+ create mode 100644 stock-pool/data/jielong_2026-06-03.json
+ create mode 100644 stock-pool/feishu_card.py
+ create mode 100644 stock-pool/output/report_20260605.md
+ create mode 100644 stock-pool/report.py
+ create mode 100644 stock-pool/track.py
+ create mode 100644 timing-research/leader_pool_history/20260605.json
+To gitee.com:ronihuang/gamt-dashboard.git
+ ! [rejected]          main -> main (fetch first)
+error: failed to push some refs to 'gitee.com:ronihuang/gamt-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:32:44]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
