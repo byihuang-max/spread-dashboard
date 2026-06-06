@@ -126,7 +126,8 @@ th:hover { color:var(--text); background:#f1f5f9; }
 .note { color:var(--muted); font-size:11px; line-height:1.7; }
 .hidden { display:none !important; }
 
-@media (max-width:1200px) { .stats, .overview, .strategy-grid, .product-chip-grid, .strategy-metrics { grid-template-columns:1fr; } }
+@media (max-width:1200px) { .overview, .strategy-grid, .product-chip-grid, .strategy-metrics { grid-template-columns:1fr; } .stats { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:640px) { .stats { grid-template-columns:repeat(2,1fr); gap:8px; } .stat { padding:10px 12px; } .stat::before { display:none; } .value { font-size:18px; } }
 @media (max-width:980px) { .app { grid-template-columns:1fr; } .sidebar { padding-bottom:10px; } .main { padding:16px; } }
 
 .modal-kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
