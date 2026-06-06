@@ -533,6 +533,7 @@ try{if(localStorage.getItem('gamt_token')){document.write('<style>#loginOverlay{
       <div class="nav-group-title">工具</div>
       <div class="nav-item" id="navTimingResearch" data-module="timing_factors" style="display:none">择时研究</div>
       <div class="nav-item" id="navChipQuery" data-module="chip_query" style="display:none">并购舆情监控</div>
+      <div class="nav-item" id="navStockPool" data-module="stock_pool" style="display:none">景气度股票池</div>
       <div class="nav-item" id="navFinancialRisk" data-module="financial_risk" style="display:none">财报预期风险 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundAsset" data-module="fund_asset" style="display:none">团队基金优选 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
       <div class="nav-item" id="navFundResearch" data-module="fund_research" style="display:none">公募基金研究 <span style="font-size:10px;background:#ff9800;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle">待完善</span></div>
@@ -3170,6 +3171,10 @@ function initCbCharts() {
       <iframe src="skills/stock-monitor/merger_pool.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 40px)"></iframe>
     </div><!-- /page-chip_query -->
 
+    <div class="module-page" id="page-stock_pool">
+      <iframe src="stock-pool/index.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 40px)"></iframe>
+    </div><!-- /page-stock_pool -->
+
     <div class="module-page" id="page-financial_risk">
       <iframe src="financial_risk/financial_risk_factor.html" class="embed-frame" style="height:calc(100vh - var(--header-h) - 40px)"></iframe>
     </div><!-- /page-financial_risk -->
@@ -3206,7 +3211,7 @@ function initCbCharts() {
 
 <script>
 (function(){
-  var titles={'overview':'工作台','quant_stock':'策略环境适配度','crowding':'资金流与中观景气','macro_liquidity':'宏观与流动性','chain_prosperity':'微观结构','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'并购舆情监控','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选','fund_research':'公募基金研究'};
+  var titles={'overview':'工作台','quant_stock':'策略环境适配度','crowding':'资金流与中观景气','macro_liquidity':'宏观与流动性','chain_prosperity':'微观结构','alerts':'红灯预警','update-log':'刷新记录','report':'每日报告','chip_query':'并购舆情监控','stock_pool':'景气度股票池','timing_factors':'择时研究','financial_risk':'财报预期风险','fund_asset':'团队基金优选','fund_research':'公募基金研究'};
 
   // 移动端汉堡菜单
   var sidebar=document.querySelector('.sidebar');
@@ -3229,6 +3234,7 @@ function initCbCharts() {
     'update-log':'page-update-log',
     'timing_factors':'page-timing_factors',
     'chip_query':'page-chip_query',
+    'stock_pool':'page-stock_pool',
     'financial_risk':'page-financial_risk',
     'fund_asset':'page-fund_asset',
     'fund_research':'page-fund_research'
@@ -3890,6 +3896,11 @@ function showApp(user){
     if(user.is_admin){
       var cq=document.getElementById('navChipQuery');
       if(cq) cq.style.display='';
+    }
+    // 仅管理员：显示景气度股票池
+    if(user.is_admin){
+      var sp=document.getElementById('navStockPool');
+      if(sp) sp.style.display='';
     }
     // 仅管理员：显示 Smart Notes
     if(user.is_admin){

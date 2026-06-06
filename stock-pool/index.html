@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="bb-dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>接龙股票池看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f6f8;--card-bg:#fff;--text:#2d3142;--text-sub:#8b92a5;--border:#e8eaef;--accent:#2563eb}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;max-width:1200px;margin:0 auto;padding:20px;background:var(--bg);color:var(--text);font-size:14px}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+h1{font-size:18px;font-weight:700}
+.date-tag{font-size:12px;color:var(--text-sub);background:#fff;padding:3px 10px;border-radius:12px;border:1px solid var(--border)}
+.env-badge{color:#fff;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600}
+.ss-tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap}
+.ss-tab{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #e5e7eb;transition:all .12s;color:#6b7280}
+.ss-tab:hover{color:#333;border-color:#cbd5e1}
+.ss-tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.ss-page{display:none}.ss-page.active{display:block}
+.card{background:var(--card-bg);border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;font-size:12px;font-weight:600;padding:8px 6px;border-bottom:2px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{background:#eef2ff;color:var(--accent)}
+td{padding:7px 6px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:hover td{background:#f8fafc}
+.mono{font-family:monospace;font-size:12px;color:var(--text-sub)}
+.pos{color:#e74c3c}.neg{color:#2ecc71}
+.sector-tag{background:#eef2ff;color:#2563eb;padding:2px 8px;border-radius:10px;font-size:11px;white-space:nowrap}
+.sb-wrap{display:flex;align-items:center;gap:6px;min-width:90px}
+.sb-fill{height:6px;background:#2563eb;border-radius:3px;min-width:2px}
+.sb-val{font-size:11px;color:var(--text-sub);white-space:nowrap}
+.cb{padding:2px 7px;border-radius:10px;font-size:11px;font-weight:500}
+.cb-buy{background:#fde8e8;color:#e74c3c}
+.cb-sell{background:#e8f8e8;color:#2ecc71}
+.cb-warn{background:#fff3cd;color:#e67e22}
+.cb-bot{background:#d4edda;color:#155724}
+.cb-above{background:#cfe2ff;color:#084298}
+.cb-mid{background:#f0f4c3;color:#558b2f}
+.cb-below{background:#e2e3e5;color:#41464b}
+.cb-none{color:#bbb}
+.quad{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;cursor:default}
+.stars{color:#f39c12;font-size:13px;letter-spacing:-1px}
+.note-card{background:#f0f6ff;border:1px solid #d6e4ff;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#3a5a8c;line-height:1.6}
+.cons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.cons-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px}
+.cons-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cons-name{font-weight:700;font-size:15px}
+.cons-ticker{font-size:11px}
+.cons-body{display:flex;gap:14px;font-size:12px;margin-bottom:8px;flex-wrap:wrap}
+.cons-recs{font-size:11px;color:var(--text-sub)}
+.rec-tag{background:#fff3e0;color:#e65100;padding:2px 7px;border-radius:10px;font-size:11px;margin-right:3px}
+.picks-cell{font-size:11px;line-height:1.8}
+.picks-cell span{margin-right:6px}
+.factor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.factor-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.factor-label{font-size:12px;color:var(--text-sub);margin-bottom:6px}
+.factor-val{font-size:22px;font-weight:700;margin-bottom:4px}
+.factor-desc{font-size:11px;color:var(--text-sub)}
+.verdict-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.verdict-main{font-size:28px;font-weight:700;margin-bottom:6px}
+.verdict-sub{font-size:12px;color:var(--text-sub)}
+.method-footer{background:#fbfcfe;border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-top:24px;font-size:12px;color:#5a6275;line-height:1.85}
+.method-footer h3{font-size:13px;font-weight:700;color:#2d3142;margin-bottom:10px}
+.method-footer h4{font-size:12px;font-weight:700;color:#2563eb;margin:12px 0 4px}
+.method-footer .formula{background:#f0f4ff;border-radius:6px;padding:8px 12px;font-family:monospace;font-size:12px;color:#1e3a8a;margin:6px 0;display:inline-block}
+.method-footer ul{margin:4px 0 4px 18px}
+.method-footer li{margin-bottom:3px}
+.method-footer .tag{display:inline-block;background:#eef2ff;color:#2563eb;border-radius:4px;padding:1px 6px;font-weight:600;font-size:11px}
+.method-footer .caveat{color:#94999f;font-style:italic;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px}
+@media(max-width:768px){
+  .ss-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .ss-tab{white-space:nowrap;flex-shrink:0}
+  .cons-grid{grid-template-columns:1fr}
+  table{font-size:12px}
+  td,th{padding:5px 4px}
+}</style>
+<style id="bb-dark-override">
+html.bb-dark,:root.bb-dark{--bg:#0d0d0d;--card-bg:#141414;--text:#d4d8e2;--text-sub:#666;--border:#2a2a2a}
+html.bb-dark body{background:#0d0d0d;color:#d4d8e2}
+html.bb-dark .card,html.bb-dark .cons-card,html.bb-dark .factor-card,html.bb-dark .verdict-box,html.bb-dark .note-card,html.bb-dark .method-footer{background:#141414;border-color:#2a2a2a;color:#d4d8e2}
+html.bb-dark table th{background:#1a1a1a;color:#888;border-color:#2a2a2a}
+html.bb-dark table td{border-color:#1f1f1f}
+html.bb-dark tr:hover td{background:#1a1a1a}
+html.bb-dark .ss-tab{background:#141414;border-color:#2a2a2a;color:#888}
+html.bb-dark .ss-tab.active{background:#2563eb;color:#fff}
+html.bb-dark .sector-tag{background:#1a2340;color:#6ea3ff}
+html.bb-dark .note-card{background:#0e1a30;border-color:#1e3a5a;color:#8ab4d8}
+html.bb-dark .method-footer{background:#0f0f0f;color:#888}
+html.bb-dark .method-footer h3{color:#c8cdd6}
+html.bb-dark .sb-fill{background:#3b7bff}
+html.bb-dark .score-bar-fill{background:#3b7bff}
+</style>
+<script>(function(){
+  var m;try{m=window.parent.__bbMode||"dark";}catch(e){m="dark";}
+  if(m!=="light")document.documentElement.classList.add("bb-dark");
+  window.addEventListener("message",function(e){
+    if(!e.data||e.data.type!=="bb-theme")return;
+    var mode=e.data.mode;window.__bbMode=mode;
+    if(mode==="light"){document.documentElement.classList.remove("bb-dark");}
+    else{document.documentElement.classList.add("bb-dark");}
+    if(typeof Chart!=="undefined"){
+      Chart.defaults.color=mode==="light"?"#475569":"#888";
+      Chart.defaults.borderColor=mode==="light"?"#e2e8f0":"#2a2a2a";
+      Object.values(Chart.instances||{}).forEach(function(c){try{c.update();}catch(_e){}});
+    }
+  });
+})();</script>
+</head><body>
+<div class="header">
+  <h1>接龙股票池看板</h1>
+  <span class="date-tag">2026-06-05</span>
+  <span class="env-badge" style="background:#f39c12">中性</span>
+  <span class="date-tag" style="color:var(--text-sub)">共 52 只 · Barra系数 0.487</span>
+</div>
+<div class="ss-tabs">
+  <div class="ss-tab active" onclick="switchTab(0)">全排名</div>
+  <div class="ss-tab" onclick="switchTab(1)">象限图</div>
+  <div class="ss-tab" onclick="switchTab(2)">共识榜</div>
+  <div class="ss-tab" onclick="switchTab(3)">题材热度</div>
+  <div class="ss-tab" onclick="switchTab(4)">推荐人胜率</div>
+  <div class="ss-tab" onclick="switchTab(5)">风格环境</div>
+</div>
+<!-- Tab 0: 全排名 -->
+<div class="ss-page active" id="page0">
+<div class="note-card">
+<b>综合分</b> = 质量分 × 0.65 + 动量分 × 0.35。
+<b>质量分</b>(缠论结构/共识/量能/风格环境) 与 <b>动量分</b>(20日+5日涨幅) 正交，相关性 0.09。
+<b style="color:#e67e22">追高</b> = 涨多但结构弱；<b style="color:#084298">埋伏</b> = 结构优但尚未启动。
+</div>
+<div class="card" style="padding:0;overflow:auto">
+<table id="rank-table"><thead><tr>
+<th onclick="sortTable(0)">排名 ↕</th>
+<th onclick="sortTable(1)">股票</th>
+<th onclick="sortTable(2)">代码</th>
+<th onclick="sortTable(3)">综合分 ↕</th>
+<th onclick="sortTable(4)">质量分 ↕</th>
+<th onclick="sortTable(5)">动量分 ↕</th>
+<th onclick="sortTable(6)">象限</th>
+<th onclick="sortTable(7)">题材</th>
+<th onclick="sortTable(8)">20日% ↕</th>
+<th onclick="sortTable(9)">5日% ↕</th>
+<th>缠论信号</th>
+<th onclick="sortTable(11)">共识★ ↕</th>
+</tr></thead><tbody><tr><td>1</td><td><b>中船特气</b></td><td class="mono">688146</td><td data-val="0.8385"><div class="sb-wrap"><div class="sb-fill" style="width:100%"></div><span class="sb-val">0.839</span></div></td><td data-val="-0.2435" style="color:#2563eb;font-weight:600">-0.24</td><td data-val="2.8480" class="pos">+2.85</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">特种气体</span></td><td class="pos" data-val="189.4664328657315">+189.5%</td><td class="pos" data-val="32.319935875415105">+32.3%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>2</td><td><b>红星发展</b></td><td class="mono">600367</td><td data-val="0.7561"><div class="sb-wrap"><div class="sb-fill" style="width:90%"></div><span class="sb-val">0.756</span></div></td><td data-val="-0.0601" style="color:#2563eb;font-weight:600">-0.06</td><td data-val="2.2718" class="pos">+2.27</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">军工化工</span></td><td class="pos" data-val="109.09014108304471">+109.1%</td><td class="pos" data-val="54.24404836096224">+54.2%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>3</td><td><b>火炬电子</b></td><td class="mono">603678</td><td data-val="0.7266"><div class="sb-wrap"><div class="sb-fill" style="width:87%"></div><span class="sb-val">0.727</span></div></td><td data-val="0.4167" style="color:#2563eb;font-weight:600">+0.42</td><td data-val="1.3019" class="pos">+1.30</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">MLCC/被动</span></td><td class="pos" data-val="88.34295283949878">+88.3%</td><td class="pos" data-val="30.177759404712678">+30.2%</td><td><span class="cb cb-bot">底背驰</span></td><td data-val="1">★</td></tr>
+<tr><td>4</td><td><b>力诺药包</b></td><td class="mono">301188</td><td data-val="0.5992"><div class="sb-wrap"><div class="sb-fill" style="width:71%"></div><span class="sb-val">0.599</span></div></td><td data-val="0.1488" style="color:#2563eb;font-weight:600">+0.15</td><td data-val="1.4356" class="pos">+1.44</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">玻璃基板/TGV</span></td><td class="pos" data-val="98.87272727272727">+98.9%</td><td class="pos" data-val="29.413156649313766">+29.4%</td><td><span class="cb cb-above">枢上</span></td><td data-val="1">★</td></tr>
+<tr><td>5</td><td><b>金海高科</b></td><td class="mono">603311</td><td data-val="0.5465"><div class="sb-wrap"><div class="sb-fill" style="width:65%"></div><span class="sb-val">0.547</span></div></td><td data-val="0.1466" style="color:#2563eb;font-weight:600">+0.15</td><td data-val="1.2891" class="pos">+1.29</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">其他</span></td><td class="pos" data-val="77.14285714285714">+77.1%</td><td class="pos" data-val="35.6763925729443">+35.7%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>6</td><td><b>鼎通科技</b></td><td class="mono">688668</td><td data-val="0.5314"><div class="sb-wrap"><div class="sb-fill" style="width:63%"></div><span class="sb-val">0.531</span></div></td><td data-val="0.1110" style="color:#2563eb;font-weight:600">+0.11</td><td data-val="1.3122" class="pos">+1.31</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">连接器</span></td><td class="pos" data-val="77.0252145922747">+77.0%</td><td class="pos" data-val="36.574345531680066">+36.6%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>7</td><td><b>长盈通</b></td><td class="mono">688143</td><td data-val="0.5053"><div class="sb-wrap"><div class="sb-fill" style="width:60%"></div><span class="sb-val">0.505</span></div></td><td data-val="-0.0304" style="color:#2563eb;font-weight:600">-0.03</td><td data-val="1.5003" class="pos">+1.50</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="149.85867721876764">+149.9%</td><td class="pos" data-val="4.615384615384621">+4.6%</td><td><span class="cb cb-above">枢上</span></td><td data-val="1">★</td></tr>
+<tr><td>8</td><td><b>泰坦股份</b></td><td class="mono">003036</td><td data-val="0.4207"><div class="sb-wrap"><div class="sb-fill" style="width:50%"></div><span class="sb-val">0.421</span></div></td><td data-val="0.0914" style="color:#2563eb;font-weight:600">+0.09</td><td data-val="1.0324" class="pos">+1.03</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">电子织造</span></td><td class="pos" data-val="96.6755033316615">+96.7%</td><td class="pos" data-val="15.985915492957737">+16.0%</td><td><span class="cb cb-none">—</span></td><td data-val="2">★★</td></tr>
+<tr><td>9</td><td><b>鼎泰高科</b></td><td class="mono">301528</td><td data-val="0.3318"><div class="sb-wrap"><div class="sb-fill" style="width:40%"></div><span class="sb-val">0.332</span></div></td><td data-val="0.2404" style="color:#2563eb;font-weight:600">+0.24</td><td data-val="0.5017" class="pos">+0.50</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">PCB耗材</span></td><td class="pos" data-val="25.221782448478237">+25.2%</td><td class="pos" data-val="34.80752277402293">+34.8%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>10</td><td><b>京东方</b></td><td class="mono">000725</td><td data-val="0.2828"><div class="sb-wrap"><div class="sb-fill" style="width:34%"></div><span class="sb-val">0.283</span></div></td><td data-val="0.0690" style="color:#2563eb;font-weight:600">+0.07</td><td data-val="0.6798" class="pos">+0.68</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">面板</span></td><td class="pos" data-val="54.196642685851316">+54.2%</td><td class="pos" data-val="25.831702544031288">+25.8%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>11</td><td><b>江化微</b></td><td class="mono">603078</td><td data-val="0.2776"><div class="sb-wrap"><div class="sb-fill" style="width:33%"></div><span class="sb-val">0.278</span></div></td><td data-val="0.1242" style="color:#2563eb;font-weight:600">+0.12</td><td data-val="0.5624" class="pos">+0.56</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">半导体材料</span></td><td class="pos" data-val="57.603337125521435">+57.6%</td><td class="pos" data-val="19.769452449567716">+19.8%</td><td><span class="cb cb-buy">三买</span></td><td data-val="2">★★</td></tr>
+<tr><td>12</td><td><b>江海股份</b></td><td class="mono">002484</td><td data-val="0.2691"><div class="sb-wrap"><div class="sb-fill" style="width:32%"></div><span class="sb-val">0.269</span></div></td><td data-val="-0.2373" style="color:#2563eb;font-weight:600">-0.24</td><td data-val="1.2095" class="pos">+1.21</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">MLCC/被动</span></td><td class="pos" data-val="109.42895704379394">+109.4%</td><td class="pos" data-val="15.606936416184979">+15.6%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>13</td><td><b>长信科技</b></td><td class="mono">300088</td><td data-val="0.2605"><div class="sb-wrap"><div class="sb-fill" style="width:31%"></div><span class="sb-val">0.260</span></div></td><td data-val="0.4468" style="color:#2563eb;font-weight:600">+0.45</td><td data-val="-0.0857" class="neg">-0.09</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">玻璃基板/TGV</span></td><td class="pos" data-val="15.789473684210531">+15.8%</td><td class="pos" data-val="18.564742589703577">+18.6%</td><td><span class="cb cb-above">枢上</span></td><td data-val="5">★★★★★</td></tr>
+<tr><td>14</td><td><b>洁美科技</b></td><td class="mono">002859</td><td data-val="0.2444"><div class="sb-wrap"><div class="sb-fill" style="width:29%"></div><span class="sb-val">0.244</span></div></td><td data-val="-0.1600" style="color:#2563eb;font-weight:600">-0.16</td><td data-val="0.9953" class="pos">+1.00</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">MLCC/被动</span></td><td class="pos" data-val="77.05776468663068">+77.1%</td><td class="pos" data-val="25.08670520231213">+25.1%</td><td><span class="cb cb-none">—</span></td><td data-val="2">★★</td></tr>
+<tr><td>15</td><td><b>华虹公司</b></td><td class="mono">688347</td><td data-val="0.2297"><div class="sb-wrap"><div class="sb-fill" style="width:27%"></div><span class="sb-val">0.230</span></div></td><td data-val="0.5226" style="color:#2563eb;font-weight:600">+0.52</td><td data-val="-0.3143" class="neg">-0.31</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">半导体代工</span></td><td class="pos" data-val="42.80322093608455">+42.8%</td><td class="neg" data-val="-4.089910427581545">-4.1%</td><td><span class="cb cb-above">枢上</span></td><td data-val="5">★★★★★</td></tr>
+<tr><td>16</td><td><b>麦格米特</b></td><td class="mono">002851</td><td data-val="0.1830"><div class="sb-wrap"><div class="sb-fill" style="width:22%"></div><span class="sb-val">0.183</span></div></td><td data-val="0.3340" style="color:#2563eb;font-weight:600">+0.33</td><td data-val="-0.0973" class="neg">-0.10</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">工控/电源</span></td><td class="pos" data-val="19.396903015484913">+19.4%</td><td class="pos" data-val="16.223720745735815">+16.2%</td><td><span class="cb cb-above">枢上</span></td><td data-val="4">★★★★</td></tr>
+<tr><td>17</td><td><b>兆易创新</b></td><td class="mono">603986</td><td data-val="0.1677"><div class="sb-wrap"><div class="sb-fill" style="width:20%"></div><span class="sb-val">0.168</span></div></td><td data-val="0.2720" style="color:#2563eb;font-weight:600">+0.27</td><td data-val="-0.0261" class="neg">-0.03</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">半导体存储</span></td><td class="pos" data-val="46.27683490501">+46.3%</td><td class="pos" data-val="4.494550437892131">+4.5%</td><td><span class="cb cb-buy">三买</span></td><td data-val="5">★★★★★</td></tr>
+<tr><td>18</td><td><b>激智科技</b></td><td class="mono">300566</td><td data-val="0.1468"><div class="sb-wrap"><div class="sb-fill" style="width:18%"></div><span class="sb-val">0.147</span></div></td><td data-val="0.2048" style="color:#2563eb;font-weight:600">+0.20</td><td data-val="0.0390" class="pos">+0.04</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">光学膜</span></td><td class="pos" data-val="31.57637872132748">+31.6%</td><td class="pos" data-val="14.67460655040409">+14.7%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>19</td><td><b>和胜股份</b></td><td class="mono">002824</td><td data-val="0.1370"><div class="sb-wrap"><div class="sb-fill" style="width:16%"></div><span class="sb-val">0.137</span></div></td><td data-val="0.4981" style="color:#2563eb;font-weight:600">+0.50</td><td data-val="-0.5338" class="neg">-0.53</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">液冷/算力</span></td><td class="pos" data-val="5.1228901391767945">+5.1%</td><td class="pos" data-val="8.021756494617915">+8.0%</td><td><span class="cb cb-above">枢上</span></td><td data-val="3">★★★</td></tr>
+<tr><td>20</td><td><b>英诺激光</b></td><td class="mono">301021</td><td data-val="0.0853"><div class="sb-wrap"><div class="sb-fill" style="width:10%"></div><span class="sb-val">0.085</span></div></td><td data-val="0.2098" style="color:#2563eb;font-weight:600">+0.21</td><td data-val="-0.1460" class="neg">-0.15</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">激光设备</span></td><td class="pos" data-val="49.80249644493602">+49.8%</td><td class="neg" data-val="-1.7207421996475514">-1.7%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="2">★★</td></tr>
+<tr><td>21</td><td><b>大胜达</b></td><td class="mono">603687</td><td data-val="0.0772"><div class="sb-wrap"><div class="sb-fill" style="width:9%"></div><span class="sb-val">0.077</span></div></td><td data-val="0.1910" style="color:#2563eb;font-weight:600">+0.19</td><td data-val="-0.1340" class="neg">-0.13</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">包装</span></td><td class="pos" data-val="10.194460813199768">+10.2%</td><td class="pos" data-val="19.795003203074945">+19.8%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>22</td><td><b>模塑科技</b></td><td class="mono">000700</td><td data-val="0.0499"><div class="sb-wrap"><div class="sb-fill" style="width:6%"></div><span class="sb-val">0.050</span></div></td><td data-val="0.0455" style="color:#2563eb;font-weight:600">+0.05</td><td data-val="0.0581" class="pos">+0.06</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">机器人/散热</span></td><td class="pos" data-val="19.24137931034482">+19.2%</td><td class="pos" data-val="21.932299012693935">+21.9%</td><td><span class="cb cb-above">枢上</span></td><td data-val="2">★★</td></tr>
+<tr><td>23</td><td><b>永鼎股份</b></td><td class="mono">600105</td><td data-val="0.0333"><div class="sb-wrap"><div class="sb-fill" style="width:4%"></div><span class="sb-val">0.033</span></div></td><td data-val="0.1749" style="color:#2563eb;font-weight:600">+0.17</td><td data-val="-0.2297" class="neg">-0.23</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="10.973167801361638">+11.0%</td><td class="pos" data-val="15.917172139719726">+15.9%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>24</td><td><b>芯碁微装</b></td><td class="mono">688630</td><td data-val="0.0202"><div class="sb-wrap"><div class="sb-fill" style="width:2%"></div><span class="sb-val">0.020</span></div></td><td data-val="-0.0830" style="color:#2563eb;font-weight:600">-0.08</td><td data-val="0.2121" class="pos">+0.21</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">半导体设备</span></td><td class="pos" data-val="46.24170396666152">+46.2%</td><td class="pos" data-val="13.134328358208958">+13.1%</td><td><span class="cb cb-none">—</span></td><td data-val="2">★★</td></tr>
+<tr><td>25</td><td><b>光库科技</b></td><td class="mono">300620</td><td data-val="0.0052"><div class="sb-wrap"><div class="sb-fill" style="width:1%"></div><span class="sb-val">0.005</span></div></td><td data-val="0.0460" style="color:#2563eb;font-weight:600">+0.05</td><td data-val="-0.0706" class="neg">-0.07</td><td><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="23.71333114462835">+23.7%</td><td class="pos" data-val="14.893464380515109">+14.9%</td><td><span class="cb cb-none">—</span></td><td data-val="2">★★</td></tr>
+<tr><td>26</td><td><b>天孚通信</b></td><td class="mono">300394</td><td data-val="0.0046"><div class="sb-wrap"><div class="sb-fill" style="width:1%"></div><span class="sb-val">0.005</span></div></td><td data-val="0.1313" style="color:#2563eb;font-weight:600">+0.13</td><td data-val="-0.2308" class="neg">-0.23</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="40.05516395954643">+40.1%</td><td class="pos" data-val="0.39543057996485054">+0.4%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="2">★★</td></tr>
+<tr><td>27</td><td><b>联特科技</b></td><td class="mono">301205</td><td data-val="0.0041"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">0.004</span></div></td><td data-val="0.2042" style="color:#2563eb;font-weight:600">+0.20</td><td data-val="-0.3675" class="neg">-0.37</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="18.588483146067425">+18.6%</td><td class="pos" data-val="6.872982722612497">+6.9%</td><td><span class="cb cb-above">枢上</span></td><td data-val="1">★</td></tr>
+<tr><td>28</td><td><b>电连技术</b></td><td class="mono">300679</td><td data-val="-0.0001"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.000</span></div></td><td data-val="0.2240" style="color:#2563eb;font-weight:600">+0.22</td><td data-val="-0.4162" class="neg">-0.42</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">消费电子</span></td><td class="pos" data-val="17.587400071590498">+17.6%</td><td class="pos" data-val="5.642106767669541">+5.6%</td><td><span class="cb cb-above">枢上</span></td><td data-val="1">★</td></tr>
+<tr><td>29</td><td><b>软通动力</b></td><td class="mono">301236</td><td data-val="-0.0632"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.063</span></div></td><td data-val="-0.0443" style="color:#2563eb;font-weight:600">-0.04</td><td data-val="-0.0983" class="neg">-0.10</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">华为生态</span></td><td class="" data-val="0.0">0.0%</td><td class="pos" data-val="26.513317191283292">+26.5%</td><td><span class="cb cb-buy">二买</span></td><td data-val="1">★</td></tr>
+<tr><td>30</td><td><b>三环集团</b></td><td class="mono">300408</td><td data-val="-0.0673"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.067</span></div></td><td data-val="-0.1778" style="color:#2563eb;font-weight:600">-0.18</td><td data-val="0.1380" class="pos">+0.14</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">MLCC/被动</span></td><td class="pos" data-val="57.052999417588836">+57.1%</td><td class="pos" data-val="4.697934461872966">+4.7%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>31</td><td><b>新风光</b></td><td class="mono">688663</td><td data-val="-0.0851"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.085</span></div></td><td data-val="0.1102" style="color:#2563eb;font-weight:600">+0.11</td><td data-val="-0.4476" class="neg">-0.45</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">工控/电源</span></td><td class="pos" data-val="30.07065057403593">+30.1%</td><td class="neg" data-val="-2.1373200442967755">-2.1%</td><td><span class="cb cb-sell">三卖</span></td><td data-val="1">★</td></tr>
+<tr><td>32</td><td><b>中富电路</b></td><td class="mono">300814</td><td data-val="-0.1345"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.134</span></div></td><td data-val="0.0009" style="color:#2563eb;font-weight:600">+0.00</td><td data-val="-0.3860" class="neg">-0.39</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="32.596638655462186">+32.6%</td><td class="neg" data-val="-1.251642781150264">-1.3%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>33</td><td><b>科翔股份</b></td><td class="mono">300903</td><td data-val="-0.1417"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.142</span></div></td><td data-val="0.0039" style="color:#2563eb;font-weight:600">+0.00</td><td data-val="-0.4120" class="neg">-0.41</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">液冷/算力</span></td><td class="pos" data-val="24.181880812952095">+24.2%</td><td class="pos" data-val="2.284011916583917">+2.3%</td><td><span class="cb cb-none">—</span></td><td data-val="3">★★★</td></tr>
+<tr><td>34</td><td><b>奕瑞科技</b></td><td class="mono">688301</td><td data-val="-0.1580"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.158</span></div></td><td data-val="0.0261" style="color:#2563eb;font-weight:600">+0.03</td><td data-val="-0.5001" class="neg">-0.50</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">检测设备</span></td><td class="pos" data-val="49.224806201550386">+49.2%</td><td class="neg" data-val="-14.232673267326735">-14.2%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="1">★</td></tr>
+<tr><td>35</td><td><b>万通发展</b></td><td class="mono">600246</td><td data-val="-0.1749"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.175</span></div></td><td data-val="-0.2644" style="color:#2563eb;font-weight:600">-0.26</td><td data-val="-0.0087" class="neg">-0.01</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">地产</span></td><td class="pos" data-val="41.72779136104321">+41.7%</td><td class="pos" data-val="7.544836116264686">+7.5%</td><td><span class="cb cb-buy">三买</span></td><td data-val="1">★</td></tr>
+<tr><td>36</td><td><b>贵研铂业</b></td><td class="mono">600459</td><td data-val="-0.2084"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.208</span></div></td><td data-val="-0.2250" style="color:#2563eb;font-weight:600">-0.22</td><td data-val="-0.1775" class="neg">-0.18</td><td><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></td><td><span class="sector-tag">战略材料</span></td><td class="pos" data-val="15.925058548009364">+15.9%</td><td class="pos" data-val="15.16984644020476">+15.2%</td><td><span class="cb cb-warn">顶背驰</span></td><td data-val="1">★</td></tr>
+<tr><td>37</td><td><b>菲沃泰</b></td><td class="mono">688371</td><td data-val="-0.2415"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.242</span></div></td><td data-val="-0.1893" style="color:#2563eb;font-weight:600">-0.19</td><td data-val="-0.3385" class="neg">-0.34</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">涂层</span></td><td class="pos" data-val="20.996216897856247">+21.0%</td><td class="pos" data-val="6.640733537093646">+6.6%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="1">★</td></tr>
+<tr><td>38</td><td><b>沪电股份</b></td><td class="mono">002463</td><td data-val="-0.2819"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.282</span></div></td><td data-val="-0.1783" style="color:#2563eb;font-weight:600">-0.18</td><td data-val="-0.4745" class="neg">-0.47</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">PCB</span></td><td class="pos" data-val="22.546223898445405">+22.5%</td><td class="pos" data-val="0.8936685852771964">+0.9%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>39</td><td><b>华润微</b></td><td class="mono">688396</td><td data-val="-0.2939"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.294</span></div></td><td data-val="-0.1776" style="color:#2563eb;font-weight:600">-0.18</td><td data-val="-0.5099" class="neg">-0.51</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">功率半导体</span></td><td class="pos" data-val="14.516683866529068">+14.5%</td><td class="pos" data-val="3.8851614916523447">+3.9%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>40</td><td><b>云南锗业</b></td><td class="mono">002428</td><td data-val="-0.3134"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.313</span></div></td><td data-val="0.0631" style="color:#2563eb;font-weight:600">+0.06</td><td data-val="-1.0125" class="neg">-1.01</td><td><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></td><td><span class="sector-tag">战略材料</span></td><td class="neg" data-val="-0.6622516556291314">-0.7%</td><td class="neg" data-val="-6.229436279885947">-6.2%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="1">★</td></tr>
+<tr><td>41</td><td><b>力芯微</b></td><td class="mono">688601</td><td data-val="-0.3277"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.328</span></div></td><td data-val="-0.1137" style="color:#2563eb;font-weight:600">-0.11</td><td data-val="-0.7250" class="neg">-0.73</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">MLCC/被动</span></td><td class="pos" data-val="4.582366589327158">+4.6%</td><td class="pos" data-val="1.3870665417057282">+1.4%</td><td><span class="cb cb-mid">枢内</span></td><td data-val="1">★</td></tr>
+<tr><td>42</td><td><b>飞龙股份</b></td><td class="mono">002536</td><td data-val="-0.3355"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.336</span></div></td><td data-val="-0.0343" style="color:#2563eb;font-weight:600">-0.03</td><td data-val="-0.8950" class="neg">-0.89</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">汽车零部件</span></td><td class="neg" data-val="-8.744808491001399">-8.7%</td><td class="pos" data-val="2.3285899094437124">+2.3%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="2">★★</td></tr>
+<tr><td>43</td><td><b>禾望电气</b></td><td class="mono">603063</td><td data-val="-0.3642"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.364</span></div></td><td data-val="-0.1269" style="color:#2563eb;font-weight:600">-0.13</td><td data-val="-0.8048" class="neg">-0.80</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">工控/电源</span></td><td class="pos" data-val="5.911425902864242">+5.9%</td><td class="neg" data-val="-2.209845490477891">-2.2%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="1">★</td></tr>
+<tr><td>44</td><td><b>盛合晶微</b></td><td class="mono">688798</td><td data-val="-0.3746"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.375</span></div></td><td data-val="-0.0222" style="color:#2563eb;font-weight:600">-0.02</td><td data-val="-1.0290" class="neg">-1.03</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">半导体封测</span></td><td class="neg" data-val="-1.5150441474510723">-1.5%</td><td class="neg" data-val="-6.37294529776341">-6.4%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="2">★★</td></tr>
+<tr><td>45</td><td><b>澜起科技</b></td><td class="mono">688008</td><td data-val="-0.3807"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.381</span></div></td><td data-val="-0.1680" style="color:#2563eb;font-weight:600">-0.17</td><td data-val="-0.7757" class="neg">-0.78</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">半导体存储</span></td><td class="pos" data-val="13.848860988253175">+13.8%</td><td class="neg" data-val="-5.3794466403162104">-5.4%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>46</td><td><b>纳芯微</b></td><td class="mono">688052</td><td data-val="-0.3885"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.389</span></div></td><td data-val="-0.1530" style="color:#2563eb;font-weight:600">-0.15</td><td data-val="-0.8259" class="neg">-0.83</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">功率半导体</span></td><td class="pos" data-val="16.66169154228856">+16.7%</td><td class="neg" data-val="-8.694805700490615">-8.7%</td><td><span class="cb cb-none">—</span></td><td data-val="1">★</td></tr>
+<tr><td>47</td><td><b>欧陆通</b></td><td class="mono">300870</td><td data-val="-0.3976"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.398</span></div></td><td data-val="-0.1025" style="color:#2563eb;font-weight:600">-0.10</td><td data-val="-0.9455" class="neg">-0.95</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">工控/电源</span></td><td class="neg" data-val="-2.6285414671623486">-2.6%</td><td class="neg" data-val="-2.7563636363636346">-2.8%</td><td><span class="cb cb-sell">二卖</span></td><td data-val="1">★</td></tr>
+<tr><td>48</td><td><b>天通股份</b></td><td class="mono">600330</td><td data-val="-0.4942"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.494</span></div></td><td data-val="-0.1696" style="color:#2563eb;font-weight:600">-0.17</td><td data-val="-1.0970" class="neg">-1.10</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">战略材料</span></td><td class="pos" data-val="0.8916323731138709">+0.9%</td><td class="neg" data-val="-10.11304613504429">-10.1%</td><td><span class="cb cb-mid">枢内</span></td><td data-val="1">★</td></tr>
+<tr><td>49</td><td><b>新亚电子</b></td><td class="mono">605277</td><td data-val="-0.5034"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.503</span></div></td><td data-val="-0.1621" style="color:#2563eb;font-weight:600">-0.16</td><td data-val="-1.1373" class="neg">-1.14</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">其他电子</span></td><td class="neg" data-val="-6.048053024026512">-6.0%</td><td class="neg" data-val="-7.879772542648256">-7.9%</td><td><span class="cb cb-sell">三卖</span></td><td data-val="1">★</td></tr>
+<tr><td>50</td><td><b>豪威集团</b></td><td class="mono">603501</td><td data-val="-0.5188"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.519</span></div></td><td data-val="-0.3290" style="color:#2563eb;font-weight:600">-0.33</td><td data-val="-0.8714" class="neg">-0.87</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">图像传感器</span></td><td class="neg" data-val="-3.7262065763710828">-3.7%</td><td class="pos" data-val="0.5099782943122522">+0.5%</td><td><span class="cb cb-below">枢下</span></td><td data-val="1">★</td></tr>
+<tr><td>51</td><td><b>剑桥科技</b></td><td class="mono">603083</td><td data-val="-0.6779"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.678</span></div></td><td data-val="-0.4937" style="color:#2563eb;font-weight:600">-0.49</td><td data-val="-1.0201" class="neg">-1.02</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">光通信/CPO</span></td><td class="pos" data-val="1.3020173883683706">+1.3%</td><td class="neg" data-val="-7.549350024073176">-7.5%</td><td><span class="cb cb-warn">顶背驰</span></td><td data-val="2">★★</td></tr>
+<tr><td>52</td><td><b>威迈斯</b></td><td class="mono">688612</td><td data-val="-0.8076"><div class="sb-wrap"><div class="sb-fill" style="width:0%"></div><span class="sb-val">-0.808</span></div></td><td data-val="-1.1118" style="color:#2563eb;font-weight:600">-1.11</td><td data-val="-0.2426" class="neg">-0.24</td><td><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></td><td><span class="sector-tag">工控/电源</span></td><td class="pos" data-val="15.272161741835166">+15.3%</td><td class="pos" data-val="13.160305343511446">+13.2%</td><td><span class="cb cb-sell">一卖</span></td><td data-val="1">★</td></tr>
+</tbody></table></div></div>
+<!-- Tab 1: 象限图 -->
+<div class="ss-page" id="page1">
+<div class="note-card">
+横轴 = 动量分，纵轴 = 质量分。
+<b style="color:#27ae60">右上 买点</b>(结构好+在涨)　
+<b style="color:#084298">左上 埋伏</b>(结构好+待启动)　
+<b style="color:#e67e22">右下 追高</b>(涨多+结构弱)　
+<b style="color:#999">左下 回避</b>
+</div>
+<div class="card"><canvas id="quadChart" height="480"></canvas></div>
+</div>
+<!-- Tab 2: 共识榜 -->
+<div class="ss-page" id="page2"><div class="cons-grid"><div class="cons-card"><div class="cons-head"><span class="cons-name">泰坦股份</span><span class="mono cons-ticker">003036</span><span class="sector-tag">电子织造</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+96.7%</b></span><span>5日: <b class="pos">+16.0%</b></span><span><span class="cb cb-none">—</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">红树林</span> <span class="rec-tag">观察员</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">江化微</span><span class="mono cons-ticker">603078</span><span class="sector-tag">半导体材料</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+57.6%</b></span><span>5日: <b class="pos">+19.8%</b></span><span><span class="cb cb-buy">三买</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">郭龙飞</span> <span class="rec-tag">lee</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">长信科技</span><span class="mono cons-ticker">300088</span><span class="sector-tag">玻璃基板/TGV</span><span class="stars">★★★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+15.8%</b></span><span>5日: <b class="pos">+18.6%</b></span><span><span class="cb cb-above">枢上</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">致远</span> <span class="rec-tag">魏芳</span> <span class="rec-tag">AA大神</span> <span class="rec-tag">管微笑</span> <span class="rec-tag">Felix</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">洁美科技</span><span class="mono cons-ticker">002859</span><span class="sector-tag">MLCC/被动</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+77.1%</b></span><span>5日: <b class="pos">+25.1%</b></span><span><span class="cb cb-none">—</span></span><span><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">Alex</span> <span class="rec-tag">永谦倬明</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">华虹公司</span><span class="mono cons-ticker">688347</span><span class="sector-tag">半导体代工</span><span class="stars">★★★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+42.8%</b></span><span>5日: <b class="neg">-4.1%</b></span><span><span class="cb cb-above">枢上</span></span><span><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">李旦</span> <span class="rec-tag">刘力</span> <span class="rec-tag">永谦倬明</span> <span class="rec-tag">贾</span> <span class="rec-tag">孙长青CQSUN</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">麦格米特</span><span class="mono cons-ticker">002851</span><span class="sector-tag">工控/电源</span><span class="stars">★★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+19.4%</b></span><span>5日: <b class="pos">+16.2%</b></span><span><span class="cb cb-above">枢上</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">徐细仁</span> <span class="rec-tag">刘力</span> <span class="rec-tag">老范</span> <span class="rec-tag">崔磊</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">兆易创新</span><span class="mono cons-ticker">603986</span><span class="sector-tag">半导体存储</span><span class="stars">★★★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+46.3%</b></span><span>5日: <b class="pos">+4.5%</b></span><span><span class="cb cb-buy">三买</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">方</span> <span class="rec-tag">吴其蔚</span> <span class="rec-tag">lee</span> <span class="rec-tag">tomson</span> <span class="rec-tag">Felix</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">和胜股份</span><span class="mono cons-ticker">002824</span><span class="sector-tag">液冷/算力</span><span class="stars">★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+5.1%</b></span><span>5日: <b class="pos">+8.0%</b></span><span><span class="cb cb-above">枢上</span></span><span><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">李旦</span> <span class="rec-tag">李宇崇</span> <span class="rec-tag">金色浮云</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">英诺激光</span><span class="mono cons-ticker">301021</span><span class="sector-tag">激光设备</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+49.8%</b></span><span>5日: <b class="neg">-1.7%</b></span><span><span class="cb cb-sell">二卖</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">朱涛</span> <span class="rec-tag">AA大神</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">模塑科技</span><span class="mono cons-ticker">000700</span><span class="sector-tag">机器人/散热</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+19.2%</b></span><span>5日: <b class="pos">+21.9%</b></span><span><span class="cb cb-above">枢上</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">浩</span> <span class="rec-tag">北落师门</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">芯碁微装</span><span class="mono cons-ticker">688630</span><span class="sector-tag">半导体设备</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+46.2%</b></span><span>5日: <b class="pos">+13.1%</b></span><span><span class="cb cb-none">—</span></span><span><span class="quad" style="background:#fff3cd;color:#e67e22" title="追高(动量+结构弱)">追高</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">刘力</span> <span class="rec-tag">自由自在</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">光库科技</span><span class="mono cons-ticker">300620</span><span class="sector-tag">光通信/CPO</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+23.7%</b></span><span>5日: <b class="pos">+14.9%</b></span><span><span class="cb cb-none">—</span></span><span><span class="quad" style="background:#e8f8e8;color:#27ae60" title="买点(质优+动量)">买点</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">吴其蔚</span> <span class="rec-tag">HJC</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">天孚通信</span><span class="mono cons-ticker">300394</span><span class="sector-tag">光通信/CPO</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+40.1%</b></span><span>5日: <b class="pos">+0.4%</b></span><span><span class="cb cb-sell">二卖</span></span><span><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">XG</span> <span class="rec-tag">HJC</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">科翔股份</span><span class="mono cons-ticker">300903</span><span class="sector-tag">液冷/算力</span><span class="stars">★★★</span></div><div class="cons-body"><span>20日: <b class="pos">+24.2%</b></span><span>5日: <b class="pos">+2.3%</b></span><span><span class="cb cb-none">—</span></span><span><span class="quad" style="background:#cfe2ff;color:#084298" title="埋伏(质优+待启动)">埋伏</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">朱涛</span> <span class="rec-tag">李宇崇</span> <span class="rec-tag">红树林</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">飞龙股份</span><span class="mono cons-ticker">002536</span><span class="sector-tag">汽车零部件</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="neg">-8.7%</b></span><span>5日: <b class="pos">+2.3%</b></span><span><span class="cb cb-sell">二卖</span></span><span><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">徐细仁</span> <span class="rec-tag">猪侠</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">盛合晶微</span><span class="mono cons-ticker">688798</span><span class="sector-tag">半导体封测</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="neg">-1.5%</b></span><span>5日: <b class="neg">-6.4%</b></span><span><span class="cb cb-sell">二卖</span></span><span><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">Kaixinzhu</span> <span class="rec-tag">刘刚</span></div></div>
+<div class="cons-card"><div class="cons-head"><span class="cons-name">剑桥科技</span><span class="mono cons-ticker">603083</span><span class="sector-tag">光通信/CPO</span><span class="stars">★★</span></div><div class="cons-body"><span>20日: <b class="pos">+1.3%</b></span><span>5日: <b class="neg">-7.5%</b></span><span><span class="cb cb-warn">顶背驰</span></span><span><span class="quad" style="background:#e2e3e5;color:#666666" title="回避(双弱)">回避</span></span></div><div class="cons-recs">推荐: <span class="rec-tag">XG</span> <span class="rec-tag">荣泽</span></div></div>
+</div></div>
+<!-- Tab 3: 题材热度 -->
+<div class="ss-page" id="page3"><div class="card">
+<div style="font-size:13px;font-weight:600;margin-bottom:12px">题材20日平均涨跌幅</div>
+<canvas id="sectorChart" height="500"></canvas></div></div>
+<!-- Tab 4: 推荐人胜率 -->
+<div class="ss-page" id="page4"><div class="card" style="padding:0;overflow:auto"><table>
+<thead><tr><th>排名</th><th>推荐人</th><th>平均20日%</th><th>推荐数</th><th>个股详情</th></tr></thead>
+<tbody><tr><td>1</td><td><b>前进</b></td><td class="pos">+149.3%</td><td>2</td><td class="picks-cell"><span class="pos">中船特气(+189.5%)</span> <span class="pos">红星发展(+109.1%)</span></td></tr>
+<tr><td>2</td><td><b>厚德</b></td><td class="pos">+109.4%</td><td>1</td><td class="picks-cell"><span class="pos">江海股份(+109.4%)</span></td></tr>
+<tr><td>3</td><td><b>曾科技·真科基金</b></td><td class="pos">+98.9%</td><td>1</td><td class="picks-cell"><span class="pos">力诺药包(+98.9%)</span></td></tr>
+<tr><td>4</td><td><b>贾</b></td><td class="pos">+96.3%</td><td>2</td><td class="picks-cell"><span class="pos">长盈通(+149.9%)</span> <span class="pos">华虹公司(+42.8%)</span></td></tr>
+<tr><td>5</td><td><b>Alex</b></td><td class="pos">+74.2%</td><td>3</td><td class="picks-cell"><span class="pos">火炬电子(+88.3%)</span> <span class="pos">洁美科技(+77.1%)</span> <span class="pos">三环集团(+57.1%)</span></td></tr>
+<tr><td>6</td><td><b>自由自在</b></td><td class="pos">+61.7%</td><td>2</td><td class="picks-cell"><span class="pos">金海高科(+77.1%)</span> <span class="pos">芯碁微装(+46.2%)</span></td></tr>
+<tr><td>7</td><td><b>红树林</b></td><td class="pos">+60.4%</td><td>2</td><td class="picks-cell"><span class="pos">泰坦股份(+96.7%)</span> <span class="pos">科翔股份(+24.2%)</span></td></tr>
+<tr><td>8</td><td><b>永谦倬明</b></td><td class="pos">+59.9%</td><td>2</td><td class="picks-cell"><span class="pos">洁美科技(+77.1%)</span> <span class="pos">华虹公司(+42.8%)</span></td></tr>
+<tr><td>9</td><td><b>郭龙飞</b></td><td class="pos">+57.6%</td><td>1</td><td class="picks-cell"><span class="pos">江化微(+57.6%)</span></td></tr>
+<tr><td>10</td><td><b>lee</b></td><td class="pos">+51.9%</td><td>2</td><td class="picks-cell"><span class="pos">江化微(+57.6%)</span> <span class="pos">兆易创新(+46.3%)</span></td></tr>
+<tr><td>11</td><td><b>观察员</b></td><td class="pos">+48.8%</td><td>2</td><td class="picks-cell"><span class="pos">泰坦股份(+96.7%)</span> <span class="pos">天通股份(+0.9%)</span></td></tr>
+<tr><td>12</td><td><b>小妖上黑山</b></td><td class="pos">+46.8%</td><td>2</td><td class="picks-cell"><span class="pos">鼎通科技(+77.0%)</span> <span class="pos">纳芯微(+16.7%)</span></td></tr>
+<tr><td>13</td><td><b>方</b></td><td class="pos">+46.3%</td><td>1</td><td class="picks-cell"><span class="pos">兆易创新(+46.3%)</span></td></tr>
+<tr><td>14</td><td><b>tomson</b></td><td class="pos">+46.3%</td><td>1</td><td class="picks-cell"><span class="pos">兆易创新(+46.3%)</span></td></tr>
+<tr><td>15</td><td><b>孙长青CQSUN</b></td><td class="pos">+42.8%</td><td>1</td><td class="picks-cell"><span class="pos">华虹公司(+42.8%)</span></td></tr>
+<tr><td>16</td><td><b>aaa</b></td><td class="pos">+41.7%</td><td>1</td><td class="picks-cell"><span class="pos">万通发展(+41.7%)</span></td></tr>
+<tr><td>17</td><td><b>朱涛</b></td><td class="pos">+37.0%</td><td>2</td><td class="picks-cell"><span class="pos">英诺激光(+49.8%)</span> <span class="pos">科翔股份(+24.2%)</span></td></tr>
+<tr><td>18</td><td><b>崔磊</b></td><td class="pos">+36.8%</td><td>2</td><td class="picks-cell"><span class="pos">京东方(+54.2%)</span> <span class="pos">麦格米特(+19.4%)</span></td></tr>
+<tr><td>19</td><td><b>刘力</b></td><td class="pos">+36.1%</td><td>3</td><td class="picks-cell"><span class="pos">华虹公司(+42.8%)</span> <span class="pos">麦格米特(+19.4%)</span> <span class="pos">芯碁微装(+46.2%)</span></td></tr>
+<tr><td>20</td><td><b>吴其蔚</b></td><td class="pos">+35.0%</td><td>2</td><td class="picks-cell"><span class="pos">兆易创新(+46.3%)</span> <span class="pos">光库科技(+23.7%)</span></td></tr>
+<tr><td>21</td><td><b>AA大神</b></td><td class="pos">+32.8%</td><td>2</td><td class="picks-cell"><span class="pos">长信科技(+15.8%)</span> <span class="pos">英诺激光(+49.8%)</span></td></tr>
+<tr><td>22</td><td><b>HJC</b></td><td class="pos">+31.9%</td><td>2</td><td class="picks-cell"><span class="pos">光库科技(+23.7%)</span> <span class="pos">天孚通信(+40.1%)</span></td></tr>
+<tr><td>23</td><td><b>Felix</b></td><td class="pos">+31.0%</td><td>2</td><td class="picks-cell"><span class="pos">长信科技(+15.8%)</span> <span class="pos">兆易创新(+46.3%)</span></td></tr>
+<tr><td>24</td><td><b>北落师门</b></td><td class="pos">+25.4%</td><td>2</td><td class="picks-cell"><span class="pos">激智科技(+31.6%)</span> <span class="pos">模塑科技(+19.2%)</span></td></tr>
+<tr><td>25</td><td><b>文王</b></td><td class="pos">+24.3%</td><td>2</td><td class="picks-cell"><span class="pos">奕瑞科技(+49.2%)</span> <span class="neg">云南锗业(-0.7%)</span></td></tr>
+<tr><td>26</td><td><b>李旦</b></td><td class="pos">+24.0%</td><td>2</td><td class="picks-cell"><span class="pos">华虹公司(+42.8%)</span> <span class="pos">和胜股份(+5.1%)</span></td></tr>
+<tr><td>27</td><td><b>郑</b></td><td class="pos">+21.8%</td><td>2</td><td class="picks-cell"><span class="pos">永鼎股份(+11.0%)</span> <span class="pos">中富电路(+32.6%)</span></td></tr>
+<tr><td>28</td><td><b>XG</b></td><td class="pos">+20.7%</td><td>2</td><td class="picks-cell"><span class="pos">天孚通信(+40.1%)</span> <span class="pos">剑桥科技(+1.3%)</span></td></tr>
+<tr><td>29</td><td><b>浩</b></td><td class="pos">+19.2%</td><td>1</td><td class="picks-cell"><span class="pos">模塑科技(+19.2%)</span></td></tr>
+<tr><td>30</td><td><b>E玲珑</b></td><td class="pos">+19.2%</td><td>2</td><td class="picks-cell"><span class="pos">贵研铂业(+15.9%)</span> <span class="pos">沪电股份(+22.5%)</span></td></tr>
+<tr><td>31</td><td><b>Leon</b></td><td class="pos">+18.6%</td><td>1</td><td class="picks-cell"><span class="pos">联特科技(+18.6%)</span></td></tr>
+<tr><td>32</td><td><b>老范</b></td><td class="pos">+18.5%</td><td>2</td><td class="picks-cell"><span class="pos">麦格米特(+19.4%)</span> <span class="pos">电连技术(+17.6%)</span></td></tr>
+<tr><td>33</td><td><b>金色浮云</b></td><td class="pos">+17.6%</td><td>2</td><td class="picks-cell"><span class="pos">和胜股份(+5.1%)</span> <span class="pos">新风光(+30.1%)</span></td></tr>
+<tr><td>34</td><td><b>致远</b></td><td class="pos">+15.8%</td><td>1</td><td class="picks-cell"><span class="pos">长信科技(+15.8%)</span></td></tr>
+<tr><td>35</td><td><b>管微笑</b></td><td class="pos">+15.8%</td><td>1</td><td class="picks-cell"><span class="pos">长信科技(+15.8%)</span></td></tr>
+<tr><td>36</td><td><b>李宇崇</b></td><td class="pos">+14.7%</td><td>2</td><td class="picks-cell"><span class="pos">和胜股份(+5.1%)</span> <span class="pos">科翔股份(+24.2%)</span></td></tr>
+<tr><td>37</td><td><b>奋斗</b></td><td class="pos">+14.5%</td><td>1</td><td class="picks-cell"><span class="pos">华润微(+14.5%)</span></td></tr>
+<tr><td>38</td><td><b>傻老冒</b></td><td class="pos">+12.8%</td><td>2</td><td class="picks-cell"><span class="pos">菲沃泰(+21.0%)</span> <span class="pos">力芯微(+4.6%)</span></td></tr>
+<tr><td>39</td><td><b>刘刚</b></td><td class="pos">+11.9%</td><td>2</td><td class="picks-cell"><span class="pos">鼎泰高科(+25.2%)</span> <span class="neg">盛合晶微(-1.5%)</span></td></tr>
+<tr><td>40</td><td><b>大詹</b></td><td class="pos">+10.6%</td><td>2</td><td class="picks-cell"><span class="pos">禾望电气(+5.9%)</span> <span class="pos">威迈斯(+15.3%)</span></td></tr>
+<tr><td>41</td><td><b>魏芳</b></td><td class="pos">+7.9%</td><td>2</td><td class="picks-cell"><span class="pos">长信科技(+15.8%)</span> <span class="">软通动力(0.0%)</span></td></tr>
+<tr><td>42</td><td><b>徐细仁</b></td><td class="pos">+5.3%</td><td>2</td><td class="picks-cell"><span class="pos">麦格米特(+19.4%)</span> <span class="neg">飞龙股份(-8.7%)</span></td></tr>
+<tr><td>43</td><td><b>第二月</b></td><td class="pos">+2.1%</td><td>2</td><td class="picks-cell"><span class="pos">大胜达(+10.2%)</span> <span class="neg">新亚电子(-6.0%)</span></td></tr>
+<tr><td>44</td><td><b>荣泽</b></td><td class="pos">+1.3%</td><td>1</td><td class="picks-cell"><span class="pos">剑桥科技(+1.3%)</span></td></tr>
+<tr><td>45</td><td><b>猪侠</b></td><td class="pos">+0.5%</td><td>3</td><td class="picks-cell"><span class="neg">飞龙股份(-8.7%)</span> <span class="pos">澜起科技(+13.8%)</span> <span class="neg">豪威集团(-3.7%)</span></td></tr>
+<tr><td>46</td><td><b>Kaixinzhu</b></td><td class="neg">-1.5%</td><td>1</td><td class="picks-cell"><span class="neg">盛合晶微(-1.5%)</span></td></tr>
+<tr><td>47</td><td><b>江昕</b></td><td class="neg">-2.6%</td><td>1</td><td class="picks-cell"><span class="neg">欧陆通(-2.6%)</span></td></tr>
+</tbody></table></div></div>
+<!-- Tab 5: 风格环境 -->
+<div class="ss-page" id="page5">
+<div class="factor-grid"><div class="factor-card"><div class="factor-label">小市值 SML5</div><div class="factor-val neg">▼ -0.0010</div><div class="factor-desc">小盘股相对强弱</div></div><div class="factor-card"><div class="factor-label">动量 MOM5</div><div class="factor-val neg">▼ -0.0030</div><div class="factor-desc">近期趋势动量</div></div><div class="factor-card"><div class="factor-label">反转 RV5</div><div class="factor-val neg">▼ -0.0040</div><div class="factor-desc">短期反转信号</div></div></div>
+<div class="verdict-box">
+  <div class="verdict-main" style="color:#f39c12">中性</div>
+  <div class="verdict-sub">市场风格判断 · Barra环境系数 0.487</div>
+  <div class="verdict-sub" style="margin-top:8px">小市值/动量因子中性，均衡配置</div>
+</div></div>
+<!-- 常驻方法论注释 -->
+<div class="method-footer">
+<h3>打分方法论（常驻说明）</h3>
+<div class="formula">综合分 = 质量分 × 0.65 + 动量分 × 0.35</div>
+<p>质量分与动量分<b>正交分开</b>，互不混入，相关性仅 0.09。涨幅只进动量，不进质量，避免动量被重复打分。</p>
+<h4>质量分 = (0.45·缠论结构 + 0.25·共识度 + 0.20·量能配合 − 0.10·拥挤度) × Barra环境系数</h4>
+<p>四个成分先各自做截面 z-score 标准化再加权，刻意<b>不含涨幅</b>：</p>
+<ul>
+<li><span class="tag">缠论结构 45%</span> 日线中枢位置（上/内/下）+ 背驰 + 30分钟买卖点信号；只看结构位置，不含趋势方向（趋势=动量）。</li>
+<li><span class="tag">共识度 25%</span> 接龙里几个人独立推荐。人多 = 多位研究员同向，信号更可靠。</li>
+<li><span class="tag">量能配合 20%</span> 当日量 vs 近5日均量；上涨放量为正，下跌放量为负。</li>
+<li><span class="tag">拥挤度 −10%</span> 换手率 + 近5日振幅，越高扣分越多，反映短期追高风险。</li>
+</ul>
+<p>外层乘 <b>Barra环境系数</b>（0~1，当前由小市值/动量/反转因子滚动收益算出）：逆风时结构再好也打折，顺风时接近 1。</p>
+<h4>动量分 = z(20日涨幅)·0.6 + z(5日涨幅)·0.4</h4>
+<p>纯粹反映"最近涨了多少"，独立展示，不混入质量。</p>
+<h4>四象限（质量×动量，按中位数切分）</h4>
+<ul>
+<li><b style="color:#27ae60">买点</b> 质优 + 动量起 — 结构好且已启动</li>
+<li><b style="color:#084298">埋伏</b> 质优 + 待启动 — 结构好但还没涨</li>
+<li><b style="color:#e67e22">追高</b> 动量强 + 结构弱 — 涨多但缠论不支持</li>
+<li><b style="color:#999">回避</b> 双弱</li>
+</ul>
+<h4>缠论三级别框架</h4>
+<ul>
+<li><b>大级别（周线）</b> 定产业趋势方向 → 趋势系数</li>
+<li><b>中级别（日线）</b> 中枢 + 三类买卖点主战场（一买底背驰/二买回踩不破/三买突破回踩）</li>
+<li><b>小级别（30分钟）</b> 背驰 + 买卖点精确化</li>
+</ul>
+<p class="caveat">权重（0.45/0.25/0.20/0.10 与 0.65/0.35）是基于盘感主观拍定的，非回测最优解。基本面因子刻意不做——推荐人本身就是强基本面研究员，基本面已内嵌在选票里。</p>
+</div>
+<script>const pages=document.querySelectorAll('.ss-page');
+const tabs=document.querySelectorAll('.ss-tab');
+let sectorInited=false,quadInited=false;
+function switchTab(i){
+  pages.forEach((p,j)=>{p.classList.toggle('active',i===j);tabs[j].classList.toggle('active',i===j)});
+  if(i===1&&!quadInited)initQuad();
+  if(i===3&&!sectorInited)initSector();
+}
+function initSector(){
+  sectorInited=true;
+  new Chart(document.getElementById('sectorChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:["特种气体", "军工化工", "电子织造", "其他", "连接器", "MLCC/被动", "半导体材料", "玻璃基板/TGV", "面板", "激光设备", "检测设备", "半导体设备", "半导体代工", "地产", "光通信/CPO", "光学膜", "半导体存储", "PCB耗材", "PCB", "涂层", "机器人/散热", "消费电子", "功率半导体", "液冷/算力", "工控/电源", "包装", "战略材料", "华为生态", "半导体封测", "图像传感器", "其他电子", "汽车零部件"],datasets:[{data:[189.47, 109.09, 96.68, 77.14, 77.03, 67.29, 57.6, 57.33, 54.2, 49.8, 49.22, 46.24, 42.8, 41.73, 39.58, 31.58, 30.06, 25.22, 22.55, 21.0, 19.24, 17.59, 15.59, 14.65, 13.6, 10.19, 5.38, 0.0, -1.52, -3.73, -6.05, -8.74],backgroundColor:["#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#e74c3c", "#2ecc71", "#2ecc71", "#2ecc71", "#2ecc71"],borderRadius:3}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.toFixed(2)+'%'}}},
+      scales:{x:{ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+  });
+}
+function initQuad(){
+  quadInited=true;
+  const pts=[{"x": 2.848, "y": -0.244, "name": "中船特气", "ret20": 189.4664328657315, "c": "#e67e22"}, {"x": 2.272, "y": -0.06, "name": "红星发展", "ret20": 109.09014108304471, "c": "#e67e22"}, {"x": 1.302, "y": 0.417, "name": "火炬电子", "ret20": 88.34295283949878, "c": "#27ae60"}, {"x": 1.436, "y": 0.149, "name": "力诺药包", "ret20": 98.87272727272727, "c": "#27ae60"}, {"x": 1.289, "y": 0.147, "name": "金海高科", "ret20": 77.14285714285714, "c": "#27ae60"}, {"x": 1.312, "y": 0.111, "name": "鼎通科技", "ret20": 77.0252145922747, "c": "#27ae60"}, {"x": 1.5, "y": -0.03, "name": "长盈通", "ret20": 149.85867721876764, "c": "#e67e22"}, {"x": 1.032, "y": 0.091, "name": "泰坦股份", "ret20": 96.6755033316615, "c": "#27ae60"}, {"x": 0.502, "y": 0.24, "name": "鼎泰高科", "ret20": 25.221782448478237, "c": "#27ae60"}, {"x": 0.68, "y": 0.069, "name": "京东方", "ret20": 54.196642685851316, "c": "#27ae60"}, {"x": 0.562, "y": 0.124, "name": "江化微", "ret20": 57.603337125521435, "c": "#27ae60"}, {"x": 1.209, "y": -0.237, "name": "江海股份", "ret20": 109.42895704379394, "c": "#e67e22"}, {"x": -0.086, "y": 0.447, "name": "长信科技", "ret20": 15.789473684210531, "c": "#27ae60"}, {"x": 0.995, "y": -0.16, "name": "洁美科技", "ret20": 77.05776468663068, "c": "#e67e22"}, {"x": -0.314, "y": 0.523, "name": "华虹公司", "ret20": 42.80322093608455, "c": "#084298"}, {"x": -0.097, "y": 0.334, "name": "麦格米特", "ret20": 19.396903015484913, "c": "#27ae60"}, {"x": -0.026, "y": 0.272, "name": "兆易创新", "ret20": 46.27683490501, "c": "#27ae60"}, {"x": 0.039, "y": 0.205, "name": "激智科技", "ret20": 31.57637872132748, "c": "#27ae60"}, {"x": -0.534, "y": 0.498, "name": "和胜股份", "ret20": 5.1228901391767945, "c": "#084298"}, {"x": -0.146, "y": 0.21, "name": "英诺激光", "ret20": 49.80249644493602, "c": "#27ae60"}, {"x": -0.134, "y": 0.191, "name": "大胜达", "ret20": 10.194460813199768, "c": "#27ae60"}, {"x": 0.058, "y": 0.046, "name": "模塑科技", "ret20": 19.24137931034482, "c": "#27ae60"}, {"x": -0.23, "y": 0.175, "name": "永鼎股份", "ret20": 10.973167801361638, "c": "#084298"}, {"x": 0.212, "y": -0.083, "name": "芯碁微装", "ret20": 46.24170396666152, "c": "#e67e22"}, {"x": -0.071, "y": 0.046, "name": "光库科技", "ret20": 23.71333114462835, "c": "#27ae60"}, {"x": -0.231, "y": 0.131, "name": "天孚通信", "ret20": 40.05516395954643, "c": "#084298"}, {"x": -0.368, "y": 0.204, "name": "联特科技", "ret20": 18.588483146067425, "c": "#084298"}, {"x": -0.416, "y": 0.224, "name": "电连技术", "ret20": 17.587400071590498, "c": "#084298"}, {"x": -0.098, "y": -0.044, "name": "软通动力", "ret20": 0.0, "c": "#e67e22"}, {"x": 0.138, "y": -0.178, "name": "三环集团", "ret20": 57.052999417588836, "c": "#e67e22"}, {"x": -0.448, "y": 0.11, "name": "新风光", "ret20": 30.07065057403593, "c": "#084298"}, {"x": -0.386, "y": 0.001, "name": "中富电路", "ret20": 32.596638655462186, "c": "#999999"}, {"x": -0.412, "y": 0.004, "name": "科翔股份", "ret20": 24.181880812952095, "c": "#084298"}, {"x": -0.5, "y": 0.026, "name": "奕瑞科技", "ret20": 49.224806201550386, "c": "#084298"}, {"x": -0.009, "y": -0.264, "name": "万通发展", "ret20": 41.72779136104321, "c": "#e67e22"}, {"x": -0.177, "y": -0.225, "name": "贵研铂业", "ret20": 15.925058548009364, "c": "#e67e22"}, {"x": -0.339, "y": -0.189, "name": "菲沃泰", "ret20": 20.996216897856247, "c": "#999999"}, {"x": -0.475, "y": -0.178, "name": "沪电股份", "ret20": 22.546223898445405, "c": "#999999"}, {"x": -0.51, "y": -0.178, "name": "华润微", "ret20": 14.516683866529068, "c": "#999999"}, {"x": -1.013, "y": 0.063, "name": "云南锗业", "ret20": -0.6622516556291314, "c": "#084298"}, {"x": -0.725, "y": -0.114, "name": "力芯微", "ret20": 4.582366589327158, "c": "#999999"}, {"x": -0.895, "y": -0.034, "name": "飞龙股份", "ret20": -8.744808491001399, "c": "#999999"}, {"x": -0.805, "y": -0.127, "name": "禾望电气", "ret20": 5.911425902864242, "c": "#999999"}, {"x": -1.029, "y": -0.022, "name": "盛合晶微", "ret20": -1.5150441474510723, "c": "#999999"}, {"x": -0.776, "y": -0.168, "name": "澜起科技", "ret20": 13.848860988253175, "c": "#999999"}, {"x": -0.826, "y": -0.153, "name": "纳芯微", "ret20": 16.66169154228856, "c": "#999999"}, {"x": -0.946, "y": -0.103, "name": "欧陆通", "ret20": -2.6285414671623486, "c": "#999999"}, {"x": -1.097, "y": -0.17, "name": "天通股份", "ret20": 0.8916323731138709, "c": "#999999"}, {"x": -1.137, "y": -0.162, "name": "新亚电子", "ret20": -6.048053024026512, "c": "#999999"}, {"x": -0.871, "y": -0.329, "name": "豪威集团", "ret20": -3.7262065763710828, "c": "#999999"}, {"x": -1.02, "y": -0.494, "name": "剑桥科技", "ret20": 1.3020173883683706, "c": "#999999"}, {"x": -0.243, "y": -1.112, "name": "威迈斯", "ret20": 15.272161741835166, "c": "#999999"}];
+  const quadLabels={id:'ql',afterDraw(chart){
+    const{ctx,chartArea:{left,right,top,bottom},scales:{x,y}}=chart;
+    const zx=x.getPixelForValue(0),zy=y.getPixelForValue(0);
+    ctx.save();ctx.strokeStyle='#ccc';ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(zx,top);ctx.lineTo(zx,bottom);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(left,zy);ctx.lineTo(right,zy);ctx.stroke();
+    ctx.setLineDash([]);ctx.font='bold 12px sans-serif';ctx.globalAlpha=0.5;
+    ctx.fillStyle='#27ae60';ctx.textAlign='right';ctx.fillText('买点',right-8,top+18);
+    ctx.fillStyle='#084298';ctx.textAlign='left';ctx.fillText('埋伏',left+8,top+18);
+    ctx.fillStyle='#e67e22';ctx.textAlign='right';ctx.fillText('追高',right-8,bottom-8);
+    ctx.fillStyle='#999';ctx.textAlign='left';ctx.fillText('回避',left+8,bottom-8);
+    ctx.restore();
+  }};
+  new Chart(document.getElementById('quadChart').getContext('2d'),{
+    type:'scatter',
+    data:{datasets:[{data:pts,backgroundColor:pts.map(p=>p.c),pointRadius:6,pointHoverRadius:9}]},
+    options:{
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const p=c.raw;return p.name+'  质量'+p.y+'  动量'+p.x+'  (20日'+p.ret20+'%)'}}}},
+      scales:{x:{title:{display:true,text:'动量分'}},y:{title:{display:true,text:'质量分'}}}
+    },
+    plugins:[quadLabels]
+  });
+}
+let sortDir={};
+function sortTable(col){
+  const tb=document.querySelector('#rank-table tbody');
+  const rows=Array.from(tb.rows);
+  const asc=sortDir[col]=!sortDir[col];
+  rows.sort((a,b)=>{
+    let av=a.cells[col].getAttribute('data-val')??a.cells[col].textContent.trim();
+    let bv=b.cells[col].getAttribute('data-val')??b.cells[col].textContent.trim();
+    let an=parseFloat(av),bn=parseFloat(bv);
+    if(!isNaN(an)&&!isNaN(bn))return asc?an-bn:bn-an;
+    return asc?av.localeCompare(bv,'zh'):bv.localeCompare(av,'zh');
+  });
+  rows.forEach(r=>tb.appendChild(r));
+}</script>
+</body></html>
