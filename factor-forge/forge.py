@@ -21,7 +21,31 @@ from pathlib import Path
 
 INTEL_DIR = Path("/Users/apple/Desktop/gamt-dashboard/smart-notes/intelligence")
 sys.path.insert(0, str(INTEL_DIR))
-from llm_client import call_claude  # noqa: E402
+from llm_client import call_claude, _load_openai_provider  # noqa: E402
+import requests as _requests, certifi as _certifi  # noqa: E402
+
+
+def _call_llm_fast(prompt: str, system: str = "", max_tokens: int = 2000) -> str:
+    """快速 LLM 调用：直接走 GPT（25秒超时），避开慢的 Claude 中转(实测60秒才超时)。
+    GPT 失败再回退到 call_claude 的完整链路。"""
+    try:
+        prov = _load_openai_provider()
+        url = prov["baseUrl"].rstrip("/") + "/chat/completions"
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+        r = _requests.post(
+            url,
+            headers={"Authorization": f"Bearer {prov['apiKey']}", "Content-Type": "application/json"},
+            json={"model": "gpt-5.5", "messages": messages, "max_tokens": max_tokens},
+            timeout=25, verify=_certifi.where(),
+        )
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"]
+    except Exception:
+        # GPT 不通，回退完整链路（含 Claude）
+        return call_claude(prompt, system=system, max_tokens=max_tokens)
 
 # ── GAMT 看板模块清单（看板顾问的上下文）──────────────────
 GAMT_MODULES = """GAMT 看板现有模块（因子要挂靠到这些上面才有用）：
@@ -92,11 +116,11 @@ ADVISOR_SYSTEM = f"""你是 Roni 的 GAMT 看板军师。
 
 务实，不空话。如果这因子对现有看板没什么用，直接说"暂无明确挂靠点"。"""
 
-ADVISOR_OUTPUT = """严格返回 JSON，不要额外文字：
+ADVISOR_OUTPUT = """严格返回 JSON，不要额外文字。重要：字段值内不得使用双引号，用单引号或中文书名号替代：
 {
   "dashboard_modules": ["<挂靠模块1>", "..."],
   "suggested_observables": ["<建议加的观测项1>", "..."],
-  "synergy_or_conflict": "<跟哪类因子印证或矛盾，1-2句>",
+  "synergy_or_conflict": "<跟哪类因子印证或矛盾，1-2句，用单引号而非双引号引用名称>",
   "adoption_value": "高|中|低",
   "adoption_reason": "<一句话理由>"
 }"""
@@ -125,13 +149,21 @@ def _parse_json(raw: str, expect_array=False):
             return json.loads(chunk)
         except json.JSONDecodeError:
             pass
+        # 末招：LLM 常在字符串值里塞中文弯引号 ""，破坏 JSON。
+        # 把中文弯引号统一替换为单引号（不影响 JSON 结构字符）
+        fixed = chunk.replace("\u201c", "'").replace("\u201d", "'")
+        try:
+            return json.loads(fixed)
+        except json.JSONDecodeError:
+            pass
     raise RuntimeError(f"LLM 返回无法解析为 JSON:\n{raw[:800]}")
 
 
 def distill_factors(text: str, source_hint: str = "") -> list:
-    """研报正文 → 因子候选列表"""
-    prompt = f"研报来源: {source_hint or '未知'}\n\n[研报正文]\n{text[:24000]}\n\n{DISTILLER_OUTPUT}"
-    raw = call_claude(prompt, system=DISTILLER_SYSTEM, max_tokens=3000)
+    """研报正文 → 因子候选列表。
+    长研报截断到 14000 字：开头摘要+核心观点信息密度最高，尾部多为免责声明/附录。"""
+    prompt = f"研报来源: {source_hint or '未知'}\n\n[研报正文]\n{text[:14000]}\n\n{DISTILLER_OUTPUT}"
+    raw = _call_llm_fast(prompt, system=DISTILLER_SYSTEM, max_tokens=3000)
     factors = _parse_json(raw, expect_array=True)
     if not isinstance(factors, list):
         factors = [factors]
@@ -141,7 +173,7 @@ def distill_factors(text: str, source_hint: str = "") -> list:
 def advise_factor(factor: dict) -> dict:
     """对单条因子 → 看板辅助建议"""
     prompt = f"待评估因子:\n{json.dumps(factor, ensure_ascii=False, indent=2)}\n\n{ADVISOR_OUTPUT}"
-    raw = call_claude(prompt, system=ADVISOR_SYSTEM, max_tokens=1200)
+    raw = _call_llm_fast(prompt, system=ADVISOR_SYSTEM, max_tokens=1200)
     return _parse_json(raw, expect_array=False)
 
 
@@ -151,23 +183,35 @@ def make_factor_id(factor: dict, source: str) -> str:
 
 
 def forge(text: str, source_hint: str = "", with_advice: bool = True) -> list:
-    """完整流程：蒸馏 + (可选)看板顾问。返回带完整字段的因子列表。"""
+    """完整流程：蒸馏 + (可选)看板顾问。返回带完整字段的因子列表。
+    看板顾问对多条因子并发调用，避免串行累积超时。"""
     factors = distill_factors(text, source_hint)
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
-    out = []
     for f in factors:
         f["factor_id"] = make_factor_id(f, source_hint)
         f["source"] = source_hint
         f["captured_at"] = now
         f["confidence"] = None      # 你自己后填
         f["status"] = "候选"
-        if with_advice:
+
+    if with_advice and factors:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        def _advise(idx_factor):
+            idx, fct = idx_factor
             try:
-                f["dashboard_hook"] = advise_factor(f)
+                return idx, advise_factor(fct)
             except Exception as e:
-                f["dashboard_hook"] = {"error": str(e)}
-        out.append(f)
-    return out
+                return idx, {"error": str(e)}
+        # 并发跑顾问，最多 4 路；单条不阻塞整体
+        with ThreadPoolExecutor(max_workers=min(4, len(factors))) as ex:
+            futures = [ex.submit(_advise, (i, f)) for i, f in enumerate(factors)]
+            for fut in as_completed(futures, timeout=90):
+                try:
+                    idx, hook = fut.result()
+                    factors[idx]["dashboard_hook"] = hook
+                except Exception as e:
+                    pass  # 超时的顾问留空，不影响因子本身
+    return factors
 
 
 def main():
