@@ -644,6 +644,9 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self._json(404, {'error': '基金不存在'})
 
+        elif self.path == '/api/factors':
+            # Factor Forge: 全部因子
+            self._ff_get_factors()
         elif self.path.startswith('/api/'):
             self._json(404, {'error': 'not found'})
         else:
@@ -1111,8 +1114,123 @@ class Handler(BaseHTTPRequestHandler):
                 dd_api.add_attachment(fund_id, filename, filepath, uploaded_by=uploaded_by)
             self._json(200, {'ok': True, 'path': filepath, 'name': filename})
 
+        elif self.path == '/api/forge':
+            # Factor Forge: 蒸馏研报（multipart: pdf/text/source/no_advice）
+            self._ff_forge()
+        elif self.path == '/api/factors':
+            # Factor Forge: 批量入库
+            self._ff_post_factors()
         else:
             self._json(404, {'error': 'not found'})
+
+    def do_PATCH(self):
+        from urllib.parse import urlparse
+        self.path = urlparse(self.path).path
+        if self.path.startswith('/api/factors/'):
+            self._ff_patch_factor(self.path.rsplit('/', 1)[-1])
+        else:
+            self._json(404, {'error': 'not found'})
+
+    def do_DELETE(self):
+        from urllib.parse import urlparse
+        self.path = urlparse(self.path).path
+        if self.path.startswith('/api/factors/'):
+            self._ff_delete_factor(self.path.rsplit('/', 1)[-1])
+        else:
+            self._json(404, {'error': 'not found'})
+
+    # ═══ Factor Forge handlers ═══
+    def _ff_store(self):
+        ff_dir = os.path.join(BASE_DIR, 'factor-forge')
+        if ff_dir not in sys.path:
+            sys.path.insert(0, ff_dir)
+        import store as ff_store
+        return ff_store
+
+    def _ff_get_factors(self):
+        try:
+            self._json(200, self._ff_store().all_factors())
+        except Exception as e:
+            self._json(500, {'error': str(e)})
+
+    def _ff_post_factors(self):
+        try:
+            length = int(self.headers.get('Content-Length', 0))
+            payload = json.loads(self.rfile.read(length) or b'{}')
+            r = self._ff_store().add_factors(payload.get('factors', []))
+            self._json(200, r)
+        except Exception as e:
+            self._json(500, {'error': str(e)})
+
+    def _ff_patch_factor(self, fid):
+        try:
+            length = int(self.headers.get('Content-Length', 0))
+            patch = json.loads(self.rfile.read(length) or b'{}')
+            ok = self._ff_store().update_factor(fid, patch)
+            self._json(200 if ok else 404, {'ok': ok})
+        except Exception as e:
+            self._json(500, {'error': str(e)})
+
+    def _ff_delete_factor(self, fid):
+        try:
+            ok = self._ff_store().delete_factor(fid)
+            self._json(200 if ok else 404, {'ok': ok})
+        except Exception as e:
+            self._json(500, {'error': str(e)})
+
+    def _ff_forge(self):
+        """蒸馏研报：解析 multipart，抽 PDF/文本，调 forge。"""
+        try:
+            ff_dir = os.path.join(BASE_DIR, 'factor-forge')
+            if ff_dir not in sys.path:
+                sys.path.insert(0, ff_dir)
+            import forge as ff_forge
+            ctype = self.headers.get('Content-Type', '')
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            source, text, no_advice, pdf_bytes, pdf_name = '', '', False, None, None
+            if 'multipart/form-data' in ctype and 'boundary=' in ctype:
+                boundary = ctype.split('boundary=')[-1].strip().strip('"')
+                for part in body.split(f'--{boundary}'.encode()):
+                    if b'Content-Disposition' not in part:
+                        continue
+                    he = part.find(b'\r\n\r\n')
+                    if he < 0:
+                        continue
+                    header = part[:he].decode('utf-8', 'ignore')
+                    data = part[he+4:]
+                    if data.endswith(b'\r\n'):
+                        data = data[:-2]
+                    if 'name="pdf"' in header and 'filename="' in header:
+                        fn_s = header.index('filename="') + 10
+                        pdf_name = header[fn_s:header.index('"', fn_s)]
+                        pdf_bytes = data
+                    elif 'name="text"' in header:
+                        text = data.decode('utf-8', 'replace')
+                    elif 'name="source"' in header:
+                        source = data.decode('utf-8', 'replace').strip()
+                    elif 'name="no_advice"' in header:
+                        no_advice = bool(data.decode('utf-8', 'replace').strip())
+            # PDF 优先
+            if pdf_bytes:
+                import tempfile
+                from extract_pdf import extract_pdf
+                with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tf:
+                    tf.write(pdf_bytes); tmp = tf.name
+                try:
+                    res = extract_pdf(tmp)
+                    text = res['text']
+                    if not source and pdf_name:
+                        source = os.path.splitext(pdf_name)[0]
+                finally:
+                    os.unlink(tmp)
+            if len(text.strip()) < 100:
+                self._json(400, {'error': '正文太短或抽取失败（PDF 可能是扫描件，请粘贴正文）'}); return
+            factors = ff_forge.forge(text, source_hint=source, with_advice=not no_advice)
+            self._json(200, {'factors': factors, 'source': source})
+        except Exception as e:
+            import traceback; traceback.print_exc()
+            self._json(500, {'error': str(e)})
 
     def log_message(self, fmt, *args):
         ts = time.strftime('%H:%M:%S')
