@@ -19,7 +19,7 @@ from __future__ import annotations
 import os, sys, json, re, argparse, datetime as dt, hashlib
 from pathlib import Path
 
-INTEL_DIR = Path("/Users/apple/Desktop/gamt-dashboard/smart-notes/intelligence")
+INTEL_DIR = Path(__file__).resolve().parent.parent / "smart-notes" / "intelligence"
 sys.path.insert(0, str(INTEL_DIR))
 from llm_client import call_claude, _load_openai_provider  # noqa: E402
 import requests as _requests, certifi as _certifi  # noqa: E402
