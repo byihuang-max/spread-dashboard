@@ -1,7 +1,7 @@
 # Smart Notes 审计报告
 
-> 生成时间: 2026-05-31 20:00
-> 笔记总数: 93
+> 生成时间: 2026-06-07 20:00
+> 笔记总数: 98
 > 看板模块数: 35
 
 ## 1. 模块覆盖检查
@@ -22,14 +22,16 @@
 - [ ] `smart-notes/notes/research/factors/风格集中度.md`
 - [ ] `smart-notes/notes/research/factors/基差情绪.md`
 
-### 缺少标准元数据 (3 篇)
+### 缺少标准元数据 (5 篇)
 标准字段: 日期、类型、标签
 
+- [ ] `smart-notes/notes/engineering/2026-06-07_研报因子蒸馏FactorForge实现与GAMT接入.md` — 研报因子蒸馏（Factor Forge）实现与接入
 - [ ] `smart-notes/notes/engineering/024_数据token与权限补全_通联DataYes_UQER_iFind_Tushare_2026-04-06.md` — 数据 token 与权限补全（通联 DataYes / UQER / iFind / Tushare）
 - [ ] `smart-notes/notes/engineering/025_数据源地图_四条数据线与分工_2026-04-06.md` — 数据源地图：四条数据线与分工（2026-04-06）
 - [ ] `smart-notes/notes/research/narrative/026_PPI_CPI_流动性回流实体观察框架_2026-04-06.md` — PPI / CPI / 流动性回流实体观察框架（2026-04-06）
+- [ ] `smart-notes/notes/research/strategy/2026-06-06_景气度股票池打分逻辑.md` — 景气度股票池打分逻辑
 
-### 缺少看板关联 (88 篇)
+### 缺少看板关联 (93 篇)
 
 - [ ] `smart-notes/notes/decisions/2026-05-31_强势股日报v2改造方向.md` — 强势股日报 v2 改造方向
 - [ ] `smart-notes/notes/engineering/2026-05-24_Chart.js_主题适配：覆盖优先级与_afterLayout_兜底.md` — Chart.js 主题适配：覆盖优先级与 afterLayout 兜底
@@ -37,6 +39,7 @@
 - [ ] `smart-notes/notes/engineering/2026-05-06_GAMT登录框自动登录前抖动修复.md` — GAMT登录框自动登录前抖动修复
 - [ ] `smart-notes/notes/engineering/2026-03-08_API密钥配置检查.md` — 2026-03-08 API 密钥配置全面检查
 - [ ] `smart-notes/notes/engineering/telegram-multi-bots.md` — 配置多个 Telegram AI 员工
+- [ ] `smart-notes/notes/engineering/2026-06-06_GAMT看板工具组内嵌改造与Nginx权限根因修复.md` — GAMT看板工具组内嵌改造与Nginx权限根因修复
 - [ ] `smart-notes/notes/engineering/004_腾讯云服务器git配置丢失导致定时任务无法推送.md` — 腾讯云服务器git配置丢失导致定时任务无法推送
 - [ ] `smart-notes/notes/engineering/stock_monitor_skill_design.md` — 个股监控 Skill 完整设计记录（2026-05-10）
 - [ ] `smart-notes/notes/engineering/2026-05-24_Git_rebase_中_ourstheirs_语义反转踩坑记录.md` — Git rebase 中 ours/theirs 语义反转踩坑记录
@@ -45,12 +48,14 @@
 - [ ] `smart-notes/notes/engineering/2026-05-26_Signal-bar_组件格式规范.md` — Signal-bar 组件格式规范
 - [ ] `smart-notes/notes/engineering/2026-05-24_Bloomberg_终端风主题部署架构.md` — 2026-05-24_Bloomberg_终端风主题部署架构
 - [ ] `smart-notes/notes/engineering/腾讯云自动部署机制.md` — 腾讯云自动部署机制
+- [ ] `smart-notes/notes/engineering/2026-06-07_研报因子蒸馏FactorForge实现与GAMT接入.md` — 研报因子蒸馏（Factor Forge）实现与接入
 - [ ] `smart-notes/notes/engineering/024_数据token与权限补全_通联DataYes_UQER_iFind_Tushare_2026-04-06.md` — 数据 token 与权限补全（通联 DataYes / UQER / iFind / Tushare）
 - [ ] `smart-notes/notes/engineering/2026-05-23_Nova_Demo_8问题_GAMT_10改进方向.md` — Nova Demo 8问题 + GAMT 10改进方向（大白话版）
 - [ ] `smart-notes/notes/engineering/2026-05-24_Bloomberg_终端风主题部署架构_v2.md` — GAMT 看板 Bloomberg 主题 CSS 架构
 - [ ] `smart-notes/notes/engineering/2026-03-11_腾讯云部署踩坑实录.md` — 腾讯云部署 — 踩坑实录与最终方案
 - [ ] `smart-notes/notes/engineering/Smart_Notes架构改造_动态加载方案.md` — Smart Notes架构改造：动态加载方案
 - [ ] `smart-notes/notes/engineering/GAMT看板工作流与Git操作指南.md` — GAMT 看板工作流与 Git 操作指南
+- [ ] `smart-notes/notes/engineering/2026-06-04_GAMT_看板_6月3-4日工程修复与批次时序优化.md` — GAMT 看板 6月3-4日工程修复与批次时序优化
 - [ ] `smart-notes/notes/engineering/2026-05-05_我们一起经历的这一天.md` — 2026-05-05 · 我们一起经历的这一天
 - [ ] `smart-notes/notes/engineering/2026-05-10_邮件订阅者管理工程流程事故复盘.md` — 邮件订阅者管理工程流程事故复盘
 - [ ] `smart-notes/notes/engineering/2026-04-17_三端对齐操作手册.md` — 三端对齐操作手册
@@ -72,6 +77,7 @@
 - [ ] `smart-notes/notes/engineering/025_数据源地图_四条数据线与分工_2026-04-06.md` — 数据源地图：四条数据线与分工（2026-04-06）
 - [ ] `smart-notes/notes/engineering/2026-05-07_research-capture_skill_设计决策与技术架构.md` — research-capture skill 设计决策与技术架构
 - [ ] `smart-notes/notes/engineering/2026-05-31_GAMT投研看板仓库架构全景.md` — GAMT投研看板仓库架构全景
+- [ ] `smart-notes/notes/engineering/2026-06-07_多Bot并行的记忆隔离与共享工作状态层.md` — 多Bot并行的记忆隔离与共享工作状态层
 - [ ] `smart-notes/notes/engineering/2026-03-11_腾讯云部署看板迁移指南.md` — 腾讯云部署 - GAMT 看板迁移指南
 - [ ] `smart-notes/notes/engineering/Smart_Notes架构改造_动态加载方案_v2.md` — Smart Notes 前端自动同步机制设计
 - [ ] `smart-notes/notes/engineering/2026-05-06_微信公众号文章抓取失败的应对方案.md` — 微信公众号文章抓取失败的应对方案
@@ -119,6 +125,7 @@
 - [ ] `smart-notes/notes/research/strategy/商品CTA_PCA环境诊断.md` — 商品CTA PCA环境诊断
 - [ ] `smart-notes/notes/research/strategy/HALO_重资产范式转移.md` — HALO 策略：重资产范式转移
 - [ ] `smart-notes/notes/research/strategy/024_财报雷票系统与行业ETF基本面写照是一体两面_2026-04-04.md` — 财报雷票系统与行业ETF基本面写照是一体两面
+- [ ] `smart-notes/notes/research/strategy/2026-06-06_景气度股票池打分逻辑.md` — 景气度股票池打分逻辑
 
 ## 3. 陈旧笔记 (>60天未更新)
 
@@ -130,23 +137,18 @@
 
 ## 5. 近14天对话中可能未沉淀的决策
 
-共 **10** 条疑似未沉淀:
+共 **5** 条疑似未沉淀:
 
-- [ ] `2026-05-18.md` L370: ### 关键设计决策
-- [ ] `2026-05-18.md` L410: ### 23:36 并购池前端新增"策略净值"Tab
-- [ ] `2026-05-18.md` L441: ### 23:47-23:51 并购池前端重构：净值图表移到"进行中"Tab 顶部
-- [ ] `2026-05-19.md` L242: ### Cron 三批次重构（重要架构变更）
-- [ ] `2026-05-21.md` L80: ## 关键架构认知更新
-- [ ] `2026-05-24.md` L525: ### 修复方案（commit 820c69fe）
 - [ ] `2026-05-25.md` L121: ### 实施路径（B 方案）
 - [ ] `2026-05-30.md` L69: ## 19:20 - Roni 要求画 CSS 架构完整流程图
 - [ ] `2026-05-31.md` L3: ## 13:21 - GAMT 仓库架构全景梳理
 - [ ] `2026-05-31.md` L29: ## 15:22 - 量化方案节奏确认
+- [ ] `2026-06-02.md` L3: ## 拥挤度看板：量价矩阵新增龙头案例 + 涨跌停家数醒目显示（已上线）
 
 *注: 模糊匹配，可能有误报。标记为已处理的可忽略。*
 
 ---
 
-**待处理项总计: 107**
+**待处理项总计: 109**
 
 待补项较多，建议优先处理模块覆盖和缺日期的笔记。
