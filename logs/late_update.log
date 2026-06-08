@@ -983,3 +983,106 @@ FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
 [18:32:47]  总耗时: 166.7s
 [18:32:47]  已更新 update_log.json
 [18:32:47]  ═══ Git Push ═══
+[18:32:47] 同步到云端...
+[main 9dacbd8b] auto: update late_only 6/7 modules
+ 26 files changed, 4535 insertions(+), 2932 deletions(-)
+ create mode 100644 timing-research/leader_pool_history/20260608.json
+To gitee.com:ronihuang/gamt-dashboard.git
+ ! [rejected]          main -> main (fetch first)
+error: failed to push some refs to 'gitee.com:ronihuang/gamt-dashboard.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[18:32:49]    推送 gitee 失败: Command '['git', 'push', 'gitee', 'main']' returned non-zero exit status 1.
+failed to store: -61
+To https://github.com/byihuang-max/spread-dashboard.git
+   0b431abf..9dacbd8b  main -> main
+[18:32:52]  推送 origin 成功
+HEAD is now at 2fdb032d auto: sim portfolio daily update
+[18:32:54]  腾讯云同步成功
+[18:32:54]  完成！
+[18:32:55] ✅ 同步完成
+[fix-perms] 完成：前端资产已放开，server/ 与 zsxq/ 已锁死
+[18:33:00] ✅ 后端已重启
+[00:15:00]  GAMT 投研看板 — 一键更新开始
+[00:15:00]  晚到数据模式：只更新 barra_style, patient_capital, momentum_stock, crowding, timing_factors, merger_pool, overview
+[00:15:00]  ═══ Barra风格因子 (barra_style) ═══
+[00:15:00]  运行 size_spread/barra_update.py
+[00:15:01]    完成 (1.5s)
+
+[00:15:01]  ═══ 耐心资本 (patient_capital) ═══
+[00:15:01]  运行 micro_flow/patient_capital/patient_data.py
+[00:15:09]    完成 (7.8s)
+[00:15:09]  运行 micro_flow/patient_capital/patient_calc.py
+[00:15:12]    完成 (3.1s)
+
+[00:15:12]  ═══ 强势股情绪 (momentum_stock) ═══
+[00:15:12]  运行 size_spread/fund_nav/fund_nav_data.py
+[00:15:19]    完成 (6.8s)
+[00:15:19]  运行 env_fit/momentum_stock/momentum_data.py
+[00:15:21]    完成 (1.8s)
+[00:15:21]  运行 env_fit/momentum_stock/limit_index/limit_index_data.py
+[00:15:38]    完成 (17.6s)
+[00:15:38]  运行 env_fit/momentum_stock/limit_index/seal_spread/seal_spread_data.py
+[00:15:39]    完成 (0.1s)
+[00:15:39]  运行 env_fit/momentum_stock/momentum_sector.py
+[00:15:45]    完成 (6.9s)
+[00:15:45]  运行 env_fit/momentum_stock/momentum_warning.py
+[00:15:46]    完成 (0.2s)
+[00:15:46]  运行 env_fit/momentum_stock/momentum_return_decomp.py
+[00:15:46]    完成 (0.2s)
+[00:15:46]  运行 env_fit/momentum_stock/inject_momentum.py
+[00:15:46]    完成 (0.1s)
+[00:15:46]  运行 timing-research/generate_leader_pool.py
+[00:15:48]    失败 (1.7s): ashboard/env_fit/momentum_stock/momentum_data.py", line 202, in fetch_day_cached
+    raise ValueError(f'empty limit_list_d result for {trade_date}')
+ValueError: empty limit_list_d result for 20260609
+
+[00:15:48]  运行 timing-research/export_leader_pool_history.py
+[00:15:48]    完成 (0.2s)
+[00:15:48]  运行 timing-research/generate_replay_page.py
+[00:15:48]    完成 (0.1s)
+[00:15:48]  运行 timing-research/push_limit_replay_feishu.py
+[00:15:49]    完成 (1.0s)
+
+[00:15:49]  ═══ 资金流拥挤度 (crowding) ═══
+[00:15:49]  运行 micro_flow/crowding/crowding_data.py
+[00:16:17]    完成 (27.9s)
+[00:16:17]  运行 micro_flow/crowding/breadth_data.py
+[00:16:56]    完成 (39.2s)
+[00:16:56]  运行 micro_flow/crowding/crowding_calc.py
+[00:16:57]    完成 (0.9s)
+[00:16:57]  运行 micro_flow/crowding/breadth_calc.py
+[00:16:58]    完成 (1.2s)
+
+[00:16:58]  ═══ 择时因子系统 (timing_factors) ═══
+[00:16:58]  运行外部脚本: /Users/apple/Desktop/quant-backtest/timing_model/factor_system/daily_update.py
+[00:17:31]    完成 (32.8s)
+[00:17:31]  运行 timing-research/update_ic_table.py
+[00:17:31]    完成 (0.0s)
+
+[00:17:31]  ═══ 并购池 (merger_pool) ═══
+[00:17:31]  运行 skills/stock-monitor/merger_pool.py
+[00:17:31]    失败 (0.1s): 14/lib/python3.14/subprocess.py", line 1989, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+
+[00:17:31]    数据脚本失败，跳过注入
+
+[00:17:31]  ═══ 仪表盘汇总 (overview) ═══
+[00:17:31]  运行 server/overview_calc.py
+[00:17:31]    完成 (0.3s)
+
+[00:17:31]  ═══ 汇总 ═══
+[00:17:31]     Barra风格因子    (1.5s)
+[00:17:31]     耐心资本         (10.9s)
+[00:17:31]     强势股情绪        (36.7s)
+[00:17:31]     资金流拥挤度       (69.2s)
+[00:17:31]     择时因子系统       (32.8s)
+[00:17:31]     并购池          (0.1s)
+[00:17:31]     仪表盘汇总        (0.3s)
+[00:17:31]  总耗时: 151.5s
+[00:17:31]  已更新 update_log.json
+[00:17:31]  ═══ Git Push ═══
